@@ -1,0 +1,4 @@
+name: BungeeUtilisals
+main: com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals
+version: ${project.version}
+author: didjee2
