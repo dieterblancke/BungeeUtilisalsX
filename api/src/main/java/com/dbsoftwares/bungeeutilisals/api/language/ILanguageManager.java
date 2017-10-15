@@ -1,0 +1,87 @@
+package com.dbsoftwares.bungeeutilisals.api.language;
+
+/*
+ * Created by DBSoftwares on 15 oktober 2017
+ * Developer: Dieter Blancke
+ * Project: BungeeUtilisals
+ */
+
+import com.dbsoftwares.bungeeutilisals.api.user.User;
+import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.Configuration;
+import java.io.File;
+
+public interface ILanguageManager {
+
+    /**
+     * Registers a plugin into the ILanguageManager
+     * @param plugin The plugin you want to register.
+     * @param folder The folder in which the languages will be located.
+     */
+    void addPlugin(Plugin plugin, File folder);
+
+    /**
+     * Loads default language files of a plugin.
+     * @param plugin The plugin of which the languages should be loaded.
+     */
+    void loadLanguages(Plugin plugin);
+
+    /**
+     * @param plugin The plugin of which you want to get the language configuration.
+     * @param user The user of which you want to get the configuration.
+     * @return The Configuration bound to the User's language.
+     */
+    Configuration getLanguageConfiguration(Plugin plugin, User user);
+
+    /**
+     * @param plugin The plugin of which you want to get the language configuration.
+     * @param player The player of which you want to get the configuration.
+     * @return The Configuration bound to the Player's language.
+     */
+    Configuration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player);
+
+    /**
+     * @param plugin The plugin of which you want to get the language configuration.
+     * @param sender The CommandSender of which you want to get the configuration.
+     * @return The Configuration bound to the CommandSender's language, default language configuration if language isn't set.
+     */
+    Configuration getLanguageConfiguration(Plugin plugin, CommandSender sender);
+
+    /**
+     * @param plugin The plugin of which you want to get the File.
+     * @param language The language of which you want to get the file.
+     * @return The file containing language settings for a certain plugin.
+     */
+    File getFile(Plugin plugin, Language language);
+
+    /**
+     * @param plugin The plugin of which you want to get the Configuration
+     * @param language The language of which you want to get the Configuration.
+     * @return The Configuration bound to the certain plugin and language.
+     */
+    Configuration getConfig(Plugin plugin, Language language);
+
+    /**
+     * @param plugin The plugin you want to check.
+     * @param language The language you want to check.
+     * @return True if the certain plugin and language is registered, false if not.
+     */
+    Boolean isRegistered(Plugin plugin, Language language);
+
+    /**
+     * @param plugin The plugin of which you want to save the language.
+     * @param language The language you want to save.
+     * @return True if successful, false if not.
+     */
+    Boolean saveLanguage(Plugin plugin, Language language);
+
+    /**
+     *
+     * @param plugin The plugin of which you want to reload the language configuration.
+     * @param language The language configuration you want to reload.
+     * @return True if successful, false if not.
+     */
+    Boolean reloadConfig(Plugin plugin, Language language);
+}

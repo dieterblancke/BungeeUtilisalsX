@@ -7,8 +7,9 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/installer/src/main/java" isTestSource="false" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/jars" />
+      <excludeFolder url="file://$MODULE_DIR$/$" />
+      <excludeFolder url="file://$MODULE_DIR$/$systemPath" />
+      <excludeFolder url="file://$MODULE_DIR$/${systempath}" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />

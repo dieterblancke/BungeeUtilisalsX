@@ -6,11 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="BungeeUtilisals" />
+        <module name="api" />
+        <module name="core" />
+        <module name="installer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="api" target="1.8" />
       <module name="BungeeUtilisals" target="1.8" />
+      <module name="core" target="1.8" />
+      <module name="installer" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>
