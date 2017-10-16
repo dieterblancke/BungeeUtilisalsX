@@ -9,7 +9,6 @@ package com.dbsoftwares.bungeeutilisals.api;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 import java.util.Optional;
-import javax.annotation.Nonnull;
 
 public final class BUCore {
 
@@ -24,7 +23,6 @@ public final class BUCore {
      * @return an api instance
      * @throws IllegalStateException if the api is not loaded
      */
-    @Nonnull
     public static BUAPI getApi() {
         if (instance == null) {
             throw new IllegalStateException("API is not loaded.");
@@ -41,7 +39,6 @@ public final class BUCore {
      *
      * @return an optional api instance
      */
-    @Nonnull
     public static Optional<BUAPI> getApiSafe() {
         return Optional.ofNullable(instance);
     }

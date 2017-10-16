@@ -29,23 +29,23 @@ public interface ILanguageManager {
     void loadLanguages(Plugin plugin);
 
     /**
-     * @param plugin The plugin of which you want to get the language configuration.
-     * @param user The user of which you want to get the configuration.
+     * @param plugin The plugin of which you want to get the language config.
+     * @param user The user of which you want to get the config.
      * @return The Configuration bound to the User's language.
      */
     Configuration getLanguageConfiguration(Plugin plugin, User user);
 
     /**
-     * @param plugin The plugin of which you want to get the language configuration.
-     * @param player The player of which you want to get the configuration.
+     * @param plugin The plugin of which you want to get the language config.
+     * @param player The player of which you want to get the config.
      * @return The Configuration bound to the Player's language.
      */
     Configuration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player);
 
     /**
-     * @param plugin The plugin of which you want to get the language configuration.
-     * @param sender The CommandSender of which you want to get the configuration.
-     * @return The Configuration bound to the CommandSender's language, default language configuration if language isn't set.
+     * @param plugin The plugin of which you want to get the language config.
+     * @param sender The CommandSender of which you want to get the config.
+     * @return The Configuration bound to the CommandSender's language, default language config if language isn't set.
      */
     Configuration getLanguageConfiguration(Plugin plugin, CommandSender sender);
 
@@ -79,8 +79,8 @@ public interface ILanguageManager {
 
     /**
      *
-     * @param plugin The plugin of which you want to reload the language configuration.
-     * @param language The language configuration you want to reload.
+     * @param plugin The plugin of which you want to reload the language config.
+     * @param language The language config you want to reload.
      * @return True if successful, false if not.
      */
     Boolean reloadConfig(Plugin plugin, Language language);

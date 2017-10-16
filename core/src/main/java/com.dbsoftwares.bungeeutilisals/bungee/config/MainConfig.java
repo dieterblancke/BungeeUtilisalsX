@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.configuration;
+package com.dbsoftwares.bungeeutilisals.bungee.config;
 
 /*
  * Created by DBSoftwares on 04 september 2017
@@ -6,10 +6,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.configuration;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.Config;
+import com.dbsoftwares.bungeeutilisals.api.configuration.ConfigPath;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.universal.configuration.Config;
-import com.dbsoftwares.bungeeutilisals.universal.configuration.ConfigPath;
-
 import java.io.File;
 
 public class MainConfig extends Config {

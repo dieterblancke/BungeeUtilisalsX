@@ -1,7 +1,5 @@
 package com.dbsoftwares.bungeeutilisals.api.event;
 
-import javax.annotation.Nonnull;
-
 public interface EventHandler<T extends BUEvent> {
 
     /**
@@ -9,7 +7,7 @@ public interface EventHandler<T extends BUEvent> {
      *
      * @return the event class
      */
-    @Nonnull Class<T> getEventClass();
+    Class<T> getEventClass();
 
     /**
      * Returns true if this handler is active
@@ -30,7 +28,7 @@ public interface EventHandler<T extends BUEvent> {
      *
      * @return the event executor
      */
-    @Nonnull EventExecutor<T> getExecutor();
+    EventExecutor<T> getExecutor();
 
     /**
      * Gets the number of times this handler has been called
