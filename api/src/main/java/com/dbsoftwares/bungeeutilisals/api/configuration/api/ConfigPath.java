@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.configuration;
+package com.dbsoftwares.bungeeutilisals.api.configuration.api;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

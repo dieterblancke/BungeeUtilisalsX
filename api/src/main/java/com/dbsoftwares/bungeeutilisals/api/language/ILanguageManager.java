@@ -12,8 +12,21 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.config.Configuration;
 import java.io.File;
+import java.util.Optional;
 
 public interface ILanguageManager {
+
+    /**
+     * @return The default language, if not found, it will return the first available language, if not found, it will return an empty optional.
+     */
+    Optional<Language> getDefaultLanguage();
+
+    /**
+     * Method to retrieve a Language by name.
+     * @param language The name of the language.
+     * @return An optional containing the language IF present.
+     */
+    Optional<Language> getLanguage(String language);
 
     /**
      * Registers a plugin into the ILanguageManager

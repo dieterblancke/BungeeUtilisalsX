@@ -6,16 +6,21 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.config.MySQLConfig;
-import com.dbsoftwares.bungeeutilisals.bungee.config.MainConfig;
+import com.dbsoftwares.bungeeutilisals.api.configuration.MainConfig;
 import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.util.logging.Logger;
+
 public class BungeeUtilisals extends Plugin {
 
+    @Getter private static final Logger log = Logger.getLogger("BungeeUtilisals");
     @Getter private static BungeeUtilisals instance;
+    @Getter private static BUtilisalsAPI api;
     @Getter private MainConfig config;
     @Getter private HikariDataSource source;
 
@@ -23,6 +28,8 @@ public class BungeeUtilisals extends Plugin {
     public void onEnable() {
         // Setting instance
         instance = this;
+
+        api = new BUtilisalsAPI(this);
 
         // Initialize metric system
         new Metrics(this);

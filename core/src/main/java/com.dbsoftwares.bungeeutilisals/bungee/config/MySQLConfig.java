@@ -6,8 +6,8 @@ package com.dbsoftwares.bungeeutilisals.bungee.config;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.Config;
-import com.dbsoftwares.bungeeutilisals.api.configuration.ConfigPath;
+import com.dbsoftwares.bungeeutilisals.api.configuration.api.Config;
+import com.dbsoftwares.bungeeutilisals.api.configuration.api.ConfigPath;
 
 import java.io.File;
 

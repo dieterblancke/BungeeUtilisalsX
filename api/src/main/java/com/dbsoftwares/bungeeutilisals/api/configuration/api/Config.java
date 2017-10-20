@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.configuration;
+package com.dbsoftwares.bungeeutilisals.api.configuration.api;
 
 import com.google.common.collect.Lists;
 import net.md_5.bungee.config.Configuration;

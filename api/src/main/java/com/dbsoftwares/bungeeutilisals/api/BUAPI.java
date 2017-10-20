@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.MainConfig;
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
@@ -69,4 +70,9 @@ public interface BUAPI {
      * @return DatabaseUser class providing utilities to get and set user data from and into the database.
      */
     DatabaseUser getUserData();
+
+    /**
+     * @return The default BungeeUtilisals configuration.
+     */
+    MainConfig getMainConfig();
 }

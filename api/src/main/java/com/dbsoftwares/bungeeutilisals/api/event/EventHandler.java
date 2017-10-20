@@ -35,6 +35,6 @@ public interface EventHandler<T extends BUEvent> {
      *
      * @return the number of times this handler has been called
      */
-    int getCallCount();
+    int getExecutedAmount();
 
 }
