@@ -25,6 +25,7 @@ public class Installer {
         System.out.println("It really means everything to me, and I want to thank you for using my project.\n");
         System.out.println("This installer is a simple system which will put the BungeeUtilisals jars into your current folder.");
         System.out.println("If any bugs occur, please report this to didjee2 on SpigotMC BEFORE making a (bad) review!\n");
+        System.out.println("My apologies for the bunch of configuration files that comes with installing BungeeUtilisals.\n");
         System.out.println("Good luck on setting up BungeeUtilisals! And I hope that you'll have fun using BungeeUtilisals!\n\n");
 
         Scanner scanner = new Scanner(System.in);

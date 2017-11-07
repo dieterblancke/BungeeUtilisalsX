@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.utils;
+package com.dbsoftwares.bungeeutilisals.api.utils.math;
 
 import java.text.DecimalFormat;
 import java.util.List;

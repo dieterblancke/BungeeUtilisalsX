@@ -7,7 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.user;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class UserStorage {
 
     private String customname;
     private String IP;
-    private Language language = Language.ENGLISH;
+    private Language language;
 
     /**
      * Checks if a cooldown is registered.

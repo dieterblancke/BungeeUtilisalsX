@@ -1,0 +1,21 @@
+fancychat:
+  # If enabled, people with the permission listed below will be having a fancy Unicode chat.
+  enabled: false
+  permission: 'bungeeutilisals.chat.fancy'
+
+# Keywords you want to be replaced with a certain Unicode character.
+# Use it like: 'Java code': 'keyword1, keyword2, keyword3, ...'
+# Unicode in java format is in the format like \u2764. This will result in a heart.
+symbols:
+  '\u2764': '<3, :heart:'
+  '\u2603': ':snowman:, :sman:'
+  '\u2605': ':star:'
+  '\u263c': ':sun:'
+  '\u26a0': ':warning:, :caution:'
+  '\u26ab': ':dot:'
+  '\u2696': ':balance:'
+  '\u2693': ':anchor:'
+  '\u270C': ':peace:'
+  '\u267a': ':recycle:'
+  '\u2622': ':radioactive:'
+  '\u262f': ':yinyan:'

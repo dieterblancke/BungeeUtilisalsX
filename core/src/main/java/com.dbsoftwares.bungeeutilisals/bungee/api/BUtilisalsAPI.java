@@ -1,14 +1,15 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.configuration.MainConfig;
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
-import com.dbsoftwares.bungeeutilisals.api.user.UserList;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
+import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
+import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -17,16 +18,15 @@ import java.util.Optional;
 public class BUtilisalsAPI implements BUAPI {
 
     private final BungeeUtilisals instance;
-    private MainConfig config;
-
     private UserList users;
+    private ChatManager chatManager;
+    private EventLoader eventLoader;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
         this.instance = instance;
-        this.config = new MainConfig();
-        this.config.loadDefaults();
-
         this.users = new UserList();
+        this.chatManager = new ChatManager(instance);
+        this.eventLoader = new EventLoader();
     }
 
     @Override
@@ -36,7 +36,7 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public String getPrefix() {
-        return Utils.c(config.prefix);
+        return null;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public IEventLoader getEventLoader() {
-        return null;
+        return eventLoader;
     }
 
     @Override
@@ -67,7 +67,7 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public UserCollection getUsers(String permission) {
         UserList list = new UserList();
-        users.stream().filter(user -> user.getPlayer().hasPermission(permission)).forEach(list::add);
+        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(list::add);
         return list;
     }
 
@@ -82,7 +82,7 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
-    public MainConfig getMainConfig() {
-        return config;
+    public IChatManager getChatManager() {
+        return chatManager;
     }
 }

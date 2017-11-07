@@ -159,7 +159,7 @@ public interface User {
     /**
      * @return The Player who's behind the User.
      */
-    ProxiedPlayer getPlayer();
+    ProxiedPlayer getParent();
 
     /**
      * @return The user his language config.

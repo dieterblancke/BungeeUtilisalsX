@@ -6,7 +6,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.user;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.event.events.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
@@ -31,10 +33,16 @@ public class BUser implements User {
     @Override
     public void load(UserPreLoadEvent event) {
         this.player = event.getPlayer().getName();
+
+        UserLoadEvent userLoadEvent = new UserLoadEvent(this);
+        BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
     }
 
     @Override
     public void unload() {
+        UserUnloadEvent event = new UserUnloadEvent(this);
+        BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
+
 
     }
 
@@ -100,7 +108,7 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(String message) {
-        TextComponent component = new TextComponent(Utils.c(BungeeUtilisals.getInstance().getConfig().prefix));
+        TextComponent component = new TextComponent(BungeeUtilisals.getApi().getPrefix());
 
         component.setExtra(Arrays.asList(Utils.format(message)));
 
@@ -114,17 +122,17 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(BaseComponent component) {
-        getPlayer().sendMessage(component);
+        getParent().sendMessage(component);
     }
 
     @Override
     public void sendMessage(BaseComponent[] components) {
-        getPlayer().sendMessage(components);
+        getParent().sendMessage(components);
     }
 
     @Override
     public void kick(String reason) {
-        getPlayer().disconnect(buildComponent(reason));
+        getParent().disconnect(buildComponent(reason));
     }
 
     @Override
@@ -158,7 +166,7 @@ public class BUser implements User {
     }
 
     @Override
-    public ProxiedPlayer getPlayer() {
+    public ProxiedPlayer getParent() {
         return ProxyServer.getInstance().getPlayer(player);
     }
 

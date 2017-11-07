@@ -1,5 +1,7 @@
-package com.dbsoftwares.bungeeutilisals.api.user;
+package com.dbsoftwares.bungeeutilisals.bungee.user;
 
+import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Collection;

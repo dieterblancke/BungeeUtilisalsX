@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.utils;
+package com.dbsoftwares.bungeeutilisals.api.utils.time;
 
 /*
  * Added TICKS to the TimeUnit class of Oracle.

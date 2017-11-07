@@ -1,0 +1,52 @@
+package com.dbsoftwares.bungeeutilisals.api.manager;
+
+import com.dbsoftwares.bungeeutilisals.api.user.User;
+
+public interface IChatManager {
+
+    /**
+     * Checks the given message for advertisements.
+     * @param user The user who sent the message. If Admin (+), he will be skipped.
+     * @param message The message you want to check for Advertisements.
+     * @return True if advertisement was found, false if not.
+     */
+    Boolean checkForAdvertisement(User user, String message);
+
+    /**
+     * Checks the given message for caps.
+     * @param user The user who sent the message. If Admin (+), he will be skipped.
+     * @param message The message you want to check for caps.
+     * @return True if too much caps was detected, false if not.
+     */
+    Boolean checkForCaps(User user, String message);
+
+    /**
+     * Checks the given message for spam.
+     * @param user The user who sent the message. If Phantom (+), he will be skipped.
+     * @param message The message you want to check for spam.
+     * @return True if the delay was too short, false if not.
+     */
+    Boolean checkForSpam(User user, String message);
+
+    /**
+     * Checks the given message for swear words.
+     * @param user The user who sent the message. If Owner (+), he will be skipped.
+     * @param message The message you want to check for swear words.
+     * @return True if swear words were detected, false if not.
+     */
+    Boolean checkForSwear(User user, String message);
+
+    /**
+     * Replaces combinations with their corresponding characters.
+     * @param message The message that you want to replace in.
+     * @return The message with replacements.
+     */
+    String replaceSymbols(String message);
+
+    /**
+     * Replaces A-Z characters in a message with a fancier Unicode font.
+     * @param message The message in which you want to replace.
+     * @return The message with replacements.
+     */
+    String fancyFont(String message);
+}

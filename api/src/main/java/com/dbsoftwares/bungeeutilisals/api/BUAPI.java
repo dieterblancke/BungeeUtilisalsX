@@ -6,9 +6,9 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.MainConfig;
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
@@ -72,7 +72,7 @@ public interface BUAPI {
     DatabaseUser getUserData();
 
     /**
-     * @return The default BungeeUtilisals configuration.
+     * @return The BungeeUtilisals chat utility class.
      */
-    MainConfig getMainConfig();
+    IChatManager getChatManager();
 }
