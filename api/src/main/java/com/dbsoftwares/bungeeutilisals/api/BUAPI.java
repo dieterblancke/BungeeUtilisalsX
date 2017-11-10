@@ -24,11 +24,6 @@ public interface BUAPI {
     Plugin getPlugin();
 
     /**
-     * @return Returns the Prefix that BungeeUtilisals will be using.
-     */
-    String getPrefix();
-
-    /**
      * @return The language manager of BungeeUtilisals.
      */
     ILanguageManager getLanguageManager();

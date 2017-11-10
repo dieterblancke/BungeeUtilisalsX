@@ -49,7 +49,8 @@ public abstract class BUCommand extends Command implements TabExecutor {
         Configuration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
         if (permission != null && !sender.hasPermission(permission)) {
-            sender.sendMessage(Utils.format(api.getPrefix(), configuration.getString("no-permission").replace("%permission%", permission)));
+            // TODO: get sender language & language prefix.
+            sender.sendMessage(Utils.format(configuration.getString("no-permission").replace("%permission%", permission)));
             return;
         }
 

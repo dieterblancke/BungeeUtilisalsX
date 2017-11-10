@@ -1,5 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api.language;
 
+import com.dbsoftwares.bungeeutilisals.api.json.IJsonConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.json.JsonConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
@@ -30,9 +32,9 @@ public class LanguageManager implements ILanguageManager {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        File english = new File(folder, "english.yml");
+        File english = new File(folder, "english.json");
         if (!english.exists()) {
-            loadResource(plugin, "languages/english.yml", english);
+            loadResource(plugin, "languages/english.json", english);
         }
 
         addPlugin(plugin, new File(plugin.getDataFolder(), "languages"));
@@ -66,15 +68,16 @@ public class LanguageManager implements ILanguageManager {
         File folder = plugins.get(plugin);
 
         for(Language language : languages) {
-            File lang = loadResource(plugin, "languages/" + language.getName() + ".yml", new File(folder, language.getName() + ".yml"));
+            File lang = loadResource(plugin, "languages/" + language.getName() + ".json", new File(folder, language.getName() + ".json"));
             if(!lang.exists()) {
                 continue;
             }
             try {
                 Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(lang,
                         ConfigurationProvider.getProvider(YamlConfiguration.class).load(
-                                plugin.getResourceAsStream("languages/" + language.getName() + ".yml")));
+                                plugin.getResourceAsStream("languages/" + language.getName() + ".json")));
 
+                JsonConfiguration jconfig = IJsonConfiguration.loadConfiguration(lang);
                 configurations.put(lang, config);
                 saveLanguage(plugin, language);
             } catch (IOException e) {
@@ -110,7 +113,7 @@ public class LanguageManager implements ILanguageManager {
         if (!plugins.containsKey(plugin)) {
             throw new RuntimeException("The plugin " + plugin.getDescription().getName() + " is not registered!");
         }
-        return new File(plugins.get(plugin), language.getName() + ".yml");
+        return new File(plugins.get(plugin), language.getName() + ".json");
     }
 
     @Override
@@ -184,12 +187,12 @@ public class LanguageManager implements ILanguageManager {
                 try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
                         BungeeUtilisals.getLog().info("Didn't found default configuration for language " + source.replace("languages/", "")
-                                .replace(".yml", "") + " for plugin " + plugin.getDescription().getName());
+                                .replace(".json", "") + " for plugin " + plugin.getDescription().getName());
                         return null;
                     }
                     ByteStreams.copy(in, out);
                     BungeeUtilisals.getLog().info("Loading default configuration for language " + source.replace("languages/", "")
-                            .replace(".yml", "") + " for plugin " + plugin.getDescription().getName());
+                            .replace(".json", "") + " for plugin " + plugin.getDescription().getName());
 
                     in.close();
                     out.close();

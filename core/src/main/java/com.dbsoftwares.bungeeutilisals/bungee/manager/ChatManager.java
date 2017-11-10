@@ -7,11 +7,8 @@ import com.dbsoftwares.bungeeutilisals.api.settings.SettingType;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
-import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.SwearSettings;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.UTFSettings;
-import com.google.common.collect.Lists;
-import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -19,21 +16,6 @@ public class ChatManager implements IChatManager {
 
     static Pattern ippattern = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
     static Pattern webpattern = Pattern.compile("^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$");
-    List<Pattern> swearPatterns = Lists.newArrayList();
-
-    public ChatManager(BungeeUtilisals plugin) {
-        SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class).getSwearWords().forEach(word -> {
-            StringBuilder builder = new StringBuilder("\\b(");
-
-            for (char o : word.toCharArray()) {
-                builder.append(o);
-                builder.append("+(\\W|\\d\\_)*");
-            }
-            builder.append(")\\b");
-
-            swearPatterns.add(Pattern.compile(builder.toString()));
-        });
-    }
 
     @Override
     public Boolean checkForAdvertisement(User user, String message) {
@@ -91,13 +73,27 @@ public class ChatManager implements IChatManager {
             return false;
         }
 
-        for (Pattern pattern : swearPatterns) {
+        for (Pattern pattern : SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class).getPatterns()) {
             if (pattern.matcher(message).find()) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    @Override
+    public String replaceSwearWords(User user, String message, String replacement) {
+        if (user.getParent().hasPermission(Permissions.SWEAR_BYPASS)) {
+            return message;
+        }
+
+        for (Pattern pattern : SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class).getPatterns()) {
+            if (pattern.matcher(message).find()) {
+                message = pattern.matcher(message).replaceAll(replacement);
+            }
+        }
+        return message;
     }
 
     @Override

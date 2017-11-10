@@ -5,6 +5,7 @@ import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.settings.SettingManager;
 import com.dbsoftwares.bungeeutilisals.api.settings.SettingType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.SwearSettings;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.UTFSettings;
 
 public class UserChatExecutor {
@@ -30,9 +31,18 @@ public class UserChatExecutor {
 
     public void onSwearChat(UserChatEvent event) {
         String message = event.getMessage();
+        SwearSettings settings = SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class);
 
         if (manager.checkForSwear(event.getUser(), message)) {
+            if (settings.getCancel()) {
+                // TODO: send swear message.
 
+                event.setCancelled(true);
+            } else {
+                // TODO: send swear message.
+
+                event.setMessage(manager.replaceSwearWords(event.getUser(), message, settings.getReplacement()));
+            }
         }
     }
 }

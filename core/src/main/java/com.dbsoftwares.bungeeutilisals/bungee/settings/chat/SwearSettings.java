@@ -10,12 +10,15 @@ import net.md_5.bungee.config.Configuration;
 
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 @Getter
 public class SwearSettings extends SettingStorage {
 
-    Boolean enabled;
-    List<String> swearWords;
+    Boolean enabled, cancel;
+    String replacement;
+    List<String> words;
+    List<Pattern> patterns;
 
     public SwearSettings() {
         super(BungeeUtilisals.getInstance(), SettingType.ANTISWEAR);
@@ -30,9 +33,24 @@ public class SwearSettings extends SettingStorage {
 
     @Override
     public void load() {
+        patterns = Lists.newArrayList();
         Configuration section = getConfig().getSection("symbols");
 
         enabled = getConfig().getBoolean("enabled");
-        swearWords = getConfig().getStringList("words");
+        cancel = getConfig().getBoolean("cancel");
+        replacement = getConfig().getString("replace");
+        words = getConfig().getStringList("words");
+
+        for (String word : words) {
+            StringBuilder builder = new StringBuilder("\\b(");
+
+            for (char o : word.toCharArray()) {
+                builder.append(o);
+                builder.append("+(\\W|\\d\\_)*");
+            }
+            builder.append(")\\b");
+
+            patterns.add(Pattern.compile(builder.toString()));
+        }
     }
 }

@@ -64,6 +64,7 @@ public final class BUCore {
     }
 
     public static void sendMessage(CommandSender sender, String message) {
-        sender.sendMessage(Utils.format(getApi().getPrefix() + message));
+        // TODO: get sender language & language prefix
+        sender.sendMessage(Utils.format(message));
     }
 }

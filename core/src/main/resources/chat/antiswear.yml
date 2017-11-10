@@ -1,4 +1,9 @@
 enabled: true
+# If set to true, BungeeUtilisals will cancel the chat message sent, if false, BungeeUtilisals will replace the word.
+cancel: true
+# What do you want to words to be replaced with? This is ignored is cancel is true.
+replace: '*****'
+# The words you want to be blocked by antiswear.
 words:
 - word1
 - word2

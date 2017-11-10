@@ -7,7 +7,6 @@ package com.dbsoftwares.bungeeutilisals.installer;
  */
 
 import com.dbsoftwares.bungeeutilisals.installer.enums.InstallType;
-
 import java.io.*;
 import java.net.URISyntaxException;
 import java.nio.file.Files;

@@ -7,8 +7,10 @@ import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
+import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
+import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -21,12 +23,16 @@ public class BUtilisalsAPI implements BUAPI {
     private UserList users;
     private ChatManager chatManager;
     private EventLoader eventLoader;
+    private LanguageManager languageManager;
+    private UserData userdata;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
         this.instance = instance;
         this.users = new UserList();
-        this.chatManager = new ChatManager(instance);
+        this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
+        this.languageManager = new LanguageManager(instance);
+        this.userdata = new UserData();
     }
 
     @Override
@@ -35,13 +41,8 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
-    public String getPrefix() {
-        return null;
-    }
-
-    @Override
     public ILanguageManager getLanguageManager() {
-        return null;
+        return languageManager;
     }
 
     @Override
@@ -78,7 +79,7 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public DatabaseUser getUserData() {
-        return null;
+        return userdata;
     }
 
     @Override

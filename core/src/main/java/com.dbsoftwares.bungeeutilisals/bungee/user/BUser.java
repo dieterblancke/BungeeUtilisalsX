@@ -108,7 +108,7 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(String message) {
-        TextComponent component = new TextComponent(BungeeUtilisals.getApi().getPrefix());
+        TextComponent component = new TextComponent(/*BungeeUtilisals.getApi().getPrefix() TODO: get language & language prefix */);
 
         component.setExtra(Arrays.asList(Utils.format(message)));
 
