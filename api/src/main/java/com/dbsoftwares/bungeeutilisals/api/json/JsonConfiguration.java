@@ -1,9 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.api.json;
 
-import com.google.common.collect.Sets;
+import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.gson.*;
 import lombok.Cleanup;
 import java.io.*;
+import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
@@ -13,7 +16,7 @@ public class JsonConfiguration implements IJsonConfiguration {
     private File file;
     private Object obj;
     private JsonObject object;
-    private InputStream stream;
+    Map<String, Object> values = Maps.newHashMap();
 
     public JsonConfiguration(File file) throws IOException {
         this.file = file;
@@ -29,6 +32,10 @@ public class JsonConfiguration implements IJsonConfiguration {
         this.object = gson.fromJson(reader, JsonObject.class);
         this.obj = gson.fromJson(object, Object.class);
 
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            loadValues(entry.getKey(), entry.getValue());
+        }
+
         stream.close();
         reader.close();
     }
@@ -36,15 +43,67 @@ public class JsonConfiguration implements IJsonConfiguration {
     public JsonConfiguration(InputStream input) throws IOException {
         InputStreamReader reader = new InputStreamReader(input);
         Gson gson = new Gson();
-        this.stream = input;
         this.object = gson.fromJson(reader, JsonObject.class);
         this.obj = gson.fromJson(object, Object.class);
+        loadValues(null, object);
+
+        input.close();
         reader.close();
     }
 
     public JsonConfiguration(File file, JsonObject object) {
         this.file = file;
         this.object = object;
+    }
+
+    private void loadValues(String prefix, JsonElement element) {
+        if (element.isJsonPrimitive()) {
+            JsonPrimitive primitive = element.getAsJsonPrimitive();
+            Object value = getValue(primitive);
+
+            if (value instanceof BigDecimal) {
+                values.put(prefix, primitive.getAsBigDecimal());
+            } else if (value instanceof BigInteger) {
+                values.put(prefix, primitive.getAsBigInteger());
+            } else if (primitive.isBoolean()) {
+                values.put(prefix, primitive.getAsBoolean());
+            } else if (primitive.isNumber()) {
+                values.put(prefix, primitive.getAsNumber());
+            } else if (primitive.isString()) {
+                values.put(prefix, primitive.getAsString());
+            }
+        } else if (element.isJsonArray()) {
+            JsonArray array = element.getAsJsonArray();
+            List<Object> list = Lists.newArrayList();
+
+            for (JsonElement e : array) {
+                if (!e.isJsonPrimitive()) {
+                    continue;
+                }
+                JsonPrimitive primitive = e.getAsJsonPrimitive();
+                Object value = getValue(primitive);
+                if (value instanceof BigDecimal) {
+                    list.add(primitive.getAsBigDecimal());
+                } else if (value instanceof BigInteger) {
+                    list.add(primitive.getAsBigInteger());
+                } else if (primitive.isBoolean()) {
+                    list.add(primitive.getAsBoolean());
+                } else if (primitive.isNumber()) {
+                    list.add(primitive.getAsNumber());
+                } else if (primitive.isString()) {
+                    list.add(primitive.getAsString());
+                }
+            }
+
+            values.put(prefix, list);
+        } else if (element.isJsonObject()) {
+            JsonObject obj = element.getAsJsonObject();
+            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
+                System.out.println("Trying to load " + entry.getValue() + " at " + prefix);
+
+                loadValues((prefix != null ? prefix + "." : "") + entry.getKey(), entry.getValue());
+            }
+        }
     }
 
     @Override
@@ -55,11 +114,8 @@ public class JsonConfiguration implements IJsonConfiguration {
         if (!file.exists()) {
             file.createNewFile();
         }
-        for (String key : config.getKeys(true)) {
-            Object object = config.get(key);
-
-            System.out.println("Setting key " + key + " to " + object);
-            set(key, object);
+        for (String key : config.getKeys()) {
+            set(key, config.get(key));
         }
         save();
     }
@@ -79,60 +135,18 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public void set(String path, Object value) {
+        values.put(path, value);
         checkOrAdd(object, path, value);
     }
 
     @Override
     public Object get(String path) {
-        JsonObject object = this.object;
-        Iterator<String> it = Arrays.asList(path.split(".")).iterator();
-
-        while (it.hasNext()) {
-            String part = it.next();
-
-            if (it.hasNext()) {
-                if (!object.has(part)) {
-                    object.add(part, new JsonObject());
-                }
-                object = object.getAsJsonObject(part);
-            } else {
-                JsonElement element = object.get(part);
-
-                if (element.isJsonObject()) {
-                    return element.getAsJsonObject();
-                } else if (element.isJsonArray()) {
-                    return element.getAsJsonArray();
-                } else if (element.isJsonPrimitive()) {
-                    JsonPrimitive primitive = element.getAsJsonPrimitive();
-
-                    if (primitive.isBoolean()) {
-                        return primitive.getAsBoolean();
-                    } else if (primitive.isNumber()) {
-                        return primitive.getAsNumber();
-                    } else if (primitive.isString()) {
-                        return primitive.getAsString();
-                    }
-                } else {
-                    return element.getAsJsonNull();
-                }
-            }
-        }
-        return null;
+        return values.getOrDefault(path, null);
     }
 
     @Override
     public String getString(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsString();
-            }
-        }
-        return null;
+        return (String) values.getOrDefault(path, null);
     }
 
     @Override
@@ -146,43 +160,9 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     @Override
-    public Character getCharacter(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsCharacter();
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public Character getCharacter(String path, Character def) {
-        Character result = getCharacter(path);
-
-        if (result == null) {
-            checkOrAdd(object, path, def);
-        }
-        return result == null ? def : result;
-    }
-
-    @Override
     public Integer getInteger(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsInt();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.intValue();
     }
 
     @Override
@@ -197,17 +177,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Number getNumber(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsNumber();
-            }
-        }
-        return null;
+        return (Number) values.getOrDefault(path, null);
     }
 
     @Override
@@ -223,17 +193,8 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Double getDouble(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsDouble();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.doubleValue();
     }
 
     @Override
@@ -248,17 +209,8 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Long getLong(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsLong();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.longValue();
     }
 
     @Override
@@ -273,17 +225,8 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Float getFloat(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsFloat();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.floatValue();
     }
 
     @Override
@@ -298,17 +241,8 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Byte getByte(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsByte();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.byteValue();
     }
 
     @Override
@@ -323,17 +257,8 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Short getShort(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsShort();
-            }
-        }
-        return null;
+        Number number = getNumber(path);
+        return number == null ? null : number.shortValue();
     }
 
     @Override
@@ -348,17 +273,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public BigInteger getBigInteger(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsBigInteger();
-            }
-        }
-        return null;
+        return (BigInteger) values.getOrDefault(path, null);
     }
 
     @Override
@@ -373,17 +288,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public BigDecimal getBigDecimal(String path) {
-        for (String part : path.split(".")) {
-            if (!object.has(part)) {
-                continue;
-            }
-            if (object.get(part).isJsonObject()) {
-                object = object.getAsJsonObject(part);
-            } else if (object.get(part).isJsonPrimitive()) {
-                return object.get(part).getAsBigDecimal();
-            }
-        }
-        return null;
+        return (BigDecimal) values.getOrDefault(path, null);
     }
 
     @Override
@@ -417,7 +322,7 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     private void checkOrAdd(JsonObject object, String path, Object def) {
-        Iterator<String> it = Arrays.asList(path.split(".")).iterator();
+        Iterator<String> it = Arrays.asList(path.split("\\.")).iterator();
 
         while (it.hasNext()) {
             String part = it.next();
@@ -428,6 +333,9 @@ public class JsonConfiguration implements IJsonConfiguration {
                 }
                 object = object.getAsJsonObject(part);
             } else {
+                if (object.has(part)) {
+                    continue;
+                }
                 if (def instanceof Character) {
                     object.addProperty(part, (Character) def);
                 } else if (def instanceof Number) {
@@ -463,52 +371,22 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     @Override
-    public Set<String> getKeys(Boolean deep) {
-        if (deep) {
-            return collectAllKeys(obj, "");
-        } else {
-            Set<String> set = Sets.newHashSet();
-            object.entrySet().forEach(entry -> {
-                if (entry.getValue().isJsonObject()) {
-                    set.add(entry.getKey());
-                }
-            });
-            return set;
-        }
+    public Set<String> getKeys() {
+        return values.keySet();
     }
 
-    @SuppressWarnings("unchecked")
-    private Set<String> collectAllKeys(Object object, String path) {
-        Set<String> keys = Sets.newHashSet();
-
-        if (object instanceof Map) {
-            Map map = (Map) object;
-
-            for (Object key : map.keySet()) {
-                keys.add(path.isEmpty() ? (String) key : path + "." + key);
-            }
-
-            for (Object ent : map.entrySet()) {
-                Map.Entry entry = (Map.Entry) ent;
-
-                keys.addAll(collectAllKeys(entry.getValue(), path.isEmpty() ? (String) entry.getKey() : path + "." + entry.getKey()));
-            }
-        } else if (object instanceof Collection) {
-            for (Object o : (Collection) object) {
-                keys.addAll(collectAllKeys(o, path));
-            }
-        } else {
-            return keys;
+    private Object getValue(JsonPrimitive primitive) {
+        Field field = ReflectionUtils.getField(primitive.getClass(), "value");
+        field.setAccessible(true);
+        try {
+            return field.get(primitive);
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
         }
-
-        return keys;
     }
 
     private JsonObject getObject() {
         return object;
-    }
-
-    private InputStream getStream() {
-        return stream;
     }
 }

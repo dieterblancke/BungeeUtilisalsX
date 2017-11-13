@@ -27,10 +27,6 @@ public interface IJsonConfiguration {
 
     String getString(String path, String def);
 
-    Character getCharacter(String path);
-
-    Character getCharacter(String path, Character def);
-
     Integer getInteger(String path);
 
     Integer getInteger(String path, Integer def);
@@ -74,5 +70,5 @@ public interface IJsonConfiguration {
 
     JsonConfiguration getSection(String section);
 
-    Set<String> getKeys(Boolean deep);
+    Set<String> getKeys();
 }

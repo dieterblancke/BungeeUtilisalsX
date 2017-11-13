@@ -26,6 +26,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
@@ -55,7 +56,6 @@ public class BungeeUtilisals extends Plugin {
             JsonConfiguration configuration = IJsonConfiguration.loadConfiguration(new File(getDataFolder(), "test.json"));
 
             configuration.copyDefaults(def);
-            configuration.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
