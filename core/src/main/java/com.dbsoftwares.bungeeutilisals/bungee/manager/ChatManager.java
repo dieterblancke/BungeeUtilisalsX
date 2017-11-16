@@ -9,6 +9,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.SwearSettings;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.UTFSettings;
+
 import java.util.Map;
 import java.util.regex.Pattern;
 

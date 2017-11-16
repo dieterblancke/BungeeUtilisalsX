@@ -1,4 +1,5 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
+
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
@@ -11,6 +12,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 import net.md_5.bungee.config.Configuration;
+
 import java.util.List;
 import java.util.Optional;
 

@@ -14,6 +14,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+
 import java.util.Optional;
 
 public interface BUAPI {

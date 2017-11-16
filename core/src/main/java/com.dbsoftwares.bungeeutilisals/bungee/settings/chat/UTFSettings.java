@@ -6,6 +6,7 @@ import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
+
 import java.util.Map;
 
 @Getter

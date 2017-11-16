@@ -6,6 +6,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.*;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;

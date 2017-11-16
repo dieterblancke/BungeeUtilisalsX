@@ -7,14 +7,15 @@ import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
+import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
-import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
+
 import java.util.Optional;
 
 public class BUtilisalsAPI implements BUAPI {

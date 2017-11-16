@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
+
 import java.util.Optional;
 
 public final class BUCore {

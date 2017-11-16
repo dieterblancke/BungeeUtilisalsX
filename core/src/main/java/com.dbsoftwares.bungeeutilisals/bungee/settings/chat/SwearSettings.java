@@ -4,12 +4,10 @@ import com.dbsoftwares.bungeeutilisals.api.settings.SettingStorage;
 import com.dbsoftwares.bungeeutilisals.api.settings.SettingType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.config.Configuration;
 
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 @Getter

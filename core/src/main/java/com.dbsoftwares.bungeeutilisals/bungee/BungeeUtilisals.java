@@ -9,8 +9,6 @@ package com.dbsoftwares.bungeeutilisals.bungee;
 import com.dbsoftwares.bungeeutilisals.api.event.events.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.json.IJsonConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.json.JsonConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.settings.SettingManager;
 import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
@@ -26,11 +24,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.YamlConfiguration;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.logging.Logger;
 
 public class BungeeUtilisals extends Plugin {
@@ -50,15 +44,17 @@ public class BungeeUtilisals extends Plugin {
             getDataFolder().mkdirs();
         }
 
-        try {
-            InputStream input = getResourceAsStream("test.json");
-            JsonConfiguration def = IJsonConfiguration.loadConfiguration(input);
+        /*try {
             JsonConfiguration configuration = IJsonConfiguration.loadConfiguration(new File(getDataFolder(), "test.json"));
 
-            configuration.copyDefaults(def);
+            configuration.set("test-array", Lists.newArrayList("item1", "item2", "item3", "item4", "item5", "item6", "..."));
+            configuration.save();
+            configuration.reload();
+
+            System.out.println(Joiner.on(" <> ").join(configuration.getStringList("test-array")));
         } catch (IOException e) {
             e.printStackTrace();
-        }
+        }*/
 
         // Loading setting files ...
         MySQLSettings mysql = new MySQLSettings();

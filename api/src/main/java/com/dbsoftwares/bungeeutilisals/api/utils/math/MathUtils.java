@@ -1,5 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.math;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Random;
@@ -100,6 +102,51 @@ public class MathUtils {
             Double.parseDouble(object.toString());
             return true;
         } catch (Exception exc) {
+            return false;
+        }
+    }
+
+    public static boolean isLong(Object object) {
+        try {
+            Long.parseLong(object.toString());
+            return true;
+        } catch (Exception exc) {
+            return false;
+        }
+    }
+
+    public static boolean isByte(Object object) {
+        try {
+            Byte.parseByte(object.toString());
+            return true;
+        } catch (Exception exc) {
+            return false;
+        }
+    }
+
+    public static boolean isFloat(Object object) {
+        try {
+            Float.parseFloat(object.toString());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isBigInteger(Object object) {
+        try {
+            new BigInteger(object.toString());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public static boolean isBigDecimal(Object object) {
+        try {
+            new BigDecimal(object.toString());
+            return true;
+        } catch (Exception e) {
             return false;
         }
     }

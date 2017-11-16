@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -184,5 +185,14 @@ public class Utils {
             c.add(Calendar.SECOND, seconds);
         }
         return c.getTimeInMillis();
+    }
+
+    public static boolean isBoolean(Object object) {
+        try {
+            Boolean.parseBoolean(object.toString());
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

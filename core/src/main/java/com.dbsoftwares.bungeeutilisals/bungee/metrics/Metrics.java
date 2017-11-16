@@ -7,8 +7,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.metrics;
  * May only be used for CentrixPVP
  */
 
-import java.util.Locale;
-
 import com.google.common.collect.Maps;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
@@ -18,6 +16,7 @@ import net.md_5.bungee.api.scheduler.TaskScheduler;
 import net.md_5.bungee.config.Configuration;
 import net.md_5.bungee.config.ConfigurationProvider;
 import net.md_5.bungee.config.YamlConfiguration;
+
 import javax.net.ssl.HttpsURLConnection;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;

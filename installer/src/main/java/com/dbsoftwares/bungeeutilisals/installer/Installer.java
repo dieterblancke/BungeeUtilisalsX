@@ -7,7 +7,11 @@ package com.dbsoftwares.bungeeutilisals.installer;
  */
 
 import com.dbsoftwares.bungeeutilisals.installer.enums.InstallType;
-import java.io.*;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;

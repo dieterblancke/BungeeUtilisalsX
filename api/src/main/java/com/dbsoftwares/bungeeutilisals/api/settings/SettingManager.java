@@ -1,6 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.settings;
 
 import com.google.common.collect.Maps;
+
 import java.util.Map;
 
 public class SettingManager {

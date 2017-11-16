@@ -1,6 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Optional;
