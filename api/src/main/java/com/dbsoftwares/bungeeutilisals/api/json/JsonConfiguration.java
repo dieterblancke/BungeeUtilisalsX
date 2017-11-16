@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.json;
 
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.google.gson.*;
 import lombok.Cleanup;
@@ -58,7 +59,10 @@ public class JsonConfiguration implements IJsonConfiguration {
         for (String key : config.getKeys(true)) {
             Object object = config.get(key);
 
-            System.out.println("Setting key " + key + " to " + object);
+            // System.out.println("Setting key " + key + " to " + object);
+            if (object == null) {
+                continue;
+            }
             set(key, object);
         }
         save();
@@ -85,18 +89,22 @@ public class JsonConfiguration implements IJsonConfiguration {
     @Override
     public Object get(String path) {
         JsonObject object = this.object;
-        Iterator<String> it = Arrays.asList(path.split(".")).iterator();
+        Iterator<String> it = Lists.newArrayList(path.split("\\.")).iterator();
+        String lastpart = null;
 
         while (it.hasNext()) {
             String part = it.next();
 
             if (it.hasNext()) {
                 if (!object.has(part)) {
-                    object.add(part, new JsonObject());
+                    System.out.println("Did not find " + part + " in " + lastpart);
+                    continue;
                 }
                 object = object.getAsJsonObject(part);
+                System.out.println("Getting " + part + " child of " + (lastpart == null ? "super part" : lastpart));
             } else {
                 JsonElement element = object.get(part);
+                System.out.println("Getting element in " + lastpart + ": " + element);
 
                 if (element.isJsonObject()) {
                     return element.getAsJsonObject();
@@ -116,13 +124,14 @@ public class JsonConfiguration implements IJsonConfiguration {
                     return element.getAsJsonNull();
                 }
             }
+            lastpart = part;
         }
         return null;
     }
 
     @Override
     public String getString(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -147,7 +156,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Character getCharacter(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -172,7 +181,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Integer getInteger(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -197,7 +206,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Number getNumber(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -223,7 +232,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Double getDouble(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -248,7 +257,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Long getLong(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -273,7 +282,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Float getFloat(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -298,7 +307,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Byte getByte(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -323,7 +332,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public Short getShort(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -348,7 +357,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public BigInteger getBigInteger(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -373,7 +382,7 @@ public class JsonConfiguration implements IJsonConfiguration {
 
     @Override
     public BigDecimal getBigDecimal(String path) {
-        for (String part : path.split(".")) {
+        for (String part : path.split("\\.")) {
             if (!object.has(part)) {
                 continue;
             }
@@ -417,7 +426,7 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     private void checkOrAdd(JsonObject object, String path, Object def) {
-        Iterator<String> it = Arrays.asList(path.split(".")).iterator();
+        Iterator<String> it = Lists.newArrayList(path.split("\\.")).iterator();
 
         while (it.hasNext()) {
             String part = it.next();
@@ -426,7 +435,9 @@ public class JsonConfiguration implements IJsonConfiguration {
                 if (!object.has(part)) {
                     object.add(part, new JsonObject());
                 }
-                object = object.getAsJsonObject(part);
+                if (object.get(part).isJsonObject()) {
+                    object = object.getAsJsonObject(part);
+                }
             } else {
                 if (def instanceof Character) {
                     object.addProperty(part, (Character) def);
