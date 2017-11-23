@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.bungee.listeners;
 
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.user.BUser;

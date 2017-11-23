@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
 import net.md_5.bungee.api.CommandSender;

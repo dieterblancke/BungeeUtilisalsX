@@ -1,13 +1,11 @@
-package com.dbsoftwares.bungeeutilisals.api.json;
-
-import com.google.gson.JsonObject;
+package com.dbsoftwares.bungeeutilisals.api.configuration;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.List;
 import java.util.Set;
 
-public interface JsonSection {
+public interface ISection {
 
     /**
      * Used to check if a path is present or not.
@@ -437,11 +435,11 @@ public interface JsonSection {
     List<BigDecimal> getBigDecimalList(String path, List<BigDecimal> def);
 
     /**
-     * Used to get a new JsonConfiguration representing the section you requested.
+     * Used to get a new IConfiguration representing the section you requested.
      * @param section The section you want to get.
-     * @return A new JsonConfiguration representing the requested Section.
+     * @return A new IConfiguration representing the requested Section.
      */
-    JsonSection getSection(String section);
+    ISection getSection(String section);
 
     /**
      * Creates an empty section.
@@ -450,14 +448,13 @@ public interface JsonSection {
     void createSection(String section);
 
     /**
-     * @return A set containing all keys of the JsonConfiguration.
+     * @return A set containing all keys of the IConfiguration.
      */
     Set<String> getKeys();
 
     /**
-     * Returns a JsonObject bound to the certain path from the parent.
-     * @param path The path you want to check.
-     * @return A JsonObject (used as section).
+     * @param path The path from which you want to retrieve the keys.
+     * @return A set containing all keys of the IConfiguration.
      */
-    JsonObject getJsonObject(String path);
+    Set<String> getKeys(String path);
 }

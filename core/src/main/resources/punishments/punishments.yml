@@ -1,0 +1,7 @@
+# Set to true if you want to ues the BungeeUtilisals punishment system.
+enabled: false
+tables:
+  # In this table, the general punishments will be stored. (IPBan, Ban, IPTempban, Tempban, IPMute, Mute, IPTempmute, Tempmute)
+  punishments: 'bu_punishments'
+  # In this table, the 'soft' punishments will be stored. (Warn, Kick)
+  soft-punishments: 'bu_soft_punishments'

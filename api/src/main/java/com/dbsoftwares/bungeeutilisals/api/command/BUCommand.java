@@ -2,6 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.ImmutableList;
@@ -11,7 +12,6 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
-import net.md_5.bungee.config.Configuration;
 
 import java.util.List;
 import java.util.Optional;
@@ -48,11 +48,10 @@ public abstract class BUCommand extends Command implements TabExecutor {
     @Override
     public void execute(CommandSender sender, String[] args) {
         BUAPI api = BUCore.getApi();
-        Configuration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
+        IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
         if (permission != null && !sender.hasPermission(permission)) {
-            // TODO: get sender language & language prefix.
-            sender.sendMessage(Utils.format(configuration.getString("no-permission").replace("%permission%", permission)));
+            sender.sendMessage(Utils.format(configuration.getString("prefix") + configuration.getString("no-permission").replace("%permission%", permission)));
             return;
         }
 

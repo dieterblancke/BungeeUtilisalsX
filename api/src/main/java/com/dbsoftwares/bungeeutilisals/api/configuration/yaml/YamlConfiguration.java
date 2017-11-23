@@ -1,111 +1,77 @@
-package com.dbsoftwares.bungeeutilisals.api.json;
+package com.dbsoftwares.bungeeutilisals.api.configuration.yaml;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.gson.*;
+import com.google.common.collect.Sets;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import lombok.Cleanup;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.Constructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
-import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.*;
 
-public class JsonConfiguration implements IJsonConfiguration {
+public class YamlConfiguration implements IConfiguration {
 
+    private final ThreadLocal<Yaml> yaml = new ThreadLocal<Yaml>() {
+        protected Yaml initialValue() {
+            Representer representer = new Representer() {
+                {
+                    this.representers.put(YamlConfiguration.class, data -> represent(values));
+                }
+            };
+            DumperOptions options = new DumperOptions();
+            options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+            options.setAllowUnicode(true);
+            return new Yaml(new Constructor(), representer, options);
+        }
+    };
     private File file;
-    private JsonObject object;
     LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
-    public JsonConfiguration(File file) throws IOException {
+    @SuppressWarnings("unchecked")
+    public YamlConfiguration(File file) throws IOException {
         this.file = file;
         if (!file.exists()) {
-            object = new JsonObject();
             return;
         }
         FileInputStream stream = new FileInputStream(file);
         InputStreamReader reader = new InputStreamReader(stream);
 
-        Gson gson = new Gson();
-        this.object = gson.fromJson(reader, JsonObject.class);
-
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            loadValues(entry.getKey(), entry.getValue());
+        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
+        if (values == null) {
+            values = new LinkedHashMap();
         }
 
         stream.close();
         reader.close();
     }
 
-    public JsonConfiguration(InputStream input) throws IOException {
+    @SuppressWarnings("unchecked")
+    public YamlConfiguration(InputStream input) throws IOException {
         InputStreamReader reader = new InputStreamReader(input);
         Gson gson = new Gson();
-        this.object = gson.fromJson(reader, JsonObject.class);
-        loadValues(null, object);
+
+        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
+        if (values == null) {
+            values = new LinkedHashMap();
+        }
 
         input.close();
         reader.close();
     }
 
-    public JsonConfiguration(File file, JsonObject object) {
-        this.file = file;
-        this.object = object;
-        loadValues(null, object);
-    }
-
-    private void loadValues(String prefix, JsonElement element) {
-        if (element.isJsonPrimitive()) {
-            JsonPrimitive primitive = element.getAsJsonPrimitive();
-            Object value = getValue(primitive);
-
-            if (value instanceof BigDecimal) {
-                values.put(prefix, primitive.getAsBigDecimal());
-            } else if (value instanceof BigInteger) {
-                values.put(prefix, primitive.getAsBigInteger());
-            } else if (primitive.isBoolean()) {
-                values.put(prefix, primitive.getAsBoolean());
-            } else if (primitive.isNumber()) {
-                values.put(prefix, primitive.getAsNumber());
-            } else if (primitive.isString()) {
-                values.put(prefix, primitive.getAsString());
-            }
-        } else if (element.isJsonArray()) {
-            JsonArray array = element.getAsJsonArray();
-            List<Object> list = Lists.newArrayList();
-
-            for (JsonElement e : array) {
-                if (!e.isJsonPrimitive()) {
-                    continue;
-                }
-                JsonPrimitive primitive = e.getAsJsonPrimitive();
-                Object value = getValue(primitive);
-                if (value instanceof BigDecimal) {
-                    list.add(primitive.getAsBigDecimal());
-                } else if (value instanceof BigInteger) {
-                    list.add(primitive.getAsBigInteger());
-                } else if (primitive.isBoolean()) {
-                    list.add(primitive.getAsBoolean());
-                } else if (primitive.isNumber()) {
-                    list.add(primitive.getAsNumber());
-                } else if (primitive.isString()) {
-                    list.add(primitive.getAsString());
-                }
-            }
-
-            values.put(prefix, list);
-        } else if (element.isJsonObject()) {
-            JsonObject obj = element.getAsJsonObject();
-            for (Map.Entry<String, JsonElement> entry : obj.entrySet()) {
-                loadValues((prefix != null ? prefix + "." : "") + entry.getKey(), entry.getValue());
-            }
-        }
-    }
-
     @Override
-    public void copyDefaults(JsonConfiguration config) throws IOException {
+    public void copyDefaults(IConfiguration config) throws IOException {
         if (file == null) {
             return;
         }
@@ -121,23 +87,6 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     @Override
-    public void loadDefault(JsonConfiguration config) throws IOException {
-        if (file == null) {
-            return;
-        }
-        if (!file.exists()) {
-            file.createNewFile();
-        }
-        this.object = config.getObject();
-        save();
-
-        values.clear();
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            loadValues(entry.getKey(), entry.getValue());
-        }
-    }
-
-    @Override
     public Boolean exists(String path) {
         return values.containsKey(path);
     }
@@ -146,7 +95,7 @@ public class JsonConfiguration implements IJsonConfiguration {
     public void set(String path, Object value) {
         values.put(path, value);
 
-        update(object, path, value, true);
+        update(path, value, true);
     }
 
     @Override
@@ -170,7 +119,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         String result = getString(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -191,7 +140,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Boolean result = getBoolean(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -212,7 +161,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Integer result = getInteger(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -233,7 +182,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Number result = getNumber(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -255,7 +204,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Double result = getDouble(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -276,7 +225,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Long result = getLong(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -297,7 +246,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Float result = getFloat(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -318,7 +267,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Byte result = getByte(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -339,7 +288,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         Short result = getShort(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -360,7 +309,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         BigInteger result = getBigInteger(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -381,7 +330,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         BigDecimal result = getBigDecimal(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
         return result == null ? def : result;
     }
@@ -402,7 +351,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List result = getList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -427,7 +376,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<String> result = getStringList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -456,7 +405,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Integer> result = getIntegerList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -485,7 +434,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Double> result = getDoubleList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -514,7 +463,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Boolean> result = getBooleanList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -543,7 +492,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Long> result = getLongList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -572,7 +521,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Byte> result = getByteList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -601,7 +550,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Short> result = getShortList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -630,7 +579,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Float> result = getFloatList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -669,7 +618,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<Number> result = getNumberList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -696,7 +645,7 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<BigInteger> result = getBigIntegerList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
@@ -723,23 +672,24 @@ public class JsonConfiguration implements IJsonConfiguration {
         List<BigDecimal> result = getBigDecimalList(path);
 
         if (result == null) {
-            update(object, path, def, false);
+            update(path, def, false);
         }
 
         return result == null ? def : result;
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public void reload() throws IOException {
+        if (file == null) {
+            return;
+        }
         @Cleanup FileInputStream stream = new FileInputStream(file);
         @Cleanup InputStreamReader reader = new InputStreamReader(stream);
 
         Gson gson = new Gson();
-        this.object = gson.fromJson(reader, JsonObject.class);
-
-        values.clear();
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            loadValues(entry.getKey(), entry.getValue());
+        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
+        if (values == null) {
+            values = new LinkedHashMap();
         }
     }
 
@@ -750,79 +700,30 @@ public class JsonConfiguration implements IJsonConfiguration {
         @Cleanup FileWriter fileWriter = new FileWriter(file);
         @Cleanup BufferedWriter writer = new BufferedWriter(fileWriter);
 
-        writer.write(gson.toJson(object));
-        writer.flush();
+        this.yaml.get().dump(values, writer);
     }
 
-    private void update(JsonObject object, String path, Object value, Boolean overwrite) {
+    private void update(String path, Object value, Boolean overwrite) {
         Iterator<String> it = Arrays.asList(path.split("\\.")).iterator();
 
-        while (it.hasNext()) {
-            String part = it.next();
-
-            if (it.hasNext()) {
-                if (!object.has(part)) {
-                    object.add(part, new JsonObject());
-                }
-                object = object.getAsJsonObject(part);
-            } else {
-                if (!overwrite && object.has(part)) {
-                    continue;
-                }
-                if (value instanceof Character) {
-                    object.addProperty(part, (Character) value);
-                } else if (value instanceof Number) {
-                    object.addProperty(part, (Number) value);
-                } else if (value instanceof String) {
-                    object.addProperty(part, (String) value);
-                } else if (value instanceof Boolean) {
-                    object.addProperty(part, (Boolean) value);
-                } else if (value instanceof List) {
-                    JsonArray array = new JsonArray();
-
-                    for (Object obj : (List) value) {
-                        if (obj instanceof Character) {
-                            array.add((Character) obj);
-                        } else if (obj instanceof Number) {
-                            array.add((Number) obj);
-                        } else if (obj instanceof String) {
-                            array.add((String) obj);
-                        } else if (obj instanceof Boolean) {
-                            array.add((Boolean) obj);
-                        } else {
-                            array.add(obj.toString());
-                        }
-                    }
-
-                    object.add(part, array);
-                } else {
-                    // Attempt String storage in case of other type.
-                    object.addProperty(part, value.toString());
-                }
-            }
+        if (!values.containsKey(path)) {
+            values.put(path, value);
+        } else if (values.containsKey(path) && overwrite) {
+            values.put(path, value);
         }
     }
 
     @Override
-    public JsonSection getSection(String section) {
-        JsonObject object = this.object;
-
+    public ISection getSection(String section) {
         if (section.isEmpty()) {
             return this;
         }
-
-        return new JsonConfigurationSection(section, this);
+        return new YamlSection(section, this);
     }
 
     @Override
     public void createSection(String section) {
-        JsonObject object = this.object;
-        for (String part : section.split("\\.")) {
-            if (!object.has(part)) {
-                object.add(part, new JsonObject());
-            }
-            object = object.getAsJsonObject(part);
-        }
+        values.put(section, Maps.newHashMap());
     }
 
     @Override
@@ -831,29 +732,14 @@ public class JsonConfiguration implements IJsonConfiguration {
     }
 
     @Override
-    public JsonObject getJsonObject(String path) {
-        JsonObject object = this.object;
-        for (String part : path.split("\\.")) {
-            if (!object.has(part) || !object.get(part).isJsonObject()) {
-                return null;
+    public Set<String> getKeys(String path) {
+        Set<String> keys = Sets.newHashSet();
+
+        for (String key : getKeys()) {
+            if (key.startsWith(path)) {
+                keys.add(key);
             }
-            object = object.getAsJsonObject(part);
         }
-        return object;
-    }
-
-    private Object getValue(JsonPrimitive primitive) {
-        Field field = ReflectionUtils.getField(primitive.getClass(), "value");
-        field.setAccessible(true);
-        try {
-            return field.get(primitive);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    private JsonObject getObject() {
-        return object;
+        return keys;
     }
 }

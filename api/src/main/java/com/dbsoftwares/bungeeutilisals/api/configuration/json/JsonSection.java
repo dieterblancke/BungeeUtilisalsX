@@ -1,8 +1,10 @@
-package com.dbsoftwares.bungeeutilisals.api.json;
+package com.dbsoftwares.bungeeutilisals.api.configuration.json;
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
 import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -16,14 +18,22 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class JsonConfigurationSection implements JsonSection {
+public class JsonSection implements ISection {
 
     String prefix;
-    JsonSection parent;
+    ISection parent;
     JsonObject object;
     LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
-    public JsonConfigurationSection(String prefix, JsonSection parent) {
+    public JsonSection(String prefix, JsonConfiguration parent) {
+        this.prefix = prefix;
+        this.parent = parent;
+        this.object = parent.getJsonObject(prefix);
+
+        loadValues(null, object);
+    }
+
+    public JsonSection(String prefix, JsonSection parent) {
         this.prefix = prefix;
         this.parent = parent;
         this.object = parent.getJsonObject(prefix);
@@ -385,7 +395,7 @@ public class JsonConfigurationSection implements JsonSection {
     }
 
     @Override
-    public JsonSection getSection(String section) {
+    public ISection getSection(String section) {
         return parent.getSection(getPath(section));
     }
 
@@ -400,6 +410,17 @@ public class JsonConfigurationSection implements JsonSection {
     }
 
     @Override
+    public Set<String> getKeys(String path) {
+        Set<String> keys = Sets.newHashSet();
+
+        for (String key : getKeys()) {
+            if (key.startsWith(path)) {
+                keys.add(key);
+            }
+        }
+        return keys;
+    }
+
     public JsonObject getJsonObject(String path) {
         JsonObject object = this.object;
         for (String part : path.split("\\.")) {

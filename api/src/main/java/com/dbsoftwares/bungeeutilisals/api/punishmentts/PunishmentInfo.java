@@ -22,6 +22,7 @@ public class PunishmentInfo {
     private String bantime = Utils.getCurrentTime();
     private String reason;
     private String server;
+    private PunishmentType type;
 
     public Boolean isExpired() {
         return time != null && time != -1 && time < System.currentTimeMillis();

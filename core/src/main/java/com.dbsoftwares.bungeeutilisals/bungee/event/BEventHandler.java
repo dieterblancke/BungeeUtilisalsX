@@ -14,10 +14,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
 
     private final EventLoader eventloader;
-    @Getter
-    private final Class<T> eventClass;
-    @Getter
-    private final EventExecutor<T> executor;
+    @Getter private final Class<T> eventClass;
+    @Getter private final EventExecutor<T> executor;
     private final AtomicBoolean active = new AtomicBoolean(true);
     private final AtomicInteger callCount = new AtomicInteger(0);
 

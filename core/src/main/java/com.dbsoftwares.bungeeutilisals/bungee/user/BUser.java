@@ -6,9 +6,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.user;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserPreLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.User;

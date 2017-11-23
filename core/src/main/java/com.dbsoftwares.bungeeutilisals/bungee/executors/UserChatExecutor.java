@@ -1,12 +1,10 @@
 package com.dbsoftwares.bungeeutilisals.bungee.executors;
 
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
-import com.dbsoftwares.bungeeutilisals.api.settings.SettingManager;
-import com.dbsoftwares.bungeeutilisals.api.settings.SettingType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.SwearSettings;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.UTFSettings;
+import com.dbsoftwares.bungeeutilisals.bungee.settings.Settings;
 
 public class UserChatExecutor {
 
@@ -16,32 +14,36 @@ public class UserChatExecutor {
         this.manager = manager;
     }
 
-    public void onUnicodeReplace(UserChatEvent event) {
+    public void onUnicodeReplace(UserChatPreExecuteEvent event) {
         String message = event.getMessage();
-        UTFSettings settings = SettingManager.getSettings(SettingType.UTFSYMBOLS, UTFSettings.class);
+        Settings settings = BungeeUtilisals.getInstance().getSettings();
 
-        message = manager.replaceSymbols(message);
-
-        if (settings.getFancychat() && event.getUser().getParent().hasPermission(settings.getFancyChatPerm())) {
-            message = BungeeUtilisals.getApi().getChatManager().fancyFont(message);
+        if (settings.FANCYCHAT_ENABLED.get() && event.getUser().getParent().hasPermission(settings.FANCYCHAT_PERMISSION.get())) {
+            event.setMessage(BungeeUtilisals.getApi().getChatManager().fancyFont(message));
         }
+    }
 
-        event.setMessage(message);
+    public void onUnicodeSymbol(UserChatEvent event) {
+        Settings settings = BungeeUtilisals.getInstance().getSettings();
+
+        if (settings.UTFSYMBOLS_ENABLED.get() && event.getUser().getParent().hasPermission(settings.UTFSYMBOLS_PERMISSION.get())) {
+            event.setMessage(event.getApi().getChatManager().replaceSymbols(event.getMessage()));
+        }
     }
 
     public void onSwearChat(UserChatEvent event) {
         String message = event.getMessage();
-        SwearSettings settings = SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class);
+        Settings settings = BungeeUtilisals.getInstance().getSettings();
 
         if (manager.checkForSwear(event.getUser(), message)) {
-            if (settings.getCancel()) {
+            if (settings.ANTISWEAR_CANCEL.get()) {
                 // TODO: send swear message.
 
                 event.setCancelled(true);
             } else {
                 // TODO: send swear message.
 
-                event.setMessage(manager.replaceSwearWords(event.getUser(), message, settings.getReplacement()));
+                event.setMessage(manager.replaceSwearWords(event.getUser(), message, settings.ANTISWEAR_REPLACEMENT.get()));
             }
         }
     }

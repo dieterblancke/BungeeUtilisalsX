@@ -11,6 +11,6 @@ public class BanManagementConverter extends Converter {
 
     @Override
     public void startConverter() {
-        // TODO: Hook into BanManagement API.
+        // TODO: Connect to the BanManager database.
     }
 }

@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.event.events;
+package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 /*
  * Created by DBSoftwares on 26 september 2017

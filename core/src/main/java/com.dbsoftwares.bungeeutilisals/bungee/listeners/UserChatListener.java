@@ -1,8 +1,9 @@
 package com.dbsoftwares.bungeeutilisals.bungee.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.UserCommandEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.CommandSender;
@@ -30,19 +31,27 @@ public class UserChatListener implements Listener {
 
             if (commandEvent.isCancelled()) {
                 event.setCancelled(true);
+                return;
             }
             event.setMessage(commandEvent.getCommand());
         } else {
             UserChatEvent chatEvent = new UserChatEvent(user, event.getMessage());
-            System.out.println("Eerste message: " + chatEvent.getMessage());
             api.getEventLoader().launchEvent(chatEvent);
 
             if (chatEvent.isCancelled()) {
                 event.setCancelled(true);
+                return;
             }
 
-            System.out.println("Tweede message: " + chatEvent.getMessage());
-            event.setMessage(chatEvent.getMessage());
+            UserChatPreExecuteEvent preExecuteEvent = new UserChatPreExecuteEvent(user, chatEvent.getMessage());
+            api.getEventLoader().launchEvent(preExecuteEvent);
+
+            if (preExecuteEvent.isCancelled()) {
+                event.setCancelled(true);
+                return;
+            }
+
+            event.setMessage(preExecuteEvent.getMessage());
         }
     }
 }

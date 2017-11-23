@@ -9,7 +9,7 @@ package com.dbsoftwares.bungeeutilisals.api.punishmentts;
 
 public enum PunishmentType {
 
-    BAN("Ban"), IPBAN("IPBan"), MUTE("Mute");
+    BAN("Ban"), IPBAN("IPBan"), MUTE("Mute"), IPMUTE("IPMute"), KICK("Kick"), WARN("Warn");
 
     String name;
 

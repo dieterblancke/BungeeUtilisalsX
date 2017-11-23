@@ -6,11 +6,12 @@ package com.dbsoftwares.bungeeutilisals.api.language;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
 
 import java.io.File;
 import java.util.Optional;
@@ -33,8 +34,9 @@ public interface ILanguageManager {
      * Registers a plugin into the ILanguageManager
      * @param plugin The plugin you want to register.
      * @param folder The folder in which the languages will be located.
+     * @param type The FileStorageType which will be used, Json or Yaml.
      */
-    void addPlugin(Plugin plugin, File folder);
+    void addPlugin(Plugin plugin, File folder, FileStorageType type);
 
     /**
      * Loads default language files of a plugin.
@@ -45,23 +47,23 @@ public interface ILanguageManager {
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param user The user of which you want to get the config.
-     * @return The Configuration bound to the User's language.
+     * @return The JsonConfiguration bound to the User's language.
      */
-    Configuration getLanguageConfiguration(Plugin plugin, User user);
+    IConfiguration getLanguageConfiguration(Plugin plugin, User user);
 
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param player The player of which you want to get the config.
-     * @return The Configuration bound to the Player's language.
+     * @return The JsonConfiguration bound to the Player's language.
      */
-    Configuration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player);
+    IConfiguration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player);
 
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param sender The CommandSender of which you want to get the config.
-     * @return The Configuration bound to the CommandSender's language, default language config if language isn't set.
+     * @return The JsonConfiguration bound to the CommandSender's language, default language config if language isn't set.
      */
-    Configuration getLanguageConfiguration(Plugin plugin, CommandSender sender);
+    IConfiguration getLanguageConfiguration(Plugin plugin, CommandSender sender);
 
     /**
      * @param plugin The plugin of which you want to get the File.
@@ -71,11 +73,11 @@ public interface ILanguageManager {
     File getFile(Plugin plugin, Language language);
 
     /**
-     * @param plugin The plugin of which you want to get the Configuration
-     * @param language The language of which you want to get the Configuration.
-     * @return The Configuration bound to the certain plugin and language.
+     * @param plugin The plugin of which you want to get the JsonConfiguration
+     * @param language The language of which you want to get the JsonConfiguration.
+     * @return The JsonConfiguration bound to the certain plugin and language.
      */
-    Configuration getConfig(Plugin plugin, Language language);
+    IConfiguration getConfig(Plugin plugin, Language language);
 
     /**
      * @param plugin The plugin you want to check.

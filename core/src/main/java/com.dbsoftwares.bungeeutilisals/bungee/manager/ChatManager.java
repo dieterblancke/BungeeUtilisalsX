@@ -2,13 +2,10 @@ package com.dbsoftwares.bungeeutilisals.bungee.manager;
 
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.permissions.Permissions;
-import com.dbsoftwares.bungeeutilisals.api.settings.SettingManager;
-import com.dbsoftwares.bungeeutilisals.api.settings.SettingType;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.SwearSettings;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.chat.UTFSettings;
+import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -74,7 +71,7 @@ public class ChatManager implements IChatManager {
             return false;
         }
 
-        for (Pattern pattern : SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class).getPatterns()) {
+        for (Pattern pattern : BungeeUtilisals.getInstance().getSettings().ANTISWEAR_PATTERNS) {
             if (pattern.matcher(message).find()) {
                 return true;
             }
@@ -89,7 +86,7 @@ public class ChatManager implements IChatManager {
             return message;
         }
 
-        for (Pattern pattern : SettingManager.getSettings(SettingType.ANTISWEAR, SwearSettings.class).getPatterns()) {
+        for (Pattern pattern : BungeeUtilisals.getInstance().getSettings().ANTISWEAR_PATTERNS) {
             if (pattern.matcher(message).find()) {
                 message = pattern.matcher(message).replaceAll(replacement);
             }
@@ -99,7 +96,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public String replaceSymbols(String message) {
-        for (Map.Entry<String, String> entry : SettingManager.getSettings(SettingType.UTFSYMBOLS, UTFSettings.class).getSymbols().entrySet()) {
+        for (Map.Entry<String, String> entry : BungeeUtilisals.getInstance().getSettings().UTFSYMBOLS_SYMBOLS.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 
@@ -116,8 +113,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public String fancyFont(String message) {
-        // TODO: make this thing work ...
-        char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray();
+        char[] chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ,?;.:+=-%*$!'\"@|&<>0123456789#".toCharArray();
         StringBuilder builder = new StringBuilder();
 
         for (char replaceableChar : message.toCharArray()) {
@@ -127,6 +123,7 @@ public class ChatManager implements IChatManager {
                 if (chars[i] == replaceableChar) {
                     charFound = true;
                 }
+                i++;
             }
             if (charFound) {
                 builder.append((char) (65248 + replaceableChar));

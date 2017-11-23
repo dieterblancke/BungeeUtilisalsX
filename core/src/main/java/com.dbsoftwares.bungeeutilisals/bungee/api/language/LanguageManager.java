@@ -1,10 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api.language;
 
-import com.dbsoftwares.bungeeutilisals.api.json.IJsonConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.json.JsonConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.json.JsonConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -13,9 +15,6 @@ import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.config.Configuration;
-import net.md_5.bungee.config.ConfigurationProvider;
-import net.md_5.bungee.config.YamlConfiguration;
 
 import java.io.*;
 import java.util.List;
@@ -25,7 +24,8 @@ import java.util.Optional;
 public class LanguageManager implements ILanguageManager {
 
     @Getter Map<Plugin, File> plugins = Maps.newHashMap();
-    @Getter Map<File, Configuration> configurations = Maps.newHashMap();
+    @Getter Map<Plugin, FileStorageType> fileTypes = Maps.newHashMap();
+    @Getter Map<File, IConfiguration> configurations = Maps.newHashMap();
     @Getter List<Language> languages = Lists.newArrayList();
 
     public LanguageManager(BungeeUtilisals plugin) {
@@ -33,12 +33,7 @@ public class LanguageManager implements ILanguageManager {
         if (!folder.exists()) {
             folder.mkdirs();
         }
-        File english = new File(folder, "english.json");
-        if (!english.exists()) {
-            loadResource(plugin, "languages/english.json", english);
-        }
-
-        addPlugin(plugin, new File(plugin.getDataFolder(), "languages"));
+        addPlugin(plugin, new File(plugin.getDataFolder(), "languages"), FileStorageType.JSON);
         loadLanguages(plugin);
     }
 
@@ -57,29 +52,38 @@ public class LanguageManager implements ILanguageManager {
     }
 
     @Override
-    public void addPlugin(Plugin plugin, File folder) {
+    public void addPlugin(Plugin plugin, File folder, FileStorageType type) {
         plugins.put(plugin, folder);
+        fileTypes.put(plugin, type);
     }
 
     @Override
-    public void loadLanguages(Plugin plugin){
-        if(!plugins.containsKey(plugin)) {
+    public void loadLanguages(Plugin plugin) {
+        if (!plugins.containsKey(plugin)) {
             throw new RuntimeException("The plugin " + plugin.getDescription().getName() + " is not registered!");
         }
         File folder = plugins.get(plugin);
 
-        for(Language language : languages) {
-            File lang = loadResource(plugin, "languages/" + language.getName() + ".json", new File(folder, language.getName() + ".json"));
-            if(!lang.exists()) {
+        for (Language language : languages) {
+            File lang = loadResource(plugin, "languages/" + language.getName() + ".yml", new File(folder, language.getName() + ".yml"));
+
+            if (!lang.exists()) {
                 continue;
             }
             try {
-                Configuration config = ConfigurationProvider.getProvider(YamlConfiguration.class).load(lang,
-                        ConfigurationProvider.getProvider(YamlConfiguration.class).load(
-                                plugin.getResourceAsStream("languages/" + language.getName() + ".json")));
+                IConfiguration configuration = fileTypes.get(plugin).equals(FileStorageType.JSON) ?
+                                                IConfiguration.loadConfiguration(JsonConfiguration.class, lang) :
+                                                IConfiguration.loadConfiguration(YamlConfiguration.class, lang);
 
-                JsonConfiguration jconfig = IJsonConfiguration.loadConfiguration(lang);
-                configurations.put(lang, config);
+                if (fileTypes.get(plugin).equals(FileStorageType.JSON)) {
+                    configuration.copyDefaults(IConfiguration.loadConfiguration(JsonConfiguration.class,
+                            plugin.getResourceAsStream("languages/" + language.getName() + ".json")));
+                } else {
+                    configuration.copyDefaults(IConfiguration.loadConfiguration(YamlConfiguration.class,
+                            plugin.getResourceAsStream("languages/" + language.getName() + ".yml")));
+                }
+
+                configurations.put(lang, configuration);
                 saveLanguage(plugin, language);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -88,8 +92,8 @@ public class LanguageManager implements ILanguageManager {
     }
 
     @Override
-    public Configuration getLanguageConfiguration(Plugin plugin, User user) {
-        Configuration config = null;
+    public IConfiguration getLanguageConfiguration(Plugin plugin, User user) {
+        IConfiguration config = null;
         if (user != null) {
             config = getConfig(plugin, user.getLanguage());
         }
@@ -100,12 +104,12 @@ public class LanguageManager implements ILanguageManager {
     }
 
     @Override
-    public Configuration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player) {
+    public IConfiguration getLanguageConfiguration(Plugin plugin, ProxiedPlayer player) {
         return getLanguageConfiguration(plugin, BungeeUtilisals.getApi().getUser(player).orElse(null));
     }
 
     @Override
-    public Configuration getLanguageConfiguration(Plugin plugin, CommandSender sender) {
+    public IConfiguration getLanguageConfiguration(Plugin plugin, CommandSender sender) {
         return getLanguageConfiguration(plugin, BungeeUtilisals.getApi().getUser(sender.getName()).orElse(null));
     }
 
@@ -118,7 +122,7 @@ public class LanguageManager implements ILanguageManager {
     }
 
     @Override
-    public Configuration getConfig(Plugin plugin, Language language) {
+    public IConfiguration getConfig(Plugin plugin, Language language) {
         if (!plugins.containsKey(plugin)) {
             throw new RuntimeException("The plugin " + plugin.getDescription().getName() + " is not registered!");
         }
@@ -150,10 +154,10 @@ public class LanguageManager implements ILanguageManager {
             throw new RuntimeException("The plugin " + plugin.getDescription().getName() + " is not registered!");
         }
         File lang = getFile(plugin, language);
-        Configuration config = configurations.get(lang);
+        IConfiguration config = configurations.get(lang);
 
         try {
-            ConfigurationProvider.getProvider(YamlConfiguration.class).save(config, lang);
+            config.save();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -166,8 +170,9 @@ public class LanguageManager implements ILanguageManager {
             throw new RuntimeException("The plugin " + plugin.getDescription().getName() + " is not registered!");
         }
         File lang = getFile(plugin, language);
+        IConfiguration config = configurations.get(lang);
         try {
-            configurations.put(lang, ConfigurationProvider.getProvider(YamlConfiguration.class).load(lang));
+            config.reload();
         } catch (IOException e) {
             e.printStackTrace();
         }
