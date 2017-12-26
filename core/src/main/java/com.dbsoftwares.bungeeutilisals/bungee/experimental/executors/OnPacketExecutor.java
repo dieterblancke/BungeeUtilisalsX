@@ -7,8 +7,8 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryRegistry;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.PlayerInventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InCloseWindow;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InWindowClick;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInCloseWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInWindowClick;
 import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -40,8 +40,8 @@ public class OnPacketExecutor implements EventExecutor<OnPacketEvent> {
         }
 
         if (event.getSender() instanceof ProxiedPlayer && event.getReciever() instanceof BungeeConnection) {
-            if (event.getPacket() instanceof InCloseWindow) {
-                InCloseWindow packet = (InCloseWindow) event.getPacket();
+            if (event.getPacket() instanceof PacketPlayInCloseWindow) {
+                PacketPlayInCloseWindow packet = (PacketPlayInCloseWindow) event.getPacket();
                 if (InventoryRegistry.getOpen().containsKey(event.getPlayer().getUniqueId())) {
                     if (InventoryRegistry.getOpen().get(event.getPlayer().getUniqueId()) == packet.windowID) {
                         event.setCancelled(true);
@@ -50,8 +50,8 @@ public class OnPacketExecutor implements EventExecutor<OnPacketEvent> {
                 }
             }
 
-            if (event.getPacket() instanceof InWindowClick) {
-                InWindowClick packet = (InWindowClick) event.getPacket();
+            if (event.getPacket() instanceof PacketPlayInWindowClick) {
+                PacketPlayInWindowClick packet = (PacketPlayInWindowClick) event.getPacket();
 
                 if (InventoryRegistry.getOpen().containsKey(event.getPlayer().getUniqueId())) {
                     if (InventoryRegistry.getOpen().get(event.getPlayer().getUniqueId()) == packet.windowID) {

@@ -167,7 +167,7 @@ public class ItemMeta {
         display.set(key, value);
     }
 
-    protected void fromTag(NBTTagCompound tag) {
+    public void fromTag(NBTTagCompound tag) {
         this.tag = tag;
     }
 

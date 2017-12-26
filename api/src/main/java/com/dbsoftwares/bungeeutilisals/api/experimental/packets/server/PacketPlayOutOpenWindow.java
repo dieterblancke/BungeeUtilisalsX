@@ -1,65 +1,54 @@
 package com.dbsoftwares.bungeeutilisals.api.experimental.packets.server;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
+import com.dbsoftwares.bungeeutilisals.api.user.User;
+import io.netty.buffer.ByteBuf;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import net.md_5.bungee.protocol.DefinedPacket;
+import net.md_5.bungee.protocol.ProtocolConstants;
 
-@AllArgsConstructor @NoArgsConstructor @Getter @Setter
-public class PacketPlayOutOpenWindow extends Packet implements PacketPlayOut {
+@EqualsAndHashCode(callSuper = true)
+@Data
+public class PacketPlayOutOpenWindow extends Packet {
 
     private boolean horse;
     private int id;
-    private String name;
+    private String title;
     private int slots;
     private String type;
-    public boolean UTF_8 = false;
 
-    public PacketPlayOutOpenWindow(int id, String type, String name, int slots, boolean ishorse) {
-        super(0x2D);
+    public PacketPlayOutOpenWindow(int id, String type, String title, int slots, boolean ishorse) {
+        super(0x13);
         this.id = id;
-        this.type = type + "";
-        this.name = name;
+        this.type = type;
+        this.title = title;
         this.slots = slots;
         this.horse = ishorse;
     }
 
-    public PacketPlayOutOpenWindow(int id, String type, String name, int slots, int horse_id) {
-        this(id, type, name, slots, true);
-        this.horesID = horse_id;
+    @Override
+    public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
+        id = buf.readByte();
+        type = DefinedPacket.readString(buf);
+        title = DefinedPacket.readString(buf);
+        slots = buf.readUnsignedByte();
     }
 
     @Override
-    public void read(PacketDataSerializer s) {
-        this.id = s.readUnsignedByte();
-        this.type = s.readString(32);
-        this.name = s.readString(-1);
-        this.slots = s.readUnsignedByte();
-        if (this.type.equalsIgnoreCase("EntityHorse")) {
-            this.horesID = s.readInt();
-        }
-    }
-
-    @Override
-    public String toString() {
-        return "PacketPlayOutOpenWindow [horesID=" + this.horesID + ", horse=" + this.horse + ", id=" + this.id + ", name=" + this.name + ", slots=" + this.slots + ", type=" + this.type + "]";
-    }
-
-    @Override
-    public void write(PacketDataSerializer s) {
-        s.writeByte(this.id);
-        s.writeString(this.type);
-        if (!this.name.startsWith("{")) {
-            if (!this.name.startsWith("\"")) {
-                this.name = "\"" + this.name + "\"";
+    public void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
+        buf.writeByte(id);
+        DefinedPacket.writeString(type, buf);
+        if (!title.startsWith("{")) {
+            if (!title.startsWith("\"")) {
+                title = "\"" + title + "\"";
             }
-            this.name = "{\"translate\":" + this.name + "}";
+            title = "{\"translate\":" + title + "}";
         }
-        s.writeString(this.name);
-        s.writeByte(this.slots);
-        if (this.type.equals("EntityHorse")) {
-            s.writeInt(this.horesID);
-        }
+        DefinedPacket.writeString(title, buf);
+        buf.writeByte(slots);
     }
 
+    @Override
+    public void handle(User user) { }
 }

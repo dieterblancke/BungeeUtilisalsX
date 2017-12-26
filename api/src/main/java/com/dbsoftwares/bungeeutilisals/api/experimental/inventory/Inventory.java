@@ -73,4 +73,6 @@ public interface Inventory {
     ListIterator<ItemStack> iterator();
 
     ListIterator<ItemStack> iterator(int var1);
+
+    InventoryUnsafe unsafe();
 }

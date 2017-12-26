@@ -1,6 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.bungee.user;
 
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryCloseEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
+import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryType;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutCloseWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutOpenWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutWindowItems;
 import com.dbsoftwares.bungeeutilisals.api.user.IExperimentalUser;
 import lombok.RequiredArgsConstructor;
 
@@ -16,30 +22,48 @@ public class ExperimentalUser implements IExperimentalUser {
     }
 
     @Override
-    public void openInventory(Inventory inventory, Boolean resetCursor) {
+    public void openInventory(Inventory inv, Boolean resetCursor) {
         if(hasOpenInventory()) {
-            closeInventory(resetCursor);
+            closeInventory();
         }
-        PacketPlayOutOpenWindow e = new PacketPlayOutOpenWindow(Inventory.ID, inv.getType().getType(this.getVersion()), inv.getName(), inv.getType() == InventoryType.Chest ? inv.getSlots() : inv.getType().getDefaultSlots(), false);
-        e.UTF_8 = true;
+        PacketPlayOutOpenWindow e = new PacketPlayOutOpenWindow(99, inv.getType().getMCName(), inv.getTitle(),
+                inv.getType().equals(InventoryType.CHEST) ? inv.getSize() : inv.getType().getDefaultSlots(), false);
+
         this.sendPacket(e);
-        this.sendPacket(new PacketPlayOutWindowItems(Inventory.ID, inv.getContains()));
-        inv.unsave().getModificableViewerList().add(this);
+        this.sendPacket(new PacketPlayOutWindowItems(99, inv.getContents()));
+
+        inv.unsafe().getViewers().add(user);
         this.currentInventory = inv;
     }
 
     @Override
     public Boolean hasOpenInventory() {
-        return null;
+        return currentInventory != null;
     }
 
     @Override
     public void closeInventory() {
-
+        if(currentInventory == null) {
+            return;
+        }
+        InventoryCloseEvent event = new InventoryCloseEvent(user.getParent(), currentInventory);
+        if (event.isCancelled()) {
+            return;
+        }
+        this.sendPacket(new PacketPlayOutCloseWindow(99));
+        currentInventory.unsafe().getViewers().remove(user);
+        currentInventory = null;
     }
 
     @Override
-    public void closeInventory(Boolean resetCursor) {
+    public void sendPacket(Packet packet) {
+        user.getParent().unsafe().sendPacket(packet);
+    }
+
+    public void unload() {
+        if (hasOpenInventory()) {
+            closeInventory();
+        }
 
     }
 }

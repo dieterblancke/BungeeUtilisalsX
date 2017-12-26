@@ -14,8 +14,11 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InCloseWindow;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InWindowClick;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInCloseWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInWindowClick;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutCloseWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutOpenWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutWindowItems;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
@@ -161,13 +164,13 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void registerExperimentalFeatures() {
-        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, InCloseWindow.class);
-        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, InWindowClick.class);
+        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
+        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, PacketPlayInCloseWindow.class);
 
-        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, OutOpenWindow.class);
-        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, OutCloseWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, PacketPlayOutOpenWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, PacketPlayOutWindowItems.class);
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, OutSetSlot.class);
-        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, OutWindowItems.class);
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PacketInjectListener());
         api.getEventLoader().register(OnPacketEvent.class, new OnPacketExecutor());

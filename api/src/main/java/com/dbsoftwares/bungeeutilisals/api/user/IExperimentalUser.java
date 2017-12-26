@@ -1,6 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 
 public interface IExperimentalUser {
 
@@ -28,8 +29,8 @@ public interface IExperimentalUser {
     void closeInventory();
 
     /**
-     * Closes the currently opened inventory.
-     * @param resetCursor True if cursor should be reset to center, false if not.
+     * Sends a packet.
+     * @param packet The packet to be sent.
      */
-    void closeInventory(Boolean resetCursor);
+    void sendPacket(Packet packet);
 }
