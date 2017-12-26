@@ -3,7 +3,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.event;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.*;
-import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
@@ -86,6 +85,6 @@ public class EventLoader implements IEventLoader {
         if (event instanceof Cancellable) {
             throw new IllegalArgumentException("cannot call Cancellable event async");
         }
-        SimpleExecutor.asyncExecute(() -> launchEvent(event));
+        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> launchEvent(event));
     }
 }

@@ -1,0 +1,5 @@
+# Primary Identifier, can be two types: NAME or UUID
+primaryIdentifier: UUID
+
+# If enabled, experimental features, such as the BungeeInventory / ItemStack API will be enabled.
+experimental: false

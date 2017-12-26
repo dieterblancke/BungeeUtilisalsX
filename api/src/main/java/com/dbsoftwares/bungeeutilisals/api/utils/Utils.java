@@ -8,14 +8,22 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
  */
 
 import com.google.common.collect.Lists;
+import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.connection.DownstreamBridge;
+import net.md_5.bungee.connection.UpstreamBridge;
+import net.md_5.bungee.protocol.AbstractPacketHandler;
+import net.md_5.bungee.protocol.DefinedPacket;
+import net.md_5.bungee.protocol.Protocol;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
+import java.lang.reflect.Method;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -29,6 +37,7 @@ public class Utils {
 
     /**
      * Formats a message.
+     *
      * @param message The message to be formatted.
      * @return The formatted message.
      */
@@ -38,6 +47,7 @@ public class Utils {
 
     /**
      * Formats a message to TextComponent.
+     *
      * @param message The message to be formatted.
      * @return The formatted message.
      */
@@ -47,7 +57,8 @@ public class Utils {
 
     /**
      * Formats a message to TextComponent with given prefix.
-     * @param prefix The prefix to be before the message.
+     *
+     * @param prefix  The prefix to be before the message.
      * @param message The message to be formatted.
      * @return The formatted message.
      */
@@ -57,10 +68,11 @@ public class Utils {
 
     /**
      * Util to get a key from value in a map.
-     * @param map The map to get a key by value.
+     *
+     * @param map   The map to get a key by value.
      * @param value The value to get thekey from.
-     * @param <K> The key type.
-     * @param <V> The value type
+     * @param <K>   The key type.
+     * @param <V>   The value type
      * @return The key bound to the requested value.
      */
     public static <K, V> K getKeyFromValue(Map<K, V> map, V value) {
@@ -101,25 +113,29 @@ public class Utils {
 
         try {
             reader.close();
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
         try {
             inputStreamReader.close();
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
         try {
             stream.close();
-        } catch (IOException ignored) { }
+        } catch (IOException ignored) {
+        }
 
         return lines;
     }
 
     /**
      * Attempts to parse a long time from a given string.
+     *
      * @param time The string you want to convert to time.
      * @return The time, in millis, you requested.
      */
     public static long parseDateDiff(String time) {
         Matcher m = timePattern.matcher(time);
-        Integer years = 0, months = 0, weeks = 0, days = 0, hours = 0,minutes = 0, seconds = 0;
+        Integer years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
         boolean found = false;
         while (m.find()) {
             if (m.group() == null || m.group().isEmpty()) {
@@ -187,11 +203,95 @@ public class Utils {
         return c.getTimeInMillis();
     }
 
+    /**
+     * Checks if given parameter is a Boolean.
+     *
+     * @param object The object you want to check.
+     * @return True if Boolean, false if not.
+     */
     public static boolean isBoolean(Object object) {
         try {
             Boolean.parseBoolean(object.toString());
             return true;
         } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * Capitalizes first letter of every word found.
+     *
+     * @param words The string you want to capitalize.
+     * @return A new capitalized String.
+     */
+    public static String capitalizeWords(String words) {
+        if (words != null && words.length() != 0) {
+            char[] chars = words.toCharArray();
+            char[] newCharacters = new char[chars.length];
+
+            char lastChar = ' ';
+            for (int i = 0; i < chars.length; i++) {
+                char character = chars[i];
+
+                if (lastChar == ' ') {
+                    newCharacters[i] = Character.toUpperCase(character);
+                } else {
+                    newCharacters[i] = character;
+                }
+            }
+
+            return new String(newCharacters);
+        } else {
+            return words;
+        }
+    }
+
+    /**
+     * Returns UserConnection bound to PacketHandler if instance of Downstream- or upstream bridge.
+     *
+     * @param handler The handler
+     * @return UserConnection from handler.
+     */
+    public static UserConnection getConnection(AbstractPacketHandler handler) {
+        try {
+            if (handler instanceof DownstreamBridge) {
+                DownstreamBridge bridge = (DownstreamBridge) handler;
+                return (UserConnection) ReflectionUtils.getField(bridge.getClass(), "con").get(bridge);
+            }
+
+            if (handler instanceof UpstreamBridge) {
+                UpstreamBridge bridge = (UpstreamBridge) handler;
+                return (UserConnection) ReflectionUtils.getField(bridge.getClass(), "con").get(bridge);
+            }
+        } catch (IllegalAccessException ignored) {
+        }
+        return null;
+    }
+
+    /**
+     * Registers a packet.
+     *
+     * @param direction   The packet direction.
+     * @param id          The packet ID.
+     * @param packetClass The packet class.
+     * @return True if successfull, false if not.
+     */
+    public static boolean registerPacket(Protocol.DirectionData direction, int protocol, int id, Class<? extends DefinedPacket> packetClass) {
+        try {
+            Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
+
+            Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class,
+                    Array.newInstance(protocolMap, 0).getClass());
+            Method map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
+            register.setAccessible(true);
+            map.setAccessible(true);
+
+            Object packetMap = Array.newInstance(protocolMap, 1);
+            Array.set(packetMap, 0, map.invoke(null, protocol, id));
+            register.invoke(direction, packetClass, packetMap);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }

@@ -45,6 +45,7 @@ public interface ISection {
     /**
      * Gets the requested String by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     String getString(String path, String def);
@@ -66,6 +67,7 @@ public interface ISection {
     /**
      * Gets the requested Boolean by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Boolean getBoolean(String path, Boolean def);
@@ -87,6 +89,7 @@ public interface ISection {
     /**
      * Gets the requested Integer by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Integer getInteger(String path, Integer def);
@@ -108,6 +111,7 @@ public interface ISection {
     /**
      * Gets the requested Number by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Number getNumber(String path, Number def);
@@ -129,6 +133,7 @@ public interface ISection {
     /**
      * Gets the requested Double by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Double getDouble(String path, Double def);
@@ -150,6 +155,7 @@ public interface ISection {
     /**
      * Gets the requested Long by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Long getLong(String path, Long def);
@@ -171,6 +177,7 @@ public interface ISection {
     /**
      * Gets the requested Float by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Float getFloat(String path, Float def);
@@ -192,6 +199,7 @@ public interface ISection {
     /**
      * Gets the requested Byte by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Byte getByte(String path, Byte def);
@@ -213,6 +221,7 @@ public interface ISection {
     /**
      * Gets the requested Short by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     Short getShort(String path, Short def);
@@ -234,6 +243,7 @@ public interface ISection {
     /**
      * Gets the requested BigInteger by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     BigInteger getBigInteger(String path, BigInteger def);
@@ -255,6 +265,7 @@ public interface ISection {
     /**
      * Gets the requested BigDecimal by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     BigDecimal getBigDecimal(String path, BigDecimal def);
@@ -276,6 +287,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List getList(String path, List def);
@@ -290,6 +302,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<String> getStringList(String path, List<String> def);
@@ -304,6 +317,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Integer> getIntegerList(String path, List<Integer> def);
@@ -318,6 +332,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Double> getDoubleList(String path, List<Double> def);
@@ -332,6 +347,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Boolean> getBooleanList(String path, List<Boolean> def);
@@ -346,6 +362,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Long> getLongList(String path, List<Long> def);
@@ -360,6 +377,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Byte> getByteList(String path, List<Byte> def);
@@ -374,6 +392,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Short> getShortList(String path, List<Short> def);
@@ -388,6 +407,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Float> getFloatList(String path, List<Float> def);
@@ -402,6 +422,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<Number> getNumberList(String path, List<Number> def);
@@ -416,6 +437,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<BigInteger> getBigIntegerList(String path, List<BigInteger> def);
@@ -430,6 +452,7 @@ public interface ISection {
     /**
      * Gets the requested List by path, sets default if not present.
      * @param path The path of which you need the value.
+     * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
     List<BigDecimal> getBigDecimalList(String path, List<BigDecimal> def);

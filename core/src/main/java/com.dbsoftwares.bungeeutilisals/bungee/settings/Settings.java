@@ -47,10 +47,15 @@ public class Settings {
 
     private Map<String, Configuration> configurations = Maps.newHashMap();
 
+    private String configPath = "config.yml";
     private String mysqlPath = "mysql.yml";
-    private String punishmentPath = "punishments/punishments.yml";
+    private String punishmentPath = "punishments/config.yml";
     private String utfSymbolsPath = "chat/utfsymbols.yml";
     private String antiSwearPath = "chat/antiswear.yml";
+    private String friendsPath = "friends/config.yml";
+
+    // Config Settings
+    public Setting<Boolean> USE_UUID = new Setting<>(configPath, "useUUID", true);
 
     // MySQL Settings
     public Setting<String> MYSQL_HOST = new Setting<>(mysqlPath, "hostname", "host");
@@ -73,10 +78,13 @@ public class Settings {
     public Setting<List<String>> ANTISWEAR_WORDS = new Setting<>(antiSwearPath, "words", Lists.newArrayList());
     public List<Pattern> ANTISWEAR_PATTERNS;
 
-    // General Punishment settings
+    // General Punishment Settings
     public Setting<Boolean> PUNISHMENT_ENABLED = new Setting<>(punishmentPath, "enabled", false);
     public Setting<String> PUNISHMENT_TABLE = new Setting<>(punishmentPath, "tables.punishments", "bu_punishments");
     public Setting<String> PUNISHMENT_SOFT_TABLE = new Setting<>(punishmentPath, "tables.soft-punishments", "bu_soft_punishments");
+
+    // General Friend Settings
+    public Setting<Boolean> FRIENDS_ENABLED = new Setting<>(friendsPath, "enabled", false);
 
     public void reloadAll() {
         Set<String> set = Sets.newHashSet(configurations.keySet());
@@ -141,9 +149,14 @@ public class Settings {
         private File file;
         private String path;
         private T value;
+        private Class<T> clazz;
 
         @SuppressWarnings("unchecked") // to avoid the warning, shouldn't happen to miscast.
         public Setting(String filePath, String path, T value) {
+            this(filePath, path, value, null);
+        }
+
+        public Setting(String filePath, String path, T value, Class<T> clazz) {
             this.filePath = filePath;
             this.file = new File(plugin.getDataFolder(), filePath);
 
@@ -152,6 +165,7 @@ public class Settings {
             }
 
             this.path = path;
+            this.clazz = clazz;
 
             reload();
         }
@@ -197,7 +211,11 @@ public class Settings {
                 configuration = configurations.get(filePath);
             }
             if (configuration != null && configuration.contains(path)) {
-                this.value = (T) configuration.get(path);
+                if (clazz != null && clazz.equals(Configuration.class)) {
+                    this.value = (T) configuration.getSection(path);
+                } else {
+                    this.value = (T) configuration.get(path);
+                }
             } else {
                 setAndSave(value);
             }

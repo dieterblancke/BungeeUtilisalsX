@@ -1,0 +1,58 @@
+# Set to true if you want to use the BungeeUtilisals punishment system.
+# If disabled, all other options below will be ignored.
+enabled: false
+
+tables:
+  bans: 'bu_bans'
+  ipbans: 'bu_ipbans'
+  tempbans: 'bu_tempbans'
+  iptempbans: 'bu_iptempbans'
+  mutes: 'bu_mutes'
+  ipmutes: 'bu_ipmutes'
+  tempmutes: 'bu_tempmutes'
+  iptempmutes: 'bu_iptempmutes'
+  kicks: 'bu_kicks'
+  warns: 'bu_warns'
+
+commands:
+  ban:
+    enabled: true
+    aliases: 'pban, gban'
+    permission: bungeeutilisals.punishments.ban
+  ipban:
+    enabled: true
+    aliases: 'banip, gbanip, gipban'
+    permission: bungeeutilisals.punishments.ipban
+  tempban:
+    enabled: true
+    aliases: 'tban, gtban'
+    permission: bungeeutilisals.punishments.tempban
+  tempbanip:
+    enabled: true
+    aliases: 'iptempban, tipban, gtipban, tbanip'
+    permission: bungeeutilisals.punishments.tempbanip
+  mute:
+    # Enable this subcommand or not?
+    enabled: true
+    aliases: 'pmute, gmute'
+    permission: bungeeutilisals.punishments.mute
+  ipmute:
+    enabled: true
+    aliases: 'muteip, gmuteip, gipmute'
+    permission: bungeeutilisals.punishments.ipmute
+  tempmute:
+    enabled: true
+    aliases: 'tmute, gtmute'
+    permission: bungeeutilisals.punishments.tempmute
+  tempmuteip:
+    enabled: true
+    aliases: 'iptempmute, tipmute, gtipmute, tmuteip'
+    permission: bungeeutilisals.punishments.tempmuteip
+  kick:
+    enabled: true
+    aliases: ''
+    permission: bungeeutilisals.punishments.kick
+  warn:
+    enabled: true
+    aliases: ''
+    permission: bungeeutilisals.punishments.warn

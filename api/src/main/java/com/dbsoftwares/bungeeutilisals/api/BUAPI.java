@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
@@ -71,4 +72,9 @@ public interface BUAPI {
      * @return The BungeeUtilisals chat utility class.
      */
     IChatManager getChatManager();
+
+    /**
+     * @return A SimpleExecutor instance.
+     */
+    SimpleExecutor getSimpleExecutor();
 }

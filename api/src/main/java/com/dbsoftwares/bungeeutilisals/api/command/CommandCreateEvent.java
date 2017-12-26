@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 public class CommandCreateEvent extends AbstractEvent {
 
     @Getter
-    public final BUCommand command;
+    public final Command command;
 
 }

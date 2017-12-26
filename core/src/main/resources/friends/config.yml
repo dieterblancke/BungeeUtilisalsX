@@ -1,0 +1,39 @@
+# Set to true if you want to use the BungeeUtilisals friend system.
+enabled: false
+
+# Recommended to write the names in lowercase.
+# Permissions would be like 'bungeeutilisals.friends.limit.RANK' f.e. 'bungeeutilisals.friends.limit.vip'
+friendlimit:
+  default: 10
+  vip: 15
+  mvp: 20
+  helper: 25
+
+subcommands:
+  add:
+    aliases: '[]'
+    permission: bungeeutilisals.friends.add
+  remove:
+    aliases: '[delete, del]'
+    permission: bungeeutilisals.friends.remove
+  accept:
+    aliases: '[approve]'
+    permission: bungeeutilisals.friends.accept
+  deny:
+    aliases: '[]'
+    permission: bungeeutilisals.friends.deny
+  list:
+    aliases: '[fl]'
+    permission: bungeeutilisals.friends.list
+  requests:
+    aliases: '[req]'
+    permission: bungeeutilisals.friends.requests
+  msg:
+    aliases: '[m, tell, w, whisper, message]'
+    permission: bungeeutilisals.friends.msg
+  reply:
+    aliases: '[r]'
+    permission: bungeeutilisals.friends.reply
+  settings:
+    aliases: '[]'
+    permission: bungeeutilisals.friends.settings

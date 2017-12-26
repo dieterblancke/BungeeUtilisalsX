@@ -6,7 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
- * This event gets called if an User was successfully saved & logged out.
+ * This event gets called if an User was successfully saved and logged out.
  */
 @AllArgsConstructor
 public class UserUnloadEvent extends AbstractEvent {

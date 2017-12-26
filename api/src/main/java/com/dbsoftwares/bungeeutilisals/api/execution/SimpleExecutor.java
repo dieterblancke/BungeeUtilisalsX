@@ -1,12 +1,9 @@
 package com.dbsoftwares.bungeeutilisals.api.execution;
 
-import lombok.experimental.UtilityClass;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-@UtilityClass
-public class SimpleExecutor {
+public class SimpleExecutor implements IExecutor {
 
     private static final ExecutorService executors = Executors.newCachedThreadPool();
 

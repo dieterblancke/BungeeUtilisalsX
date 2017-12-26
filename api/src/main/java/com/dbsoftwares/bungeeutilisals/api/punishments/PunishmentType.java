@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.punishmentts;
+package com.dbsoftwares.bungeeutilisals.api.punishments;
 
 /*
  * Created by DBSoftwares on 24 februari 2017

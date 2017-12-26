@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -25,6 +25,12 @@ public interface User {
      * Saves the local user data onto the database.
      */
     void save();
+
+    /**
+     * Simple but quick method to retrieve name OR UUID. Depends on the useUUID setting in the config.
+     * @return The UUID if useUUID is set to true in the configuration, otherwise it returns the name.
+     */
+    String getIdentifier();
 
     /**
      * @return The Storage containing some personal User data ((name)tags, ignored players, ...)
@@ -165,4 +171,10 @@ public interface User {
      * @return The user his language config.
      */
     Configuration getLanguageConfig();
+
+    /**
+     * Returns an ExperimentalUser object (containing functions which are unstable or in development).
+     * @return An ExperimentalUser Object.
+     */
+    IExperimentalUser experimental();
 }
