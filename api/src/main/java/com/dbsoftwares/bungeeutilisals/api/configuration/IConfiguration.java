@@ -77,10 +77,9 @@ public interface IConfiguration extends ISection {
      * @param file The file you want to load.
      * @param <T> The class implementing IConfiguration you want to get.
      * @return A new instance of T implementing IConfiguration, null if an error occured.
-     * @throws IOException If there is an error opening or closing the streams.
      */
     @SuppressWarnings("unchecked")
-    static <T extends IConfiguration> T loadConfiguration(Class<T> clazz, File file) throws IOException {
+    static <T extends IConfiguration> T loadConfiguration(Class<T> clazz, File file) {
         try {
             Constructor<?> constructor = ReflectionUtils.getConstructor(clazz, File.class);
             return (T) constructor.newInstance(file);
@@ -96,10 +95,9 @@ public interface IConfiguration extends ISection {
      * @param stream The InputStream you want to load.
      * @param <T> The class implementing IConfiguration you want to get.
      * @return A new instance of T implementing IConfiguration, null if an error occured.
-     * @throws IOException If there is an error closing the streams.
      */
     @SuppressWarnings("unchecked")
-    static <T extends IConfiguration> T loadConfiguration(Class<T> clazz, InputStream stream) throws IOException {
+    static <T extends IConfiguration> T loadConfiguration(Class<T> clazz, InputStream stream) {
         try {
             Constructor<?> constructor = ReflectionUtils.getConstructor(clazz, File.class);
             return (T) constructor.newInstance(stream);
@@ -110,7 +108,7 @@ public interface IConfiguration extends ISection {
     }
 
     /**
-     * Copies keys & values from the given IConfiguration instance IF NOT found in the instance.
+     * Copies keys and values from the given IConfiguration instance IF NOT found in the instance.
      * @param configuration The configuration you want to load defaults from.
      * @throws IOException If there is an error saving the file.
      */

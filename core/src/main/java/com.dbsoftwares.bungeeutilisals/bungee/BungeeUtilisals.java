@@ -12,26 +12,33 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InCloseWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.InWindowClick;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.OnPacketExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.PacketInjectListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
+import com.dbsoftwares.bungeeutilisals.bungee.settings.FileLocations;
 import com.dbsoftwares.bungeeutilisals.bungee.settings.Settings;
+import com.google.common.collect.Maps;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.ProxyConnection;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.protocol.Protocol;
 
 import java.io.File;
-import java.io.IOException;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -42,7 +49,7 @@ public class BungeeUtilisals extends Plugin {
     @Getter private static BUtilisalsAPI api;
     @Getter private HikariDataSource source;
     @Getter private Settings settings;
-    @Getter private Map<String, List<String>> aliases;
+    @Getter private static Map<FileLocations, YamlConfiguration> configurations = Maps.newHashMap();
 
     @Override
     public void onEnable() {
@@ -56,6 +63,7 @@ public class BungeeUtilisals extends Plugin {
 
         // Loading setting files ...
         settings = new Settings();
+        createAndLoadFiles();
 
         // Initializing API
         api = new BUtilisalsAPI(this);
@@ -72,21 +80,8 @@ public class BungeeUtilisals extends Plugin {
         // Initializing database
         loadMySQL();
 
-        if (settings.PUNISHMENT_ENABLED.get()) {
-            // TODO: Make and initialize punishment system
-
-        }
-
-        try {
-            File aliases = new File(getDataFolder(), "aliases.yml");
-            FileUtils.createDefaultFile(this, "aliases.yml", aliases, true);
-
-            YamlConfiguration configuration = IConfiguration.loadConfiguration(YamlConfiguration.class, aliases);
-            for (String key : configuration.getKeys("commands")) {
-                this.aliases.put(key, configuration.getStringList("commands." + key));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        if (configurations.get(FileLocations.CONFIG).getBoolean("experimental")) {
+            registerExperimentalFeatures();
         }
 
         // Register executors & listeners
@@ -101,6 +96,23 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(UserChatEvent.class, userChatExecutor::onSwearChat);
         api.getEventLoader().register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
         api.getEventLoader().register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
+
+
+        final int[] amount = {0};
+        api.getEventLoader().register(InventoryClickEvent.class, event -> {
+            System.out.println("#" + amount[0] + event.getPlayer().getName() + " has clicked on " + event.getSlot() + " in "
+                    + event.getInventory().getTitle() + "! Cancelling: " + (amount[0] % 2 == 0) + " ...");
+
+            System.out.println("#" + amount[0] + "Item Data: " + event.getClickedItem().getType() + " "
+                    + event.getClickedItem().getAmount() + " " + event.getClickedItem().getData());
+
+            if (amount[0] % 2 == 0) {
+                event.setCancelled(true);
+            } else {
+                event.setCancelled(false);
+            }
+            amount[0]++;
+        });
     }
 
     @Override
@@ -108,14 +120,29 @@ public class BungeeUtilisals extends Plugin {
         source.close();
     }
 
+    private void createAndLoadFiles() {
+        for (FileLocations location : FileLocations.values()) {
+            File file = new File(getDataFolder(), location.getPath());
+
+            if (!file.exists()) {
+                FileUtils.createDefaultFile(this, location.getPath(), file, true);
+            }
+
+            YamlConfiguration configuration = IConfiguration.loadConfiguration(YamlConfiguration.class, file);
+            configurations.put(location, configuration);
+        }
+    }
+
     private void loadMySQL() {
         source = new HikariDataSource();
+        YamlConfiguration configuration = configurations.get(FileLocations.MYSQL);
+
         source.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        source.addDataSourceProperty("serverName", settings.MYSQL_HOST.get());
-        source.addDataSourceProperty("port", settings.MYSQL_PORT.get());
-        source.addDataSourceProperty("databaseName", settings.MYSQL_DATABASE.get());
-        source.addDataSourceProperty("user", settings.MYSQL_USERNAME.get());
-        source.addDataSourceProperty("password", settings.MYSQL_PASSWORD.get());
+        source.addDataSourceProperty("serverName", configuration.getString("hostname"));
+        source.addDataSourceProperty("port", configuration.getInteger("port"));
+        source.addDataSourceProperty("databaseName", configuration.getString("database"));
+        source.addDataSourceProperty("user", configuration.getString("username"));
+        source.addDataSourceProperty("password", configuration.getString("password"));
 
         source.setPoolName("BungeeUtilisals");
         source.setMaximumPoolSize(6);
@@ -124,28 +151,25 @@ public class BungeeUtilisals extends Plugin {
         source.setLeakDetectionThreshold(4000);
 
         try (ProxyConnection connection = (ProxyConnection) source.getConnection()) {
-            PreparedStatement statement = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS " + settings.PUNISHMENT_TABLE.get() + "(id INT NOT NULL AUTO_INCREMENT, " +
-                            "uuid VARCHAR(64) NOT NULL, name VARCHAR(45) NOT NULL, ip VARCHAR(32) NOT NULL, type VARCHAR(16) NOT NULL, " +
-                            "date DATE NOT NULL DEFAULT CURRENT_TIMESTAMP, data JSON NOT NULL, active TINYINT NOT NULL DEFAULT 1, " +
-                            "removed_by VARCHAR(45) NOT NULL, removed_at DATE NOT NULL);"
-            );
 
-            statement.executeUpdate();
-            statement.close();
+            // TODO: Create default tables.
 
-            statement = connection.prepareStatement(
-                    "CREATE TABLE IF NOT EXISTS " + settings.PUNISHMENT_SOFT_TABLE.get() + "(id INT NOT NULL AUTO_INCREMENT, " +
-                            "uuid VARCHAR(64) NOT NULL, name VARCHAR(45) NOT NULL, type VARCHAR(16) NOT NULL, " +
-                            "date DATE NOT NULL DEFAULT CURRENT_TIMESTAMP, data JSON NOT NULL;"
-            );
-
-            statement.executeUpdate();
-            statement.close();
-
-
+            connection.close();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void registerExperimentalFeatures() {
+        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, InCloseWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, InWindowClick.class);
+
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, OutOpenWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, OutCloseWindow.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, OutSetSlot.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, OutWindowItems.class);
+
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new PacketInjectListener());
+        api.getEventLoader().register(OnPacketEvent.class, new OnPacketExecutor());
     }
 }

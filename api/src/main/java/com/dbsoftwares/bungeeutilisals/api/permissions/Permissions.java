@@ -16,4 +16,5 @@ public class Permissions {
 
     private String PUNISHMENT_PREFIX = BUNGEEUTILISALS + "punishments.";
     public String BAN_PERMISSION = PUNISHMENT_PREFIX + "ban";
+
 }

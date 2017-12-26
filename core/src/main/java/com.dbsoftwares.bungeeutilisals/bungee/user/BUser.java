@@ -10,7 +10,8 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.user.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -29,10 +30,12 @@ public class BUser implements User {
 
     String player;
     Boolean socialspy = false;
+    ExperimentalUser experimental;
 
     @Override
     public void load(UserPreLoadEvent event) {
         this.player = event.getPlayer().getName();
+        this.experimental = new ExperimentalUser(this);
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);
         BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
@@ -49,6 +52,11 @@ public class BUser implements User {
     @Override
     public void save() {
 
+    }
+
+    @Override
+    public String getIdentifier() {
+        return BungeeUtilisals.getInstance().getSettings().USE_UUID.get() ? getParent().getUniqueId().toString() : player;
     }
 
     @Override
@@ -173,6 +181,11 @@ public class BUser implements User {
     @Override
     public Configuration getLanguageConfig() {
         return null;
+    }
+
+    @Override
+    public IExperimentalUser experimental() {
+        return experimental;
     }
 
     private BaseComponent[] buildComponent(String... text) {

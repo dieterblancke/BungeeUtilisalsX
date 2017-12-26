@@ -10,30 +10,29 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
 import java.util.Optional;
 
-public abstract class BUCommand extends Command implements TabExecutor {
+public abstract class Command extends net.md_5.bungee.api.plugin.Command implements ICommand, TabExecutor {
 
     public BUAPI api;
     String permission = null;
 
-    public BUCommand(String name) {
+    public Command(String name) {
         this(name, Lists.newArrayList(), null);
     }
 
-    public BUCommand(String name, String... aliases) {
+    public Command(String name, String... aliases) {
         this(name, Lists.newArrayList(aliases), null);
     }
 
-    public BUCommand(String name, List<String> aliases) {
+    public Command(String name, List<String> aliases) {
         this(name, aliases, null);
     }
 
-    public BUCommand(String name, List<String> aliases, String permission) {
+    public Command(String name, List<String> aliases, String permission) {
         super(name, permission, aliases.toArray(new String[aliases.size()]));
         this.permission = permission;
 
@@ -62,7 +61,8 @@ public abstract class BUCommand extends Command implements TabExecutor {
                 User user = optional.get();
 
                 try {
-                    onExecute(user, args);
+                    BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(user, args));
+                    // onExecute(user, args); | testing plugin with Async Commands.
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -70,7 +70,8 @@ public abstract class BUCommand extends Command implements TabExecutor {
             }
         }
         try {
-            onExecute(sender, args);
+            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(sender, args));
+            //onExecute(sender, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -109,8 +110,4 @@ public abstract class BUCommand extends Command implements TabExecutor {
     }
 
     public abstract List<String> onTabComplete(User user, String[] args);
-
-    public abstract void onExecute(User user, String[] args);
-
-    public abstract void onExecute(CommandSender sender, String[] args);
 }

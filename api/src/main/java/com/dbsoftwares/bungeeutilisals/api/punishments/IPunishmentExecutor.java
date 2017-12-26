@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.punishmentts;
+package com.dbsoftwares.bungeeutilisals.api.punishments;
 
 import java.util.LinkedHashMap;
 
@@ -48,6 +48,7 @@ public interface IPunishmentExecutor {
     LinkedHashMap<PunishmentInfo, String> getPunishments(String user);
 
     /**
+     * @param user The user of which you want to get the current punishment.
      * @param type The type you want to check on.
      * @return The active Punishment of a User of the given type, null if none.
      */

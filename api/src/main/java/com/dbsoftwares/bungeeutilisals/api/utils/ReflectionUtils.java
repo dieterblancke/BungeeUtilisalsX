@@ -54,6 +54,12 @@ public class ReflectionUtils {
     }
 
     public Method getMethod(Class<?> clazz, String name, Class<?>... args) {
+        for (Method m : clazz.getDeclaredMethods()) {
+            if (m.getName().equals(name) && (args.length == 0 || classList(args, m.getParameterTypes()))) {
+                m.setAccessible(true);
+                return m;
+            }
+        }
         for (Method m : clazz.getMethods()) {
             if (m.getName().equals(name) && (args.length == 0 || classList(args, m.getParameterTypes()))) {
                 m.setAccessible(true);
@@ -74,19 +80,19 @@ public class ReflectionUtils {
         return null;
     }
 
-    public Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    public Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         return getField(clazz, fieldName).get(instance);
     }
 
-    public Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    public Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         return getValue(instance, instance.getClass(), fieldName);
     }
 
-    public void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    public void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         getField(clazz, fieldName).set(instance, value);
     }
 
-    public void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, SecurityException {
+    public void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         setValue(instance, instance.getClass(), fieldName, value);
     }
 

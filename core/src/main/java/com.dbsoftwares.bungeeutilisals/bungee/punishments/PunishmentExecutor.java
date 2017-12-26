@@ -1,8 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.bungee.punishments;
 
-import com.dbsoftwares.bungeeutilisals.api.punishmentts.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishmentts.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 
 import java.util.LinkedHashMap;
 

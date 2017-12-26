@@ -1,7 +1,11 @@
 package com.dbsoftwares.bungeeutilisals.bungee.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
+import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
+import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.user.BUser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -28,6 +32,24 @@ public class UserConnectionListener implements Listener {
 
         BUser user = new BUser();
         user.load(userPreLoadEvent);
+
+        testInventoryAPI(player);
+    }
+
+    private void testInventoryAPI(ProxiedPlayer player) {
+        Inventory inventory = new Inventory("Testing BungeeUtilisals inventory", 3 * 9);
+
+        ItemStack item = new ItemStack(Material.WOOL);
+
+        for (int i = 0; i < 27; i++) {
+            ItemStack clone = (ItemStack) item.clone();
+            clone.setData(MathUtils.randomRangeInt(0, 15));
+            clone.setAmount(i + 1);
+
+            inventory.setItem(i, clone);
+        }
+
+        BungeeUtilisals.getApi().getSimpleExecutor().delayedExecute(5, () -> inventory.open(player));
     }
 
     @EventHandler

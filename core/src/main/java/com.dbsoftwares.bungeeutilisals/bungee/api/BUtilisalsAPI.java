@@ -2,6 +2,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
@@ -26,6 +27,7 @@ public class BUtilisalsAPI implements BUAPI {
     private EventLoader eventLoader;
     private LanguageManager languageManager;
     private UserData userdata;
+    private SimpleExecutor simpleExecutor;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
         this.instance = instance;
@@ -34,6 +36,7 @@ public class BUtilisalsAPI implements BUAPI {
         this.eventLoader = new EventLoader();
         this.languageManager = new LanguageManager(instance);
         this.userdata = new UserData();
+        this.simpleExecutor = new SimpleExecutor();
     }
 
     @Override
@@ -86,5 +89,10 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public IChatManager getChatManager() {
         return chatManager;
+    }
+
+    @Override
+    public SimpleExecutor getSimpleExecutor() {
+        return simpleExecutor;
     }
 }
