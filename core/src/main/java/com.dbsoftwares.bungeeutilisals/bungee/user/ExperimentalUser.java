@@ -64,6 +64,5 @@ public class ExperimentalUser implements IExperimentalUser {
         if (hasOpenInventory()) {
             closeInventory();
         }
-
     }
 }

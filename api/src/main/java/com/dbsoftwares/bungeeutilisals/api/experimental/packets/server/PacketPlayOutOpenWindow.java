@@ -18,6 +18,10 @@ public class PacketPlayOutOpenWindow extends Packet {
     private int slots;
     private String type;
 
+    public PacketPlayOutOpenWindow() {
+        super(0x13);
+    }
+
     public PacketPlayOutOpenWindow(int id, String type, String title, int slots, boolean ishorse) {
         super(0x13);
         this.id = id;

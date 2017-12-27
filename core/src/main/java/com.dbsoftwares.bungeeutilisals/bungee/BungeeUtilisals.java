@@ -14,11 +14,14 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInCloseWindow;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInWindowClick;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutCloseWindow;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutOpenWindow;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutSetSlot;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutWindowItems;
+import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
@@ -26,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.OnPacketExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.experimental.inventory.BungeeInventory;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.PacketInjectListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
@@ -101,6 +105,11 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
 
 
+        api.getEventLoader().register(UserLoadEvent.class, event -> {
+            User user = event.getUser();
+            BungeeInventory inventory = new BungeeInventory();
+        });
+
         final int[] amount = {0};
         api.getEventLoader().register(InventoryClickEvent.class, event -> {
             System.out.println("#" + amount[0] + event.getPlayer().getName() + " has clicked on " + event.getSlot() + " in "
@@ -167,10 +176,11 @@ public class BungeeUtilisals extends Plugin {
         Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
         Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, PacketPlayInCloseWindow.class);
 
+
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, PacketPlayOutOpenWindow.class);
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, PacketPlayOutWindowItems.class);
-        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, OutSetSlot.class);
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, PacketPlayOutSetSlot.class);
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PacketInjectListener());
         api.getEventLoader().register(OnPacketEvent.class, new OnPacketExecutor());
