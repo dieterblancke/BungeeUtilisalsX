@@ -5,10 +5,8 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.md_5.bungee.protocol.ProtocolConstants.Direction;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class PacketPlayInWindowClick extends Packet {
 
@@ -44,6 +42,16 @@ public class PacketPlayInWindowClick extends Packet {
 
     @Override
     public void handle(User user) {
+    }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof PacketPlayInWindowClick)) {
+            return false;
+        }
+        PacketPlayInWindowClick packet = (PacketPlayInWindowClick) other;
+        return packet.window == window && packet.actionNumber == actionNumber &&
+                packet.item.isSimilarTo(item) && packet.mode == mode && packet.slot == slot;
     }
 
     public static final int NORMAL_LEFT_CLICK = getInt(0, 0);

@@ -4,11 +4,8 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
-import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class PacketPlayOutCloseWindow extends Packet {
 
@@ -36,4 +33,13 @@ public class PacketPlayOutCloseWindow extends Packet {
 
     @Override
     public void handle(User user) { }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof PacketPlayOutCloseWindow)) {
+            return false;
+        }
+        PacketPlayOutCloseWindow packet = (PacketPlayOutCloseWindow) other;
+        return packet.window == window;
+    }
 }

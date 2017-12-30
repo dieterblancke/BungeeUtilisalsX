@@ -7,6 +7,7 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
 import com.google.common.collect.Maps;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
@@ -63,7 +64,8 @@ public class BungeeInventory implements Inventory {
 
     @Override
     public boolean setItem(int slot, ItemStack stack) {
-        return false;
+        map.put(slot, stack);
+        return true;
     }
 
     public boolean addItem(ItemStack stack) {

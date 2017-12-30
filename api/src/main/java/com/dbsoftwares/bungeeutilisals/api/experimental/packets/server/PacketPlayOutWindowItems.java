@@ -5,10 +5,8 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import io.netty.buffer.ByteBuf;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
-@EqualsAndHashCode(callSuper = true)
 @Data
 public class PacketPlayOutWindowItems extends Packet {
 
@@ -50,4 +48,13 @@ public class PacketPlayOutWindowItems extends Packet {
 
     @Override
     public void handle(User user) { }
+
+    @Override
+    public boolean equals(Object other) {
+        if (!(other instanceof PacketPlayOutWindowItems)) {
+            return false;
+        }
+        PacketPlayOutWindowItems packet = (PacketPlayOutWindowItems) other;
+        return packet.window == window && packet.items == items;
+    }
 }

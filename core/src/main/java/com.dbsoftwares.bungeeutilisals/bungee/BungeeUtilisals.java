@@ -12,9 +12,9 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
+import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemMeta;
+import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
+import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInCloseWindow;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInWindowClick;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutCloseWindow;
@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
-import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.OnPacketExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.inventory.BungeeInventory;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.PacketInjectListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
@@ -108,22 +107,19 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(UserLoadEvent.class, event -> {
             User user = event.getUser();
             BungeeInventory inventory = new BungeeInventory();
-        });
 
-        final int[] amount = {0};
-        api.getEventLoader().register(InventoryClickEvent.class, event -> {
-            System.out.println("#" + amount[0] + event.getPlayer().getName() + " has clicked on " + event.getSlot() + " in "
-                    + event.getInventory().getTitle() + "! Cancelling: " + (amount[0] % 2 == 0) + " ...");
+            inventory.setItem(0, new ItemStack(Material.BED).setAmount(1).setData(1)
+                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
+            inventory.setItem(1, new ItemStack(Material.BED).setAmount(1).setData(2)
+                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
+            inventory.setItem(2, new ItemStack(Material.BED).setAmount(1).setData(3)
+                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
+            inventory.setItem(3, new ItemStack(Material.BED).setAmount(1).setData(4)
+                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
+            inventory.setItem(4, new ItemStack(Material.BED).setAmount(1).setData(14)
+                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
 
-            System.out.println("#" + amount[0] + "Item Data: " + event.getClickedItem().getType() + " "
-                    + event.getClickedItem().getAmount() + " " + event.getClickedItem().getData());
-
-            if (amount[0] % 2 == 0) {
-                event.setCancelled(true);
-            } else {
-                event.setCancelled(false);
-            }
-            amount[0]++;
+            user.experimental().openInventory(inventory);
         });
     }
 
@@ -183,6 +179,5 @@ public class BungeeUtilisals extends Plugin {
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, PacketPlayOutSetSlot.class);
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new PacketInjectListener());
-        api.getEventLoader().register(OnPacketEvent.class, new OnPacketExecutor());
     }
 }

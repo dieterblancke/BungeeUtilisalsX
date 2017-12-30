@@ -1,7 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.experimental.item;
 
 import lombok.Getter;
-import lombok.Setter;
 
 public class ItemStack implements Cloneable {
 
@@ -9,7 +8,8 @@ public class ItemStack implements Cloneable {
     @Getter private int amount;
     @Getter private int data;
 
-    @Getter @Setter private ItemMeta itemMeta = new ItemMeta();
+    @Getter
+    private ItemMeta itemMeta = new ItemMeta();
 
     public ItemStack(Material type) {
         this.type = type;
@@ -25,6 +25,11 @@ public class ItemStack implements Cloneable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public ItemStack setItemMeta(ItemMeta meta) {
+        this.itemMeta = meta;
+        return this;
     }
 
     public ItemStack setType(Material type) {
