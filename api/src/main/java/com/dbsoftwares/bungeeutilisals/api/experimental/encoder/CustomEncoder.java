@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.experimental.encoder;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.experimental.connection.BungeeConnection;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
 import net.md_5.bungee.UserConnection;
@@ -23,14 +23,14 @@ public class CustomEncoder extends MessageToMessageEncoder<DefinedPacket> {
 
     @Override
     protected void encode(ChannelHandlerContext ctx, DefinedPacket msg, List<Object> out) {
-        OnPacketEvent event = null;
+        PacketUpdateEvent event = null;
 
         if (server) {
-            event = new OnPacketEvent(msg, p, new BungeeConnection(), p);
+            event = new PacketUpdateEvent(msg, p, new BungeeConnection(), p);
         } else {
             if (p instanceof UserConnection) {
                 UserConnection u = (UserConnection) p;
-                event = new OnPacketEvent(msg, p, new BungeeConnection(), u.getServer());
+                event = new PacketUpdateEvent(msg, p, new BungeeConnection(), u.getServer());
             }
         }
 

@@ -30,10 +30,15 @@ public class ExperimentalUser implements IExperimentalUser {
                 inv.getType().equals(InventoryType.CHEST) ? inv.getSize() : inv.getType().getDefaultSlots(), false);
 
         this.sendPacket(e);
-        this.sendPacket(new PacketPlayOutWindowItems(99, inv.getContents()));
+        this.sendPacket(new PacketPlayOutWindowItems(99, inv.getContentsAsArray()));
 
         inv.unsafe().getViewers().add(user);
         this.currentInventory = inv;
+    }
+
+    @Override
+    public Inventory getOpenInventory() {
+        return currentInventory;
     }
 
     @Override
@@ -47,9 +52,6 @@ public class ExperimentalUser implements IExperimentalUser {
             return;
         }
         InventoryCloseEvent event = new InventoryCloseEvent(user.getParent(), currentInventory);
-        if (event.isCancelled()) {
-            return;
-        }
         this.sendPacket(new PacketPlayOutCloseWindow(99));
         currentInventory.unsafe().getViewers().remove(user);
         currentInventory = null;

@@ -20,6 +20,7 @@ import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
+
 import java.io.DataOutput;
 import java.util.Optional;
 
@@ -80,7 +81,7 @@ public abstract class Packet extends DefinedPacket {
     }
 
     public static void writeItem(ByteBuf buf, ItemStack item) {
-        if (item.getType() == null) {
+        if (item == null || item.getType() == null) {
             buf.writeShort(-1);
         } else {
             buf.writeShort(item.getType().getId());

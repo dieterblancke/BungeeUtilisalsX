@@ -11,10 +11,10 @@ import net.md_5.bungee.protocol.ProtocolConstants.Direction;
 public class PacketPlayInWindowClick extends Packet {
 
     public int window;
-    private short actionNumber;
-    private ItemStack item;
-    private int mode = 0;
-    private int slot;
+    public short actionNumber;
+    public ItemStack item;
+    public int mode = 0;
+    public int slot;
 
     public PacketPlayInWindowClick() {
         super(0x12);
@@ -91,7 +91,7 @@ public class PacketPlayInWindowClick extends Packet {
         return mode >> 4;
     }
 
-    public static boolean inDrop(int mode) {
+    public static boolean isDrop(int mode) {
         return getMode(mode) == 4;
     }
 

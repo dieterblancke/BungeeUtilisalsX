@@ -7,9 +7,10 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class BungeeInventory implements Inventory {
 
@@ -156,7 +157,7 @@ public class BungeeInventory implements Inventory {
 
                     if (amount <= toDelete) {
                         toDelete -= amount;
-                        clear(first);
+                        setItem(first, null);
                     } else {
                         itemStack.setAmount(amount - toDelete);
                         setItem(first, itemStack);
@@ -283,22 +284,16 @@ public class BungeeInventory implements Inventory {
 
     @Override
     public void remove(ItemStack item) {
+        TreeMap<Integer, ItemStack> items = all(item);
 
-    }
-
-    @Override
-    public void clear(int slot) {
-
+        for (int slot : items.keySet()) {
+            setItem(slot, null);
+        }
     }
 
     @Override
     public void clear() {
-
-    }
-
-    @Override
-    public List<ProxiedPlayer> getViewers() {
-        return null;
+        map.clear();
     }
 
     @Override
@@ -307,18 +302,13 @@ public class BungeeInventory implements Inventory {
     }
 
     @Override
-    public ListIterator<ItemStack> iterator() {
-        return null;
-    }
-
-    @Override
-    public ListIterator<ItemStack> iterator(int var1) {
-        return null;
-    }
-
-    @Override
     public InventoryUnsafe unsafe() {
         return unsafe;
+    }
+
+    @Override
+    public ItemStack[] getContentsAsArray() {
+        return map.values().toArray(new ItemStack[size]);
     }
 
     public int firstPartial(int materialId) {

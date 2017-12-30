@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.experimental.encoder;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.experimental.connection.BungeeConnection;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.OnPacketEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
 import net.md_5.bungee.UserConnection;
@@ -28,15 +28,15 @@ public class CustomDecoder extends MessageToMessageDecoder<PacketWrapper> {
             return;
         }
 
-        OnPacketEvent event = null;
+        PacketUpdateEvent event = null;
 
         if (server) {
             if (p instanceof UserConnection) {
                 UserConnection u = (UserConnection) p;
-                event = new OnPacketEvent(wrapper.packet, p, u.getServer(), new BungeeConnection());
+                event = new PacketUpdateEvent(wrapper.packet, p, u.getServer(), new BungeeConnection());
             }
         } else {
-            event = new OnPacketEvent(wrapper.packet, p, p, new BungeeConnection());
+            event = new PacketUpdateEvent(wrapper.packet, p, p, new BungeeConnection());
         }
 
         if (event != null) {

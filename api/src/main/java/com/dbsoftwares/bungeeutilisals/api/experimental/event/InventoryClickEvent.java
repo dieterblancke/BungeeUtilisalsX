@@ -4,6 +4,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInWindowClick;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class InventoryClickEvent extends AbstractEvent implements Cancellable {
@@ -14,16 +15,16 @@ public class InventoryClickEvent extends AbstractEvent implements Cancellable {
     int slot;
     Inventory inventory;
     ItemStack clickedItem;
-    boolean leftClick;
-    boolean shiftClick;
+    int mode;
+    int action;
 
-    public InventoryClickEvent(ProxiedPlayer p, Inventory inventory, int slot, ItemStack clicked, boolean lefltClick, boolean shiftClick) {
+    public InventoryClickEvent(ProxiedPlayer p, Inventory inventory, int slot, ItemStack clicked, int mode, int action) {
         this.p = p;
         this.inventory = inventory;
         this.slot = slot;
         this.clickedItem = clicked;
-        this.leftClick = lefltClick;
-        this.shiftClick = shiftClick;
+        this.mode = mode;
+        this.action = action;
     }
 
     public ProxiedPlayer getPlayer() {
@@ -42,16 +43,44 @@ public class InventoryClickEvent extends AbstractEvent implements Cancellable {
         return slot;
     }
 
+    public boolean isDrop() {
+        return PacketPlayInWindowClick.isDrop(mode);
+    }
+
+    public boolean isDrag() {
+        return PacketPlayInWindowClick.isDrag(mode);
+    }
+
+    public boolean isKeyPress() {
+        return PacketPlayInWindowClick.isKey(mode);
+    }
+
     public boolean isLeftClick() {
-        return leftClick;
+        int mode = this.mode >> 4;
+
+        return mode == 0 && action == 0;
     }
 
     public boolean isRightClick() {
-        return !leftClick;
+        int mode = this.mode >> 4;
+
+        return mode == 0 && action == 1;
+    }
+
+    public boolean isScrollClick() {
+        int mode = this.mode >> 4;
+
+        return mode == 3;
+    }
+
+    public boolean isDoubleClick() {
+        int mode = this.mode >> 4;
+
+        return mode == 6;
     }
 
     public boolean isShiftClick() {
-        return shiftClick;
+        return PacketPlayInWindowClick.isShiftClick(mode);
     }
 
     @Override
