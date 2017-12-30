@@ -12,6 +12,10 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryCloseEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemMeta;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
@@ -28,8 +32,9 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.inventory.BungeeInventory;
-import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.PacketInjectListener;
+import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
@@ -103,24 +108,41 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
         api.getEventLoader().register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
 
+        api.getEventLoader().register(UserLoadEvent.class, event ->
+                api.getSimpleExecutor().delayedExecute(3, () -> {
+                    User user = event.getUser();
+                    BungeeInventory inventory = new BungeeInventory();
 
-        api.getEventLoader().register(UserLoadEvent.class, event -> {
-            User user = event.getUser();
-            BungeeInventory inventory = new BungeeInventory();
+                    inventory.setItem(0, new ItemStack(Material.BED).setAmount(1).setData(1)
+                            .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&6Colored Bed"))
+                                    .setLore(Utils.c("&6This item is a colored bed! :O"))));
+                    inventory.setItem(1, new ItemStack(Material.BED).setAmount(1).setData(2)
+                            .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&dColored Bed"))
+                                    .setLore(Utils.c("&dThis item is a colored bed! :O"))));
+                    inventory.setItem(2, new ItemStack(Material.BED).setAmount(1).setData(3)
+                            .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&bColored Bed"))
+                                    .setLore(Utils.c("&bThis item is a colored bed! :O"))));
+                    inventory.setItem(3, new ItemStack(Material.BED).setAmount(1).setData(4)
+                            .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&eColored Bed"))
+                                    .setLore(Utils.c("&eThis item is a colored bed! :O"))));
+                    inventory.setItem(4, new ItemStack(Material.BED).setAmount(1).setData(14)
+                            .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&4Colored Bed"))
+                                    .setLore(Utils.c("&4This item is a colored bed! :O"))));
 
-            inventory.setItem(0, new ItemStack(Material.BED).setAmount(1).setData(1)
-                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
-            inventory.setItem(1, new ItemStack(Material.BED).setAmount(1).setData(2)
-                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
-            inventory.setItem(2, new ItemStack(Material.BED).setAmount(1).setData(3)
-                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
-            inventory.setItem(3, new ItemStack(Material.BED).setAmount(1).setData(4)
-                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
-            inventory.setItem(4, new ItemStack(Material.BED).setAmount(1).setData(14)
-                    .setItemMeta(new ItemMeta().setDisplayName(Utils.c("&cColored Bed")).setLore(Utils.c("&cThis item is a colored bed! :O"))));
+                    user.experimental().openInventory(inventory);
+                })
+        );
 
-            user.experimental().openInventory(inventory);
-        });
+        api.getEventLoader().register(InventoryClickEvent.class, event ->
+                ProxyServer.getInstance().broadcast(Utils.format(event.getPlayer().getName() + " has clicked in " + event.getInventory().getTitle() +
+                        " on slot " + event.getSlot() + ". Details: left: " + event.isLeftClick() + " right: " + event.isRightClick() +
+                        " shift: " + event.isShiftClick() + " drag: " + event.isDrag() + " double: " + event.isDoubleClick() +
+                        " drop: " + event.isDrop() + " scroll: " + event.isScrollClick() + " key: " + event.isKeyPress()))
+        );
+
+        api.getEventLoader().register(InventoryCloseEvent.class, event -> ProxyServer.getInstance().broadcast(
+                Utils.format(event.getPlayer().getName() + " has closed an inventory! (" + event.getInventory().getTitle() + ")"))
+        );
     }
 
     @Override
@@ -178,6 +200,10 @@ public class BungeeUtilisals extends Plugin {
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, PacketPlayOutWindowItems.class);
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, PacketPlayOutSetSlot.class);
 
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new PacketInjectListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
+
+        PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
+        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor::onPacketUpdate);
+        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor::onPacketReceive);
     }
 }

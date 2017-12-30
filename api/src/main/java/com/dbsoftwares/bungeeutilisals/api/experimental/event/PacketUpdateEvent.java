@@ -1,12 +1,14 @@
 package com.dbsoftwares.bungeeutilisals.api.experimental.event;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.user.User;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
-public class OnPacketEvent extends AbstractEvent implements Cancellable {
+public class PacketUpdateEvent extends AbstractEvent implements Cancellable {
 
     private boolean cancelled;
     private DefinedPacket packet;
@@ -14,7 +16,7 @@ public class OnPacketEvent extends AbstractEvent implements Cancellable {
     private Connection reciever;
     private ProxiedPlayer player;
 
-    public OnPacketEvent(DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection reciever) {
+    public PacketUpdateEvent(DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection reciever) {
         this.cancelled = false;
         this.player = p;
         this.packet = packet;
@@ -24,6 +26,10 @@ public class OnPacketEvent extends AbstractEvent implements Cancellable {
 
     public ProxiedPlayer getPlayer(){
         return player;
+    }
+
+    public User getUser() {
+        return BUCore.getApi().getUser(player).orElse(null);
     }
 
     public DefinedPacket getPacket(){

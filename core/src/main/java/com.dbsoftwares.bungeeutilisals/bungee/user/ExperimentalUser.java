@@ -3,7 +3,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.user;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryCloseEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryType;
-import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutCloseWindow;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.server.PacketPlayOutOpenWindow;
@@ -31,10 +30,15 @@ public class ExperimentalUser implements IExperimentalUser {
                 inv.getType().equals(InventoryType.CHEST) ? inv.getSize() : inv.getType().getDefaultSlots(), false);
 
         this.sendPacket(e);
-        this.sendPacket(new PacketPlayOutWindowItems(99, inv.getContents().values().toArray(new ItemStack[inv.getContents().size()])));
+        this.sendPacket(new PacketPlayOutWindowItems(99, inv.getContentsAsArray()));
 
         inv.unsafe().getViewers().add(user);
         this.currentInventory = inv;
+    }
+
+    @Override
+    public Inventory getOpenInventory() {
+        return currentInventory;
     }
 
     @Override
@@ -48,9 +52,6 @@ public class ExperimentalUser implements IExperimentalUser {
             return;
         }
         InventoryCloseEvent event = new InventoryCloseEvent(user.getParent(), currentInventory);
-        if (event.isCancelled()) {
-            return;
-        }
         this.sendPacket(new PacketPlayOutCloseWindow(99));
         currentInventory.unsafe().getViewers().remove(user);
         currentInventory = null;

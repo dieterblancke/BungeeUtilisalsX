@@ -19,6 +19,11 @@ public interface IExperimentalUser {
     void openInventory(Inventory inventory, Boolean resetCursor);
 
     /**
+     * @return The inventory the user currently has opened.
+     */
+    Inventory getOpenInventory();
+
+    /**
      * @return True if an inventory is opened, false if not.
      */
     Boolean hasOpenInventory();

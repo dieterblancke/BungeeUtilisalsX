@@ -15,7 +15,7 @@ import net.md_5.bungee.netty.PipelineUtils;
 
 import java.lang.reflect.Method;
 
-public class PacketInjectListener implements Listener {
+public class SimplePacketListener implements Listener {
 
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
