@@ -15,6 +15,10 @@ public class PacketPlayOutWindowItems extends Packet {
     private int window;
     private ItemStack[] items;
 
+    public PacketPlayOutWindowItems() {
+        super(0x14);
+    }
+
     public PacketPlayOutWindowItems(int window, ItemStack[] items) {
         super(0x14);
 

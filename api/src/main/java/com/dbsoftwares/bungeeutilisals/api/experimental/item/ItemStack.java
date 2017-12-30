@@ -1,14 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.experimental.item;
 
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTCompressedStreamTools;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTReadLimiter;
-import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufInputStream;
-import io.netty.buffer.ByteBufOutputStream;
 import lombok.Getter;
 import lombok.Setter;
-
-import java.io.DataOutput;
 
 public class ItemStack implements Cloneable {
 
@@ -22,22 +15,6 @@ public class ItemStack implements Cloneable {
         this.type = type;
         this.amount = 1;
         this.data = 0;
-    }
-
-    public void write(ByteBuf buf) {
-        if (type == null) {
-            buf.writeShort(-1);
-        } else {
-            buf.writeShort(type.getId());
-            buf.writeByte(amount);
-            buf.writeShort(data);
-
-            if (itemMeta.getTag() == null || itemMeta.getTag().isEmpty()) {
-                buf.writeByte(0);
-            } else {
-                NBTCompressedStreamTools.a(itemMeta.getTag(), (DataOutput) new ByteBufOutputStream(buf));
-            }
-        }
     }
 
     @Override

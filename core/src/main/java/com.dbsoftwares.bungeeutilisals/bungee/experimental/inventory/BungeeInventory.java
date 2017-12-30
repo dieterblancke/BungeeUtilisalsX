@@ -1,33 +1,26 @@
 package com.dbsoftwares.bungeeutilisals.bungee.experimental.inventory;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.InventoryClickEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.Inventory;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryType;
+import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryUnsafe;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
-import java.util.UUID;
 
 public class BungeeInventory implements Inventory {
-
-    // TODO: Base inventory on BungeeUtil ?? Or make completely customized version.
 
     private HashMap<Integer, ItemStack> map;
     private InventoryType type;
     private String title;
     private int size;
-    private int inventoryID;
+    private InventoryUnsafe unsafe;
 
     public BungeeInventory() {
-        this(InventoryType.CHEST_INVENTORY, "Chest", 27);
+        this(InventoryType.CHEST, "Chest", 27);
     }
 
     public BungeeInventory(InventoryType type) {
@@ -41,55 +34,36 @@ public class BungeeInventory implements Inventory {
         if(size % 9 != 0) {
             throw new RuntimeException(size + " % 9 != 0");
         }
+        this.unsafe = new InventoryUnsafe();
         this.type = type;
         this.map = Maps.newHashMap();
         this.title = title;
         this.size = size;
-        this.inventoryID = InventoryRegistry.getCurrentInventoryId().getAndIncrement();
-
-        if (InventoryRegistry.getCurrentInventoryId().get() > 999) {
-            InventoryRegistry.getCurrentInventoryId().set(0);
-        }
-
-        InventoryRegistry.getInventories().put(inventoryID, this);
     }
 
-    public int getInventoryId() {
-        return inventoryID;
-    }
-
+    @Override
     public void setSize(int i) {
-        this.size = i;
+
     }
 
+    @Override
     public int getSize() {
-        return size;
+        return 0;
     }
 
+    @Override
     public String getTitle() {
         return title;
     }
 
+    @Override
     public ItemStack getItem(int slot) {
-        if (map.containsKey(slot)) {
-            return map.get(slot);
-        }
-        return null;
+        return map.getOrDefault(slot, null);
     }
 
+    @Override
     public boolean setItem(int slot, ItemStack stack) {
-        map.put(slot, stack);
-
-        for (UUID id : InventoryRegistry.getOpen().keySet()) {
-            if (InventoryRegistry.getOpen().get(id) == inventoryID) {
-                ProxiedPlayer p = ProxyServer.getInstance().getPlayer(id);
-                if (p != null) {
-                    updateSlot(p, slot);
-                }
-            }
-        }
-
-        return true;
+        return false;
     }
 
     public boolean addItem(ItemStack stack) {
@@ -101,37 +75,9 @@ public class BungeeInventory implements Inventory {
         return slot <= size - 1 && setItem(slot, stack);
     }
 
-//    public boolean open(ProxiedPlayer p) {
-//        InventoryRegistry.getOpen().put(p.getUniqueId(), inventoryID);
-//
-//        OutOpenWindow window = new OutOpenWindow();
-//        window.id = inventoryID;
-//        window.title = "{\"text\":\"" + title + "\"}";
-//        window.slots = size;
-//        window.windowType = "Chest";
-//
-//        p.unsafe().sendPacket(window);
-//
-//        for (int i : map.keySet()) {
-//            OutSetSlot slot = new OutSetSlot();
-//            slot.windowID = inventoryID;
-//            slot.slot = i;
-//            slot.item = map.get(i);
-//
-//            if (slot.item != null) {
-//                p.unsafe().sendPacket(slot);
-//            }
-//        }
-//
-//        return true;
-//    }
-
     @Override
     public void destroy() {
-        List<UUID> remove = Lists.newArrayList();
-        InventoryRegistry.getOpen().keySet().stream().filter(id -> InventoryRegistry.getOpen().get(id) == inventoryID).forEach(remove::add);
-        remove.forEach(id -> InventoryRegistry.getOpen().remove(id));
-        InventoryRegistry.getInventories().remove(inventoryID);
+
     }
 
     @Override
@@ -297,6 +243,11 @@ public class BungeeInventory implements Inventory {
         return null;
     }
 
+    @Override
+    public InventoryUnsafe unsafe() {
+        return unsafe;
+    }
+
     public int firstPartial(int materialId) {
         ItemStack[] inventory = getStorageContents();
         for (int i = 0; i < inventory.length; i++) {
@@ -325,58 +276,5 @@ public class BungeeInventory implements Inventory {
             }
         }
         return -1;
-    }
-
-    private void handleClick(ProxiedPlayer p, ItemStack stack, int slot, boolean shift, boolean leftClick) {
-        PlayerInventory pinv = InventoryRegistry.getPlayerInventory(p.getUniqueId());
-
-        if (slot >= size) {
-            // Click outside inventory window, not listening.
-            return;
-        }
-
-        InventoryClickEvent event = new InventoryClickEvent(p, this, slot, stack, leftClick, shift);
-        BUCore.getApi().getEventLoader().launchEvent(event);
-
-        if (event.isCancelled()) {
-            for (int i = 0; i < size; i++) {
-                if (map.containsKey(i)) {
-                    OutSetSlot slotPacket = new OutSetSlot();
-                    slotPacket.windowID = inventoryID;
-                    slotPacket.slot = i;
-                    slotPacket.item = map.get(i);
-
-                    p.unsafe().sendPacket(slotPacket);
-                } else {
-                    OutSetSlot slotPacket = new OutSetSlot();
-                    slotPacket.windowID = inventoryID;
-                    slotPacket.slot = i;
-                    slotPacket.item = null;
-
-                    p.unsafe().sendPacket(slotPacket);
-                }
-            }
-
-            OutWindowItems pWindow = new OutWindowItems();
-            pWindow.id = 0;
-            pWindow.items = pinv.getItems();
-
-            p.unsafe().sendPacket(pWindow);
-
-            OutSetSlot nullifyPacket = new OutSetSlot();
-            nullifyPacket.windowID = -1;
-            nullifyPacket.slot = -1;
-
-            p.unsafe().sendPacket(nullifyPacket);
-        }
-    }
-
-    private void updateSlot(ProxiedPlayer p, int slot) {
-        OutSetSlot packet = new OutSetSlot();
-        packet.windowID = inventoryID;
-        packet.slot = slot;
-        packet.item = map.getOrDefault(slot, null);
-
-        p.unsafe().sendPacket(packet);
     }
 }

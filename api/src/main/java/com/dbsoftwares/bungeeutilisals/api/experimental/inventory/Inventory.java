@@ -10,8 +10,6 @@ import java.util.ListIterator;
 
 public interface Inventory {
 
-    int getInventoryId();
-
     void setSize(int i);
 
     int getSize();
