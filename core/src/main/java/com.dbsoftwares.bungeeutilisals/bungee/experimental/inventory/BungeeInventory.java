@@ -5,16 +5,15 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryType;
 import com.dbsoftwares.bungeeutilisals.api.experimental.inventory.InventoryUnsafe;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.ItemStack;
 import com.dbsoftwares.bungeeutilisals.api.experimental.item.Material;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 public class BungeeInventory implements Inventory {
 
-    private HashMap<Integer, ItemStack> map;
+    private TreeMap<Integer, ItemStack> map;
     private InventoryType type;
     private String title;
     private int size;
@@ -37,19 +36,19 @@ public class BungeeInventory implements Inventory {
         }
         this.unsafe = new InventoryUnsafe();
         this.type = type;
-        this.map = Maps.newHashMap();
+        this.map = Maps.newTreeMap();
         this.title = title;
         this.size = size;
     }
 
     @Override
-    public void setSize(int i) {
-
+    public int getSize() {
+        return size;
     }
 
     @Override
-    public int getSize() {
-        return 0;
+    public void setSize(int i) {
+        this.size = i;
     }
 
     @Override
@@ -64,6 +63,9 @@ public class BungeeInventory implements Inventory {
 
     @Override
     public boolean setItem(int slot, ItemStack stack) {
+        if (stack == null || stack.getType().equals(Material.AIR)) {
+            map.remove(slot);
+        }
         map.put(slot, stack);
         return true;
     }
@@ -79,12 +81,16 @@ public class BungeeInventory implements Inventory {
 
     @Override
     public void destroy() {
-
+        unsafe.getViewers().clear();
+        map.clear();
+        size = type.getDefaultSlots();
+        type = null;
+        title = null;
     }
 
     @Override
-    public HashMap<Integer, ItemStack> addItem(ItemStack... items) {
-        HashMap<Integer, ItemStack> leftover = Maps.newHashMap();
+    public TreeMap<Integer, ItemStack> addItem(ItemStack... items) {
+        TreeMap<Integer, ItemStack> leftover = Maps.newTreeMap();
 
         for (int i = 0; i < items.length; i++) {
             ItemStack item = items[i];
@@ -131,92 +137,157 @@ public class BungeeInventory implements Inventory {
     }
 
     @Override
-    public HashMap<Integer, ItemStack> removeItem(ItemStack... var1) {
-        return null;
+    public TreeMap<Integer, ItemStack> removeItem(ItemStack... items) {
+        TreeMap<Integer, ItemStack> leftover = new TreeMap<>();
+
+        for (int i = 0; i < items.length; i++) {
+            ItemStack item = items[i];
+            int toDelete = item.getAmount();
+
+            while (true) {
+                int first = first(item);
+                if (first == -1) {
+                    item.setAmount(toDelete);
+                    leftover.put(i, item);
+                    break;
+                } else {
+                    ItemStack itemStack = getItem(first);
+                    int amount = itemStack.getAmount();
+
+                    if (amount <= toDelete) {
+                        toDelete -= amount;
+                        clear(first);
+                    } else {
+                        itemStack.setAmount(amount - toDelete);
+                        setItem(first, itemStack);
+                        toDelete = 0;
+                    }
+                }
+                if (toDelete <= 0) {
+                    break;
+                }
+            }
+        }
+        return leftover;
     }
 
     @Override
-    public ItemStack[] getContents() {
-        return new ItemStack[0];
+    public TreeMap<Integer, ItemStack> getContents() {
+        return map;
     }
 
     @Override
-    public void setContents(ItemStack[] var1) {
-
+    public void setContents(TreeMap<Integer, ItemStack> items) {
+        this.map = items;
     }
 
     @Override
-    public ItemStack[] getStorageContents() {
-        return new ItemStack[0];
-    }
-
-    @Override
-    public void setStorageContents(ItemStack[] var1) {
-
-    }
-
-    @Override
-    public boolean contains(Material var1) {
+    public boolean contains(Material mat) {
+        for (ItemStack item : map.values()) {
+            if (item.getType().equals(mat)) {
+                return true;
+            }
+        }
         return false;
     }
 
     @Override
-    public boolean contains(ItemStack var1) {
-        return false;
+    public boolean contains(ItemStack item) {
+        return containsAtLeast(item, item.getAmount());
     }
 
     @Override
-    public boolean contains(Material var1, int var2) {
-        return false;
+    public boolean containsAtLeast(Material mat, int amount) {
+        int amountOfSimilar = 0;
+        for (ItemStack item : map.values()) {
+            if (item.getType().equals(mat)) {
+                amountOfSimilar += item.getAmount();
+            }
+        }
+        return amountOfSimilar >= amount;
     }
 
     @Override
-    public boolean contains(ItemStack var1, int var2) {
-        return false;
+    public boolean containsAtLeast(ItemStack item, int amount) {
+        int amountOfSimilar = 0;
+        for (ItemStack i : map.values()) {
+            if (i.isSimilarTo(item)) {
+                amountOfSimilar += i.getAmount();
+            }
+        }
+        return amountOfSimilar >= amount;
     }
 
     @Override
-    public boolean containsAtLeast(ItemStack var1, int var2) {
-        return false;
+    public TreeMap<Integer, ItemStack> all(Material mat) {
+        TreeMap<Integer, ItemStack> items = Maps.newTreeMap();
+
+        for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
+            if (entry.getValue().getType().equals(mat)) {
+                items.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return items;
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(Material var1) {
-        return null;
+    public TreeMap<Integer, ItemStack> all(ItemStack item) {
+        TreeMap<Integer, ItemStack> items = Maps.newTreeMap();
+
+        for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
+            if (entry.getValue().isSimilarTo(item)) {
+                items.put(entry.getKey(), entry.getValue());
+            }
+        }
+        return items;
     }
 
     @Override
-    public HashMap<Integer, ? extends ItemStack> all(ItemStack var1) {
-        return null;
-    }
-
-    @Override
-    public int first(Material var1) {
+    public int first(Material mat) {
+        for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
+            if (entry.getValue().getType().equals(mat)) {
+                return entry.getKey();
+            }
+        }
         return 0;
     }
 
     @Override
-    public int first(ItemStack var1) {
+    public int first(ItemStack item) {
+        for (Map.Entry<Integer, ItemStack> entry : map.entrySet()) {
+            if (entry.getValue().isSimilarTo(item)) {
+                return entry.getKey();
+            }
+        }
         return 0;
     }
 
     @Override
     public int firstEmpty() {
-        return 0;
+        for (int i = 0; i < size; i++) {
+            if (!map.containsKey(i) || map.get(i).getType().equals(Material.AIR)) {
+                return i;
+            }
+        }
+        return -1;
     }
 
     @Override
-    public void remove(Material var1) {
+    public void remove(Material mat) {
+        TreeMap<Integer, ItemStack> items = all(mat);
+
+        for (int slot : items.keySet()) {
+            setItem(slot, null);
+        }
+    }
+
+    @Override
+    public void remove(ItemStack item) {
 
     }
 
     @Override
-    public void remove(ItemStack var1) {
-
-    }
-
-    @Override
-    public void clear(int var1) {
+    public void clear(int slot) {
 
     }
 
@@ -232,7 +303,7 @@ public class BungeeInventory implements Inventory {
 
     @Override
     public InventoryType getType() {
-        return null;
+        return type;
     }
 
     @Override
@@ -251,9 +322,9 @@ public class BungeeInventory implements Inventory {
     }
 
     public int firstPartial(int materialId) {
-        ItemStack[] inventory = getStorageContents();
-        for (int i = 0; i < inventory.length; i++) {
-            ItemStack item = inventory[i];
+        LinkedList<ItemStack> inventory = Lists.newLinkedList(map.values());
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack item = inventory.get(i);
             if (item != null && item.getType().getId() == materialId && item.getAmount() < item.getType().getMaxStackSize()) {
                 return i;
             }
@@ -266,14 +337,14 @@ public class BungeeInventory implements Inventory {
     }
 
     private int firstPartial(ItemStack item) {
-        ItemStack[] inventory = getStorageContents();
+        LinkedList<ItemStack> inventory = Lists.newLinkedList(map.values());
         ItemStack filteredItem = (ItemStack) item.clone();
         if (item == null) {
             return -1;
         }
-        for (int i = 0; i < inventory.length; i++) {
-            ItemStack cItem = inventory[i];
-            if (cItem != null && cItem.getAmount() < cItem.getType().getMaxStackSize() && cItem.isSimilarTo(filteredItem)) {
+        for (int i = 0; i < inventory.size(); i++) {
+            ItemStack cItem = inventory.get(i);
+            if (cItem != null && cItem.getAmount() <= filteredItem.getAmount() && cItem.isSimilarTo(filteredItem)) {
                 return i;
             }
         }

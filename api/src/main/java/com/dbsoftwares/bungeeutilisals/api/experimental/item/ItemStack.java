@@ -38,6 +38,9 @@ public class ItemStack implements Cloneable {
     }
 
     public ItemStack setAmount(int amount) {
+        if (amount > type.getMaxStackSize()) {
+            throw new RuntimeException("Maximum amount of an ItemStack is 64");
+        }
         this.amount = amount;
         return this;
     }
@@ -53,7 +56,7 @@ public class ItemStack implements Cloneable {
         } else if (item == this) {
             return true;
         } else {
-            if (item.getType().getId() == this.getType().getId() && this.getType().getMaxDurability() == item.getType().getMaxDurability()) {
+            if (item.getType().getId() == this.getType().getId() && this.getData() == item.getData() && this.getType().getMaxDurability() == item.getType().getMaxDurability()) {
                 return this.getItemMeta().isSimilar(item.getItemMeta());
             } else {
                 return false;
