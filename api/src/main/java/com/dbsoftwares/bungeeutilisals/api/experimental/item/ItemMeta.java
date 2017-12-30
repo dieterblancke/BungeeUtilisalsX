@@ -4,14 +4,12 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTBase;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTTagCompound;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTTagList;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.nbt.NBTTagString;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.skin.GameProfile;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 public class ItemMeta {
 
@@ -44,6 +42,8 @@ public class ItemMeta {
         return skullowner.hasKey("Id") ? skullowner.getString("Id") : skullowner.getString("Name");
     }
 
+    /*
+    TODO: Fix GameProfile.
     public ItemMeta setOwner(UUID id) {
         try {
             GameProfile profile = new GameProfile(id, null);
@@ -68,7 +68,7 @@ public class ItemMeta {
             }
         } catch (Exception ignored) { }
         return this;
-    }
+    }*/
 
     public List<String> getLore() {
         return fromNBTList(tag.getList(LORE.NBT));
