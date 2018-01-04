@@ -1,5 +1,17 @@
+# The MySQL hostname (IP)
 hostname: '127.0.0.1'
+# The MySQL port, default this is 3306
 port: 3306
+# The MySQL database / scheme name
 database: 'database'
+# The MySQL username, should at least have write & read access to the database above!
 username: 'username'
+# The MySQL password corresponding to the username above
 password: 'password'
+
+# How many connections can BungeeUtilisals make to the database?
+# Bigger servers might want to increase this value for a higher performance.
+# | WARNING | Do not set the pool size too high (25 max) | WARNING |
+max-pool-size: 5
+
+user-table: 'bu_users'

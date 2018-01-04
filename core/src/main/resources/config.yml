@@ -1,3 +1,16 @@
+# Should debugging mode be enabled?
+debug: false
+
+logging:
+  # Should BungeeUtilisals keep his own log?
+  enabled: true
+  # What TimeUnit should be the checker for expiry date?
+  # Recommended units: HOURS, DAYS, WEEKS
+  unit: WEEKS
+  # How long should it be stored? Formula: amount * unit
+  # For example: 4 * WEEKS = 4 Weeks = 28 days untill a log gets removed.
+  amount: 4
+
 # Primary Identifier, can be two types: NAME or UUID
 primaryIdentifier: UUID
 

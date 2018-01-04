@@ -3,8 +3,8 @@ package com.dbsoftwares.bungeeutilisals.bungee.punishments.commands;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.permissions.Permissions;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.FileLocations;
 import net.md_5.bungee.api.CommandSender;
 
 import java.util.Arrays;
