@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.settings;
+package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import lombok.Getter;
 
