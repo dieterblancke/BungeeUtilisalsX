@@ -1,0 +1,223 @@
+CREATE TABLE IF NOT EXISTS bu_users (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    username VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    language VARCHAR(32) NOT NULL,
+    PRIMARY KEY (id),
+    UNIQUE KEY (uuid),
+    UNIQUE KEY (username),
+    KEY idx_users_uuid (uuid),
+    KEY idx_users_user (username),
+    KEY idx_users_ip (ip)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_friends (
+    userid INT(11) NOT NULL,
+    friendid INT(11) NOT NULL,
+    friendsince DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(userid, friendid),
+    KEY idx_friends_userid (userid),
+    KEY idx_friends_friendid (friendid),
+    FOREIGN KEY(userid) REFERENCES bu_users(id),
+    FOREIGN KEY(friendid) REFERENCES bu_users(id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_friendrequests (
+    userid INT(11) NOT NULL,
+    friendid INT(11) NOT NULL,
+    requested_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY(userid, friendid),
+    KEY idx_friends_userid (userid),
+    KEY idx_friends_friendid (friendid),
+    FOREIGN KEY(userid) REFERENCES bu_users(id),
+    FOREIGN KEY(friendid) REFERENCES bu_users(id)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_bans (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_bans_uuid (uuid),
+    KEY idx_bans_user (user),
+    KEY idx_bans_active (active),
+    KEY idx_bans_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_ipbans (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_ipbans_uuid (uuid),
+    KEY idx_ipbans_user (user),
+    KEY idx_ipbans_active (active),
+    KEY idx_ipbans_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_tempbans (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    time LONG NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_tempbans_uuid (uuid),
+    KEY idx_tempbans_user (user),
+    KEY idx_tempbans_active (active),
+    KEY idx_tempbans_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_iptempbans (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    time LONG NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_iptempbans_uuid (uuid),
+    KEY idx_iptempbans_user (user),
+    KEY idx_iptempbans_active (active),
+    KEY idx_iptempbans_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_mutes (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_mutes_uuid (uuid),
+    KEY idx_mutes_user (user),
+    KEY idx_mutes_active (active),
+    KEY idx_mutes_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_ipmutes (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_ipmutes_uuid (uuid),
+    KEY idx_ipmutes_user (user),
+    KEY idx_ipmutes_active (active),
+    KEY idx_ipmutes_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_tempmutes (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    time LONG NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_tempmutes_uuid (uuid),
+    KEY idx_tempmutes_user (user),
+    KEY idx_tempmutes_active (active),
+    KEY idx_tempmutes_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_iptempmutes (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    time LONG NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active TINYINT(1) NOT NULL,
+    executed_by VARCHAR(64) NOT NULL,
+    removed_by VARCHAR(45) NOT NULL DEFAULT 'UNKNOWN',
+    PRIMARY KEY (id),
+    KEY idx_iptempbans_uuid (uuid),
+    KEY idx_iptempbans_user (user),
+    KEY idx_iptempbans_active (active),
+    KEY idx_iptempbans_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_kicks (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    executed_by VARCHAR(64) NOT NULL,
+    PRIMARY KEY (id),
+    KEY idx_kicks_uuid (uuid),
+    KEY idx_kicks_user (user),
+    KEY idx_kicks_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
+
+CREATE TABLE IF NOT EXISTS bu_warns (
+    id INT(11) NOT NULL AUTO_INCREMENT,
+    uuid VARCHAR(64) NOT NULL,
+    user VARCHAR(32) NOT NULL,
+    ip VARCHAR(32) NOT NULL,
+    reason TEXT NOT NULL,
+    server VARCHAR(32) NOT NULL,
+    date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    executed_by VARCHAR(64) NOT NULL,
+    PRIMARY KEY (id),
+    KEY idx_warns_uuid (uuid),
+    KEY idx_warns_user (user),
+    KEY idx_warns_ip (ip),
+    FOREIGN KEY (uuid) REFERENCES bu_users(uuid)
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;

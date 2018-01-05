@@ -4,6 +4,7 @@ package com.dbsoftwares.bungeeutilisals.api.mysql;
  * Created by DBSoftwares on 04/01/2018
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
+ * May only be used for CentrixPVP
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
@@ -35,7 +36,7 @@ public class MySQLFinder {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> T find() {
+    public MultiDataObject find() {
         Validate.notNull(table, "Table cannot be null!");
         Validate.notNull(condition, "Condition cannot be null!");
         Validate.notNull(column, "Column cannot be null!");
@@ -46,18 +47,20 @@ public class MySQLFinder {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet rs = preparedStatement.executeQuery();
 
-            T value = null;
+            MultiDataObject multiDataObject = new MultiDataObject();
             if (rs.next()) {
-                value = (T) rs.getObject(column);
+                for (String column : this.column.split(", ")) {
+                    multiDataObject.getMap().put(column, rs.getObject(column));
+                }
             }
 
             rs.close();
             preparedStatement.close();
             connection.close();
-            return value;
+            return multiDataObject;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return new MultiDataObject();
     }
 }

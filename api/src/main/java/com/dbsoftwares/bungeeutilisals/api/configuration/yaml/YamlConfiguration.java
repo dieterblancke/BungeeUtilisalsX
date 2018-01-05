@@ -38,22 +38,9 @@ public class YamlConfiguration implements IConfiguration {
     private File file;
     LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
-    @SuppressWarnings("unchecked")
     public YamlConfiguration(File file) throws IOException {
+        this(new FileInputStream(file));
         this.file = file;
-        if (!file.exists()) {
-            return;
-        }
-        FileInputStream stream = new FileInputStream(file);
-        InputStreamReader reader = new InputStreamReader(stream);
-
-        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
-        if (values == null) {
-            values = new LinkedHashMap();
-        }
-
-        stream.close();
-        reader.close();
     }
 
     @SuppressWarnings("unchecked")
@@ -61,13 +48,31 @@ public class YamlConfiguration implements IConfiguration {
         InputStreamReader reader = new InputStreamReader(input);
         Gson gson = new Gson();
 
-        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
+        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
         if (values == null) {
-            values = new LinkedHashMap();
+            values = new LinkedHashMap<>();
         }
+
+        this.values = getValuesDeep("", values);
 
         input.close();
         reader.close();
+    }
+
+    @SuppressWarnings("unchecked")
+    private LinkedHashMap<String, Object> getValuesDeep(String prefix, Map<String, Object> map) {
+        LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
+
+        for (Map.Entry<String, Object> entry : map.entrySet()) {
+            if (entry.getValue() instanceof Map) {
+                values.putAll(getValuesDeep((prefix.isEmpty() ? "" : prefix + ".") + entry.getKey(),
+                        (Map<String, Object>) entry.getValue()));
+            } else {
+                values.put((prefix.isEmpty() ? "" : prefix + ".") + entry.getKey(), entry.getValue());
+            }
+        }
+
+        return values;
     }
 
     @Override

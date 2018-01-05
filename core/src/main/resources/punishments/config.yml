@@ -16,6 +16,7 @@ tables:
 
 commands:
   ban:
+    # Enable this subcommand or not?
     enabled: true
     aliases: 'pban, gban'
     permission: bungeeutilisals.punishments.ban
@@ -32,7 +33,6 @@ commands:
     aliases: 'iptempban, tipban, gtipban, tbanip'
     permission: bungeeutilisals.punishments.tempbanip
   mute:
-    # Enable this subcommand or not?
     enabled: true
     aliases: 'pmute, gmute'
     permission: bungeeutilisals.punishments.mute

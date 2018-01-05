@@ -42,6 +42,9 @@ public class Utils {
      * @return The formatted message.
      */
     public static String c(String message) {
+        if (message == null) {
+            return message;
+        }
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
