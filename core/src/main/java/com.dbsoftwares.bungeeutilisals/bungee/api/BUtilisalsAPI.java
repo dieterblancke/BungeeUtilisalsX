@@ -18,6 +18,7 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Debugger;
 import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Loggers;
 import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
+import com.dbsoftwares.bungeeutilisals.bungee.manager.DatabaseManager;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
 import com.zaxxer.hikari.pool.ProxyConnection;
@@ -43,9 +44,12 @@ public class BUtilisalsAPI implements BUAPI {
     private Loggers loggers;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
+        APIHandler.registerProvider(this);
+
         this.instance = instance;
         this.users = new UserList();
         this.databaseManager = new DatabaseManager(this);
+        databaseManager.createTables();
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
         this.languageManager = new LanguageManager(instance);

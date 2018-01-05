@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.api;
+package com.dbsoftwares.bungeeutilisals.bungee.manager;
 
 /*
  * Created by DBSoftwares on 04/01/2018
@@ -8,7 +8,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
+import com.dbsoftwares.bungeeutilisals.bungee.tables.*;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class DatabaseManager extends HikariDataSource {
@@ -50,7 +52,11 @@ public class DatabaseManager extends HikariDataSource {
             // noinspection deprecation
             setInitializationFailFast(false);
         }
+    }
 
-        // TODO: Default table creation.
+    public void createTables() {
+        MySQL.initTables(UserTable.class, FriendsTable.class, FriendRequestTable.class, BansTable.class, IPBansTable.class,
+                TempBansTable.class, IPTempBansTable.class, MutesTable.class, IPMutesTable.class, TempMutesTable.class,
+                IPTempMutesTable.class, KicksTable.class, WarnsTable.class);
     }
 }

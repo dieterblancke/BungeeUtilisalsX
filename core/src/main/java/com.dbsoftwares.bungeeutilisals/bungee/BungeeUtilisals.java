@@ -14,11 +14,12 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.tools.ILoggers;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
-import com.dbsoftwares.bungeeutilisals.bungee.api.APIHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
+import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
@@ -55,12 +56,13 @@ public class BungeeUtilisals extends Plugin {
         }
 
         // Loading setting files ...
-        settings = new Settings();
         createAndLoadFiles();
+
+        // Loading default PlaceHolders. Must be done BEFORE API (and database) loads.
+        PlaceHolderAPI.loadPlaceHolderPack(new DefaultPlaceHolders());
 
         // Initializing API
         api = new BUtilisalsAPI(this);
-        APIHandler.registerProvider(api);
 
         // Initialize metric system
         new Metrics(this);
@@ -70,6 +72,7 @@ public class BungeeUtilisals extends Plugin {
             getDataFolder().mkdir();
         }
 
+        // Registering experimental features
         if (configurations.get(FileLocations.CONFIG).getBoolean("experimental")) {
             registerExperimentalFeatures();
         }
