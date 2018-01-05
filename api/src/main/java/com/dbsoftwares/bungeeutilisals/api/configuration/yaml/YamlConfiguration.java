@@ -39,12 +39,15 @@ public class YamlConfiguration implements IConfiguration {
     LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
     public YamlConfiguration(File file) throws IOException {
-        this(new FileInputStream(file));
+        this(file.exists() ? new FileInputStream(file) : null);
         this.file = file;
     }
 
     @SuppressWarnings("unchecked")
     public YamlConfiguration(InputStream input) throws IOException {
+        if (input == null) {
+            return;
+        }
         InputStreamReader reader = new InputStreamReader(input);
         Gson gson = new Gson();
 
