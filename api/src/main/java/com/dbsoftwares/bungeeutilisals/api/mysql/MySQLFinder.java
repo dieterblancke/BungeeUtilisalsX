@@ -8,21 +8,28 @@ package com.dbsoftwares.bungeeutilisals.api.mysql;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
+import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.google.common.collect.Maps;
 import com.zaxxer.hikari.pool.ProxyConnection;
 
+import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedHashMap;
 
-public class MySQLFinder {
+public class MySQLFinder<T> {
 
-    private String table;
+    private Class<T> table;
+    private StorageTable storageTable;
     private String condition;
     private String column;
 
-    public MySQLFinder(String table) {
+    public MySQLFinder(Class<T> table) {
         this.table = table;
+        this.storageTable = table.getDeclaredAnnotation(StorageTable.class);
     }
 
     public MySQLFinder where(String condition, String... replacements) {
@@ -36,12 +43,25 @@ public class MySQLFinder {
     }
 
     @SuppressWarnings("unchecked")
-    public MultiDataObject find() {
+    public T find() {
         Validate.notNull(table, "Table cannot be null!");
         Validate.notNull(condition, "Condition cannot be null!");
         Validate.notNull(column, "Column cannot be null!");
 
-        String statement = "SELECT " + column + " FROM " + table + " WHERE " + condition + ";";
+        String statement = "SELECT " + column + " FROM " + storageTable.name() + " WHERE " + condition + ";";
+
+        Object instance;
+        try {
+            instance = table.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        LinkedHashMap<String, Field> fields = Maps.newLinkedHashMap();
+        for (String column : column.split(", ")) {
+            fields.put(column, ReflectionUtils.getField(table, column));
+        }
 
         try (ProxyConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
@@ -50,17 +70,21 @@ public class MySQLFinder {
             MultiDataObject multiDataObject = new MultiDataObject();
             if (rs.next()) {
                 for (String column : this.column.split(", ")) {
-                    multiDataObject.getMap().put(column, rs.getObject(column));
+                    try {
+                        fields.get(column).set(instance, rs.getObject(column));
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
 
             rs.close();
             preparedStatement.close();
             connection.close();
-            return multiDataObject;
+            return (T) instance;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return new MultiDataObject();
+        return null;
     }
 }

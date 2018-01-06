@@ -7,8 +7,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.Cleanup;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -18,15 +16,20 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class YamlConfiguration implements IConfiguration {
 
+    LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
+    private File file;
     private final ThreadLocal<Yaml> yaml = new ThreadLocal<Yaml>() {
         protected Yaml initialValue() {
             Representer representer = new Representer() {
                 {
-                    this.representers.put(YamlConfiguration.class, data -> represent(values));
+                    this.representers.put(YamlConfiguration.class, data -> represent(self));
                 }
             };
             DumperOptions options = new DumperOptions();
@@ -35,8 +38,6 @@ public class YamlConfiguration implements IConfiguration {
             return new Yaml(new Constructor(), representer, options);
         }
     };
-    private File file;
-    LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
     public YamlConfiguration(File file) throws IOException {
         this(new FileInputStream(file));
@@ -46,33 +47,23 @@ public class YamlConfiguration implements IConfiguration {
     @SuppressWarnings("unchecked")
     public YamlConfiguration(InputStream input) throws IOException {
         InputStreamReader reader = new InputStreamReader(input);
-        Gson gson = new Gson();
-
         LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
         if (values == null) {
             values = new LinkedHashMap<>();
         }
 
-        this.values = getValuesDeep("", values);
+        for (Map.Entry<String, Object> entry : values.entrySet()) {
+            String key = entry.getKey() == null ? "null" : entry.getKey();
 
-        input.close();
-        reader.close();
-    }
-
-    @SuppressWarnings("unchecked")
-    private LinkedHashMap<String, Object> getValuesDeep(String prefix, Map<String, Object> map) {
-        LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
-
-        for (Map.Entry<String, Object> entry : map.entrySet()) {
             if (entry.getValue() instanceof Map) {
-                values.putAll(getValuesDeep((prefix.isEmpty() ? "" : prefix + ".") + entry.getKey(),
-                        (Map<String, Object>) entry.getValue()));
+                this.self.put(key, new YamlSection((Map<String, Object>) entry.getValue()));
             } else {
-                values.put((prefix.isEmpty() ? "" : prefix + ".") + entry.getKey(), entry.getValue());
+                this.self.put(key, entry.getValue());
             }
         }
 
-        return values;
+        input.close();
+        reader.close();
     }
 
     @Override
@@ -93,19 +84,44 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public Boolean exists(String path) {
-        return values.containsKey(path);
+        return self.containsKey(path);
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void set(String path, Object value) {
-        values.put(path, value);
+        if (value instanceof Map) {
+            value = new YamlSection((Map<String, Object>) value);
+        }
 
-        update(path, value, true);
+        ISection section = this.getSectionFor(path);
+        if (section == this) {
+            if (value == null) {
+                this.self.remove(path);
+            } else {
+                this.self.put(path, value);
+            }
+        } else {
+            section.set(getChild(path), value);
+        }
     }
 
     @Override
-    public Object get(String path) {
-        return values.getOrDefault(path, null);
+    @SuppressWarnings("unchecked")
+    public <T> T get(String path, T def) {
+        ISection section = getSectionFor(path);
+        Object value;
+        if (section == this) {
+            value = this.self.get(path);
+        } else {
+            value = section.get(getChild(path));
+        }
+        return value != null ? (T) value : def;
+    }
+
+    @Override
+    public <T> T get(String path) {
+        return get(path, null);
     }
 
     @Override
@@ -116,7 +132,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public String getString(String path) {
-        return (String) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -137,7 +153,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public Boolean getBoolean(String path) {
-        return (Boolean) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -179,7 +195,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public Number getNumber(String path) {
-        return (Number) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -306,7 +322,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public BigInteger getBigInteger(String path) {
-        return (BigInteger) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -327,7 +343,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public BigDecimal getBigDecimal(String path) {
-        return (BigDecimal) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -348,7 +364,7 @@ public class YamlConfiguration implements IConfiguration {
 
     @Override
     public List getList(String path) {
-        return (List) values.getOrDefault(path, null);
+        return get(path);
     }
 
     @Override
@@ -688,52 +704,60 @@ public class YamlConfiguration implements IConfiguration {
         if (file == null) {
             return;
         }
-        @Cleanup FileInputStream stream = new FileInputStream(file);
-        @Cleanup InputStreamReader reader = new InputStreamReader(stream);
+        FileInputStream stream = new FileInputStream(file);
+        InputStreamReader reader = new InputStreamReader(stream);
 
-        Gson gson = new Gson();
-        values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
+        LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
         if (values == null) {
-            values = new LinkedHashMap();
+            values = new LinkedHashMap<>();
         }
+
+        for (Map.Entry<String, Object> entry : values.entrySet()) {
+            String key = entry.getKey() == null ? "null" : entry.getKey();
+
+            if (entry.getValue() instanceof Map) {
+                this.self.put(key, new YamlSection((Map<String, Object>) entry.getValue()));
+            } else {
+                this.self.put(key, entry.getValue());
+            }
+        }
+
+        reader.close();
+        stream.close();
     }
 
     @Override
     public void save() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
         @Cleanup FileWriter fileWriter = new FileWriter(file);
         @Cleanup BufferedWriter writer = new BufferedWriter(fileWriter);
 
-        this.yaml.get().dump(values, writer);
+        this.yaml.get().dump(self, writer);
     }
 
     private void update(String path, Object value, Boolean overwrite) {
-        Iterator<String> it = Arrays.asList(path.split("\\.")).iterator();
-
-        if (!values.containsKey(path)) {
-            values.put(path, value);
-        } else if (values.containsKey(path) && overwrite) {
-            values.put(path, value);
+        if (!self.containsKey(path)) {
+            self.put(path, value);
+        } else if (self.containsKey(path) && overwrite) {
+            self.put(path, value);
         }
     }
 
     @Override
-    public ISection getSection(String section) {
-        if (section.isEmpty()) {
+    public ISection getSection(String path) {
+        if (path.isEmpty()) {
             return this;
         }
-        return new YamlSection(section, this);
+        return this.get(path, new YamlSection(Maps.newLinkedHashMap()));
     }
 
     @Override
     public void createSection(String section) {
-        values.put(section, Maps.newHashMap());
+        self.put(section, new YamlSection(Maps.newLinkedHashMap()));
     }
 
     @Override
     public Set<String> getKeys() {
-        return values.keySet();
+        return self.keySet();
     }
 
     @Override
@@ -746,5 +770,26 @@ public class YamlConfiguration implements IConfiguration {
             }
         }
         return keys;
+    }
+
+    private ISection getSectionFor(String path) {
+        int index = path.indexOf(46);
+        if (index == -1) {
+            return this;
+        } else {
+            String root = path.substring(0, index);
+            Object section = this.self.get(root);
+            if (section == null) {
+                section = new YamlSection(Maps.newLinkedHashMap());
+                this.self.put(root, section);
+            }
+
+            return (YamlSection) section;
+        }
+    }
+
+    private String getChild(String path) {
+        int index = path.indexOf(46);
+        return index == -1 ? path : path.substring(index + 1);
     }
 }

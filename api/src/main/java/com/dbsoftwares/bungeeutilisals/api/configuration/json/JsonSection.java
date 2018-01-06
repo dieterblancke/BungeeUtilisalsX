@@ -100,8 +100,13 @@ public class JsonSection implements ISection {
     }
 
     @Override
-    public Object get(String path) {
-        return parent.get(getPath(path));
+    public <T> T get(String path, T def) {
+        return parent.get(path, def);
+    }
+
+    @Override
+    public <T> T get(String path) {
+        return get(path, null);
     }
 
     @Override

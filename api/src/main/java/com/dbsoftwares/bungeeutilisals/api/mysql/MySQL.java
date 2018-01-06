@@ -11,19 +11,65 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.google.common.collect.Lists;
 import com.zaxxer.hikari.pool.ProxyConnection;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.LinkedList;
 
 public class MySQL {
 
-    public static MySQLFinder find(String table) {
-        return new MySQLFinder(table);
+    public static <T> MySQLFinder<T> find(Class<T> table) {
+        if (!table.isAnnotationPresent(StorageTable.class)) {
+            return null;
+        }
+        return new MySQLFinder<>(table);
     }
 
-    public static void initTables(Class... tables) {
+    public static <T> void insert(T table) {
+        if (!table.getClass().isAnnotationPresent(StorageTable.class)) {
+            return;
+        }
+        StorageTable storageTable = table.getClass().getDeclaredAnnotation(StorageTable.class);
+        LinkedList<Field> fields = Lists.newLinkedList();
+        StringBuilder builder = new StringBuilder();
+
+        StringBuilder columnBuilder = new StringBuilder();
+        StringBuilder valueBuilder = new StringBuilder();
+
+        for (Field field : table.getClass().getDeclaredFields()) {
+            if (!field.isAnnotationPresent(StorageColumn.class)) {
+                continue;
+            }
+            StorageColumn column = field.getDeclaredAnnotation(StorageColumn.class);
+            if (column.autoincrement()) {
+                continue;
+            }
+            try {
+                Object value = field.get(table);
+
+                columnBuilder.append(field.getName()).append(", ");
+                valueBuilder.append(value == null ? "NULL" : value).append(", ");
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        columnBuilder.delete(columnBuilder.length() - 2, columnBuilder.length());
+        valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
+
+        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO " + storageTable.name() +
+                    " (%s) VALUES (%s);", columnBuilder.toString(), valueBuilder.toString()));
+
+            preparedStatement.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void createDefaultTables(Class... tables) {
         for (Class<?> table : tables) {
             if (!table.isAnnotationPresent(StorageTable.class)) {
                 continue;

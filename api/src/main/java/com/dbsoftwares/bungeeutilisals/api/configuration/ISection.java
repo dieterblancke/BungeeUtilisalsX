@@ -26,7 +26,17 @@ public interface ISection {
      * @param path The path of which you need the value.
      * @return The value (object) bound to this path.
      */
-    Object get(String path);
+    <T> T get(String path);
+
+    /**
+     * Gets the requested Object by path.
+     *
+     * @param path The path of which you need the value.
+     * @param def  The default value for this path.
+     * @param <T>  The type of the espected value.
+     * @return The value (object) bound to this path.
+     */
+    <T> T get(String path, T def);
 
     /**
      * Used to check if the value bound to the given path is a String.

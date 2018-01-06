@@ -55,7 +55,7 @@ public class DatabaseManager extends HikariDataSource {
     }
 
     public void createTables() {
-        MySQL.initTables(UserTable.class, FriendsTable.class, FriendRequestTable.class, BansTable.class, IPBansTable.class,
+        MySQL.createDefaultTables(UserTable.class, FriendsTable.class, FriendRequestTable.class, BansTable.class, IPBansTable.class,
                 TempBansTable.class, IPTempBansTable.class, MutesTable.class, IPMutesTable.class, TempMutesTable.class,
                 IPTempMutesTable.class, KicksTable.class, WarnsTable.class);
     }

@@ -136,8 +136,14 @@ public class JsonConfiguration implements IConfiguration {
     }
 
     @Override
-    public Object get(String path) {
-        return values.getOrDefault(path, null);
+    @SuppressWarnings("unchecked")
+    public <T> T get(String path, T def) {
+        return (T) values.getOrDefault(path, def);
+    }
+
+    @Override
+    public <T> T get(String path) {
+        return get(path, null);
     }
 
     @Override
