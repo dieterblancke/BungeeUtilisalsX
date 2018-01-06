@@ -40,12 +40,15 @@ public class YamlConfiguration implements IConfiguration {
     };
 
     public YamlConfiguration(File file) throws IOException {
-        this(new FileInputStream(file));
+        this(file.exists() ? new FileInputStream(file) : null);
         this.file = file;
     }
 
     @SuppressWarnings("unchecked")
     public YamlConfiguration(InputStream input) throws IOException {
+        if (input == null) {
+            return;
+        }
         InputStreamReader reader = new InputStreamReader(input);
         LinkedHashMap<String, Object> values = (LinkedHashMap<String, Object>) yaml.get().loadAs(reader, LinkedHashMap.class);
         if (values == null) {
