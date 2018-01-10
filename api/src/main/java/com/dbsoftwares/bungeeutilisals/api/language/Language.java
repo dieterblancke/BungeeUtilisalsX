@@ -17,14 +17,7 @@ public class Language {
      * @return The language name in lowercase.
      */
     public String getName() {
-        return name.toLowerCase();
-    }
-
-    /**
-     * @return The file name of a Language.
-     */
-    public String getFileName() {
-        return name + ".yml";
+        return name;
     }
 
     /**

@@ -99,7 +99,7 @@ public interface IConfiguration extends ISection {
     @SuppressWarnings("unchecked")
     static <T extends IConfiguration> T loadConfiguration(Class<T> clazz, InputStream stream) {
         try {
-            Constructor<?> constructor = ReflectionUtils.getConstructor(clazz, File.class);
+            Constructor<?> constructor = ReflectionUtils.getConstructor(clazz, InputStream.class);
             return (T) constructor.newInstance(stream);
         } catch (Exception e) {
             e.printStackTrace();

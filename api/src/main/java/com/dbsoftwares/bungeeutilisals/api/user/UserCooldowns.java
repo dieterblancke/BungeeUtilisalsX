@@ -6,7 +6,6 @@ package com.dbsoftwares.bungeeutilisals.api.user;
  * Project: centrixcore
  */
 
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -16,13 +15,9 @@ import java.util.HashMap;
 
 @Getter
 @Setter
-public class UserStorage {
+public class UserCooldowns {
 
     private HashMap<String, Long> map = Maps.newHashMap();
-
-    private String customname;
-    private String IP;
-    private Language language;
 
     /**
      * Checks if a cooldown is registered.

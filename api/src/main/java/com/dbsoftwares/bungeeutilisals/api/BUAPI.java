@@ -12,11 +12,10 @@ import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
-import com.dbsoftwares.bungeeutilisals.api.tools.ILoggers;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.zaxxer.hikari.pool.ProxyConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -90,15 +89,10 @@ public interface BUAPI {
     IDebugger getDebugger();
 
     /**
-     * @return An optional containing a ILoggers instance. Not present if logging is disabled in the config.
-     */
-    Optional<ILoggers> getLoggers();
-
-    /**
      * @param location The Configuration location you want to request.
      * @return A YamlConfiguration instance from the requested file location.
      */
-    YamlConfiguration getConfig(FileLocations location);
+    YamlConfiguration getConfig(FileLocation location);
 
     /**
      * @return A new ProxyConnection instance.

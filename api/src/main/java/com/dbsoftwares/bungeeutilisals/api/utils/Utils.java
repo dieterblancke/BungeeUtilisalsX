@@ -24,12 +24,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
     private static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?"
                     + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
                     + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
@@ -269,6 +272,26 @@ public class Utils {
         } catch (IllegalAccessException ignored) {
         }
         return null;
+    }
+
+    /**
+     * Converts a InetSocketAddress into a String IPv4.
+     *
+     * @param a The address to be converted.
+     * @return The converted address as a String.
+     */
+    public static String getIP(InetSocketAddress a) {
+        return getIP(a.getAddress());
+    }
+
+    /**
+     * Converts a InetAddress into a String IPv4.
+     *
+     * @param a The address to be converted.
+     * @return The converted address as a String.
+     */
+    public static String getIP(InetAddress a) {
+        return a.toString().split("/")[1].split(":")[0];
     }
 
     /**

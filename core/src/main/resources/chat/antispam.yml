@@ -1,0 +1,10 @@
+enabled: true
+
+# The permission to bypass the antispam system
+bypass: 'bungeeutilisals.bypass.antispam'
+
+delay:
+  # Possible units: MILLISECONDS, SECONDS, MINUTES
+  unit: SECONDS
+  # Time in between messages
+  time: 3

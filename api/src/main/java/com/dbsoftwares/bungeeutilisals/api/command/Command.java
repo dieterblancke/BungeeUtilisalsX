@@ -4,7 +4,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
@@ -50,7 +49,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
         if (permission != null && !sender.hasPermission(permission)) {
-            sender.sendMessage(Utils.format(configuration.getString("prefix") + configuration.getString("no-permission").replace("%permission%", permission)));
+            BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
             return;
         }
 

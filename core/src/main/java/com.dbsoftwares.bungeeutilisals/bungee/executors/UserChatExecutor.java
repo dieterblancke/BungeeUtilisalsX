@@ -1,10 +1,13 @@
 package com.dbsoftwares.bungeeutilisals.bungee.executors;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.Settings;
 
 public class UserChatExecutor {
 
@@ -16,35 +19,74 @@ public class UserChatExecutor {
 
     public void onUnicodeReplace(UserChatPreExecuteEvent event) {
         String message = event.getMessage();
-        Settings settings = BungeeUtilisals.getInstance().getSettings();
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
 
-        if (settings.FANCYCHAT_ENABLED.get() && event.getUser().getParent().hasPermission(settings.FANCYCHAT_PERMISSION.get())) {
+        if (config.getBoolean("fancychat.enabled") && event.getUser().getParent().hasPermission(config.getString("fancychat.permission"))) {
             event.setMessage(BungeeUtilisals.getApi().getChatManager().fancyFont(message));
         }
     }
 
     public void onUnicodeSymbol(UserChatEvent event) {
-        Settings settings = BungeeUtilisals.getInstance().getSettings();
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
 
-        if (settings.UTFSYMBOLS_ENABLED.get() && event.getUser().getParent().hasPermission(settings.UTFSYMBOLS_PERMISSION.get())) {
+        if (config.getBoolean("symbols.enabled") && event.getUser().getParent().hasPermission(config.getString("symbols.permission"))) {
             event.setMessage(event.getApi().getChatManager().replaceSymbols(event.getMessage()));
         }
     }
 
     public void onSwearChat(UserChatEvent event) {
+        User user = event.getUser();
         String message = event.getMessage();
-        Settings settings = BungeeUtilisals.getInstance().getSettings();
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
 
         if (manager.checkForSwear(event.getUser(), message)) {
-            if (settings.ANTISWEAR_CANCEL.get()) {
-                // TODO: send swear message.
+            BUCore.getApi().getDebugger().debug("%s failed swearing, message: %s", user.getName(), message);
 
+            if (config.getBoolean("cancel")) {
                 event.setCancelled(true);
             } else {
-                // TODO: send swear message.
-
-                event.setMessage(manager.replaceSwearWords(event.getUser(), message, settings.ANTISWEAR_REPLACEMENT.get()));
+                event.setMessage(manager.replaceSwearWords(user, message, config.getString("replace")));
             }
+            user.sendLangMessage("chat-protection.swear");
+        }
+    }
+
+    public void onCapsChat(UserChatEvent event) {
+        User user = event.getUser();
+        String message = event.getMessage();
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
+
+        if (manager.checkForCaps(user, message)) {
+            BUCore.getApi().getDebugger().debug("%s failed using caps, message: %s", user.getName(), message);
+
+            if (config.getBoolean("cancel")) {
+                event.setCancelled(true);
+            } else {
+                event.setMessage(event.getMessage().toLowerCase());
+            }
+            user.sendLangMessage("chat-protection.caps");
+        }
+    }
+
+    public void onSpamChat(UserChatEvent event) {
+        User user = event.getUser();
+
+        if (manager.checkForSpam(user)) {
+            event.setCancelled(true);
+
+            user.sendLangMessage("chat-protection.spam", "%time%", user.getCooldowns().getLeftTime("CHATSPAM"));
+        }
+    }
+
+    public void onAdChat(UserChatEvent event) {
+        User user = event.getUser();
+        String message = event.getMessage();
+
+        if (manager.checkForAdvertisement(user, message)) {
+            BUCore.getApi().getDebugger().debug("%s failed advertising, message: %s", user.getName(), message);
+            event.setCancelled(true);
+
+            user.sendLangMessage("chat-protection.advertise");
         }
     }
 }

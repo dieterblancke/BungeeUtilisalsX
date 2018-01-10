@@ -6,8 +6,10 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCreateEvent;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
@@ -15,11 +17,12 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.tools.ILoggers;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.executors.CommandCreateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
@@ -27,7 +30,6 @@ import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.SimplePacke
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
-import com.dbsoftwares.bungeeutilisals.bungee.settings.Settings;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -42,8 +44,12 @@ public class BungeeUtilisals extends Plugin {
     @Getter private static final Logger log = Logger.getLogger("BungeeUtilisals");
     @Getter private static BungeeUtilisals instance;
     @Getter private static BUtilisalsAPI api;
-    @Getter private Settings settings;
-    @Getter private static Map<FileLocations, YamlConfiguration> configurations = Maps.newHashMap();
+    @Getter
+    private static Map<FileLocation, YamlConfiguration> configurations = Maps.newHashMap();
+
+    public static YamlConfiguration getConfiguration(FileLocation location) {
+        return configurations.get(location);
+    }
 
     @Override
     public void onEnable() {
@@ -73,7 +79,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         // Registering experimental features
-        if (configurations.get(FileLocations.CONFIG).getBoolean("experimental")) {
+        if (configurations.get(FileLocation.CONFIG).getBoolean("experimental")) {
             registerExperimentalFeatures();
         }
 
@@ -81,25 +87,40 @@ public class BungeeUtilisals extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
 
+        IEventLoader loader = api.getEventLoader();
+
+        loader.register(CommandCreateEvent.class, new CommandCreateExecutor());
+
         UserExecutor userExecutor = new UserExecutor();
-        api.getEventLoader().register(UserLoadEvent.class, userExecutor::onLoad);
-        api.getEventLoader().register(UserUnloadEvent.class, userExecutor::onUnload);
+        loader.register(UserLoadEvent.class, userExecutor::onLoad);
+        loader.register(UserUnloadEvent.class, userExecutor::onUnload);
 
         UserChatExecutor userChatExecutor = new UserChatExecutor(api.getChatManager());
-        api.getEventLoader().register(UserChatEvent.class, userChatExecutor::onSwearChat);
-        api.getEventLoader().register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
-        api.getEventLoader().register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
+        loader.register(UserChatEvent.class, userChatExecutor::onSwearChat);
+        loader.register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
+        loader.register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
+        loader.register(UserChatEvent.class, userChatExecutor::onCapsChat);
+        loader.register(UserChatEvent.class, userChatExecutor::onSpamChat);
+        loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
+
+        new PluginCommand();
     }
 
     @Override
     public void onDisable() {
         api.getDatabaseManager().close();
+    }
 
-        api.getLoggers().ifPresent(loggers -> loggers.getLoggers().forEach(ILoggers.Logger::shutdown));
+    public YamlConfiguration getConfig() {
+        return configurations.get(FileLocation.CONFIG);
+    }
+
+    public boolean useUUID() {
+        return getConfig().getString("primaryIdentifier").equalsIgnoreCase("UUID");
     }
 
     private void createAndLoadFiles() {
-        for (FileLocations location : FileLocations.values()) {
+        for (FileLocation location : FileLocation.values()) {
             File file = new File(getDataFolder(), location.getPath());
 
             if (!file.exists()) {

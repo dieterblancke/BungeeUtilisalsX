@@ -1,0 +1,10 @@
+{
+    "prefix": "&c&lBungeeUtilisals &8» ",
+    "no-permission": "&cYou do not have the permission to do this!",
+    "chat-protection": {
+        "swear": "&fPlease do not swear!",
+        "caps": "&fPlease do not use that much caps!",
+        "spam": "&fPlease wait another &c%time% &fseconds before talking again!",
+        "advertise": "&fPlease do not advertise!"
+    }
+}

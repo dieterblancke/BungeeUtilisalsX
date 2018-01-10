@@ -1,12 +1,11 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.config.Configuration;
 
 public interface User {
 
@@ -33,14 +32,9 @@ public interface User {
     String getIdentifier();
 
     /**
-     * @return The Storage containing some personal User data ((name)tags, ignored players, ...)
+     * @return A small and simple user cooldown utility.
      */
-    UserStorage getStorage();
-
-    /**
-     * @return The ping (in ms) of an user.
-     */
-    Integer getPing();
+    UserCooldowns getCooldowns();
 
     /**
      * @return The IP of the User.
@@ -58,22 +52,6 @@ public interface User {
      * @param language The new language.
      */
     void setLanguage(Language language);
-
-    /**
-     * @return If the User has been muted or not.
-     */
-    Boolean isMuted();
-
-    /**
-     * Sets the User his current mute.
-     * @param info The data the mute should get.
-     */
-    void setCurrentMute(PunishmentInfo info);
-
-    /**
-     * @return Null if not muted, punishmentinfo if muted.
-     */
-    PunishmentInfo getCurrentMute();
 
     /**
      * @return The User casted to CommandSender.
@@ -100,6 +78,21 @@ public interface User {
      * @param message The message which has to be sent. The CentrixCore prefix will appear before.
      */
     void sendMessage(String message);
+
+    /**
+     * Searches a message in the user's language configuration & sends that message.
+     *
+     * @param path The path to the message in the language file.
+     */
+    void sendLangMessage(String path);
+
+    /**
+     * Searches a message in the user's language configuration & sends that message formatted with placeholders.
+     *
+     * @param path         The path to the message in the language file.
+     * @param placeholders The placeholders & their values (placeholder on odd place, value on even place behind placeholder)
+     */
+    void sendLangMessage(String path, Object... placeholders);
 
     /**
      * Sends a message to the User with the given prefix + colors will be replaced.
@@ -146,11 +139,6 @@ public interface User {
     void sendNoPermMessage();
 
     /**
-     * @return If the User is a staff or not (checked via permissions).
-     */
-    Boolean isStaff();
-
-    /**
      * Sets the Socialspy of the User on or off.
      *
      * @param socialspy The status of the Socialspy, true for on, false for off.
@@ -170,7 +158,7 @@ public interface User {
     /**
      * @return The user his language config.
      */
-    Configuration getLanguageConfig();
+    IConfiguration getLanguageConfig();
 
     /**
      * Returns an ExperimentalUser object (containing functions which are unstable or in development).

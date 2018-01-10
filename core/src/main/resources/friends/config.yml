@@ -15,29 +15,29 @@ tables:
 
 subcommands:
   add:
-    aliases: '[]'
+    aliases: ''
     permission: bungeeutilisals.friends.add
   remove:
-    aliases: '[delete, del]'
+    aliases: 'delete, del'
     permission: bungeeutilisals.friends.remove
   accept:
-    aliases: '[approve]'
+    aliases: 'approve'
     permission: bungeeutilisals.friends.accept
   deny:
-    aliases: '[]'
+    aliases: ''
     permission: bungeeutilisals.friends.deny
   list:
-    aliases: '[fl]'
+    aliases: 'fl'
     permission: bungeeutilisals.friends.list
   requests:
-    aliases: '[req]'
+    aliases: 'req'
     permission: bungeeutilisals.friends.requests
   msg:
-    aliases: '[m, tell, w, whisper, message]'
+    aliases: 'm, tell, w, whisper, message'
     permission: bungeeutilisals.friends.msg
   reply:
-    aliases: '[r]'
+    aliases: 'r'
     permission: bungeeutilisals.friends.reply
   settings:
-    aliases: '[]'
+    aliases: ''
     permission: bungeeutilisals.friends.settings

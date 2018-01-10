@@ -9,7 +9,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
         <module name="core" />
-        <module name="installer" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>

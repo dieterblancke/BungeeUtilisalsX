@@ -9,14 +9,19 @@ package com.dbsoftwares.bungeeutilisals.bungee.manager;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.tables.*;
 import com.zaxxer.hikari.HikariDataSource;
 
 public class DatabaseManager extends HikariDataSource {
 
     public DatabaseManager(BUAPI api) {
-        YamlConfiguration configuration = api.getConfig(FileLocations.MYSQL);
+        YamlConfiguration configuration = api.getConfig(FileLocation.MYSQL);
+
+        BungeeUtilisals.getLog().info(String.format("Attempting to connect to the database @ %s:%s, user: %s, database: %s",
+                configuration.getString("hostname"), configuration.getInteger("port"),
+                configuration.getString("username"), configuration.getString("database")));
 
         setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
         addDataSourceProperty("serverName", configuration.getString("hostname"));
@@ -52,6 +57,11 @@ public class DatabaseManager extends HikariDataSource {
             // noinspection deprecation
             setInitializationFailFast(false);
         }
+
+        BungeeUtilisals.getLog().info(String.format("Connection successfully established @ %s:%s, user: %s, database: %s",
+                configuration.getString("hostname"), configuration.getInteger("port"),
+                configuration.getString("username"), configuration.getString("database")));
+
     }
 
     public void createTables() {

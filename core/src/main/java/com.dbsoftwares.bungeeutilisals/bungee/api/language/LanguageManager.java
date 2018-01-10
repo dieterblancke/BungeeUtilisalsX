@@ -1,11 +1,13 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api.language;
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
 import com.dbsoftwares.bungeeutilisals.api.configuration.json.JsonConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.google.common.collect.Lists;
@@ -29,10 +31,12 @@ public class LanguageManager implements ILanguageManager {
     @Getter List<Language> languages = Lists.newArrayList();
 
     public LanguageManager(BungeeUtilisals plugin) {
-        File folder = new File(plugin.getDataFolder(), "languages");
-        if (!folder.exists()) {
-            folder.mkdirs();
+        ISection section = BungeeUtilisals.getConfiguration(FileLocation.LANGUAGES_CONFIG).getSection("languages");
+
+        for (String key : section.getKeys()) {
+            languages.add(new Language(key, section.getBoolean(key + ".default")));
         }
+
         addPlugin(plugin, new File(plugin.getDataFolder(), "languages"), FileStorageType.JSON);
         loadLanguages(plugin);
     }
@@ -65,22 +69,31 @@ public class LanguageManager implements ILanguageManager {
         File folder = plugins.get(plugin);
 
         for (Language language : languages) {
-            File lang = loadResource(plugin, "languages/" + language.getName() + ".yml", new File(folder, language.getName() + ".yml"));
+            String name = language.getName();
+            File lang;
+
+            if (fileTypes.get(plugin).equals(FileStorageType.JSON)) {
+                lang = loadResource(plugin, "languages/" + name + ".json", new File(folder, name + ".json"));
+            } else {
+                lang = loadResource(plugin, "languages/" + name + ".yml", new File(folder, name + ".yml"));
+            }
 
             if (!lang.exists()) {
                 continue;
             }
             try {
-                IConfiguration configuration = fileTypes.get(plugin).equals(FileStorageType.JSON) ?
-                                                IConfiguration.loadConfiguration(JsonConfiguration.class, lang) :
-                                                IConfiguration.loadConfiguration(YamlConfiguration.class, lang);
+                IConfiguration configuration;
 
                 if (fileTypes.get(plugin).equals(FileStorageType.JSON)) {
+                    configuration = IConfiguration.loadConfiguration(JsonConfiguration.class, lang);
+
                     configuration.copyDefaults(IConfiguration.loadConfiguration(JsonConfiguration.class,
-                            plugin.getResourceAsStream("languages/" + language.getName() + ".json")));
+                            plugin.getResourceAsStream("languages/" + name + ".json")));
                 } else {
+                    configuration = IConfiguration.loadConfiguration(YamlConfiguration.class, lang);
+
                     configuration.copyDefaults(IConfiguration.loadConfiguration(YamlConfiguration.class,
-                            plugin.getResourceAsStream("languages/" + language.getName() + ".yml")));
+                            plugin.getResourceAsStream("languages/" + name + ".yml")));
                 }
 
                 configurations.put(lang, configuration);
@@ -192,13 +205,15 @@ public class LanguageManager implements ILanguageManager {
                 target.createNewFile();
                 try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
-                        BungeeUtilisals.getLog().info("Didn't found default configuration for language " + source.replace("languages/", "")
-                                .replace(".json", "") + " for plugin " + plugin.getDescription().getName());
+                        BungeeUtilisals.getLog().info("Didn't found default configuration for language " +
+                                source.replace("languages/", "").replace(".json", "") +
+                                " for plugin " + plugin.getDescription().getName());
                         return null;
                     }
                     ByteStreams.copy(in, out);
-                    BungeeUtilisals.getLog().info("Loading default configuration for language " + source.replace("languages/", "")
-                            .replace(".json", "") + " for plugin " + plugin.getDescription().getName());
+                    BungeeUtilisals.getLog().info("Loading default configuration for language "
+                            + source.replace("languages/", "").replace(".json", "") + " for plugin "
+                            + plugin.getDescription().getName());
 
                     in.close();
                     out.close();

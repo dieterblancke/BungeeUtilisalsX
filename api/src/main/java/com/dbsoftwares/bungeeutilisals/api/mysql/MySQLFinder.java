@@ -8,8 +8,9 @@ package com.dbsoftwares.bungeeutilisals.api.mysql;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.pool.ProxyConnection;
@@ -19,6 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 public class MySQLFinder<T> {
 
@@ -32,13 +34,20 @@ public class MySQLFinder<T> {
         this.storageTable = table.getDeclaredAnnotation(StorageTable.class);
     }
 
-    public MySQLFinder where(String condition, String... replacements) {
+    public MySQLFinder<T> where(String condition, Object... replacements) {
+        for (int i = 0; i < replacements.length; i++) {
+            if (!(replacements[i] instanceof Number)) {
+                if (!replacements[i].toString().startsWith("'") && !replacements[i].toString().endsWith("'")) {
+                    replacements[i] = "'" + replacements[i] + "'";
+                }
+            }
+        }
         this.condition = String.format(condition, (Object[]) replacements);
         return this;
     }
 
-    public MySQLFinder select(String column, String... replacements) {
-        this.column = String.format(condition, (Object[]) replacements);
+    public MySQLFinder<T> select(String column, Object... replacements) {
+        this.column = String.format(column, (Object[]) replacements);
         return this;
     }
 
@@ -48,7 +57,7 @@ public class MySQLFinder<T> {
         Validate.notNull(condition, "Condition cannot be null!");
         Validate.notNull(column, "Column cannot be null!");
 
-        String statement = "SELECT " + column + " FROM " + storageTable.name() + " WHERE " + condition + ";";
+        String statement = "SELECT " + column + " FROM " + PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + condition + ";";
 
         Object instance;
         try {
@@ -59,23 +68,38 @@ public class MySQLFinder<T> {
         }
 
         LinkedHashMap<String, Field> fields = Maps.newLinkedHashMap();
-        for (String column : column.split(", ")) {
-            fields.put(column, ReflectionUtils.getField(table, column));
+        for (Field field : table.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(StorageColumn.class)) {
+                continue;
+            }
+            field.setAccessible(true);
+            if (column.equalsIgnoreCase("*")) {
+                fields.put(field.getName(), field);
+            }
+            for (String column : column.split(", ")) {
+                if (field.getName().equalsIgnoreCase(column)) {
+                    fields.put(column, field);
+                }
+            }
         }
 
         try (ProxyConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet rs = preparedStatement.executeQuery();
 
-            MultiDataObject multiDataObject = new MultiDataObject();
             if (rs.next()) {
-                for (String column : this.column.split(", ")) {
+                for (Map.Entry<String, Field> entry : fields.entrySet()) {
+                    String column = entry.getKey();
+                    Field field = entry.getValue();
+
                     try {
-                        fields.get(column).set(instance, rs.getObject(column));
+                        field.set(instance, rs.getObject(column));
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();
                     }
                 }
+            } else {
+                return null;
             }
 
             rs.close();

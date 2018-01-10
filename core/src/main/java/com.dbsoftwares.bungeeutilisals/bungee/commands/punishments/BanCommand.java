@@ -1,9 +1,8 @@
-package com.dbsoftwares.bungeeutilisals.bungee.punishments.commands;
+package com.dbsoftwares.bungeeutilisals.bungee.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.permissions.Permissions;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.CommandSender;
 
@@ -13,8 +12,9 @@ import java.util.List;
 public class BanCommand extends Command {
 
     public BanCommand() {
-        super("ban", Arrays.asList(BungeeUtilisals.getConfigurations().get(FileLocations.PUNISHMENTS_CONFIG)
-                .getString("commands.ban.aliases").split(", ")), Permissions.BAN_PERMISSION);
+        super("ban", Arrays.asList(BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG)
+                        .getString("commands.ban.aliases").split(", ")),
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.permission"));
     }
 
     @Override
