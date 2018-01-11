@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,4 +45,16 @@ public class WarnsTable {
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
 
+    public static WarnsTable fromInfo(PunishmentInfo info) {
+        WarnsTable table = new WarnsTable();
+
+        table.setUuid(info.getUuid());
+        table.setUser(info.getUser());
+        table.setIp(info.getIP());
+        table.setReason(info.getReason());
+        table.setServer(info.getServer());
+        table.setExecutedby(info.getBy());
+
+        return table;
+    }
 }

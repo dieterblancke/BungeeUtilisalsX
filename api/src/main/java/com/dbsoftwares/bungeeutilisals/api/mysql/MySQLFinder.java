@@ -21,6 +21,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.function.Consumer;
 
 public class MySQLFinder<T> {
 
@@ -28,6 +29,8 @@ public class MySQLFinder<T> {
     private StorageTable storageTable;
     private String condition;
     private String column;
+
+    private T tableInstance = null;
 
     public MySQLFinder(Class<T> table) {
         this.table = table;
@@ -52,7 +55,7 @@ public class MySQLFinder<T> {
     }
 
     @SuppressWarnings("unchecked")
-    public T find() {
+    public MySQLFinder<T> search() {
         Validate.notNull(table, "Table cannot be null!");
         Validate.notNull(condition, "Condition cannot be null!");
         Validate.notNull(column, "Column cannot be null!");
@@ -64,7 +67,7 @@ public class MySQLFinder<T> {
             instance = table.newInstance();
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
-            return null;
+            return this;
         }
 
         LinkedHashMap<String, Field> fields = Maps.newLinkedHashMap();
@@ -99,16 +102,30 @@ public class MySQLFinder<T> {
                     }
                 }
             } else {
-                return null;
+                return this;
             }
 
             rs.close();
             preparedStatement.close();
             connection.close();
-            return (T) instance;
+            this.tableInstance = (T) instance;
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return this;
+    }
+
+    public T get() {
+        return tableInstance;
+    }
+
+    public boolean isPresent() {
+        return tableInstance != null;
+    }
+
+    public void ifPresent(Consumer<? super T> consumer) {
+        if (tableInstance != null) {
+            consumer.accept(tableInstance);
+        }
     }
 }

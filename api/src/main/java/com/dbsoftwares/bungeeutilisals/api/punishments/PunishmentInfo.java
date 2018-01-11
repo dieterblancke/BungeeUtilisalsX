@@ -13,13 +13,12 @@ import lombok.Data;
 @Data
 public class PunishmentInfo {
 
-    private String name;
+    private String uuid;
+    private String user;
     private String IP;
     private String by;
     private Long time;
-    private String expiredate;
-    private String bandate = Utils.getCurrentDate();
-    private String bantime = Utils.getCurrentTime();
+    private String bandatetime = Utils.getCurrentDate();
     private String reason;
     private String server;
     private PunishmentType type;

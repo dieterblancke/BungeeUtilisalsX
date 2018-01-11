@@ -18,7 +18,7 @@ import java.sql.SQLException;
 
 public class MySQL {
 
-    public static <T> MySQLFinder<T> find(Class<T> table) {
+    public static <T> MySQLFinder<T> search(Class<T> table) {
         if (!table.isAnnotationPresent(StorageTable.class)) {
             return null;
         }
@@ -94,6 +94,10 @@ public class MySQL {
             field.setAccessible(true);
             try {
                 Object value = field.get(table);
+
+                if (value == null) {
+                    continue;
+                }
 
                 columnBuilder.append(field.getName()).append(", ");
                 if (value instanceof Number) {

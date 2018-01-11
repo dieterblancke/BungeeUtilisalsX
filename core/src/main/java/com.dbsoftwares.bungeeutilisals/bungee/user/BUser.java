@@ -40,20 +40,22 @@ public class BUser implements User {
 
     @Override
     public void load(UserPreLoadEvent event) {
-        this.player = event.getPlayer().getName();
+        ProxiedPlayer p = event.getPlayer();
+
+        this.player = p.getName();
         this.experimental = new ExperimentalUser(this);
         this.cooldowns = new UserCooldowns();
 
         BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
         UserTable data;
         if (BungeeUtilisals.getInstance().useUUID()) {
-            data = MySQL.find(UserTable.class).select("*").where("uuid = %s", event.getPlayer().getUniqueId().toString()).find();
+            data = MySQL.search(UserTable.class).select("*").where("uuid = %s", p.getUniqueId().toString()).search().get();
         } else {
-            data = MySQL.find(UserTable.class).select("*").where("username = %s", player).find();
+            data = MySQL.search(UserTable.class).select("*").where("username = %s", player).get();
         }
         if (data == null) {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            data = MySQL.insert(UserTable.getDefault(event.getPlayer()));
+            data = MySQL.insert(UserTable.getDefault(p));
         }
         this.userData = data;
 

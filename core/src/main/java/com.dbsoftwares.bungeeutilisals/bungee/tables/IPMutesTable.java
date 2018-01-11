@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -47,7 +48,20 @@ public class IPMutesTable {
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
 
-    @StorageColumn(type = "VARCHAR(32)", nullable = false)
+    @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
+    public static IPMutesTable fromInfo(PunishmentInfo info) {
+        IPMutesTable table = new IPMutesTable();
+
+        table.setUuid(info.getUuid());
+        table.setUser(info.getUser());
+        table.setIp(info.getIP());
+        table.setReason(info.getReason());
+        table.setServer(info.getServer());
+        table.setActive(true);
+        table.setExecutedby(info.getBy());
+
+        return table;
+    }
 }

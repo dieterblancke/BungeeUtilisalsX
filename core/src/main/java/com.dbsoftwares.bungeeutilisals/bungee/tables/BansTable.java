@@ -8,11 +8,10 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -39,7 +38,7 @@ public class BansTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
     @StorageColumn(type = "TINYINT(1)", nullable = false)
     private boolean active;
@@ -47,7 +46,21 @@ public class BansTable {
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
 
-    @StorageColumn(type = "VARCHAR(32)", nullable = false)
+    @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
+
+    public static BansTable fromInfo(PunishmentInfo info) {
+        BansTable table = new BansTable();
+
+        table.setUuid(info.getUuid());
+        table.setUser(info.getUser());
+        table.setIp(info.getIP());
+        table.setReason(info.getReason());
+        table.setServer(info.getServer());
+        table.setActive(true);
+        table.setExecutedby(info.getBy());
+
+        return table;
+    }
 }
