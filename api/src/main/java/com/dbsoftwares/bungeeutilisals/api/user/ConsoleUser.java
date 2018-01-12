@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.user;
+package com.dbsoftwares.bungeeutilisals.api.user;
 
 /*
  * Created by DBSoftwares on 04 september 2017
@@ -8,89 +8,41 @@ package com.dbsoftwares.bungeeutilisals.bungee.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
-import com.dbsoftwares.bungeeutilisals.api.user.IExperimentalUser;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.tables.UserTable;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Arrays;
 
 @Data
-public class BUser implements User {
+public class ConsoleUser implements User {
 
-    private String player;
-    private Boolean socialspy = false;
-    private ExperimentalUser experimental;
-    private UserTable userData;
-    private UserCooldowns cooldowns;
+    private UserCooldowns cooldowns = new UserCooldowns();
 
     @Override
     public void load(UserPreLoadEvent event) {
-        ProxiedPlayer p = event.getPlayer();
-
-        this.player = p.getName();
-        this.experimental = new ExperimentalUser(this);
-        this.cooldowns = new UserCooldowns();
-
-        BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
-        UserTable data;
-        if (BungeeUtilisals.getInstance().useUUID()) {
-            data = MySQL.search(UserTable.class).select("*").where("uuid = %s", p.getUniqueId().toString()).search().get();
-        } else {
-            data = MySQL.search(UserTable.class).select("*").where("username = %s", player).search().get();
-        }
-        if (data == null) {
-            BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            data = MySQL.insert(UserTable.getDefault(p));
-        }
-        this.userData = data;
-
-        if (!userData.getUsername().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
-            userData.setUsername(player);
-            save();
-        }
-
-        UserLoadEvent userLoadEvent = new UserLoadEvent(this);
-        BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void unload() {
-        save();
-        cooldowns.remove();
-
-        UserUnloadEvent event = new UserUnloadEvent(this);
-        BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void save() {
-        BUCore.getApi().getDebugger().debug("Saving data for %s!", player);
-
-        if (BungeeUtilisals.getInstance().useUUID()) {
-            MySQL.update(userData, "uuid = %s", getParent().getUniqueId().toString());
-        } else {
-            MySQL.update(userData, "username = %s", player);
-        }
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getIdentifier() {
-        return BungeeUtilisals.getInstance().useUUID() ? getParent().getUniqueId().toString() : player;
+        return getName();
     }
 
     @Override
@@ -100,23 +52,22 @@ public class BUser implements User {
 
     @Override
     public String getIP() {
-        return null;
+        return "127.0.0.1";
     }
 
     @Override
     public Language getLanguage() {
-        return BUCore.getApi().getLanguageManager().getLanguage(userData.getLanguage())
-                .orElse(BUCore.getApi().getLanguageManager().getDefaultLanguage().orElse(null));
+        return BUCore.getApi().getLanguageManager().getDefaultLanguage().orElse(null);
     }
 
     @Override
     public void setLanguage(Language language) {
-        userData.setLanguage(language.getName());
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public CommandSender sender() {
-        return getParent();
+        return ProxyServer.getInstance().getConsole();
     }
 
     @Override
@@ -176,27 +127,27 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(BaseComponent component) {
-        getParent().sendMessage(component);
+        sender().sendMessage(component);
     }
 
     @Override
     public void sendMessage(BaseComponent[] components) {
-        getParent().sendMessage(components);
+        sender().sendMessage(components);
     }
 
     @Override
     public void kick(String reason) {
-        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(buildComponent(reason)));
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public void forceKick(String reason) {
-        getParent().disconnect(buildComponent(reason));
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public String getName() {
-        return player;
+        return "CONSOLE";
     }
 
     @Override
@@ -206,42 +157,31 @@ public class BUser implements User {
 
     @Override
     public void setSocialspy(Boolean socialspy) {
-        this.socialspy = socialspy;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Boolean isSocialSpy() {
-        return socialspy;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public ProxiedPlayer getParent() {
-        return ProxyServer.getInstance().getPlayer(player);
+        return null;
     }
 
     @Override
     public IConfiguration getLanguageConfig() {
-        return BUCore.getApi().getLanguageManager().getLanguageConfiguration(BUCore.getApi().getPlugin(), this);
+        return BUCore.getApi().getLanguageManager().getConfig(BUCore.getApi().getPlugin(), getLanguage());
     }
 
     @Override
     public IExperimentalUser experimental() {
-        return experimental;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public boolean isConsole() {
-        return false;
-    }
-
-    private BaseComponent[] buildComponent(String... text) {
-        ComponentBuilder builder = new ComponentBuilder("");
-        if (text == null || text.length == 0) {
-            return builder.create();
-        }
-        for (String aText : text) {
-            builder.append(Utils.format(aText));
-        }
-        return builder.create();
+        return true;
     }
 }

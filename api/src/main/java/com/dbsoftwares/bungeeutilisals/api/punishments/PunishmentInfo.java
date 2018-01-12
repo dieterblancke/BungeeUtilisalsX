@@ -21,6 +21,7 @@ public class PunishmentInfo {
     private String bandatetime = Utils.getCurrentDate();
     private String reason;
     private String server;
+    private String removedBy;
     private PunishmentType type;
 
     public Boolean isExpired() {

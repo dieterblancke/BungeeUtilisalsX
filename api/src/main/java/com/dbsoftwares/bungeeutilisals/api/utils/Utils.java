@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
  * May only be used for CentrixPVP
  */
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
@@ -320,5 +321,27 @@ public class Utils {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Formatting a list into a string with given seperators.
+     *
+     * @param objects    Iterable which has to be converted.
+     * @param separators Seperator which will be used to seperate the list.
+     * @return A string in which all sendable of the list are seperated by the separator.
+     */
+    public static String formatList(Iterable<?> objects, String separators) {
+        return Utils.c(Joiner.on(separators).join(objects));
+    }
+
+    /**
+     * Similar to {@link #formatList(Iterable, String)} but for Arrays.
+     *
+     * @param objects    Array which has to be converted.
+     * @param separators Seperator which will be used to seperate the array.
+     * @return A string in which all sendable of the array are seperated by the separator.
+     */
+    public static String formatList(Object[] objects, String separators) {
+        return Utils.c(Joiner.on(separators).join(objects));
     }
 }

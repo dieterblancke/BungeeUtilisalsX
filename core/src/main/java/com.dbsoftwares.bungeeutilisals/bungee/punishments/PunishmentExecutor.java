@@ -3,10 +3,12 @@ package com.dbsoftwares.bungeeutilisals.bungee.punishments;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.bungee.tables.*;
+import com.google.common.collect.Lists;
 
-import java.util.LinkedHashMap;
+import java.util.LinkedList;
 
 public class PunishmentExecutor implements IPunishmentExecutor {
 
@@ -71,32 +73,53 @@ public class PunishmentExecutor implements IPunishmentExecutor {
     }
 
     @Override
-    public void removePunishment(String user, PunishmentType type, String removedby) {
+    public void removePunishment(boolean uuid, String user, PunishmentType type, String removedby) {
+        if (!type.isRemovable()) {
+            return;
+        }
+        Object instance = type.newInstance();
+        type.setRemovedBy(instance, removedby);
+        type.setActive(instance, false);
 
+        MySQL.update(instance, (uuid ? "uuid" : "user") + " = %s", user);
+    }
+
+    @Override
+    public Boolean hasActivePunishment(boolean uuid, String user, PunishmentType type) {
+        // Kicks & Warns can only be in the past, cannot be active.
+        return type.isRemovable() && MySQL.search(type.getTable()).select("id")
+                .where((uuid ? "uuid" : "user") + " = %s AND active = %s", user, true).search().isPresent();
     }
 
     @Override
     public Boolean hasPunishment(boolean uuid, String user, PunishmentType type) {
-        return null;
+        return MySQL.search(type.getTable()).select("id")
+                .where((uuid ? "uuid" : "user") + " = %s", user).search().isPresent();
     }
 
     @Override
-    public Boolean hasPastPunishment(boolean uuid, String user, PunishmentType type) {
-        return null;
+    public LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user, PunishmentType type) {
+        return MySQL.search(type.getTable()).select("*")
+                .where((uuid ? "uuid" : "user") + " = %s", user).search().multiGet();
     }
 
     @Override
-    public LinkedHashMap<PunishmentInfo, String> getPunishments(boolean uuid, String user, PunishmentType type) {
-        return null;
+    public LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user) {
+        LinkedList<PunishmentTable> punishments = Lists.newLinkedList();
+
+        for (PunishmentType type : PunishmentType.values()) {
+            punishments.addAll(getPunishments(uuid, user, type));
+        }
+
+        return punishments;
     }
 
     @Override
-    public LinkedHashMap<PunishmentInfo, String> getPunishments(boolean uuid, String user) {
-        return null;
-    }
-
-    @Override
-    public PunishmentInfo getCurrentPunishment(boolean uuid, String user, PunishmentType type) {
-        return null;
+    public PunishmentTable getCurrentPunishment(boolean uuid, String user, PunishmentType type) {
+        if (!type.isRemovable()) {
+            return null;
+        }
+        return MySQL.search(type.getTable()).select("id")
+                .where((uuid ? "uuid" : "user") + " = %s", user).search().get();
     }
 }

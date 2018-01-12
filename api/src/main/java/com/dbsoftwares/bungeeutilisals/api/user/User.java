@@ -165,4 +165,9 @@ public interface User {
      * @return An ExperimentalUser Object.
      */
     IExperimentalUser experimental();
+
+    /**
+     * @return True if console, false if player.
+     */
+    boolean isConsole();
 }

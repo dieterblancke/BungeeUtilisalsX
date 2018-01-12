@@ -25,16 +25,39 @@ public class MySQL {
         return new MySQLFinder<>(table);
     }
 
+    public static void delete(Class<?> clazz, String where, String... replacements) {
+        if (!clazz.isAnnotationPresent(StorageTable.class)) {
+            return;
+        }
+        StorageTable storageTable = clazz.getDeclaredAnnotation(StorageTable.class);
+
+        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " +
+                    PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + String.format(where, (Object[]) replacements));
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     public static <T> T update(T table, String where, String... replacements) {
         if (!table.getClass().isAnnotationPresent(StorageTable.class)) {
             return table;
         }
         StorageTable storageTable = table.getClass().getDeclaredAnnotation(StorageTable.class);
+
+        for (int i = 0; i < replacements.length; i++) {
+            replacements[i] = "'" + replacements[i] + "'";
+        }
+
         where = String.format(where, (Object[]) replacements);
 
         StringBuilder builder = new StringBuilder();
         builder.append("UPDATE ").append(PlaceHolderAPI.formatMessage(storageTable.name())).append(" SET ");
-        for (Field field : table.getClass().getFields()) {
+        for (Field field : table.getClass().getDeclaredFields()) {
             if (!field.isAnnotationPresent(StorageColumn.class)) {
                 continue;
             }
@@ -50,6 +73,8 @@ public class MySQL {
                 if (value != null) {
                     if (value instanceof Number) {
                         builder.append(field.getName()).append(" = ").append(value).append(", ");
+                    } else if (value instanceof Boolean) {
+                        builder.append(field.getName()).append(" = ").append((boolean) value ? 1 : 0).append(", ");
                     } else {
                         builder.append(field.getName()).append(" = ").append("'").append(value).append("'").append(", ");
                     }
@@ -59,7 +84,7 @@ public class MySQL {
             }
         }
         builder.delete(builder.length() - 2, builder.length());
-        builder.append(" WHERE ").append("'").append(where).append("'").append(";");
+        builder.append(" WHERE ").append(where).append(";");
 
         try (ProxyConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
@@ -102,6 +127,8 @@ public class MySQL {
                 columnBuilder.append(field.getName()).append(", ");
                 if (value instanceof Number) {
                     valueBuilder.append(value == null ? "NULL" : value).append(", ");
+                } else if (value instanceof Boolean) {
+                    valueBuilder.append((boolean) value ? 1 : 0).append(", ");
                 } else {
                     valueBuilder.append(value == null ? "NULL" : "'" + value + "'").append(", ");
                 }

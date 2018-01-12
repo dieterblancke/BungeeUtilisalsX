@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.BanCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.CommandCreateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
@@ -104,6 +105,9 @@ public class BungeeUtilisals extends Plugin {
         loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
 
         new PluginCommand();
+        if (getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
+            new BanCommand();
+        }
     }
 
     @Override

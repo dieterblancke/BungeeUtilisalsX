@@ -12,6 +12,7 @@ import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.zaxxer.hikari.pool.ProxyConnection;
 
@@ -20,6 +21,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -30,7 +32,7 @@ public class MySQLFinder<T> {
     private String condition;
     private String column;
 
-    private T tableInstance = null;
+    private LinkedList<T> tableInstances = Lists.newLinkedList();
 
     public MySQLFinder(Class<T> table) {
         this.table = table;
@@ -62,14 +64,6 @@ public class MySQLFinder<T> {
 
         String statement = "SELECT " + column + " FROM " + PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + condition + ";";
 
-        Object instance;
-        try {
-            instance = table.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return this;
-        }
-
         LinkedHashMap<String, Field> fields = Maps.newLinkedHashMap();
         for (Field field : table.getDeclaredFields()) {
             if (!field.isAnnotationPresent(StorageColumn.class)) {
@@ -90,25 +84,25 @@ public class MySQLFinder<T> {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet rs = preparedStatement.executeQuery();
 
-            if (rs.next()) {
-                for (Map.Entry<String, Field> entry : fields.entrySet()) {
-                    String column = entry.getKey();
-                    Field field = entry.getValue();
+            while (rs.next()) {
+                try {
+                    Object instance = table.newInstance();
 
-                    try {
+                    for (Map.Entry<String, Field> entry : fields.entrySet()) {
+                        String column = entry.getKey();
+                        Field field = entry.getValue();
+
                         field.set(instance, rs.getObject(column));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
                     }
+                    tableInstances.add((T) instance);
+                } catch (IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
                 }
-            } else {
-                return this;
             }
 
             rs.close();
             preparedStatement.close();
             connection.close();
-            this.tableInstance = (T) instance;
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -116,16 +110,29 @@ public class MySQLFinder<T> {
     }
 
     public T get() {
-        return tableInstance;
+        if (tableInstances.isEmpty()) {
+            return null;
+        }
+        return tableInstances.get(0);
+    }
+
+    public LinkedList<T> multiGet() {
+        return tableInstances;
     }
 
     public boolean isPresent() {
-        return tableInstance != null;
+        return !tableInstances.isEmpty();
     }
 
     public void ifPresent(Consumer<? super T> consumer) {
-        if (tableInstance != null) {
-            consumer.accept(tableInstance);
+        if (!tableInstances.isEmpty()) {
+            consumer.accept(get());
+        }
+    }
+
+    public void ifMultiPresent(Consumer<LinkedList<? super T>> consumer) {
+        if (!tableInstances.isEmpty()) {
+            consumer.accept(tableInstances);
         }
     }
 }

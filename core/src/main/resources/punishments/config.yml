@@ -20,6 +20,8 @@ commands:
     enabled: true
     aliases: 'pban, gban'
     permission: bungeeutilisals.punishments.ban
+    # Permission to receive broadcast ban messages
+    broadcast: bungeeutilisals.punishments.ban.broadcast
   ipban:
     enabled: true
     aliases: 'banip, gbanip, gipban'

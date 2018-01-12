@@ -9,17 +9,17 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{ipbans-table}", indexes = {"uuid", "user", "active", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class IPBansTable {
+public class IPBansTable implements PunishmentTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -40,10 +40,10 @@ public class IPBansTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
-    @StorageColumn(type = "TINYINT(1)", nullable = false)
-    private boolean active;
+    @StorageColumn(type = "BOOLEAN", nullable = false)
+    private Boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
@@ -63,5 +63,20 @@ public class IPBansTable {
         table.setExecutedby(info.getBy());
 
         return table;
+    }
+
+    @Override
+    public PunishmentType getType() {
+        return PunishmentType.KICK;
+    }
+
+    @Override
+    public Boolean isActive() {
+        return active;
+    }
+
+    @Override
+    public Long getRemoveTime() {
+        return null;
     }
 }

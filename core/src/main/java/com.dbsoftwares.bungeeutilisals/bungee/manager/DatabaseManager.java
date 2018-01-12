@@ -16,7 +16,10 @@ import com.zaxxer.hikari.HikariDataSource;
 
 public class DatabaseManager extends HikariDataSource {
 
+    BUAPI api;
+
     public DatabaseManager(BUAPI api) {
+        this.api = api;
         YamlConfiguration configuration = api.getConfig(FileLocation.MYSQL);
 
         BungeeUtilisals.getLog().info(String.format("Attempting to connect to the database @ %s:%s, user: %s, database: %s",
@@ -65,8 +68,11 @@ public class DatabaseManager extends HikariDataSource {
     }
 
     public void createTables() {
-        MySQL.createDefaultTables(UserTable.class, FriendsTable.class, FriendRequestTable.class, BansTable.class, IPBansTable.class,
-                TempBansTable.class, IPTempBansTable.class, MutesTable.class, IPMutesTable.class, TempMutesTable.class,
-                IPTempMutesTable.class, KicksTable.class, WarnsTable.class);
+        MySQL.createDefaultTables(UserTable.class, FriendsTable.class, FriendRequestTable.class);
+
+        if (api.getConfig(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
+            MySQL.createDefaultTables(BansTable.class, IPBansTable.class, TempBansTable.class, IPTempBansTable.class, MutesTable.class,
+                    IPMutesTable.class, TempMutesTable.class, IPTempMutesTable.class, KicksTable.class, WarnsTable.class);
+        }
     }
 }

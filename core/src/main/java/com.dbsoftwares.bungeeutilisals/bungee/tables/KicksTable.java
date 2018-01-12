@@ -9,17 +9,17 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{kicks-table}", indexes = {"uuid", "user", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class KicksTable {
+public class KicksTable implements PunishmentTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -40,7 +40,7 @@ public class KicksTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
     @StorageColumn(type = "VARCHAR(32)")
     private String executedby;
@@ -56,5 +56,25 @@ public class KicksTable {
         table.setExecutedby(info.getBy());
 
         return table;
+    }
+
+    @Override
+    public PunishmentType getType() {
+        return PunishmentType.KICK;
+    }
+
+    @Override
+    public Boolean isActive() {
+        return null;
+    }
+
+    @Override
+    public String getRemovedby() {
+        return null;
+    }
+
+    @Override
+    public Long getRemoveTime() {
+        return null;
     }
 }
