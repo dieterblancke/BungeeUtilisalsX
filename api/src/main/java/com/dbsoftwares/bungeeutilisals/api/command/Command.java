@@ -39,7 +39,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         if (optional.isPresent()) {
             api = optional.get();
 
-            api.getEventLoader().launchEventAsync(new CommandCreateEvent(this));
+            ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
         }
     }
 

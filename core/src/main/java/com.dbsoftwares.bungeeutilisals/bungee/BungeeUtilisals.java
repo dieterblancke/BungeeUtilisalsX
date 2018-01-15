@@ -6,7 +6,6 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCreateEvent;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
@@ -23,7 +22,6 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.BanCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.executors.CommandCreateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
@@ -89,8 +87,6 @@ public class BungeeUtilisals extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
 
         IEventLoader loader = api.getEventLoader();
-
-        loader.register(CommandCreateEvent.class, new CommandCreateExecutor());
 
         UserExecutor userExecutor = new UserExecutor();
         loader.register(UserLoadEvent.class, userExecutor::onLoad);

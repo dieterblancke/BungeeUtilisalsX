@@ -8,9 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{warns-table}", indexes = {"uuid", "user", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class WarnsTable implements PunishmentTable {
+public class WarnsTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -44,37 +41,4 @@ public class WarnsTable implements PunishmentTable {
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
-
-    public static WarnsTable fromInfo(PunishmentInfo info) {
-        WarnsTable table = new WarnsTable();
-
-        table.setUuid(info.getUuid());
-        table.setUser(info.getUser());
-        table.setIp(info.getIP());
-        table.setReason(info.getReason());
-        table.setServer(info.getServer());
-        table.setExecutedby(info.getBy());
-
-        return table;
-    }
-
-    @Override
-    public PunishmentType getType() {
-        return PunishmentType.WARN;
-    }
-
-    @Override
-    public Boolean isActive() {
-        return null;
-    }
-
-    @Override
-    public String getRemovedby() {
-        return null;
-    }
-
-    @Override
-    public Long getRemoveTime() {
-        return null;
-    }
 }

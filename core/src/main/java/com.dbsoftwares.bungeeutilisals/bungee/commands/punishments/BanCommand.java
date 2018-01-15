@@ -5,7 +5,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserBanEvent;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQLFinder;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;

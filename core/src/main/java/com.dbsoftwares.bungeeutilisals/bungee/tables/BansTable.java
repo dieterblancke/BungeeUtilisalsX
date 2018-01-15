@@ -8,9 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{bans-table}", indexes = {"uuid", "user", "active", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class BansTable implements PunishmentTable {
+public class BansTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -43,7 +40,7 @@ public class BansTable implements PunishmentTable {
     private String date;
 
     @StorageColumn(type = "BOOLEAN", nullable = false)
-    private Boolean active;
+    private boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
@@ -51,33 +48,13 @@ public class BansTable implements PunishmentTable {
     @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
-
-    public static BansTable fromInfo(PunishmentInfo info) {
-        BansTable table = new BansTable();
-
-        table.setUuid(info.getUuid());
-        table.setUser(info.getUser());
-        table.setIp(info.getIP());
-        table.setReason(info.getReason());
-        table.setServer(info.getServer());
-        table.setActive(true);
-        table.setExecutedby(info.getBy());
-
-        return table;
-    }
-
-    @Override
-    public PunishmentType getType() {
-        return PunishmentType.BAN;
-    }
-
-    @Override
-    public Boolean isActive() {
-        return active;
-    }
-
-    @Override
-    public Long getRemoveTime() {
-        return null;
+    public BansTable(String uuid, String user, String ip, String reason, String server, boolean active, String executor) {
+        this.uuid = uuid;
+        this.user = user;
+        this.ip = ip;
+        this.reason = reason;
+        this.server = server;
+        this.active = active;
+        this.executedby = executor;
     }
 }

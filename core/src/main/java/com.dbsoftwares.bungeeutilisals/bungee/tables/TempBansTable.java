@@ -8,9 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{tempbans-table}", indexes = {"uuid", "user", "active", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class TempBansTable implements PunishmentTable {
+public class TempBansTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -46,7 +43,7 @@ public class TempBansTable implements PunishmentTable {
     private String date;
 
     @StorageColumn(type = "BOOLEAN", nullable = false)
-    private Boolean active;
+    private boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
@@ -54,28 +51,14 @@ public class TempBansTable implements PunishmentTable {
     @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
-    public static TempBansTable fromInfo(PunishmentInfo info) {
-        TempBansTable table = new TempBansTable();
-
-        table.setUuid(info.getUuid());
-        table.setUser(info.getUser());
-        table.setIp(info.getIP());
-        table.setRemoveTime(info.getTime());
-        table.setReason(info.getReason());
-        table.setServer(info.getServer());
-        table.setActive(true);
-        table.setExecutedby(info.getBy());
-
-        return table;
-    }
-
-    @Override
-    public PunishmentType getType() {
-        return PunishmentType.TEMPBAN;
-    }
-
-    @Override
-    public Boolean isActive() {
-        return active;
+    public TempBansTable(String uuid, String user, String ip, long removeTime, String reason, String server, boolean active, String executor) {
+        this.uuid = uuid;
+        this.user = user;
+        this.ip = ip;
+        this.removeTime = removeTime;
+        this.reason = reason;
+        this.server = server;
+        this.active = active;
+        this.executedby = executor;
     }
 }

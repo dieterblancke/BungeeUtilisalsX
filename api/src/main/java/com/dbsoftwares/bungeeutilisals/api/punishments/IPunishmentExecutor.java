@@ -1,72 +1,41 @@
 package com.dbsoftwares.bungeeutilisals.api.punishments;
 
-import java.util.LinkedList;
-
 public interface IPunishmentExecutor {
 
-    /**
-     * Adds a permanent punishment to the user. (Ban, IPBan, Mute, IPMute, Kick, Warn)
-     * @param type The punishment type you want to execute. PERMANENT PUNISHMENTS ONLY
-     * @param info The punishment information you want for the punishment.
-     */
-    void addPunishment(PunishmentType type, PunishmentInfo info);
+    boolean isBanned(String uuid, String name);
 
-    /**
-     * Adds a temporary punishment to the user. (Tempban, Tempmute, TempbanIP, TempmuteIP)
-     *
-     * @param type   The punishment type you want to execute. PERMANENT PUNISHMENTS ONLY
-     * @param info   The punishment information you want for the punishment.
-     * @param expire The future time on which the punishment should expire (in Milliseconds)
-     */
-    void addTemporaryPunishment(PunishmentType type, PunishmentInfo info, long expire);
+    boolean isTempBanned(String uuid, String name);
 
-    /**
-     * Disables activity for an active punishment of an user.
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user The user you want to remove the punishment from.
-     * @param type The type you want to remove the punishment from.
-     * @param removedby The person who removed the punishment, 'CONSOLE' in case of console.
-     */
-    void removePunishment(boolean uuid, String user, PunishmentType type, String removedby);
+    boolean isIPBanned(String uuid, String name, String IP);
 
-    /**
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user The user to check.
-     * @param type The type of which you want to check.
-     * @return True if punished, false if not.
-     */
-    Boolean hasActivePunishment(boolean uuid, String user, PunishmentType type);
+    boolean isIPTempBanned(String uuid, String name, String IP);
 
-    /**
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user The user to check.
-     * @param type The type you watn to check.
-     * @return True if punished before, false if not.
-     */
-    Boolean hasPunishment(boolean uuid, String user, PunishmentType type);
+    boolean isMuted(String uuid, String name);
 
-    /**
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user THe user of which you want to get the punishments.
-     * @param type The punishment type you want to retrieve from.
-     * @return All punishments of the given type in a LinkedHashMap, key = punishment info,
-     * value = remover of punishment, UNKNOWN if active.
-     */
-    LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user, PunishmentType type);
+    boolean isTempMuted(String uuid, String name);
 
-    /**
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user The user of which you want to get the punishments.
-     * @return All punishments of the all types in a LinkedHashMap, key = punishment info,
-     * value = remover of punishment, UNKNOWN if active.
-     */
-    LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user);
+    boolean isIPMuted(String uuid, String name, String IP);
 
-    /**
-     * @param uuid True if it should check on UUID, false if not.
-     * @param user The user of which you want to get the current punishment.
-     * @param type The type you want to check on.
-     * @return The active Punishment of a User of the given type, null if none.
-     */
-    PunishmentTable getCurrentPunishment(boolean uuid, String user, PunishmentType type);
+    boolean isIPTempMuted(String uuid, String name, String IP);
+
+    void addBan(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addIPBan(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addIPTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addMute(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addIPMute(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addIPTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addKick(String uuid, String user, String ip, String reason, String server, String executor);
+
+    void addWarn(String uuid, String user, String ip, String reason, String server, String executor);
+
 }

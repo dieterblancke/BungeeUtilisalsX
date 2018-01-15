@@ -16,3 +16,41 @@ logging:
   # How long should it be stored? Formula: amount * unit
   # For example: 4 * WEEKS = 4 Weeks = 28 days untill a log gets removed.
   amount: 4
+
+storage:
+  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | mysql recommended
+  type: 'MYSQL'
+
+  # The hostname (IP) to connect to
+  hostname: '127.0.0.1'
+  # Default ports:
+  # MySQL: 3306, PostgreSQL: 5432, MongoDB: 27017
+  port: 3306
+  # The database / scheme name
+  database: 'database'
+  # The username, should at least have write & read access to the database above!
+  username: 'username'
+  # The password corresponding to the username above
+  password: 'password'
+
+  pool:
+    # How many connections are allowed to be made?
+    # Find more information at:
+    # https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+    max-pool-size: 5
+
+    minimum-idle: 10
+
+  # Storage table names
+  tables:
+    users: 'bu_users'
+    bans: 'bu_bans'
+    ipbans: 'bu_ipbans'
+    tempbans: 'bu_tempbans'
+    iptempbans: 'bu_iptempbans'
+    mutes: 'bu_mutes'
+    ipmutes: 'bu_ipmutes'
+    tempmutes: 'bu_tempmutes'
+    iptempmutes: 'bu_iptempmutes'
+    kicks: 'bu_kicks'
+    warns: 'bu_warns'

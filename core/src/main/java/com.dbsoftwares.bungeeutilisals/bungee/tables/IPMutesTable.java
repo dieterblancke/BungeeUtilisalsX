@@ -8,9 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.tables;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @StorageTable(name = "{ipmutes-table}", indexes = {"uuid", "user", "active", "ip"}, foreign = {"uuid => {users-table}(uuid)"})
-public class IPMutesTable implements PunishmentTable {
+public class IPMutesTable {
 
     @StorageColumn(type = "INT(11)", primary = true, nullable = false, autoincrement = true)
     private int id;
@@ -43,7 +40,7 @@ public class IPMutesTable implements PunishmentTable {
     private String date;
 
     @StorageColumn(type = "BOOLEAN", nullable = false)
-    private Boolean active;
+    private boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
@@ -51,32 +48,4 @@ public class IPMutesTable implements PunishmentTable {
     @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
-    public static IPMutesTable fromInfo(PunishmentInfo info) {
-        IPMutesTable table = new IPMutesTable();
-
-        table.setUuid(info.getUuid());
-        table.setUser(info.getUser());
-        table.setIp(info.getIP());
-        table.setReason(info.getReason());
-        table.setServer(info.getServer());
-        table.setActive(true);
-        table.setExecutedby(info.getBy());
-
-        return table;
-    }
-
-    @Override
-    public PunishmentType getType() {
-        return PunishmentType.IPMUTE;
-    }
-
-    @Override
-    public Boolean isActive() {
-        return active;
-    }
-
-    @Override
-    public Long getRemoveTime() {
-        return null;
-    }
 }

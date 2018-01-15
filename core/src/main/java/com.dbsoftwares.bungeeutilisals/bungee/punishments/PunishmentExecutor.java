@@ -2,124 +2,122 @@ package com.dbsoftwares.bungeeutilisals.bungee.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentTable;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.bungee.tables.*;
-import com.google.common.collect.Lists;
-
-import java.util.LinkedList;
 
 public class PunishmentExecutor implements IPunishmentExecutor {
 
-    @Override
-    public void addPunishment(PunishmentType type, PunishmentInfo info) {
-        Object table = null;
-        switch (type) {
-            case BAN: {
-                table = BansTable.fromInfo(info);
-                break;
-            }
-            case IPBAN: {
-                table = IPBansTable.fromInfo(info);
-                break;
-            }
-            case MUTE: {
-                table = MutesTable.fromInfo(info);
-                break;
-            }
-            case IPMUTE: {
-                table = IPMutesTable.fromInfo(info);
-                break;
-            }
-            case KICK: {
-                table = KicksTable.fromInfo(info);
-                break;
-            }
-            case WARN: {
-                table = WarnsTable.fromInfo(info);
-                break;
-            }
+    private boolean find(Class<?> table, String uuid, String name, String ip) {
+        StringBuilder builder = new StringBuilder();
+        boolean firstArgument = true;
+
+        if (uuid != null) {
+            builder.append("uuid = '").append(uuid).append("'");
+            firstArgument = false;
         }
-        if (table != null) {
-            MySQL.insert(table);
+        if (name != null) {
+            if (!firstArgument) {
+                builder.append("AND ");
+            }
+            builder.append("user = '").append(name).append("'");
+            firstArgument = false;
         }
+        if (ip != null) {
+            if (!firstArgument) {
+                builder.append("AND ");
+            }
+            builder.append("ip = '").append(ip).append("'");
+        }
+
+        return MySQL.search(table).select("id").where(builder.toString()).search().isPresent();
     }
 
     @Override
-    public void addTemporaryPunishment(PunishmentType type, PunishmentInfo info, long expire) {
-        Object table = null;
-        switch (type) {
-            case TEMPBAN: {
-                table = TempBansTable.fromInfo(info);
-                break;
-            }
-            case IPTEMPBAN: {
-                table = IPTempBansTable.fromInfo(info);
-                break;
-            }
-            case TEMPMUTE: {
-                table = TempMutesTable.fromInfo(info);
-                break;
-            }
-            case IPTEMPMUTE: {
-                table = IPTempMutesTable.fromInfo(info);
-                break;
-            }
-        }
-        if (table != null) {
-            MySQL.insert(table);
-        }
+    public boolean isBanned(String uuid, String name) {
+        return find(BansTable.class, uuid, name, null);
     }
 
     @Override
-    public void removePunishment(boolean uuid, String user, PunishmentType type, String removedby) {
-        if (!type.isRemovable()) {
-            return;
-        }
-        Object instance = type.newInstance();
-        type.setRemovedBy(instance, removedby);
-        type.setActive(instance, false);
-
-        MySQL.update(instance, (uuid ? "uuid" : "user") + " = %s", user);
+    public boolean isTempBanned(String uuid, String name) {
+        return find(TempBansTable.class, uuid, name, null);
     }
 
     @Override
-    public Boolean hasActivePunishment(boolean uuid, String user, PunishmentType type) {
-        // Kicks & Warns can only be in the past, cannot be active.
-        return type.isRemovable() && MySQL.search(type.getTable()).select("id")
-                .where((uuid ? "uuid" : "user") + " = %s AND active = %s", user, true).search().isPresent();
+    public boolean isIPBanned(String uuid, String name, String IP) {
+        return find(IPBansTable.class, uuid, name, IP);
     }
 
     @Override
-    public Boolean hasPunishment(boolean uuid, String user, PunishmentType type) {
-        return MySQL.search(type.getTable()).select("id")
-                .where((uuid ? "uuid" : "user") + " = %s", user).search().isPresent();
+    public boolean isIPTempBanned(String uuid, String name, String IP) {
+        return find(IPTempBansTable.class, uuid, name, IP);
     }
 
     @Override
-    public LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user, PunishmentType type) {
-        return MySQL.search(type.getTable()).select("*")
-                .where((uuid ? "uuid" : "user") + " = %s", user).search().multiGet();
+    public boolean isMuted(String uuid, String name) {
+        return find(MutesTable.class, uuid, name, null);
     }
 
     @Override
-    public LinkedList<? extends PunishmentTable> getPunishments(boolean uuid, String user) {
-        LinkedList<PunishmentTable> punishments = Lists.newLinkedList();
-
-        for (PunishmentType type : PunishmentType.values()) {
-            punishments.addAll(getPunishments(uuid, user, type));
-        }
-
-        return punishments;
+    public boolean isTempMuted(String uuid, String name) {
+        return find(TempMutesTable.class, uuid, name, null);
     }
 
     @Override
-    public PunishmentTable getCurrentPunishment(boolean uuid, String user, PunishmentType type) {
-        if (!type.isRemovable()) {
-            return null;
-        }
-        return MySQL.search(type.getTable()).select("id")
-                .where((uuid ? "uuid" : "user") + " = %s", user).search().get();
+    public boolean isIPMuted(String uuid, String name, String IP) {
+        return find(IPMutesTable.class, uuid, name, IP);
+    }
+
+    @Override
+    public boolean isIPTempMuted(String uuid, String name, String IP) {
+        return find(IPTempMutesTable.class, uuid, name, IP);
+    }
+
+    @Override
+    public void addBan(String uuid, String name, String IP, String reason, String server, String executor) {
+        MySQL.insert(new BansTable(uuid, name, IP, reason, server, true, executor));
+    }
+
+    @Override
+    public void addTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+        MySQL.insert(new TempBansTable(uuid, user, ip, removeTime, reason, server, true, executor));
+    }
+
+    @Override
+    public void addIPBan(String uuid, String name, String IP, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addIPTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addMute(String uuid, String name, String IP, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addIPMute(String uuid, String name, String IP, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addIPTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addKick(String uuid, String user, String ip, String reason, String server, String executor) {
+
+    }
+
+    @Override
+    public void addWarn(String uuid, String user, String ip, String reason, String server, String executor) {
+
     }
 }
