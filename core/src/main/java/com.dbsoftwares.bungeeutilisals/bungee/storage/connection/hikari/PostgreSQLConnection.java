@@ -11,9 +11,9 @@ import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException
 
 import java.sql.*;
 
-public class MySQLConnection extends AbstractConnection {
+public class PostgreSQLConnection extends AbstractConnection {
 
-    public MySQLConnection(Connection connection) {
+    public PostgreSQLConnection(Connection connection) {
         super(connection);
     }
 
@@ -52,7 +52,6 @@ public class MySQLConnection extends AbstractConnection {
             throw new ConnectionException("Could not create statement!", e);
         }
     }
-
 
     @Override
     protected void finalize() throws Throwable {

@@ -5,8 +5,6 @@ import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
-import java.util.logging.Level;
-
 /*
  * Created by DBSoftwares on 04 01 2018
  * Developer: Dieter Blancke
@@ -25,6 +23,6 @@ public class Debugger implements IDebugger {
 
     @Override
     public void forceDebug(String message, Object... replacements) {
-        BungeeUtilisals.getLog().log(Level.INFO, String.format(message, (Object[]) replacements));
+        BungeeUtilisals.log(String.format(message, (Object[]) replacements));
     }
 }

@@ -11,10 +11,11 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.zaxxer.hikari.pool.ProxyConnection;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -80,7 +81,7 @@ public class MySQLFinder<T> {
             }
         }
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet rs = preparedStatement.executeQuery();
 
@@ -103,7 +104,7 @@ public class MySQLFinder<T> {
             rs.close();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException e) {
+        } catch (ConnectionException | SQLException e) {
             e.printStackTrace();
         }
         return this;

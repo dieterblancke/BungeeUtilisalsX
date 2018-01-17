@@ -12,13 +12,14 @@ import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.zaxxer.hikari.pool.ProxyConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -99,7 +100,7 @@ public interface BUAPI {
     /**
      * @return A new ProxyConnection instance.
      */
-    ProxyConnection getConnection() throws SQLException;
+    AbstractConnection getConnection() throws SQLException, ConnectionException;
 
     /**
      * @return The BungeeUtilisals punishment API.

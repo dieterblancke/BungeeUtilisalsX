@@ -344,4 +344,19 @@ public class Utils {
     public static String formatList(Object[] objects, String separators) {
         return Utils.c(Joiner.on(separators).join(objects));
     }
+
+    /**
+     * Checks if a class is present or not.
+     *
+     * @param clazz The class to be checked.
+     * @return True if found, false if not.
+     */
+    public static boolean classFound(String clazz) {
+        try {
+            Class.forName(clazz);
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 }

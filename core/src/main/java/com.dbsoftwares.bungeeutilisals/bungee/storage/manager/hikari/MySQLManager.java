@@ -6,24 +6,32 @@ package com.dbsoftwares.bungeeutilisals.bungee.storage.manager.hikari;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
-import com.zaxxer.hikari.HikariConfig;
-import com.zaxxer.hikari.HikariDataSource;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
+import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.connection.hikari.MySQLConnection;
+import net.md_5.bungee.api.plugin.Plugin;
+
+import java.sql.SQLException;
 
 public class MySQLManager extends HikariManager {
 
-    public MySQLManager(YamlConfiguration configuration) {
-        config = new HikariConfig();
-        config.setDataSourceClassName("com.mysql.jdbc.jdbc2.optional.MysqlDataSource");
-        config.addDataSourceProperty("serverName", configuration.getString("storage.mysql.hostname"));
-        config.addDataSourceProperty("port", configuration.getInteger("storage.mysql.port"));
-        config.addDataSourceProperty("databaseName", configuration.getString("storage.mysql.database"));
-        config.setUsername(configuration.getString("storage.mysql.username"));
-        config.setPassword(configuration.getString("storage.mysql.password"));
+    public MySQLManager(Plugin plugin) {
+        super(plugin, StorageType.MYSQL, BungeeUtilisals.getInstance().getConfig());
+    }
 
-        config.setMaximumPoolSize(configuration.getInteger("storage.mysql.max-pool-size"));
-        addConfigDefaults();
+    @Override
+    protected String getDataSourceClass() {
+        return "com.mysql.jdbc.jdbc2.optional.MysqlDataSource";
+    }
 
-        dataSource = new HikariDataSource(config);
+    @Override
+    public AbstractConnection getConnection() throws ConnectionException {
+        try {
+            return new MySQLConnection(dataSource.getConnection());
+        } catch (SQLException e) {
+            throw new ConnectionException("Could not create new connection for " + getName(), e);
+        }
     }
 }

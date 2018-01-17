@@ -7,6 +7,8 @@ import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
@@ -18,26 +20,18 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Debugger;
 import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
-import com.dbsoftwares.bungeeutilisals.bungee.manager.DatabaseManager;
 import com.dbsoftwares.bungeeutilisals.bungee.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
-import com.zaxxer.hikari.pool.ProxyConnection;
-import lombok.Getter;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.sql.SQLException;
 import java.util.Optional;
 
 public class BUtilisalsAPI implements BUAPI {
 
     private final BungeeUtilisals instance;
     private ConsoleUser console;
-
-    @Getter
-    private DatabaseManager databaseManager;
-
     private UserList users;
     private ChatManager chatManager;
     private EventLoader eventLoader;
@@ -53,8 +47,6 @@ public class BUtilisalsAPI implements BUAPI {
         this.instance = instance;
         this.console = new ConsoleUser();
         this.users = new UserList();
-        this.databaseManager = new DatabaseManager(this);
-        this.databaseManager.createTables();
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
         this.languageManager = new LanguageManager(instance);
@@ -132,8 +124,8 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
-    public ProxyConnection getConnection() throws SQLException {
-        return (ProxyConnection) databaseManager.getConnection();
+    public AbstractConnection getConnection() throws ConnectionException {
+        return instance.getDatabaseManagement().getConnection();
     }
 
     @Override

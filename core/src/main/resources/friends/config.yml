@@ -9,10 +9,6 @@ friendlimit:
   mvp: 20
   helper: 25
 
-tables:
-  friends: 'bu_friends'
-  requests: 'bu_friendrequests'
-
 subcommands:
   add:
     aliases: ''

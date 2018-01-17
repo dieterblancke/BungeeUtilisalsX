@@ -38,12 +38,19 @@ storage:
     # Find more information at:
     # https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
     max-pool-size: 5
+    # How many idle connections should be maintained?
+    # It is recommended to set this to the same value as the max-pool-size
+    min-idle: 5
+    # Maximum lifetime of a connection. Time in seconds.
+    max-lifetime: 1500 # 25 min
+    # How long should BungeeUtilisals wait before timing out a connection?
+    connection-timeout: 8
 
-    minimum-idle: 10
-
-  # Storage table names
-  tables:
+  # Storage schema names
+  schema:
     users: 'bu_users'
+    friends: 'bu_friends'
+    friendrequests: 'bu_friendrequests'
     bans: 'bu_bans'
     ipbans: 'bu_ipbans'
     tempbans: 'bu_tempbans'

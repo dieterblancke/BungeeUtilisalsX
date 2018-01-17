@@ -142,7 +142,7 @@ public class LanguageManager implements ILanguageManager {
         File lang = getFile(plugin, language);
 
         if (!configurations.containsKey(lang)) {
-            BungeeUtilisals.getLog().info("The plugin " + plugin.getDescription().getName() + " did not register the language " + language.getName() + " yet!");
+            BungeeUtilisals.log("The plugin " + plugin.getDescription().getName() + " did not register the language " + language.getName() + " yet!");
 
             File deflang = getFile(plugin, getDefaultLanguage().get());
             if (configurations.containsKey(deflang)) {
@@ -205,13 +205,13 @@ public class LanguageManager implements ILanguageManager {
                 target.createNewFile();
                 try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
-                        BungeeUtilisals.getLog().info("Didn't found default configuration for language " +
+                        BungeeUtilisals.log("Didn't found default configuration for language " +
                                 source.replace("languages/", "").replace(".json", "") +
                                 " for plugin " + plugin.getDescription().getName());
                         return null;
                     }
                     ByteStreams.copy(in, out);
-                    BungeeUtilisals.getLog().info("Loading default configuration for language "
+                    BungeeUtilisals.log("Loading default configuration for language "
                             + source.replace("languages/", "").replace(".json", "") + " for plugin "
                             + plugin.getDescription().getName());
 

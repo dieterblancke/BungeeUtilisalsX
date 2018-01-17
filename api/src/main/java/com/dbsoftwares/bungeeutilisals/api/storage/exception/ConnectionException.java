@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.storage.exception;
+package com.dbsoftwares.bungeeutilisals.api.storage.exception;
 
 /*
  * Created by DBSoftwares on 15/01/2018

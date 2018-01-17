@@ -8,7 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -30,8 +29,5 @@ public class PunishmentListener implements Listener {
         IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
         Boolean useUUID = BungeeUtilisals.getInstance().useUUID();
 
-        if (executor.hasActivePunishment(useUUID, useUUID ? uuid.toString() : name, PunishmentType.BAN)) {
-
-        }
     }
 }

@@ -16,6 +16,8 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractManager;
+import com.dbsoftwares.bungeeutilisals.api.storage.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
@@ -26,6 +28,9 @@ import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.SimplePacketListener;
+import com.dbsoftwares.bungeeutilisals.bungee.library.Library;
+import com.dbsoftwares.bungeeutilisals.bungee.library.classloader.LibraryClassLoader;
+import com.dbsoftwares.bungeeutilisals.bungee.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
@@ -35,19 +40,28 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
+import java.sql.SQLException;
 import java.util.Map;
-import java.util.logging.Logger;
 
 public class BungeeUtilisals extends Plugin {
 
-    @Getter private static final Logger log = Logger.getLogger("BungeeUtilisals");
-    @Getter private static BungeeUtilisals instance;
-    @Getter private static BUtilisalsAPI api;
+    @Getter
+    private static BungeeUtilisals instance;
+    @Getter
+    private static BUtilisalsAPI api;
     @Getter
     private static Map<FileLocation, YamlConfiguration> configurations = Maps.newHashMap();
+    @Getter
+    private LibraryClassLoader libraryClassLoader;
+    @Getter
+    private AbstractManager databaseManagement;
 
     public static YamlConfiguration getConfiguration(FileLocation location) {
         return configurations.get(location);
+    }
+
+    public static void log(String message) {
+        System.out.println("[BungeeUtilisals] " + message);
     }
 
     @Override
@@ -63,8 +77,14 @@ public class BungeeUtilisals extends Plugin {
         // Loading setting files ...
         createAndLoadFiles();
 
-        // Loading default PlaceHolders. Must be done BEFORE API (and database) loads.
+        // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack(new DefaultPlaceHolders());
+
+        // Loading libraries
+        loadLibraries();
+
+        // Loading database
+        loadDatabase();
 
         // Initializing API
         api = new BUtilisalsAPI(this);
@@ -85,6 +105,7 @@ public class BungeeUtilisals extends Plugin {
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
+        ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
         IEventLoader loader = api.getEventLoader();
 
@@ -108,7 +129,38 @@ public class BungeeUtilisals extends Plugin {
 
     @Override
     public void onDisable() {
-        api.getDatabaseManager().close();
+        try {
+            databaseManagement.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadDatabase() {
+        StorageType type;
+        try {
+            type = StorageType.valueOf(getConfig().getString("storage.type").toUpperCase());
+        } catch (IllegalArgumentException e) {
+            type = StorageType.MYSQL;
+        }
+        try {
+            databaseManagement = type.getManager().getConstructor(Plugin.class).newInstance(this);
+            databaseManagement.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void loadLibraries() {
+        log("Loading libraries ...");
+        libraryClassLoader = new LibraryClassLoader(this);
+
+        for (Library library : Library.values()) {
+            if (!library.isPresent()) {
+                library.load();
+            }
+        }
+        log("Libraries have been loaded.");
     }
 
     public YamlConfiguration getConfig() {

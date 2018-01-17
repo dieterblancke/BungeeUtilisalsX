@@ -10,7 +10,8 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.zaxxer.hikari.pool.ProxyConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
@@ -31,14 +32,14 @@ public class MySQL {
         }
         StorageTable storageTable = clazz.getDeclaredAnnotation(StorageTable.class);
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " +
                     PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + String.format(where, (Object[]) replacements));
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             e.printStackTrace();
         }
     }
@@ -86,13 +87,13 @@ public class MySQL {
         builder.delete(builder.length() - 2, builder.length());
         builder.append(" WHERE ").append(where).append(";");
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             e.printStackTrace();
         }
         return table;
@@ -139,14 +140,14 @@ public class MySQL {
         columnBuilder.delete(columnBuilder.length() - 2, columnBuilder.length());
         valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO %s (%s) VALUES (%s);",
                     PlaceHolderAPI.formatMessage(storageTable.name()), columnBuilder.toString(), valueBuilder.toString()));
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException e) {
+        } catch (SQLException | ConnectionException e) {
             e.printStackTrace();
         }
         return table;
@@ -226,13 +227,13 @@ public class MySQL {
             builder.append(storageTable.charset());
             builder.append(";");
 
-            try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+            try (AbstractConnection connection = BUCore.getApi().getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();
-            } catch (SQLException e) {
+            } catch (SQLException | ConnectionException e) {
                 e.printStackTrace();
             }
         }

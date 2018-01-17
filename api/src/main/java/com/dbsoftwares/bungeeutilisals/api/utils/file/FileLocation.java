@@ -5,7 +5,6 @@ import lombok.Getter;
 public enum FileLocation {
 
     CONFIG("config.yml"),
-    MYSQL("mysql.yml"),
     ANTISWEAR("chat/antiswear.yml"),
     ANTICAPS("chat/anticaps.yml"),
     ANTIAD("chat/antiadvertise.yml"),

@@ -2,10 +2,8 @@ package com.dbsoftwares.bungeeutilisals.bungee.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserBanEvent;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.mysql.MySQLFinder;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -46,15 +44,6 @@ public class BanCommand extends Command {
         }
         UserTable table = finder.get();
 
-        PunishmentInfo info = new PunishmentInfo();
-        info.setUser(table.getUsername());
-        info.setUuid(table.getUuid());
-        info.setIP(table.getIp());
-        info.setBy(user.getName());
-        info.setReason(reason);
-        info.setServer(user.getParent().getServer().getInfo().getName());
-        info.setType(PunishmentType.BAN);
-
         Optional<User> optionalUser = BUCore.getApi().getUser(table.getUsername());
         if (optionalUser.isPresent()) {
             User banned = optionalUser.get();
@@ -63,7 +52,7 @@ public class BanCommand extends Command {
                     .replace("%reason%", reason).replace("%bandate%", Utils.getCurrentDate()
                             + " " + Utils.getCurrentTime()).replace("%bannedby%", user.getName()));
         }
-
+/*
         BUCore.getApi().getPunishmentExecutor().addPunishment(PunishmentType.BAN, info);
 
         UserBanEvent event = new UserBanEvent(table.getUsername(), table.getUuid(), user.getName(), info);
@@ -71,6 +60,6 @@ public class BanCommand extends Command {
 
         BUCore.getApi().langBroadcast("punishments.ban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.broadcast"),
-                "%banner%", user.getName(), "%banned%", table.getUsername(), "%reason%", reason);
+                "%banner%", user.getName(), "%banned%", table.getUsername(), "%reason%", reason);*/
     }
 }

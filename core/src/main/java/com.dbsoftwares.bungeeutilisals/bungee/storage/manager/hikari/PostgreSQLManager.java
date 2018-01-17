@@ -11,27 +11,27 @@ import com.dbsoftwares.bungeeutilisals.api.storage.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.connection.hikari.MariaDBConnection;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.connection.hikari.PostgreSQLConnection;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.SQLException;
 
-public class MariaDBManager extends HikariManager {
+public class PostgreSQLManager extends HikariManager {
 
-    public MariaDBManager(Plugin plugin) {
-        super(plugin, StorageType.MARIADB, BungeeUtilisals.getInstance().getConfig());
+    public PostgreSQLManager(Plugin plugin) {
+        super(plugin, StorageType.POSTGRESQL, BungeeUtilisals.getInstance().getConfig());
     }
 
     @Override
     protected String getDataSourceClass() {
-        return Utils.classFound("org.mariadb.jdbc.MariaDbDataSource") ? "org.mariadb.jdbc.MariaDbDataSource"
-                : "org.mariadb.jdbc.MySQLDataSource";
+        return Utils.classFound("org.postgresql.ds.PGSimpleDataSource") ? "org.postgresql.ds.PGSimpleDataSource"
+                : "com.impossibl.postgres.jdbc.PGDataSource";
     }
 
     @Override
     public AbstractConnection getConnection() throws ConnectionException {
         try {
-            return new MariaDBConnection(dataSource.getConnection());
+            return new PostgreSQLConnection(dataSource.getConnection());
         } catch (SQLException e) {
             throw new ConnectionException("Could not create new connection for " + getName(), e);
         }
