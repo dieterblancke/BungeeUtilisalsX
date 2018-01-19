@@ -1,9 +1,6 @@
 # Should debugging mode be enabled?
 debug: false
 
-# Primary Identifier, can be two types: NAME or UUID
-primaryIdentifier: UUID
-
 # If enabled, experimental features, such as the BungeeInventory / ItemStack API will be enabled.
 experimental: false
 
@@ -18,13 +15,14 @@ logging:
   amount: 4
 
 storage:
-  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | mysql recommended
+  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | MySQL recommended
+  # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.
   type: 'MYSQL'
 
   # The hostname (IP) to connect to
   hostname: '127.0.0.1'
   # Default ports:
-  # MySQL: 3306, PostgreSQL: 5432, MongoDB: 27017
+  # MySQL / MariaDB: 3306, PostgreSQL: 5432, MongoDB: 27017
   port: 3306
   # The database / scheme name
   database: 'database'

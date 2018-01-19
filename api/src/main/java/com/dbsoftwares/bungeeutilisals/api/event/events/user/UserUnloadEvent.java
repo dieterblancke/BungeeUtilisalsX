@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 

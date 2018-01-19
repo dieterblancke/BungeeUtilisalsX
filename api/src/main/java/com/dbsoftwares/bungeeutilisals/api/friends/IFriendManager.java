@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.friends;
 
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.Collection;
 import java.util.UUID;

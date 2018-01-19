@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 public class UserExecutor {
 

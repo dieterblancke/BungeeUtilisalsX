@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 

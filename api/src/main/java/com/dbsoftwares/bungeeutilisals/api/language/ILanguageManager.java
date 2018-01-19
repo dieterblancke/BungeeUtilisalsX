@@ -7,7 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.language;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -19,9 +19,9 @@ import java.util.Optional;
 public interface ILanguageManager {
 
     /**
-     * @return The default language, if not found, it will return the first available language, if not found, it will return an empty optional.
+     * @return The default language, if not found, it will return the first available language, if still not present, null will be returned.
      */
-    Optional<Language> getDefaultLanguage();
+    Language getDefaultLanguage();
 
     /**
      * Method to retrieve a Language by name.

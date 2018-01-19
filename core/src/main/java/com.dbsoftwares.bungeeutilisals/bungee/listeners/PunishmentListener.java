@@ -6,7 +6,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.listeners;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
@@ -23,11 +25,20 @@ public class PunishmentListener implements Listener {
     public void onLogin(LoginEvent event) {
         PendingConnection connection = event.getConnection();
         UUID uuid = connection.getUniqueId();
-        String name = connection.getName();
         String IP = Utils.getIP(connection.getAddress());
 
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        Boolean useUUID = BungeeUtilisals.getInstance().useUUID();
+        BUAPI api = BUCore.getApi();
+        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        if (executor.isBanned(uuid)) {
+            IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(),
+                    api.getLanguageManager().getDefaultLanguage());
 
+            String kick = Utils.formatList(language.getStringList("punishments.ban.kick"), "\n");
+
+            event.setCancelled(true);
+            event.setCancelReason(Utils.format(kick));
+        } else if (executor.isIPBanned(IP)) {
+            // ... TODO
+        }
     }
 }

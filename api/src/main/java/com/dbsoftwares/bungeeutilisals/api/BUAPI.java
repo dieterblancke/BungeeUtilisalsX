@@ -6,23 +6,22 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
-import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
-import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
@@ -95,12 +94,12 @@ public interface BUAPI {
      * @param location The Configuration location you want to request.
      * @return A YamlConfiguration instance from the requested file location.
      */
-    YamlConfiguration getConfig(FileLocation location);
+    IConfiguration getConfig(FileLocation location);
 
     /**
      * @return A new ProxyConnection instance.
      */
-    AbstractConnection getConnection() throws SQLException, ConnectionException;
+    Connection getConnection() throws SQLException;
 
     /**
      * @return The BungeeUtilisals punishment API.

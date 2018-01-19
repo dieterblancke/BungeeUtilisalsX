@@ -7,7 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.experimental.packets;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import io.netty.buffer.ByteBuf;
 import net.md_5.bungee.UserConnection;

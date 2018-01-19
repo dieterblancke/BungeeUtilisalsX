@@ -4,7 +4,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.ChatEvent;

@@ -9,6 +9,7 @@
         "advertise": "&fPlease do not advertise!"
     },
     "punishments": {
+        "cancelled": "&fIt seems that an external plugin has cancelled your punishment!",
         "ban": {
             "usage": "&fPlease use &a/ban (user) (reason)&f!",
             "broadcast": [

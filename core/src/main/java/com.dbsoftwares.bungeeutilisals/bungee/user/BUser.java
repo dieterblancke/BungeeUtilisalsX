@@ -12,13 +12,13 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
-import com.dbsoftwares.bungeeutilisals.api.user.IExperimentalUser;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.tables.UserTable;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -35,8 +35,8 @@ public class BUser implements User {
     private String player;
     private Boolean socialspy = false;
     private ExperimentalUser experimental;
-    private UserTable userData;
     private UserCooldowns cooldowns;
+    private UserStorage storage;
 
     @Override
     public void load(UserPreLoadEvent event) {
@@ -44,24 +44,23 @@ public class BUser implements User {
 
         this.player = p.getName();
         this.experimental = new ExperimentalUser(this);
+        this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
         BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
-        UserTable data;
-        if (BungeeUtilisals.getInstance().useUUID()) {
-            data = MySQL.search(UserTable.class).select("*").where("uuid = %s", p.getUniqueId().toString()).search().get();
+        if (SQLStatements.isUserPresent(p.getUniqueId())) {
+            storage = SQLStatements.getUser(p.getUniqueId());
         } else {
-            data = MySQL.search(UserTable.class).select("*").where("username = %s", player).search().get();
-        }
-        if (data == null) {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            data = MySQL.insert(UserTable.getDefault(p));
+            SQLStatements.insertIntoUsers(p.getUniqueId().toString(), p.getName(), Utils.getIP(p.getAddress()),
+                    BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
+            storage = new UserStorage();
+            storage.setDefaultsFor(p);
         }
-        this.userData = data;
 
-        if (!userData.getUsername().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
-            userData.setUsername(player);
-            save();
+        if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
+            storage.setUserName(player);
+            SQLStatements.updateUser(p.getUniqueId().toString(), player, null, null);
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);
@@ -81,16 +80,17 @@ public class BUser implements User {
     public void save() {
         BUCore.getApi().getDebugger().debug("Saving data for %s!", player);
 
-        if (BungeeUtilisals.getInstance().useUUID()) {
-            MySQL.update(userData, "uuid = %s", getParent().getUniqueId().toString());
-        } else {
-            MySQL.update(userData, "username = %s", player);
-        }
+        SQLStatements.updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
     }
 
     @Override
     public String getIdentifier() {
-        return BungeeUtilisals.getInstance().useUUID() ? getParent().getUniqueId().toString() : player;
+        return getParent().getUniqueId().toString();
+    }
+
+    @Override
+    public UserStorage getStorage() {
+        return storage;
     }
 
     @Override
@@ -100,18 +100,17 @@ public class BUser implements User {
 
     @Override
     public String getIP() {
-        return null;
+        return Utils.getIP(getParent().getAddress());
     }
 
     @Override
     public Language getLanguage() {
-        return BUCore.getApi().getLanguageManager().getLanguage(userData.getLanguage())
-                .orElse(BUCore.getApi().getLanguageManager().getDefaultLanguage().orElse(null));
+        return storage.getLanguage();
     }
 
     @Override
     public void setLanguage(Language language) {
-        userData.setLanguage(language.getName());
+        storage.setLanguage(language);
     }
 
     @Override
@@ -232,6 +231,11 @@ public class BUser implements User {
     @Override
     public boolean isConsole() {
         return false;
+    }
+
+    @Override
+    public String getServerName() {
+        return getParent().getServer().getInfo().getName();
     }
 
     private BaseComponent[] buildComponent(String... text) {

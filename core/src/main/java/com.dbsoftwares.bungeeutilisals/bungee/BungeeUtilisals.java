@@ -7,20 +7,20 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractManager;
-import com.dbsoftwares.bungeeutilisals.api.storage.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
+import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.BanCommand;
@@ -50,13 +50,13 @@ public class BungeeUtilisals extends Plugin {
     @Getter
     private static BUtilisalsAPI api;
     @Getter
-    private static Map<FileLocation, YamlConfiguration> configurations = Maps.newHashMap();
+    private static Map<FileLocation, IConfiguration> configurations = Maps.newHashMap();
     @Getter
     private LibraryClassLoader libraryClassLoader;
     @Getter
-    private AbstractManager databaseManagement;
+    private AbstractStorageManager databaseManagement;
 
-    public static YamlConfiguration getConfiguration(FileLocation location) {
+    public static IConfiguration getConfiguration(FileLocation location) {
         return configurations.get(location);
     }
 
@@ -163,12 +163,8 @@ public class BungeeUtilisals extends Plugin {
         log("Libraries have been loaded.");
     }
 
-    public YamlConfiguration getConfig() {
+    public IConfiguration getConfig() {
         return configurations.get(FileLocation.CONFIG);
-    }
-
-    public boolean useUUID() {
-        return getConfig().getString("primaryIdentifier").equalsIgnoreCase("UUID");
     }
 
     private void createAndLoadFiles() {
@@ -179,7 +175,7 @@ public class BungeeUtilisals extends Plugin {
                 FileUtils.createDefaultFile(this, location.getPath(), file, true);
             }
 
-            YamlConfiguration configuration = IConfiguration.loadConfiguration(YamlConfiguration.class, file);
+            YamlConfiguration configuration = (YamlConfiguration) IConfiguration.loadYamlConfiguration(file);
             configurations.put(location, configuration);
         }
     }

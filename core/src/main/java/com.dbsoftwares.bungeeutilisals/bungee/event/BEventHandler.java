@@ -1,13 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.bungee.event;
 
-import com.dbsoftwares.bungeeutilisals.api.event.BUEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.BUEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.EventHandler;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
@@ -16,38 +15,26 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
     private final EventLoader eventloader;
     @Getter private final Class<T> eventClass;
     @Getter private final EventExecutor<T> executor;
-    private final AtomicBoolean active = new AtomicBoolean(true);
-    private final AtomicInteger callCount = new AtomicInteger(0);
+    private final AtomicInteger uses = new AtomicInteger(0);
 
     @Override
-    public boolean isActive() {
-        return active.get();
-    }
-
-    @Override
-    public boolean unregister() {
-        // already unregistered
-        if (!active.getAndSet(false)) {
-            return false;
-        }
-
+    public void unregister() {
         eventloader.unregister(this);
-        return true;
     }
 
     @Override
-    public int getExecutedAmount() {
-        return callCount.get();
+    public int getUsedAmount() {
+        return uses.get();
     }
 
     @SuppressWarnings("unchecked")
     void handle(BUEvent event) {
         try {
-            T t = (T) event;
-            executor.onExecute(t);
-            callCount.incrementAndGet();
+            T castedEvent = (T) event;
+            executor.onExecute(castedEvent);
+            uses.getAndIncrement();
         } catch (Throwable t) {
-            BungeeUtilisals.log("Unable to pass event " + event.getClass().getSimpleName() + " to handler " + executor.getClass().getName());
+            BungeeUtilisals.log("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
             t.printStackTrace();
         }
     }

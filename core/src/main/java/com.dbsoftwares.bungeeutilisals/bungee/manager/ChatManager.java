@@ -1,9 +1,9 @@
 package com.dbsoftwares.bungeeutilisals.bungee.manager;
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
@@ -46,7 +46,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public Boolean checkForAdvertisement(User user, String message) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTIAD);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTIAD);
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
@@ -64,7 +64,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public Boolean checkForCaps(User user, String message) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
 
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))
                 || message.length() < config.getInteger("min-length")) {
@@ -83,7 +83,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public Boolean checkForSpam(User user) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISPAM);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISPAM);
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
@@ -98,7 +98,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public Boolean checkForSwear(User user, String message) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
@@ -114,7 +114,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public String replaceSwearWords(User user, String message, String replacement) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return message;
         }

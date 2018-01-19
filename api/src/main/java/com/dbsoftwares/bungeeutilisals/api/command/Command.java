@@ -3,7 +3,7 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
@@ -34,13 +34,9 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     public Command(String name, List<String> aliases, String permission) {
         super(name, "", aliases.toArray(new String[aliases.size()]));
         this.permission = permission;
+        this.api = BUCore.getApi();
 
-        Optional<BUAPI> optional = BUCore.getApiSafe();
-        if (optional.isPresent()) {
-            api = optional.get();
-
-            ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
-        }
+        ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
     }
 
     @Override
@@ -72,7 +68,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         }
         try {
             BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
-            //onExecute(sender, args);
+            // onExecute(sender, args);
         } catch (Exception e) {
             e.printStackTrace();
         }
