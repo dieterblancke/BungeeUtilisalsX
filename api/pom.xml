@@ -19,6 +19,6 @@
     </dependencies>
 
     <build>
-        <finalName>BUtilisals API</finalName>
+        <finalName>BungeeUtilisals API</finalName>
     </build>
 </project>

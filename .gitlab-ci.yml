@@ -6,4 +6,5 @@ build:
     name: "${CI_JOB_STAGE} #${CI_COMMIT_REF_NAME}"
     untracked: true
     paths:
-      - "target/*.jar"
+      - "api/*"
+      - "core/*"
