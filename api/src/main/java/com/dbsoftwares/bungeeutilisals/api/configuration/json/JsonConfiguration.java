@@ -24,30 +24,18 @@ public class JsonConfiguration implements IConfiguration {
     LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
     public JsonConfiguration(File file) throws IOException {
+        this(new FileInputStream(file));
         this.file = file;
-        if (!file.exists()) {
-            object = new JsonObject();
-            return;
-        }
-        FileInputStream stream = new FileInputStream(file);
-        InputStreamReader reader = new InputStreamReader(stream);
-
-        Gson gson = new Gson();
-        this.object = gson.fromJson(reader, JsonObject.class);
-
-        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
-            loadValues(entry.getKey(), entry.getValue());
-        }
-
-        stream.close();
-        reader.close();
     }
 
     public JsonConfiguration(InputStream input) throws IOException {
         InputStreamReader reader = new InputStreamReader(input);
-        Gson gson = new Gson();
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
+
         this.object = gson.fromJson(reader, JsonObject.class);
-        loadValues(null, object);
+        for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+            loadValues(entry.getKey(), entry.getValue());
+        }
 
         input.close();
         reader.close();
@@ -737,7 +725,7 @@ public class JsonConfiguration implements IConfiguration {
 
     @Override
     public void save() throws IOException {
-        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+        Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
 
         @Cleanup FileWriter fileWriter = new FileWriter(file);
         @Cleanup BufferedWriter writer = new BufferedWriter(fileWriter);

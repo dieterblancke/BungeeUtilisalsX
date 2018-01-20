@@ -12,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,15 +37,15 @@ public class IPMutesTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
-    @StorageColumn(type = "TINYINT(1)", nullable = false)
+    @StorageColumn(type = "BOOLEAN", nullable = false)
     private boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
 
-    @StorageColumn(type = "VARCHAR(32)", nullable = false)
+    @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
 }

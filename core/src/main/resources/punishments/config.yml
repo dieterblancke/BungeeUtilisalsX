@@ -2,17 +2,25 @@
 # If disabled, all other options below will be ignored.
 enabled: false
 
-tables:
-  bans: 'bu_bans'
-  ipbans: 'bu_ipbans'
-  tempbans: 'bu_tempbans'
-  iptempbans: 'bu_iptempbans'
-  mutes: 'bu_mutes'
-  ipmutes: 'bu_ipmutes'
-  tempmutes: 'bu_tempmutes'
-  iptempmutes: 'bu_iptempmutes'
-  kicks: 'bu_kicks'
-  warns: 'bu_warns'
+actions:
+  5warns: # This is an example if an user gets warned 5 times in 7 days time, he'll receive an one day tempmute.
+    # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
+    type: 'WARN'
+    time:
+      # Possible units: MINUTES, HOURS, DAYS, WEEKS
+      unit: DAYS
+      amount: 7
+    action:
+    - 'tempmute %user% 1d You have received too many warns recently!'
+  3tempmutes: # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
+    # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
+    type: 'TEMPMUTE'
+    time:
+      # Possible units: MINUTES, HOURS, DAYS, WEEKS
+      unit: WEEKS
+      amount: 2
+    action:
+    - 'tempban %user% 1w You have received too many tempmutes recently!'
 
 commands:
   ban:
@@ -20,39 +28,50 @@ commands:
     enabled: true
     aliases: 'pban, gban'
     permission: bungeeutilisals.punishments.ban
+    # Permission to receive broadcast ban messages
+    broadcast: bungeeutilisals.punishments.ban.broadcast
   ipban:
     enabled: true
     aliases: 'banip, gbanip, gipban'
     permission: bungeeutilisals.punishments.ipban
+    broadcast: bungeeutilisals.punishments.ipban.broadcast
   tempban:
     enabled: true
     aliases: 'tban, gtban'
     permission: bungeeutilisals.punishments.tempban
+    broadcast: bungeeutilisals.punishments.tempban.broadcast
   tempbanip:
     enabled: true
     aliases: 'iptempban, tipban, gtipban, tbanip'
     permission: bungeeutilisals.punishments.tempbanip
+    broadcast: bungeeutilisals.punishments.tempbanip.broadcast
   mute:
     enabled: true
     aliases: 'pmute, gmute'
     permission: bungeeutilisals.punishments.mute
+    broadcast: bungeeutilisals.punishments.mute.broadcast
   ipmute:
     enabled: true
     aliases: 'muteip, gmuteip, gipmute'
     permission: bungeeutilisals.punishments.ipmute
+    broadcast: bungeeutilisals.punishments.ipmute.broadcast
   tempmute:
     enabled: true
     aliases: 'tmute, gtmute'
     permission: bungeeutilisals.punishments.tempmute
+    broadcast: bungeeutilisals.punishments.tempmute.broadcast
   tempmuteip:
     enabled: true
     aliases: 'iptempmute, tipmute, gtipmute, tmuteip'
     permission: bungeeutilisals.punishments.tempmuteip
+    broadcast: bungeeutilisals.punishments.tempmuteip.broadcast
   kick:
     enabled: true
     aliases: ''
     permission: bungeeutilisals.punishments.kick
+    broadcast: bungeeutilisals.punishments.kick.broadcast
   warn:
     enabled: true
     aliases: ''
     permission: bungeeutilisals.punishments.warn
+    broadcast: bungeeutilisals.punishments.warn.broadcast

@@ -3,6 +3,8 @@ enabled: true
 cancel: true
 # What do you want to words to be replaced with? This is ignored is cancel is true.
 replace: '*****'
+# The permission to bypass the antiswear system
+bypass: 'bungeeutilisals.bypass.antiswear'
 # The words you want to be blocked by antiswear.
 words:
 - word1

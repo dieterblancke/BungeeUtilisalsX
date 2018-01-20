@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 
@@ -65,7 +66,8 @@ public final class BUCore {
     }
 
     public static void sendMessage(CommandSender sender, String message) {
-        // TODO: get sender language & language prefix
-        sender.sendMessage(Utils.format(message));
+        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin(), sender);
+
+        sender.sendMessage(Utils.format(config.getString("prefix"), message));
     }
 }

@@ -11,13 +11,15 @@ import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
-import com.dbsoftwares.bungeeutilisals.api.tools.ILoggers;
+import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocations;
-import com.zaxxer.hikari.pool.ProxyConnection;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -90,18 +92,72 @@ public interface BUAPI {
     IDebugger getDebugger();
 
     /**
-     * @return An optional containing a ILoggers instance. Not present if logging is disabled in the config.
-     */
-    Optional<ILoggers> getLoggers();
-
-    /**
      * @param location The Configuration location you want to request.
      * @return A YamlConfiguration instance from the requested file location.
      */
-    YamlConfiguration getConfig(FileLocations location);
+    YamlConfiguration getConfig(FileLocation location);
 
     /**
      * @return A new ProxyConnection instance.
      */
-    ProxyConnection getConnection() throws SQLException;
+    AbstractConnection getConnection() throws SQLException, ConnectionException;
+
+    /**
+     * @return The BungeeUtilisals punishment API.
+     */
+    IPunishmentExecutor getPunishmentExecutor();
+
+    /**
+     * @return ConsoleUser instance.
+     */
+    ConsoleUser getConsole();
+
+    /**
+     * Broadcasts a message with the BungeeUtilisals prefix.
+     *
+     * @param message The message to be broadcasted.
+     */
+    void broadcast(String message);
+
+    /**
+     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     *
+     * @param message    The message to be broadcasted.
+     * @param permission The permission the user must have to receive the message.
+     */
+    void broadcast(String message, String permission);
+
+    /**
+     * Broadcastas a message with a given prefix to the people with the given permission.
+     *
+     * @param prefix  The prefix you want.
+     * @param message The message to be broadcasted.
+     */
+    void announce(String prefix, String message);
+
+    /**
+     * Broadcastas a message with a given prefix to the people with the given permission.
+     *
+     * @param prefix     The prefix you want.
+     * @param message    The message to be broadcasted.
+     * @param permission The permission the user must have to receive the message.
+     */
+    void announce(String prefix, String message, String permission);
+
+    /**
+     * Broadcasts a message with the BungeeUtilisals prefix.
+     *
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void langBroadcast(String message, Object... placeholders);
+
+    /**
+     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     *
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param permission   The permission the user must have to receive the message.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void langBroadcast(String message, String permission, Object... placeholders);
 }

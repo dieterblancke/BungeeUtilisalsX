@@ -16,7 +16,7 @@ public interface IDebugger {
      * @param message      The message to be debugged.
      * @param replacements The replacements for the '%s' format in the message.
      */
-    void debug(String message, String... replacements);
+    void debug(String message, Object... replacements);
 
     /**
      * This will print a debug message to the console.
@@ -25,6 +25,6 @@ public interface IDebugger {
      * @param message      The message to be debugged.
      * @param replacements The replacements for the '%s' format in the message.
      */
-    void forceDebug(String message, String... replacements);
+    void forceDebug(String message, Object... replacements);
 
 }

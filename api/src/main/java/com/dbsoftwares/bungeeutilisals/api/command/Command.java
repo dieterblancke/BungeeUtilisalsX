@@ -4,7 +4,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
@@ -33,14 +32,14 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     }
 
     public Command(String name, List<String> aliases, String permission) {
-        super(name, permission, aliases.toArray(new String[aliases.size()]));
+        super(name, "", aliases.toArray(new String[aliases.size()]));
         this.permission = permission;
 
         Optional<BUAPI> optional = BUCore.getApiSafe();
         if (optional.isPresent()) {
             api = optional.get();
 
-            api.getEventLoader().launchEventAsync(new CommandCreateEvent(this));
+            ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
         }
     }
 
@@ -49,9 +48,11 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         BUAPI api = BUCore.getApi();
         IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
-        if (permission != null && !sender.hasPermission(permission)) {
-            sender.sendMessage(Utils.format(configuration.getString("prefix") + configuration.getString("no-permission").replace("%permission%", permission)));
-            return;
+        if (permission != null) {
+            if (!sender.hasPermission(permission) && !sender.hasPermission("bungeeutilisals.commands.*")) {
+                BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
+                return;
+            }
         }
 
         if (sender instanceof ProxiedPlayer) {
@@ -70,7 +71,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
             }
         }
         try {
-            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(sender, args));
+            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
             //onExecute(sender, args);
         } catch (Exception e) {
             e.printStackTrace();

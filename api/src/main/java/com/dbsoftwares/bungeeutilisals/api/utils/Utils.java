@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
  * May only be used for CentrixPVP
  */
 
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
@@ -24,12 +25,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Utils {
+
     private static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?"
                     + "(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
                     + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?" + "(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
@@ -272,6 +276,26 @@ public class Utils {
     }
 
     /**
+     * Converts a InetSocketAddress into a String IPv4.
+     *
+     * @param a The address to be converted.
+     * @return The converted address as a String.
+     */
+    public static String getIP(InetSocketAddress a) {
+        return getIP(a.getAddress());
+    }
+
+    /**
+     * Converts a InetAddress into a String IPv4.
+     *
+     * @param a The address to be converted.
+     * @return The converted address as a String.
+     */
+    public static String getIP(InetAddress a) {
+        return a.toString().split("/")[1].split(":")[0];
+    }
+
+    /**
      * Registers a packet.
      *
      * @param direction   The packet direction.
@@ -295,6 +319,43 @@ public class Utils {
             return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Formatting a list into a string with given seperators.
+     *
+     * @param objects    Iterable which has to be converted.
+     * @param separators Seperator which will be used to seperate the list.
+     * @return A string in which all sendable of the list are seperated by the separator.
+     */
+    public static String formatList(Iterable<?> objects, String separators) {
+        return Utils.c(Joiner.on(separators).join(objects));
+    }
+
+    /**
+     * Similar to {@link #formatList(Iterable, String)} but for Arrays.
+     *
+     * @param objects    Array which has to be converted.
+     * @param separators Seperator which will be used to seperate the array.
+     * @return A string in which all sendable of the array are seperated by the separator.
+     */
+    public static String formatList(Object[] objects, String separators) {
+        return Utils.c(Joiner.on(separators).join(objects));
+    }
+
+    /**
+     * Checks if a class is present or not.
+     *
+     * @param clazz The class to be checked.
+     * @return True if found, false if not.
+     */
+    public static boolean classFound(String clazz) {
+        try {
+            Class.forName(clazz);
+            return true;
+        } catch (ClassNotFoundException e) {
             return false;
         }
     }

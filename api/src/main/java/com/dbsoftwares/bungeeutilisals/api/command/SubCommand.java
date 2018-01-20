@@ -39,7 +39,7 @@ public abstract class SubCommand implements ICommand {
             }
         }
         try {
-            onExecute(sender, args);
+            onExecute(BUCore.getApi().getConsole(), args);
         } catch (Exception e) {
             e.printStackTrace();
         }

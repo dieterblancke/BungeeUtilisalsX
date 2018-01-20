@@ -24,4 +24,6 @@ public @interface StorageColumn {
 
     String def() default "";
 
+    boolean updateable() default true;
+
 }

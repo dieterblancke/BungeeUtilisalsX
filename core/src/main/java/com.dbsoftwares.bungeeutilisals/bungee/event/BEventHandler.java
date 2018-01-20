@@ -47,7 +47,7 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
             executor.onExecute(t);
             callCount.incrementAndGet();
         } catch (Throwable t) {
-            BungeeUtilisals.getLog().warning("Unable to pass event " + event.getClass().getSimpleName() + " to handler " + executor.getClass().getName());
+            BungeeUtilisals.log("Unable to pass event " + event.getClass().getSimpleName() + " to handler " + executor.getClass().getName());
             t.printStackTrace();
         }
     }

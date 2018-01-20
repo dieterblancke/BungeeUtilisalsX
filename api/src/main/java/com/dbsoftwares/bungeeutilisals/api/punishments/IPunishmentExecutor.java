@@ -1,56 +1,41 @@
 package com.dbsoftwares.bungeeutilisals.api.punishments;
 
-import java.util.LinkedHashMap;
-
 public interface IPunishmentExecutor {
 
-    /**
-     * Adds a punishment to the User with the given type and info.
-     * @param user The user you want to punish.
-     * @param type The punishment type you want to execute. IPBAN, BAN or MUTE
-     * @param info The punishment information you want for the punishment.
-     */
-    void addPunishment(String user, PunishmentType type, PunishmentInfo info);
+    boolean isBanned(String uuid, String name);
 
-    /**
-     * Disables activity for an active punishment of an user.
-     * @param user The user you want to remove the punishment from.
-     * @param type The type you want to remove the punishment from.
-     * @param remover The person who removed the punishment.
-     */
-    void removePunishment(String user, PunishmentType type, String remover);
+    boolean isTempBanned(String uuid, String name);
 
-    /**
-     * @param user The user to check.
-     * @param type The type of which you want to check.
-     * @return True if punished, false if not.
-     */
-    Boolean isPunished(String user, PunishmentType type);
+    boolean isIPBanned(String uuid, String name, String IP);
 
-    /**
-     * @param user The user to check.
-     * @param type The type you watn to check.
-     * @return True if punished before, false if not.
-     */
-    Boolean punishedBefore(String user, PunishmentType type);
+    boolean isIPTempBanned(String uuid, String name, String IP);
 
-    /**
-     * @param user THe user of which you want to get the punishments.
-     * @param type The punishment type you want to retrieve from.
-     * @return All punishments of the given type in a LinkedHashMap, key = punishment info, value = remover of punishment, UNKNOWN if active.
-     */
-    LinkedHashMap<PunishmentInfo, String> getPunishments(String user, PunishmentType type);
+    boolean isMuted(String uuid, String name);
 
-    /**
-     * @param user The user of which you want to get the punishments.
-     * @return All punishments of the all types in a LinkedHashMap, key = punishment info, value = remover of punishment, UNKNOWN if active.
-     */
-    LinkedHashMap<PunishmentInfo, String> getPunishments(String user);
+    boolean isTempMuted(String uuid, String name);
 
-    /**
-     * @param user The user of which you want to get the current punishment.
-     * @param type The type you want to check on.
-     * @return The active Punishment of a User of the given type, null if none.
-     */
-    PunishmentInfo getCurrentPunishment(String user, PunishmentType type);
+    boolean isIPMuted(String uuid, String name, String IP);
+
+    boolean isIPTempMuted(String uuid, String name, String IP);
+
+    void addBan(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addIPBan(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addIPTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addMute(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addIPMute(String uuid, String name, String IP, String reason, String server, String executor);
+
+    void addIPTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor);
+
+    void addKick(String uuid, String user, String ip, String reason, String server, String executor);
+
+    void addWarn(String uuid, String user, String ip, String reason, String server, String executor);
+
 }

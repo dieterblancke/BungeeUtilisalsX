@@ -1,15 +1,4 @@
-# If enabled people will be able to select their language.
-# If disabled, BungeeUtilisals will use the default, built in en_US language.
-enabled: true
-
 languages:
   en_US:
-    # Locations where BungeeUtilisals can find the language file. By default in the language folder.
-    location: languages/en_US.yml
     # If default is true, this language will be default for new users, if false, users will be able to select it.
     default: true
-  nl_NL:
-    # Locations where BungeeUtilisals can find the language file. By default in the language folder.
-    location: languages/nl_NL.yml
-    # If default is true, this language will be default for new users, if false, users will be able to select it.
-    default: false

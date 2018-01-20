@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.bungee.listeners;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
@@ -22,7 +23,7 @@ public class UserConnectionListener implements Listener {
         BungeeUtilisals.getApi().getEventLoader().launchEvent(userPreLoadEvent);
 
         if (userPreLoadEvent.isCancelled()) {
-            BungeeUtilisals.getLog().info("Did not load User for " + player.getName() + "! Because UserPreLoadEvent got cancelled.");
+            BUCore.getApi().getDebugger().debug("Did not load user %s, UserPreLoadEvent got cancelled!", player.getName());
             return;
         }
 

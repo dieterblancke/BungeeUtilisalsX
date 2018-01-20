@@ -6,34 +6,104 @@ package com.dbsoftwares.bungeeutilisals.api.mysql;
  * Project: BungeeUtilisals
  */
 
-
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.google.common.collect.Lists;
-import com.zaxxer.hikari.pool.ProxyConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 public class MySQL {
 
-    public static <T> MySQLFinder<T> find(Class<T> table) {
+    public static <T> MySQLFinder<T> search(Class<T> table) {
         if (!table.isAnnotationPresent(StorageTable.class)) {
             return null;
         }
         return new MySQLFinder<>(table);
     }
 
-    public static <T> void insert(T table) {
-        if (!table.getClass().isAnnotationPresent(StorageTable.class)) {
+    public static void delete(Class<?> clazz, String where, String... replacements) {
+        if (!clazz.isAnnotationPresent(StorageTable.class)) {
             return;
         }
+        StorageTable storageTable = clazz.getDeclaredAnnotation(StorageTable.class);
+
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " +
+                    PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + String.format(where, (Object[]) replacements));
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException | ConnectionException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static <T> T update(T table, String where, String... replacements) {
+        if (!table.getClass().isAnnotationPresent(StorageTable.class)) {
+            return table;
+        }
         StorageTable storageTable = table.getClass().getDeclaredAnnotation(StorageTable.class);
-        LinkedList<Field> fields = Lists.newLinkedList();
+
+        for (int i = 0; i < replacements.length; i++) {
+            replacements[i] = "'" + replacements[i] + "'";
+        }
+
+        where = String.format(where, (Object[]) replacements);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("UPDATE ").append(PlaceHolderAPI.formatMessage(storageTable.name())).append(" SET ");
+        for (Field field : table.getClass().getDeclaredFields()) {
+            if (!field.isAnnotationPresent(StorageColumn.class)) {
+                continue;
+            }
+            StorageColumn column = field.getDeclaredAnnotation(StorageColumn.class);
+            if (!column.updateable()) {
+                continue;
+            }
+            field.setAccessible(true);
+            try {
+                String name = field.getName();
+                Object value = field.get(table);
+
+                if (value != null) {
+                    if (value instanceof Number) {
+                        builder.append(field.getName()).append(" = ").append(value).append(", ");
+                    } else if (value instanceof Boolean) {
+                        builder.append(field.getName()).append(" = ").append((boolean) value ? 1 : 0).append(", ");
+                    } else {
+                        builder.append(field.getName()).append(" = ").append("'").append(value).append("'").append(", ");
+                    }
+                }
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
+        builder.delete(builder.length() - 2, builder.length());
+        builder.append(" WHERE ").append(where).append(";");
+
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException | ConnectionException e) {
+            e.printStackTrace();
+        }
+        return table;
+    }
+
+    public static <T> T insert(T table) {
+        if (!table.getClass().isAnnotationPresent(StorageTable.class)) {
+            return table;
+        }
+        StorageTable storageTable = table.getClass().getDeclaredAnnotation(StorageTable.class);
         StringBuilder builder = new StringBuilder();
 
         StringBuilder columnBuilder = new StringBuilder();
@@ -47,11 +117,22 @@ public class MySQL {
             if (column.autoincrement()) {
                 continue;
             }
+            field.setAccessible(true);
             try {
                 Object value = field.get(table);
 
+                if (value == null) {
+                    continue;
+                }
+
                 columnBuilder.append(field.getName()).append(", ");
-                valueBuilder.append(value == null ? "NULL" : value).append(", ");
+                if (value instanceof Number) {
+                    valueBuilder.append(value == null ? "NULL" : value).append(", ");
+                } else if (value instanceof Boolean) {
+                    valueBuilder.append((boolean) value ? 1 : 0).append(", ");
+                } else {
+                    valueBuilder.append(value == null ? "NULL" : "'" + value + "'").append(", ");
+                }
             } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
@@ -59,14 +140,17 @@ public class MySQL {
         columnBuilder.delete(columnBuilder.length() - 2, columnBuilder.length());
         valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
-            PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO " + storageTable.name() +
-                    " (%s) VALUES (%s);", columnBuilder.toString(), valueBuilder.toString()));
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO %s (%s) VALUES (%s);",
+                    PlaceHolderAPI.formatMessage(storageTable.name()), columnBuilder.toString(), valueBuilder.toString()));
 
             preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+            preparedStatement.close();
+            connection.close();
+        } catch (SQLException | ConnectionException e) {
             e.printStackTrace();
         }
+        return table;
     }
 
     public static void createDefaultTables(Class... tables) {
@@ -86,6 +170,7 @@ public class MySQL {
                 if (!field.isAnnotationPresent(StorageColumn.class)) {
                     continue;
                 }
+                field.setAccessible(true);
                 String name = field.getName();
                 StorageColumn storageColumn = field.getDeclaredAnnotation(StorageColumn.class);
 
@@ -142,13 +227,13 @@ public class MySQL {
             builder.append(storageTable.charset());
             builder.append(";");
 
-            try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+            try (AbstractConnection connection = BUCore.getApi().getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();
-            } catch (SQLException e) {
+            } catch (SQLException | ConnectionException e) {
                 e.printStackTrace();
             }
         }

@@ -9,15 +9,6 @@ package com.dbsoftwares.bungeeutilisals.api.punishments;
 
 public enum PunishmentType {
 
-    BAN("Ban"), IPBAN("IPBan"), MUTE("Mute"), IPMUTE("IPMute"), KICK("Kick"), WARN("Warn");
+    BAN, TEMPBAN, IPBAN, IPTEMPBAN, MUTE, TEMPMUTE, IPMUTE, IPTEMPMUTE, KICK, WARN
 
-    String name;
-
-    PunishmentType(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
 }

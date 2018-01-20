@@ -8,17 +8,23 @@ package com.dbsoftwares.bungeeutilisals.api.mysql;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
+import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.zaxxer.hikari.pool.ProxyConnection;
 
 import java.lang.reflect.Field;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.Map;
+import java.util.function.Consumer;
 
 public class MySQLFinder<T> {
 
@@ -27,64 +33,107 @@ public class MySQLFinder<T> {
     private String condition;
     private String column;
 
+    private LinkedList<T> tableInstances = Lists.newLinkedList();
+
     public MySQLFinder(Class<T> table) {
         this.table = table;
         this.storageTable = table.getDeclaredAnnotation(StorageTable.class);
     }
 
-    public MySQLFinder where(String condition, String... replacements) {
+    public MySQLFinder<T> where(String condition, Object... replacements) {
+        for (int i = 0; i < replacements.length; i++) {
+            if (!(replacements[i] instanceof Number)) {
+                if (!replacements[i].toString().startsWith("'") && !replacements[i].toString().endsWith("'")) {
+                    replacements[i] = "'" + replacements[i] + "'";
+                }
+            }
+        }
         this.condition = String.format(condition, (Object[]) replacements);
         return this;
     }
 
-    public MySQLFinder select(String column, String... replacements) {
-        this.column = String.format(condition, (Object[]) replacements);
+    public MySQLFinder<T> select(String column, Object... replacements) {
+        this.column = String.format(column, (Object[]) replacements);
         return this;
     }
 
     @SuppressWarnings("unchecked")
-    public T find() {
+    public MySQLFinder<T> search() {
         Validate.notNull(table, "Table cannot be null!");
         Validate.notNull(condition, "Condition cannot be null!");
         Validate.notNull(column, "Column cannot be null!");
 
-        String statement = "SELECT " + column + " FROM " + storageTable.name() + " WHERE " + condition + ";";
-
-        Object instance;
-        try {
-            instance = table.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            e.printStackTrace();
-            return null;
-        }
+        String statement = "SELECT " + column + " FROM " + PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + condition + ";";
 
         LinkedHashMap<String, Field> fields = Maps.newLinkedHashMap();
-        for (String column : column.split(", ")) {
-            fields.put(column, ReflectionUtils.getField(table, column));
+        for (Field field : table.getDeclaredFields()) {
+            if (!field.isAnnotationPresent(StorageColumn.class)) {
+                continue;
+            }
+            field.setAccessible(true);
+            if (column.equalsIgnoreCase("*")) {
+                fields.put(field.getName(), field);
+            }
+            for (String column : column.split(", ")) {
+                if (field.getName().equalsIgnoreCase(column)) {
+                    fields.put(column, field);
+                }
+            }
         }
 
-        try (ProxyConnection connection = BUCore.getApi().getConnection()) {
+        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(statement);
             ResultSet rs = preparedStatement.executeQuery();
 
-            MultiDataObject multiDataObject = new MultiDataObject();
-            if (rs.next()) {
-                for (String column : this.column.split(", ")) {
-                    try {
-                        fields.get(column).set(instance, rs.getObject(column));
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
+            while (rs.next()) {
+                try {
+                    Object instance = table.newInstance();
+
+                    for (Map.Entry<String, Field> entry : fields.entrySet()) {
+                        String column = entry.getKey();
+                        Field field = entry.getValue();
+
+                        field.set(instance, rs.getObject(column));
                     }
+                    tableInstances.add((T) instance);
+                } catch (IllegalAccessException | InstantiationException e) {
+                    e.printStackTrace();
                 }
             }
 
             rs.close();
             preparedStatement.close();
             connection.close();
-            return (T) instance;
-        } catch (SQLException e) {
+        } catch (ConnectionException | SQLException e) {
             e.printStackTrace();
         }
-        return null;
+        return this;
+    }
+
+    public T get() {
+        if (tableInstances.isEmpty()) {
+            return null;
+        }
+        return tableInstances.get(0);
+    }
+
+    public LinkedList<T> multiGet() {
+        return tableInstances;
+    }
+
+    public boolean isPresent() {
+        return !tableInstances.isEmpty();
+    }
+
+    public void ifPresent(Consumer<? super T> consumer) {
+        if (!tableInstances.isEmpty()) {
+            consumer.accept(get());
+        }
+    }
+
+    public void ifMultiPresent(Consumer<LinkedList<? super T>> consumer) {
+        if (!tableInstances.isEmpty()) {
+            consumer.accept(tableInstances);
+        }
     }
 }

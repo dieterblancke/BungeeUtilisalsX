@@ -23,10 +23,9 @@ public interface IChatManager {
     /**
      * Checks the given message for spam.
      * @param user The user who sent the message.
-     * @param message The message you want to check for spam.
      * @return True if the delay was too short, false if not.
      */
-    Boolean checkForSpam(User user, String message);
+    Boolean checkForSpam(User user);
 
     /**
      * Checks the given message for swear words.

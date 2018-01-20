@@ -12,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,7 +31,7 @@ public class TempBansTable {
     private String ip;
 
     @StorageColumn(type = "LONG", nullable = false)
-    private Long unbanTime;
+    private Long removeTime;
 
     @StorageColumn(type = "TEXT", nullable = false)
     private String reason;
@@ -42,15 +40,25 @@ public class TempBansTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
-    @StorageColumn(type = "TINYINT(1)", nullable = false)
+    @StorageColumn(type = "BOOLEAN", nullable = false)
     private boolean active;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
 
-    @StorageColumn(type = "VARCHAR(32)", nullable = false)
+    @StorageColumn(type = "VARCHAR(32)")
     private String removedby;
 
+    public TempBansTable(String uuid, String user, String ip, long removeTime, String reason, String server, boolean active, String executor) {
+        this.uuid = uuid;
+        this.user = user;
+        this.ip = ip;
+        this.removeTime = removeTime;
+        this.reason = reason;
+        this.server = server;
+        this.active = active;
+        this.executedby = executor;
+    }
 }

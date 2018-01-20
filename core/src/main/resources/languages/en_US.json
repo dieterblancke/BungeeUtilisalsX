@@ -1,0 +1,28 @@
+{
+    "prefix": "&c&lBungeeUtilisals &8» ",
+    "no-permission": "&cYou do not have the permission to do this!",
+    "never-joined": "&fThat user never joined before!",
+    "chat-protection": {
+        "swear": "&fPlease do not swear!",
+        "caps": "&fPlease do not use that much caps!",
+        "spam": "&fPlease wait another &a%time% &fseconds before talking again!",
+        "advertise": "&fPlease do not advertise!"
+    },
+    "punishments": {
+        "ban": {
+            "usage": "&fPlease use &a/ban (user) (reason)&f!",
+            "broadcast": [
+                "&a%banned% &fhas been permanently banned by &a%banner%&f!",
+                "&fReason: &e%reason%"
+            ],
+            "kick": [
+                "&c&lBungeeUtilisals &8» &fYou have been banned!",
+                "",
+                "&cReason: &f%reason%",
+                "&cBanned at: &f%bandate%",
+                "&cBanned by: &f%bannedby%",
+                "&cUnban at: &fNever"
+            ]
+        }
+    }
+}

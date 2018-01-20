@@ -1,0 +1,11 @@
+enabled: true
+
+# The permission to bypass the antiadvertise system
+bypass: 'bungeeutilisals.bypass.antiad'
+
+# Please type these addresses in lowercase (= NO CAPS)
+allowed:
+- 'www.example.com'
+- 'http://www.example.com'
+- 'https://www.example.com'
+- 'play.exampleserver.com'

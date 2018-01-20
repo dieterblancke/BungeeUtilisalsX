@@ -1,36 +1,61 @@
 package com.dbsoftwares.bungeeutilisals.bungee.manager;
 
+import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
+import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
-import com.dbsoftwares.bungeeutilisals.api.permissions.Permissions;
 import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
 public class ChatManager implements IChatManager {
 
-    static Pattern ippattern = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
-    static Pattern webpattern = Pattern.compile("^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$");
+    private Pattern ippattern = Pattern.compile("^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$");
+    private Pattern webpattern = Pattern.compile("^((https?|ftp)://|(www|ftp)\\.)?[a-z0-9-]+(\\.[a-z0-9-]+)+([/?].*)?$");
+
+    private List<Pattern> swearPatterns = Lists.newArrayList();
+    private Map<String, String> utfSymbols = Maps.newHashMap();
+
+    public void reloadPatterns() {
+        swearPatterns.clear();
+
+        for (String word : BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR).getStringList("words")) {
+            StringBuilder builder = new StringBuilder("\\b(");
+
+            for (char o : word.toCharArray()) {
+                builder.append(o);
+                builder.append("+(\\W|\\d\\_)*");
+            }
+            builder.append(")\\b");
+
+            swearPatterns.add(Pattern.compile(builder.toString()));
+        }
+
+        ISection section = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS).getSection("symbols.symbols");
+        for (String key : section.getKeys()) {
+            utfSymbols.put(key, section.getString(key));
+        }
+    }
 
     @Override
     public Boolean checkForAdvertisement(User user, String message) {
-        if (user.getParent().hasPermission(Permissions.AD_BYPASS)) {
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTIAD);
+        if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
-        message.replaceAll("[^A-Za-z0-9:/]", "");
-        String[] words = message.split(" ");
-        if (words.length == 1) {
-            if (words[0].toLowerCase().startsWith("http") || words[0].toLowerCase().startsWith("https")
-                    || (ippattern.matcher(words[0]).find() || webpattern.matcher(words[0]).find())) {
-                return true;
+        message = message.replaceAll("[^A-Za-z0-9:/]", "");
+        for (String word : message.split(" ")) {
+            if (config.getStringList("allowed").contains(word.toLowerCase())) {
+                continue;
             }
-        }
-        for (String word : words) {
-            if (word.toLowerCase().startsWith("http") || word.toLowerCase().startsWith("https")
-                    || ippattern.matcher(word).find() || webpattern.matcher(word).find()) {
+            if (ippattern.matcher(word).find() || webpattern.matcher(word).find()) {
                 return true;
             }
         }
@@ -39,39 +64,46 @@ public class ChatManager implements IChatManager {
 
     @Override
     public Boolean checkForCaps(User user, String message) {
-        if (user.getParent().hasPermission(Permissions.CAPS_BYPASS) || message.length() < 4) {
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
+
+        if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))
+                || message.length() < config.getInteger("min-length")) {
             return false;
         }
 
         Double upperCase = 0.0D;
         for (int i = 0; i < message.length(); i++) {
-            if ("ABCDEFGHIJKLMNOPQRSTUVWXYZ".contains(message.substring(i, i + 1))) {
+            if (config.getString("characters").contains(message.substring(i, i + 1))) {
                 upperCase += 1.0D;
             }
         }
 
-        return (upperCase / message.length()) > 0.-40;
+        return (upperCase / message.length()) > ((config.getInteger("percentage")) / 100);
     }
 
     @Override
-    public Boolean checkForSpam(User user, String message) {
-        if (user.getParent().hasPermission(Permissions.SPAM_BYPASS)) {
+    public Boolean checkForSpam(User user) {
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISPAM);
+        if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
-        if (!user.getStorage().canUse("CHATSPAM")) {
+        if (!user.getCooldowns().canUse("CHATSPAM")) {
             return true;
         }
-        user.getStorage().updateTime("CHATSPAM", TimeUnit.SECONDS, 3);
+        user.getCooldowns().updateTime("CHATSPAM",
+                TimeUnit.valueOf(config.getString("delay.unit").toUpperCase()),
+                config.getInteger("delay.time"));
         return false;
     }
 
     @Override
     public Boolean checkForSwear(User user, String message) {
-        if (user.getParent().hasPermission(Permissions.SWEAR_BYPASS)) {
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
+        if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
 
-        for (Pattern pattern : BungeeUtilisals.getInstance().getSettings().ANTISWEAR_PATTERNS) {
+        for (Pattern pattern : swearPatterns) {
             if (pattern.matcher(message).find()) {
                 return true;
             }
@@ -82,11 +114,12 @@ public class ChatManager implements IChatManager {
 
     @Override
     public String replaceSwearWords(User user, String message, String replacement) {
-        if (user.getParent().hasPermission(Permissions.SWEAR_BYPASS)) {
+        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
+        if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return message;
         }
 
-        for (Pattern pattern : BungeeUtilisals.getInstance().getSettings().ANTISWEAR_PATTERNS) {
+        for (Pattern pattern : swearPatterns) {
             if (pattern.matcher(message).find()) {
                 message = pattern.matcher(message).replaceAll(replacement);
             }
@@ -96,7 +129,7 @@ public class ChatManager implements IChatManager {
 
     @Override
     public String replaceSymbols(String message) {
-        for (Map.Entry<String, String> entry : BungeeUtilisals.getInstance().getSettings().UTFSYMBOLS_SYMBOLS.entrySet()) {
+        for (Map.Entry<String, String> entry : utfSymbols.entrySet()) {
             String key = entry.getKey();
             String value = entry.getValue();
 

@@ -12,8 +12,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,9 +37,8 @@ public class WarnsTable {
     private String server;
 
     @StorageColumn(type = "DATETIME", nullable = false, def = "CURRENT_TIMESTAMP")
-    private Date date;
+    private String date;
 
     @StorageColumn(type = "VARCHAR(32)", nullable = false)
     private String executedby;
-
 }
