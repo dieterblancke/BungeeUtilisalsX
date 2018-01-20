@@ -7,7 +7,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.commands;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.google.common.collect.ImmutableList;

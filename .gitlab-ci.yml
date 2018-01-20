@@ -1,0 +1,10 @@
+image: maven:3.3-jdk-8-onbuild
+
+build:
+  script: "mvn clean package install"
+  artifacts:
+    name: "${CI_JOB_STAGE} #${CI_COMMIT_REF_NAME}"
+    expire_in: 6 mos
+    paths:
+      - "builds/api/BungeeUtilisals API.jar"
+      - "builds/core/BungeeUtilisals.jar"

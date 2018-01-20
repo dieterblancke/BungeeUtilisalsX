@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
 
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import lombok.Getter;
 

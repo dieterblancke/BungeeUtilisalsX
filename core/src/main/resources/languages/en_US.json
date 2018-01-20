@@ -9,18 +9,38 @@
         "advertise": "&fPlease do not advertise!"
     },
     "punishments": {
+        "cancelled": "&fIt seems that an external plugin has cancelled your punishment!",
         "ban": {
             "usage": "&fPlease use &a/ban (user) (reason)&f!",
+            "already-banned": "&fThis user is already banned!",
             "broadcast": [
-                "&a%banned% &fhas been permanently banned by &a%banner%&f!",
-                "&fReason: &e%reason%"
+                "&a{user} &fhas been permanently banned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
             ],
             "kick": [
-                "&c&lBungeeUtilisals &8» &fYou have been banned!",
+                "&c&lBungeeUtilisals &8» &fYou have been permanently banned!",
                 "",
-                "&cReason: &f%reason%",
-                "&cBanned at: &f%bandate%",
-                "&cBanned by: &f%bannedby%",
+                "&cReason: &f{reason}",
+                "&cBanned on: &f{date}",
+                "&cBanned by: &f{by}",
+                "&cBanned at: &f{server}",
+                "&cUnban at: &fNever"
+            ]
+        },
+        "ipban": {
+            "usage": "&fPlease use &a/ipban (user / IP) (reason)&f!",
+            "already-banned": "&fThis user is already ipbanned!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been permanently ipbanned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "kick": [
+                "&c&lBungeeUtilisals &8» &fYou have been permanently IPBanned!",
+                "",
+                "&cReason: &f{reason}",
+                "&cBanned on: &f{date}",
+                "&cBanned by: &f{by}",
+                "&cBanned at: &f{server}",
                 "&cUnban at: &fNever"
             ]
         }

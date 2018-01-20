@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners;
 
-import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.CustomDecoder;
-import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.CustomEncoder;
+import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.BUDecoder;
+import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.BUEncoder;
 import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
 import io.netty.channel.Channel;
 import net.md_5.bungee.ServerConnection;
@@ -26,8 +26,8 @@ public class SimplePacketListener implements Listener {
             ChannelWrapper wrapper = server.getCh();
             if (wrapper != null) {
                 try {
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new CustomDecoder(true, p));
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new CustomEncoder(true, p));
+                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new BUDecoder(true, p));
+                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new BUEncoder(true, p));
                 } catch (Exception ignore) { }
             }
         }
@@ -41,8 +41,8 @@ public class SimplePacketListener implements Listener {
             Method method = ReflectionUtils.getMethod(ch.getClass(), "getHandle", new Class[0]);
             Channel channel = (Channel) method.invoke(ch, new Object[0]);
 
-            channel.pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new CustomDecoder(false, p));
-            channel.pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new CustomEncoder(false, p));
+            channel.pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new BUDecoder(false, p));
+            channel.pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new BUEncoder(false, p));
         } catch (Exception ignore) { }
     }
 }

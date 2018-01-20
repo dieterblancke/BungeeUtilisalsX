@@ -10,10 +10,9 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageColumn;
 import com.dbsoftwares.bungeeutilisals.api.mysql.storage.StorageTable;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
-import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 
 import java.lang.reflect.Field;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -32,14 +31,14 @@ public class MySQL {
         }
         StorageTable storageTable = clazz.getDeclaredAnnotation(StorageTable.class);
 
-        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+        try (Connection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement("DELETE FROM " +
                     PlaceHolderAPI.formatMessage(storageTable.name()) + " WHERE " + String.format(where, (Object[]) replacements));
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
@@ -87,13 +86,13 @@ public class MySQL {
         builder.delete(builder.length() - 2, builder.length());
         builder.append(" WHERE ").append(where).append(";");
 
-        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+        try (Connection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return table;
@@ -140,14 +139,14 @@ public class MySQL {
         columnBuilder.delete(columnBuilder.length() - 2, columnBuilder.length());
         valueBuilder.delete(valueBuilder.length() - 2, valueBuilder.length());
 
-        try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+        try (Connection connection = BUCore.getApi().getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(String.format("INSERT INTO %s (%s) VALUES (%s);",
                     PlaceHolderAPI.formatMessage(storageTable.name()), columnBuilder.toString(), valueBuilder.toString()));
 
             preparedStatement.executeUpdate();
             preparedStatement.close();
             connection.close();
-        } catch (SQLException | ConnectionException e) {
+        } catch (SQLException e) {
             e.printStackTrace();
         }
         return table;
@@ -227,25 +226,15 @@ public class MySQL {
             builder.append(storageTable.charset());
             builder.append(";");
 
-            try (AbstractConnection connection = BUCore.getApi().getConnection()) {
+            try (Connection connection = BUCore.getApi().getConnection()) {
                 PreparedStatement preparedStatement = connection.prepareStatement(builder.toString());
 
                 preparedStatement.executeUpdate();
                 preparedStatement.close();
                 connection.close();
-            } catch (SQLException | ConnectionException e) {
+            } catch (SQLException e) {
                 e.printStackTrace();
             }
         }
     }
-
-    /*
-    void test() {
-        MultiDataObject data = find("bu_users").select("username, language")
-                .where("username = %s", "didjee2").find();
-
-        String username = data.getCastedValue("username");
-        String language = data.getCastedValue("language");
-        // Do stuff
-    }*/
 }

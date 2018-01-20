@@ -1,13 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.bungee.event;
 
-import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.*;
+import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -20,12 +19,10 @@ public class EventLoader implements IEventLoader {
         if (!BUEvent.class.isAssignableFrom(eventClass)) {
             throw new IllegalArgumentException("class " + eventClass.getName() + " does not implement BUEvent");
         }
-
         Set<EventHandler<?>> handlers = handlerMap.computeIfAbsent(eventClass, c -> ConcurrentHashMap.newKeySet());
 
         BEventHandler<T> eventHandler = new BEventHandler<>(this, eventClass, handler);
         handlers.add(eventHandler);
-
         return eventHandler;
     }
 
@@ -55,16 +52,15 @@ public class EventLoader implements IEventLoader {
     @Override
     public void unregister(EventHandler<?> handler) {
         Set<EventHandler<?>> handlers = handlerMap.get(handler.getEventClass());
-        if (handlers != null) {
+        if (handlers != null && handlers.contains(handler)) {
             handlers.remove(handler);
         }
     }
 
     @Override
     public void launchEvent(BUEvent event) {
-        Optional<BUAPI> api = BUCore.getApiSafe();
-        if (event instanceof AbstractEvent && api.isPresent()) {
-            ((AbstractEvent) event).setApi(api.get());
+        if (event instanceof AbstractEvent) {
+            ((AbstractEvent) event).setApi(BUCore.getApi());
         }
 
         for (Map.Entry<Class<? extends BUEvent>, Set<EventHandler<?>>> ent : handlerMap.entrySet()) {
@@ -73,8 +69,9 @@ public class EventLoader implements IEventLoader {
             }
 
             ent.getValue().forEach(h -> {
-                if (h instanceof BEventHandler<?>) {
-                    ((BEventHandler<?>)h).handle(event);
+                if (h instanceof BEventHandler) {
+                    BEventHandler handler = (BEventHandler) h;
+                    handler.handle(event);
                 }
             });
         }

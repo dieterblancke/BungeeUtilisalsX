@@ -2,14 +2,14 @@ package com.dbsoftwares.bungeeutilisals.bungee.api.language;
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
-import com.dbsoftwares.bungeeutilisals.api.configuration.json.JsonConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.json.JsonConfiguration;
+import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
@@ -42,12 +42,8 @@ public class LanguageManager implements ILanguageManager {
     }
 
     @Override
-    public Optional<Language> getDefaultLanguage() {
-        Optional<Language> optional = languages.stream().filter(Language::isDefault).findFirst();
-        if (!optional.isPresent() && languages.size() > 0) {
-            return Optional.ofNullable(languages.get(0));
-        }
-        return optional;
+    public Language getDefaultLanguage() {
+        return languages.stream().filter(Language::isDefault).findFirst().orElse(languages.stream().findFirst().orElse(null));
     }
 
     @Override
@@ -111,7 +107,7 @@ public class LanguageManager implements ILanguageManager {
             config = getConfig(plugin, user.getLanguage());
         }
         if (config == null) {
-            config = getConfig(plugin, getDefaultLanguage().get());
+            config = getConfig(plugin, getDefaultLanguage());
         }
         return config;
     }
@@ -144,7 +140,7 @@ public class LanguageManager implements ILanguageManager {
         if (!configurations.containsKey(lang)) {
             BungeeUtilisals.log("The plugin " + plugin.getDescription().getName() + " did not register the language " + language.getName() + " yet!");
 
-            File deflang = getFile(plugin, getDefaultLanguage().get());
+            File deflang = getFile(plugin, getDefaultLanguage());
             if (configurations.containsKey(deflang)) {
                 return configurations.get(deflang);
             }

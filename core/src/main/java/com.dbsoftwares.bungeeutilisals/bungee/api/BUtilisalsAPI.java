@@ -1,19 +1,17 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractConnection;
-import com.dbsoftwares.bungeeutilisals.api.storage.exception.ConnectionException;
 import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
-import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
-import com.dbsoftwares.bungeeutilisals.api.user.UserCollection;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
@@ -26,6 +24,8 @@ import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.Optional;
 
 public class BUtilisalsAPI implements BUAPI {
@@ -119,12 +119,12 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
-    public YamlConfiguration getConfig(FileLocation location) {
+    public IConfiguration getConfig(FileLocation location) {
         return BungeeUtilisals.getConfigurations().get(location);
     }
 
     @Override
-    public AbstractConnection getConnection() throws ConnectionException {
+    public Connection getConnection() throws SQLException {
         return instance.getDatabaseManagement().getConnection();
     }
 
@@ -141,30 +141,36 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public void broadcast(String message) {
         users.forEach(user -> user.sendMessage(message));
+        getConsole().sendMessage(message);
     }
 
     @Override
     public void broadcast(String message, String permission) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(message));
+        getConsole().sendMessage(message);
     }
 
     @Override
     public void announce(String prefix, String message) {
         users.forEach(user -> user.sendMessage(prefix, message));
+        getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void announce(String prefix, String message, String permission) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(prefix, message));
+        getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void langBroadcast(String message, Object... placeholders) {
         users.forEach(user -> user.sendLangMessage(message, placeholders));
+        getConsole().sendLangMessage(message, placeholders);
     }
 
     @Override
     public void langBroadcast(String message, String permission, Object... placeholders) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
+        getConsole().sendLangMessage(message, placeholders);
     }
 }

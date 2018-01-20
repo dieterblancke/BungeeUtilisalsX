@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.bungee.user;
 
-import com.dbsoftwares.bungeeutilisals.api.user.DatabaseUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 
 import java.util.List;
 
@@ -23,16 +23,6 @@ public class UserData implements DatabaseUser {
 
     @Override
     public void setIP(String user, String IP) {
-
-    }
-
-    @Override
-    public void addIgnoredPlayer(String user, String ignoredplayer) {
-
-    }
-
-    @Override
-    public void removeIgnoredPlayer(String user, String ignoredplayer) {
 
     }
 }

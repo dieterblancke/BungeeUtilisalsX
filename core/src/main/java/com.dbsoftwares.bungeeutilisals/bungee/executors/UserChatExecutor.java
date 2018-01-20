@@ -1,11 +1,11 @@
 package com.dbsoftwares.bungeeutilisals.bungee.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.configuration.yaml.YamlConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
@@ -19,7 +19,7 @@ public class UserChatExecutor {
 
     public void onUnicodeReplace(UserChatPreExecuteEvent event) {
         String message = event.getMessage();
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
 
         if (config.getBoolean("fancychat.enabled") && event.getUser().getParent().hasPermission(config.getString("fancychat.permission"))) {
             event.setMessage(BungeeUtilisals.getApi().getChatManager().fancyFont(message));
@@ -27,7 +27,7 @@ public class UserChatExecutor {
     }
 
     public void onUnicodeSymbol(UserChatEvent event) {
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.UTFSYMBOLS);
 
         if (config.getBoolean("symbols.enabled") && event.getUser().getParent().hasPermission(config.getString("symbols.permission"))) {
             event.setMessage(event.getApi().getChatManager().replaceSymbols(event.getMessage()));
@@ -37,7 +37,7 @@ public class UserChatExecutor {
     public void onSwearChat(UserChatEvent event) {
         User user = event.getUser();
         String message = event.getMessage();
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTISWEAR);
 
         if (manager.checkForSwear(event.getUser(), message)) {
             BUCore.getApi().getDebugger().debug("%s failed swearing, message: %s", user.getName(), message);
@@ -54,7 +54,7 @@ public class UserChatExecutor {
     public void onCapsChat(UserChatEvent event) {
         User user = event.getUser();
         String message = event.getMessage();
-        YamlConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
+        IConfiguration config = BungeeUtilisals.getConfiguration(FileLocation.ANTICAPS);
 
         if (manager.checkForCaps(user, message)) {
             BUCore.getApi().getDebugger().debug("%s failed using caps, message: %s", user.getName(), message);

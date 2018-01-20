@@ -1,8 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,7 +13,7 @@ public class UserCommandEvent extends AbstractEvent implements Cancellable {
 
     @Getter @Setter User user;
     @Getter @Setter String command;
-    Boolean cancelled = false;
+    boolean cancelled = false;
 
     public UserCommandEvent(User user, String command) {
         this.user = user;
@@ -21,12 +21,12 @@ public class UserCommandEvent extends AbstractEvent implements Cancellable {
     }
 
     @Override
-    public void setCancelled(Boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
     @Override
-    public Boolean isCancelled() {
-        return cancelled;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

@@ -1,18 +1,19 @@
 package com.dbsoftwares.bungeeutilisals.bungee.commands.punishments;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
-import com.dbsoftwares.bungeeutilisals.api.mysql.MySQLFinder;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.tables.UserTable;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class BanCommand extends Command {
 
@@ -35,31 +36,37 @@ public class BanCommand extends Command {
         }
         String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
-        MySQLFinder<UserTable> finder = MySQL.search(UserTable.class).select("uuid, username, ip")
-                .where((args[0].contains("-") ? "uuid" : "username") + " = %s", args[0]).search();
-
-        if (!finder.isPresent()) {
+        if (!SQLStatements.isUserPresent(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserTable table = finder.get();
-
-        Optional<User> optionalUser = BUCore.getApi().getUser(table.getUsername());
-        if (optionalUser.isPresent()) {
-            User banned = optionalUser.get();
-
-            banned.kick(Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n")
-                    .replace("%reason%", reason).replace("%bandate%", Utils.getCurrentDate()
-                            + " " + Utils.getCurrentTime()).replace("%bannedby%", user.getName()));
+        UserStorage storage = SQLStatements.getUser(args[0]);
+        if (SQLStatements.isBanPresent(storage.getUuid(), true)) {
+            user.sendLangMessage("punishments.ban.already-banned");
+            return;
         }
-/*
-        BUCore.getApi().getPunishmentExecutor().addPunishment(PunishmentType.BAN, info);
 
-        UserBanEvent event = new UserBanEvent(table.getUsername(), table.getUuid(), user.getName(), info);
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
+        api.getEventLoader().launchEvent(event);
 
-        BUCore.getApi().langBroadcast("punishments.ban.broadcast",
+        if (event.isCancelled()) {
+            user.sendLangMessage("punishments.cancelled");
+            return;
+        }
+        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        PunishmentInfo info = executor.addBan(storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), user.getName());
+
+        api.getUser(storage.getUserName()).ifPresent(banned -> {
+            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
+            kick = executor.setPlaceHolders(kick, info);
+
+            banned.kick(kick);
+        });
+
+        api.langBroadcast("punishments.ban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.broadcast"),
-                "%banner%", user.getName(), "%banned%", table.getUsername(), "%reason%", reason);*/
+                executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

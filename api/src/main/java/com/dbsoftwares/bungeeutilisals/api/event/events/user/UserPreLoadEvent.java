@@ -7,7 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.user;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -20,17 +20,17 @@ import java.net.InetAddress;
 @RequiredArgsConstructor
 public class UserPreLoadEvent extends AbstractEvent implements Cancellable {
 
-    private Boolean cancelled = false;
+    private boolean cancelled = false;
     @Getter private final ProxiedPlayer player;
     @Getter private final InetAddress address;
 
     @Override
-    public void setCancelled(Boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
     @Override
-    public Boolean isCancelled() {
-        return cancelled;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.bungee.user;
 
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
-import com.dbsoftwares.bungeeutilisals.api.user.IExperimentalUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

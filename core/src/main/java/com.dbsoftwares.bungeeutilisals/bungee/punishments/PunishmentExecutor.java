@@ -1,123 +1,164 @@
 package com.dbsoftwares.bungeeutilisals.bungee.punishments;
 
-import com.dbsoftwares.bungeeutilisals.api.mysql.MySQL;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.bungee.tables.*;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
+import com.google.common.collect.Lists;
+
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
 
 public class PunishmentExecutor implements IPunishmentExecutor {
 
-    private boolean find(Class<?> table, String uuid, String name, String ip) {
-        StringBuilder builder = new StringBuilder();
-        boolean firstArgument = true;
+    @Override
+    public boolean isBanned(UUID uuid) {
+        return SQLStatements.isBanPresent(uuid, true);
+    }
 
-        if (uuid != null) {
-            builder.append("uuid = '").append(uuid).append("'");
-            firstArgument = false;
+    @Override
+    public boolean isTempBanned(UUID uuid) {
+        return false;
+    }
+
+    @Override
+    public boolean isIPBanned(String IP) {
+        return SQLStatements.isIPBanPresent(IP, true);
+    }
+
+    @Override
+    public boolean isIPTempBanned(String IP) {
+        return false;
+    }
+
+    @Override
+    public boolean isMuted(UUID uuid) {
+        return false;
+    }
+
+    @Override
+    public boolean isTempMuted(UUID uuid) {
+        return false;
+    }
+
+    @Override
+    public boolean isIPMuted(String IP) {
+        return false;
+    }
+
+    @Override
+    public boolean isIPTempMuted(String IP) {
+        return false;
+    }
+
+    @Override
+    public PunishmentInfo addBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
+        return SQLStatements.insertIntoBans(uuid.toString(), name, IP, reason, server, true, executor);
+    }
+
+    @Override
+    public PunishmentInfo addTempBan(UUID uuid, String name, String IP, long removeTime, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addIPBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
+        return SQLStatements.insertIntoIPBans(uuid.toString(), name, IP, reason, server, true, executor);
+    }
+
+    @Override
+    public PunishmentInfo addIPTempBan(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addIPMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addIPTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addKick(UUID uuid, String user, String ip, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor) {
+        return null;
+    }
+
+    @Override
+    public String getDateFormat() {
+        return BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("date-format");
+    }
+
+    @Override
+    public String setPlaceHolders(String line, PunishmentInfo info) {
+        line = line.replace("{reason}", info.getReason());
+        line = line.replace("{date}", Utils.formatDate(getDateFormat(), info.getDate()));
+        line = line.replace("{by}", info.getExecutedBy());
+        line = line.replace("{server}", info.getServer());
+
+        // Just adding in case someone wants them ...
+        line = line.replace("{uuid}", info.getUuid().toString());
+        line = line.replace("{ip}", info.getIP());
+        line = line.replace("{user}", info.getUser());
+        line = line.replace("{id}", String.valueOf(info.getId()));
+
+        // Checking if value is present, if so: replacing
+        if (info.getExpireTime() != null) {
+            line = line.replace("{expire}", Utils.formatDate(getDateFormat(), new Date(info.getExpireTime())));
         }
-        if (name != null) {
-            if (!firstArgument) {
-                builder.append("AND ");
-            }
-            builder.append("user = '").append(name).append("'");
-            firstArgument = false;
+        return line;
+    }
+
+    @Override
+    public List<String> getPlaceHolders(PunishmentInfo info) {
+        List<String> placeholders = Lists.newArrayList();
+
+        placeholders.add("{reason}");
+        placeholders.add(info.getReason());
+        placeholders.add("{date}");
+        placeholders.add(Utils.formatDate(getDateFormat(), info.getDate()));
+        placeholders.add("{by}");
+        placeholders.add(info.getExecutedBy());
+        placeholders.add("{server}");
+        placeholders.add(info.getServer());
+
+        // Just adding in case someone wants them ...
+        placeholders.add("{uuid}");
+        placeholders.add(info.getUuid().toString());
+        placeholders.add("{ip}");
+        placeholders.add(info.getIP());
+        placeholders.add("{user}");
+        placeholders.add(info.getUser());
+        placeholders.add("{id}");
+        placeholders.add(String.valueOf(info.getId()));
+
+        // Checking if value is present);
+        // placeholders.add(if so: replacing
+        if (info.getExpireTime() != null) {
+            placeholders.add("{expire}");
+            placeholders.add(Utils.formatDate(getDateFormat(), new Date(info.getExpireTime())));
         }
-        if (ip != null) {
-            if (!firstArgument) {
-                builder.append("AND ");
-            }
-            builder.append("ip = '").append(ip).append("'");
-        }
 
-        return MySQL.search(table).select("id").where(builder.toString()).search().isPresent();
-    }
-
-    @Override
-    public boolean isBanned(String uuid, String name) {
-        return find(BansTable.class, uuid, name, null);
-    }
-
-    @Override
-    public boolean isTempBanned(String uuid, String name) {
-        return find(TempBansTable.class, uuid, name, null);
-    }
-
-    @Override
-    public boolean isIPBanned(String uuid, String name, String IP) {
-        return find(IPBansTable.class, uuid, name, IP);
-    }
-
-    @Override
-    public boolean isIPTempBanned(String uuid, String name, String IP) {
-        return find(IPTempBansTable.class, uuid, name, IP);
-    }
-
-    @Override
-    public boolean isMuted(String uuid, String name) {
-        return find(MutesTable.class, uuid, name, null);
-    }
-
-    @Override
-    public boolean isTempMuted(String uuid, String name) {
-        return find(TempMutesTable.class, uuid, name, null);
-    }
-
-    @Override
-    public boolean isIPMuted(String uuid, String name, String IP) {
-        return find(IPMutesTable.class, uuid, name, IP);
-    }
-
-    @Override
-    public boolean isIPTempMuted(String uuid, String name, String IP) {
-        return find(IPTempMutesTable.class, uuid, name, IP);
-    }
-
-    @Override
-    public void addBan(String uuid, String name, String IP, String reason, String server, String executor) {
-        MySQL.insert(new BansTable(uuid, name, IP, reason, server, true, executor));
-    }
-
-    @Override
-    public void addTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        MySQL.insert(new TempBansTable(uuid, user, ip, removeTime, reason, server, true, executor));
-    }
-
-    @Override
-    public void addIPBan(String uuid, String name, String IP, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addIPTempBan(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addMute(String uuid, String name, String IP, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addIPMute(String uuid, String name, String IP, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addIPTempMute(String uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addKick(String uuid, String user, String ip, String reason, String server, String executor) {
-
-    }
-
-    @Override
-    public void addWarn(String uuid, String user, String ip, String reason, String server, String executor) {
-
+        return placeholders;
     }
 }

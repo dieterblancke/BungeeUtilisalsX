@@ -18,4 +18,8 @@
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <directory>../builds/core</directory>
+    </build>
 </project>

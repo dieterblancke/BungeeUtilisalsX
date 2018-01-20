@@ -30,4 +30,5 @@ public class BungeeConnection implements Connection {
 	public Unsafe unsafe() {
 		return null;
 	}
+
 }

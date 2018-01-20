@@ -21,7 +21,7 @@ public enum Library {
 
     SQLITE("org.sqlite.JDBC", "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.21.0.1/sqlite-jdbc-3.21.0.1.jar"),
     MARIADB("org.mariadb.jdbc.MariaDbDataSource", "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.2.1/mariadb-java-client-2.2.1.jar"),
-    POSTGRESQL("org.postgresql.ds.PGSimpleDataSource", "http://central.maven.org/maven2/postgresql/postgresql/9.1-901-1.jdbc4/postgresql-9.1-901-1.jdbc4.jar");
+    POSTGRESQL("org.postgresql.ds.PGSimpleDataSource", "http://repo1.maven.org/maven2/org/postgresql/postgresql/9.4.1212/postgresql-9.4.1212.jar");
 
     private String className;
     private String downloadURL;

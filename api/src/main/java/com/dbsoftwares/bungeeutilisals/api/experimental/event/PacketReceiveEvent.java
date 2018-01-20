@@ -2,8 +2,8 @@ package com.dbsoftwares.bungeeutilisals.api.experimental.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
@@ -45,12 +45,12 @@ public class PacketReceiveEvent extends AbstractEvent implements Cancellable {
     }
 
     @Override
-    public Boolean isCancelled() {
+    public boolean isCancelled() {
         return cancelled;
     }
 
     @Override
-    public void setCancelled(Boolean b) {
+    public void setCancelled(boolean b) {
         this.cancelled = b;
     }
 }

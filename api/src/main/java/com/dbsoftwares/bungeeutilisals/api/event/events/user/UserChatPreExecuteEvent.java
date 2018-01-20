@@ -1,8 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.Cancellable;
-import com.dbsoftwares.bungeeutilisals.api.user.User;
+import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -14,7 +14,7 @@ public class UserChatPreExecuteEvent extends AbstractEvent implements Cancellabl
 
     @Getter @Setter User user;
     @Getter @Setter String message;
-    Boolean cancelled = false;
+    boolean cancelled = false;
 
     public UserChatPreExecuteEvent(User user, String message) {
         this.user = user;
@@ -22,12 +22,12 @@ public class UserChatPreExecuteEvent extends AbstractEvent implements Cancellabl
     }
 
     @Override
-    public void setCancelled(Boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isCancelled() {
+        return cancelled;
     }
 
     @Override
-    public Boolean isCancelled() {
-        return cancelled;
+    public void setCancelled(boolean cancelled) {
+        this.cancelled = cancelled;
     }
 }

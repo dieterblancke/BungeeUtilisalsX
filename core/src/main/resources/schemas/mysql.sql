@@ -1,15 +1,11 @@
 CREATE TABLE IF NOT EXISTS {users-table} (
-    id        INT(11) AUTO_INCREMENT     NOT NULL,
-    uuid      VARCHAR(36)                NOT NULL,
-    username  VARCHAR(32)                NOT NULL,
-    ip        VARCHAR(32)                NOT NULL,
-    language  VARCHAR(24)                NOT NULL,
+    id        INT(11) AUTO_INCREMENT            NOT NULL,
+    uuid      VARCHAR(36) UNIQUE                NOT NULL,
+    username  VARCHAR(32) UNIQUE                NOT NULL,
+    ip        VARCHAR(32)                       NOT NULL,
+    language  VARCHAR(24)                       NOT NULL,
     PRIMARY KEY (id),
-    UNIQUE KEY (uuid),
-    UNIQUE KEY (username),
-    KEY idx_users_uuid (uuid),
-    KEY idx_users_user (username),
-    KEY idx_users_ip (ip)
+    KEY idx_users (id, uuid, username, ip)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {friends-table} (
@@ -17,10 +13,9 @@ CREATE TABLE IF NOT EXISTS {friends-table} (
     friendid     INT(11)                              NOT NULL,
     friendsince  DATETIME DEFAULT CURRENT_TIMESTAMP   NOT NULL,
     PRIMARY KEY (userid, friendid),
-    KEY idx_friends_id (userid),
-    KEY idx_friends_fid (friendid),
-    FOREIGN KEY(userid) REFERENCES {users-table}(id),
-    FOREIGN KEY(friendid) REFERENCES {users-table}(id)
+    KEY idx_friends (userid, friendid),
+    FOREIGN KEY (userid)    REFERENCES {users-table} (id),
+    FOREIGN KEY (friendid)  REFERENCES {users-table} (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {friendrequests-table} (
@@ -28,10 +23,9 @@ CREATE TABLE IF NOT EXISTS {friendrequests-table} (
     friendid      INT(11)                              NOT NULL,
     requested_at  DATETIME DEFAULT CURRENT_TIMESTAMP   NOT NULL,
     PRIMARY KEY (userid, friendid),
-    KEY idx_friends_id (userid),
-    KEY idx_friends_fid (friendid),
-    FOREIGN KEY(userid) REFERENCES {users-table}(id),
-    FOREIGN KEY(friendid) REFERENCES {users-table}(id)
+    KEY idx_friendreq (userid, friendid),
+    FOREIGN KEY (userid)    REFERENCES {users-table} (id),
+    FOREIGN KEY (friendid)  REFERENCES {users-table} (id)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {bans-table} (
@@ -46,11 +40,8 @@ CREATE TABLE IF NOT EXISTS {bans-table} (
     executed_by  VARCHAR(64)                             NOT NULL,
     removed_by   VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_bans_uuid (uuid),
-    KEY idx_bans_user (user),
-    KEY idx_bans_active (active),
-    KEY idx_bans_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_bans (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {ipbans-table} (
@@ -65,11 +56,8 @@ CREATE TABLE IF NOT EXISTS {ipbans-table} (
     executed_by  VARCHAR(64)                             NOT NULL,
     removed_by   VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_ipbans_uuid (uuid),
-    KEY idx_ipbans_user (user),
-    KEY idx_ipbans_active (active),
-    KEY idx_ipbans_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_ipbans (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {tempbans-table} (
@@ -85,11 +73,8 @@ CREATE TABLE IF NOT EXISTS {tempbans-table} (
     executed_by  VARCHAR(64)                             NOT NULL,
     removed_by   VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_tempbans_uuid (uuid),
-    KEY idx_tempbans_user (user),
-    KEY idx_tempbans_active (active),
-    KEY idx_tempbans_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_tempbans (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {iptempbans-table} (
@@ -105,11 +90,8 @@ CREATE TABLE IF NOT EXISTS {iptempbans-table} (
     executed_by  VARCHAR(64)                             NOT NULL,
     removed_by   VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_iptempbans_uuid (uuid),
-    KEY idx_iptempbans_user (user),
-    KEY idx_iptempbans_active (active),
-    KEY idx_iptempbans_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_iptempbans (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {mutes-table} (
@@ -124,11 +106,8 @@ CREATE TABLE IF NOT EXISTS {mutes-table} (
     executed_by   VARCHAR(64)                             NOT NULL,
     removed_by    VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_mutes_uuid (uuid),
-    KEY idx_mutes_user (user),
-    KEY idx_mutes_active (active),
-    KEY idx_mutes_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_mutes (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {ipmutes-table} (
@@ -143,11 +122,8 @@ CREATE TABLE IF NOT EXISTS {ipmutes-table} (
     executed_by   VARCHAR(64)                             NOT NULL,
     removed_by    VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_ipmutes_uuid (uuid),
-    KEY idx_ipmutes_user (user),
-    KEY idx_ipmutes_active (active),
-    KEY idx_ipmutes_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_ipmutes (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {tempmutes-table} (
@@ -163,11 +139,8 @@ CREATE TABLE IF NOT EXISTS {tempmutes-table} (
     executed_by   VARCHAR(64)                             NOT NULL,
     removed_by    VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_tempmutes_uuid (uuid),
-    KEY idx_tempmutes_user (user),
-    KEY idx_tempmutes_active (active),
-    KEY idx_tempmutes_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_tempmutes (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {iptempmutes-table} (
@@ -183,11 +156,8 @@ CREATE TABLE IF NOT EXISTS {iptempmutes-table} (
     executed_by   VARCHAR(64)                             NOT NULL,
     removed_by    VARCHAR(32),
     PRIMARY KEY (id),
-    KEY idx_iptempbans_uuid (uuid),
-    KEY idx_iptempbans_user (user),
-    KEY idx_iptempbans_active (active),
-    KEY idx_iptempbans_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_iptempbans (id, uuid, user, ip, active),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {kicks-table} (
@@ -200,10 +170,8 @@ CREATE TABLE IF NOT EXISTS {kicks-table} (
     date          DATETIME DEFAULT CURRENT_TIMESTAMP      NOT NULL,
     executed_by   VARCHAR(64)                             NOT NULL,
     PRIMARY KEY (id),
-    KEY idx_kicks_uuid (uuid),
-    KEY idx_kicks_user (user),
-    KEY idx_kicks_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_kicks (id, uuid, user, ip),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;
 
 CREATE TABLE IF NOT EXISTS {warns-table} (
@@ -216,8 +184,6 @@ CREATE TABLE IF NOT EXISTS {warns-table} (
     date          DATETIME DEFAULT CURRENT_TIMESTAMP      NOT NULL,
     executed_by   VARCHAR(64)                             NOT NULL,
     PRIMARY KEY (id),
-    KEY idx_warns_uuid (uuid),
-    KEY idx_warns_user (user),
-    KEY idx_warns_ip (ip),
-    FOREIGN KEY (uuid) REFERENCES {users-table}(uuid)
+    KEY idx_warns (id, uuid, user, ip),
+    FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8;

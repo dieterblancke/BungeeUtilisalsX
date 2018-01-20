@@ -10,6 +10,8 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
@@ -18,11 +20,10 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Arrays;
-
 @Data
 public class ConsoleUser implements User {
 
+    private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
 
     @Override
@@ -46,6 +47,11 @@ public class ConsoleUser implements User {
     }
 
     @Override
+    public UserStorage getStorage() {
+        return storage;
+    }
+
+    @Override
     public UserCooldowns getCooldowns() {
         return cooldowns;
     }
@@ -57,7 +63,7 @@ public class ConsoleUser implements User {
 
     @Override
     public Language getLanguage() {
-        return BUCore.getApi().getLanguageManager().getDefaultLanguage().orElse(null);
+        return BUCore.getApi().getLanguageManager().getDefaultLanguage();
     }
 
     @Override
@@ -118,11 +124,7 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendMessage(String prefix, String message) {
-        TextComponent component = new TextComponent(Utils.format(prefix));
-
-        component.setExtra(Arrays.asList(Utils.format(message)));
-
-        sendMessage(component);
+        sendMessage(Utils.format(prefix + message));
     }
 
     @Override
@@ -183,5 +185,10 @@ public class ConsoleUser implements User {
     @Override
     public boolean isConsole() {
         return true;
+    }
+
+    @Override
+    public String getServerName() {
+        return "BUNGEE";
     }
 }
