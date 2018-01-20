@@ -5,3 +5,5 @@ build:
     - "mvn package"
   artifacts:
     name: "BungeeUtilisals"
+    paths:
+      - "*.jar"
