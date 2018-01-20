@@ -7,6 +7,9 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>core</artifactId>
+  <build>
+    <directory>../builds/core</directory>
+  </build>
   <dependencies>
     <dependency>
       <groupId>net.md-5</groupId>

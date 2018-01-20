@@ -8,7 +8,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>api</artifactId>
   <build>
-    <finalName>BUtilisals API</finalName>
+    <directory>../builds/api</directory>
+    <finalName>BungeeUtilisals API</finalName>
   </build>
   <dependencies>
     <dependency>

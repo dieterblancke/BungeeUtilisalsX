@@ -3,11 +3,16 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Maven default annotation processors profile" enabled="true">
-        <sourceOutputDir name="target/generated-sources/annotations" />
-        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+      <profile name="Annotation profile for BungeeUtilisals" enabled="true">
+        <sourceOutputDir name="../builds/api/generated-sources/annotations" />
+        <sourceTestOutputDir name="../builds/api/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
+      </profile>
+      <profile name="Annotation profile for core" enabled="true">
+        <sourceOutputDir name="../builds/core/generated-sources/annotations" />
+        <sourceTestOutputDir name="../builds/core/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
         <module name="core" />
       </profile>
     </annotationProcessing>

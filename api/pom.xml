@@ -20,5 +20,6 @@
 
     <build>
         <finalName>BungeeUtilisals API</finalName>
+        <directory>../builds/api</directory>
     </build>
 </project>
