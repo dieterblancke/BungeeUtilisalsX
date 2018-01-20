@@ -42,7 +42,10 @@ public class PunishmentListener implements Listener {
         } else if (executor.isTempBanned(uuid)) {
             // TODO ...
         }
-        if (info != null) {
+        if (info != null) { // active punishment found
+            if (info.isTemporary()) { // TODO: check if punishment expired, if yes: remove & let player through
+
+            }
             String kick = Utils.formatList(language.getStringList("punishments." +
                     info.getType().toString().toLowerCase() + ".kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
