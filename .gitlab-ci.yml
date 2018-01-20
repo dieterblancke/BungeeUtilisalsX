@@ -6,4 +6,4 @@ build:
   artifacts:
     name: "BungeeUtilisals"
     paths:
-      - "*.jar"
+      - "target/BungeeUtilisals.jar"
