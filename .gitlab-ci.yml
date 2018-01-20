@@ -1,9 +1,8 @@
 image: maven:3.3-jdk-8-onbuild
 
 build:
-  script:
-    - "mvn package"
+  script: "mvn clean package install"
   artifacts:
     name: "BungeeUtilisals"
     paths:
-      - "target/BungeeUtilisals.jar"
+      - "target/*.jar"
