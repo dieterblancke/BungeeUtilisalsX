@@ -141,30 +141,36 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public void broadcast(String message) {
         users.forEach(user -> user.sendMessage(message));
+        getConsole().sendMessage(message);
     }
 
     @Override
     public void broadcast(String message, String permission) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(message));
+        getConsole().sendMessage(message);
     }
 
     @Override
     public void announce(String prefix, String message) {
         users.forEach(user -> user.sendMessage(prefix, message));
+        getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void announce(String prefix, String message, String permission) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(prefix, message));
+        getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void langBroadcast(String message, Object... placeholders) {
         users.forEach(user -> user.sendLangMessage(message, placeholders));
+        getConsole().sendLangMessage(message, placeholders);
     }
 
     @Override
     public void langBroadcast(String message, String permission, Object... placeholders) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
+        getConsole().sendLangMessage(message, placeholders);
     }
 }

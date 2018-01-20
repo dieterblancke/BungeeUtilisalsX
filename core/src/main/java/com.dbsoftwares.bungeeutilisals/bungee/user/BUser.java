@@ -27,8 +27,6 @@ import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-import java.util.Arrays;
-
 @Data
 public class BUser implements User {
 
@@ -166,11 +164,7 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(String prefix, String message) {
-        TextComponent component = new TextComponent(Utils.format(prefix));
-
-        component.setExtra(Arrays.asList(Utils.format(message)));
-
-        sendMessage(component);
+        sendMessage(Utils.format(prefix + message));
     }
 
     @Override

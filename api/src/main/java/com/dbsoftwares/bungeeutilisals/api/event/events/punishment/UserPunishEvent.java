@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.punishment;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -17,28 +18,40 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserBanEvent extends AbstractEvent implements Cancellable {
+public class UserPunishEvent extends AbstractEvent implements Cancellable {
 
-    private User banner;
-    private UUID bannedUUID;
-    private String bannedName;
-    private String bannedIP;
+    private PunishmentType type;
+    private User executor;
+    private UUID UUID;
+    private String name;
+    private String ip;
     private String reason;
     private String executionServer;
+    private Long expire;
 
     private boolean cancelled = false;
 
-    public UserBanEvent(User banner, UUID bannedUUID, String bannedName, String bannedIP, String reason, String executionServer) {
-        this.banner = banner;
-        this.bannedUUID = bannedUUID;
-        this.bannedName = bannedName;
-        this.bannedIP = bannedIP;
+    public UserPunishEvent(PunishmentType type, User executor, UUID uuid, String name, String ip, String reason, String executionServer, Long expire) {
+        this.type = type;
+        this.executor = executor;
+        this.UUID = uuid;
+        this.name = name;
+        this.ip = ip;
         this.reason = reason;
         this.executionServer = executionServer;
+        this.expire = expire;
     }
 
-    public Optional<User> getBannedUser() {
-        return getApi().getUser(bannedName);
+    public boolean isActivatable() {
+        return type.isActivatable();
+    }
+
+    public boolean isTemporary() {
+        return type.isTemporary();
+    }
+
+    public Optional<User> getUser() {
+        return getApi().getUser(name);
     }
 
     @Override

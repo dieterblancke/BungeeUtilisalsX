@@ -15,12 +15,12 @@ import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import java.util.Arrays;
 import java.util.List;
 
-public class BanCommand extends Command {
+public class IPBanCommand extends Command {
 
-    public BanCommand() {
-        super("ban", Arrays.asList(BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG)
-                        .getString("commands.ban.aliases").split(", ")),
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.permission"));
+    public IPBanCommand() {
+        super("ipban", Arrays.asList(BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG)
+                        .getString("commands.ipban.aliases").split(", ")),
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ipban.permission"));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class BanCommand extends Command {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length < 2) {
-            user.sendLangMessage("punishments.ban.usage");
+            user.sendLangMessage("punishments.ipban.usage");
             return;
         }
         String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
@@ -41,12 +41,12 @@ public class BanCommand extends Command {
             return;
         }
         UserStorage storage = SQLStatements.getUser(args[0]);
-        if (SQLStatements.isBanPresent(storage.getUuid(), true)) {
-            user.sendLangMessage("punishments.ban.already-banned");
+        if (SQLStatements.isIPBanPresent(storage.getIp(), true)) {
+            user.sendLangMessage("punishments.ipban.already-banned");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
+        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         api.getEventLoader().launchEvent(event);
 
@@ -55,18 +55,18 @@ public class BanCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        PunishmentInfo info = executor.addBan(storage.getUuid(), storage.getUserName(), storage.getIp(),
+        PunishmentInfo info = executor.addIPBan(storage.getUuid(), storage.getUserName(), storage.getIp(),
                 reason, user.getServerName(), user.getName());
 
         api.getUser(storage.getUserName()).ifPresent(banned -> {
-            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
+            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ipban.kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
 
             banned.kick(kick);
         });
 
-        api.langBroadcast("punishments.ban.broadcast",
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.broadcast"),
+        api.langBroadcast("punishments.ipban.broadcast",
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ipban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

@@ -10,8 +10,10 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.LoginEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -29,16 +31,24 @@ public class PunishmentListener implements Listener {
 
         BUAPI api = BUCore.getApi();
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        if (executor.isBanned(uuid)) {
-            IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(),
-                    api.getLanguageManager().getDefaultLanguage());
+        PunishmentInfo info = null;
+        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(),
+                api.getLanguageManager().getDefaultLanguage());
 
-            String kick = Utils.formatList(language.getStringList("punishments.ban.kick"), "\n");
+        if (executor.isBanned(uuid)) {
+            info = SQLStatements.getBan(uuid);
+        } else if (executor.isIPBanned(IP)) {
+            info = SQLStatements.getIPBan(IP);
+        } else if (executor.isTempBanned(uuid)) {
+            // TODO ...
+        }
+        if (info != null) {
+            String kick = Utils.formatList(language.getStringList("punishments." +
+                    info.getType().toString().toLowerCase() + ".kick"), "\n");
+            kick = executor.setPlaceHolders(kick, info);
 
             event.setCancelled(true);
             event.setCancelReason(Utils.format(kick));
-        } else if (executor.isIPBanned(IP)) {
-            // ... TODO
         }
     }
 }

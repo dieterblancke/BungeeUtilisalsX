@@ -359,4 +359,22 @@ public class Utils {
             return false;
         }
     }
+
+    public static String getFormattedDate() {
+        return formatDate(new Date(System.currentTimeMillis()));
+    }
+
+    public static String getFormattedDate(String format) {
+        return formatDate(format, new Date(System.currentTimeMillis()));
+    }
+
+    public static String formatDate(Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy kk:mm:ss");
+        return sdf.format(date);
+    }
+
+    public static String formatDate(String format, Date date) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        return sdf.format(date);
+    }
 }
