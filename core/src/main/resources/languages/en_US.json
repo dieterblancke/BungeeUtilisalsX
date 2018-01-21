@@ -43,6 +43,25 @@
                 "&cBanned at: &f{server}",
                 "&cUnban at: &fNever"
             ]
+        },
+        "tempban": {
+            "usage": "&fPlease use &a/tempban (user) (timeformat) (reason)&f!",
+            "already-banned": "&fThis user is already tempbanned!",
+            "non-valid": "&fPlease enter a valid time format!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been temporary banned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}",
+                "&fExpires at: &e{expire}"
+            ],
+            "kick": [
+                "&c&lBungeeUtilisals &8» &fYou have been temporary banned!",
+                "",
+                "&cReason: &f{reason}",
+                "&cBanned on: &f{date}",
+                "&cBanned by: &f{by}",
+                "&cBanned at: &f{server}",
+                "&cUnban at: &f{expire}"
+            ]
         }
     }
 }

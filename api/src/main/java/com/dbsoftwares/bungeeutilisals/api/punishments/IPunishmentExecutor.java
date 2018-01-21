@@ -41,6 +41,38 @@ public interface IPunishmentExecutor {
 
     PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor);
 
+    PunishmentInfo getBan(UUID uuid);
+
+    PunishmentInfo getTempBan(UUID uuid);
+
+    PunishmentInfo getIPBan(String IP);
+
+    PunishmentInfo getIPTempBan(String IP);
+
+    PunishmentInfo getMute(UUID uuid);
+
+    PunishmentInfo getTempMute(UUID uuid);
+
+    PunishmentInfo getIPMute(String IP);
+
+    PunishmentInfo getIPTempMute(String IP);
+
+    void removeBan(UUID uuid);
+
+    void removeTempBan(UUID uuid);
+
+    void removeIPBan(String IP);
+
+    void removeIPTempBan(String IP);
+
+    void removeMute(UUID uuid);
+
+    void removeTempMute(UUID uuid);
+
+    void removeIPMute(String IP);
+
+    void removeIPTempMute(String IP);
+
     String getDateFormat();
 
     String setPlaceHolders(String line, PunishmentInfo info);
