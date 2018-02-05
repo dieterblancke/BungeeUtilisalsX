@@ -21,7 +21,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public boolean isTempBanned(UUID uuid) {
-        return false;
+        return SQLStatements.isTempbanPresent(uuid, true);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo addTempBan(UUID uuid, String name, String IP, long removeTime, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoTempBans(uuid.toString(), name, IP, removeTime, reason, server, true, executor);
     }
 
     @Override
@@ -102,6 +102,86 @@ public class PunishmentExecutor implements IPunishmentExecutor {
     @Override
     public PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor) {
         return null;
+    }
+
+    @Override
+    public PunishmentInfo getBan(UUID uuid) {
+        return SQLStatements.getBan(uuid);
+    }
+
+    @Override
+    public PunishmentInfo getTempBan(UUID uuid) {
+        return SQLStatements.getTempban(uuid);
+    }
+
+    @Override
+    public PunishmentInfo getIPBan(String IP) {
+        return SQLStatements.getIPBan(IP);
+    }
+
+    @Override
+    public PunishmentInfo getIPTempBan(String IP) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo getMute(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo getTempMute(UUID uuid) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo getIPMute(String IP) {
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo getIPTempMute(String IP) {
+        return null;
+    }
+
+    @Override
+    public void removeBan(UUID uuid) {
+        SQLStatements.removeBan(uuid);
+    }
+
+    @Override
+    public void removeTempBan(UUID uuid) {
+        SQLStatements.removeTempBan(uuid);
+    }
+
+    @Override
+    public void removeIPBan(String IP) {
+        SQLStatements.removeIPBan(IP);
+    }
+
+    @Override
+    public void removeIPTempBan(String IP) {
+
+    }
+
+    @Override
+    public void removeMute(UUID uuid) {
+
+    }
+
+    @Override
+    public void removeTempMute(UUID uuid) {
+
+    }
+
+    @Override
+    public void removeIPMute(String IP) {
+
+    }
+
+    @Override
+    public void removeIPTempMute(String IP) {
+
     }
 
     @Override
