@@ -21,7 +21,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public boolean isTempBanned(UUID uuid) {
-        return SQLStatements.isTempbanPresent(uuid, true);
+        return SQLStatements.isTempBanPresent(uuid, true);
     }
 
     @Override
@@ -31,27 +31,27 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public boolean isIPTempBanned(String IP) {
-        return false;
+        return SQLStatements.isIPTempBanPresent(IP, true);
     }
 
     @Override
     public boolean isMuted(UUID uuid) {
-        return false;
+        return SQLStatements.isMutePresent(uuid, true);
     }
 
     @Override
     public boolean isTempMuted(UUID uuid) {
-        return false;
+        return SQLStatements.isTempMutePresent(uuid, true);
     }
 
     @Override
     public boolean isIPMuted(String IP) {
-        return false;
+        return SQLStatements.isIPMutePresent(IP, true);
     }
 
     @Override
     public boolean isIPTempMuted(String IP) {
-        return false;
+        return SQLStatements.isIPTempMutePresent(IP, true);
     }
 
     @Override
@@ -71,27 +71,27 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo addIPTempBan(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoIPTempBans(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoMutes(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoIPMutes(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return SQLStatements.insertIntoIPTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
@@ -111,7 +111,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo getTempBan(UUID uuid) {
-        return SQLStatements.getTempban(uuid);
+        return SQLStatements.getTempBan(uuid);
     }
 
     @Override
@@ -121,27 +121,27 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo getIPTempBan(String IP) {
-        return null;
+        return SQLStatements.getIPTempBan(IP);
     }
 
     @Override
     public PunishmentInfo getMute(UUID uuid) {
-        return null;
+        return SQLStatements.getMute(uuid);
     }
 
     @Override
     public PunishmentInfo getTempMute(UUID uuid) {
-        return null;
+        return SQLStatements.getTempMute(uuid);
     }
 
     @Override
     public PunishmentInfo getIPMute(String IP) {
-        return null;
+        return SQLStatements.getIPMute(IP);
     }
 
     @Override
     public PunishmentInfo getIPTempMute(String IP) {
-        return null;
+        return SQLStatements.getIPTempMute(IP);
     }
 
     @Override
@@ -161,27 +161,27 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public void removeIPTempBan(String IP) {
-
+        SQLStatements.removeIPTempBan(IP);
     }
 
     @Override
     public void removeMute(UUID uuid) {
-
+        SQLStatements.removeMute(uuid);
     }
 
     @Override
     public void removeTempMute(UUID uuid) {
-
+        SQLStatements.removeTempMute(uuid);
     }
 
     @Override
     public void removeIPMute(String IP) {
-
+        SQLStatements.removeIPMute(IP);
     }
 
     @Override
     public void removeIPTempMute(String IP) {
-
+        SQLStatements.removeIPTempMute(IP);
     }
 
     @Override
