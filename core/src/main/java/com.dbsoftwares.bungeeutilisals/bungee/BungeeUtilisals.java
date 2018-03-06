@@ -23,9 +23,7 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.BanCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.IPBanCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.TempBanCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
@@ -128,6 +126,11 @@ public class BungeeUtilisals extends Plugin {
             new BanCommand();
             new IPBanCommand();
             new TempBanCommand();
+            new IPTempBanCommand();
+            new MuteCommand();
+            new IPMuteCommand();
+            new TempMuteCommand();
+            new IPTempMuteCommand();
         }
     }
 

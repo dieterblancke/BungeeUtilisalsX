@@ -15,12 +15,12 @@ import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import java.util.Arrays;
 import java.util.List;
 
-public class TempBanCommand extends Command {
+public class IPTempMuteCommand extends Command {
 
-    public TempBanCommand() {
-        super("tempban", Arrays.asList(BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG)
-                        .getString("commands.tempban.aliases").split(", ")),
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.tempban.permission"));
+    public IPTempMuteCommand() {
+        super("iptempmute", Arrays.asList(BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG)
+                        .getString("commands.iptempmute.aliases").split(", ")),
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.iptempmute.permission"));
     }
 
     @Override
@@ -31,7 +31,7 @@ public class TempBanCommand extends Command {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length < 3) {
-            user.sendLangMessage("punishments.tempban.usage");
+            user.sendLangMessage("punishments.iptempmute.usage");
             return;
         }
         String timeFormat = args[1];
@@ -39,7 +39,7 @@ public class TempBanCommand extends Command {
         Long time = Utils.parseDateDiff(timeFormat);
 
         if (time == 0L) {
-            user.sendLangMessage("punishments.tempban.non-valid");
+            user.sendLangMessage("punishments.iptempmute.non-valid");
             return;
         }
         if (!SQLStatements.isUserPresent(args[0])) {
@@ -47,12 +47,12 @@ public class TempBanCommand extends Command {
             return;
         }
         UserStorage storage = SQLStatements.getUser(args[0]);
-        if (SQLStatements.isTempBanPresent(storage.getUuid(), true)) {
-            user.sendLangMessage("punishments.tempban.already-banned");
+        if (SQLStatements.isIPTempMutePresent(storage.getIp(), true)) {
+            user.sendLangMessage("punishments.iptempmute.already-muted");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.TEMPBAN, user, storage.getUuid(),
+        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
         api.getEventLoader().launchEvent(event);
 
@@ -61,18 +61,15 @@ public class TempBanCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        PunishmentInfo info = executor.addTempBan(storage.getUuid(), storage.getUserName(), storage.getIp(), time,
+        PunishmentInfo info = executor.addIPTempMute(storage.getUuid(), storage.getUserName(), storage.getIp(), time,
                 reason, user.getServerName(), user.getName());
 
-        api.getUser(storage.getUserName()).ifPresent(banned -> {
-            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.tempban.kick"), "\n");
-            kick = executor.setPlaceHolders(kick, info);
+        api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.iptempmute.onmute",
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.iptempmute.onmute"),
+                executor.getPlaceHolders(info).toArray(new Object[]{})));
 
-            banned.kick(kick);
-        });
-
-        api.langBroadcast("punishments.tempban.broadcast",
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.tempban.broadcast"),
+        api.langBroadcast("punishments.iptempmute.broadcast",
+                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.iptempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

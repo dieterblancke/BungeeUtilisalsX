@@ -42,7 +42,7 @@ public class PunishmentListener implements Listener {
         } else if (executor.isTempBanned(uuid)) {
             info = executor.getTempBan(uuid);
         } else if (executor.isIPTempBanned(IP)) {
-            // TODO ...
+            info = executor.getIPTempBan(IP);
         }
         if (info != null) { // active punishment found
             if (info.isTemporary()) {

@@ -12,6 +12,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
@@ -230,6 +231,16 @@ public class BUser implements User {
     @Override
     public String getServerName() {
         return getParent().getServer().getInfo().getName();
+    }
+
+    @Override // TODO
+    public boolean isMuted() {
+        return false;
+    }
+
+    @Override // TODO
+    public PunishmentInfo getMuteInfo() {
+        return null;
     }
 
     private BaseComponent[] buildComponent(String... text) {

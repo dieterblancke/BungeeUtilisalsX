@@ -20,6 +20,10 @@ public class UserCommandEvent extends AbstractEvent implements Cancellable {
         this.command = command;
     }
 
+    public String getActualCommand() {
+        return command.split(" ")[0].toLowerCase();
+    }
+
     @Override
     public boolean isCancelled() {
         return cancelled;
