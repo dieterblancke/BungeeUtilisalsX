@@ -63,4 +63,20 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     public void setCancelled(boolean cancelled) {
         this.cancelled = cancelled;
     }
+
+    public boolean isMute() {
+        return type.toString().contains("MUTE");
+    }
+
+    public boolean isBan() {
+        return type.toString().contains("BAN");
+    }
+
+    public boolean isKick() {
+        return type.equals(PunishmentType.KICK);
+    }
+
+    public boolean isWarn() {
+        return type.equals(PunishmentType.WARN);
+    }
 }

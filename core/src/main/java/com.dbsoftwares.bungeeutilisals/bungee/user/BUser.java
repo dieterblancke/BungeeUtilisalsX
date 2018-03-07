@@ -36,6 +36,7 @@ public class BUser implements User {
     private ExperimentalUser experimental;
     private UserCooldowns cooldowns;
     private UserStorage storage;
+    private PunishmentInfo mute;
 
     @Override
     public void load(UserPreLoadEvent event) {
@@ -60,6 +61,16 @@ public class BUser implements User {
         if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
             storage.setUserName(player);
             SQLStatements.updateUser(p.getUniqueId().toString(), player, null, null);
+        }
+
+        if (SQLStatements.isMutePresent(p.getUniqueId(), true)) {
+            mute = SQLStatements.getMute(p.getUniqueId());
+        } else if (SQLStatements.isTempMutePresent(p.getUniqueId(), true)) {
+            mute = SQLStatements.getTempMute(p.getUniqueId());
+        } else if (SQLStatements.isIPMutePresent(getIP(), true)) {
+            mute = SQLStatements.getIPMute(getIP());
+        } else if (SQLStatements.isIPTempMutePresent(getIP(), true)) {
+            mute = SQLStatements.getIPTempMute(getIP());
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);
@@ -233,14 +244,14 @@ public class BUser implements User {
         return getParent().getServer().getInfo().getName();
     }
 
-    @Override // TODO
+    @Override
     public boolean isMuted() {
-        return false;
+        return mute != null;
     }
 
-    @Override // TODO
+    @Override
     public PunishmentInfo getMuteInfo() {
-        return null;
+        return mute;
     }
 
     private BaseComponent[] buildComponent(String... text) {

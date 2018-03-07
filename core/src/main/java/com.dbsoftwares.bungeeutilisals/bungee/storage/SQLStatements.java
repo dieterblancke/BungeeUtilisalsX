@@ -89,16 +89,8 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.BAN);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.BAN).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -113,16 +105,8 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.IPBAN);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.IPBAN).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
