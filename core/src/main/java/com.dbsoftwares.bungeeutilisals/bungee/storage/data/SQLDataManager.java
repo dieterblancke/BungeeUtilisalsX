@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.storage;
+package com.dbsoftwares.bungeeutilisals.bungee.storage.data;
 
 /*
  * Created by DBSoftwares on 18/01/2018
@@ -11,6 +11,7 @@ import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
@@ -20,7 +21,7 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
-public class SQLStatements {
+public class SQLDataManager implements DataManager {
 
     /* SQL INSERT STATEMENTS */
     private final static String INSERT_INTO_USERS = "INSERT INTO {users-table} (uuid, username, ip, language) VALUES ('%s', '%s', '%s', '%s');";
@@ -57,21 +58,12 @@ public class SQLStatements {
     private final static String SELECT_FROM_KICKS = SELECT.replace("{table}", "{kicks-table}");
 
     /* SQL DELETE STATEMENTS */
-    private final static String UPDATE_BANS = "UPDATE {bans-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
-    private final static String UPDATE_IPBANS = "UPDATE {ipbans-table} SET active = 0 WHERE ip = '%s' AND active = 1;";
-    private final static String UPDATE_TEMPBANS = "UPDATE {tempbans-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
-    private final static String UPDATE_IPTEMPBANS = "UPDATE {iptempbans-table} SET active = 0 WHERE ip = '%s' AND active = 1;";
-
-    private final static String UPDATE_MUTES = "UPDATE {mutes-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
-    private final static String UPDATE_IPMUTES = "UPDATE {ipmutes-table} SET active = 0 WHERE ip = '%s' AND active = 1;";
-    private final static String UPDATE_TEMPMUTES = "UPDATE {tempmutes-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
-    private final static String UPDATE_IPTEMPMUTES = "UPDATE {iptempmutes-table} SET active = 0 WHERE ip = '%s' AND active = 1;";
-
-    private final static String UPDATE_WARNS = "UPDATE {warns-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
-    private final static String UPDATE_KICKS = "UPDATE {kicks-table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
+    private final static String UPDATE_PUNISHMENTS_UUID = "UPDATE {table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
+    private final static String UPDATE_PUNISHMENTS_IP = "UPDATE {table} SET active = 0 WHERE ip = '%s' AND active = 1;";
 
     /* INSERTION STATEMENTS */
-    public static void insertIntoUsers(String uuid, String username, String ip, String language) {
+    @Override
+    public void insertIntoUsers(String uuid, String username, String ip, String language) {
         String statement = format(INSERT_INTO_USERS, uuid, username, ip, language);
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
@@ -81,7 +73,8 @@ public class SQLStatements {
         }
     }
 
-    public static PunishmentInfo insertIntoBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -97,7 +90,8 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo insertIntoIPBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoIPBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -113,7 +107,8 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo insertIntoTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -121,49 +116,37 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setExpireTime(time);
-            info.setType(PunishmentType.TEMPBAN);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
+                    .expireTime(time).type(PunishmentType.TEMPBAN).build();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoIPTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoIPTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
-        String statement = format(INSERT_INTO_TEMPBANS, uuid, user, ip, time, reason, server, activeNumber, executedby);
+        String statement = format(INSERT_INTO_IPTEMPBANS, uuid, user, ip, time, reason, server, activeNumber, executedby);
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setExpireTime(time);
-            info.setType(PunishmentType.IPTEMPBAN);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
+                    .expireTime(time).type(PunishmentType.IPTEMPBAN).build();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -171,23 +154,16 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.MUTE);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.MUTE).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoIPMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoIPMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -195,23 +171,16 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.IPMUTE);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.IPMUTE).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
@@ -219,86 +188,59 @@ public class SQLStatements {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setExpireTime(time);
-            info.setType(PunishmentType.TEMPMUTE);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
+                    .expireTime(time).type(PunishmentType.TEMPMUTE).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoIPTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoIPTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
         int activeNumber = active ? 1 : 0;
         PunishmentInfo info = null;
 
-        String statement = format(INSERT_INTO_TEMPMUTES, uuid, user, ip, time, reason, server, activeNumber, executedby);
+        String statement = format(INSERT_INTO_IPTEMPMUTES, uuid, user, ip, time, reason, server, activeNumber, executedby);
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setActive(active);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setExpireTime(time);
-            info.setType(PunishmentType.IPTEMPMUTE);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
+                    .expireTime(time).type(PunishmentType.IPTEMPMUTE).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoWarns(String uuid, String user, String ip, String reason, String server, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoWarns(String uuid, String user, String ip, String reason, String server, String executedby) {
         PunishmentInfo info = null;
 
         String statement = format(INSERT_INTO_WARNS, uuid, user, ip, reason, server, executedby);
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.WARN);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.WARN).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return info;
     }
 
-    public static PunishmentInfo insertIntoKicks(String uuid, String user, String ip, String reason, String server, String executedby) {
+    @Override
+    public PunishmentInfo insertIntoKicks(String uuid, String user, String ip, String reason, String server, String executedby) {
         PunishmentInfo info = null;
 
         String statement = format(INSERT_INTO_KICKS, uuid, user, ip, reason, server, executedby);
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
 
-            info = new PunishmentInfo();
-            info.setUuid(UUID.fromString(uuid));
-            info.setUser(user);
-            info.setIP(ip);
-            info.setReason(reason);
-            info.setServer(server);
-            info.setExecutedBy(executedby);
-            info.setDate(new Date(System.currentTimeMillis()));
-            info.setType(PunishmentType.KICK);
+            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+                    .executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.KICK).build();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -307,7 +249,8 @@ public class SQLStatements {
 
 
     /* UPDATE STATEMENTS */
-    public static void updateUser(String identifier, String name, String ip, String language) {
+    @Override
+    public void updateUser(String identifier, String name, String ip, String language) {
         StringBuilder statement = new StringBuilder("UPDATE " + PlaceHolderAPI.formatMessage("{users-table}") + " SET ");
 
         if (name != null) {
@@ -330,7 +273,8 @@ public class SQLStatements {
     }
 
     /* SELECTION STATEMENTS */
-    public static boolean isUserPresent(String name) {
+    @Override
+    public boolean isUserPresent(String name) {
         boolean present = false;
         String statement = format(SELECT_FROM_USERS, "id", (name.contains(".") ? "ip = '" : "username = '") + name + "'");
 
@@ -345,7 +289,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isUserPresent(UUID uuid) {
+    @Override
+    public boolean isUserPresent(UUID uuid) {
         boolean present = false;
         String statement = format(SELECT_FROM_USERS, "id", "uuid = '" + uuid + "'");
 
@@ -360,7 +305,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isBanPresent(UUID uuid, boolean checkActive) {
+    @Override
+    public boolean isBanPresent(UUID uuid, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_BANS, "id", "uuid = '" + uuid + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -375,7 +321,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isIPBanPresent(String ip, boolean checkActive) {
+    @Override
+    public boolean isIPBanPresent(String ip, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_IPBANS, "id", "ip = '" + ip + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -390,7 +337,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isTempBanPresent(UUID uuid, boolean checkActive) {
+    @Override
+    public boolean isTempBanPresent(UUID uuid, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_TEMPBANS, "id", "uuid = '" + uuid + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -405,7 +353,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isIPTempBanPresent(String IP, boolean checkActive) {
+    @Override
+    public boolean isIPTempBanPresent(String IP, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_IPTEMPBANS, "id", "ip = '" + IP + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -420,7 +369,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isMutePresent(UUID uuid, boolean checkActive) {
+    @Override
+    public boolean isMutePresent(UUID uuid, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_MUTES, "id", "uuid = '" + uuid + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -435,7 +385,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isIPMutePresent(String ip, boolean checkActive) {
+    @Override
+    public boolean isIPMutePresent(String ip, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_IPMUTES, "id", "ip = '" + ip + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -450,7 +401,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isTempMutePresent(UUID uuid, boolean checkActive) {
+    @Override
+    public boolean isTempMutePresent(UUID uuid, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_TEMPMUTES, "id", "uuid = '" + uuid + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -465,7 +417,8 @@ public class SQLStatements {
         return present;
     }
 
-    public static boolean isIPTempMutePresent(String IP, boolean checkActive) {
+    @Override
+    public boolean isIPTempMutePresent(String IP, boolean checkActive) {
         boolean present = false;
         String statement = format(SELECT_FROM_IPTEMPMUTES, "id", "ip = '" + IP + "'" + (checkActive ? " AND active = 1" : ""));
 
@@ -481,11 +434,8 @@ public class SQLStatements {
     }
 
 
-
-
-
-
-    public static UserStorage getUser(UUID uuid) {
+    @Override
+    public UserStorage getUser(UUID uuid) {
         UserStorage storage = new UserStorage();
         String statement = format(SELECT_FROM_USERS, "*", "uuid = '" + uuid + "'");
 
@@ -504,7 +454,8 @@ public class SQLStatements {
         return storage;
     }
 
-    public static UserStorage getUser(String name) {
+    @Override
+    public UserStorage getUser(String name) {
         UserStorage storage = new UserStorage();
         String statement = format(SELECT_FROM_USERS, "*", (name.contains(".") ? "ip = '" : "username = '") + name + "'");
 
@@ -523,8 +474,9 @@ public class SQLStatements {
         return storage;
     }
 
-    public static PunishmentInfo getBan(UUID uuid) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getBan(UUID uuid) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.BAN);
 
         String statement = format(SELECT_FROM_BANS, "*", "uuid = '" + uuid + "' AND active = 1");
@@ -549,8 +501,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getIPBan(String IP) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getIPBan(String IP) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.IPBAN);
 
         String statement = format(SELECT_FROM_IPBANS, "*", "ip = '" + IP + "' AND active = 1");
@@ -575,8 +528,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getTempBan(UUID uuid) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getTempBan(UUID uuid) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.TEMPBAN);
 
         String statement = format(SELECT_FROM_TEMPBANS, "*", "uuid = '" + uuid + "' AND active = 1");
@@ -602,8 +556,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getIPTempBan(String IP) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getIPTempBan(String IP) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.IPTEMPBAN);
 
         String statement = format(SELECT_FROM_IPTEMPBANS, "*", "ip = '" + IP + "' AND active = 1");
@@ -629,8 +584,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getMute(UUID uuid) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getMute(UUID uuid) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.MUTE);
 
         String statement = format(SELECT_FROM_MUTES, "*", "uuid = '" + uuid + "' AND active = 1");
@@ -655,8 +611,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getIPMute(String IP) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getIPMute(String IP) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.IPMUTE);
 
         String statement = format(SELECT_FROM_IPMUTES, "*", "ip = '" + IP + "' AND active = 1");
@@ -681,8 +638,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getTempMute(UUID uuid) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getTempMute(UUID uuid) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.TEMPMUTE);
 
         String statement = format(SELECT_FROM_TEMPMUTES, "*", "uuid = '" + uuid + "' AND active = 1");
@@ -708,8 +666,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static PunishmentInfo getIPTempMute(String IP) {
-        PunishmentInfo info = new PunishmentInfo();
+    @Override
+    public PunishmentInfo getIPTempMute(String IP) {
+        PunishmentInfo info = PunishmentInfo.builder().build();
         info.setType(PunishmentType.IPTEMPMUTE);
 
         String statement = format(SELECT_FROM_IPTEMPMUTES, "*", "ip = '" + IP + "' AND active = 1");
@@ -735,8 +694,9 @@ public class SQLStatements {
         return info;
     }
 
-    public static void removeBan(UUID uuid) {
-        String statement = format(UPDATE_BANS, uuid.toString());
+    @Override
+    public void removeBan(UUID uuid) {
+        String statement = format(UPDATE_PUNISHMENTS_UUID.replace("{table}", "{bans-table}"), uuid.toString());
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -745,8 +705,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeIPBan(String IP) {
-        String statement = format(UPDATE_IPBANS, IP);
+    @Override
+    public void removeIPBan(String IP) {
+        String statement = format(UPDATE_PUNISHMENTS_IP.replace("{table}", "{ipbans-table}"), IP);
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -755,8 +716,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeTempBan(UUID uuid) {
-        String statement = format(UPDATE_TEMPBANS, uuid.toString());
+    @Override
+    public void removeTempBan(UUID uuid) {
+        String statement = format(UPDATE_PUNISHMENTS_UUID.replace("{table}", "{tempbans-table}"), uuid.toString());
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -765,8 +727,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeIPTempBan(String IP) {
-        String statement = format(UPDATE_TEMPBANS, IP);
+    @Override
+    public void removeIPTempBan(String IP) {
+        String statement = format(UPDATE_PUNISHMENTS_IP.replace("{table}", "{iptempbans-table}"), IP);
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -775,8 +738,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeMute(UUID uuid) {
-        String statement = format(UPDATE_MUTES, uuid.toString());
+    @Override
+    public void removeMute(UUID uuid) {
+        String statement = format(UPDATE_PUNISHMENTS_UUID.replace("{table}", "{mutes-table}"), uuid.toString());
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -785,8 +749,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeIPMute(String IP) {
-        String statement = format(UPDATE_IPMUTES, IP);
+    @Override
+    public void removeIPMute(String IP) {
+        String statement = format(UPDATE_PUNISHMENTS_IP.replace("{table}", "{ipmutes-table}"), IP);
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -795,8 +760,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeTempMute(UUID uuid) {
-        String statement = format(UPDATE_TEMPMUTES, uuid.toString());
+    @Override
+    public void removeTempMute(UUID uuid) {
+        String statement = format(UPDATE_PUNISHMENTS_UUID.replace("{table}", "{tempmutes-table}"), uuid.toString());
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);
@@ -805,8 +771,9 @@ public class SQLStatements {
         }
     }
 
-    public static void removeIPTempMute(String IP) {
-        String statement = format(UPDATE_TEMPMUTES, IP);
+    @Override
+    public void removeIPTempMute(String IP) {
+        String statement = format(UPDATE_PUNISHMENTS_IP.replace("{table}", "{iptempmutes-table}"), IP);
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement);

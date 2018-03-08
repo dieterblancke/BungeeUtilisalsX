@@ -28,12 +28,15 @@ public abstract class AbstractStorageManager {
     private Plugin plugin;
     @Getter
     private StorageType type;
+    @Getter
+    DataManager dataManager;
 
-    public AbstractStorageManager(Plugin plugin, StorageType type) {
+    public AbstractStorageManager(Plugin plugin, StorageType type, DataManager dataManager) {
         manager = this;
 
         this.plugin = plugin;
         this.type = type;
+        this.dataManager = dataManager;
     }
 
     public String getName() {

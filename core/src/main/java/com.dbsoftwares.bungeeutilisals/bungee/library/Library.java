@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.library;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
 import java.io.File;
@@ -19,16 +20,39 @@ import java.nio.channels.ReadableByteChannel;
 
 public enum Library {
 
-    SQLITE("org.sqlite.JDBC", "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.21.0.1/sqlite-jdbc-3.21.0.1.jar"),
-    MARIADB("org.mariadb.jdbc.MariaDbDataSource", "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.2.1/mariadb-java-client-2.2.1.jar"),
-    POSTGRESQL("org.postgresql.ds.PGSimpleDataSource", "http://repo1.maven.org/maven2/org/postgresql/postgresql/9.4.1212/postgresql-9.4.1212.jar");
+    SQLITE(
+            "org.sqlite.JDBC",
+            "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.21.0.1/sqlite-jdbc-3.21.0.1.jar",
+            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("SQLITE")
+    ),
+    MARIADB(
+            "org.mariadb.jdbc.MariaDbDataSource",
+            "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.2.1/mariadb-java-client-2.2.1.jar",
+            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("MARIADB")
+    ),
+    POSTGRESQL(
+            "org.postgresql.ds.PGSimpleDataSource",
+            "http://repo1.maven.org/maven2/org/postgresql/postgresql/9.4.1212/postgresql-9.4.1212.jar",
+            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("POSTGRESQL")
+    ),
+    MONGODB(
+            "com.mongodb.MongoClient",
+            "https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.6.3/mongo-java-driver-3.6.3.jar",
+            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("MONGODB")
+    );
 
     private String className;
     private String downloadURL;
+    private boolean load;
 
-    Library(String className, String downloadURL) {
+    Library(String className, String downloadURL, boolean load) {
         this.className = className;
         this.downloadURL = downloadURL;
+        this.load = load;
+    }
+
+    public boolean shouldBeLoaded() {
+        return load;
     }
 
     public boolean isPresent() {

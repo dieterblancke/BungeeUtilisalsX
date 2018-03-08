@@ -33,11 +33,11 @@ import com.dbsoftwares.bungeeutilisals.bungee.library.classloader.LibraryClassLo
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
-import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
 import java.sql.SQLException;
@@ -163,7 +163,7 @@ public class BungeeUtilisals extends Plugin {
         libraryClassLoader = new LibraryClassLoader(this);
 
         for (Library library : Library.values()) {
-            if (!library.isPresent()) {
+            if (library.shouldBeLoaded() && !library.isPresent()) {
                 library.load();
             }
         }

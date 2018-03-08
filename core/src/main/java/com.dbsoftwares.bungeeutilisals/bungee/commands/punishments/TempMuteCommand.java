@@ -10,7 +10,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,12 +41,12 @@ public class TempMuteCommand extends Command {
             user.sendLangMessage("punishments.tempmute.non-valid");
             return;
         }
-        if (!SQLStatements.isUserPresent(args[0])) {
+        if (!BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = SQLStatements.getUser(args[0]);
-        if (SQLStatements.isTempMutePresent(storage.getUuid(), true)) {
+        UserStorage storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(args[0]);
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempMutePresent(storage.getUuid(), true)) {
             user.sendLangMessage("punishments.tempmute.already-muted");
             return;
         }

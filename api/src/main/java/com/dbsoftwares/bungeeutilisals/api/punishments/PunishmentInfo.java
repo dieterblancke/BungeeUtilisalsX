@@ -32,10 +32,6 @@ public class PunishmentInfo {
     private boolean active;
     private String removedBy;
 
-    public PunishmentInfo() {
-
-    }
-
     public boolean isActivatable() {
         return type.isActivatable();
     }

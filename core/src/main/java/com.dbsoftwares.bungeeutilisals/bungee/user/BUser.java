@@ -19,7 +19,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -48,11 +47,11 @@ public class BUser implements User {
         this.cooldowns = new UserCooldowns();
 
         BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
-        if (SQLStatements.isUserPresent(p.getUniqueId())) {
-            storage = SQLStatements.getUser(p.getUniqueId());
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(p.getUniqueId())) {
+            storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(p.getUniqueId());
         } else {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            SQLStatements.insertIntoUsers(p.getUniqueId().toString(), p.getName(), Utils.getIP(p.getAddress()),
+            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoUsers(p.getUniqueId().toString(), p.getName(), Utils.getIP(p.getAddress()),
                     BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
             storage = new UserStorage();
             storage.setDefaultsFor(p);
@@ -60,17 +59,17 @@ public class BUser implements User {
 
         if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
             storage.setUserName(player);
-            SQLStatements.updateUser(p.getUniqueId().toString(), player, null, null);
+            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(p.getUniqueId().toString(), player, null, null);
         }
 
-        if (SQLStatements.isMutePresent(p.getUniqueId(), true)) {
-            mute = SQLStatements.getMute(p.getUniqueId());
-        } else if (SQLStatements.isTempMutePresent(p.getUniqueId(), true)) {
-            mute = SQLStatements.getTempMute(p.getUniqueId());
-        } else if (SQLStatements.isIPMutePresent(getIP(), true)) {
-            mute = SQLStatements.getIPMute(getIP());
-        } else if (SQLStatements.isIPTempMutePresent(getIP(), true)) {
-            mute = SQLStatements.getIPTempMute(getIP());
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isMutePresent(p.getUniqueId(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getMute(p.getUniqueId());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempMutePresent(p.getUniqueId(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getTempMute(p.getUniqueId());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPMutePresent(getIP(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPMute(getIP());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPTempMutePresent(getIP(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPTempMute(getIP());
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);
@@ -90,7 +89,7 @@ public class BUser implements User {
     public void save() {
         BUCore.getApi().getDebugger().debug("Saving data for %s!", player);
 
-        SQLStatements.updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
     }
 
     @Override

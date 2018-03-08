@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.storage.file;
 
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.storage.data.SQLDataManager;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -22,7 +23,7 @@ public class SQLiteStorageManager extends AbstractStorageManager {
     private File database;
 
     public SQLiteStorageManager(Plugin plugin) throws SQLException {
-        super(plugin, StorageType.SQLITE);
+        super(plugin, StorageType.SQLITE, new SQLDataManager());
 
         database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
         if (!database.exists()) {

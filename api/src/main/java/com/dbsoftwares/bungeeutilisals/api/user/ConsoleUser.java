@@ -10,6 +10,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -190,5 +191,15 @@ public class ConsoleUser implements User {
     @Override
     public String getServerName() {
         return "BUNGEE";
+    }
+
+    @Override
+    public boolean isMuted() {
+        return false;
+    }
+
+    @Override
+    public PunishmentInfo getMuteInfo() {
+        return null;
     }
 }

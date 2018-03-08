@@ -10,7 +10,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,12 +35,12 @@ public class BanCommand extends Command {
         }
         String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
-        if (!SQLStatements.isUserPresent(args[0])) {
+        if (!BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = SQLStatements.getUser(args[0]);
-        if (SQLStatements.isBanPresent(storage.getUuid(), true)) {
+        UserStorage storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(args[0]);
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isBanPresent(storage.getUuid(), true)) {
             user.sendLangMessage("punishments.ban.already-banned");
             return;
         }
