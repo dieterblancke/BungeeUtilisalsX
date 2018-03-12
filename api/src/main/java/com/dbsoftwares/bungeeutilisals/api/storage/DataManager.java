@@ -35,7 +35,7 @@ public interface DataManager {
 
     PunishmentInfo insertIntoKicks(String uuid, String user, String ip, String reason, String server, String executedby);
 
-    void updateUser(String identifier, String name, String ip, String language);
+    void updateUser(String uuid, String name, String ip, String language);
 
     boolean isUserPresent(String name);
 

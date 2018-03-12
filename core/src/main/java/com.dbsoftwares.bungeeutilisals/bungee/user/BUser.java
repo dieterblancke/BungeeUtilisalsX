@@ -51,8 +51,8 @@ public class BUser implements User {
             storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(p.getUniqueId());
         } else {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoUsers(p.getUniqueId().toString(), p.getName(), Utils.getIP(p.getAddress()),
-                    BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
+            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoUsers(p.getUniqueId().toString(),
+                    p.getName(), Utils.getIP(p.getAddress()), BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
             storage = new UserStorage();
             storage.setDefaultsFor(p);
         }

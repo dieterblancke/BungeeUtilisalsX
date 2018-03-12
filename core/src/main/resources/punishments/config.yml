@@ -44,7 +44,7 @@ commands:
     aliases: 'tban, gtban'
     permission: bungeeutilisals.punishments.tempban
     broadcast: bungeeutilisals.punishments.tempban.broadcast
-  tempbanip:
+  iptempban:
     enabled: true
     aliases: 'iptempban, tipban, gtipban, tbanip'
     permission: bungeeutilisals.punishments.tempbanip
@@ -64,7 +64,7 @@ commands:
     aliases: 'tmute, gtmute'
     permission: bungeeutilisals.punishments.tempmute
     broadcast: bungeeutilisals.punishments.tempmute.broadcast
-  tempmuteip:
+  iptempmute:
     enabled: true
     aliases: 'iptempmute, tipmute, gtipmute, tmuteip'
     permission: bungeeutilisals.punishments.tempmuteip
