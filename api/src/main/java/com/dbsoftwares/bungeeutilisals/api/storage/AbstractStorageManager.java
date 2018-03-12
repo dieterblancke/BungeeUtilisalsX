@@ -85,7 +85,9 @@ public abstract class AbstractStorageManager {
         MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.hikari.MariaDBStorageManager"),
                 "MariaDB", "schemas/mariadb.sql"),
         SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.file.SQLiteStorageManager"),
-                "SQLite", "schemas/sqlite.sql");
+                "SQLite", "schemas/sqlite.sql"),
+        MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.mongodb.MongoDBStorageManager"),
+                "MongoDB", "schemas/mongodb.mdb");
 
         @Getter
         private Class<? extends AbstractStorageManager> manager;
