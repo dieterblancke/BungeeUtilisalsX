@@ -58,7 +58,6 @@ public class MuteCommand extends Command {
                 reason, user.getServerName(), user.getName());
 
         api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.mute.onmute",
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.mute.onmute"),
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
         api.langBroadcast("punishments.mute.broadcast",

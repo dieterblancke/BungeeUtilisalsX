@@ -38,4 +38,9 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
             t.printStackTrace();
         }
     }
+
+    @Override
+    public String toString() {
+        return "EventHandler for " + eventClass.getSimpleName() + ". Used Amount: " + uses;
+    }
 }

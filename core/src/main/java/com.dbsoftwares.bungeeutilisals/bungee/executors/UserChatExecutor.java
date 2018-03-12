@@ -74,7 +74,7 @@ public class UserChatExecutor {
         if (manager.checkForSpam(user)) {
             event.setCancelled(true);
 
-            user.sendLangMessage("chat-protection.spam", "%time%", user.getCooldowns().getLeftTime("CHATSPAM"));
+            user.sendLangMessage("chat-protection.spam", "%time%", user.getCooldowns().getLeftTime("CHATSPAM") / 1000);
         }
     }
 

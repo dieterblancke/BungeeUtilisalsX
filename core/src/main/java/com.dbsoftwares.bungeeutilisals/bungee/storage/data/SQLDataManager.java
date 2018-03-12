@@ -250,7 +250,7 @@ public class SQLDataManager implements DataManager {
 
     /* UPDATE STATEMENTS */
     @Override
-    public void updateUser(String identifier, String name, String ip, String language) {
+    public void updateUser(String uuid, String name, String ip, String language) {
         StringBuilder statement = new StringBuilder("UPDATE " + PlaceHolderAPI.formatMessage("{users-table}") + " SET ");
 
         if (name != null) {
@@ -263,7 +263,7 @@ public class SQLDataManager implements DataManager {
             statement.append(" language = '").append(language).append("', ");
         }
         statement.delete(statement.length() - 2, statement.length());
-        statement.append(" WHERE uuid = '").append(identifier).append("';");
+        statement.append(" WHERE uuid = '").append(uuid).append("';");
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
             connection.createStatement().executeUpdate(statement.toString());

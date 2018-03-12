@@ -32,7 +32,7 @@ public class MongoDBStorageManager extends AbstractStorageManager {
     }
 
     public MongoDBStorageManager(Plugin plugin, StorageType type, IConfiguration configuration) {
-        super(plugin, type, null /* TODO: Create MongoDB DataManager*/);
+        super(plugin, type, new MongoDataManager());
 
         String user = configuration.getString("storage.username");
         String password = configuration.getString("storage.password");
@@ -63,7 +63,7 @@ public class MongoDBStorageManager extends AbstractStorageManager {
 
     @Override
     public Connection getConnection() {
-        return null;
+        throw new UnsupportedOperationException("MongoDB does not support java.sql.Connection!");
     }
 
     @Override

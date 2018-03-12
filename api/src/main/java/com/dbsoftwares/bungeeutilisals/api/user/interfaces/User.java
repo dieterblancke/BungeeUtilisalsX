@@ -193,4 +193,11 @@ public interface User {
      * @return PunishmentInfo of current mute (if muted), null if not muted.
      */
     PunishmentInfo getMuteInfo();
+
+    /**
+     * Sets the user mute data in local cache.
+     *
+     * @param info The info to be stored.
+     */
+    void setMute(PunishmentInfo info);
 }

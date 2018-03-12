@@ -7,10 +7,8 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.*;
 import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
@@ -24,8 +22,10 @@ import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfigu
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.*;
+import com.dbsoftwares.bungeeutilisals.bungee.executors.MuteCheckExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.executors.UserPunishExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.bungee.library.Library;
@@ -120,6 +120,12 @@ public class BungeeUtilisals extends Plugin {
         loader.register(UserChatEvent.class, userChatExecutor::onCapsChat);
         loader.register(UserChatEvent.class, userChatExecutor::onSpamChat);
         loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
+
+        MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
+        loader.register(UserChatEvent.class, muteCheckExecutor::onChat);
+        loader.register(UserCommandEvent.class, muteCheckExecutor::onCommand);
+
+        loader.register(UserPunishEvent.class, new UserPunishExecutor());
 
         new PluginCommand();
         if (getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
