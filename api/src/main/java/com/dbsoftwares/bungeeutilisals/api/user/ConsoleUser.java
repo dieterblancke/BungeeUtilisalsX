@@ -202,4 +202,9 @@ public class ConsoleUser implements User {
     public PunishmentInfo getMuteInfo() {
         return null;
     }
+
+    @Override
+    public void setMute(PunishmentInfo info) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }

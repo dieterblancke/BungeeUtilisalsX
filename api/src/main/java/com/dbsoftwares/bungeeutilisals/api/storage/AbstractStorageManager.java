@@ -46,6 +46,9 @@ public abstract class AbstractStorageManager {
     public abstract Connection getConnection() throws SQLException;
 
     public void initialize() throws Exception {
+        if (type.equals(StorageType.MONGODB)) {
+            return;
+        }
         try (InputStream is = plugin.getResourceAsStream(type.getSchema())) {
             if (is == null) {
                 throw new Exception("Could not find schema for " + type.toString() + ": " + type.getSchema() + "!");
@@ -85,7 +88,9 @@ public abstract class AbstractStorageManager {
         MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.hikari.MariaDBStorageManager"),
                 "MariaDB", "schemas/mariadb.sql"),
         SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.file.SQLiteStorageManager"),
-                "SQLite", "schemas/sqlite.sql");
+                "SQLite", "schemas/sqlite.sql"),
+        MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.mongodb.MongoDBStorageManager"),
+                "MongoDB", null);
 
         @Getter
         private Class<? extends AbstractStorageManager> manager;

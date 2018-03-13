@@ -8,11 +8,13 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.punishment;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,6 +30,7 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     private String reason;
     private String executionServer;
     private Long expire;
+    private Date date = new Date(System.currentTimeMillis());
 
     private boolean cancelled = false;
 
@@ -40,6 +43,12 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
         this.reason = reason;
         this.executionServer = executionServer;
         this.expire = expire;
+    }
+
+    public PunishmentInfo getInfo() {
+        return PunishmentInfo.builder().uuid(UUID).user(name).IP(ip).reason(reason)
+                .server(executionServer).date(date).active(true).executedBy(executor.getName())
+                .expireTime(expire).removedBy(null).type(type).build();
     }
 
     public boolean isActivatable() {

@@ -64,7 +64,6 @@ public class TempMuteCommand extends Command {
                 reason, user.getServerName(), user.getName());
 
         api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.tempmute.onmute",
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.tempmute.onmute"),
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
         api.langBroadcast("punishments.tempmute.broadcast",

@@ -32,12 +32,12 @@ public class MuteCheckExecutor {
                 .contains(event.getActualCommand().replaceFirst("/", ""))) {
 
             user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                    BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands." + info.getType().toString().toLowerCase() + ".onmute"),
                     event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
             event.setCancelled(true);
         }
     }
 
+    // high priority
     public void onChat(UserChatEvent event) {
         User user = event.getUser();
 
@@ -48,9 +48,8 @@ public class MuteCheckExecutor {
         if (checkTemporaryMute(user, info)) {
             return;
         }
-        
+
         user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands." + info.getType().toString().toLowerCase() + ".onmute"),
                 event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
         event.setCancelled(true);
     }
