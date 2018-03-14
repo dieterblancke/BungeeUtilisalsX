@@ -32,8 +32,7 @@ public class PunishmentListener implements Listener {
         BUAPI api = BUCore.getApi();
         IPunishmentExecutor executor = api.getPunishmentExecutor();
         PunishmentInfo info = null;
-        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(),
-                api.getLanguageManager().getDefaultLanguage());
+        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(), api.getLanguageManager().getDefaultLanguage());
 
         if (executor.isBanned(uuid)) {
             info = executor.getBan(uuid);
@@ -55,8 +54,7 @@ public class PunishmentListener implements Listener {
                     return;
                 }
             }
-            String kick = Utils.formatList(language.getStringList("punishments." +
-                    info.getType().toString().toLowerCase() + ".kick"), "\n");
+            String kick = Utils.formatList(language.getStringList("punishments." + info.getType().toString().toLowerCase() + ".kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
 
             event.setCancelled(true);

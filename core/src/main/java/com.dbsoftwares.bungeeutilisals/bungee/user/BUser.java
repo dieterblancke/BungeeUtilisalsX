@@ -23,7 +23,6 @@ import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -190,12 +189,35 @@ public class BUser implements User {
 
     @Override
     public void kick(String reason) {
-        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(buildComponent(reason)));
+        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(Utils.format(reason)));
+    }
+
+    @Override
+    public void langKick(String path, Object... placeholders) {
+        if (getLanguageConfig().isList(path)) {
+            StringBuilder builder = new StringBuilder();
+
+            for (String message : getLanguageConfig().getStringList(path)) {
+                for (int i = 0; i < placeholders.length - 1; i += 2) {
+                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+                }
+
+                builder.append(message).append("\n");
+            }
+            kick(builder.toString());
+        } else {
+            String message = getLanguageConfig().getString(path);
+            for (int i = 0; i < placeholders.length - 1; i += 2) {
+                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+            }
+
+            kick(message);
+        }
     }
 
     @Override
     public void forceKick(String reason) {
-        getParent().disconnect(buildComponent(reason));
+        getParent().disconnect(Utils.format(reason));
     }
 
     @Override
@@ -251,16 +273,5 @@ public class BUser implements User {
     @Override
     public PunishmentInfo getMuteInfo() {
         return mute;
-    }
-
-    private BaseComponent[] buildComponent(String... text) {
-        ComponentBuilder builder = new ComponentBuilder("");
-        if (text == null || text.length == 0) {
-            return builder.create();
-        }
-        for (String aText : text) {
-            builder.append(Utils.format(aText));
-        }
-        return builder.create();
     }
 }

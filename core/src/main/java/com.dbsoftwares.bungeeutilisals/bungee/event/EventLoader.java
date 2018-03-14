@@ -35,9 +35,6 @@ public class EventLoader implements IEventLoader {
                 method.setAccessible(true);
 
                 BEventHandler<T> eventHandler = new BEventHandler<>(this, eventClass, method, executor, executeIfCancelled, priority);
-
-                System.out.println(eventHandler.toString());
-
                 handlers.add(eventHandler);
                 addedHandlers.add(eventHandler);
             }

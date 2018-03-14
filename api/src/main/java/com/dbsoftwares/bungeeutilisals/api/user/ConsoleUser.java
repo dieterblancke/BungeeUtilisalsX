@@ -144,6 +144,11 @@ public class ConsoleUser implements User {
     }
 
     @Override
+    public void langKick(String path, Object... placeholders) {
+
+    }
+
+    @Override
     public void forceKick(String reason) {
         throw new UnsupportedOperationException("Not supported yet.");
     }

@@ -134,6 +134,8 @@ public class BungeeUtilisals extends Plugin {
             new IPMuteCommand();
             new TempMuteCommand();
             new IPTempMuteCommand();
+            new KickCommand();
+            new WarnCommand();
         }
     }
 
