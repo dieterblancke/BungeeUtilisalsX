@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.event.interfaces;
+package com.dbsoftwares.bungeeutilisals.api.event.event;
 
 public interface Cancellable {
 

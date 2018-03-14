@@ -2,10 +2,14 @@ package com.dbsoftwares.bungeeutilisals.bungee.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.*;
+import com.dbsoftwares.bungeeutilisals.api.event.event.*;
 import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
+import java.lang.reflect.Method;
+import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -15,15 +19,31 @@ public class EventLoader implements IEventLoader {
     private final Map<Class<? extends BUEvent>, Set<EventHandler<?>>> handlerMap = new ConcurrentHashMap<>();
 
     @Override
-    public <T extends BUEvent> EventHandler<T> register(Class<T> eventClass, EventExecutor<T> handler) {
+    public <T extends BUEvent> Set<EventHandler<T>> register(Class<T> eventClass, EventExecutor executor) {
         if (!BUEvent.class.isAssignableFrom(eventClass)) {
             throw new IllegalArgumentException("class " + eventClass.getName() + " does not implement BUEvent");
         }
         Set<EventHandler<?>> handlers = handlerMap.computeIfAbsent(eventClass, c -> ConcurrentHashMap.newKeySet());
+        Set<EventHandler<T>> addedHandlers = ConcurrentHashMap.newKeySet();
 
-        BEventHandler<T> eventHandler = new BEventHandler<>(this, eventClass, handler);
-        handlers.add(eventHandler);
-        return eventHandler;
+        for (Method method : executor.getClass().getDeclaredMethods()) {
+            if (method.getParameters()[0].getType().equals(eventClass) && method.isAnnotationPresent(Event.class)) {
+                Event event = method.getAnnotation(Event.class);
+                int priority = event.priority();
+                boolean executeIfCancelled = event.executeIfCancelled();
+
+                method.setAccessible(true);
+
+                BEventHandler<T> eventHandler = new BEventHandler<>(this, eventClass, method, executor, executeIfCancelled, priority);
+
+                System.out.println(eventHandler.toString());
+
+                handlers.add(eventHandler);
+                addedHandlers.add(eventHandler);
+            }
+        }
+
+        return addedHandlers;
     }
 
     @Override
@@ -33,12 +53,11 @@ public class EventLoader implements IEventLoader {
         if (handlers == null) {
             return ImmutableSet.of();
         } else {
-            ImmutableSet.Builder<EventHandler<T>> ret = ImmutableSet.builder();
-            for (EventHandler<?> handler : handlers) {
-                ret.add((EventHandler<T>) handler);
-            }
+            ImmutableSet.Builder<EventHandler<T>> builder = ImmutableSet.builder();
 
-            return ret.build();
+            handlers.forEach(handler -> builder.add((EventHandler<T>) handler));
+
+            return builder.build();
         }
     }
 
@@ -68,12 +87,19 @@ public class EventLoader implements IEventLoader {
                 continue;
             }
 
-            ent.getValue().forEach(h -> {
+            List<EventHandler<?>> sortedSet = Lists.newArrayList(ent.getValue());
+            sortedSet.sort(Comparator.comparingInt(EventHandler::getPriority));
+
+            for (EventHandler h : sortedSet) {
                 if (h instanceof BEventHandler) {
                     BEventHandler handler = (BEventHandler) h;
+
+                    if (!handler.executeIfCancelled() && event instanceof Cancellable && ((Cancellable) event).isCancelled()) {
+                        continue;
+                    }
                     handler.handle(event);
                 }
-            });
+            }
         }
     }
 

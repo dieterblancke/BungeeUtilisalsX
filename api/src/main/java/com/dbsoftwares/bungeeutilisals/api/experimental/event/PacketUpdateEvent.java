@@ -2,15 +2,19 @@ package com.dbsoftwares.bungeeutilisals.api.experimental.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
 public class PacketUpdateEvent extends AbstractEvent implements Cancellable {
 
-    private boolean cancelled;
+    @Getter
+    @Setter
+    private boolean cancelled = false;
     private DefinedPacket packet;
     private Connection sender;
     private Connection reciever;
@@ -42,15 +46,5 @@ public class PacketUpdateEvent extends AbstractEvent implements Cancellable {
 
     public Connection getReciever(){
         return reciever;
-    }
-
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    @Override
-    public void setCancelled(boolean b) {
-        this.cancelled = b;
     }
 }

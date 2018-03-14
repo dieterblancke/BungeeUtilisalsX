@@ -6,12 +6,13 @@ package com.dbsoftwares.bungeeutilisals.bungee.executors;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.EventExecutor;
 
-public class UserPunishExecutor implements EventExecutor<UserPunishEvent> {
+public class UserPunishExecutor implements EventExecutor {
 
-    @Override
+    @Event
     public void onExecute(UserPunishEvent event) {
         if (event.isMute()) {
             event.getUser().ifPresent(user -> user.setMute(event.getInfo()));

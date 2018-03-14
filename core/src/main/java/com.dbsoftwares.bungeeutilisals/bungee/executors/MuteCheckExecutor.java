@@ -7,6 +7,9 @@ package com.dbsoftwares.bungeeutilisals.bungee.executors;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -15,8 +18,9 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
-public class MuteCheckExecutor {
+public class MuteCheckExecutor implements EventExecutor {
 
+    @Event
     public void onCommand(UserCommandEvent event) {
         User user = event.getUser();
 
@@ -38,6 +42,7 @@ public class MuteCheckExecutor {
     }
 
     // high priority
+    @Event(priority = Priority.HIGHEST)
     public void onChat(UserChatEvent event) {
         User user = event.getUser();
 

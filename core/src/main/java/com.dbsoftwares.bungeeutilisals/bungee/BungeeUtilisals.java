@@ -7,9 +7,12 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.*;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
@@ -109,21 +112,15 @@ public class BungeeUtilisals extends Plugin {
 
         IEventLoader loader = api.getEventLoader();
 
-        UserExecutor userExecutor = new UserExecutor();
-        loader.register(UserLoadEvent.class, userExecutor::onLoad);
-        loader.register(UserUnloadEvent.class, userExecutor::onUnload);
+        loader.register(UserLoadEvent.class, new UserExecutor());
 
-        UserChatExecutor userChatExecutor = new UserChatExecutor(api.getChatManager());
-        loader.register(UserChatEvent.class, userChatExecutor::onSwearChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
-        loader.register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
-        loader.register(UserChatEvent.class, userChatExecutor::onCapsChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onSpamChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
+        UserChatExecutor chatExecutor = new UserChatExecutor(api.getChatManager());
+        loader.register(UserChatEvent.class, chatExecutor);
+        loader.register(UserChatPreExecuteEvent.class, chatExecutor);
 
         MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-        loader.register(UserChatEvent.class, muteCheckExecutor::onChat);
-        loader.register(UserCommandEvent.class, muteCheckExecutor::onCommand);
+        loader.register(UserChatEvent.class, muteCheckExecutor);
+        loader.register(UserCommandEvent.class, muteCheckExecutor);
 
         loader.register(UserPunishEvent.class, new UserPunishExecutor());
 
@@ -208,7 +205,7 @@ public class BungeeUtilisals extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
 
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor::onPacketUpdate);
-        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor::onPacketReceive);
+        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
+        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
     }
 }
