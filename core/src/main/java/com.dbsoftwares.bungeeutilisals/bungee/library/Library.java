@@ -23,22 +23,32 @@ public enum Library {
     SQLITE(
             "org.sqlite.JDBC",
             "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.21.0.1/sqlite-jdbc-3.21.0.1.jar",
-            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("SQLITE")
+            checkType("SQLITE")
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.2.1/mariadb-java-client-2.2.1.jar",
-            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("MARIADB")
+            checkType("MARIADB")
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "http://repo1.maven.org/maven2/org/postgresql/postgresql/9.4.1212/postgresql-9.4.1212.jar",
-            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("POSTGRESQL")
+            checkType("POSTGRESQL")
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.6.3/mongo-java-driver-3.6.3.jar",
-            BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase("MONGODB")
+            checkType("MONGODB")
+    ),
+    SLF4J( // used for Hikari
+            "org.slf4j.LogginFactory",
+            "http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+            checkType("MYSQL", "MARIADB", "POSTGRESQL")
+    ),
+    HIKARIDB(
+            "com.zaxxer.hikari.HikariDataSource",
+            "http://central.maven.org/maven2/com/zaxxer/HikariCP/2.7.8/HikariCP-2.7.8.jar",
+            checkType("MYSQL", "MARIADB", "POSTGRESQL")
     );
 
     private String className;
@@ -110,5 +120,14 @@ public enum Library {
 
         BungeeUtilisals.getInstance().getLibraryClassLoader().loadLibrary(path);
         BungeeUtilisals.log("Loaded libary with name: " + toString().toLowerCase());
+    }
+
+    private static boolean checkType(String... types) {
+        for (String type : types) {
+            if (BungeeUtilisals.getConfiguration(FileLocation.CONFIG).getString("storage.type").equalsIgnoreCase(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
