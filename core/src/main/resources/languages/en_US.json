@@ -2,6 +2,7 @@
     "prefix": "&c&lBungeeUtilisals &8» ",
     "no-permission": "&cYou do not have the permission to do this!",
     "never-joined": "&fThat user never joined before!",
+    "offline": "&fThat user is not online!",
     "chat-protection": {
         "swear": "&fPlease do not swear!",
         "caps": "&fPlease do not use that much caps!",
@@ -61,6 +62,129 @@
                 "&cBanned by: &f{by}",
                 "&cBanned at: &f{server}",
                 "&cUnban at: &f{expire}"
+            ]
+        },
+        "iptempban": {
+            "usage": "&fPlease use &a/iptempban (user / IP) (timeformat) (reason)&f!",
+            "already-banned": "&fThis user is already iptempbanned!",
+            "non-valid": "&fPlease enter a valid time format!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been temporary ipbanned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}",
+                "&fExpires at: &e{expire}"
+            ],
+            "kick": [
+                "&c&lBungeeUtilisals &8» &fYou have been temporary ipbanned!",
+                "",
+                "&cReason: &f{reason}",
+                "&cBanned on: &f{date}",
+                "&cBanned by: &f{by}",
+                "&cBanned at: &f{server}",
+                "&cUnban at: &f{expire}"
+            ]
+        },
+        "mute": {
+            "usage": "&fPlease use &a/mute (user) (reason)&f!",
+            "already-muted": "&fThis user is already muted!",
+            "broadcast": [
+                "&a{user} &fhas been permanently muted by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onmute": [
+                "&c&lBungeeUtilisals &8» &fYou have been permanently muted!",
+                "",
+                "&cReason: &f{reason}",
+                "&cMuted on: &f{date}",
+                "&cMuted by: &f{by}",
+                "&cMuted at: &f{server}",
+                "&cUnmute at: &fNever"
+            ]
+        },
+        "ipmute": {
+            "usage": "&fPlease use &a/ipmute (user / IP) (reason)&f!",
+            "already-muted": "&fThis user is already ipmuted!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been permanently ipmuted by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onmute": [
+                "&c&lBungeeUtilisals &8» &fYou have been permanently IPMuted!",
+                "",
+                "&cReason: &f{reason}",
+                "&cMuted on: &f{date}",
+                "&cMuted by: &f{by}",
+                "&cMuted at: &f{server}",
+                "&cUnmute at: &fNever"
+            ]
+        },
+        "tempmute": {
+            "usage": "&fPlease use &a/tempmute (user) (timeformat) (reason)&f!",
+            "already-muted": "&fThis user is already tempmuted!",
+            "non-valid": "&fPlease enter a valid time format!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been temporary muted by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}",
+                "&fExpires at: &e{expire}"
+            ],
+            "onmute": [
+                "&c&lBungeeUtilisals &8» &fYou have been temporary muted!",
+                "",
+                "&cReason: &f{reason}",
+                "&cMuted on: &f{date}",
+                "&cMuted by: &f{by}",
+                "&cMuted at: &f{server}",
+                "&cUnmute at: &f{expire}"
+            ]
+        },
+        "iptempmute": {
+            "usage": "&fPlease use &a/iptempmute (user / IP) (timeformat) (reason)&f!",
+            "already-muted": "&fThis user is already iptempmuted!",
+            "non-valid": "&fPlease enter a valid time format!",
+            "broadcast": [
+                "&a{user} (&f{ip}&a) &fhas been temporary ipmuted by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}",
+                "&fExpires at: &e{expire}"
+            ],
+            "onmute": [
+                "&c&lBungeeUtilisals &8» &fYou have been temporary ipmuted!",
+                "",
+                "&cReason: &f{reason}",
+                "&cMuted on: &f{date}",
+                "&cMuted by: &f{by}",
+                "&cMuted at: &f{server}",
+                "&cUnmute at: &f{expire}"
+            ]
+        },
+        "kick": {
+            "usage": "&fPlease use &a/kick (user) (reason)&f!",
+            "already-muted": "&fThis user is already muted!",
+            "broadcast": [
+                "&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onkick": [
+                "&c&lBungeeUtilisals &8» &fYou have been kicked!",
+                "",
+                "&cReason: &f{reason}",
+                "&cKicked on: &f{date}",
+                "&cKicked by: &f{by}",
+                "&cKicked at: &f{server}"
+            ]
+        },
+        "warn": {
+            "usage": "&fPlease use &a/warn (user) (reason)&f!",
+            "already-muted": "&fThis user is already muted!",
+            "broadcast": [
+                "&a{user} &fhas been warned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onwarn": [
+                "&c&lBungeeUtilisals &8» &fYou have been warned!",
+                "",
+                "&cReason: &f{reason}",
+                "&cWarned on: &f{date}",
+                "&cWarned by: &f{by}",
+                "&cWarned at: &f{server}"
             ]
         }
     }

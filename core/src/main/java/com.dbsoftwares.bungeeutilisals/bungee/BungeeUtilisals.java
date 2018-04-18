@@ -6,28 +6,37 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.BanCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.IPBanCommand;
-import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.TempBanCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.*;
+import com.dbsoftwares.bungeeutilisals.bungee.executors.MuteCheckExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
+import com.dbsoftwares.bungeeutilisals.bungee.executors.UserPunishExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.bungee.library.Library;
@@ -35,15 +44,20 @@ import com.dbsoftwares.bungeeutilisals.bungee.library.classloader.LibraryClassLo
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
-import com.dbsoftwares.bungeeutilisals.bungee.metrics.Metrics;
 import com.google.common.collect.Maps;
 import lombok.Getter;
+import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.protocol.Protocol;
+import net.md_5.bungee.protocol.ProtocolConstants;
+import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -111,23 +125,29 @@ public class BungeeUtilisals extends Plugin {
 
         IEventLoader loader = api.getEventLoader();
 
-        UserExecutor userExecutor = new UserExecutor();
-        loader.register(UserLoadEvent.class, userExecutor::onLoad);
-        loader.register(UserUnloadEvent.class, userExecutor::onUnload);
+        loader.register(UserLoadEvent.class, new UserExecutor());
 
-        UserChatExecutor userChatExecutor = new UserChatExecutor(api.getChatManager());
-        loader.register(UserChatEvent.class, userChatExecutor::onSwearChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
-        loader.register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
-        loader.register(UserChatEvent.class, userChatExecutor::onCapsChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onSpamChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
+        UserChatExecutor chatExecutor = new UserChatExecutor(api.getChatManager());
+        loader.register(UserChatEvent.class, chatExecutor);
+        loader.register(UserChatPreExecuteEvent.class, chatExecutor);
+
+        MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
+        loader.register(UserChatEvent.class, muteCheckExecutor);
+        loader.register(UserCommandEvent.class, muteCheckExecutor);
+        loader.register(UserPunishEvent.class, new UserPunishExecutor());
 
         new PluginCommand();
         if (getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
             new BanCommand();
             new IPBanCommand();
             new TempBanCommand();
+            new IPTempBanCommand();
+            new MuteCommand();
+            new IPMuteCommand();
+            new TempMuteCommand();
+            new IPTempMuteCommand();
+            new KickCommand();
+            new WarnCommand();
         }
     }
 
@@ -160,7 +180,7 @@ public class BungeeUtilisals extends Plugin {
         libraryClassLoader = new LibraryClassLoader(this);
 
         for (Library library : Library.values()) {
-            if (!library.isPresent()) {
+            if (library.shouldBeLoaded() && !library.isPresent()) {
                 library.load();
             }
         }
@@ -188,18 +208,56 @@ public class BungeeUtilisals extends Plugin {
         /*  EXAMPLES:
 
             Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
-            Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, PacketPlayInCloseWindow.class);
 
             Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, PacketPlayOutOpenWindow.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, PacketPlayOutWindowItems.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, PacketPlayOutSetSlot.class);
         */
+
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
+                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
+                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
 
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor::onPacketUpdate);
-        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor::onPacketReceive);
+        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
+        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
+
+        api.getEventLoader().register(PacketUpdateEvent.class, new EventExecutor() {
+
+            @Event
+            public void onPacketUpdate(PacketUpdateEvent event) {
+                System.out.println(event.getPacket().toString() + " update for " + event.getPlayer().getName());
+            }
+
+        });
+
+        api.getEventLoader().register(UserLoadEvent.class, new EventExecutor() {
+
+            @Event
+            public void onLoad(UserLoadEvent event) {
+                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, () -> {
+                    BossBar bar = new BossBar(BarColor.YELLOW, BarStyle.SOLID, 0.1F, Utils.c("&b&lBungeeUtilisals FTW :D"));
+                    bar.addUser(event.getUser());
+
+                    BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, new Runnable() {
+
+                        float progress = 0.1F;
+
+                         @Override
+                        public void run() {
+                            progress += 0.1F;
+                            if (progress > 1.0F) {
+                                progress = 0.0F;
+                            }
+
+                            bar.setProgress(progress);
+                            bar.setMessage(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D");
+                        }
+
+                    }, 2, 2, java.util.concurrent.TimeUnit.SECONDS);
+                }, 5000, TimeUnit.MILLISECONDS);
+            }
+
+        });
     }
 }

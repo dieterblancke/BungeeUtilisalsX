@@ -5,7 +5,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import com.google.common.collect.Lists;
 
 import java.util.Date;
@@ -16,172 +15,172 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public boolean isBanned(UUID uuid) {
-        return SQLStatements.isBanPresent(uuid, true);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isBanPresent(uuid, true);
     }
 
     @Override
     public boolean isTempBanned(UUID uuid) {
-        return SQLStatements.isTempbanPresent(uuid, true);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempBanPresent(uuid, true);
     }
 
     @Override
     public boolean isIPBanned(String IP) {
-        return SQLStatements.isIPBanPresent(IP, true);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPBanPresent(IP, true);
     }
 
     @Override
     public boolean isIPTempBanned(String IP) {
-        return false;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPTempBanPresent(IP, true);
     }
 
     @Override
     public boolean isMuted(UUID uuid) {
-        return false;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isMutePresent(uuid, true);
     }
 
     @Override
     public boolean isTempMuted(UUID uuid) {
-        return false;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempMutePresent(uuid, true);
     }
 
     @Override
     public boolean isIPMuted(String IP) {
-        return false;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPMutePresent(IP, true);
     }
 
     @Override
     public boolean isIPTempMuted(String IP) {
-        return false;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPTempMutePresent(IP, true);
     }
 
     @Override
     public PunishmentInfo addBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return SQLStatements.insertIntoBans(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoBans(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addTempBan(UUID uuid, String name, String IP, long removeTime, String reason, String server, String executor) {
-        return SQLStatements.insertIntoTempBans(uuid.toString(), name, IP, removeTime, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoTempBans(uuid.toString(), name, IP, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return SQLStatements.insertIntoIPBans(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPBans(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPTempBan(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPTempBans(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoMutes(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPMutes(uuid.toString(), name, IP, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addKick(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoKicks(uuid.toString(), user, ip, reason, server, executor);
     }
 
     @Override
     public PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoWarns(uuid.toString(), user, ip, reason, server, executor);
     }
 
     @Override
     public PunishmentInfo getBan(UUID uuid) {
-        return SQLStatements.getBan(uuid);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getBan(uuid);
     }
 
     @Override
     public PunishmentInfo getTempBan(UUID uuid) {
-        return SQLStatements.getTempban(uuid);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getTempBan(uuid);
     }
 
     @Override
     public PunishmentInfo getIPBan(String IP) {
-        return SQLStatements.getIPBan(IP);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPBan(IP);
     }
 
     @Override
     public PunishmentInfo getIPTempBan(String IP) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPTempBan(IP);
     }
 
     @Override
     public PunishmentInfo getMute(UUID uuid) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getMute(uuid);
     }
 
     @Override
     public PunishmentInfo getTempMute(UUID uuid) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getTempMute(uuid);
     }
 
     @Override
     public PunishmentInfo getIPMute(String IP) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPMute(IP);
     }
 
     @Override
     public PunishmentInfo getIPTempMute(String IP) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPTempMute(IP);
     }
 
     @Override
     public void removeBan(UUID uuid) {
-        SQLStatements.removeBan(uuid);
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeBan(uuid);
     }
 
     @Override
     public void removeTempBan(UUID uuid) {
-        SQLStatements.removeTempBan(uuid);
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeTempBan(uuid);
     }
 
     @Override
     public void removeIPBan(String IP) {
-        SQLStatements.removeIPBan(IP);
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeIPBan(IP);
     }
 
     @Override
     public void removeIPTempBan(String IP) {
-
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeIPTempBan(IP);
     }
 
     @Override
     public void removeMute(UUID uuid) {
-
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeMute(uuid);
     }
 
     @Override
     public void removeTempMute(UUID uuid) {
-
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeTempMute(uuid);
     }
 
     @Override
     public void removeIPMute(String IP) {
-
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeIPMute(IP);
     }
 
     @Override
     public void removeIPTempMute(String IP) {
-
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().removeIPTempMute(IP);
     }
 
     @Override

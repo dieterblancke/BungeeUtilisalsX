@@ -6,12 +6,14 @@ package com.dbsoftwares.bungeeutilisals.api.punishments;
  * Project: BungeeUtilisals
  */
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Data
+@Builder
 public class PunishmentInfo {
 
     private PunishmentType type;

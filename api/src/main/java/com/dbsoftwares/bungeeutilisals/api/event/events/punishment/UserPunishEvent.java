@@ -7,12 +7,16 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.punishment;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +32,10 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     private String reason;
     private String executionServer;
     private Long expire;
+    private Date date = new Date(System.currentTimeMillis());
 
+    @Getter
+    @Setter
     private boolean cancelled = false;
 
     public UserPunishEvent(PunishmentType type, User executor, UUID uuid, String name, String ip, String reason, String executionServer, Long expire) {
@@ -40,6 +47,12 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
         this.reason = reason;
         this.executionServer = executionServer;
         this.expire = expire;
+    }
+
+    public PunishmentInfo getInfo() {
+        return PunishmentInfo.builder().uuid(UUID).user(name).IP(ip).reason(reason)
+                .server(executionServer).date(date).active(true).executedBy(executor.getName())
+                .expireTime(expire).removedBy(null).type(type).build();
     }
 
     public boolean isActivatable() {
@@ -54,13 +67,19 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
         return getApi().getUser(name);
     }
 
-    @Override
-    public boolean isCancelled() {
-        return cancelled;
+    public boolean isMute() {
+        return type.toString().contains("MUTE");
     }
 
-    @Override
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
+    public boolean isBan() {
+        return type.toString().contains("BAN");
+    }
+
+    public boolean isKick() {
+        return type.equals(PunishmentType.KICK);
+    }
+
+    public boolean isWarn() {
+        return type.equals(PunishmentType.WARN);
     }
 }

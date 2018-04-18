@@ -12,18 +12,17 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.storage.SQLStatements;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -35,6 +34,7 @@ public class BUser implements User {
     private ExperimentalUser experimental;
     private UserCooldowns cooldowns;
     private UserStorage storage;
+    private PunishmentInfo mute;
 
     @Override
     public void load(UserPreLoadEvent event) {
@@ -46,19 +46,29 @@ public class BUser implements User {
         this.cooldowns = new UserCooldowns();
 
         BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
-        if (SQLStatements.isUserPresent(p.getUniqueId())) {
-            storage = SQLStatements.getUser(p.getUniqueId());
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(p.getUniqueId())) {
+            storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(p.getUniqueId());
         } else {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            SQLStatements.insertIntoUsers(p.getUniqueId().toString(), p.getName(), Utils.getIP(p.getAddress()),
-                    BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
+            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoUsers(p.getUniqueId().toString(),
+                    p.getName(), Utils.getIP(p.getAddress()), BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
             storage = new UserStorage();
             storage.setDefaultsFor(p);
         }
 
         if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
             storage.setUserName(player);
-            SQLStatements.updateUser(p.getUniqueId().toString(), player, null, null);
+            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(p.getUniqueId().toString(), player, null, null);
+        }
+
+        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isMutePresent(p.getUniqueId(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getMute(p.getUniqueId());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempMutePresent(p.getUniqueId(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getTempMute(p.getUniqueId());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPMutePresent(getIP(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPMute(getIP());
+        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPTempMutePresent(getIP(), true)) {
+            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPTempMute(getIP());
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);
@@ -78,7 +88,7 @@ public class BUser implements User {
     public void save() {
         BUCore.getApi().getDebugger().debug("Saving data for %s!", player);
 
-        SQLStatements.updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
     }
 
     @Override
@@ -179,12 +189,35 @@ public class BUser implements User {
 
     @Override
     public void kick(String reason) {
-        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(buildComponent(reason)));
+        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(Utils.format(reason)));
+    }
+
+    @Override
+    public void langKick(String path, Object... placeholders) {
+        if (getLanguageConfig().isList(path)) {
+            StringBuilder builder = new StringBuilder();
+
+            for (String message : getLanguageConfig().getStringList(path)) {
+                for (int i = 0; i < placeholders.length - 1; i += 2) {
+                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+                }
+
+                builder.append(message).append("\n");
+            }
+            kick(builder.toString());
+        } else {
+            String message = getLanguageConfig().getString(path);
+            for (int i = 0; i < placeholders.length - 1; i += 2) {
+                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+            }
+
+            kick(message);
+        }
     }
 
     @Override
     public void forceKick(String reason) {
-        getParent().disconnect(buildComponent(reason));
+        getParent().disconnect(Utils.format(reason));
     }
 
     @Override
@@ -232,14 +265,13 @@ public class BUser implements User {
         return getParent().getServer().getInfo().getName();
     }
 
-    private BaseComponent[] buildComponent(String... text) {
-        ComponentBuilder builder = new ComponentBuilder("");
-        if (text == null || text.length == 0) {
-            return builder.create();
-        }
-        for (String aText : text) {
-            builder.append(Utils.format(aText));
-        }
-        return builder.create();
+    @Override
+    public boolean isMuted() {
+        return mute != null;
+    }
+
+    @Override
+    public PunishmentInfo getMuteInfo() {
+        return mute;
     }
 }

@@ -3,6 +3,7 @@ package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import net.md_5.bungee.api.CommandSender;
@@ -129,6 +130,14 @@ public interface User {
     void kick(String reason);
 
     /**
+     * Kicks user with message from language file.
+     *
+     * @param path         Path in language file.
+     * @param placeholders Placeholders to be replaced.
+     */
+    void langKick(String path, Object... placeholders);
+
+    /**
      * Kicks the User with a certain reason.
      *
      * @param reason The reason of the kick.
@@ -182,4 +191,21 @@ public interface User {
      * @return the name of the server the user is in, returns BUNGEE in case of Console.
      */
     String getServerName();
+
+    /**
+     * @return true if user is muted, false if not.
+     */
+    boolean isMuted();
+
+    /**
+     * @return PunishmentInfo of current mute (if muted), null if not muted.
+     */
+    PunishmentInfo getMuteInfo();
+
+    /**
+     * Sets the user mute data in local cache.
+     *
+     * @param info The info to be stored.
+     */
+    void setMute(PunishmentInfo info);
 }
