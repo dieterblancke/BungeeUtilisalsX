@@ -11,6 +11,9 @@ public class ExperimentalUser implements IExperimentalUser {
 
     @Override
     public void sendPacket(Packet packet) {
+        if (user.getParent() == null || !user.getParent().isConnected()) {
+            return;
+        }
         user.getParent().unsafe().sendPacket(packet);
     }
 }
