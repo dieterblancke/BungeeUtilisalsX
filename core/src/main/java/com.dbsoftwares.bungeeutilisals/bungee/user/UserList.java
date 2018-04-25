@@ -21,7 +21,7 @@ public class UserList implements UserCollection {
 
     @Override
     public Optional<User> fromPlayer(ProxiedPlayer player) {
-        return stream().filter(user -> user.getName().equalsIgnoreCase(player.getName())).findFirst();
+        return fromName(player.getName());
     }
 
     @Override
@@ -43,11 +43,11 @@ public class UserList implements UserCollection {
     }
 
     @Override
-    public boolean contains(Object o) {
-        if (o instanceof User) {
-            return map.containsValue(o) || map.containsKey(((User) o).getName());
+    public boolean contains(Object obj) {
+        if (obj instanceof User) {
+            return map.containsValue(obj) || map.containsKey(((User) obj).getName());
         } else {
-            return o instanceof String && map.containsKey(o);
+            return obj instanceof String && map.containsKey(obj);
         }
     }
 
@@ -65,31 +65,33 @@ public class UserList implements UserCollection {
         return map.values().toArray();
     }
 
+    @Override
     @SuppressWarnings("unchecked")
     public User[] toTypeArray() {
         return (User[]) toArray();
     }
 
+    @Override
     public String[] toNameArray() {
         return map.keySet().toArray(new String[]{});
     }
 
     @Override
-    public <T> T[] toArray(T[] a) {
-        return map.values().toArray(a);
+    public <T> T[] toArray(T[] array) {
+        return map.values().toArray(array);
     }
 
     @Override
-    public boolean add(User u) {
-        return this.map.putIfAbsent(u.getName(), u) == null;
+    public boolean add(User user) {
+        return this.map.putIfAbsent(user.getName(), user) == null;
     }
 
     @Override
-    public boolean remove(Object o) {
-        if (o instanceof User) {
-            return map.remove(((User) o).getName()) != null;
+    public boolean remove(Object obj) {
+        if (obj instanceof User) {
+            return map.remove(((User) obj).getName()) != null;
         } else {
-            return o instanceof String && map.remove(o) != null;
+            return obj instanceof String && map.remove(obj) != null;
         }
     }
 
@@ -99,28 +101,24 @@ public class UserList implements UserCollection {
     }
 
     @Override
-    public boolean addAll(Collection<? extends User> c) {
-        Boolean added = false;
-        for (User e : c) {
-            if (!contains(e)) {
-                if (!added) {
-                    added = add(e);
-                } else {
-                    add(e);
-                }
+    public boolean addAll(Collection<? extends User> userColl) {
+        int addedAmount = 0;
+        for (User user : userColl) {
+            if (!contains(user) && add(user)) {
+                addedAmount++;
             }
         }
-        return added;
+        return addedAmount > 0;
     }
 
     @Override
-    public boolean removeAll(Collection<?> c) {
-        return removeIf(c::contains);
+    public boolean removeAll(Collection<?> userColl) {
+        return removeIf(userColl::contains);
     }
 
     @Override
-    public boolean retainAll(Collection<?> c) {
-        return removeIf(value -> !c.contains(value));
+    public boolean retainAll(Collection<?> userColl) {
+        return removeIf(value -> !userColl.contains(value));
     }
 
     @Override

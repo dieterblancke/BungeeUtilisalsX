@@ -20,4 +20,13 @@ public interface UserCollection extends Serializable, Collection<User> {
      */
     Optional<User> fromPlayer(ProxiedPlayer player);
 
+    /**
+     * @return Same as toArray but with User type specified
+     */
+    User[] toTypeArray();
+
+    /**
+     * @return An array of names of the users in the list.
+     */
+    String[] toNameArray();
 }

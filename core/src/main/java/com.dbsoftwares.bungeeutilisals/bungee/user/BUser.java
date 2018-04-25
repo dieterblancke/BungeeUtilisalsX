@@ -26,6 +26,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.Objects;
+
 @Data
 public class BUser implements User {
 
@@ -273,5 +275,26 @@ public class BUser implements User {
     @Override
     public PunishmentInfo getMuteInfo() {
         return mute;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
+
+        BUser user = (BUser) o;
+        return user.getPlayer().equalsIgnoreCase(getPlayer()) && user.getIdentifier().equalsIgnoreCase(getIdentifier());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(player, getIdentifier());
     }
 }

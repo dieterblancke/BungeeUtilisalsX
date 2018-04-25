@@ -1,6 +1,10 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarFlag;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -14,6 +18,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Debugger;
 import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
@@ -21,12 +26,14 @@ import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.bungee.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 
 public class BUtilisalsAPI implements BUAPI {
 
@@ -172,5 +179,37 @@ public class BUtilisalsAPI implements BUAPI {
     public void langBroadcast(String message, String permission, Object... placeholders) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
         getConsole().sendLangMessage(message, placeholders);
+    }
+
+    @Override
+    public IBossBar createBossBar() {
+        return new BossBar();
+    }
+
+    @Override
+    @Deprecated
+    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message) {
+        return new BossBar(color, style, progress, message);
+    }
+
+    @Override
+    @Deprecated
+    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message) {
+        return new BossBar(uuid, color, style, progress, message);
+    }
+
+    @Override
+    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message) {
+        return new BossBar(color, style, progress, message);
+    }
+
+    @Override
+    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
+        return new BossBar(uuid, color, style, progress, message);
+    }
+
+    @Override
+    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message, BarFlag flag) {
+        return new BossBar(uuid, color, style, progress, message, flag);
     }
 }

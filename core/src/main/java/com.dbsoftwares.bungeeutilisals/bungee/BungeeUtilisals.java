@@ -6,9 +6,11 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarFlag;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
@@ -57,6 +59,7 @@ import org.bstats.bungeecord.Metrics;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
@@ -222,40 +225,44 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
         api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
 
-        api.getEventLoader().register(PacketUpdateEvent.class, new EventExecutor() {
-
-            @Event
-            public void onPacketUpdate(PacketUpdateEvent event) {
-                System.out.println(event.getPacket().toString() + " update for " + event.getPlayer().getName());
-            }
-
-        });
-
         api.getEventLoader().register(UserLoadEvent.class, new EventExecutor() {
 
             @Event
             public void onLoad(UserLoadEvent event) {
-                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, () -> {
-                    BossBar bar = new BossBar(BarColor.YELLOW, BarStyle.SOLID, 0.1F, Utils.c("&b&lBungeeUtilisals FTW :D"));
-                    bar.addUser(event.getUser());
+                IBossBar bar = BUCore.getApi().createBossBar(UUID.randomUUID(), BarColor.PURPLE, BarStyle.TWELVE_SEGMENTS,
+                        0.1F, Utils.format("&e&lBungeeUtilisals FTW :D"), BarFlag.CREATE_FOG);
 
-                    BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, new Runnable() {
+                bar.addUser(event.getUser());
 
-                        float progress = 0.1F;
+                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, new Runnable() {
 
-                         @Override
-                        public void run() {
-                            progress += 0.1F;
-                            if (progress > 1.0F) {
-                                progress = 0.0F;
-                            }
+                    float progress = 0.1F;
 
-                            bar.setProgress(progress);
-                            bar.setMessage(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D");
+                    @Override
+                    public void run() {
+                        progress += 0.1F;
+                        if (progress > 1.0F) {
+                            progress = 0.0F;
                         }
 
-                    }, 2, 2, java.util.concurrent.TimeUnit.SECONDS);
-                }, 5000, TimeUnit.MILLISECONDS);
+                        bar.setProgress(progress);
+                        bar.setMessage(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D");
+                    }
+
+                }, 1, 1, java.util.concurrent.TimeUnit.SECONDS);
+
+                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, () -> {
+                    if (bar.getFlag().equals(BarFlag.PLAY_BOSS_MUSIC)) {
+                        bar.setFlag(BarFlag.CREATE_FOG);
+                        ProxyServer.getInstance().broadcast("Changing to CREATE_FOG");
+                    } else if (bar.getFlag().equals(BarFlag.CREATE_FOG)) {
+                        bar.setFlag(BarFlag.DARKEN_SKY);
+                        ProxyServer.getInstance().broadcast("Changing to DARKEN_SKY");
+                    } else {
+                        bar.setFlag(BarFlag.PLAY_BOSS_MUSIC);
+                        ProxyServer.getInstance().broadcast("Changing to PLAY_BOSS_MUSIC");
+                    }
+                }, 10, 15, TimeUnit.SECONDS);
             }
 
         });
