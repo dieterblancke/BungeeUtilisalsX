@@ -24,12 +24,15 @@ public abstract class AbstractStorageManager {
 
     @Getter
     private static AbstractStorageManager manager;
+
     @Getter
     private Plugin plugin;
+
     @Getter
     private StorageType type;
+
     @Getter
-    DataManager dataManager;
+    private DataManager dataManager;
 
     public AbstractStorageManager(Plugin plugin, StorageType type, DataManager dataManager) {
         manager = this;
