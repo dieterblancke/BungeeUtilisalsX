@@ -95,12 +95,12 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo addKick(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoKicks(uuid.toString(), user, ip, reason, server, executor);
     }
 
     @Override
     public PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return null;
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoWarns(uuid.toString(), user, ip, reason, server, executor);
     }
 
     @Override

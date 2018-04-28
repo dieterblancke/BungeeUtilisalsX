@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.event.interfaces;
+package com.dbsoftwares.bungeeutilisals.api.event.event;
 
 import lombok.NonNull;
 
@@ -14,7 +14,7 @@ public interface IEventLoader {
      * @param <T> The event class.
      * @return An eventexecutor instance.
      */
-    <T extends BUEvent> EventHandler<T> register(@NonNull Class<T> clazz, @NonNull EventExecutor<T> executor);
+    <T extends BUEvent> Set<EventHandler<T>> register(@NonNull Class<T> clazz, @NonNull EventExecutor executor);
 
     /**
      * Unregisters a certain EventHandler.
@@ -25,7 +25,7 @@ public interface IEventLoader {
     /**
      * Gets a set of all registered handlers for a given event.
      *
-     * @param eventClass The event to find handlers for.
+     * @param eventClass The event to find< handlers for.
      * @param <T> The event class.
      * @return An immutable set of event handlers.
      */

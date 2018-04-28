@@ -71,14 +71,6 @@ public class MongoDBStorageManagerTest {
         mapping.put("ip", "127.0.0.1");
         mapping.put("language", "en_US");
 
-// testing map in map structure | working
-//        Map<String, Object> settingsMap = Maps.newHashMap();
-//        settingsMap.put("key1", "value1");
-//        settingsMap.put("key2", 2);
-//        settingsMap.put("key3", "value3");
-//
-//        mapping.put("settingsMap", settingsMap);
-
         return mapping;
     }
 
