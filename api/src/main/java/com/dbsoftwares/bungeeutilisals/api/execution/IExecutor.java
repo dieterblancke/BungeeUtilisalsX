@@ -16,6 +16,7 @@ public interface IExecutor {
 
     /**
      * Executes a,n async delayed simple job. Can be anything.
+     * @param delay Time, in seconds, untill execution.
      * @param executor The job you want to execute async delayed.
      */
     void delayedExecute(int delay, SimpleJob executor);

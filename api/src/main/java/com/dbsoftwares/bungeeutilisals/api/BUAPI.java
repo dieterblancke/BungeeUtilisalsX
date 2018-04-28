@@ -103,6 +103,7 @@ public interface BUAPI {
 
     /**
      * @return A new ProxyConnection instance.
+     * @throws SQLException When an error occurs trying to setup the connection.
      */
     Connection getConnection() throws SQLException;
 
@@ -175,7 +176,7 @@ public interface BUAPI {
      *
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
-     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
      * @param message  The display message of the BossBar (String)
      * @return a new BossBar instance.
      */
@@ -188,7 +189,7 @@ public interface BUAPI {
      * @param uuid     UUID for the BossBar, should be unique!
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
-     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
      * @param message  The display message of the BossBar (String)
      * @return a new BossBar instance.
      */
@@ -198,7 +199,7 @@ public interface BUAPI {
     /**
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
-     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
      * @param message  The display message of the BossBar (BaseComponent)
      * @return a new BossBar instance.
      */
@@ -208,7 +209,7 @@ public interface BUAPI {
      * @param uuid     UUID for the BossBar, should be unique!
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
-     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
      * @param message  The display message of the BossBar (BaseComponent)
      * @return a new BossBar instance.
      */

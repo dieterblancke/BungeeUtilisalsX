@@ -88,17 +88,17 @@ public interface User {
     void sendMessage(String message);
 
     /**
-     * Searches a message in the user's language configuration & sends that message.
+     * Searches a message in the user's language configuration and sends that message.
      *
      * @param path The path to the message in the language file.
      */
     void sendLangMessage(String path);
 
     /**
-     * Searches a message in the user's language configuration & sends that message formatted with placeholders.
+     * Searches a message in the user's language configuration and sends that message formatted with placeholders.
      *
      * @param path         The path to the message in the language file.
-     * @param placeholders The placeholders & their values (placeholder on odd place, value on even place behind placeholder)
+     * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
     void sendLangMessage(String path, Object... placeholders);
 

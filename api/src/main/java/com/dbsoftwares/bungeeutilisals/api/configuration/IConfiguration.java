@@ -119,7 +119,7 @@ public interface IConfiguration extends ISection {
     }
 
     /**
-     * Gets the default (built in) class for Json & Yaml file management.
+     * Gets the default (built in) class for Json and Yaml file management.
      *
      * @param type JSON or YAML type.
      * @return The default BungeeUtilisals management for these classes.

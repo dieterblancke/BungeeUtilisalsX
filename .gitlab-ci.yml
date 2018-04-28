@@ -7,4 +7,5 @@ build:
     expire_in: 6 mos
     paths:
       - "builds/api/BungeeUtilisals API.jar"
+      - "builds/api/apidocs/*"
       - "builds/core/BungeeUtilisals.jar"
