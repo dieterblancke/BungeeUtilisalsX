@@ -2,7 +2,6 @@ package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarFlag;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
@@ -206,10 +205,5 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
         return new BossBar(uuid, color, style, progress, message);
-    }
-
-    @Override
-    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message, BarFlag flag) {
-        return new BossBar(uuid, color, style, progress, message, flag);
     }
 }

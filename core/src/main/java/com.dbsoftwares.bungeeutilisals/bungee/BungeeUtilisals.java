@@ -8,7 +8,6 @@ package com.dbsoftwares.bungeeutilisals.bungee;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarFlag;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
@@ -208,13 +207,6 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void registerExperimentalFeatures() {
-        /*  EXAMPLES:
-
-            Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
-
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
-        */
-
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));
@@ -230,7 +222,7 @@ public class BungeeUtilisals extends Plugin {
             @Event
             public void onLoad(UserLoadEvent event) {
                 IBossBar bar = BUCore.getApi().createBossBar(UUID.randomUUID(), BarColor.PURPLE, BarStyle.TWELVE_SEGMENTS,
-                        0.1F, Utils.format("&e&lBungeeUtilisals FTW :D"), BarFlag.CREATE_FOG);
+                        0.1F, Utils.format("&e&lBungeeUtilisals FTW :D"));
 
                 bar.addUser(event.getUser());
 
@@ -246,23 +238,10 @@ public class BungeeUtilisals extends Plugin {
                         }
 
                         bar.setProgress(progress);
-                        bar.setMessage(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D");
+                        bar.setMessage(Utils.format(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D"));
                     }
 
-                }, 1, 1, java.util.concurrent.TimeUnit.SECONDS);
-
-                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, () -> {
-                    if (bar.getFlag().equals(BarFlag.PLAY_BOSS_MUSIC)) {
-                        bar.setFlag(BarFlag.CREATE_FOG);
-                        ProxyServer.getInstance().broadcast("Changing to CREATE_FOG");
-                    } else if (bar.getFlag().equals(BarFlag.CREATE_FOG)) {
-                        bar.setFlag(BarFlag.DARKEN_SKY);
-                        ProxyServer.getInstance().broadcast("Changing to DARKEN_SKY");
-                    } else {
-                        bar.setFlag(BarFlag.PLAY_BOSS_MUSIC);
-                        ProxyServer.getInstance().broadcast("Changing to PLAY_BOSS_MUSIC");
-                    }
-                }, 10, 15, TimeUnit.SECONDS);
+                }, 1, 1, TimeUnit.SECONDS);
             }
 
         });

@@ -7,7 +7,10 @@ package com.dbsoftwares.bungeeutilisals.bungee.api.bossbar;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.*;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBarAction;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
@@ -32,7 +35,6 @@ public class BossBar implements IBossBar {
     private float progress;
     private BaseComponent[] message;
     private boolean visible;
-    private BarFlag flag;
 
     private UserCollection users;
     private Set<EventHandler<UserUnloadEvent>> eventHandlers; // Should only contain ONE EventHandler
@@ -56,10 +58,6 @@ public class BossBar implements IBossBar {
     }
 
     public BossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
-        this(uuid, color, style, progress, message, null);
-    }
-
-    public BossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message, BarFlag flag) {
         this.uuid = uuid;
         this.color = color;
         this.style = style;
@@ -67,8 +65,6 @@ public class BossBar implements IBossBar {
         this.message = message;
         this.visible = true;
         this.users = BUCore.getApi().newUserCollection();
-        this.flag = flag;
-
         this.eventHandlers = BUCore.getApi().getEventLoader().register(UserUnloadEvent.class, new BossBarListener());
     }
 
@@ -79,11 +75,7 @@ public class BossBar implements IBossBar {
         PacketPlayOutBossBar packet;
 
         if (visible) {
-            if (flag == null) {
-                packet = new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style);
-            } else {
-                packet = new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style, flag.getId());
-            }
+            packet = new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style);
         } else {
             packet = new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE);
         }
@@ -135,11 +127,7 @@ public class BossBar implements IBossBar {
         if (!users.contains(user)) {
             users.add(user);
 
-            if (flag == null) {
-                user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style));
-            } else {
-                user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style, flag.getId()));
-            }
+            user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style));
         }
     }
 
@@ -160,13 +148,6 @@ public class BossBar implements IBossBar {
     @Override
     public void unregister() {
         eventHandlers.forEach(EventHandler::unregister);
-    }
-
-    @Override
-    public void setFlag(BarFlag flag) {
-        this.flag = flag;
-
-        users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_FLAGS, flag.getId())));
     }
 
     private class BossBarListener implements EventExecutor {

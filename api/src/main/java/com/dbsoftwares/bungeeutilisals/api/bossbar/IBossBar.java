@@ -35,10 +35,6 @@ public interface IBossBar {
 
     void setVisible(boolean visible);
 
-    BarFlag getFlag();
-
-    void setFlag(BarFlag flag);
-
     @Deprecated
     void setMessage(String title);
 

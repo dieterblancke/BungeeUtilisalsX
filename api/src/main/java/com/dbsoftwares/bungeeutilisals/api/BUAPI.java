@@ -7,7 +7,6 @@ package com.dbsoftwares.bungeeutilisals.api;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarFlag;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
@@ -214,15 +213,4 @@ public interface BUAPI {
      * @return a new BossBar instance.
      */
     IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message);
-
-    /**
-     * @param uuid     UUID for the BossBar, should be unique!
-     * @param color    Color of the BossBar.
-     * @param style    Amount of divisions in the BossBar.
-     * @param progress Progress of the BossBar, between 0.0 & 1.0.
-     * @param message  The display message of the BossBar (BaseComponent)
-     * @param flag     The flag this bar should have.
-     * @return a new BossBar instance.
-     */
-    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message, BarFlag flag);
 }
