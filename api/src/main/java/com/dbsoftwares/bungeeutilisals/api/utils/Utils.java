@@ -299,32 +299,37 @@ public class Utils {
         return a.toString().split("/")[1].split(":")[0];
     }
 
-    /**
-     * Registers a packet.
-     *
-     * @param direction   The packet direction.
-     * @param id          The packet ID.
-     * @param packetClass The packet class.
-     * @return True if successfull, false if not.
-     */
-    public static boolean registerPacket(Protocol.DirectionData direction, int protocol, int id, Class<? extends DefinedPacket> packetClass) {
+    public static boolean  registerPacket(Protocol.DirectionData direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
         try {
             Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
 
-            Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class,
-                    Array.newInstance(protocolMap, 0).getClass());
-            Method map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
-            register.setAccessible(true);
-            map.setAccessible(true);
+            Object map = Array.newInstance(protocolMap, protocolMappings.length);
 
-            Object packetMap = Array.newInstance(protocolMap, 1);
-            Array.set(packetMap, 0, map.invoke(null, protocol, id));
-            register.invoke(direction, packetClass, packetMap);
+            for (int i = 0; i < protocolMappings.length; i++) {
+                Array.set(map, i, protocolMappings[i]);
+            }
+
+            Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class, map.getClass());
+            register.setAccessible(true);
+
+            register.invoke(direction, packetClass, (Object[]) map);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
+
+    public static Object createProtocolMapping(int protocol, int id) {
+        try {
+            Method map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
+            map.setAccessible(true);
+
+            return map.invoke(null, protocol, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -375,6 +380,7 @@ public class Utils {
 
     /**
      * Formats current date into a custom date format.
+     *
      * @param format The date format to be used.
      * @return a formatted date string.
      */
@@ -384,6 +390,7 @@ public class Utils {
 
     /**
      * Formats the given date into the following format: "dd-MM-yyyy kk:mm:ss"
+     *
      * @param date The date to be formatted.
      * @return a formatted date string.
      */
@@ -394,8 +401,9 @@ public class Utils {
 
     /**
      * Formats a given date into the given format.
+     *
      * @param format The date format to be used.
-     * @param date The date to be formatted.
+     * @param date   The date to be formatted.
      * @return a formatted date string.
      */
     public static String formatDate(String format, Date date) {

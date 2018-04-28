@@ -6,17 +6,29 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.*;
-import com.dbsoftwares.bungeeutilisals.api.event.interfaces.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
@@ -35,13 +47,19 @@ import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.google.common.collect.Maps;
 import lombok.Getter;
+import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.protocol.Protocol;
+import net.md_5.bungee.protocol.ProtocolConstants;
 import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -109,22 +127,15 @@ public class BungeeUtilisals extends Plugin {
 
         IEventLoader loader = api.getEventLoader();
 
-        UserExecutor userExecutor = new UserExecutor();
-        loader.register(UserLoadEvent.class, userExecutor::onLoad);
-        loader.register(UserUnloadEvent.class, userExecutor::onUnload);
+        loader.register(UserLoadEvent.class, new UserExecutor());
 
-        UserChatExecutor userChatExecutor = new UserChatExecutor(api.getChatManager());
-        loader.register(UserChatEvent.class, userChatExecutor::onSwearChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onUnicodeSymbol);
-        loader.register(UserChatPreExecuteEvent.class, userChatExecutor::onUnicodeReplace);
-        loader.register(UserChatEvent.class, userChatExecutor::onCapsChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onSpamChat);
-        loader.register(UserChatEvent.class, userChatExecutor::onAdChat);
+        UserChatExecutor chatExecutor = new UserChatExecutor(api.getChatManager());
+        loader.register(UserChatEvent.class, chatExecutor);
+        loader.register(UserChatPreExecuteEvent.class, chatExecutor);
 
         MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-        loader.register(UserChatEvent.class, muteCheckExecutor::onChat);
-        loader.register(UserCommandEvent.class, muteCheckExecutor::onCommand);
-
+        loader.register(UserChatEvent.class, muteCheckExecutor);
+        loader.register(UserCommandEvent.class, muteCheckExecutor);
         loader.register(UserPunishEvent.class, new UserPunishExecutor());
 
         new PluginCommand();
@@ -137,6 +148,8 @@ public class BungeeUtilisals extends Plugin {
             new IPMuteCommand();
             new TempMuteCommand();
             new IPTempMuteCommand();
+            new KickCommand();
+            new WarnCommand();
         }
     }
 
@@ -194,21 +207,43 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void registerExperimentalFeatures() {
-        /*  EXAMPLES:
-
-            Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
-            Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x08, PacketPlayInCloseWindow.class);
-
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x13, PacketPlayOutOpenWindow.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x14, PacketPlayOutWindowItems.class);
-            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x16, PacketPlayOutSetSlot.class);
-        */
+        Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
+                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
+                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));
 
         ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
 
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor::onPacketUpdate);
-        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor::onPacketReceive);
+        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
+        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
+
+        api.getEventLoader().register(UserLoadEvent.class, new EventExecutor() {
+
+            @Event
+            public void onLoad(UserLoadEvent event) {
+                IBossBar bar = BUCore.getApi().createBossBar(UUID.randomUUID(), BarColor.PURPLE, BarStyle.TWELVE_SEGMENTS,
+                        0.1F, Utils.format("&e&lBungeeUtilisals FTW :D"));
+
+                bar.addUser(event.getUser());
+
+                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, new Runnable() {
+
+                    float progress = 0.1F;
+
+                    @Override
+                    public void run() {
+                        progress += 0.1F;
+                        if (progress > 1.0F) {
+                            progress = 0.0F;
+                        }
+
+                        bar.setProgress(progress);
+                        bar.setMessage(Utils.format(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D"));
+                    }
+
+                }, 1, 1, TimeUnit.SECONDS);
+            }
+
+        });
     }
 }

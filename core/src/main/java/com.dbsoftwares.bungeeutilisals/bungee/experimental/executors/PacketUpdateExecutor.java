@@ -1,6 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.bungee.experimental.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.experimental.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketSendEvent;
@@ -8,8 +10,9 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class PacketUpdateExecutor {
+public class PacketUpdateExecutor implements EventExecutor {
 
+    @Event
     public void onPacketUpdate(PacketUpdateEvent event) {
         if (event.getSender() instanceof ServerConnection && event.getReciever() instanceof BungeeConnection) {
             PacketSendEvent packetEvent = new PacketSendEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReciever());
@@ -30,6 +33,7 @@ public class PacketUpdateExecutor {
         }
     }
 
+    @Event
     public void onPacketReceive(PacketReceiveEvent event) {
 
     }

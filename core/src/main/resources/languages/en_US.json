@@ -2,6 +2,7 @@
     "prefix": "&c&lBungeeUtilisals &8» ",
     "no-permission": "&cYou do not have the permission to do this!",
     "never-joined": "&fThat user never joined before!",
+    "offline": "&fThat user is not online!",
     "chat-protection": {
         "swear": "&fPlease do not swear!",
         "caps": "&fPlease do not use that much caps!",
@@ -152,6 +153,38 @@
                 "&cMuted by: &f{by}",
                 "&cMuted at: &f{server}",
                 "&cUnmute at: &f{expire}"
+            ]
+        },
+        "kick": {
+            "usage": "&fPlease use &a/kick (user) (reason)&f!",
+            "already-muted": "&fThis user is already muted!",
+            "broadcast": [
+                "&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onkick": [
+                "&c&lBungeeUtilisals &8» &fYou have been kicked!",
+                "",
+                "&cReason: &f{reason}",
+                "&cKicked on: &f{date}",
+                "&cKicked by: &f{by}",
+                "&cKicked at: &f{server}"
+            ]
+        },
+        "warn": {
+            "usage": "&fPlease use &a/warn (user) (reason)&f!",
+            "already-muted": "&fThis user is already muted!",
+            "broadcast": [
+                "&a{user} &fhas been warned by &a{by} &fat &a{server}&f!",
+                "&fReason: &e{reason}"
+            ],
+            "onwarn": [
+                "&c&lBungeeUtilisals &8» &fYou have been warned!",
+                "",
+                "&cReason: &f{reason}",
+                "&cWarned on: &f{date}",
+                "&cWarned by: &f{by}",
+                "&cWarned at: &f{server}"
             ]
         }
     }

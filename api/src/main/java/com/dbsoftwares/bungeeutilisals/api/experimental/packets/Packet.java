@@ -19,7 +19,7 @@ import java.util.Optional;
 
 public abstract class Packet extends DefinedPacket {
 
-    int id;
+    private int id;
 
     public Packet(int id) {
         this.id = id;
@@ -35,7 +35,7 @@ public abstract class Packet extends DefinedPacket {
 
     @Override
     public int hashCode() {
-        return 0;
+        return id;
     }
 
     @Override

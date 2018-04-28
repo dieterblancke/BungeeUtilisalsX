@@ -1,13 +1,13 @@
 <component name="libraryTable">
   <library name="Maven: net.md-5:bungeecord-native:1.12-SNAPSHOT">
     <CLASSES>
-      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180420.111019-63.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180315.111011-58.jar!/" />
     </CLASSES>
     <JAVADOC>
-      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180420.111019-63-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180315.111011-58-javadoc.jar!/" />
     </JAVADOC>
     <SOURCES>
-      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180420.111019-63-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/net/md-5/bungeecord-native/1.12-SNAPSHOT/bungeecord-native-1.12-20180315.111011-58-sources.jar!/" />
     </SOURCES>
   </library>
 </component>

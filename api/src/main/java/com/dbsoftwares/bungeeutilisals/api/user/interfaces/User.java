@@ -130,6 +130,14 @@ public interface User {
     void kick(String reason);
 
     /**
+     * Kicks user with message from language file.
+     *
+     * @param path         Path in language file.
+     * @param placeholders Placeholders to be replaced.
+     */
+    void langKick(String path, Object... placeholders);
+
+    /**
      * Kicks the User with a certain reason.
      *
      * @param reason The reason of the kick.
