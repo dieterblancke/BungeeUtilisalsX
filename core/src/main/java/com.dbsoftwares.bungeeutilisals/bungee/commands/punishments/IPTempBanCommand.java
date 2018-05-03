@@ -70,6 +70,8 @@ public class IPTempBanCommand extends Command {
             banned.kick(kick);
         });
 
+        user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.iptempban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

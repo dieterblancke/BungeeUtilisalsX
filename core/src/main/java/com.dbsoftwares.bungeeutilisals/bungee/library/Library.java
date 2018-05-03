@@ -40,7 +40,7 @@ public enum Library {
             "https://oss.sonatype.org/content/repositories/releases/org/mongodb/mongo-java-driver/3.6.3/mongo-java-driver-3.6.3.jar",
             checkType("MONGODB")
     ),
-    SLF4J( // used for Hikari
+    SLF4J( // required for Hikari
             "org.slf4j.LogginFactory",
             "http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")

@@ -144,6 +144,9 @@ public class MongoDataManager implements DataManager {
 
     @Override
     public boolean isUserPresent(String name) {
+        if (name.contains(".")) {
+            return getDatabase().getCollection(format("{users-table}")).find(Filters.eq("ip", name)).iterator().hasNext();
+        }
         return getDatabase().getCollection(format("{users-table}")).find(Filters.eq("name", name)).iterator().hasNext();
     }
 
@@ -226,10 +229,25 @@ public class MongoDataManager implements DataManager {
     }
 
     @Override
+    public Language getLanguage(UUID uuid) {
+        Language language = null;
+
+        Document document = getDatabase().getCollection(format("{users-table}")).find(Filters.eq("uuid", uuid.toString())).first();
+
+        if (document != null) {
+            language = getLanguageOrDefault(document.getString("language"));
+        }
+
+        return language;
+    }
+
+    @Override
     public UserStorage getUser(String name) {
         UserStorage storage = new UserStorage();
 
-        Document document = getDatabase().getCollection(format("{users-table}")).find(Filters.eq("name", name)).first();
+        Document document = name.contains(".") ?
+                getDatabase().getCollection(format("{users-table}")).find(Filters.eq("ip", name)).first()
+                : getDatabase().getCollection(format("{users-table}")).find(Filters.eq("name", name)).first();
 
         if (document != null) {
             storage.setUuid(UUID.fromString(document.getString("uuid")));

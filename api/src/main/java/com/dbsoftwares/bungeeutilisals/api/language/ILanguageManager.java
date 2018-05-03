@@ -19,6 +19,24 @@ import java.util.Optional;
 public interface ILanguageManager {
 
     /**
+     * @return The language found with the given name, if not found: default language.
+     */
+    Language getLangOrDefault(String language);
+
+    /**
+     * @return The registered language integration.
+     */
+    LanguageIntegration getLanguageIntegration();
+
+    /**
+     * Allows to make a custom User language integration.
+     * This basically means that if you have a language system already, you can fetch the language from there and tell it to BungeeUtilisals.
+     *
+     * @param integration LanguageIntegration instance
+     */
+    void setLanguageIntegration(LanguageIntegration integration);
+
+    /**
      * @return The default language, if not found, it will return the first available language, if still not present, null will be returned.
      */
     Language getDefaultLanguage();

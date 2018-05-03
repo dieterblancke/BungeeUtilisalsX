@@ -4,6 +4,7 @@ import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
@@ -25,12 +26,19 @@ import java.util.Optional;
 
 public class LanguageManager implements ILanguageManager {
 
-    @Getter Map<Plugin, File> plugins = Maps.newHashMap();
-    @Getter Map<Plugin, FileStorageType> fileTypes = Maps.newHashMap();
-    @Getter Map<File, IConfiguration> configurations = Maps.newHashMap();
-    @Getter List<Language> languages = Lists.newArrayList();
+    @Getter
+    private Map<Plugin, File> plugins = Maps.newHashMap();
+    @Getter
+    private Map<Plugin, FileStorageType> fileTypes = Maps.newHashMap();
+    @Getter
+    private Map<File, IConfiguration> configurations = Maps.newHashMap();
+    @Getter
+    private List<Language> languages = Lists.newArrayList();
+    @Getter
+    private LanguageIntegration integration;
 
     public LanguageManager(BungeeUtilisals plugin) {
+        integration = uuid -> plugin.getDatabaseManagement().getDataManager().getLanguage(uuid);
         ISection section = BungeeUtilisals.getConfiguration(FileLocation.LANGUAGES_CONFIG).getSection("languages");
 
         for (String key : section.getKeys()) {
@@ -39,6 +47,21 @@ public class LanguageManager implements ILanguageManager {
 
         addPlugin(plugin, new File(plugin.getDataFolder(), "languages"), FileStorageType.JSON);
         loadLanguages(plugin);
+    }
+
+    @Override
+    public Language getLangOrDefault(String language) {
+        return getLanguage(language).orElse(getDefaultLanguage());
+    }
+
+    @Override
+    public LanguageIntegration getLanguageIntegration() {
+        return integration;
+    }
+
+    @Override
+    public void setLanguageIntegration(LanguageIntegration integration) {
+        this.integration = integration;
     }
 
     @Override

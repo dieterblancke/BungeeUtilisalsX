@@ -146,6 +146,12 @@ public class BossBar implements IBossBar {
     }
 
     @Override
+    public void clearUsers() {
+        users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE)));
+        users.clear();
+    }
+
+    @Override
     public void unregister() {
         eventHandlers.forEach(EventHandler::unregister);
     }

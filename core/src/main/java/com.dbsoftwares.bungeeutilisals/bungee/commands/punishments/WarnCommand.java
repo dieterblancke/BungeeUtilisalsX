@@ -58,6 +58,8 @@ public class WarnCommand extends Command {
 
         target.sendLangMessage("punishments.warn.onwarn", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
+        user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.warn.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.warn.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

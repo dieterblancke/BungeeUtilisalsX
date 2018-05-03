@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 
@@ -92,4 +93,6 @@ public interface DataManager {
     void removeTempMute(UUID uuid);
 
     void removeIPTempMute(String IP);
+
+    Language getLanguage(UUID uuid);
 }

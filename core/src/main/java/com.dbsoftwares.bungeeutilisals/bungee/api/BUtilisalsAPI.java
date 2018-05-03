@@ -1,6 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
@@ -17,6 +18,9 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.BossBarAnnouncer;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.ChatAnnouncer;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.bungee.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Debugger;
@@ -25,12 +29,15 @@ import com.dbsoftwares.bungeeutilisals.bungee.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.bungee.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserData;
 import com.dbsoftwares.bungeeutilisals.bungee.user.UserList;
+import com.google.common.collect.Lists;
+import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -47,6 +54,9 @@ public class BUtilisalsAPI implements BUAPI {
     private Debugger debugger;
     private PunishmentExecutor punishmentExecutor;
 
+    @Getter
+    private List<Announcer> announcers;
+
     public BUtilisalsAPI(BungeeUtilisals instance) {
         APIHandler.registerProvider(this);
 
@@ -60,6 +70,21 @@ public class BUtilisalsAPI implements BUAPI {
         this.simpleExecutor = new SimpleExecutor();
         this.debugger = new Debugger();
         this.punishmentExecutor = new PunishmentExecutor();
+
+        loadAnnouncers();
+    }
+
+    private void loadAnnouncers() {
+        this.announcers = Lists.newArrayList();
+
+        announcers.add(new ChatAnnouncer());
+        announcers.add(new TitleAnnouncer());
+        announcers.add(new BossBarAnnouncer());
+
+        announcers.stream().filter(Announcer::isEnabled).forEach(announcer -> {
+            announcer.loadAnnouncements();
+            announcer.start();
+        });
     }
 
     @Override

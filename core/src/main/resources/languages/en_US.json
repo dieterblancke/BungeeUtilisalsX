@@ -14,6 +14,7 @@
         "ban": {
             "usage": "&fPlease use &a/ban (user) (reason)&f!",
             "already-banned": "&fThis user is already banned!",
+            "executed": "&fYou have banned &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} &fhas been permanently banned by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -31,6 +32,7 @@
         "ipban": {
             "usage": "&fPlease use &a/ipban (user / IP) (reason)&f!",
             "already-banned": "&fThis user is already ipbanned!",
+            "executed": "&fYou have ipbanned &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been permanently ipbanned by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -49,6 +51,7 @@
             "usage": "&fPlease use &a/tempban (user) (timeformat) (reason)&f!",
             "already-banned": "&fThis user is already tempbanned!",
             "non-valid": "&fPlease enter a valid time format!",
+            "executed": "&fYou have tempbanned &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been temporary banned by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}",
@@ -68,6 +71,7 @@
             "usage": "&fPlease use &a/iptempban (user / IP) (timeformat) (reason)&f!",
             "already-banned": "&fThis user is already iptempbanned!",
             "non-valid": "&fPlease enter a valid time format!",
+            "executed": "&fYou have iptempbanned &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been temporary ipbanned by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}",
@@ -86,6 +90,7 @@
         "mute": {
             "usage": "&fPlease use &a/mute (user) (reason)&f!",
             "already-muted": "&fThis user is already muted!",
+            "executed": "&fYou have muted &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} &fhas been permanently muted by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -103,6 +108,7 @@
         "ipmute": {
             "usage": "&fPlease use &a/ipmute (user / IP) (reason)&f!",
             "already-muted": "&fThis user is already ipmuted!",
+            "executed": "&fYou have ipmuted &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been permanently ipmuted by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -121,6 +127,7 @@
             "usage": "&fPlease use &a/tempmute (user) (timeformat) (reason)&f!",
             "already-muted": "&fThis user is already tempmuted!",
             "non-valid": "&fPlease enter a valid time format!",
+            "executed": "&fYou have tempmuted &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been temporary muted by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}",
@@ -140,6 +147,7 @@
             "usage": "&fPlease use &a/iptempmute (user / IP) (timeformat) (reason)&f!",
             "already-muted": "&fThis user is already iptempmuted!",
             "non-valid": "&fPlease enter a valid time format!",
+            "executed": "&fYou have iptempmuted &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} (&f{ip}&a) &fhas been temporary ipmuted by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}",
@@ -158,6 +166,7 @@
         "kick": {
             "usage": "&fPlease use &a/kick (user) (reason)&f!",
             "already-muted": "&fThis user is already muted!",
+            "executed": "&fYou have kicked &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -174,6 +183,7 @@
         "warn": {
             "usage": "&fPlease use &a/warn (user) (reason)&f!",
             "already-muted": "&fThis user is already muted!",
+            "executed": "&fYou have warned &e{user} for &e{reason}&f!",
             "broadcast": [
                 "&a{user} &fhas been warned by &a{by} &fat &a{server}&f!",
                 "&fReason: &e{reason}"
@@ -185,6 +195,38 @@
                 "&cWarned on: &f{date}",
                 "&cWarned by: &f{by}",
                 "&cWarned at: &f{server}"
+            ]
+        },
+        "unban": {
+            "usage": "&fPlease use &a/unban (user)&f!",
+            "not-banned": "&fThis user is not banned!",
+            "executed": "&fYou have unbanned &e{user} &ffor &e{reason}&f!",
+            "broadcast": [
+                "&a{user} &fhas been unbanned by &a{by} &fat &a{server}&f!"
+            ]
+        },
+        "unbanip": {
+            "usage": "&fPlease use &a/unbanip (user)&f!",
+            "not-banned": "&fThis user is not ipbanned!",
+            "executed": "&fYou have unbanned &e{user}&f's IP for &e{reason}&f!",
+            "broadcast": [
+                "&a{user}&f's IP has been unbanned by &a{by} &fat &a{server}&f!"
+            ]
+        },
+        "unmute": {
+            "usage": "&fPlease use &a/unmute (user)&f!",
+            "not-mutened": "&fThis user is not mutened!",
+            "executed": "&fYou have unmutened &e{user} &ffor &e{reason}&f!",
+            "broadcast": [
+                "&a{user} &fhas been unmutened by &a{by} &fat &a{server}&f!"
+            ]
+        },
+        "unmuteip": {
+            "usage": "&fPlease use &a/unmuteip (user)&f!",
+            "not-mutened": "&fThis user is not ipmutened!",
+            "executed": "&fYou have unmutened &e{user}&f's IP for &e{reason}&f!",
+            "broadcast": [
+                "&a{user}&f's IP has been unmutened by &a{by} &fat &a{server}&f!"
             ]
         }
     }

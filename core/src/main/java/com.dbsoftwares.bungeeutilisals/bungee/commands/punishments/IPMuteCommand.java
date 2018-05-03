@@ -60,6 +60,8 @@ public class IPMuteCommand extends Command {
         api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.ipmute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
+        user.sendLangMessage("punishments.ipmute.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.ipmute.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ipmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

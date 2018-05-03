@@ -6,13 +6,7 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
@@ -28,12 +22,15 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.*;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.removal.UnbanCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.removal.UnbanIPCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.removal.UnmuteCommand;
+import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.removal.UnmuteIPCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.MuteCheckExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.bungee.executors.UserExecutor;
@@ -47,8 +44,6 @@ import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
 import com.google.common.collect.Maps;
 import lombok.Getter;
-import net.md_5.bungee.BungeeCord;
-import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.protocol.Protocol;
@@ -58,8 +53,6 @@ import org.bstats.bungeecord.Metrics;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -123,7 +116,6 @@ public class BungeeUtilisals extends Plugin {
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
         IEventLoader loader = api.getEventLoader();
 
@@ -133,12 +125,8 @@ public class BungeeUtilisals extends Plugin {
         loader.register(UserChatEvent.class, chatExecutor);
         loader.register(UserChatPreExecuteEvent.class, chatExecutor);
 
-        MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-        loader.register(UserChatEvent.class, muteCheckExecutor);
-        loader.register(UserCommandEvent.class, muteCheckExecutor);
-        loader.register(UserPunishEvent.class, new UserPunishExecutor());
-
         new PluginCommand();
+
         if (getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
             new BanCommand();
             new IPBanCommand();
@@ -150,6 +138,18 @@ public class BungeeUtilisals extends Plugin {
             new IPTempMuteCommand();
             new KickCommand();
             new WarnCommand();
+            new UnbanCommand();
+            new UnbanIPCommand();
+            new UnmuteCommand();
+            new UnmuteIPCommand();
+
+            ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
+
+            loader.register(UserPunishEvent.class, new UserPunishExecutor());
+
+            MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
+            loader.register(UserChatEvent.class, muteCheckExecutor);
+            loader.register(UserCommandEvent.class, muteCheckExecutor);
         }
     }
 
@@ -216,34 +216,5 @@ public class BungeeUtilisals extends Plugin {
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
         api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
         api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
-
-        api.getEventLoader().register(UserLoadEvent.class, new EventExecutor() {
-
-            @Event
-            public void onLoad(UserLoadEvent event) {
-                IBossBar bar = BUCore.getApi().createBossBar(UUID.randomUUID(), BarColor.PURPLE, BarStyle.TWELVE_SEGMENTS,
-                        0.1F, Utils.format("&e&lBungeeUtilisals FTW :D"));
-
-                bar.addUser(event.getUser());
-
-                BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.this, new Runnable() {
-
-                    float progress = 0.1F;
-
-                    @Override
-                    public void run() {
-                        progress += 0.1F;
-                        if (progress > 1.0F) {
-                            progress = 0.0F;
-                        }
-
-                        bar.setProgress(progress);
-                        bar.setMessage(Utils.format(MathUtils.getRandomFromArray(ChatColor.values()).toString() + "BungeeUtilisals FTW :D"));
-                    }
-
-                }, 1, 1, TimeUnit.SECONDS);
-            }
-
-        });
     }
 }

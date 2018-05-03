@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class YamlSection implements ISection {
 
-    LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
+    final LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
 
     @SuppressWarnings("unchecked")
     public YamlSection(Map<String, Object> values) {
@@ -76,7 +76,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isString(String path) {
         Object object = get(path);
-        return object != null && object instanceof String;
+        return object instanceof String;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isBoolean(String path) {
         Object object = get(path);
-        return object != null && object instanceof Boolean;
+        return object instanceof Boolean;
     }
 
     @Override
@@ -139,7 +139,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isNumber(String path) {
         Object object = get(path);
-        return object != null && object instanceof Number;
+        return object instanceof Number;
     }
 
     @Override
@@ -266,7 +266,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isBigInteger(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigInteger;
+        return object instanceof BigInteger;
     }
 
     @Override
@@ -287,7 +287,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isBigDecimal(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigDecimal;
+        return object instanceof BigDecimal;
     }
 
     @Override
@@ -308,7 +308,7 @@ public class YamlSection implements ISection {
     @Override
     public Boolean isList(String path) {
         Object object = get(path);
-        return object != null && object instanceof List;
+        return object instanceof List;
     }
 
     @Override

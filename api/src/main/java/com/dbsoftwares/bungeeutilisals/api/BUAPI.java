@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
@@ -27,6 +28,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -125,7 +127,7 @@ public interface BUAPI {
     void broadcast(String message);
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param message    The message to be broadcasted.
      * @param permission The permission the user must have to receive the message.
@@ -214,4 +216,9 @@ public interface BUAPI {
      * @return a new BossBar instance.
      */
     IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message);
+
+    /**
+     * @return a list of all announcers.
+     */
+    List<Announcer> getAnnouncers();
 }

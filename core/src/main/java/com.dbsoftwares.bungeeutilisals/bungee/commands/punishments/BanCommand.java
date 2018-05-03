@@ -64,6 +64,8 @@ public class BanCommand extends Command {
             banned.kick(kick);
         });
 
+        user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.ban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

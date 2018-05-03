@@ -23,13 +23,14 @@ import java.util.Set;
 
 public class YamlConfiguration implements IConfiguration {
 
-    LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
+    final LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
     private File file;
     private final ThreadLocal<Yaml> yaml = new ThreadLocal<Yaml>() {
         protected Yaml initialValue() {
             Representer representer = new Representer() {
                 {
-                    this.representers.put(YamlConfiguration.class, data -> represent(self));
+                    this.representers.put(YamlConfiguration.class, data -> represent(((YamlConfiguration) data).self));
+                    this.representers.put(YamlSection.class, data -> represent(((YamlSection) data).self));
                 }
             };
             DumperOptions options = new DumperOptions();
@@ -79,7 +80,9 @@ public class YamlConfiguration implements IConfiguration {
         }
         for (String key : config.getKeys()) {
             if (!exists(key)) {
-                set(key, config.get(key));
+                Object value = config.get(key);
+
+                set(key, value);
             }
         }
         save();
@@ -130,7 +133,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isString(String path) {
         Object object = get(path);
-        return object != null && object instanceof String;
+        return object instanceof String;
     }
 
     @Override
@@ -151,7 +154,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isBoolean(String path) {
         Object object = get(path);
-        return object != null && object instanceof Boolean;
+        return object instanceof Boolean;
     }
 
     @Override
@@ -193,7 +196,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isNumber(String path) {
         Object object = get(path);
-        return object != null && object instanceof Number;
+        return object instanceof Number;
     }
 
     @Override
@@ -320,7 +323,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isBigInteger(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigInteger;
+        return object instanceof BigInteger;
     }
 
     @Override
@@ -341,7 +344,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isBigDecimal(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigDecimal;
+        return object instanceof BigDecimal;
     }
 
     @Override
@@ -362,7 +365,7 @@ public class YamlConfiguration implements IConfiguration {
     @Override
     public Boolean isList(String path) {
         Object object = get(path);
-        return object != null && object instanceof List;
+        return object instanceof List;
     }
 
     @Override
