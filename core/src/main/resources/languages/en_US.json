@@ -187,5 +187,13 @@
                 "&cWarned at: &f{server}"
             ]
         }
+    },
+    "custom": {
+        "announcements": {
+          "minigame1": [
+            "&eThank you for playing on our Minigame Servers!",
+            "&bWe hope you enjoy your stay!"
+          ]
+        }
     }
 }

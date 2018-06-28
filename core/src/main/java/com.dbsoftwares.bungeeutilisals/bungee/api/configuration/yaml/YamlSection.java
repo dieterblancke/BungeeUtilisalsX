@@ -25,6 +25,23 @@ public class YamlSection implements ISection {
 
             if (entry.getValue() instanceof Map) {
                 this.self.put(key, new YamlSection((Map<String, Object>) entry.getValue()));
+            } else if (entry.getValue() instanceof List) {
+                List list = (List) entry.getValue();
+                List<ISection> sections = Lists.newArrayList();
+
+                for (Object object : list) {
+                    if (object instanceof Map) {
+                        sections.add(new YamlSection((Map<String, Object>) object));
+                    } else {
+                        sections.clear();
+                        this.self.put(key, entry.getValue());
+                        break;
+                    }
+                }
+
+                if (!sections.isEmpty()) {
+                    this.self.put(key, sections);
+                }
             } else {
                 this.self.put(key, entry.getValue());
             }
@@ -32,7 +49,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean exists(String path) {
+    public boolean exists(String path) {
         return self.containsKey(path);
     }
 
@@ -74,9 +91,9 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isString(String path) {
+    public boolean isString(String path) {
         Object object = get(path);
-        return object != null && object instanceof String;
+        return object instanceof String;
     }
 
     @Override
@@ -95,18 +112,18 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isBoolean(String path) {
+    public boolean isBoolean(String path) {
         Object object = get(path);
-        return object != null && object instanceof Boolean;
+        return object instanceof Boolean;
     }
 
     @Override
-    public Boolean getBoolean(String path) {
+    public boolean getBoolean(String path) {
         return get(path);
     }
 
     @Override
-    public Boolean getBoolean(String path, Boolean def) {
+    public boolean getBoolean(String path, boolean def) {
         Boolean result = getBoolean(path);
 
         if (result == null) {
@@ -116,7 +133,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isInteger(String path) {
+    public boolean isInteger(String path) {
         return isNumber(path);
     }
 
@@ -137,9 +154,9 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isNumber(String path) {
+    public boolean isNumber(String path) {
         Object object = get(path);
-        return object != null && object instanceof Number;
+        return object instanceof Number;
     }
 
     @Override
@@ -158,7 +175,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isDouble(String path) {
+    public boolean isDouble(String path) {
         return isNumber(path);
     }
 
@@ -180,7 +197,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isLong(String path) {
+    public boolean isLong(String path) {
         return isNumber(path);
     }
 
@@ -201,7 +218,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isFloat(String path) {
+    public boolean isFloat(String path) {
         return isNumber(path);
     }
 
@@ -222,7 +239,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isByte(String path) {
+    public boolean isByte(String path) {
         return isNumber(path);
     }
 
@@ -243,7 +260,7 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isShort(String path) {
+    public boolean isShort(String path) {
         return isNumber(path);
     }
 
@@ -264,9 +281,9 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isBigInteger(String path) {
+    public boolean isBigInteger(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigInteger;
+        return object instanceof BigInteger;
     }
 
     @Override
@@ -285,9 +302,9 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isBigDecimal(String path) {
+    public boolean isBigDecimal(String path) {
         Object object = get(path);
-        return object != null && object instanceof BigDecimal;
+        return object instanceof BigDecimal;
     }
 
     @Override
@@ -306,9 +323,9 @@ public class YamlSection implements ISection {
     }
 
     @Override
-    public Boolean isList(String path) {
+    public boolean isList(String path) {
         Object object = get(path);
-        return object != null && object instanceof List;
+        return object instanceof List;
     }
 
     @Override
@@ -646,6 +663,23 @@ public class YamlSection implements ISection {
         }
 
         return result == null ? def : result;
+    }
+
+
+    @Override @SuppressWarnings("unchecked")
+    public List<ISection> getSectionList(String path) {
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<ISection> sections = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof ISection) {
+                sections.add((ISection) object);
+            }
+        }
+        return sections;
     }
 
     private void update(String path, Object value, Boolean overwrite) {

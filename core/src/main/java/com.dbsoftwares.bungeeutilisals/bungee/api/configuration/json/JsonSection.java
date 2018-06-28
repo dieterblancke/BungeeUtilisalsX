@@ -2,32 +2,25 @@ package com.dbsoftwares.bungeeutilisals.bungee.api.configuration.json;
 
 import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
 import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
-
+import com.google.gson.*;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class JsonSection implements ISection {
 
-    String prefix;
-    ISection parent;
-    JsonObject object;
-    LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
+    private String prefix;
+    private JsonObject object;
+    private LinkedHashMap<String, Object> values = Maps.newLinkedHashMap();
 
     public JsonSection(String prefix, JsonConfiguration parent) {
         this.prefix = prefix;
-        this.parent = parent;
         this.object = parent.getJsonObject(prefix);
 
         loadValues(null, object);
@@ -35,8 +28,14 @@ public class JsonSection implements ISection {
 
     public JsonSection(String prefix, JsonSection parent) {
         this.prefix = prefix;
-        this.parent = parent;
         this.object = parent.getJsonObject(prefix);
+
+        loadValues(null, object);
+    }
+
+    public JsonSection(String prefix, JsonObject object) {
+        this.prefix = prefix;
+        this.object = object;
 
         loadValues(null, object);
     }
@@ -63,6 +62,9 @@ public class JsonSection implements ISection {
 
             for (JsonElement e : array) {
                 if (!e.isJsonPrimitive()) {
+                    if (e.isJsonObject()) {
+                        list.add(new JsonSection(prefix, e.getAsJsonObject()));
+                    }
                     continue;
                 }
                 JsonPrimitive primitive = e.getAsJsonPrimitive();
@@ -90,18 +92,18 @@ public class JsonSection implements ISection {
     }
 
     @Override
-    public Boolean exists(String path) {
+    public boolean exists(String path) {
         return values.containsKey(path);
     }
 
     @Override
     public void set(String path, Object value) {
-        parent.set(getPath(path), value);
+        values.put(path, value);
     }
 
-    @Override
+    @Override @SuppressWarnings("unchecked")
     public <T> T get(String path, T def) {
-        return parent.get(path, def);
+        return (T) values.getOrDefault(path, def);
     }
 
     @Override
@@ -110,303 +112,662 @@ public class JsonSection implements ISection {
     }
 
     @Override
-    public Boolean isString(String path) {
-        return parent.isString(getPath(path));
+    public boolean isString(String path) {
+        Object object = get(path);
+        return object instanceof String;
     }
 
     @Override
     public String getString(String path) {
-        return parent.getString(getPath(path));
+        return (String) values.getOrDefault(path, null);
     }
 
     @Override
     public String getString(String path, String def) {
-        return parent.getString(getPath(path), def);
+        String result = getString(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isBoolean(String path) {
-        return parent.isBoolean(getPath(path));
+    public boolean isBoolean(String path) {
+        Object object = get(path);
+        return object instanceof Boolean;
     }
 
     @Override
-    public Boolean getBoolean(String path) {
-        return parent.getBoolean(getPath(path));
+    public boolean getBoolean(String path) {
+        return (boolean) values.getOrDefault(path, null);
     }
 
     @Override
-    public Boolean getBoolean(String path, Boolean def) {
-        return parent.getBoolean(getPath(path), def);
+    public boolean getBoolean(String path, boolean def) {
+        Boolean result = getBoolean(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isInteger(String path) {
-        return parent.isInteger(getPath(path));
+    public boolean isInteger(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Integer getInteger(String path) {
-        return parent.getInteger(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.intValue();
     }
 
     @Override
     public Integer getInteger(String path, Integer def) {
-        return parent.getInteger(getPath(path), def);
+        Integer result = getInteger(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isNumber(String path) {
-        return parent.isNumber(getPath(path));
+    public boolean isNumber(String path) {
+        Object object = get(path);
+        return object instanceof Number;
     }
 
     @Override
     public Number getNumber(String path) {
-        return parent.getNumber(getPath(path));
+        return (Number) values.getOrDefault(path, null);
     }
 
     @Override
     public Number getNumber(String path, Number def) {
-        return parent.getNumber(getPath(path), def);
+        Number result = getNumber(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isDouble(String path) {
-        return parent.isDouble(getPath(path));
+    public boolean isDouble(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Double getDouble(String path) {
-        return parent.getDouble(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.doubleValue();
     }
 
     @Override
     public Double getDouble(String path, Double def) {
-        return parent.getDouble(getPath(path), def);
+        Double result = getDouble(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isLong(String path) {
-        return parent.isLong(getPath(path));
+    public boolean isLong(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Long getLong(String path) {
-        return parent.getLong(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.longValue();
     }
 
     @Override
     public Long getLong(String path, Long def) {
-        return parent.getLong(getPath(path), def);
+        Long result = getLong(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isFloat(String path) {
-        return parent.isFloat(getPath(path));
+    public boolean isFloat(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Float getFloat(String path) {
-        return parent.getFloat(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.floatValue();
     }
 
     @Override
     public Float getFloat(String path, Float def) {
-        return parent.getFloat(getPath(path), def);
+        Float result = getFloat(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isByte(String path) {
-        return parent.isByte(getPath(path));
+    public boolean isByte(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Byte getByte(String path) {
-        return parent.getByte(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.byteValue();
     }
 
     @Override
     public Byte getByte(String path, Byte def) {
-        return parent.getByte(getPath(path), def);
+        Byte result = getByte(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isShort(String path) {
-        return parent.isShort(getPath(path));
+    public boolean isShort(String path) {
+        return isNumber(path);
     }
 
     @Override
     public Short getShort(String path) {
-        return parent.getShort(getPath(path));
+        Number number = getNumber(path);
+        return number == null ? null : number.shortValue();
     }
 
     @Override
     public Short getShort(String path, Short def) {
-        return parent.getShort(getPath(path), def);
+        Short result = getShort(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isBigInteger(String path) {
-        return parent.isBigInteger(getPath(path));
+    public boolean isBigInteger(String path) {
+        Object object = get(path);
+        return object instanceof BigInteger;
     }
 
     @Override
     public BigInteger getBigInteger(String path) {
-        return parent.getBigInteger(getPath(path));
+        return (BigInteger) values.getOrDefault(path, null);
     }
 
     @Override
     public BigInteger getBigInteger(String path, BigInteger def) {
-        return parent.getBigInteger(getPath(path), def);
+        BigInteger result = getBigInteger(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isBigDecimal(String path) {
-        return parent.isBigInteger(getPath(path));
+    public boolean isBigDecimal(String path) {
+        Object object = get(path);
+        return object instanceof BigDecimal;
     }
 
     @Override
     public BigDecimal getBigDecimal(String path) {
-        return parent.getBigDecimal(getPath(path));
+        return (BigDecimal) values.getOrDefault(path, null);
     }
 
     @Override
     public BigDecimal getBigDecimal(String path, BigDecimal def) {
-        return parent.getBigDecimal(getPath(path), def);
+        BigDecimal result = getBigDecimal(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+        return result == null ? def : result;
     }
 
     @Override
-    public Boolean isList(String path) {
-        return parent.isList(getPath(path));
+    public boolean isList(String path) {
+        Object object = get(path);
+        return object instanceof List;
     }
 
     @Override
     public List getList(String path) {
-        return parent.getList(getPath(path));
+        return (List) values.getOrDefault(path, null);
     }
 
     @Override
     public List getList(String path, List def) {
-        return parent.getList(getPath(path), def);
+        List result = getList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<String> getStringList(String path) {
-        return parent.getStringList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<String> strList = Lists.newArrayList();
+        for (Object object : list) {
+            strList.add(object.toString());
+        }
+        return strList;
     }
 
     @Override
     public List<String> getStringList(String path, List<String> def) {
-        return parent.getStringList(getPath(path), def);
+        List<String> result = getStringList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Integer> getIntegerList(String path) {
-        return parent.getIntegerList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Integer> intList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                intList.add(((Number) object).intValue());
+            } else if (MathUtils.isInteger(object)) {
+                intList.add(Integer.parseInt(object.toString()));
+            }
+        }
+        return intList;
     }
 
     @Override
     public List<Integer> getIntegerList(String path, List<Integer> def) {
-        return parent.getIntegerList(getPath(path), def);
+        List<Integer> result = getIntegerList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Double> getDoubleList(String path) {
-        return parent.getDoubleList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Double> dList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                dList.add(((Number) object).doubleValue());
+            } else if (MathUtils.isDouble(object)) {
+                dList.add(Double.parseDouble(object.toString()));
+            }
+        }
+        return dList;
     }
 
     @Override
     public List<Double> getDoubleList(String path, List<Double> def) {
-        return parent.getDoubleList(getPath(path), def);
+        List<Double> result = getDoubleList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Boolean> getBooleanList(String path) {
-        return parent.getBooleanList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Boolean> bList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Boolean) {
+                bList.add((Boolean) object);
+            } else if (Utils.isBoolean(object)) {
+                bList.add(Boolean.parseBoolean(object.toString()));
+            }
+        }
+        return bList;
     }
 
     @Override
     public List<Boolean> getBooleanList(String path, List<Boolean> def) {
-        return parent.getBooleanList(getPath(path), def);
+        List<Boolean> result = getBooleanList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Long> getLongList(String path) {
-        return parent.getLongList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Long> longList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                longList.add(((Number) object).longValue());
+            } else if (MathUtils.isLong(object)) {
+                longList.add(Long.parseLong(object.toString()));
+            }
+        }
+        return longList;
     }
 
     @Override
     public List<Long> getLongList(String path, List<Long> def) {
-        return parent.getLongList(getPath(path), def);
+        List<Long> result = getLongList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Byte> getByteList(String path) {
-        return parent.getByteList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Byte> bList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                bList.add(((Number) object).byteValue());
+            } else if (MathUtils.isByte(object)) {
+                bList.add(Byte.parseByte(object.toString()));
+            }
+        }
+        return bList;
     }
 
     @Override
     public List<Byte> getByteList(String path, List<Byte> def) {
-        return parent.getByteList(getPath(path), def);
+        List<Byte> result = getByteList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Short> getShortList(String path) {
-        return parent.getShortList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Short> shortList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                shortList.add(((Number) object).shortValue());
+            } else if (MathUtils.isShort(object)) {
+                shortList.add(Short.parseShort(object.toString()));
+            }
+        }
+        return shortList;
     }
 
     @Override
     public List<Short> getShortList(String path, List<Short> def) {
-        return parent.getShortList(getPath(path), def);
+        List<Short> result = getShortList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Float> getFloatList(String path) {
-        return parent.getFloatList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Float> floatList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                floatList.add(((Number) object).floatValue());
+            } else if (MathUtils.isFloat(object)) {
+                floatList.add(Float.parseFloat(object.toString()));
+            }
+        }
+        return floatList;
     }
 
     @Override
     public List<Float> getFloatList(String path, List<Float> def) {
-        return parent.getFloatList(getPath(path), def);
+        List<Float> result = getFloatList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<Number> getNumberList(String path) {
-        return parent.getNumberList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<Number> numberList = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof Number) {
+                numberList.add((Number) object);
+            } else if (MathUtils.isInteger(object)) {
+                numberList.add(Integer.parseInt(object.toString()));
+            } else if (MathUtils.isShort(object)) {
+                numberList.add(Short.parseShort(object.toString()));
+            } else if (MathUtils.isByte(object)) {
+                numberList.add(Byte.parseByte(object.toString()));
+            } else if (MathUtils.isDouble(object)) {
+                numberList.add(Double.parseDouble(object.toString()));
+            } else if (MathUtils.isLong(object)) {
+                numberList.add(Long.parseLong(object.toString()));
+            } else if (MathUtils.isFloat(object)) {
+                numberList.add(Float.parseFloat(object.toString()));
+            }
+        }
+        return numberList;
     }
 
     @Override
     public List<Number> getNumberList(String path, List<Number> def) {
-        return parent.getNumberList(getPath(path), def);
+        List<Number> result = getNumberList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<BigInteger> getBigIntegerList(String path) {
-        return parent.getBigIntegerList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<BigInteger> biList = Lists.newArrayList();
+        for (Object object : list) {
+            if (MathUtils.isBigInteger(object.toString())) {
+                biList.add(new BigInteger(object.toString()));
+            }
+        }
+        return biList;
     }
 
     @Override
     public List<BigInteger> getBigIntegerList(String path, List<BigInteger> def) {
-        return parent.getBigIntegerList(getPath(path), def);
+        List<BigInteger> result = getBigIntegerList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
     }
 
     @Override
     public List<BigDecimal> getBigDecimalList(String path) {
-        return parent.getBigDecimalList(getPath(path));
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<BigDecimal> bdList = Lists.newArrayList();
+        for (Object object : list) {
+            if (MathUtils.isBigDecimal(object.toString())) {
+                bdList.add(new BigDecimal(object.toString()));
+            }
+        }
+        return bdList;
     }
 
     @Override
     public List<BigDecimal> getBigDecimalList(String path, List<BigDecimal> def) {
-        return parent.getBigDecimalList(getPath(path), def);
+        List<BigDecimal> result = getBigDecimalList(path);
+
+        if (result == null) {
+            update(object, path, def, false);
+        }
+
+        return result == null ? def : result;
+    }
+
+    @Override
+    public List<ISection> getSectionList(String path) {
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<ISection> sections = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof ISection) {
+                sections.add((ISection) object);
+            }
+        }
+        return sections;
+    }
+
+    private void update(JsonObject object, String path, Object value, Boolean overwrite) {
+        Iterator<String> it = Arrays.asList(path.split("\\.")).iterator();
+
+        while (it.hasNext()) {
+            String part = it.next();
+
+            if (it.hasNext()) {
+                if (!object.has(part)) {
+                    object.add(part, new JsonObject());
+                }
+                object = object.getAsJsonObject(part);
+            } else {
+                if (!overwrite && object.has(part)) {
+                    continue;
+                }
+                if (value instanceof Character) {
+                    object.addProperty(part, (Character) value);
+                } else if (value instanceof Number) {
+                    object.addProperty(part, (Number) value);
+                } else if (value instanceof String) {
+                    object.addProperty(part, (String) value);
+                } else if (value instanceof Boolean) {
+                    object.addProperty(part, (Boolean) value);
+                } else if (value instanceof List) {
+                    JsonArray array = new JsonArray();
+
+                    for (Object obj : (List) value) {
+                        if (obj instanceof Character) {
+                            array.add((Character) obj);
+                        } else if (obj instanceof Number) {
+                            array.add((Number) obj);
+                        } else if (obj instanceof String) {
+                            array.add((String) obj);
+                        } else if (obj instanceof Boolean) {
+                            array.add((Boolean) obj);
+                        } else {
+                            array.add(obj.toString());
+                        }
+                    }
+
+                    object.add(part, array);
+                } else {
+                    // Attempt String storage in case of other type.
+                    object.addProperty(part, value.toString());
+                }
+            }
+        }
     }
 
     @Override
     public ISection getSection(String section) {
-        return parent.getSection(getPath(section));
+        if (section.isEmpty()) {
+            return this;
+        }
+
+        return new JsonSection(section, this);
     }
 
     @Override
     public void createSection(String section) {
-        parent.createSection(getPath(section));
+        JsonObject object = this.object;
+        for (String part : section.split("\\.")) {
+            if (!object.has(part)) {
+                object.add(part, new JsonObject());
+            }
+            object = object.getAsJsonObject(part);
+        }
     }
 
     @Override

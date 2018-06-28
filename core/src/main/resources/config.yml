@@ -4,16 +4,6 @@ debug: false
 # If enabled, experimental features, such as the BungeeInventory / ItemStack API will be enabled.
 experimental: false
 
-logging:
-  # Should BungeeUtilisals keep his own log?
-  enabled: true
-  # What TimeUnit should be the checker for expiry date?
-  # Recommended units: HOURS, DAYS, WEEKS
-  unit: WEEKS
-  # How long should it be stored? Formula: amount * unit
-  # For example: 4 * WEEKS = 4 Weeks = 28 days untill a log gets removed.
-  amount: 4
-
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | MySQL recommended
   # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.

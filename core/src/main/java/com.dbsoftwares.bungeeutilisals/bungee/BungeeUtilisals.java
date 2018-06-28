@@ -201,17 +201,16 @@ public class BungeeUtilisals extends Plugin {
 
             YamlConfiguration configuration = (YamlConfiguration) IConfiguration.loadYamlConfiguration(file);
             configurations.put(location, configuration);
+
+            location.loadData(configuration);
         }
     }
 
     private void registerExperimentalFeatures() {
         /*  EXAMPLES:
-
             Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
-
             Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
         */
-
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));
@@ -221,15 +220,6 @@ public class BungeeUtilisals extends Plugin {
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
         api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
         api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
-
-        api.getEventLoader().register(PacketUpdateEvent.class, new EventExecutor() {
-
-            @Event
-            public void onPacketUpdate(PacketUpdateEvent event) {
-                System.out.println(event.getPacket().toString() + " update for " + event.getPlayer().getName());
-            }
-
-        });
 
         api.getEventLoader().register(UserLoadEvent.class, new EventExecutor() {
 

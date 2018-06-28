@@ -82,4 +82,12 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     public boolean isWarn() {
         return type.equals(PunishmentType.WARN);
     }
+
+    public boolean isIPPunishment() {
+        return type.toString().startsWith("IP");
+    }
+
+    public boolean isUserPunishment() {
+        return !type.toString().startsWith("IP");
+    }
 }
