@@ -12,7 +12,7 @@ public interface ISection {
      * @param path The path (sections separated by dots) you want to check.
      * @return True when the path is present, false if not.
      */
-    Boolean exists(String path);
+    boolean exists(String path);
 
     /**
      * Used to set the value of the given path.
@@ -44,7 +44,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a String, false if not.
      */
-    Boolean isString(String path);
+    boolean isString(String path);
 
     /**
      * Gets the requested String by path.
@@ -62,33 +62,33 @@ public interface ISection {
     String getString(String path, String def);
 
     /**
-     * Used to check if the value bound to the given path is a Boolean.
+     * Used to check if the value bound to the given path is a boolean.
      * @param path The path you want to check.
-     * @return True if the value is a Boolean, false if not.
+     * @return True if the value is a boolean, false if not.
      */
-    Boolean isBoolean(String path);
+    boolean isBoolean(String path);
 
     /**
-     * Gets the requested Boolean by path.
+     * Gets the requested boolean by path.
      * @param path The path of which you need the value.
      * @return The value bound to this path.
      */
-    Boolean getBoolean(String path);
+    boolean getBoolean(String path);
 
     /**
-     * Gets the requested Boolean by path, sets default if not present.
+     * Gets the requested boolean by path, sets default if not present.
      * @param path The path of which you need the value.
      * @param def The default value this path should get if not present.
      * @return The value bound to this path, default if not present.
      */
-    Boolean getBoolean(String path, Boolean def);
+    boolean getBoolean(String path, boolean def);
 
     /**
      * Used to check if the value bound to the given path is an Integer.
      * @param path The path you want to check.
      * @return True if the value is an Integer, false if not.
      */
-    Boolean isInteger(String path);
+    boolean isInteger(String path);
 
     /**
      * Gets the requested Integer by path.
@@ -110,7 +110,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Number, false if not.
      */
-    Boolean isNumber(String path);
+    boolean isNumber(String path);
 
     /**
      * Gets the requested Number by path.
@@ -132,7 +132,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Double, false if not.
      */
-    Boolean isDouble(String path);
+    boolean isDouble(String path);
 
     /**
      * Gets the requested Double by path.
@@ -154,7 +154,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Long, false if not.
      */
-    Boolean isLong(String path);
+    boolean isLong(String path);
 
     /**
      * Gets the requested Long by path.
@@ -176,7 +176,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Float, false if not.
      */
-    Boolean isFloat(String path);
+    boolean isFloat(String path);
 
     /**
      * Gets the requested Float by path.
@@ -198,7 +198,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Byte, false if not.
      */
-    Boolean isByte(String path);
+    boolean isByte(String path);
 
     /**
      * Gets the requested Byte by path.
@@ -220,7 +220,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a Short, false if not.
      */
-    Boolean isShort(String path);
+    boolean isShort(String path);
 
     /**
      * Gets the requested Short by path.
@@ -242,7 +242,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a BigInteger, false if not.
      */
-    Boolean isBigInteger(String path);
+    boolean isBigInteger(String path);
 
     /**
      * Gets the requested BigInteger by path.
@@ -264,7 +264,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a BigDecimal, false if not.
      */
-    Boolean isBigDecimal(String path);
+    boolean isBigDecimal(String path);
 
     /**
      * Gets the requested BigDecimal by path.
@@ -286,7 +286,7 @@ public interface ISection {
      * @param path The path you want to check.
      * @return True if the value is a List, false if not.
      */
-    Boolean isList(String path);
+    boolean isList(String path);
 
     /**
      * Gets the requested List by path.
@@ -467,6 +467,13 @@ public interface ISection {
      * @return The value bound to this path, default if not present.
      */
     List<BigDecimal> getBigDecimalList(String path, List<BigDecimal> def);
+
+    /**
+     * Gets the requested List by path.
+     * @param path The path of which you need the value.
+     * @return The value bound to this path.
+     */
+    List<ISection> getSectionList(String path);
 
     /**
      * Used to get a new IConfiguration representing the section you requested.

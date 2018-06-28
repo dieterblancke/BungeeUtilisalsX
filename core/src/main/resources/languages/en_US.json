@@ -229,5 +229,13 @@
                 "&a{user}&f's IP has been unmutened by &a{by} &fat &a{server}&f!"
             ]
         }
+    },
+    "custom": {
+        "announcements": {
+          "minigame1": [
+            "&eThank you for playing on our Minigame Servers!",
+            "&bWe hope you enjoy your stay!"
+          ]
+        }
     }
 }

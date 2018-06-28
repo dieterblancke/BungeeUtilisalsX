@@ -16,10 +16,7 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.*;
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class YamlConfiguration implements IConfiguration {
 
@@ -61,6 +58,23 @@ public class YamlConfiguration implements IConfiguration {
 
             if (entry.getValue() instanceof Map) {
                 this.self.put(key, new YamlSection((Map<String, Object>) entry.getValue()));
+            } else if (entry.getValue() instanceof List) {
+                List list = (List) entry.getValue();
+                List<ISection> sections = Lists.newArrayList();
+
+                for (Object object : list) {
+                    if (object instanceof Map) {
+                        sections.add(new YamlSection((Map<String, Object>) object));
+                    } else {
+                        sections.clear();
+                        this.self.put(key, entry.getValue());
+                        break;
+                    }
+                }
+
+                if (!sections.isEmpty()) {
+                    this.self.put(key, sections);
+                }
             } else {
                 this.self.put(key, entry.getValue());
             }
@@ -89,7 +103,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean exists(String path) {
+    public boolean exists(String path) {
         return self.containsKey(path);
     }
 
@@ -131,7 +145,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isString(String path) {
+    public boolean isString(String path) {
         Object object = get(path);
         return object instanceof String;
     }
@@ -152,18 +166,18 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isBoolean(String path) {
+    public boolean isBoolean(String path) {
         Object object = get(path);
         return object instanceof Boolean;
     }
 
     @Override
-    public Boolean getBoolean(String path) {
+    public boolean getBoolean(String path) {
         return get(path);
     }
 
     @Override
-    public Boolean getBoolean(String path, Boolean def) {
+    public boolean getBoolean(String path, boolean def) {
         Boolean result = getBoolean(path);
 
         if (result == null) {
@@ -173,7 +187,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isInteger(String path) {
+    public boolean isInteger(String path) {
         return isNumber(path);
     }
 
@@ -194,7 +208,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isNumber(String path) {
+    public boolean isNumber(String path) {
         Object object = get(path);
         return object instanceof Number;
     }
@@ -215,10 +229,9 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isDouble(String path) {
+    public boolean isDouble(String path) {
         return isNumber(path);
     }
-
 
     @Override
     public Double getDouble(String path) {
@@ -237,7 +250,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isLong(String path) {
+    public boolean isLong(String path) {
         return isNumber(path);
     }
 
@@ -258,7 +271,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isFloat(String path) {
+    public boolean isFloat(String path) {
         return isNumber(path);
     }
 
@@ -279,7 +292,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isByte(String path) {
+    public boolean isByte(String path) {
         return isNumber(path);
     }
 
@@ -300,7 +313,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isShort(String path) {
+    public boolean isShort(String path) {
         return isNumber(path);
     }
 
@@ -321,7 +334,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isBigInteger(String path) {
+    public boolean isBigInteger(String path) {
         Object object = get(path);
         return object instanceof BigInteger;
     }
@@ -342,7 +355,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isBigDecimal(String path) {
+    public boolean isBigDecimal(String path) {
         Object object = get(path);
         return object instanceof BigDecimal;
     }
@@ -363,7 +376,7 @@ public class YamlConfiguration implements IConfiguration {
     }
 
     @Override
-    public Boolean isList(String path) {
+    public boolean isList(String path) {
         Object object = get(path);
         return object instanceof List;
     }
@@ -703,6 +716,22 @@ public class YamlConfiguration implements IConfiguration {
         }
 
         return result == null ? def : result;
+    }
+
+    @Override @SuppressWarnings("unchecked")
+    public List<ISection> getSectionList(String path) {
+        List list = getList(path);
+
+        if (list == null) {
+            return null;
+        }
+        List<ISection> sections = Lists.newArrayList();
+        for (Object object : list) {
+            if (object instanceof ISection) {
+                sections.add((ISection) object);
+            }
+        }
+        return sections;
     }
 
     @Override @SuppressWarnings("unchecked")

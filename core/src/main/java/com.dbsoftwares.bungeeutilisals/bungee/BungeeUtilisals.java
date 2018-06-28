@@ -6,6 +6,9 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
@@ -53,6 +56,7 @@ import org.bstats.bungeecord.Metrics;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -203,10 +207,16 @@ public class BungeeUtilisals extends Plugin {
 
             YamlConfiguration configuration = (YamlConfiguration) IConfiguration.loadYamlConfiguration(file);
             configurations.put(location, configuration);
+
+            location.loadData(configuration);
         }
     }
 
     private void registerExperimentalFeatures() {
+        /*  EXAMPLES:
+            Utils.registerPacket(Protocol.GAME.TO_SERVER, 47, 0x07, PacketPlayInWindowClick.class);
+            Utils.registerPacket(Protocol.GAME.TO_CLIENT, 47, 0x12, PacketPlayOutCloseWindow.class);
+        */
         Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
                 Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));

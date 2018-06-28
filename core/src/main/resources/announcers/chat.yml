@@ -1,0 +1,27 @@
+# If set to true, the announcement messages will be sent random.
+# If set to false, the announcement messages will be sent ordered as below.
+random: false
+
+delay:
+ # Possible TimeUnits: SECONDS, MINUTES & HOURS
+ unit: SECONDS
+ time: 30
+
+announcements:
+# You can enter a ServerGroup name or a ServerName in here.
+# Do note that ServerGroup names will be prioritized above ServerNames.
+- server: Global
+  # If set to true, the Prefix installed in Languages will be used in the announcements.
+  use-prefix: true
+  messages:
+  - '&eThis server is using BungeeUtilisals:'
+  - '&6BungeeUtilisals has been coded by &bdidjee2&6.'
+# You can enter a ServerGroup name or a ServerName in here.
+# Do note that ServerGroup names will be prioritized above ServerNames.
+- server: Minigames
+  # If set to true, the Prefix installed in Languages will be used in the announcements.
+  use-prefix: true
+  # If the messages is NOT a list (like above), then BungeeUtilisals will assume a language reference.
+  # With a language reference you can add the path of the message to serve as the announcement message.
+  # This allows you to make announcements in MULTIPLE languages.
+  messages: 'custom.announcements.minigame1'
