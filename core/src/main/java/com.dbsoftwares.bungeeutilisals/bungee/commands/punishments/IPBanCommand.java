@@ -64,6 +64,8 @@ public class IPBanCommand extends Command {
             banned.kick(kick);
         });
 
+        user.sendLangMessage("punishments.ipban.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.ipban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.ipban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

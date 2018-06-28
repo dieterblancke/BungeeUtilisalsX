@@ -20,13 +20,14 @@ import java.util.*;
 
 public class YamlConfiguration implements IConfiguration {
 
-    LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
+    final LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
     private File file;
     private final ThreadLocal<Yaml> yaml = new ThreadLocal<Yaml>() {
         protected Yaml initialValue() {
             Representer representer = new Representer() {
                 {
-                    this.representers.put(YamlConfiguration.class, data -> represent(self));
+                    this.representers.put(YamlConfiguration.class, data -> represent(((YamlConfiguration) data).self));
+                    this.representers.put(YamlSection.class, data -> represent(((YamlSection) data).self));
                 }
             };
             DumperOptions options = new DumperOptions();
@@ -93,7 +94,9 @@ public class YamlConfiguration implements IConfiguration {
         }
         for (String key : config.getKeys()) {
             if (!exists(key)) {
-                set(key, config.get(key));
+                Object value = config.get(key);
+
+                set(key, value);
             }
         }
         save();

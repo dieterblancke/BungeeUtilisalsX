@@ -446,12 +446,28 @@ public class SQLDataManager implements DataManager {
                 storage.setUuid(uuid);
                 storage.setUserName(resultSet.getString("username"));
                 storage.setIp(resultSet.getString("ip"));
-                storage.setLanguage(getLanguageOrDefault(resultSet.getString("language")));
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
         return storage;
+    }
+
+    @Override
+    public Language getLanguage(UUID uuid) {
+        Language language = null;
+        String statement = format(SELECT_FROM_USERS, "language", "uuid = '" + uuid + "'");
+
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
+            ResultSet resultSet = connection.createStatement().executeQuery(statement);
+
+            if (resultSet.next()) {
+                language = getLanguageOrDefault(resultSet.getString("language"));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return language;
     }
 
     @Override

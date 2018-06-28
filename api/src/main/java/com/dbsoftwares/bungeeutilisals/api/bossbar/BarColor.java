@@ -50,6 +50,29 @@ public class BarColor {
         return values.stream().filter(a -> a.id == action).findFirst().orElse(PINK);
     }
 
+    public static BarColor valueOf(String color) {
+        if (color == null) {
+            return PINK;
+        }
+        switch (color) {
+            default:
+            case "PINK":
+                return PINK;
+            case "BLUE":
+                return BLUE;
+            case "RED":
+                return RED;
+            case "GREEN":
+                return GREEN;
+            case "YELLOW":
+                return YELLOW;
+            case "PURPLE":
+                return PURPLE;
+            case "WHITE":
+                return WHITE;
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj == this || (obj instanceof BarColor && ((BarColor) obj).getId() == id);

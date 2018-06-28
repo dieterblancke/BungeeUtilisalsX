@@ -79,3 +79,24 @@ commands:
     aliases: ''
     permission: bungeeutilisals.punishments.warn
     broadcast: bungeeutilisals.punishments.warn.broadcast
+
+  unban:
+    enabled: true
+    aliases: 'punban, gunban, unsetban, removeban'
+    permission: bungeeutilisals.punishments.unban
+    broadcast: bungeeutilisals.punishments.unban.broadcast
+  unbanip:
+    enabled: true
+    aliases: 'punbanip, gunbanip, unsetbanip, removebanip'
+    permission: bungeeutilisals.punishments.unbanip
+    broadcast: bungeeutilisals.punishments.unbanip.broadcast
+  unmute:
+    enabled: true
+    aliases: 'punmute, gunmute, unsetmute, removemute'
+    permission: bungeeutilisals.punishments.unmute
+    broadcast: bungeeutilisals.punishments.unmute.broadcast
+  unmuteip:
+    enabled: true
+    aliases: 'punmuteip, gunmuteip, unsetmuteip, removemuteip'
+    permission: bungeeutilisals.punishments.unmuteip
+    broadcast: bungeeutilisals.punishments.unmuteip.broadcast

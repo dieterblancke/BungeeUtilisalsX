@@ -511,4 +511,12 @@ public enum TimeUnit {
         }
         return false;
     }
+
+    public java.util.concurrent.TimeUnit toJavaTimeUnit() {
+        try {
+            return java.util.concurrent.TimeUnit.valueOf(toString());
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
+    }
 }

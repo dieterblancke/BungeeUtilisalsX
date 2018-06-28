@@ -16,7 +16,7 @@ import java.util.Set;
 
 public class YamlSection implements ISection {
 
-    LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
+    final LinkedHashMap<String, Object> self = Maps.newLinkedHashMap();
 
     @SuppressWarnings("unchecked")
     public YamlSection(Map<String, Object> values) {

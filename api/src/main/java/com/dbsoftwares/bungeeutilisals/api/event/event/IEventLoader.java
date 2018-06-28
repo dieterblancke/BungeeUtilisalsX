@@ -25,7 +25,7 @@ public interface IEventLoader {
     /**
      * Gets a set of all registered handlers for a given event.
      *
-     * @param eventClass The event to find< handlers for.
+     * @param eventClass The event to find handlers for.
      * @param <T> The event class.
      * @return An immutable set of event handlers.
      */

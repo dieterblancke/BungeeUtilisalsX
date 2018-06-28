@@ -70,6 +70,8 @@ public class TempBanCommand extends Command {
             banned.kick(kick);
         });
 
+        user.sendLangMessage("punishments.tempban.executed", executor.getPlaceHolders(info));
+
         api.langBroadcast("punishments.tempban.broadcast",
                 BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getString("commands.tempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

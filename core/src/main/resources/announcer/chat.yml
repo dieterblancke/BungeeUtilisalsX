@@ -1,0 +1,24 @@
+enabled: true
+delay:
+  # Possible TimeUnits: SECONDS, MINUTES, HOURS
+  unit: SECONDS
+  time: 30
+
+random: false
+
+announcements:
+  - messages:
+    - '&bExample line 1'
+    - '&eExample line 2'
+    servers: 'ALL'
+    permission: ''
+  - messages:
+    - '&cExample line 3'
+    - '&dExample line 4'
+    servers: 'Lobby, Skyblock, Survival'
+    permission: ''
+  - messages:
+    - '&aExample line 5'
+    - '&5Example line 6'
+    servers: 'ALL'
+    permission: 'bungeeutilisals.announcements.view'

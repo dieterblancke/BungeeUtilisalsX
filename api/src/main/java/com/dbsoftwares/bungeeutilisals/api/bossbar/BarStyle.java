@@ -46,6 +46,25 @@ public class BarStyle {
         return values.stream().filter(a -> a.id == action).findFirst().orElse(SOLID);
     }
 
+    public static BarStyle valueOf(String style) {
+        if (style == null) {
+            return SOLID;
+        }
+        switch (style) {
+            default:
+            case "SOLID":
+                return SOLID;
+            case "SIX_SEGMENTS":
+                return SIX_SEGMENTS;
+            case "TEN_SEGMENTS":
+                return TEN_SEGMENTS;
+            case "TWELVE_SEGMENTS":
+                return TWELVE_SEGMENTS;
+            case "TWENTY_SEGMENTS":
+                return TWENTY_SEGMENTS;
+        }
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj == this || (obj instanceof BarStyle && ((BarStyle) obj).getId() == id);

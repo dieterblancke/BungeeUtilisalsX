@@ -13,11 +13,13 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
@@ -41,6 +43,7 @@ public class BUser implements User {
     @Override
     public void load(UserPreLoadEvent event) {
         ProxiedPlayer p = event.getPlayer();
+        DataManager dataManager = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
 
         this.player = p.getName();
         this.experimental = new ExperimentalUser(this);
@@ -48,11 +51,13 @@ public class BUser implements User {
         this.cooldowns = new UserCooldowns();
 
         BUCore.getApi().getDebugger().debug("Searching user data for %s", player);
-        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(p.getUniqueId())) {
-            storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(p.getUniqueId());
+        if (dataManager.isUserPresent(p.getUniqueId())) {
+            storage = dataManager.getUser(p.getUniqueId());
+
+            storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(p.getUniqueId()));
         } else {
             BUCore.getApi().getDebugger().debug("%s not found, creating ...", player);
-            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoUsers(p.getUniqueId().toString(),
+            dataManager.insertIntoUsers(p.getUniqueId().toString(),
                     p.getName(), Utils.getIP(p.getAddress()), BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
             storage = new UserStorage();
             storage.setDefaultsFor(p);
@@ -60,17 +65,19 @@ public class BUser implements User {
 
         if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
             storage.setUserName(player);
-            BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(p.getUniqueId().toString(), player, null, null);
+            dataManager.updateUser(p.getUniqueId().toString(), player, null, null);
         }
 
-        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isMutePresent(p.getUniqueId(), true)) {
-            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getMute(p.getUniqueId());
-        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isTempMutePresent(p.getUniqueId(), true)) {
-            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getTempMute(p.getUniqueId());
-        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPMutePresent(getIP(), true)) {
-            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPMute(getIP());
-        } else if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPTempMutePresent(getIP(), true)) {
-            mute = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getIPTempMute(getIP());
+        if (BungeeUtilisals.getConfiguration(FileLocation.PUNISHMENTS_CONFIG).getBoolean("enabled")) {
+            if (dataManager.isMutePresent(p.getUniqueId(), true)) {
+                mute = dataManager.getMute(p.getUniqueId());
+            } else if (dataManager.isTempMutePresent(p.getUniqueId(), true)) {
+                mute = dataManager.getTempMute(p.getUniqueId());
+            } else if (dataManager.isIPMutePresent(getIP(), true)) {
+                mute = dataManager.getIPMute(getIP());
+            } else if (dataManager.isIPTempMutePresent(getIP(), true)) {
+                mute = dataManager.getIPTempMute(getIP());
+            }
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);

@@ -24,6 +24,7 @@ public interface ISection {
     /**
      * Gets the requested Object by path.
      * @param path The path of which you need the value.
+     * @param <T> Type the value should be.
      * @return The value (object) bound to this path.
      */
     <T> T get(String path);
