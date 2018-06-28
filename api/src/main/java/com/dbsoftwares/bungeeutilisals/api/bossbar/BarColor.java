@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.bossbar;
  */
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -34,6 +35,7 @@ public class BarColor {
         values = Lists.newArrayList(PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE);
     }
 
+    @Getter
     private int id;
 
     public BarColor(int id) {
@@ -46,10 +48,6 @@ public class BarColor {
 
     public static BarColor fromId(int action) {
         return values.stream().filter(a -> a.id == action).findFirst().orElse(PINK);
-    }
-
-    public int getId() {
-        return id;
     }
 
     @Override

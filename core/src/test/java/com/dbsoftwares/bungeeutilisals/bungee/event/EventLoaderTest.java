@@ -1,9 +1,8 @@
-package com.dbsoftwares.bungeeutilisals.bungee.newevent;
+package com.dbsoftwares.bungeeutilisals.bungee.event;
 
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
-import com.dbsoftwares.bungeeutilisals.bungee.event.EventLoader;
 import org.junit.Test;
 
 
@@ -16,7 +15,7 @@ import org.junit.Test;
 public class EventLoaderTest {
 
     @Test
-    public void testEventLoader() {
+    public void testEventLoader() { // not really a real tester, this is just used to test event priority by console output.
         EventLoader loader = new EventLoader();
 
         loader.register(TestEvent.class, new EventExecutor() {

@@ -12,25 +12,30 @@ import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBarAction;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import io.netty.buffer.ByteBuf;
+import lombok.Getter;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
+import java.util.Arrays;
 import java.util.UUID;
 
+@Getter
 public class PacketPlayOutBossBar extends Packet {
 
     private UUID barId;
     private BossBarAction action;
-    private String title;
+    private BaseComponent[] title;
     private float health;
     private BarColor color;
     private BarStyle style;
-    private byte flags;
+    private short flags;
 
     public PacketPlayOutBossBar() {
         super(0x0C);
     }
 
-    public PacketPlayOutBossBar(UUID id, BossBarAction action, String title) {
+    public PacketPlayOutBossBar(UUID id, BossBarAction action, BaseComponent[] title) {
         super(0x0C);
         this.barId = id;
         this.action = action;
@@ -52,7 +57,7 @@ public class PacketPlayOutBossBar extends Packet {
         this.style = style;
     }
 
-    public PacketPlayOutBossBar(UUID id, BossBarAction action, byte flags) {
+    public PacketPlayOutBossBar(UUID id, BossBarAction action, short flags) {
         super(0x0C);
         this.barId = id;
         this.action = action;
@@ -65,7 +70,7 @@ public class PacketPlayOutBossBar extends Packet {
         this.action = action;
     }
 
-    public PacketPlayOutBossBar(UUID id, BossBarAction action, String title, float health, BarColor color, BarStyle style) {
+    public PacketPlayOutBossBar(UUID id, BossBarAction action, BaseComponent[] title, float health, BarColor color, BarStyle style) {
         super(0x0C);
         this.barId = id;
         this.action = action;
@@ -75,7 +80,7 @@ public class PacketPlayOutBossBar extends Packet {
         this.style = style;
     }
 
-    public PacketPlayOutBossBar(UUID id, BossBarAction action, String title, float health, BarColor color, BarStyle style, byte flags) {
+    public PacketPlayOutBossBar(UUID id, BossBarAction action, BaseComponent[] title, float health, BarColor color, BarStyle style, short flags) {
         super(0x0C);
         this.barId = id;
         this.action = action;
@@ -89,24 +94,23 @@ public class PacketPlayOutBossBar extends Packet {
     @Override
     public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
         this.barId = readUUID(buf);
-
         this.action = BossBarAction.fromId(readVarInt(buf));
 
         if (this.action.equals(BossBarAction.ADD)) {
-            this.title = readString(buf);
+            this.title = ComponentSerializer.parse(readString(buf));
             this.health = buf.readFloat();
             this.color = BarColor.fromId(readVarInt(buf));
             this.style = BarStyle.fromId(readVarInt(buf));
-            this.flags = buf.readByte();
+            this.flags = buf.readUnsignedByte();
         } else if (this.action.equals(BossBarAction.UPDATE_HEALTH)) {
             this.health = buf.readFloat();
         } else if (this.action.equals(BossBarAction.UPDATE_TITLE)) {
-            this.title = readString(buf);
+            this.title = ComponentSerializer.parse(readString(buf));
         } else if (this.action.equals(BossBarAction.UPDATE_STYLE)) {
             this.color = BarColor.fromId(readVarInt(buf));
             this.style = BarStyle.fromId(readVarInt(buf));
         } else if (this.action.equals(BossBarAction.UPDATE_FLAGS)) {
-            this.flags = buf.readByte();
+            this.flags = buf.readUnsignedByte();
         }
     }
 
@@ -117,7 +121,7 @@ public class PacketPlayOutBossBar extends Packet {
 
         switch (action.getId()) {
             case 0:
-                writeString(title, buf);
+                writeString(ComponentSerializer.toString(title), buf);
                 buf.writeFloat(health);
                 writeVarInt(color.getId(), buf);
                 writeVarInt(style.getId(), buf);
@@ -127,7 +131,7 @@ public class PacketPlayOutBossBar extends Packet {
                 buf.writeFloat(health);
                 break;
             case 3:
-                writeString(title, buf);
+                writeString(ComponentSerializer.toString(title), buf);
                 break;
             case 4:
                 writeVarInt(color.getId(), buf);
@@ -145,7 +149,7 @@ public class PacketPlayOutBossBar extends Packet {
             return false;
         }
         PacketPlayOutBossBar packet = (PacketPlayOutBossBar) other;
-        return packet.barId.equals(barId) && packet.action.equals(action) && packet.title.equals(title)
+        return packet.barId.equals(barId) && packet.action.equals(action) && Arrays.equals(packet.title, title)
                 && packet.health == health && packet.color.equals(color) && packet.style.equals(style) && packet.flags == flags;
     }
 

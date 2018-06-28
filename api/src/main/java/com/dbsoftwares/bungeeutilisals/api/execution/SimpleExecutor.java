@@ -1,11 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.api.execution;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class SimpleExecutor implements IExecutor {
 
-    private static final ExecutorService executors = Executors.newCachedThreadPool();
+    private static final ScheduledExecutorService executors = Executors.newSingleThreadScheduledExecutor();
 
     public void execute(SimpleJob executor) {
         executor.execute();
@@ -16,13 +17,6 @@ public class SimpleExecutor implements IExecutor {
     }
 
     public void delayedExecute(int delay, SimpleJob executor) {
-        executors.execute(() -> {
-            try {
-                Thread.sleep(delay * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            executor.execute();
-        });
+        executors.schedule(executor::execute, delay, TimeUnit.SECONDS);
     }
 }

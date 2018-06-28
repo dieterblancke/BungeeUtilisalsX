@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.api.bossbar;
  */
 
 import com.google.common.collect.Lists;
+import lombok.Getter;
 
 import java.util.List;
 
@@ -15,7 +16,7 @@ public class BarStyle {
     public static final BarStyle SOLID;
     public static final BarStyle SIX_SEGMENTS;
     public static final BarStyle TEN_SEGMENTS;
-    public static final BarStyle TWELF_SEGMENTS;
+    public static final BarStyle TWELVE_SEGMENTS;
     public static final BarStyle TWENTY_SEGMENTS;
 
     public static final List<BarStyle> values;
@@ -24,20 +25,17 @@ public class BarStyle {
         SOLID = new BarStyle(0);
         SIX_SEGMENTS = new BarStyle(1);
         TEN_SEGMENTS = new BarStyle(2);
-        TWELF_SEGMENTS = new BarStyle(3);
+        TWELVE_SEGMENTS = new BarStyle(3);
         TWENTY_SEGMENTS = new BarStyle(4);
 
-        values = Lists.newArrayList(SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELF_SEGMENTS, TWENTY_SEGMENTS);
+        values = Lists.newArrayList(SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS);
     }
 
+    @Getter
     private int id;
 
     public BarStyle(int id) {
         this.id = id;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public static BarStyle[] values() {

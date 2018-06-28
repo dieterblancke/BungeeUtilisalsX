@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.bungee.newevent;
+package com.dbsoftwares.bungeeutilisals.bungee.event;
 
 /*
  * Created by DBSoftwares on 14/03/2018

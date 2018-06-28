@@ -6,6 +6,9 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -18,12 +21,14 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface BUAPI {
 
@@ -159,4 +164,53 @@ public interface BUAPI {
      * @param placeholders PlaceHolders + their replacements
      */
     void langBroadcast(String message, String permission, Object... placeholders);
+
+    /**
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar();
+
+    /**
+     * Deprecated, please use {@link #createBossBar(BarColor, BarStyle, float, BaseComponent[])} instead.
+     *
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param message  The display message of the BossBar (String)
+     * @return a new BossBar instance.
+     */
+    @Deprecated
+    IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message);
+
+    /**
+     * Deprecated, please use {@link #createBossBar(UUID, BarColor, BarStyle, float, BaseComponent[])} instead.
+     *
+     * @param uuid     UUID for the BossBar, should be unique!
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param message  The display message of the BossBar (String)
+     * @return a new BossBar instance.
+     */
+    @Deprecated
+    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message);
+
+    /**
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param message  The display message of the BossBar (BaseComponent)
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message);
+
+    /**
+     * @param uuid     UUID for the BossBar, should be unique!
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 & 1.0.
+     * @param message  The display message of the BossBar (BaseComponent)
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message);
 }
