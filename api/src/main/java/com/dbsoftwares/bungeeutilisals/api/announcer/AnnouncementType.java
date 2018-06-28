@@ -7,5 +7,5 @@ package com.dbsoftwares.bungeeutilisals.api.announcer;
  */
 
 public enum AnnouncementType {
-    CHAT, ACTIONBAR, TITLE, BOSSBAR
+    CHAT, ACTIONBAR, TITLE, BOSSBAR, TAB
 }

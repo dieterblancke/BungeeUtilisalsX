@@ -18,9 +18,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.announcers.BossBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.bungee.announcers.ChatAnnouncer;
-import com.dbsoftwares.bungeeutilisals.bungee.announcers.TitleAnnouncer;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.*;
 import com.dbsoftwares.bungeeutilisals.bungee.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.bungee.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.api.tools.Debugger;
@@ -80,6 +78,8 @@ public class BUtilisalsAPI implements BUAPI {
         announcers.add(new ChatAnnouncer());
         announcers.add(new TitleAnnouncer());
         announcers.add(new BossBarAnnouncer());
+        announcers.add(new ActionBarAnnouncer());
+        announcers.add(new TabAnnouncer());
 
         announcers.stream().filter(Announcer::isEnabled).forEach(announcer -> {
             announcer.loadAnnouncements();

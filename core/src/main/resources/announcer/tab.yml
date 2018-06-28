@@ -7,15 +7,15 @@ delay:
 random: false
 
 announcements:
-  - text: '&aActionbar 1'
+  - header: '&aTab Header 1'
+    footer: '&aTab Footer 1'
     servers: 'ALL'
     permission: ''
-    time: 15
-  - text: '&cActionbar 2'
+  - header: '&aTab Header 2'
+    footer: '&aTab Footer 2'
     servers: 'Lobby, Skyblock, Survival'
     permission: ''
-    time: 1
-  - text: '&eActionbar 3'
+  - header: '&aTab Header 3'
+    footer: '&aTab Footer 3'
     servers: 'ALL'
     permission: 'bungeeutilisals.announcements.view'
-    time: 1

@@ -6,9 +6,6 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
@@ -56,7 +53,6 @@ import org.bstats.bungeecord.Metrics;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -76,7 +72,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     public static void log(String message) {
-        System.out.println("[BungeeUtilisals] " + message);
+        System.out.println("(BungeeUtilisals) " + message);
     }
 
     @Override
