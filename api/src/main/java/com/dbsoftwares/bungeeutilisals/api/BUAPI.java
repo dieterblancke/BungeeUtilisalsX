@@ -28,6 +28,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -220,5 +221,5 @@ public interface BUAPI {
     /**
      * @return a list of all announcers.
      */
-    List<Announcer> getAnnouncers();
+    Collection<Announcer> getAnnouncers();
 }

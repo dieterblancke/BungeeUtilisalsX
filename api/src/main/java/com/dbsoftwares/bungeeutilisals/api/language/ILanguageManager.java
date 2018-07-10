@@ -19,6 +19,7 @@ import java.util.Optional;
 public interface ILanguageManager {
 
     /**
+     * @param language The name of the language to be searched.
      * @return The language found with the given name, if not found: default language.
      */
     Language getLangOrDefault(String language);

@@ -41,12 +41,6 @@
             <version>2.7.6</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>com.dbsoftwares.configuration</groupId>
-            <artifactId>ConfigurationAPI</artifactId>
-            <version>1.0.1</version>
-            <scope>provided</scope>
-        </dependency>
     </dependencies>
 
     <build>

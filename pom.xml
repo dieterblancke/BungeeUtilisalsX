@@ -23,6 +23,10 @@
             <name>Public Repositories</name>
             <url>http://repo.mvdw-software.be/content/groups/public/</url>
         </repository>
+        <repository>
+            <id>dbsoftwares-repo</id>
+            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -42,6 +46,12 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dbsoftwares.configuration</groupId>
+            <artifactId>ConfigurationAPI</artifactId>
+            <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

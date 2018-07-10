@@ -153,7 +153,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         Announcer.registerAnnouncers(ActionBarAnnouncer.class, BossBarAnnouncer.class,
-                ChatAnnouncer.class, TabAnnouncer.class, TitleAnnouncer.class);
+                ChatAnnouncer.class, TitleAnnouncer.class);
     }
 
     @Override

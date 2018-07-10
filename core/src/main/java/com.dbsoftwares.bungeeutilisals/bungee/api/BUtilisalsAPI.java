@@ -35,6 +35,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -52,9 +53,6 @@ public class BUtilisalsAPI implements BUAPI {
     private Debugger debugger;
     private PunishmentExecutor punishmentExecutor;
 
-    @Getter
-    private List<Announcer> announcers;
-
     public BUtilisalsAPI(BungeeUtilisals instance) {
         APIHandler.registerProvider(this);
 
@@ -68,23 +66,11 @@ public class BUtilisalsAPI implements BUAPI {
         this.simpleExecutor = new SimpleExecutor();
         this.debugger = new Debugger();
         this.punishmentExecutor = new PunishmentExecutor();
-
-        loadAnnouncers();
     }
 
-    private void loadAnnouncers() {
-        this.announcers = Lists.newArrayList();
-
-        announcers.add(new ChatAnnouncer());
-        announcers.add(new TitleAnnouncer());
-        announcers.add(new BossBarAnnouncer());
-        announcers.add(new ActionBarAnnouncer());
-        announcers.add(new TabAnnouncer());
-
-        announcers.stream().filter(Announcer::isEnabled).forEach(announcer -> {
-            announcer.loadAnnouncements();
-            announcer.start();
-        });
+    @Override
+    public Collection<Announcer> getAnnouncers() {
+        return Announcer.getAnnouncers().values();
     }
 
     @Override

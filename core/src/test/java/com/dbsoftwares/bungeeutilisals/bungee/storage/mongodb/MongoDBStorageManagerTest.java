@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.bungee.storage.mongodb;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.google.common.collect.Lists;

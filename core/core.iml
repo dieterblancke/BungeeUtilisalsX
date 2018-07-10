@@ -27,7 +27,6 @@
     <orderEntry type="library" name="Maven: junit:junit:4.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.zaxxer:HikariCP:2.7.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.dbsoftwares.configuration:ConfigurationAPI:1.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord-proxy:1.12-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.flowpowered:flow-nbt:1.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-codec-haproxy:4.1.25.Final" level="project" />
@@ -56,5 +55,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.guava:guava:20.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongo-java-driver:3.6.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.20" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.dbsoftwares.configuration:ConfigurationAPI:1.0.1" level="project" />
   </component>
 </module>

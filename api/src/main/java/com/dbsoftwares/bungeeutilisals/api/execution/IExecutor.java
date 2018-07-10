@@ -28,6 +28,7 @@ public interface IExecutor {
      *
      * @param delay    Time, in seconds, untill execution.
      * @param executor The job you want to execute async delayed.
+     * @return an instance of ScheduledFuture
      */
     ScheduledFuture scheduledExecute(int delay, SimpleJob executor);
 }

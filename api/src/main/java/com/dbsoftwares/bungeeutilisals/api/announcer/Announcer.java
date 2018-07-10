@@ -80,6 +80,7 @@ public abstract class Announcer {
 
                 if (announcer.isEnabled()) {
                     announcer.loadAnnouncements();
+                    announcer.start();
 
                     BUCore.log("Loading " + announcer.getType().toString().toLowerCase() + " announcements ...");
                 }

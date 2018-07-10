@@ -11,9 +11,11 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class BUCore {
 
+    private final static Logger logger = Logger.getLogger("BungeeUtilisals");
     private static BUAPI instance = null;
 
     private BUCore() {
@@ -40,10 +42,10 @@ public final class BUCore {
     }
 
     public static void log(String message) {
-        instance.getPlugin().getLogger().log(Level.INFO, "(BungeeUtilisals) " + message);
+        logger.log(Level.INFO, message);
     }
 
     public static void log(Level level, String message) {
-        instance.getPlugin().getLogger().log(level, "(BungeeUtilisals) " + message);
+        logger.log(level, message);
     }
 }

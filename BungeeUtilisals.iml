@@ -52,5 +52,6 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.guava:guava:20.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongo-java-driver:3.6.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.20" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.dbsoftwares.configuration:ConfigurationAPI:1.0.1" level="project" />
   </component>
 </module>
