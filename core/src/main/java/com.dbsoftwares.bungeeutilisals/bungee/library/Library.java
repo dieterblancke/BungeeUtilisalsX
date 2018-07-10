@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.library;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
@@ -49,6 +50,11 @@ public enum Library {
             "com.zaxxer.hikari.HikariDataSource",
             "http://central.maven.org/maven2/com/zaxxer/HikariCP/2.7.8/HikariCP-2.7.8.jar",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")
+    ),
+    CONFIGURATIONAPI(
+            "com.dbsoftwares.configuration.api.IConfiguration",
+            "https://cdn.dbsoftwares.eu/ConfigurationAPI/1.0.1/ConfigurationAPI.jar",
+            true
     );
 
     private String className;
@@ -80,7 +86,7 @@ public enum Library {
 
         // Download libary if not present
         if (!path.exists()) {
-            BungeeUtilisals.log("Downloading libary for " + toString().toLowerCase());
+            BUCore.log("Downloading libary for " + toString().toLowerCase());
 
             InputStream input = null;
             FileOutputStream output = null;
@@ -119,7 +125,7 @@ public enum Library {
         }
 
         BungeeUtilisals.getInstance().getLibraryClassLoader().loadLibrary(path);
-        BungeeUtilisals.log("Loaded libary with name: " + toString().toLowerCase());
+        BUCore.log("Loaded libary with name: " + toString().toLowerCase());
     }
 
     private static boolean checkType(String... types) {

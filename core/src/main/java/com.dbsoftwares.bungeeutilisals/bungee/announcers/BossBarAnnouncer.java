@@ -11,11 +11,14 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.configuration.api.ISection;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.bungee.announcers.announcements.BossBarAnnouncement;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.announcements.BossBarMessage;
+import com.google.common.collect.Lists;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class BossBarAnnouncer extends Announcer {
@@ -25,24 +28,31 @@ public class BossBarAnnouncer extends Announcer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void loadAnnouncements() {
-        List<LinkedHashMap<String, Object>> announcements = configuration.getList("announcements");
-        IBossBar bossBar = BUCore.getApi().createBossBar();
+        for (ISection section : configuration.getSectionList("announcements")) {
+            ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
-        announcements.forEach(map -> {
-            String[] servers = ((String) map.get("servers")).split(", ");
-            String permission = (String) map.get("permission");
+            if (group == null) {
+                BUCore.log("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                return;
+            }
+            List<BossBarMessage> messages = Lists.newArrayList();
+            TimeUnit unit = TimeUnit.valueOfOrElse(section.getString("stay.unit"), TimeUnit.SECONDS);
+            int stay = section.getInteger("stay.time");
+            String permission = section.getString("permission");
 
-            String text = (String) map.get("text");
-            BarColor color = BarColor.valueOf(((String) map.get("color")).toUpperCase());
-            BarStyle style = BarStyle.valueOf(((String) map.get("style")).toUpperCase());
-            Double progress = (double) map.get("progress");
-            TimeUnit stayUnit = TimeUnit.isUnit((String) map.get("stayunit"))
-                    ? TimeUnit.valueOf(map.get("stayunit").toString().toUpperCase()) : TimeUnit.SECONDS;
-            int stayTime = (int) map.get("staytime");
-
-            addAnnouncement(new BossBarAnnouncement(bossBar, text, color, style, progress.floatValue(), stayUnit, stayTime, servers, permission));
-        });
+            for (ISection message : section.getSectionList("messages")) {
+                messages.add(
+                        new BossBarMessage(
+                                BarColor.valueOf(message.getString("color")),
+                                BarStyle.valueOf(message.getString("style")),
+                                message.getFloat("progress"),
+                                message.getBoolean("language"),
+                                message.getString("text")
+                        )
+                );
+            }
+            addAnnouncement(new BossBarAnnouncement(messages, unit, stay, group, permission));
+        }
     }
 }

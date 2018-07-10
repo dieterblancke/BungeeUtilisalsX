@@ -47,7 +47,7 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
             executor.invoke(executorInstance, castedEvent);
             uses.getAndIncrement();
         } catch (Throwable t) {
-            BungeeUtilisals.log("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
+            BUCore.log("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
             t.printStackTrace();
         }
     }

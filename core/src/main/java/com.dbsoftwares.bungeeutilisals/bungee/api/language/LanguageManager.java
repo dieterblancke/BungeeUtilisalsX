@@ -1,7 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.bungee.api.language;
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
@@ -9,8 +10,8 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.json.JsonConfiguration;
-import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
+import com.dbsoftwares.configuration.json.JsonConfiguration;
+import com.dbsoftwares.configuration.yaml.YamlConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.io.ByteStreams;
@@ -161,7 +162,7 @@ public class LanguageManager implements ILanguageManager {
         File lang = getFile(plugin, language);
 
         if (!configurations.containsKey(lang)) {
-            BungeeUtilisals.log("The plugin " + plugin.getDescription().getName() + " did not register the language " + language.getName() + " yet!");
+            BUCore.log("The plugin " + plugin.getDescription().getName() + " did not register the language " + language.getName() + " yet!");
 
             File deflang = getFile(plugin, getDefaultLanguage());
             if (configurations.containsKey(deflang)) {
@@ -224,18 +225,15 @@ public class LanguageManager implements ILanguageManager {
                 target.createNewFile();
                 try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
-                        BungeeUtilisals.log("Didn't found default configuration for language " +
+                        BUCore.log("Didn't found default configuration for language " +
                                 source.replace("languages/", "").replace(".json", "") +
                                 " for plugin " + plugin.getDescription().getName());
                         return null;
                     }
                     ByteStreams.copy(in, out);
-                    BungeeUtilisals.log("Loading default configuration for language "
+                    BUCore.log("Loading default configuration for language "
                             + source.replace("languages/", "").replace(".json", "") + " for plugin "
                             + plugin.getDescription().getName());
-
-                    in.close();
-                    out.close();
                 }
             }
         } catch (Exception e) {

@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.bungee.manager;
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;

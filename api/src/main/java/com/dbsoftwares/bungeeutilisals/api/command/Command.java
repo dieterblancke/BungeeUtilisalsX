@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

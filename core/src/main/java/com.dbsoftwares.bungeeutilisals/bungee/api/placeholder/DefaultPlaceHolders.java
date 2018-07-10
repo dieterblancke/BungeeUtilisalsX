@@ -94,5 +94,12 @@ public class DefaultPlaceHolders implements PlaceHolderPack {
                 return BungeeUtilisals.getInstance().getConfig().getString("storage.schema.warns");
             }
         });
+        PlaceHolderAPI.addPlaceHolder("{user}", true, new PlaceHolderEventHandler() {
+            @Override
+            public String getReplace(PlaceHolderEvent event) {
+                return event.getUser().getName();
+            }
+        });
+
     }
 }

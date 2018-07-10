@@ -6,9 +6,11 @@ package com.dbsoftwares.bungeeutilisals.api;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
+
+import java.util.logging.Level;
 
 public final class BUCore {
 
@@ -35,5 +37,13 @@ public final class BUCore {
         IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin(), sender);
 
         sender.sendMessage(Utils.format(config.getString("prefix"), message));
+    }
+
+    public static void log(String message) {
+        instance.getPlugin().getLogger().log(Level.INFO, "(BungeeUtilisals) " + message);
+    }
+
+    public static void log(Level level, String message) {
+        instance.getPlugin().getLogger().log(level, "(BungeeUtilisals) " + message);
     }
 }

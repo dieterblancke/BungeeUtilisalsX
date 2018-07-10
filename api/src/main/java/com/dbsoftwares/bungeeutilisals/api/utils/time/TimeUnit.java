@@ -503,13 +503,20 @@ public enum TimeUnit {
         }
     }
 
-    public static Boolean isUnit(String unit) {
+    public static boolean isUnit(String unit) {
         for (TimeUnit time : values()) {
             if (time.toString().equalsIgnoreCase(unit)) {
                 return true;
             }
         }
         return false;
+    }
+
+    public static TimeUnit valueOfOrElse(String unit, TimeUnit def) {
+        if (isUnit(unit)) {
+            return valueOf(unit);
+        }
+        return def;
     }
 
     public java.util.concurrent.TimeUnit toJavaTimeUnit() {

@@ -8,9 +8,13 @@ package com.dbsoftwares.bungeeutilisals.bungee.announcers;
 
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.configuration.api.ISection;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.bungee.announcers.announcements.ChatAnnouncement;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 
-import java.util.LinkedHashMap;
 import java.util.List;
 
 public class ChatAnnouncer extends Announcer {
@@ -20,16 +24,27 @@ public class ChatAnnouncer extends Announcer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void loadAnnouncements() {
-        List<LinkedHashMap<String, Object>> announcements = configuration.getList("announcements");
+        for (ISection section : configuration.getSectionList("announcements")) {
+            ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
-        announcements.forEach(map -> {
-            String[] messages = ((List<String>) map.get("messages")).toArray(new String[]{});
-            String[] servers = ((String) map.get("servers")).split(", ");
-            String permission = (String) map.get("permission");
+            if (group == null) {
+                BUCore.log("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                return;
+            }
 
-            addAnnouncement(new ChatAnnouncement(messages, servers, permission));
-        });
+            boolean usePrefix = section.getBoolean("use-prefix");
+            String permission = section.getString("permission");
+
+            if (section.isList("messages")) {
+                List<String> messages = section.getStringList("messages");
+
+                addAnnouncement(new ChatAnnouncement(usePrefix, messages, group, permission));
+            } else {
+                String messagePath = section.getString("messages");
+
+                addAnnouncement(new ChatAnnouncement(usePrefix, messagePath, group, permission));
+            }
+        }
     }
 }

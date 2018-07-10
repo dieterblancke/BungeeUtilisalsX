@@ -6,7 +6,7 @@ package com.dbsoftwares.bungeeutilisals.bungee.storage.hikari;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.bungee.storage.data.SQLDataManager;
 import com.zaxxer.hikari.HikariConfig;

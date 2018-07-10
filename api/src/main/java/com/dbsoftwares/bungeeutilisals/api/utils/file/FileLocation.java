@@ -1,15 +1,16 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.configuration.ISection;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
+import net.md_5.bungee.api.ProxyServer;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +23,7 @@ public enum FileLocation {
         }
     },
     SERVERGROUPS("servergroups.yml") {
-        @Override @SuppressWarnings("unchecked")
+        @Override
         public void loadData(IConfiguration configuration) {
             for (ISection group : configuration.getSectionList("groups")) {
                 String name = group.getString("name");
@@ -31,6 +32,12 @@ public enum FileLocation {
                     setData(name, new ServerGroup(name, false, group.getStringList("servers")));
                 } else {
                     setData(name, new ServerGroup(name, true, Lists.newArrayList()));
+                }
+            }
+
+            for (String key : ProxyServer.getInstance().getServers().keySet()) {
+                if (!hasData(key)) {
+                    setData(key, new ServerGroup(key, false, Lists.newArrayList(key)));
                 }
             }
         }
@@ -77,8 +84,9 @@ public enum FileLocation {
 
                         if (section.isInteger("time.amount")) {
                             int amount = section.getInteger("time.amount");
+                            int limit = section.getInteger("limit");
 
-                            PunishmentAction action = new PunishmentAction(type, unit, amount, section.getStringList("actions"));
+                            PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
                             List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
                                     type.toString(), Lists.newArrayList()
                             );

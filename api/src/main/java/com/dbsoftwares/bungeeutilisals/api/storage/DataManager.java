@@ -8,11 +8,15 @@ package com.dbsoftwares.bungeeutilisals.api.storage;
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 
+import java.util.Date;
 import java.util.UUID;
 
 public interface DataManager {
+
+    long getPunishmentsSince(String identifier, PunishmentType type, Date date);
 
     void insertIntoUsers(String uuid, String username, String ip, String language);
 

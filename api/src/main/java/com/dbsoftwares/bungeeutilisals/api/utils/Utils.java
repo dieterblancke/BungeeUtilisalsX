@@ -7,12 +7,16 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
  * May only be used for CentrixPVP
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.connection.DownstreamBridge;
 import net.md_5.bungee.connection.UpstreamBridge;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
@@ -53,13 +57,35 @@ public class Utils {
     }
 
     /**
-     * Formats a message to TextComponent.
+     * Formats a message to TextComponent, translates color codes and replaces general placeholders.
      *
      * @param message The message to be formatted.
      * @return The formatted message.
      */
     public static BaseComponent[] format(String message) {
-        return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', message));
+        return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', PlaceHolderAPI.formatMessage(message)));
+    }
+
+    /**
+     * Formats a message to TextComponent, translates color codes and replaces placeholders.
+     *
+     * @param player The player for which the placeholders should be formatted.
+     * @param message The message to be formatted.
+     * @return The formatted message.
+     */
+    public static BaseComponent[] format(ProxiedPlayer player, String message) {
+        return format(BUCore.getApi().getUser(player).orElse(null), message);
+    }
+
+    /**
+     * Formats a message to TextComponent, translates color codes and replaces placeholders.
+     *
+     * @param user The user for which the placeholders should be formatted.
+     * @param message The message to be formatted.
+     * @return The formatted message.
+     */
+    public static BaseComponent[] format(User user, String message) {
+        return TextComponent.fromLegacyText(ChatColor.translateAlternateColorCodes('&', PlaceHolderAPI.formatMessage(user, message)));
     }
 
     /**

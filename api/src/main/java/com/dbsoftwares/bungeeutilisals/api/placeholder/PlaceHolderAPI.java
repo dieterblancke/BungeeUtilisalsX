@@ -10,6 +10,9 @@ public class PlaceHolderAPI {
     private static List<PlaceHolder> placeholders = Lists.newArrayList();
 
     public static String formatMessage(User user, String message) {
+        if (user == null) {
+            return formatMessage(message);
+        }
         try {
             for (PlaceHolder placeholder : placeholders) {
                 message = placeholder.format(user, message);

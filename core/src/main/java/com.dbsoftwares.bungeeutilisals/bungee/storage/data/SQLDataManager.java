@@ -16,6 +16,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
@@ -60,6 +61,28 @@ public class SQLDataManager implements DataManager {
     /* SQL DELETE STATEMENTS */
     private final static String UPDATE_PUNISHMENTS_UUID = "UPDATE {table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
     private final static String UPDATE_PUNISHMENTS_IP = "UPDATE {table} SET active = 0 WHERE ip = '%s' AND active = 1;";
+
+    @Override
+    public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
+        long amount = 0;
+
+        String statement = format(SELECT.replace("{table}", type.getTablePlaceHolder()), "COUNT(*) count",
+                (type.toString().startsWith("IP") ? "ip" : "uuid") + " = '" + identifier + "' AND date >= ?;");
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
+            PreparedStatement preparedStatement = connection.prepareStatement(statement);
+            preparedStatement.setDate(1, new java.sql.Date(date.getTime()));
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                amount = resultSet.getLong("count");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return amount;
+    }
 
     /* INSERTION STATEMENTS */
     @Override

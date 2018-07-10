@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.bungee.storage.mongodb;
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.google.common.collect.Lists;
 import com.mongodb.client.MongoCollection;
@@ -32,7 +32,7 @@ public class MongoDBStorageManagerTest {
             MongoDBStorageManager manager = new MongoDBStorageManager(null, AbstractStorageManager.StorageType.MONGODB, config);
 
             if (manager.getClient() == null || manager.getDatabase() == null) {
-                System.out.println("Something went wrong while connecting!");
+                BUCore.log("Something went wrong while connecting!");
                 return;
             }
 
@@ -59,7 +59,7 @@ public class MongoDBStorageManagerTest {
             assertEquals((long) 0, userColl.count());
         } catch (Exception e) {
             // cancelling test, connection fail??
-            System.out.println("Something went wrong while connecting: " + e.getMessage());
+            BUCore.log("Something went wrong while connecting: " + e.getMessage());
         }
     }
 

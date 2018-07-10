@@ -27,4 +27,8 @@ public enum PunishmentType {
     public boolean isTemporary() {
         return temporary;
     }
+
+    public String getTablePlaceHolder() {
+        return "{" + toString().toLowerCase() + "s-table}";
+    }
 }

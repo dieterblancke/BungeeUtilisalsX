@@ -22,18 +22,18 @@ public class EventLoaderTest {
 
             @Event
             public void onChat(TestEvent event) {
-                System.out.println("Chat event 1 executed: " + event.getMessage());
+                BUCore.log("Chat event 1 executed: " + event.getMessage());
                 event.setCancelled(true);
             }
 
             @Event(priority = Priority.HIGHEST, executeIfCancelled = false)
             public void onChat2(TestEvent event) {
-                System.out.println("Chat event 2 executed: " + event.getMessage());
+                BUCore.log("Chat event 2 executed: " + event.getMessage());
             }
 
             @Event(priority = Priority.LOWEST)
             public void onChat3(TestEvent event) {
-                System.out.println("Chat event 3 executed: " + event.getMessage());
+                BUCore.log("Chat event 3 executed: " + event.getMessage());
             }
 
         });

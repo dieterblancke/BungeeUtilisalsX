@@ -8,10 +8,10 @@ package com.dbsoftwares.bungeeutilisals.bungee.announcers;
 
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.configuration.api.ISection;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.bungee.announcers.announcements.ActionBarAnnouncement;
-
-import java.util.LinkedHashMap;
-import java.util.List;
 
 public class ActionBarAnnouncer extends Announcer {
 
@@ -20,17 +20,22 @@ public class ActionBarAnnouncer extends Announcer {
     }
 
     @Override
-    @SuppressWarnings("unchecked")
     public void loadAnnouncements() {
-        List<LinkedHashMap<String, Object>> announcements = configuration.getList("announcements");
+        for (ISection section : configuration.getSectionList("announcements")) {
+            ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
-        announcements.forEach(map -> {
-            String text = (String) map.get("text");
-            String[] servers = ((String) map.get("servers")).split(", ");
-            String permission = (String) map.get("permission");
-            int time = (int) map.get("time");
+            if (group == null) {
+                BUCore.log("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                return;
+            }
 
-            addAnnouncement(new ActionBarAnnouncement(text, servers, time, permission));
-        });
+            boolean useLanguage = section.getBoolean("use-language");
+            int time = section.getInteger("time");
+            String permission = section.getString("permission");
+
+            String message = section.getString("message");
+
+            addAnnouncement(new ActionBarAnnouncement(useLanguage, time, message, group, permission));
+        }
     }
 }

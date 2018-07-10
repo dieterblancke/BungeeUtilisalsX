@@ -6,7 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api.language;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import net.md_5.bungee.api.CommandSender;

@@ -43,6 +43,16 @@ public class MongoDataManager implements DataManager {
     }
 
     @Override
+    public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
+        MongoCollection<Document> collection = getDatabase().getCollection(format(type.getTablePlaceHolder()));
+
+        Bson idFilter = Filters.eq(type.toString().startsWith("IP") ? "ip" : "uuid", identifier);
+        Bson dateFilter = Filters.gt("date", date);
+
+        return collection.count(Filters.and(idFilter, dateFilter));
+    }
+
+    @Override
     public void insertIntoUsers(String uuid, String username, String ip, String language) {
         Mapping<String, Object> mapping = new Mapping<>(true);
         mapping.append("uuid", uuid).append("username", username).append("ip", ip).append("language", language);
@@ -120,7 +130,7 @@ public class MongoDataManager implements DataManager {
         }
         mapping.append("executed_by", executedby);
 
-        getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}")).insertOne(new Document(mapping.getMap()));
+        getDatabase().getCollection(format(type.getTablePlaceHolder())).insertOne(new Document(mapping.getMap()));
 
         return builder.build();
     }
@@ -163,11 +173,11 @@ public class MongoDataManager implements DataManager {
         Validate.ifTrue(checkActive, active -> filters.add(Filters.eq("active", true)));
 
         if (filters.size() > 1) {
-            return getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}"))
+            return getDatabase().getCollection(format(type.getTablePlaceHolder()))
                     .find(Filters.and(filters)).iterator().hasNext();
         } else {
             return filters.size() == 1 &&
-                    getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}"))
+                    getDatabase().getCollection(format(type.getTablePlaceHolder()))
                             .find(filters.get(0)).iterator().hasNext();
         }
     }
@@ -260,7 +270,7 @@ public class MongoDataManager implements DataManager {
     }
 
     private PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP) {
-        MongoCollection<Document> collection = getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}"));
+        MongoCollection<Document> collection = getDatabase().getCollection(format(type.getTablePlaceHolder()));
         Document document = null;
 
         if (uuid != null) {
@@ -372,10 +382,10 @@ public class MongoDataManager implements DataManager {
 
     private void removePunishment(PunishmentType type, UUID uuid, String ip) {
         if (uuid != null) {
-            getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}"))
+            getDatabase().getCollection(format(type.getTablePlaceHolder()))
                     .updateOne(Filters.eq("uuid", uuid), Updates.set("active", false));
         } else if (ip != null) {
-            getDatabase().getCollection(format("{" + type.toString().toLowerCase() + "s-table}"))
+            getDatabase().getCollection(format(type.getTablePlaceHolder()))
                     .updateOne(Filters.eq("ip", ip), Updates.set("active", false));
         }
     }

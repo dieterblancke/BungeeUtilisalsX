@@ -23,6 +23,6 @@ public class Debugger implements IDebugger {
 
     @Override
     public void forceDebug(String message, Object... replacements) {
-        BungeeUtilisals.log(String.format(message, (Object[]) replacements));
+        BUCore.log(String.format(message, (Object[]) replacements));
     }
 }

@@ -14,6 +14,7 @@ actions:
     # Possible units: MINUTES, HOURS, DAYS, WEEKS
     unit: DAYS
     amount: 7
+  limit: 5
   actions:
   - 'tempmute %user% 1d You have received too many warns recently!'
 # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
@@ -23,6 +24,7 @@ actions:
     # Possible units: MINUTES, HOURS, DAYS, WEEKS
     unit: WEEKS
     amount: 2
+  limit: 3
   actions:
   - 'tempban %user% 1w You have received too many tempmutes recently!'
 

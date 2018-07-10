@@ -1,11 +1,11 @@
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

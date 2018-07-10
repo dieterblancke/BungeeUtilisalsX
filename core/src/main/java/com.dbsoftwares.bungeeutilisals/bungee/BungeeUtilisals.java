@@ -6,7 +6,8 @@ package com.dbsoftwares.bungeeutilisals.bungee;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.configuration.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
@@ -22,8 +23,8 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileUtils;
+import com.dbsoftwares.bungeeutilisals.bungee.announcers.*;
 import com.dbsoftwares.bungeeutilisals.bungee.api.BUtilisalsAPI;
-import com.dbsoftwares.bungeeutilisals.bungee.api.configuration.yaml.YamlConfiguration;
 import com.dbsoftwares.bungeeutilisals.bungee.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.bungee.commands.punishments.*;
@@ -42,6 +43,8 @@ import com.dbsoftwares.bungeeutilisals.bungee.library.classloader.LibraryClassLo
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.bungee.listeners.UserConnectionListener;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.yaml.YamlConfiguration;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -58,6 +61,7 @@ public class BungeeUtilisals extends Plugin {
 
     @Getter
     private static BungeeUtilisals instance;
+
     @Getter
     private static BUtilisalsAPI api;
     @Getter
@@ -69,10 +73,6 @@ public class BungeeUtilisals extends Plugin {
 
     public static IConfiguration getConfiguration(FileLocation location) {
         return configurations.get(location);
-    }
-
-    public static void log(String message) {
-        System.out.println("(BungeeUtilisals) " + message);
     }
 
     @Override
@@ -151,6 +151,9 @@ public class BungeeUtilisals extends Plugin {
             loader.register(UserChatEvent.class, muteCheckExecutor);
             loader.register(UserCommandEvent.class, muteCheckExecutor);
         }
+
+        Announcer.registerAnnouncers(ActionBarAnnouncer.class, BossBarAnnouncer.class,
+                ChatAnnouncer.class, TabAnnouncer.class, TitleAnnouncer.class);
     }
 
     @Override
@@ -178,7 +181,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadLibraries() {
-        log("Loading libraries ...");
+        BUCore.log("Loading libraries ...");
         libraryClassLoader = new LibraryClassLoader(this);
 
         for (Library library : Library.values()) {
@@ -186,7 +189,7 @@ public class BungeeUtilisals extends Plugin {
                 library.load();
             }
         }
-        log("Libraries have been loaded.");
+        BUCore.log("Libraries have been loaded.");
     }
 
     public IConfiguration getConfig() {

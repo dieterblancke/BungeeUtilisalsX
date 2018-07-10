@@ -19,6 +19,7 @@ public class PunishmentAction {
     private PunishmentType type;
     private TimeUnit unit;
     private int time;
+    private int limit;
     private List<String> actions;
 
 }
