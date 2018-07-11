@@ -108,6 +108,12 @@
       </exclusions>
     </dependency>
     <dependency>
+      <groupId>com.dbsoftwares.configuration</groupId>
+      <artifactId>ConfigurationAPI</artifactId>
+      <version>1.0.1</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>
       <version>3.6.3</version>
@@ -117,12 +123,6 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.16.20</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>com.dbsoftwares.configuration</groupId>
-      <artifactId>ConfigurationAPI</artifactId>
-      <version>1.0.1</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

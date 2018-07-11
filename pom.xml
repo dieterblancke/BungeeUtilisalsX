@@ -13,6 +13,14 @@
         <module>api</module>
     </modules>
 
+    <distributionManagement>
+        <repository>
+            <id>dbsoftwares</id>
+            <name>DBSoftwares Repo</name>
+            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+        </repository>
+    </distributionManagement>
+
     <repositories>
         <repository>
             <id>dbsoftwares-repo</id>
