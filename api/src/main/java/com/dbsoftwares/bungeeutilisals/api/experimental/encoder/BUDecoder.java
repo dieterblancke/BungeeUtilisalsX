@@ -8,7 +8,6 @@ import io.netty.handler.codec.MessageToMessageDecoder;
 import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.PacketWrapper;
-
 import java.util.List;
 
 public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {

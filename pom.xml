@@ -15,17 +15,16 @@
 
     <repositories>
         <repository>
-            <id>bungeecord-repo</id>
+            <id>dbsoftwares-repo</id>
+            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+        </repository>
+        <repository>
+            <id>luckperms-repo</id>
             <url>https://ci.lucko.me/plugin/repository/everything/</url>
         </repository>
         <repository>
-            <id>public</id>
-            <name>Public Repositories</name>
+            <id>mvdw-repo</id>
             <url>http://repo.mvdw-software.be/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>dbsoftwares-repo</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
         </repository>
     </repositories>
 
@@ -34,6 +33,12 @@
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-proxy</artifactId>
             <version>1.12-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.dbsoftwares.configuration</groupId>
+            <artifactId>ConfigurationAPI</artifactId>
+            <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -46,12 +51,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.16.20</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.dbsoftwares.configuration</groupId>
-            <artifactId>ConfigurationAPI</artifactId>
-            <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

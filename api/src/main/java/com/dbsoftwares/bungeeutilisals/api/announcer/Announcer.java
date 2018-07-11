@@ -14,7 +14,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.Getter;
-import net.md_5.bungee.BungeeCord;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.io.File;
@@ -97,7 +97,7 @@ public abstract class Announcer {
             throw new IllegalStateException("Announcer is already running.");
         }
 
-        task = BungeeCord.getInstance().getScheduler().schedule(
+        task = ProxyServer.getInstance().getScheduler().schedule(
                 BUCore.getApi().getPlugin(),
                 new Runnable() {
 
