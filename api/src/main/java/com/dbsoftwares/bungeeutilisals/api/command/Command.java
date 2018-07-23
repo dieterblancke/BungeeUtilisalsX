@@ -17,7 +17,7 @@ import java.util.Optional;
 public abstract class Command extends net.md_5.bungee.api.plugin.Command implements ICommand, TabExecutor {
 
     public BUAPI api;
-    String permission = null;
+    private String permission = null;
 
     public Command(String name) {
         this(name, Lists.newArrayList(), null);
@@ -32,7 +32,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     }
 
     public Command(String name, List<String> aliases, String permission) {
-        super(name, "", aliases.toArray(new String[aliases.size()]));
+        super(name, "", aliases.toArray(new String[] {}));
         this.permission = permission;
         this.api = BUCore.getApi();
 
@@ -44,7 +44,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         BUAPI api = BUCore.getApi();
         IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
-        if (permission != null) {
+        if (permission != null && !permission.isEmpty()) {
             if (!sender.hasPermission(permission) && !sender.hasPermission("bungeeutilisals.commands.*")) {
                 BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
                 return;
@@ -107,4 +107,8 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     }
 
     public abstract List<String> onTabComplete(User user, String[] args);
+
+    public void unload() {
+        ProxyServer.getInstance().getPluginManager().unregisterCommand(this);
+    }
 }

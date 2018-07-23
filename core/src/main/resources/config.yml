@@ -1,8 +1,5 @@
-# Should debugging mode be enabled?
-debug: false
-
-# If enabled, experimental features, such as the BungeeInventory / ItemStack API will be enabled.
-experimental: false
+# Should BungeeUtilisals use RedisBungee?
+redis: false
 
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | MySQL recommended
@@ -20,6 +17,8 @@ storage:
   username: 'username'
   # The password corresponding to the username above
   password: 'password'
+  # Should BungeeUtilisals try to establish a SSL connection? (only for SQL)
+  useSSL: true
 
   pool:
     # How many connections are allowed to be made?
@@ -35,7 +34,7 @@ storage:
     connection-timeout: 8
 
   # Storage schema names
-  schema:
+  schemas:
     users: 'bu_users'
     friends: 'bu_friends'
     friendrequests: 'bu_friendrequests'

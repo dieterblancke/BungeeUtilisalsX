@@ -1,4 +1,4 @@
 name: BungeeUtilisals
-main: com.dbsoftwares.bungeeutilisals.bungee.BungeeUtilisals
+main: com.dbsoftwares.bungeeutilisals.BungeeUtilisals
 version: ${project.version}
 author: didjee2

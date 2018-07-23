@@ -10,12 +10,33 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import net.md_5.bungee.api.CommandSender;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Date;
+import java.util.logging.*;
 
 public final class BUCore {
 
-    private final static Logger logger = Logger.getLogger("BungeeUtilisals");
+    private final static Logger logger;
+
+    static {
+        logger = Logger.getLogger("BungeeUtilisals");
+        logger.setUseParentHandlers(false);
+
+        ConsoleHandler handler = new ConsoleHandler();
+        handler.setFormatter(new SimpleFormatter() {
+            private static final String format = "[%1$tF %1$tT] [%2$s] [BungeeUtilisals] %3$s";
+
+            @Override
+            public synchronized String format(LogRecord lr) {
+                return String.format(format,
+                        new Date(lr.getMillis()),
+                        lr.getLevel().getLocalizedName(),
+                        lr.getMessage()
+                );
+            }
+        });
+        logger.addHandler(handler);
+    }
+
     private static BUAPI instance = null;
 
     private BUCore() {

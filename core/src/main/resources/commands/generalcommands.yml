@@ -1,0 +1,34 @@
+glist:
+  # Enable this command or not?
+  enabled: true
+  aliases: 'blist, globallist'
+  permission: bungeeutilisals.glist
+  format:
+    text: '&c%server% &7(%players%) &f» %playerlist%'
+    hover:
+    - '&eClick here to go to &b%server%&e.'
+    click:
+      # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+      # RUN_COMMAND will only work for BungeeCord commands.
+      type: 'RUN_COMMAND'
+      action: 'server %server%'
+  playerlist:
+    namecolor: '&e'
+    separator:
+      text: ', '
+      color: '&e'
+  # You can use ServerGroups & ServerNames in here. ServerGroups have a higher priority..
+  servers:
+    # Set to true if you want the servers below to be shown instead of your normal BungeeCord servers.
+    # This can be helpful if you want to group certain servers.
+    enabled: false
+    # The servers or servergroups which should occur in the /glist servers (allows you to for example group minigames)
+    list:
+    - 'Lobbies'
+    - 'Factions'
+    - 'Skyblock'
+    - 'SkyWars'
+  total:
+    text: '&eThere are &c%total% &eplayers online now!'
+    hover:
+    - '%playerlist%'

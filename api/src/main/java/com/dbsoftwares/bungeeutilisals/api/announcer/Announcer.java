@@ -16,13 +16,10 @@ import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
-
 import java.io.File;
-import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 @Data
 public abstract class Announcer {
@@ -49,23 +46,14 @@ public abstract class Announcer {
         }
         File file = new File(folder, type.toString().toLowerCase() + ".yml");
         if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            IConfiguration.createDefaultFile(
+                    BUCore.getApi().getPlugin().getResourceAsStream(
+                            "announcers/" + type.toString().toLowerCase() + ".yml"
+                    ), file
+            );
         }
 
         configuration = IConfiguration.loadYamlConfiguration(file);
-        try {
-            configuration.copyDefaults(IConfiguration.loadYamlConfiguration(
-                    BUCore.getApi().getPlugin().getResourceAsStream("announcers/" + type.toString().toLowerCase() + ".yml")
-            ));
-        } catch (IOException e) {
-            BUCore.log("Could not load file defaults for " + type.toString().toLowerCase() + ".yml");
-            e.printStackTrace();
-        }
-
         enabled = configuration.getBoolean("enabled");
         unit = TimeUnit.valueOfOrElse(configuration.getString("delay.unit"), TimeUnit.SECONDS);
         delay = configuration.getInteger("delay.time");

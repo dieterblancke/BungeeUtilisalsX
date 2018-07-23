@@ -6,21 +6,63 @@ package com.dbsoftwares.bungeeutilisals.api.utils.server;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class ServerGroup {
 
     private String name;
     private boolean global;
     private List<String> servers;
+
+    public ServerGroup(String name, boolean global, List<String> servers) {
+        this.name = name;
+        this.global = global;
+        this.servers = searchServers(servers);
+    }
+
+    private List<String> searchServers(List<String> servers) {
+        LinkedList<String> foundServers = Lists.newLinkedList();
+
+        servers.forEach(server -> {
+            for (ServerInfo info : ProxyServer.getInstance().getServers().values()) {
+                String name = info.getName().toLowerCase();
+
+                if (server.startsWith("*")) {
+                    if (name.endsWith(server.substring(1, server.length()).toLowerCase())) {
+                        foundServers.add(info.getName());
+                    }
+                } else if (server.endsWith("*")) {
+                    if (name.startsWith(server.substring(0, server.length() - 1).toLowerCase())) {
+                        foundServers.add(info.getName());
+                    }
+                } else {
+                    if (name.equalsIgnoreCase(server)) {
+                        foundServers.add(info.getName());
+                    }
+                }
+            }
+        });
+
+        return foundServers;
+    }
+
+    public int getPlayers() {
+        int players = 0;
+
+        for (String server : servers) {
+            players += BUCore.getApi().getPlayerUtils().getPlayerCount(server);
+        }
+
+        return players;
+    }
 
     public List<ServerInfo> getServerInfos() {
         List<ServerInfo> servers = Lists.newArrayList();

@@ -11,7 +11,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
-import java.util.LinkedHashMap;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -19,12 +19,12 @@ public enum FileLocation {
 
     CONFIG("config.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
     SERVERGROUPS("servergroups.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
             for (ISection group : configuration.getSectionList("groups")) {
                 String name = group.getString("name");
 
@@ -42,39 +42,49 @@ public enum FileLocation {
             }
         }
     },
-    ANTISWEAR("chat/antiswear.yml") {
+    CUSTOMCOMMANDS("commands/customcommands.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
-    ANTICAPS("chat/anticaps.yml") {
+    GENERALCOMMANDS("commands/generalcommands.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
-    ANTIAD("chat/antiadvertise.yml") {
+    ANTISWEAR("chat/protection/antiswear.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
-    ANTISPAM("chat/antispam.yml") {
+    ANTICAPS("chat/protection/anticaps.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
+        }
+    },
+    ANTIAD("chat/protection/antiadvertise.yml") {
+        @Override
+        public void loadData() {
+        }
+    },
+    ANTISPAM("chat/protection/antispam.yml") {
+        @Override
+        public void loadData() {
         }
     },
     UTFSYMBOLS("chat/utfsymbols.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
     FRIENDS_CONFIG("friends/config.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     },
     PUNISHMENTS_CONFIG("punishments/config.yml") {
         @Override @SuppressWarnings("unchecked")
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
             for (ISection section : configuration.getSectionList("actions")) {
                 try {
                     PunishmentType type = PunishmentType.valueOf(section.getString("type"));
@@ -111,25 +121,11 @@ public enum FileLocation {
                 }
 
             }
-
-            for (Object group : configuration.getList("actions")) {
-                LinkedHashMap<String, Object> map = (LinkedHashMap<String, Object>) group;
-
-                try {
-                    PunishmentType type = PunishmentType.valueOf((String) map.get("type"));
-
-
-                } catch (IllegalArgumentException e) {
-                    BUCore.getApi().getPlugin().getLogger().warning(
-                            "An invalid punishment type has been entered (" + map.get("type") + ")."
-                    );
-                }
-            }
         }
     },
     LANGUAGES_CONFIG("languages/config.yml") {
         @Override
-        public void loadData(IConfiguration configuration) {
+        public void loadData() {
         }
     };
 
@@ -139,12 +135,15 @@ public enum FileLocation {
     @Getter
     private Map<String, Object> data;
 
+    @Getter
+    protected IConfiguration configuration;
+
     FileLocation(String path) {
         this.path = path;
         this.data = Maps.newHashMap();
     }
 
-    public abstract void loadData(IConfiguration configuration);
+    public abstract void loadData();
 
     @SuppressWarnings("unchecked")
     public <T> T getData(String key) {
@@ -157,5 +156,9 @@ public enum FileLocation {
 
     public <T> void setData(String key, T data) {
         this.data.put(key, data);
+    }
+
+    public void loadConfiguration(File file) {
+        this.configuration = IConfiguration.loadYamlConfiguration(file);
     }
 }

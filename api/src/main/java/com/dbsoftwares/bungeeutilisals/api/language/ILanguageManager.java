@@ -6,9 +6,9 @@ package com.dbsoftwares.bungeeutilisals.api.language;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileStorageType;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;

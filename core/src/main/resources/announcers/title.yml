@@ -1,0 +1,47 @@
+# Set to true to enable this announcer, false to disable.
+enabled: true
+
+# If set to true, the announcement messages will be sent random.
+# If set to false, the announcement messages will be sent ordered as below.
+random: false
+
+delay:
+ # Possible TimeUnits: SECONDS, MINUTES & HOURS
+ unit: MINUTES
+ time: 2
+
+announcements:
+# You can enter a ServerGroup name or a ServerName in here.
+# Do note that ServerGroup names will be prioritized above ServerNames.
+- server: Global
+  # How long should the title fade in (in seconds)?
+  fadein: 1
+  # How long should the title stay (in seconds)?
+  stay: 3
+  # How long should the title fade out (in seconds)?
+  fadeout: 1
+  # Permission you need in order to receive the announcement, leave empty if no permission.
+  permission: 'bungeeutilisals.announcements.receive'
+  # Should the message be retrieved from the language files? If true, you must use a valid path!
+  language: false
+  # Title text, if language is set to true, the path will be searched in the language file.
+  title: '&c&lBungeeUtilisals'
+  # SubTitle text, if language is set to true, the path will be searched in the language file.
+  subtitle: '&dThank you for using our plugin!'
+# You can enter a ServerGroup name or a ServerName in here.
+# Do note that ServerGroup names will be prioritized above ServerNames.
+- server: Minigames
+  # How long should the title fade in (in seconds)?
+  fadein: 1
+  # How long should the title stay (in seconds)?
+  stay: 3
+  # How long should the title fade out (in seconds)?
+  fadeout: 1
+  # Permission you need in order to receive the announcement, leave empty if no permission.
+  permission: ''
+  # Should the message be retrieved from the language files? If true, you must use a valid path!
+  language: true
+  # Title text, if language is set to true, the path will be searched in the language file.
+  title: 'custom.announcements.title.minigame1.title'
+  # SubTitle text, if language is set to true, the path will be searched in the language file.
+  subtitle: 'custom.announcements.title.minigame1.subtitle'

@@ -10,13 +10,13 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.tools.IDebugger;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -29,7 +29,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -92,11 +91,6 @@ public interface BUAPI {
      * @return A SimpleExecutor instance.
      */
     SimpleExecutor getSimpleExecutor();
-
-    /**
-     * @return A IDebugger instance.
-     */
-    IDebugger getDebugger();
 
     /**
      * @param location The Configuration location you want to request.
@@ -222,4 +216,9 @@ public interface BUAPI {
      * @return a list of all announcers.
      */
     Collection<Announcer> getAnnouncers();
+
+    /**
+     * @return an IPlayerUtils instance (BungeePlayerUtils or RedisPlayerUtils)
+     */
+    IPlayerUtils getPlayerUtils();
 }

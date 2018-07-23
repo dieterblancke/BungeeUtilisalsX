@@ -84,15 +84,15 @@ public abstract class AbstractStorageManager {
 
     public enum StorageType {
 
-        MYSQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.hikari.MySQLStorageManager"),
+        MYSQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MySQLStorageManager"),
                 "MySQL", "schemas/mysql.sql"),
-        POSTGRESQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.hikari.PostgreSQLStorageManager"),
+        POSTGRESQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.PostgreSQLStorageManager"),
                 "PostgreSQL", "schemas/postgresql.sql"),
-        MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.hikari.MariaDBStorageManager"),
+        MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MariaDBStorageManager"),
                 "MariaDB", "schemas/mariadb.sql"),
-        SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.file.SQLiteStorageManager"),
+        SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager"),
                 "SQLite", "schemas/sqlite.sql"),
-        MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.bungee.storage.mongodb.MongoDBStorageManager"),
+        MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager"),
                 "MongoDB", null);
 
         @Getter
@@ -102,8 +102,7 @@ public abstract class AbstractStorageManager {
         @Getter
         private String schema;
 
-        @SuppressWarnings("unchecked")
-            // We know the classes are always an instance of AbstractStorageManager
+        @SuppressWarnings("unchecked") // We know the classes are always an instance of AbstractStorageManager
         StorageType(Class<?> manager, String name, String schema) {
             this.manager = (Class<? extends AbstractStorageManager>) manager;
             this.name = name;
