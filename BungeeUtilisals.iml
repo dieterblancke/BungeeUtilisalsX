@@ -24,12 +24,13 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.21.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-common:4.1.21.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-unix-common:4.1.21.Final" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.imaginarycode.minecraft:RedisBungee:0.3.6-SNAPSHOT" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: net.md-5:bungeecord:1.13-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.dbsoftwares.configuration:ConfigurationAPI:1.0.3" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.mongodb:mongo-java-driver:3.8.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.zaxxer:HikariCP:3.2.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: org.projectlombok:lombok:1.16.20" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.imaginarycode.minecraft:RedisBungee:0.3.6-SNAPSHOT" level="project" />
+    <orderEntry type="library" scope="PROVIDED" name="Maven: com.imaginarycode.minecraft:RedisBungee:0.3.8-SNAPSHOT" level="project" />
   </component>
 </module>

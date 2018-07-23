@@ -13,10 +13,8 @@ glist:
       type: 'RUN_COMMAND'
       action: 'server %server%'
   playerlist:
-    namecolor: '&e'
-    separator:
-      text: ', '
-      color: '&e'
+    color: '&e'
+    separator: ', '
   # You can use ServerGroups & ServerNames in here. ServerGroups have a higher priority..
   servers:
     # Set to true if you want the servers below to be shown instead of your normal BungeeCord servers.

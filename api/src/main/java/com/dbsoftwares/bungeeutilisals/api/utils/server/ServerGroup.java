@@ -64,6 +64,16 @@ public class ServerGroup {
         return players;
     }
 
+    public List<String> getPlayerList() {
+        List<String> players = Lists.newArrayList();
+
+        for (String server : servers) {
+            players.addAll(BUCore.getApi().getPlayerUtils().getPlayers(server));
+        }
+
+        return players;
+    }
+
     public List<ServerInfo> getServerInfos() {
         List<ServerInfo> servers = Lists.newArrayList();
 

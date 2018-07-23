@@ -14,4 +14,6 @@ public interface IPlayerUtils {
 
     List<String> getPlayers(String server);
 
+    int getTotalCount();
+
 }

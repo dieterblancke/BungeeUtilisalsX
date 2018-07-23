@@ -35,4 +35,9 @@ public class RedisPlayerUtils implements IPlayerUtils {
 
         return players;
     }
+
+    @Override
+    public int getTotalCount() {
+        return RedisBungee;
+    }
 }

@@ -32,4 +32,9 @@ public class BungeePlayerUtils implements IPlayerUtils {
 
         return players;
     }
+
+    @Override
+    public int getTotalCount() {
+        return 0;
+    }
 }
