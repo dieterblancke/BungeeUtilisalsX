@@ -35,6 +35,15 @@ public class BungeePlayerUtils implements IPlayerUtils {
 
     @Override
     public int getTotalCount() {
-        return 0;
+        return ProxyServer.getInstance().getPlayers().size();
+    }
+
+    @Override
+    public List<String> getPlayers() {
+        List<String> players = Lists.newArrayList();
+
+        ProxyServer.getInstance().getPlayers().forEach(player -> players.add(player.getName()));
+
+        return players;
     }
 }

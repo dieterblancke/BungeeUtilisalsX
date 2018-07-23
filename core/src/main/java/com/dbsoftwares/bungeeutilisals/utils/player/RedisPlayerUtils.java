@@ -38,6 +38,15 @@ public class RedisPlayerUtils implements IPlayerUtils {
 
     @Override
     public int getTotalCount() {
-        return RedisBungee;
+        return RedisBungee.getApi().getPlayerCount();
+    }
+
+    @Override
+    public List<String> getPlayers() {
+        List<String> players = Lists.newArrayList();
+
+        RedisBungee.getApi().getPlayersOnline().forEach(uuid -> players.add(RedisBungee.getApi().getNameFromUuid(uuid)));
+
+        return players;
     }
 }

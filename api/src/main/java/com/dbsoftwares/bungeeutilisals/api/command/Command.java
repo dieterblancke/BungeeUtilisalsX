@@ -45,7 +45,10 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
 
         if (permission != null && !permission.isEmpty()) {
-            if (!sender.hasPermission(permission) && !sender.hasPermission("bungeeutilisals.commands.*")) {
+            if (!sender.hasPermission(permission)
+                    && !sender.hasPermission("bungeeutilisals.commands.*")
+                    && !sender.hasPermission("bungeeutilisals.*")
+                    && !sender.hasPermission("*")) {
                 BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
                 return;
             }

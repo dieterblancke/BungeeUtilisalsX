@@ -36,7 +36,7 @@ public class MessageBuilder {
 
             component.setHoverEvent(new HoverEvent(
                     HoverEvent.Action.SHOW_TEXT,
-                    Utils.format(user, hover)
+                    Utils.format(user, format(hover, placeholders))
             ));
         }
         if (section.exists("click")) {

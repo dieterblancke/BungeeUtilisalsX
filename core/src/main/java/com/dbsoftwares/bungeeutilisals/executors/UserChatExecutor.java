@@ -13,7 +13,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 
 public class UserChatExecutor implements EventExecutor {
 
-    IChatManager manager;
+    private IChatManager manager;
 
     public UserChatExecutor(IChatManager manager) {
         this.manager = manager;

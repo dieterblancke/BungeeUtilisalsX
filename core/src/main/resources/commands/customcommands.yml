@@ -21,7 +21,7 @@ commands:
       # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
       # RUN_COMMAND will only work for BungeeCord commands.
       type: 'SUGGEST_COMMAND'
-      action: 'buy'
+      action: '/buy'
   # Commands to be executed by the CONSOLE
   execute:
   - 'test'

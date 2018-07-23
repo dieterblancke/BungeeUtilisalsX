@@ -11,7 +11,7 @@ glist:
       # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
       # RUN_COMMAND will only work for BungeeCord commands.
       type: 'RUN_COMMAND'
-      action: 'server %server%'
+      action: '/server %server%'
   playerlist:
     color: '&e'
     separator: ', '
@@ -27,6 +27,6 @@ glist:
     - 'Skyblock'
     - 'SkyWars'
   total:
-    text: '&eThere are &c%total% &eplayers online now!'
+    text: '&eThere is / are &c%total% &eplayer(s) online now!'
     hover:
     - '%playerlist%'

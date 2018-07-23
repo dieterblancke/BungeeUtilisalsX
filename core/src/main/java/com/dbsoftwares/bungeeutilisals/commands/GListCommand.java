@@ -17,8 +17,9 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
-
+import net.md_5.bungee.api.config.ServerInfo;
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,8 +40,9 @@ public class GListCommand extends Command {
 
     @Override
     public void onExecute(User user, String[] args) {
-        // TODO
         IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        String color = config.getString("glist.playerlist.color");
+        String separator = config.getString("glist.playerlist.separator");
         List<TextComponent> messages = Lists.newArrayList();
 
         if (config.getBoolean("glist.servers.enabled")) {
@@ -52,22 +54,27 @@ public class GListCommand extends Command {
                     return;
                 }
 
-                String color = config.getString("glist.playerlist.color");
-                String separator = config.getString("glist.playerlist.separator");
-
                 messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.format"),
                         "%server%", group.getName(),
                         "%players%", String.valueOf(group.getPlayers()),
-                        "%playerlist%", Utils.format(color + Joiner.on(separator).join(group.getPlayerList()))
+                        "%playerlist%", Utils.c(color + Joiner.on(separator).join(group.getPlayerList()))
                 ));
             }
         } else {
-            // TODO
+            for (ServerInfo info : ProxyServer.getInstance().getServers().values()) {
+                messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.format"),
+                        "%server%", info.getName(),
+                        "%players%", String.valueOf(info.getPlayers().size()),
+                        "%playerlist%", Utils.c(color + Joiner.on(separator).join(info.getPlayers()))
+                ));
+            }
         }
         messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.total"),
                 "%total%", BUCore.getApi().getPlayerUtils().getTotalCount(),
-                "%players%", String.valueOf(group.getPlayers()),
-                "%playerlist%", Utils.format(color + Joiner.on(separator).join(group.getPlayerList()))
+                "%playerlist%", Utils.c(color + Joiner.on(separator)
+                        .join(BUCore.getApi().getPlayerUtils().getPlayers()))
         ));
+
+        messages.forEach(user::sendMessage);
     }
 }

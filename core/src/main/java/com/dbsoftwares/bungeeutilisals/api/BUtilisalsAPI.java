@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api;
 
-import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -17,18 +17,14 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
-import com.dbsoftwares.bungeeutilisals.api.language.LanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.user.UserData;
 import com.dbsoftwares.bungeeutilisals.user.UserList;
-import com.dbsoftwares.bungeeutilisals.event.EventLoader;
-import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
-import com.dbsoftwares.bungeeutilisals.user.UserData;
-import com.dbsoftwares.bungeeutilisals.user.UserList;
+import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
+import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -51,6 +47,7 @@ public class BUtilisalsAPI implements BUAPI {
     private UserData userdata;
     private SimpleExecutor simpleExecutor;
     private PunishmentExecutor punishmentExecutor;
+    private IPlayerUtils playerUtils;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
         APIHandler.registerProvider(this);
@@ -64,11 +61,18 @@ public class BUtilisalsAPI implements BUAPI {
         this.userdata = new UserData();
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
+        this.playerUtils = FileLocation.CONFIG.getConfiguration().getBoolean("redis")
+                ? new RedisPlayerUtils() : new BungeePlayerUtils();
     }
 
     @Override
     public Collection<Announcer> getAnnouncers() {
         return Announcer.getAnnouncers().values();
+    }
+
+    @Override
+    public IPlayerUtils getPlayerUtils() {
+        return playerUtils;
     }
 
     @Override

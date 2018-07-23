@@ -30,6 +30,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.GListCommand;
 import com.dbsoftwares.bungeeutilisals.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
@@ -165,6 +166,7 @@ public class BungeeUtilisals extends Plugin {
                 ChatAnnouncer.class, TitleAnnouncer.class);
 
         // Loading Custom Commands
+        loadGeneralCommands();
         loadCustomCommands();
     }
 
@@ -220,16 +222,6 @@ public class BungeeUtilisals extends Plugin {
         api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
     }
 
-    private void loadPunishmentCommand(String name, Class<? extends Command> clazz) {
-        if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getBoolean("commands." + name + ".enabled")) {
-            try {
-                clazz.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
     public IConfiguration getConfig() {
         return FileLocation.CONFIG.getConfiguration();
     }
@@ -245,6 +237,10 @@ public class BungeeUtilisals extends Plugin {
             location.loadConfiguration(file);
             location.loadData();
         }
+    }
+
+    private void loadGeneralCommands() {
+        loadGeneralCommand("glist", GListCommand.class);
     }
 
     private void loadCustomCommands() {
@@ -285,6 +281,24 @@ public class BungeeUtilisals extends Plugin {
             };
 
             customCommands.add(command);
+        }
+    }
+
+    private void loadPunishmentCommand(String name, Class<? extends Command> clazz) {
+        loadCommand("commands." + name + ".enabled", FileLocation.PUNISHMENTS_CONFIG.getConfiguration(), clazz);
+    }
+
+    private void loadGeneralCommand(String name, Class<? extends Command> clazz) {
+        loadCommand(name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz);
+    }
+
+    private void loadCommand(String enabledPath, IConfiguration configuration, Class<? extends Command> clazz) {
+        if (configuration.getBoolean(enabledPath)) {
+            try {
+                clazz.newInstance();
+            } catch (InstantiationException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

@@ -22,6 +22,10 @@ public class ChatManager implements IChatManager {
     private List<Pattern> swearPatterns = Lists.newArrayList();
     private Map<String, String> utfSymbols = Maps.newHashMap();
 
+    public ChatManager() {
+        reloadPatterns();
+    }
+
     public void reloadPatterns() {
         swearPatterns.clear();
 
@@ -77,7 +81,7 @@ public class ChatManager implements IChatManager {
             }
         }
 
-        return (upperCase / message.length()) > ((config.getInteger("percentage")) / 100);
+        return (upperCase / message.length()) > (config.getDouble("percentage") / 100);
     }
 
     @Override
