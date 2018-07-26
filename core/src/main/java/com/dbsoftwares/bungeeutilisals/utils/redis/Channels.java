@@ -13,18 +13,26 @@ import com.google.gson.Gson;
 public enum Channels {
 
     ANNOUNCE() {
+
+        private Gson gson = new Gson();
+
         @Override
         public void execute(String message) {
             AnnounceCommand.AnnounceMessage announcement
-                    = new Gson().fromJson(message, AnnounceCommand.AnnounceMessage.class);
+                    = gson.fromJson(message, AnnounceCommand.AnnounceMessage.class);
 
             AnnounceCommand.sendAnnounce(announcement);
         }
     },
     CLEARCHAT() {
+
+        private Gson gson = new Gson();
+
         @Override
         public void execute(String message) {
-            ClearChatCommand.clearChat(message);
+            ClearChatCommand.ClearData data = gson.fromJson(message, ClearChatCommand.ClearData.class);
+
+            ClearChatCommand.clearChat(data.getServer(), data.getBy());
         }
     };
 

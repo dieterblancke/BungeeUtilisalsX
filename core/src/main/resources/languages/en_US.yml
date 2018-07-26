@@ -25,6 +25,7 @@ general-commands:
     connecting: '&eYou are being connected to &b{server}&e!'
   clearchat:
     usage: '&ePlease use &b/clearchat (local / global)&e!'
+    cleared: '&eYour chat has been cleared by &b{user}&e!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

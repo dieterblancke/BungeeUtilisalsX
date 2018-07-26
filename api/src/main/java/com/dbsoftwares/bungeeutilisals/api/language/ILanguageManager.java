@@ -14,6 +14,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
+import java.util.List;
 import java.util.Optional;
 
 public interface ILanguageManager {
@@ -119,4 +120,9 @@ public interface ILanguageManager {
      * @return True if successful, false if not.
      */
     Boolean reloadConfig(Plugin plugin, Language language);
+
+    /**
+     * @return A list of registered languages.
+     */
+    List<Language> getLanguages();
 }

@@ -30,11 +30,8 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.FindCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.GListCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
@@ -256,6 +253,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("announce", AnnounceCommand.class);
         loadGeneralCommand("find", FindCommand.class);
         loadGeneralCommand("server", ServerCommand.class);
+        loadGeneralCommand("clearchat", ClearChatCommand.class);
     }
 
     private void loadCustomCommands() {

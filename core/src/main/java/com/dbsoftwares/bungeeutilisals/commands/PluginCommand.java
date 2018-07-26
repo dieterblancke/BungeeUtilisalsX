@@ -6,7 +6,9 @@ package com.dbsoftwares.bungeeutilisals.commands;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
@@ -37,13 +39,17 @@ public class PluginCommand extends Command {
 
                         location.getData().clear();
                         location.loadData();
-
-                        BungeeUtilisals.getInstance().reload();
                     } catch (IOException e) {
                         e.printStackTrace();
                         user.sendMessage("&fCould not reload " + location.toString().toLowerCase().replace("_", " ") + "!");
                     }
                 }
+                BungeeUtilisals.getInstance().reload();
+
+                for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
+                    BUCore.getApi().getLanguageManager().reloadConfig(BungeeUtilisals.getInstance(), language);
+                }
+
                 user.sendMessage("&fAll configuration files have been reloaded!");
                 return;
             } else if (args[0].equalsIgnoreCase("version")) {

@@ -7,17 +7,17 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
  */
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
-import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
 import com.google.common.collect.ImmutableList;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,20 +32,25 @@ public class ClearChatCommand extends Command {
         );
     }
 
-    public static void clearChat(String server) {
+    public static void clearChat(String server, String by) {
         if (server.equalsIgnoreCase("ALL")) {
-            ProxyServer.getInstance().getPlayers().forEach(ClearChatCommand::clearChat);
+            BUCore.getApi().getUsers().forEach(u -> clearChat(u, by));
         } else {
             ServerInfo info = ProxyServer.getInstance().getServerInfo(server);
 
-            Validate.ifNotNull(info, serverInfo -> info.getPlayers().forEach(ClearChatCommand::clearChat));
+            if (info != null) {
+                BUCore.getApi().getUsers().stream().filter(u -> u.getServerName().equalsIgnoreCase(info.getName()))
+                        .forEach(u -> clearChat(u, by));
+            }
         }
     }
 
-    private static void clearChat(ProxiedPlayer player) {
+    private static void clearChat(User user, String by) {
         for (int i = 0; i < 250; i++) {
-            player.sendMessage(Utils.format("&e"));
+            user.sendMessage(Utils.format("&e"));
         }
+
+        user.sendLangMessage("general-commands.clearchat.cleared", "{user}", by);
     }
 
     @Override
@@ -62,9 +67,21 @@ public class ClearChatCommand extends Command {
         String server = args[0].toLowerCase().contains("g") ? "ALL" : user.getServerName();
 
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(Channels.CLEARCHAT, server);
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.CLEARCHAT,
+                    new ClearData(server, user.getName())
+            );
         } else {
-            clearChat(server);
+            clearChat(server, user.getName());
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    public class ClearData {
+
+        private String server;
+        private String by;
+
     }
 }
