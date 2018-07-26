@@ -9,6 +9,23 @@ chat-protection:
   spam: '&fPlease wait another &a%time% &fseconds before talking again!'
   advertise: '&fPlease do not advertise!'
 
+general-commands:
+  announce:
+    usage: '&ePlease use &b/announce (b/c/a/t) (message)&e.'
+  find:
+    usage: '&ePlease use &b/find (name)&e!'
+    message: '&b{user} &eis online in &b{server}&e!'
+  server:
+    usage:
+    - '&eYou are playing in &b{server}&e!'
+    - ''
+    - '&eYou can switch servers using &d/server (servername)&e!'
+    notfound: '&eThe server &b{server} &edoes not exist!'
+    alreadyconnected: '&eYou are already connected to &b{server}&e!'
+    connecting: '&eYou are being connected to &b{server}&e!'
+  clearchat:
+    usage: '&ePlease use &b/clearchat (local / global)&e!'
+
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
 

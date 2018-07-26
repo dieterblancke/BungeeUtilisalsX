@@ -4,6 +4,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.List;
 
@@ -45,5 +46,16 @@ public class BungeePlayerUtils implements IPlayerUtils {
         ProxyServer.getInstance().getPlayers().forEach(player -> players.add(player.getName()));
 
         return players;
+    }
+
+    @Override
+    public ServerInfo findPlayer(String name) {
+        ProxiedPlayer player = ProxyServer.getInstance().getPlayer(name);
+
+        if (player != null) {
+            return player.getServer().getInfo();
+        }
+
+        return null;
     }
 }

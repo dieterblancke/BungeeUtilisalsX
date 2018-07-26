@@ -30,8 +30,11 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.GListCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.FindCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.GListCommand;
 import com.dbsoftwares.bungeeutilisals.commands.PluginCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
@@ -49,6 +52,7 @@ import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
+import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
@@ -82,6 +86,9 @@ public class BungeeUtilisals extends Plugin {
     @Getter
     private List<Command> customCommands = Lists.newArrayList();
 
+    @Getter
+    private RedisMessenger redisMessenger;
+
     @Override
     public void onEnable() {
         // Setting instance
@@ -113,6 +120,11 @@ public class BungeeUtilisals extends Plugin {
         // Creating datafolder
         if (!getDataFolder().exists()) {
             getDataFolder().mkdir();
+        }
+
+        redisMessenger = getConfig().getBoolean("redis") ? new RedisMessenger() : null;
+        if (redisMessenger != null) {
+            ProxyServer.getInstance().getPluginManager().registerListener(this, redisMessenger);
         }
 
         // Registering experimental features
@@ -241,6 +253,9 @@ public class BungeeUtilisals extends Plugin {
 
     private void loadGeneralCommands() {
         loadGeneralCommand("glist", GListCommand.class);
+        loadGeneralCommand("announce", AnnounceCommand.class);
+        loadGeneralCommand("find", FindCommand.class);
+        loadGeneralCommand("server", ServerCommand.class);
     }
 
     private void loadCustomCommands() {

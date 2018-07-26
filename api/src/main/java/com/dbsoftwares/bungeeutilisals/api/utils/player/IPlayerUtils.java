@@ -6,6 +6,8 @@ package com.dbsoftwares.bungeeutilisals.api.utils.player;
  * Project: BungeeUtilisals
  */
 
+import net.md_5.bungee.api.config.ServerInfo;
+
 import java.util.List;
 
 public interface IPlayerUtils {
@@ -17,4 +19,7 @@ public interface IPlayerUtils {
     int getTotalCount();
 
     List<String> getPlayers();
+
+    ServerInfo findPlayer(String name);
+
 }

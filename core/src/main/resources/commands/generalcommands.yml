@@ -30,3 +30,39 @@ glist:
     text: '&eThere is / are &c%total% &eplayer(s) online now!'
     hover:
     - '%playerlist%'
+announce:
+  enabled: true
+  aliases: 'alert, bigalert'
+  permission: bungeeutilisals.announce
+  types:
+    bossbar:
+      enabled: true
+      stay: 5
+      # BarColor PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+      color: 'YELLOW'
+      # SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS
+      style: 'SOLID'
+      # Number between 0.0 & 1.0
+      progress: 1.0
+    chat:
+      enabled: true
+      prefix: '&c&lAnnounce &8» &f'
+    actionbar:
+      enabled: true
+    title:
+      enabled: true
+      fadein: 1
+      stay: 3
+      fadeout: 1
+find:
+  enabled: true
+  aliases: 'search'
+  permission: bungeeutilisals.find
+server:
+  enabled: true
+  aliases: 'switch'
+  permission: bungeeutilisals.server
+clearchat:
+  enabled: true
+  aliases: 'cc'
+  permission: bungeeutilisals.clearchat

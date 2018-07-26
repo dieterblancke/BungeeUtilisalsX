@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.commands;
+package com.dbsoftwares.bungeeutilisals.commands.general;
 
 /*
  * Created by DBSoftwares on 10/01/2018

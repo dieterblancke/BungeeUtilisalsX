@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.user;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
@@ -133,17 +134,17 @@ public class BUser implements User {
 
     @Override
     public void sendRawMessage(String message) {
-        sendMessage(new TextComponent(message));
+        sendMessage(new TextComponent(PlaceHolderAPI.formatMessage(this, message)));
     }
 
     @Override
     public void sendRawColorMessage(String message) {
-        sendMessage(Utils.format(message));
+        sendMessage(Utils.format(this, message));
     }
 
     @Override
     public void sendMessage(String message) {
-        sendMessage(getLanguageConfig().getString("prefix"), message);
+        sendMessage(getLanguageConfig().getString("prefix"), PlaceHolderAPI.formatMessage(this, message));
     }
 
     @Override
@@ -179,7 +180,7 @@ public class BUser implements User {
 
     @Override
     public void sendMessage(String prefix, String message) {
-        sendMessage(Utils.format(prefix + message));
+        sendMessage(Utils.format(prefix + PlaceHolderAPI.formatMessage(this, message)));
     }
 
     @Override

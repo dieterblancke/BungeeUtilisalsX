@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.List;
+import java.util.UUID;
 
 /*
  * Created by DBSoftwares on 22 juli 2018
@@ -48,5 +49,16 @@ public class RedisPlayerUtils implements IPlayerUtils {
         RedisBungee.getApi().getPlayersOnline().forEach(uuid -> players.add(RedisBungee.getApi().getNameFromUuid(uuid)));
 
         return players;
+    }
+
+    @Override
+    public ServerInfo findPlayer(String name) {
+        UUID uuid = RedisBungee.getApi().getUuidFromName(name);
+
+        if (RedisBungee.getApi().isPlayerOnline(uuid)) {
+            return RedisBungee.getApi().getServerFor(uuid);
+        }
+
+        return null;
     }
 }
