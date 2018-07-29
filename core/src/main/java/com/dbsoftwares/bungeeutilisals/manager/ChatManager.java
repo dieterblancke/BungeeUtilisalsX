@@ -10,6 +10,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -53,7 +54,11 @@ public class ChatManager implements IChatManager {
         if (!config.getBoolean("enabled") || user.getParent().hasPermission(config.getString("bypass"))) {
             return false;
         }
-        message = message.replaceAll("[^A-Za-z0-9:/]", "");
+
+        message = Normalizer.normalize(message, Normalizer.Form.NFKD);
+        message = message.replaceAll("[^\\x00-\\x7F]", "");
+        message = message.replace(",", ".");
+
         for (String word : message.split(" ")) {
             if (config.getStringList("allowed").contains(word.toLowerCase())) {
                 continue;
@@ -74,7 +79,7 @@ public class ChatManager implements IChatManager {
             return false;
         }
 
-        Double upperCase = 0.0D;
+        double upperCase = 0.0D;
         for (int i = 0; i < message.length(); i++) {
             if (config.getString("characters").contains(message.substring(i, i + 1))) {
                 upperCase += 1.0D;

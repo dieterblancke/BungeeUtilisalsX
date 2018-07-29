@@ -2,7 +2,6 @@ package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
@@ -43,15 +42,7 @@ public class UserChatListener implements Listener {
                 return;
             }
 
-            UserChatPreExecuteEvent preExecuteEvent = new UserChatPreExecuteEvent(user, chatEvent.getMessage());
-            api.getEventLoader().launchEvent(preExecuteEvent);
-
-            if (preExecuteEvent.isCancelled()) {
-                event.setCancelled(true);
-                return;
-            }
-
-            event.setMessage(preExecuteEvent.getMessage());
+            event.setMessage(chatEvent.getMessage());
         }
     }
 }

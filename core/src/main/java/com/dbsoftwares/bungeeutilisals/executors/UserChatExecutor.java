@@ -5,7 +5,6 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -19,12 +18,13 @@ public class UserChatExecutor implements EventExecutor {
         this.manager = manager;
     }
 
-    @Event(priority = Priority.LOW, executeIfCancelled = false)
-    public void onUnicodeReplace(UserChatPreExecuteEvent event) {
+    @Event(priority = Priority.HIGHEST, executeIfCancelled = false)
+    public void onUnicodeReplace(UserChatEvent event) {
         String message = event.getMessage();
         IConfiguration config = FileLocation.UTFSYMBOLS.getConfiguration();
 
-        if (config.getBoolean("fancychat.enabled") && event.getUser().getParent().hasPermission(config.getString("fancychat.permission"))) {
+        if (config.getBoolean("fancychat.enabled")
+                && event.getUser().getParent().hasPermission(config.getString("fancychat.permission"))) {
             event.setMessage(BungeeUtilisals.getApi().getChatManager().fancyFont(message));
         }
     }

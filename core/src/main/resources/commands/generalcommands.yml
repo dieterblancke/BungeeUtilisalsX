@@ -66,3 +66,11 @@ clearchat:
   enabled: true
   aliases: 'cc'
   permission: bungeeutilisals.clearchat
+chatlock:
+  enabled: true
+  aliases: 'cl, lock, lockchat'
+  permission: bungeeutilisals.chatlock
+glag:
+  enabled: true
+  aliases: 'bgc, blag'
+  permission: bungeeutilisals.glag

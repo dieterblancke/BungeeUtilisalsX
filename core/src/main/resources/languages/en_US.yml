@@ -26,6 +26,13 @@ general-commands:
   clearchat:
     usage: '&ePlease use &b/clearchat (local / global)&e!'
     cleared: '&eYour chat has been cleared by &b{user}&e!'
+  glag:
+  - '&eBungeeCord statistics:'
+  - '&eTPS: &b{tps}'
+  - '&eMax Memory: &b{maxmemory}'
+  - '&eFree Memory: &b{freememory}'
+  - '&eTotal Memory: &b{totalmemory}'
+  - '&eProxy online since: &b{onlinesince}'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

@@ -17,7 +17,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatPreExecuteEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
@@ -49,6 +48,7 @@ import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
+import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -65,6 +65,7 @@ import org.bstats.bungeecord.Metrics;
 import java.io.File;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -134,10 +135,7 @@ public class BungeeUtilisals extends Plugin {
         final IEventLoader loader = api.getEventLoader();
 
         loader.register(UserLoadEvent.class, new UserExecutor());
-
-        UserChatExecutor chatExecutor = new UserChatExecutor(api.getChatManager());
-        loader.register(UserChatEvent.class, chatExecutor);
-        loader.register(UserChatPreExecuteEvent.class, chatExecutor);
+        loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
 
         // Loading commands ...
         new PluginCommand();
@@ -177,6 +175,8 @@ public class BungeeUtilisals extends Plugin {
         // Loading Custom Commands
         loadGeneralCommands();
         loadCustomCommands();
+
+        ProxyServer.getInstance().getScheduler().schedule(this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -254,6 +254,8 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("find", FindCommand.class);
         loadGeneralCommand("server", ServerCommand.class);
         loadGeneralCommand("clearchat", ClearChatCommand.class);
+        loadGeneralCommand("chatlock", ChatLockCommand.class);
+        loadGeneralCommand("glag", GLagCommand.class);
     }
 
     private void loadCustomCommands() {
