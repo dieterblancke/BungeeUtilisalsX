@@ -6,12 +6,12 @@ package com.dbsoftwares.bungeeutilisals.commands;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
@@ -38,6 +38,7 @@ public class PluginCommand extends Command {
                         location.getConfiguration().reload();
 
                         location.getData().clear();
+                        location.getDataList().clear();
                         location.loadData();
                     } catch (IOException e) {
                         e.printStackTrace();

@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.utils.motd;
+package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
@@ -20,9 +20,6 @@ public class VersionConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        if (connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null) {
-            return false;
-        }
         String[] args = condition.split(" ");
         String operator = args[0];
         Version version = formatVersion(args[1]);
@@ -67,7 +64,7 @@ public class VersionConditionHandler extends ConditionHandler {
         for (int i = 0; i < length; i++) {
             Version version = Version.values()[i];
 
-            builder.append(version.toString().replace("MINECRAFT_", "").replace("_", "."));
+            builder.append(version.toString());
 
             if (i < length) {
                 builder.append(", ");

@@ -15,13 +15,13 @@ motd:
 # User name is known, player probably has joined before.
 - condition: 'name != null'
   motd: |-
-    &e     Hello &b%user%&e!
+    &e     Hello &b{user}&e!
     &eWe are now running a 10 % SALE!
 # User name is unknown, player probably has never joined before.
 - condition: 'name == null'
   motd: |-
-    &eIt seems like you have never joined our server before!
-    &b   Come and take a look, we're sure you'll love it!
+    &eIt seems like you haven't joined our server yet!
+                   &bCome and take a look!
 - condition: 'version < 1.12.2'
   motd: |-
     &bIt seems like you are using &e1.11.2&b!

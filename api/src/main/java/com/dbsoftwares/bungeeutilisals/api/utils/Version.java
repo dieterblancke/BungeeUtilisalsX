@@ -29,4 +29,18 @@ public enum Version {
     Version(int version) {
         this.version = version;
     }
+
+    public static Version getVersion(int version) {
+        for (Version v : values()) {
+            if (v.getVersion() == version) {
+                return v;
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString().replace("MINECRAFT_", "").replace("_", ".");
+    }
 }

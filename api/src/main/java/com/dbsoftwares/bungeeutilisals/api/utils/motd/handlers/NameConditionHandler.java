@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.utils.motd;
+package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -16,9 +16,6 @@ public class NameConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        if (connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null) {
-            return false;
-        }
         String[] args = condition.split(" ");
         String operator = args[0];
         String value = args[1];

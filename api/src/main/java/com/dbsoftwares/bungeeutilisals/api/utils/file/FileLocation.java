@@ -1,20 +1,26 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.MotdData;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.utils.motd.MotdData;
+import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.DomainConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.NameConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.VersionConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
+
 import java.io.File;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 public enum FileLocation {
 
@@ -46,20 +52,29 @@ public enum FileLocation {
     MOTD("motd.yml") {
         @Override
         public void loadData() {
-            List<MotdData> dataList = Lists.newArrayList();
+            MotdData def = null;
 
-            for (ISection section : configuration.getSectionList("groups")) {
+            for (ISection section : configuration.getSectionList("motd")) {
                 String condition = section.getString("condition");
                 String motd = section.getString("motd");
 
                 if (condition.equalsIgnoreCase("default")) {
-                    dataList.add(new MotdData(null, true, motd));
+                    def = new MotdData(null, true, motd);
                 } else {
-                    if (condition.startsWith("domain")) {
-                        // todo
+                    if (condition.toLowerCase().startsWith("domain")) {
+                        getDataList().add(new MotdData(new DomainConditionHandler(condition), false, motd));
+                    } else if (condition.toLowerCase().startsWith("version")) {
+                        getDataList().add(new MotdData(new VersionConditionHandler(condition), false, motd));
+                    } else if (condition.toLowerCase().startsWith("name")) {
+                        getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
+                    } else {
+                        BUCore.log(Level.WARNING, "An invalid MOTD condition has been entered.");
+                        BUCore.log(Level.WARNING, "Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-manager#conditions");
                     }
-                    dataList.add(new MotdData(null, false, motd));
                 }
+            }
+            if (def != null) {
+                getDataList().add(def);
             }
         }
     },
@@ -156,12 +171,15 @@ public enum FileLocation {
     @Getter
     private LinkedHashMap<String, Object> data;
 
+    private LinkedList<Object> dataList;
+
     @Getter
     protected IConfiguration configuration;
 
     FileLocation(String path) {
         this.path = path;
         this.data = Maps.newLinkedHashMap();
+        this.dataList = Lists.newLinkedList();
     }
 
     public abstract void loadData();
@@ -181,5 +199,10 @@ public enum FileLocation {
 
     public void loadConfiguration(File file) {
         this.configuration = IConfiguration.loadYamlConfiguration(file);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> List<T> getDataList() {
+        return (List<T>) dataList;
     }
 }

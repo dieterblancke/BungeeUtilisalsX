@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.utils.motd;
+package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;

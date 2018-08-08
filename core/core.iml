@@ -22,6 +22,7 @@
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-epoll:linux-x86_64:4.1.21.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-common:4.1.21.Final" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.netty:netty-transport-native-unix-common:4.1.21.Final" level="project" />
+    <orderEntry type="library" name="Maven: com.dbsoftwares.configuration:ConfigurationAPI:1.0.4" level="project" />
     <orderEntry type="module" module-name="api" />
     <orderEntry type="library" name="Maven: org.bstats:bstats-bungeecord:1.2" level="project" />
     <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.0" level="project" />
