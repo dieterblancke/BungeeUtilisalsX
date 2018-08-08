@@ -44,6 +44,7 @@ import com.dbsoftwares.bungeeutilisals.experimental.executors.PacketUpdateExecut
 import com.dbsoftwares.bungeeutilisals.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.classloader.LibraryClassLoader;
+import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
@@ -131,6 +132,10 @@ public class BungeeUtilisals extends Plugin {
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
+
+        if (FileLocation.MOTD.getConfiguration().getBoolean("enabled")) {
+            ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdPingListener());
+        }
 
         final IEventLoader loader = api.getEventLoader();
 

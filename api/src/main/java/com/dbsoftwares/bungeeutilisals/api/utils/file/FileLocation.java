@@ -1,6 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.utils.motd.MotdData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
@@ -12,8 +13,8 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 public enum FileLocation {
 
@@ -38,6 +39,26 @@ public enum FileLocation {
             for (String key : ProxyServer.getInstance().getServers().keySet()) {
                 if (!hasData(key)) {
                     setData(key, new ServerGroup(key, false, Lists.newArrayList(key)));
+                }
+            }
+        }
+    },
+    MOTD("motd.yml") {
+        @Override
+        public void loadData() {
+            List<MotdData> dataList = Lists.newArrayList();
+
+            for (ISection section : configuration.getSectionList("groups")) {
+                String condition = section.getString("condition");
+                String motd = section.getString("motd");
+
+                if (condition.equalsIgnoreCase("default")) {
+                    dataList.add(new MotdData(null, true, motd));
+                } else {
+                    if (condition.startsWith("domain")) {
+                        // todo
+                    }
+                    dataList.add(new MotdData(null, false, motd));
                 }
             }
         }
@@ -133,14 +154,14 @@ public enum FileLocation {
     private String path;
 
     @Getter
-    private Map<String, Object> data;
+    private LinkedHashMap<String, Object> data;
 
     @Getter
     protected IConfiguration configuration;
 
     FileLocation(String path) {
         this.path = path;
-        this.data = Maps.newHashMap();
+        this.data = Maps.newLinkedHashMap();
     }
 
     public abstract void loadData();

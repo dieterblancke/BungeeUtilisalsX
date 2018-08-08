@@ -1,0 +1,28 @@
+enabled: true
+
+# For more info about conditions, please go to https://docs.dbsoftwares.eu/bungeeutilisals/motd-manager#conditions
+motd:
+# Default, this one will show when all others do not apply.
+- condition: 'default'
+  motd: |
+    &2Motd &5line &61
+    &3Motd &4line &72
+# User pings the server at the 'play.example.net' domain, condition is invalid when domain name is unknown.
+- condition: 'domain == play.example.net'
+  motd: |-
+    &aMotd &dline &f1
+    &eMotd &bline &c2
+# User name is known, player probably has joined before.
+- condition: 'name != null'
+  motd: |-
+    &e     Hello &b%user%&e!
+    &eWe are now running a 10 % SALE!
+# User name is unknown, player probably has never joined before.
+- condition: 'name == null'
+  motd: |-
+    &eIt seems like you have never joined our server before!
+    &b   Come and take a look, we're sure you'll love it!
+- condition: 'version < 1.12.2'
+  motd: |-
+    &bIt seems like you are using &e1.11.2&b!
+    &ePlease update to &a1.12.2 &eas this is the recommended version.
