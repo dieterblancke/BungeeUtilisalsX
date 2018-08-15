@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.storage.mongodb;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.storage.data.MongoDataManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;

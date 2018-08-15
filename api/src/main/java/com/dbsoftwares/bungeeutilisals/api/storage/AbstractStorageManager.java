@@ -81,7 +81,6 @@ public abstract class AbstractStorageManager {
 
     public abstract void close() throws SQLException;
 
-
     public enum StorageType {
 
         MYSQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MySQLStorageManager"),

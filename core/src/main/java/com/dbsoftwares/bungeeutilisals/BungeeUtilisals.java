@@ -11,7 +11,6 @@ import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.BUtilisalsAPI;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;

@@ -2,6 +2,7 @@ package com.dbsoftwares.bungeeutilisals.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
@@ -55,52 +56,62 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public PunishmentInfo addBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoBans(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.BAN, uuid, name, IP, reason, null, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addTempBan(UUID uuid, String name, String IP, long removeTime, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoTempBans(uuid.toString(), name, IP, removeTime, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.TEMPBAN, uuid, name, IP, reason, removeTime, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPBan(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPBans(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.IPBAN, uuid, name, IP, reason, null, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPTempBan(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPTempBans(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.IPTEMPBAN, uuid, user, ip, reason, removeTime, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoMutes(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.MUTE, uuid, name, IP, reason, null, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.TEMPMUTE, uuid, user, ip, reason, removeTime, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPMute(UUID uuid, String name, String IP, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPMutes(uuid.toString(), name, IP, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.IPMUTE, uuid, name, IP, reason, null, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addIPTempMute(UUID uuid, String user, String ip, long removeTime, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoIPTempMutes(uuid.toString(), user, ip, removeTime, reason, server, true, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, removeTime, server, true, executor);
     }
 
     @Override
     public PunishmentInfo addKick(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoKicks(uuid.toString(), user, ip, reason, server, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.KICK, uuid, user, ip, reason, null, server, null, executor);
     }
 
     @Override
     public PunishmentInfo addWarn(UUID uuid, String user, String ip, String reason, String server, String executor) {
-        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().insertIntoWarns(uuid.toString(), user, ip, reason, server, executor);
+        return BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager()
+                .insertPunishment(PunishmentType.WARN, uuid, user, ip, reason, null, server, null, executor);
     }
 
     @Override

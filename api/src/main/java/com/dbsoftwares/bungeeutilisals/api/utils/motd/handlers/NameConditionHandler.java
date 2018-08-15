@@ -16,6 +16,8 @@ public class NameConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
+        String name = null; // TODO BUCore.getApi().getStorageManager().getDataManager();
+
         String[] args = condition.split(" ");
         String operator = args[0];
         String value = args[1];

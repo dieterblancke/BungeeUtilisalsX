@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.storage.mongodb;
+package com.dbsoftwares.bungeeutilisals.storage.data;
 
 /*
  * Created by DBSoftwares on 18/01/2018
@@ -15,6 +15,8 @@ import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.storage.mongodb.Mapping;
+import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -49,7 +51,7 @@ public class MongoDataManager implements DataManager {
         Bson idFilter = Filters.eq(type.toString().startsWith("IP") ? "ip" : "uuid", identifier);
         Bson dateFilter = Filters.gt("date", date);
 
-        return collection.count(Filters.and(idFilter, dateFilter));
+        return collection.countDocuments(Filters.and(idFilter, dateFilter));
     }
 
     @Override
@@ -61,60 +63,12 @@ public class MongoDataManager implements DataManager {
     }
 
     @Override
-    public PunishmentInfo insertIntoBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.BAN, uuid, user, ip, null, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.IPBAN, uuid, user, ip, null, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.TEMPBAN, uuid, user, ip, time, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.IPTEMPBAN, uuid, user, ip, time, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.MUTE, uuid, user, ip, null, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.IPMUTE, uuid, user, ip, null, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.TEMPMUTE, uuid, user, ip, time, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        return insertPunishment(PunishmentType.IPTEMPMUTE, uuid, user, ip, time, reason, server, active, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoWarns(String uuid, String user, String ip, String reason, String server, String executedby) {
-        return insertPunishment(PunishmentType.WARN, uuid, user, ip, null, reason, server, null, executedby);
-    }
-
-    @Override
-    public PunishmentInfo insertIntoKicks(String uuid, String user, String ip, String reason, String server, String executedby) {
-        return insertPunishment(PunishmentType.KICK, uuid, user, ip, null, reason, server, null, executedby);
-    }
-
-    private PunishmentInfo insertPunishment(PunishmentType type, String uuid, String user, String ip, Long time,
-                                            String reason, String server, Boolean active, String executedby) {
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
+                                           String ip, String reason, Long time, String server,
+                                           Boolean active, String executedby) {
         PunishmentInfo.PunishmentInfoBuilder builder = PunishmentInfo.builder();
 
-        builder.uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
+        builder.uuid(uuid).user(user).IP(ip).reason(reason).server(server)
                 .executedBy(executedby).date(new Date(System.currentTimeMillis())).type(type);
 
         Mapping<String, Object> mapping = new Mapping<>(true);

@@ -10,6 +10,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
@@ -221,4 +222,9 @@ public interface BUAPI {
      * @return an IPlayerUtils instance (BungeePlayerUtils or RedisPlayerUtils)
      */
     IPlayerUtils getPlayerUtils();
+
+    /**
+     * @return the storage manager used.
+     */
+    AbstractStorageManager getStorageManager();
 }

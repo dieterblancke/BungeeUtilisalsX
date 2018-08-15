@@ -1,6 +1,7 @@
-package com.dbsoftwares.bungeeutilisals.api;
+package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.APIHandler;
+import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -12,6 +13,7 @@ import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -73,6 +75,11 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public IPlayerUtils getPlayerUtils() {
         return playerUtils;
+    }
+
+    @Override
+    public AbstractStorageManager getStorageManager() {
+        return BungeeUtilisals.getInstance().getDatabaseManagement();
     }
 
     @Override

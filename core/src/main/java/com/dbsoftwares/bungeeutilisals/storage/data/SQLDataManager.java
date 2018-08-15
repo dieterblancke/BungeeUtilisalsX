@@ -6,6 +6,7 @@ package com.dbsoftwares.bungeeutilisals.storage.data;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
@@ -13,13 +14,13 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class SQLDataManager implements DataManager {
@@ -42,8 +43,10 @@ public class SQLDataManager implements DataManager {
 
     /* SQL SELECT STATEMENT */
     private final static String SELECT = "SELECT %s FROM {table} WHERE %s;";
+    private final static String SELECT_ORDER = "SELECT %s FROM {table} WHERE %s ORDER BY %s;";
 
     private final static String SELECT_FROM_USERS = SELECT.replace("{table}", "{users-table}");
+    private final static String SELECT_USERS_ON_IP = SELECT_ORDER.replace("{table}", "{users-table}");
 
     private final static String SELECT_FROM_BANS = SELECT.replace("{table}", "{bans-table}");
     private final static String SELECT_FROM_IPBANS = SELECT.replace("{table}", "{ipbans-table}");
@@ -61,6 +64,13 @@ public class SQLDataManager implements DataManager {
     /* SQL DELETE STATEMENTS */
     private final static String UPDATE_PUNISHMENTS_UUID = "UPDATE {table} SET active = 0 WHERE uuid = '%s' AND active = 1;";
     private final static String UPDATE_PUNISHMENTS_IP = "UPDATE {table} SET active = 0 WHERE ip = '%s' AND active = 1;";
+
+    /* UTILITY METHODS */
+    private static Language getLanguageOrDefault(String language) {
+        return BUCore.getApi().getLanguageManager().getLanguage(language).orElse(BUCore.getApi().getLanguageManager().getDefaultLanguage());
+    }
+
+
 
     @Override
     public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
@@ -97,179 +107,71 @@ public class SQLDataManager implements DataManager {
     }
 
     @Override
-    public PunishmentInfo insertIntoBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
+                                           String ip, String reason, Long time, String server,
+                                           Boolean active, String executedby) {
+        String sql = "INSERT INTO " + PlaceHolderAPI.formatMessage(type.getTablePlaceHolder()) + " ";
 
-        String statement = format(INSERT_INTO_BANS, uuid, user, ip, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
+        if (type.isActivatable()) {
+            if (type.isTemporary()) {
+                sql += "(uuid, user, ip, time, reason, server, active, executed_by) "
+                        + "VALUES ('%s', '%s', '%s', %s, '%s', '%s', %s, '%s');";
 
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.BAN).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
+                try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                    preparedStatement.setString(1, uuid.toString());
+                    preparedStatement.setString(2, user);
+                    preparedStatement.setString(3, ip);
+                    preparedStatement.setLong(4, time);
+                    preparedStatement.setString(5, reason);
+                    preparedStatement.setString(6, server);
+                    preparedStatement.setBoolean(7, active);
+                    preparedStatement.setString(8, executedby);
+
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                sql += "(uuid, user, ip, reason, server, active, executed_by) "
+                        + "VALUES ('%s', '%s', '%s', '%s', '%s', %s, '%s');";
+
+                try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                    preparedStatement.setString(1, uuid.toString());
+                    preparedStatement.setString(2, user);
+                    preparedStatement.setString(3, ip);
+                    preparedStatement.setString(4, reason);
+                    preparedStatement.setString(5, server);
+                    preparedStatement.setBoolean(6, active);
+                    preparedStatement.setString(7, executedby);
+
+                    preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } else {
+            sql += "(uuid, user, ip, reason, server, executed_by) "
+                    + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');";
+
+            try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
+                preparedStatement.setString(1, uuid.toString());
+                preparedStatement.setString(2, user);
+                preparedStatement.setString(3, ip);
+                preparedStatement.setString(4, reason);
+                preparedStatement.setString(5, server);
+                preparedStatement.setString(7, executedby);
+
+                preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
-        return info;
+
+        return null;
     }
-
-    @Override
-    public PunishmentInfo insertIntoIPBans(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_IPBANS, uuid, user, ip, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.IPBAN).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_TEMPBANS, uuid, user, ip, time, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
-                    .expireTime(time).type(PunishmentType.TEMPBAN).build();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPTempBans(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_IPTEMPBANS, uuid, user, ip, time, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
-                    .expireTime(time).type(PunishmentType.IPTEMPBAN).build();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_MUTES, uuid, user, ip, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.MUTE).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPMutes(String uuid, String user, String ip, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_IPMUTES, uuid, user, ip, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.IPMUTE).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_TEMPMUTES, uuid, user, ip, time, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
-                    .expireTime(time).type(PunishmentType.TEMPMUTE).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoIPTempMutes(String uuid, String user, String ip, Long time, String reason, String server, Boolean active, String executedby) {
-        int activeNumber = active ? 1 : 0;
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_IPTEMPMUTES, uuid, user, ip, time, reason, server, activeNumber, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .active(active).executedBy(executedby).date(new Date(System.currentTimeMillis()))
-                    .expireTime(time).type(PunishmentType.IPTEMPMUTE).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoWarns(String uuid, String user, String ip, String reason, String server, String executedby) {
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_WARNS, uuid, user, ip, reason, server, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.WARN).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
-    @Override
-    public PunishmentInfo insertIntoKicks(String uuid, String user, String ip, String reason, String server, String executedby) {
-        PunishmentInfo info = null;
-
-        String statement = format(INSERT_INTO_KICKS, uuid, user, ip, reason, server, executedby);
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection()) {
-            connection.createStatement().executeUpdate(statement);
-
-            info = PunishmentInfo.builder().uuid(UUID.fromString(uuid)).user(user).IP(ip).reason(reason).server(server)
-                    .executedBy(executedby).date(new Date(System.currentTimeMillis())).type(PunishmentType.KICK).build();
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-        return info;
-    }
-
 
     /* UPDATE STATEMENTS */
     @Override
@@ -326,6 +228,11 @@ public class SQLDataManager implements DataManager {
         }
 
         return present;
+    }
+
+    @Override
+    public boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive) {
+        return false;
     }
 
     @Override
@@ -456,7 +363,6 @@ public class SQLDataManager implements DataManager {
         return present;
     }
 
-
     @Override
     public UserStorage getUser(UUID uuid) {
         UserStorage storage = new UserStorage();
@@ -511,6 +417,23 @@ public class SQLDataManager implements DataManager {
             e.printStackTrace();
         }
         return storage;
+    }
+
+    @Override
+    public List<String> getUsersOnIP(String name) {
+//        private final static String SELECT_ORDER = "SELECT %s FROM {table} WHERE %s ORDER BY %s;";
+        format(SELECT_USERS_ON_IP, "username", "ip = ?", "lastjoined DESC");
+        return null;
+    }
+
+    @Override
+    public PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP) {
+        return null;
+    }
+
+    @Override
+    public void removePunishment(PunishmentType type, UUID uuid, String IP) {
+
     }
 
     @Override
@@ -819,15 +742,5 @@ public class SQLDataManager implements DataManager {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-
-    /* UTILITY METHODS */
-    private static Language getLanguageOrDefault(String language) {
-        return BUCore.getApi().getLanguageManager().getLanguage(language).orElse(BUCore.getApi().getLanguageManager().getDefaultLanguage());
-    }
-
-    private static String format(String line, Object... replacements) {
-        return String.format(PlaceHolderAPI.formatMessage(line), replacements);
     }
 }

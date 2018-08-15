@@ -24,5 +24,5 @@ motd:
                    &bCome and take a look!
 - condition: 'version < 1.12.2'
   motd: |-
-    &bIt seems like you are using &e1.11.2&b!
+    &bIt seems like you are using &e{version}&b!
     &ePlease update to &a1.12.2 &eas this is the recommended version.
