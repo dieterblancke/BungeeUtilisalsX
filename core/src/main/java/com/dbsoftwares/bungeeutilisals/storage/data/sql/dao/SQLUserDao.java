@@ -190,6 +190,6 @@ public class SQLUserDao implements UserDao {
     }
 
     private String format(String line, Object... replacements) {
-        return String.format(PlaceHolderAPI.formatMessage(line), replacements);
+        return PlaceHolderAPI.formatMessage(String.format(line, replacements));
     }
 }

@@ -6,7 +6,7 @@ package com.dbsoftwares.bungeeutilisals.storage.mongodb;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.storage.data.MongoDataManager;
+import com.dbsoftwares.bungeeutilisals.storage.data.mongo.MongoDao;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
@@ -33,7 +33,7 @@ public class MongoDBStorageManager extends AbstractStorageManager {
     }
 
     public MongoDBStorageManager(Plugin plugin, StorageType type, IConfiguration configuration) {
-        super(plugin, type, new MongoDataManager());
+        super(plugin, type, new MongoDao());
 
         String user = configuration.getString("storage.username");
         String password = configuration.getString("storage.password");

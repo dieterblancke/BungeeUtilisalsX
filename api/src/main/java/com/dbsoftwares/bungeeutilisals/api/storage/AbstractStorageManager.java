@@ -8,6 +8,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage;
 
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -32,9 +33,9 @@ public abstract class AbstractStorageManager {
     private StorageType type;
 
     @Getter
-    private DataManager dataManager;
+    private Dao dataManager;
 
-    public AbstractStorageManager(Plugin plugin, StorageType type, DataManager dataManager) {
+    public AbstractStorageManager(Plugin plugin, StorageType type, Dao dataManager) {
         manager = this;
 
         this.plugin = plugin;

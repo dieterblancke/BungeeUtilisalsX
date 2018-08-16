@@ -4,7 +4,9 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -32,14 +34,14 @@ public class UnbanCommand extends Command {
             user.sendLangMessage("punishments.unban.usage");
             return;
         }
-        DataManager dataManager = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
+        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
 
-        if (!dataManager.isUserPresent(args[0])) {
+        if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dataManager.getUser(args[0]);
-        if (!dataManager.isBanPresent(storage.getUuid(), true)) {
+        UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (!dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), null, true)) {
             user.sendLangMessage("punishments.unban.not-banned");
             return;
         }
@@ -55,8 +57,11 @@ public class UnbanCommand extends Command {
         IPunishmentExecutor executor = api.getPunishmentExecutor();
         executor.removeBan(storage.getUuid());
 
-        PunishmentInfo info = PunishmentInfo.builder().user(args[0])
-                .id(-1).executedBy(user.getName()).removedBy(user.getName()).build();
+        PunishmentInfo info = new PunishmentInfo();
+        info.setUser(args[0]);
+        info.setId(-1);
+        info.setExecutedBy(user.getName());
+        info.setRemovedBy(user.getName());
 
         user.sendLangMessage("punishments.unban.executed", executor.getPlaceHolders(info));
 

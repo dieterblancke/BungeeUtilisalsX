@@ -8,9 +8,8 @@ package com.dbsoftwares.bungeeutilisals.storage.file;
 
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.storage.data.SQLDataManager;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
 import net.md_5.bungee.api.plugin.Plugin;
-
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
@@ -23,7 +22,7 @@ public class SQLiteStorageManager extends AbstractStorageManager {
     private File database;
 
     public SQLiteStorageManager(Plugin plugin) throws SQLException {
-        super(plugin, StorageType.SQLITE, new SQLDataManager());
+        super(plugin, StorageType.SQLITE, new SQLDao());
 
         database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
         if (!database.exists()) {
@@ -49,7 +48,6 @@ public class SQLiteStorageManager extends AbstractStorageManager {
 
     @Override
     public Connection getConnection() throws SQLException {
-        // if connection timed out / closed for some reason -> reopening
         if (connection.isClosed()) {
             initializeConnection();
         }

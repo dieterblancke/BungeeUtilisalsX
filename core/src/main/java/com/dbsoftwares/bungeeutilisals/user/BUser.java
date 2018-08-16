@@ -8,13 +8,14 @@ package com.dbsoftwares.bungeeutilisals.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.DataManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
@@ -44,38 +45,39 @@ public class BUser implements User {
     @Override
     public void load(UserPreLoadEvent event) {
         ProxiedPlayer p = event.getPlayer();
-        DataManager dataManager = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
+        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
 
         this.player = p.getName();
         this.experimental = new ExperimentalUser(this);
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
-        if (dataManager.isUserPresent(p.getUniqueId())) {
-            storage = dataManager.getUser(p.getUniqueId());
+        if (dao.getUserDao().exists(p.getUniqueId())) {
+            storage = dao.getUserDao().getUserData(p.getUniqueId());
 
             storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(p.getUniqueId()));
         } else {
-            dataManager.insertIntoUsers(p.getUniqueId().toString(),
-                    p.getName(), Utils.getIP(p.getAddress()), BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
+            dao.getUserDao().createUser(p.getUniqueId().toString(),
+                    p.getName(), Utils.getIP(p.getAddress()),
+                    BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
             storage = new UserStorage();
             storage.setDefaultsFor(p);
         }
 
         if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
             storage.setUserName(player);
-            dataManager.updateUser(p.getUniqueId().toString(), player, null, null);
+            dao.getUserDao().updateUser(p.getUniqueId().toString(), player, null, null);
         }
 
         if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getBoolean("enabled")) {
-            if (dataManager.isMutePresent(p.getUniqueId(), true)) {
-                mute = dataManager.getMute(p.getUniqueId());
-            } else if (dataManager.isTempMutePresent(p.getUniqueId(), true)) {
-                mute = dataManager.getTempMute(p.getUniqueId());
-            } else if (dataManager.isIPMutePresent(getIP(), true)) {
-                mute = dataManager.getIPMute(getIP());
-            } else if (dataManager.isIPTempMutePresent(getIP(), true)) {
-                mute = dataManager.getIPTempMute(getIP());
+            if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, p.getUniqueId(), null, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, p.getUniqueId(), null);
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, p.getUniqueId(), null, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, p.getUniqueId(), null);
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, getIP(), true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, getIP());
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, getIP(), true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, getIP());
             }
         }
 
@@ -94,7 +96,8 @@ public class BUser implements User {
 
     @Override
     public void save() {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUserDao()
+                .updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
     }
 
     @Override

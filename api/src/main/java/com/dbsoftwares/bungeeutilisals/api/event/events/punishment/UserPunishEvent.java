@@ -50,9 +50,8 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     }
 
     public PunishmentInfo getInfo() {
-        return PunishmentInfo.builder().uuid(UUID).user(name).IP(ip).reason(reason)
-                .server(executionServer).date(date).active(true).executedBy(executor.getName())
-                .expireTime(expire).removedBy(null).type(type).build();
+        return new PunishmentInfo(type, 0, name, ip, UUID, executor.getName(),
+                executionServer, reason, date, expire, true, null);
     }
 
     public boolean isActivatable() {

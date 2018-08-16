@@ -31,4 +31,8 @@ public enum PunishmentType {
     public String getTablePlaceHolder() {
         return "{" + toString().toLowerCase() + "s-table}";
     }
+
+    public boolean isIP() {
+        return toString().startsWith("IP");
+    }
 }

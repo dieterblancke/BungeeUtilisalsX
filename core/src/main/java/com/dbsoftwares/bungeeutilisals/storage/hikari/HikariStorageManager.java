@@ -6,9 +6,9 @@ package com.dbsoftwares.bungeeutilisals.storage.hikari;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
-import com.dbsoftwares.bungeeutilisals.storage.data.SQLDataManager;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Data;
@@ -24,7 +24,7 @@ public abstract class HikariStorageManager extends AbstractStorageManager {
 
     @SuppressWarnings("deprecation")
     public HikariStorageManager(Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg) {
-        super(plugin, type, new SQLDataManager());
+        super(plugin, type, new SQLDao());
         config = cfg == null ? new HikariConfig() : cfg;
         config.setDataSourceClassName(getDataSourceClass());
         config.addDataSourceProperty("serverName", configuration.getString("storage.hostname"));

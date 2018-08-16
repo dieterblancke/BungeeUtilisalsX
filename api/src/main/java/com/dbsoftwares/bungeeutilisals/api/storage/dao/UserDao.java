@@ -25,7 +25,7 @@ public interface UserDao {
 
     UserStorage getUserData(String name);
 
-    List<String> getUsersOnIP(String name);
+    List<String> getUsersOnIP(String ip);
 
     Language getLanguage(UUID uuid);
 }
