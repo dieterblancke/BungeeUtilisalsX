@@ -52,7 +52,11 @@ public class KickCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        PunishmentInfo info = executor.addKick(storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), user.getName());
+
+        PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+                PunishmentType.KICK, storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, 0L, user.getServerName(), true, user.getName()
+        );
 
         target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
 

@@ -16,7 +16,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 
 public class MuteCheckExecutor implements EventExecutor {
 
@@ -63,9 +62,13 @@ public class MuteCheckExecutor implements EventExecutor {
         if (info.isTemporary()) {
             if (info.getExpireTime() <= System.currentTimeMillis()) {
                 if (info.getType().equals(PunishmentType.TEMPMUTE)) {
-                    BUCore.getApi().getPunishmentExecutor().removeTempMute(user.getParent().getUniqueId());
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
+                            PunishmentType.TEMPMUTE, user.getParent().getUniqueId(), null
+                    );
                 } else {
-                    BUCore.getApi().getPunishmentExecutor().removeIPTempMute(user.getIP());
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
+                            PunishmentType.IPTEMPMUTE, null, user.getIP()
+                    );
                 }
                 return true;
             }

@@ -18,7 +18,7 @@ public class NameConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        String name = BUCore.getApi().getStorageManager().getDataManager()
+        String name = BUCore.getApi().getStorageManager().getDao()
                 .getUserDao().getUsersOnIP(Utils.getIP(connection.getAddress()))
                 .stream().findFirst().orElse(null);
 

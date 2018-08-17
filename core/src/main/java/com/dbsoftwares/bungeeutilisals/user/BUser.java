@@ -45,7 +45,7 @@ public class BUser implements User {
     @Override
     public void load(UserPreLoadEvent event) {
         ProxiedPlayer p = event.getPlayer();
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
+        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         this.player = p.getName();
         this.experimental = new ExperimentalUser(this);
@@ -96,7 +96,7 @@ public class BUser implements User {
 
     @Override
     public void save() {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUserDao()
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao()
                 .updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
     }
 

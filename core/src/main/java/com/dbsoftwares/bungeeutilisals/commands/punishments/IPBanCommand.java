@@ -1,10 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -33,14 +35,15 @@ public class IPBanCommand extends Command {
             user.sendLangMessage("punishments.ipban.usage");
             return;
         }
+        Dao dao = BUCore.getApi().getStorageManager().getDao();
         String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
-        if (!BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isUserPresent(args[0])) {
+        if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().getUser(args[0]);
-        if (BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager().isIPBanPresent(storage.getIp(), true)) {
+        UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPBAN, null, storage.getIp(), true)) {
             user.sendLangMessage("punishments.ipban.already-banned");
             return;
         }
@@ -54,8 +57,11 @@ public class IPBanCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        PunishmentInfo info = executor.addIPBan(storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, user.getServerName(), user.getName());
+
+        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
+                PunishmentType.IPBAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, 0L, user.getServerName(), true, user.getName()
+        );
 
         api.getUser(storage.getUserName()).ifPresent(banned -> {
             String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ipban.kick"), "\n");

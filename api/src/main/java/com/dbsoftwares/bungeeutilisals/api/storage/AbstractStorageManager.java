@@ -33,14 +33,14 @@ public abstract class AbstractStorageManager {
     private StorageType type;
 
     @Getter
-    private Dao dataManager;
+    private Dao dao;
 
-    public AbstractStorageManager(Plugin plugin, StorageType type, Dao dataManager) {
+    public AbstractStorageManager(Plugin plugin, StorageType type, Dao dao) {
         manager = this;
 
         this.plugin = plugin;
         this.type = type;
-        this.dataManager = dataManager;
+        this.dao = dao;
     }
 
     public String getName() {

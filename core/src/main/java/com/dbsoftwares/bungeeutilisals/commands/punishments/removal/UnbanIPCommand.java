@@ -32,7 +32,7 @@ public class UnbanIPCommand extends Command {
             user.sendLangMessage("punishments.unbanip.usage");
             return;
         }
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
+        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
@@ -53,7 +53,7 @@ public class UnbanIPCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        executor.removeBan(storage.getUuid());
+        dao.getPunishmentDao().removePunishment(PunishmentType.IPBAN, null, storage.getIp());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

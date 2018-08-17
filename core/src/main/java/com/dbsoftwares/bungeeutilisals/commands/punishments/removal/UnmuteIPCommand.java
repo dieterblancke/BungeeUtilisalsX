@@ -33,7 +33,7 @@ public class UnmuteIPCommand extends Command {
             user.sendLangMessage("punishments.unmuteip.usage");
             return;
         }
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDataManager();
+        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
@@ -54,7 +54,7 @@ public class UnmuteIPCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        executor.removeBan(storage.getUuid());
+        dao.getPunishmentDao().removePunishment(PunishmentType.IPMUTE, null, storage.getIp());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

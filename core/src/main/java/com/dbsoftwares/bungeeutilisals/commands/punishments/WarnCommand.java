@@ -10,8 +10,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -54,10 +52,13 @@ public class WarnCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        PunishmentInfo info = executor.addWarn(storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), user.getName());
+
+        PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+                PunishmentType.WARN, storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, 0L, user.getServerName(), true, user.getName()
+        );
 
         target.sendLangMessage("punishments.warn.onwarn", executor.getPlaceHolders(info).toArray(new Object[]{}));
-
         user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.warn.broadcast",

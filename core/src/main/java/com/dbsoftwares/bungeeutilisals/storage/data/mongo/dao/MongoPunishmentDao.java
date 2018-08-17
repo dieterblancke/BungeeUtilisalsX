@@ -101,24 +101,29 @@ public class MongoPunishmentDao implements PunishmentDao {
         }
 
         if (document != null) {
-            PunishmentInfo.PunishmentInfoBuilder builder = PunishmentInfo.builder();
-            builder.uuid(uuid).user(document.getString("user")).IP(document.getString("ip"))
-                    .reason(document.getString("reason")).server(document.getString("server"))
-                    .date(document.getDate("date")).executedBy(document.getString("executed_by"))
-                    .removedBy(document.containsKey("removed_by") ? null : document.getString("removed_by"))
-                    .type(type);
+            PunishmentInfo info = new PunishmentInfo();
+
+            info.setUuid(uuid);
+            info.setUser(document.getString("user"));
+            info.setIP(document.getString("ip"));
+            info.setReason(document.getString("reason"));
+            info.setServer(document.getString("server"));
+            info.setDate(document.getDate("date"));
+            info.setExecutedBy(document.getString("executed_by"));
+            info.setRemovedBy(document.containsKey("removed_by") ? null : document.getString("removed_by"));
+            info.setType(type);
 
             if (document.containsKey("active")) {
-                builder.active(document.getBoolean("active"));
+                info.setActive(document.getBoolean("active"));
             }
             if (document.containsKey("time")) {
-                builder.expireTime(document.getLong("time"));
+                info.setExpireTime(document.getLong("time"));
             }
 
-            return builder.build();
+            return info;
         }
 
-        return PunishmentInfo.builder().build();
+        return new PunishmentInfo();
     }
 
     @Override

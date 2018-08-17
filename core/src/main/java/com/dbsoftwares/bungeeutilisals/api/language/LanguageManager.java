@@ -1,15 +1,12 @@
 package com.dbsoftwares.bungeeutilisals.api.language;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
-import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.configuration.json.JsonConfiguration;
 import com.dbsoftwares.configuration.yaml.YamlConfiguration;
 import com.google.common.collect.Lists;
@@ -39,7 +36,7 @@ public class LanguageManager implements ILanguageManager {
     private LanguageIntegration integration;
 
     public LanguageManager(BungeeUtilisals plugin) {
-        integration = uuid -> plugin.getDatabaseManagement().getDataManager().getLanguage(uuid);
+        integration = uuid -> plugin.getDatabaseManagement().getDao().getUserDao().getLanguage(uuid);
         ISection section = FileLocation.LANGUAGES_CONFIG.getConfiguration().getSection("languages");
 
         for (String key : section.getKeys()) {
