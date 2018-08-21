@@ -14,7 +14,7 @@ public class PacketReceiveEvent extends AbstractEvent implements Cancellable {
 
     @Getter
     @Setter
-    private boolean cancelled = false;
+    private boolean cancelled;
     private DefinedPacket packet;
     private Connection sender;
     private Connection reciever;
