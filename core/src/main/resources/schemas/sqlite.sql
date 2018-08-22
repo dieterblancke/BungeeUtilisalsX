@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS {users-table} (
-    id        INTEGER PRIMARY KEY AUTOINCREMENT      NOT NULL,
-    uuid      VARCHAR(36) UNIQUE                     NOT NULL,
-    username  VARCHAR(32) UNIQUE                     NOT NULL,
-    ip        VARCHAR(32)                            NOT NULL,
-    language  VARCHAR(24)                            NOT NULL
+    id         INTEGER PRIMARY KEY AUTOINCREMENT      NOT NULL,
+    uuid       VARCHAR(36) UNIQUE                     NOT NULL,
+    username   VARCHAR(32) UNIQUE                     NOT NULL,
+    ip         VARCHAR(32)                            NOT NULL,
+    language   VARCHAR(24)                            NOT NULL,
+    firstlogin DATETIME DEFAULT CURRENT_TIMESTAMP     NOT NULL,
+    lastlogout DATETIME DEFAULT CURRENT_TIMESTAMP     NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_users ON {users-table} (uuid, username, ip);

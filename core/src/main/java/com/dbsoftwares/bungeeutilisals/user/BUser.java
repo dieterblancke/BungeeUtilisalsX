@@ -12,7 +12,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -23,57 +22,66 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import lombok.Data;
+import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.sql.Date;
 import java.util.Objects;
+import java.util.UUID;
 
-@Data
+@Setter
 public class BUser implements User {
 
-    private String player;
-    private Boolean socialspy = false;
+    private String name;
+    private UUID uuid;
+    private Boolean socialspy;
     private ExperimentalUser experimental;
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private PunishmentInfo mute;
 
     @Override
-    public void load(UserPreLoadEvent event) {
-        ProxiedPlayer p = event.getPlayer();
+    public void load(String name, UUID uuid, String IP) {
         Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
-        this.player = p.getName();
+        this.name = name;
+        this.uuid = uuid;
         this.experimental = new ExperimentalUser(this);
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
-        if (dao.getUserDao().exists(p.getUniqueId())) {
-            storage = dao.getUserDao().getUserData(p.getUniqueId());
+        if (dao.getUserDao().exists(uuid)) {
+            storage = dao.getUserDao().getUserData(uuid);
 
-            storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(p.getUniqueId()));
+            storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(uuid));
         } else {
-            dao.getUserDao().createUser(p.getUniqueId().toString(),
-                    p.getName(), Utils.getIP(p.getAddress()),
-                    BUCore.getApi().getLanguageManager().getDefaultLanguage().getName());
-            storage = new UserStorage();
-            storage.setDefaultsFor(p);
+            final Language defLanguage = BUCore.getApi().getLanguageManager().getDefaultLanguage();
+            final Date date = new Date(System.currentTimeMillis());
+
+            dao.getUserDao().createUser(
+                    uuid,
+                    name,
+                    IP,
+                    defLanguage
+            );
+
+            storage = new UserStorage(uuid, name, IP, defLanguage, date, date);
         }
 
-        if (!storage.getUserName().equalsIgnoreCase(player)) { // Stored name != user current name | Name changed?
-            storage.setUserName(player);
-            dao.getUserDao().updateUser(p.getUniqueId().toString(), player, null, null);
+        if (!storage.getUserName().equalsIgnoreCase(name)) { // Stored name != user current name | Name changed?
+            storage.setUserName(name);
+            dao.getUserDao().setName(uuid, name);
         }
 
         if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getBoolean("enabled")) {
-            if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, p.getUniqueId(), null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, p.getUniqueId(), null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, p.getUniqueId(), null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, p.getUniqueId(), null);
+            if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, uuid, null, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, uuid, null);
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, uuid, null, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, uuid, null);
             } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, getIP(), true)) {
                 mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, getIP());
             } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, getIP(), true)) {
@@ -97,12 +105,7 @@ public class BUser implements User {
     @Override
     public void save() {
         BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao()
-                .updateUser(getIdentifier(), getName(), getIP(), getLanguage().getName());
-    }
-
-    @Override
-    public String getIdentifier() {
-        return getParent().getUniqueId().toString();
+                .updateUser(uuid, getName(), getIP(), getLanguage(), new Date(System.currentTimeMillis()));
     }
 
     @Override
@@ -231,7 +234,12 @@ public class BUser implements User {
 
     @Override
     public String getName() {
-        return player;
+        return name;
+    }
+
+    @Override
+    public UUID getUUID() {
+        return uuid;
     }
 
     @Override
@@ -251,7 +259,7 @@ public class BUser implements User {
 
     @Override
     public ProxiedPlayer getParent() {
-        return ProxyServer.getInstance().getPlayer(player);
+        return ProxyServer.getInstance().getPlayer(name);
     }
 
     @Override
@@ -297,11 +305,11 @@ public class BUser implements User {
         }
 
         BUser user = (BUser) o;
-        return user.getPlayer().equalsIgnoreCase(getPlayer()) && user.getIdentifier().equalsIgnoreCase(getIdentifier());
+        return user.name.equalsIgnoreCase(name) && user.uuid.equals(uuid);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(player, getIdentifier());
+        return Objects.hash(name, uuid);
     }
 }

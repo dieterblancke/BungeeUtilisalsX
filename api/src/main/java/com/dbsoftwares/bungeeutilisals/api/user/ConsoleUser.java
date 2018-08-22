@@ -8,27 +8,25 @@ package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import java.util.UUID;
 
-@Data
 public class ConsoleUser implements User {
 
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
 
     @Override
-    public void load(UserPreLoadEvent event) {
+    public void load(String name, UUID uuid, String IP) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -40,11 +38,6 @@ public class ConsoleUser implements User {
     @Override
     public void save() {
         throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public String getIdentifier() {
-        return getName();
     }
 
     @Override
@@ -156,6 +149,11 @@ public class ConsoleUser implements User {
     @Override
     public String getName() {
         return "CONSOLE";
+    }
+
+    @Override
+    public UUID getUUID() {
+        return UUID.randomUUID();
     }
 
     @Override

@@ -4,9 +4,9 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 public class PlaceHolderEvent {
 
-    User user;
-    PlaceHolder placeholder;
-    String message;
+    private User user;
+    private PlaceHolder placeholder;
+    private String message;
 
     public PlaceHolderEvent(User user, PlaceHolder placeholder, String message) {
         this.user = user;

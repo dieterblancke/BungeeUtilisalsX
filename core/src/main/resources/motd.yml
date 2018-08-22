@@ -4,24 +4,24 @@ enabled: true
 motd:
 # Default, this one will show when all others do not apply.
 - condition: 'default'
-  motd: |
+  motd: |-
     &2Motd &5line &61
     &3Motd &4line &72
 # User pings the server at the 'play.example.net' domain, condition is invalid when domain name is unknown.
 - condition: 'domain == play.example.net'
   motd: |-
-    &aMotd &dline &f1
-    &eMotd &bline &c2
+    &aIt seems that you are playing on &2play.example.net&a!
+    &e     Please switch to &bplay.example.com &einstead!
 # User name is known, player probably has joined before.
 - condition: 'name != null'
   motd: |-
-    &e     Hello &b{user}&e!
-    &eWe are now running a 10 % SALE!
+    &e                        Hello &b{user}&e!
+    &e               Welcome back to our server!
 # User name is unknown, player probably has never joined before.
 - condition: 'name == null'
   motd: |-
     &eIt seems like you haven't joined our server yet!
-                   &bCome and take a look!
+    &b               Come and take a look!
 - condition: 'version < 1.12.2'
   motd: |-
     &bIt seems like you are using &e{version}&b!

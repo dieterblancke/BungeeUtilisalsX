@@ -14,6 +14,8 @@ import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
+
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -22,32 +24,35 @@ import java.util.UUID;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
 public class MongoUserDao implements UserDao {
 
     @Override
-    public void createUser(String uuid, String username, String ip, String language) {
+    public void createUser(UUID uuid, String username, String ip, Language language) {
         Mapping<String, Object> mapping = new Mapping<>(true);
-        mapping.append("uuid", uuid).append("username", username).append("ip", ip).append("language", language);
+        Date date = new Date(System.currentTimeMillis());
+
+        mapping.append("uuid", uuid)
+                .append("username", username)
+                .append("ip", ip)
+                .append("language", language.getName())
+                .append("firstlogin", date)
+                .append("lastlogout", date);
 
         getDatabase().getCollection(format("{users-table}")).insertOne(new Document(mapping.getMap()));
     }
 
     @Override
-    public void updateUser(String uuid, String name, String ip, String language) {
+    public void updateUser(UUID uuid, String name, String ip, Language language, Date date) {
         List<Bson> updates = Lists.newArrayList();
 
-        if (name != null) {
-            updates.add(Updates.set("name", name));
-        }
-        if (ip != null) {
-            updates.add(Updates.set("ip", ip));
-        }
-        if (language != null) {
-            updates.add(Updates.set("language", language));
-        }
+        updates.add(Updates.set("name", name));
+        updates.add(Updates.set("ip", ip));
+        updates.add(Updates.set("language", language.getName()));
+        updates.add(Updates.set("lastlogout", date));
 
         getDatabase().getCollection(format("{users-table}"))
-                .findOneAndUpdate(Filters.eq("uuid", uuid), Updates.combine(updates));
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.combine(updates));
     }
 
     @Override
@@ -81,6 +86,8 @@ public class MongoUserDao implements UserDao {
             storage.setLanguage(
                     BUCore.getApi().getLanguageManager().getLangOrDefault(document.getString("language"))
             );
+            storage.setFirstLogin(document.getDate("lastlogin"));
+            storage.setLastLogout(document.getDate("lastlogout"));
         }
 
         return storage;
@@ -100,6 +107,8 @@ public class MongoUserDao implements UserDao {
             storage.setLanguage(
                     BUCore.getApi().getLanguageManager().getLangOrDefault(document.getString("language"))
             );
+            storage.setFirstLogin(document.getDate("lastlogin"));
+            storage.setLastLogout(document.getDate("lastlogout"));
         }
 
         return storage;
@@ -107,7 +116,7 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public List<String> getUsersOnIP(String ip) {
-        List<String> users =  Lists.newArrayList();
+        List<String> users = Lists.newArrayList();
 
         for (Document document : getDatabase().getCollection(format("{users-table}")).find(Filters.eq("ip", ip))) {
             users.add(document.getString("username"));
@@ -127,6 +136,30 @@ public class MongoUserDao implements UserDao {
         }
 
         return language;
+    }
+
+    @Override
+    public void setName(UUID uuid, String name) {
+        getDatabase().getCollection(format("{users-table}"))
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("name", name));
+    }
+
+    @Override
+    public void setIP(UUID uuid, String ip) {
+        getDatabase().getCollection(format("{users-table}"))
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("ip", ip));
+    }
+
+    @Override
+    public void setLanguage(UUID uuid, Language language) {
+        getDatabase().getCollection(format("{users-table}"))
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("language", language.getName()));
+    }
+
+    @Override
+    public void setLogout(UUID uuid, Date logout) {
+        getDatabase().getCollection(format("{users-table}"))
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("lastlogout", logout));
     }
 
     private String format(String line) {

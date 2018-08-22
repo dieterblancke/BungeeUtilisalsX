@@ -6,26 +6,24 @@ package com.dbsoftwares.bungeeutilisals.api.user;
  * Project: centrixcore
  */
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.UUID;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserStorage {
 
     private UUID Uuid;
     private String userName;
     private String ip;
     private Language language;
+    private Date firstLogin;
+    private Date lastLogout;
 
-    public void setDefaultsFor(ProxiedPlayer p) {
-        setUuid(p.getUniqueId());
-        setUserName(p.getName());
-        setIp(Utils.getIP(p.getAddress()));
-        setLanguage(BUCore.getApi().getLanguageManager().getDefaultLanguage());
-    }
 }

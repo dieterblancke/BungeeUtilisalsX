@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.language;
 
+import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
 /*
@@ -7,6 +8,8 @@ import lombok.RequiredArgsConstructor;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
+@EqualsAndHashCode
 @RequiredArgsConstructor
 public class Language {
 
@@ -25,5 +28,10 @@ public class Language {
      */
     public Boolean isDefault() {
         return defaultLanguage;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }

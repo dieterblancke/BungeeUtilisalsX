@@ -1,6 +1,5 @@
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
@@ -10,13 +9,17 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.UUID;
+
 public interface User {
 
     /**
-     * Loads the user into storage.
-     * @param event The even for the user to be loaded from.
+     * Loads the user in RAM.
+     * @param name The user's name.
+     * @param uuid The user's UUID.
+     * @param IP The user's IP.
      */
-    void load(UserPreLoadEvent event);
+    void load(String name, UUID uuid, String IP);
 
     /**
      * Unloads the User from storage.
@@ -27,12 +30,6 @@ public interface User {
      * Saves the local user data onto the database.
      */
     void save();
-
-    /**
-     * Simple but quick method to retrieve name OR UUID. Depends on the useUUID setting in the config.
-     * @return The UUID if useUUID is set to true in the configuration, otherwise it returns the name.
-     */
-    String getIdentifier();
 
     /**
      * @return User data is being stored in here.
@@ -145,9 +142,14 @@ public interface User {
     void forceKick(String reason);
 
     /**
-     * @return The User his name.
+     * @return The user's name.
      */
     String getName();
+
+    /**
+     * @return The user's UUID.
+     */
+    UUID getUUID();
 
     /**
      * Sends the standard no permission message to the User.

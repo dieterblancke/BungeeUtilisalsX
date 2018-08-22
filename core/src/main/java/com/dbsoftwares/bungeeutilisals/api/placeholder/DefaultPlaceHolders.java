@@ -97,5 +97,12 @@ public class DefaultPlaceHolders implements PlaceHolderPack {
             }
         });
 
+        // For MOTD, allows to use time left + format (must be able to read input, !!TODO!!)
+        PlaceHolderAPI.addPlaceHolder("{timeleft_%time%}", false, new PlaceHolderEventHandler() {
+            @Override
+            public String getReplace(PlaceHolderEvent event) {
+                return event.getUser().getName();
+            }
+        });
     }
 }

@@ -8,7 +8,11 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.google.common.collect.Lists;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -17,21 +21,27 @@ import java.util.UUID;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
 public class SQLUserDao implements UserDao {
 
     private final static String INSERT_USER = "INSERT INTO {users-table} " +
             "(uuid, username, ip, language) VALUES (?, ?, ?, ?);";
 
     private final static String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
+    private final static String UPDATE_USER = "UPDATE {users-table} " +
+            "SET username = ?, ip = ?, language = ?, lastlogout = ? " +
+            "WHERE uuid = ?;";
+
+    private final static String UPDATE_USER_COLUMN = "UPDATE {users-table} SET %s = ? WHERE uuid = ?;";
 
     @Override
-    public void createUser(String uuid, String username, String ip, String language) {
+    public void createUser(UUID uuid, String username, String ip, Language language) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
-            pstmt.setString(1, uuid);
+            pstmt.setString(1, uuid.toString());
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
-            pstmt.setString(4, language);
+            pstmt.setString(4, language.getName());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -40,26 +50,16 @@ public class SQLUserDao implements UserDao {
     }
 
     @Override
-    public void updateUser(String uuid, String name, String ip, String language) {
-        StringBuilder statement = new StringBuilder(
-                "UPDATE " + PlaceHolderAPI.formatMessage("{users-table}") + " SET "
-        );
-
-        if (name != null) {
-            statement.append(" username = '").append(name).append("', ");
-        }
-        if (ip != null) {
-            statement.append(" ip = '").append(ip).append("', ");
-        }
-        if (language != null) {
-            statement.append(" language = '").append(language).append("', ");
-        }
-        statement.delete(statement.length() - 2, statement.length());
-        statement.append(" WHERE uuid = '").append(uuid).append("';");
-
+    public void updateUser(UUID uuid, String name, String ip, Language language, Date logout) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(statement.toString());
+             PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER))) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, ip);
+            pstmt.setString(3, language.getName());
+            pstmt.setDate(4, new java.sql.Date(logout.getTime()));
+            pstmt.setString(5, uuid.toString());
+
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -117,6 +117,8 @@ public class SQLUserDao implements UserDao {
                 storage.setUserName(rs.getString("username"));
                 storage.setIp(rs.getString("ip"));
                 storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
+                storage.setFirstLogin(rs.getDate("firstlogin"));
+                storage.setLastLogout(rs.getDate("lastlogout"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -138,6 +140,8 @@ public class SQLUserDao implements UserDao {
                 storage.setUserName(name);
                 storage.setIp(rs.getString("ip"));
                 storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
+                storage.setFirstLogin(rs.getDate("firstlogin"));
+                storage.setLastLogout(rs.getDate("lastlogout"));
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -183,6 +187,58 @@ public class SQLUserDao implements UserDao {
             e.printStackTrace();
         }
         return language;
+    }
+
+    @Override
+    public void setName(UUID uuid, String name) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "username"))) {
+            pstmt.setString(1, name);
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setIP(UUID uuid, String ip) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "ip"))) {
+            pstmt.setString(1, ip);
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setLanguage(UUID uuid, Language language) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "language"))) {
+            pstmt.setString(1, language.getName());
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void setLogout(UUID uuid, Date logout) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "lastlogout"))) {
+            pstmt.setDate(1, new java.sql.Date(logout.getTime()));
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private String format(String line) {

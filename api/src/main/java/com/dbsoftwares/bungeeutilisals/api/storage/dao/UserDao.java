@@ -3,6 +3,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -11,11 +12,12 @@ import java.util.UUID;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
 public interface UserDao {
 
-    void createUser(String uuid, String username, String ip, String language);
+    void createUser(UUID uuid, String username, String ip, Language language);
 
-    void updateUser(String uuid, String name, String ip, String language);
+    void updateUser(UUID uuid, String name, String ip, Language language, Date logout);
 
     boolean exists(String name);
 
@@ -28,4 +30,13 @@ public interface UserDao {
     List<String> getUsersOnIP(String ip);
 
     Language getLanguage(UUID uuid);
+
+
+    void setName(UUID uuid, String name);
+
+    void setIP(UUID uuid, String ip);
+
+    void setLanguage(UUID uuid, Language language);
+
+    void setLogout(UUID uuid, Date logout);
 }

@@ -1,7 +1,5 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
 
@@ -10,6 +8,7 @@ import net.md_5.bungee.api.connection.PendingConnection;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
 public class NameConditionHandler extends ConditionHandler {
 
     public NameConditionHandler(String condition) {
@@ -18,10 +17,6 @@ public class NameConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        String name = BUCore.getApi().getStorageManager().getDao()
-                .getUserDao().getUsersOnIP(Utils.getIP(connection.getAddress()))
-                .stream().findFirst().orElse(null);
-
         String[] args = condition.split(" ");
         String operator = args[0];
         String value = args[1];

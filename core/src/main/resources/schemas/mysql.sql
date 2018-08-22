@@ -1,9 +1,11 @@
 CREATE TABLE IF NOT EXISTS {users-table} (
-    id        INT(11) AUTO_INCREMENT            NOT NULL,
-    uuid      VARCHAR(36) UNIQUE                NOT NULL,
-    username  VARCHAR(32) UNIQUE                NOT NULL,
-    ip        VARCHAR(32)                       NOT NULL,
-    language  VARCHAR(24)                       NOT NULL,
+    id         INT(11) AUTO_INCREMENT              NOT NULL,
+    uuid       VARCHAR(36) UNIQUE                  NOT NULL,
+    username   VARCHAR(32) UNIQUE                  NOT NULL,
+    ip         VARCHAR(32)                         NOT NULL,
+    language   VARCHAR(24)                         NOT NULL,
+    firstlogin DATETIME DEFAULT CURRENT_TIMESTAMP  NOT NULL,
+    lastlogout DATETIME DEFAULT CURRENT_TIMESTAMP  NOT NULL,
     PRIMARY KEY (id),
     KEY idx_users (id, uuid, username, ip)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8MB4;
