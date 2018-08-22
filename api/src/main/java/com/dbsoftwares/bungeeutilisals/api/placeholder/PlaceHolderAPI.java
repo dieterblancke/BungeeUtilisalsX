@@ -1,7 +1,11 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
+import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.DefaultPlaceHolder;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.InputPlaceHolder;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.Lists;
+
 import java.util.List;
 
 public class PlaceHolderAPI {
@@ -42,8 +46,12 @@ public class PlaceHolderAPI {
         pack.loadPack();
     }
 
-    public static void addPlaceHolder(String placeholder, boolean requiresUser, PlaceHolderEventHandler replace) {
-        placeholders.add(new PlaceHolder(placeholder, requiresUser, replace));
+    public static void addPlaceHolder(String placeholder, boolean requiresUser, PlaceHolderEventHandler handler) {
+        placeholders.add(new DefaultPlaceHolder(placeholder, requiresUser, handler));
+    }
+
+    public static void addPlaceHolder(String placeholder, boolean requiresUser, String prefix, PlaceHolderEventHandler handler) {
+        placeholders.add(new InputPlaceHolder(placeholder, requiresUser, prefix, handler));
     }
 
     public static PlaceHolder getPlaceHolder(String placeholder) {

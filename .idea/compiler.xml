@@ -17,7 +17,6 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="API" target="1.8" />
       <module name="api" target="1.8" />
       <module name="api (1)" target="1.8" />
       <module name="BungeeUtilisals" target="1.8" />
