@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS "{users-table}" (
   "username"   VARCHAR(32) UNIQUE                   NOT NULL,
   "ip"         VARCHAR(32)                          NOT NULL,
   "language"   VARCHAR(24)                          NOT NULL,
-  "firstlogin" TIMESTAMP DEFAULT CURRENT_TIMESTAMP  NOT NULL,
-  "lastlogout" TIMESTAMP DEFAULT CURRENT_TIMESTAMP  NOT NULL
+  "firstlogin" TIMESTAMP                            NOT NULL,
+  "lastlogout" TIMESTAMP                            NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_users ON {users-table} ("uuid", "username", "ip");

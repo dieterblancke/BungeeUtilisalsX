@@ -9,6 +9,9 @@ chat-protection:
   spam: '&fPlease wait another &a%time% &fseconds before talking again!'
   advertise: '&fPlease do not advertise!'
 
+placeholders:
+  timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
+
 general-commands:
   announce:
     usage: '&ePlease use &b/announce (b/c/a/t) (message)&e.'

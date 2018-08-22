@@ -1,11 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
 
-
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderEventHandler;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.InputPlaceHolderEvent;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -13,8 +10,8 @@ public class InputPlaceHolder extends PlaceHolder {
 
     private Pattern pattern;
 
-    public InputPlaceHolder(String placeHolder, boolean requiresUser, String prefix, PlaceHolderEventHandler handler) {
-        super(placeHolder, requiresUser, handler);
+    public InputPlaceHolder(boolean requiresUser, String prefix, InputPlaceHolderEventHandler handler) {
+        super(null, requiresUser, handler);
 
         this.pattern = makePlaceholderWithArgsPattern(prefix);
     }
@@ -29,10 +26,15 @@ public class InputPlaceHolder extends PlaceHolder {
 
     @Override
     public String format(User user, String message) {
-        if (placeHolder == null || !message.contains(placeHolder)) {
-            return message;
+        Matcher matcher = pattern.matcher(message);
+
+        while (matcher.find()) {
+            final String argument = extractArgumentFromPlaceholder(matcher);
+            final InputPlaceHolderEvent event = new InputPlaceHolderEvent(user, this, message, argument);
+
+            message = message.replace(matcher.group(), eventHandler.getReplacement(event));
         }
-        PlaceHolderEvent event = new PlaceHolderEvent(user, this, message);
-        return message.replace(placeHolder, Utils.c(eventHandler.getReplacement(event)));
+
+        return message;
     }
 }

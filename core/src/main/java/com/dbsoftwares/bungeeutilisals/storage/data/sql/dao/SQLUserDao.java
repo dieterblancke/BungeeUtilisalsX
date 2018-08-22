@@ -8,10 +8,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.google.common.collect.Lists;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -25,7 +22,7 @@ import java.util.UUID;
 public class SQLUserDao implements UserDao {
 
     private final static String INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language) VALUES (?, ?, ?, ?);";
+            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);";
 
     private final static String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
     private final static String UPDATE_USER = "UPDATE {users-table} " +
@@ -38,10 +35,14 @@ public class SQLUserDao implements UserDao {
     public void createUser(UUID uuid, String username, String ip, Language language) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
+            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
+            pstmt.setDate(5, date);
+            pstmt.setDate(6, date);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

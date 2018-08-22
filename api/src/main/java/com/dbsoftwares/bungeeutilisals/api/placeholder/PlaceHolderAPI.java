@@ -1,5 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.DefaultPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.InputPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.PlaceHolder;
@@ -50,8 +52,8 @@ public class PlaceHolderAPI {
         placeholders.add(new DefaultPlaceHolder(placeholder, requiresUser, handler));
     }
 
-    public static void addPlaceHolder(String placeholder, boolean requiresUser, String prefix, PlaceHolderEventHandler handler) {
-        placeholders.add(new InputPlaceHolder(placeholder, requiresUser, prefix, handler));
+    public static void addPlaceHolder(boolean requiresUser, String prefix, InputPlaceHolderEventHandler handler) {
+        placeholders.add(new InputPlaceHolder(requiresUser, prefix, handler));
     }
 
     public static PlaceHolder getPlaceHolder(String placeholder) {

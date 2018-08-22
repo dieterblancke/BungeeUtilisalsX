@@ -4,8 +4,8 @@ CREATE TABLE IF NOT EXISTS {users-table} (
     username   VARCHAR(32) UNIQUE                  NOT NULL,
     ip         VARCHAR(32)                         NOT NULL,
     language   VARCHAR(24)                         NOT NULL,
-    firstlogin DATETIME DEFAULT CURRENT_TIMESTAMP  NOT NULL,
-    lastlogout DATETIME DEFAULT CURRENT_TIMESTAMP  NOT NULL,
+    firstlogin DATETIME                            NOT NULL,
+    lastlogout DATETIME                            NOT NULL,
     PRIMARY KEY (id),
     KEY idx_users (id, uuid, username, ip)
 ) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=UTF8MB4;

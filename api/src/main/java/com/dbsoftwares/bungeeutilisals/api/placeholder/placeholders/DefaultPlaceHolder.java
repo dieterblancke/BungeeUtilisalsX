@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
 
 
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderEventHandler;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;

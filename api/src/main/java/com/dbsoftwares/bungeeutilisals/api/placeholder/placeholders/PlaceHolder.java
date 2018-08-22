@@ -6,7 +6,7 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
  * Project: BungeeUtilisals
  */
 
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderEventHandler;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
