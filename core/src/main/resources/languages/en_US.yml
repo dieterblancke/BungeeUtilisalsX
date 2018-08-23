@@ -11,6 +11,9 @@ chat-protection:
 
 placeholders:
   timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
+  isonline:
+    online: 'online'
+    offline: 'offline'
 
 general-commands:
   announce:

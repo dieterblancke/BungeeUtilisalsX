@@ -57,6 +57,10 @@ public class ServerGroup {
     public int getPlayers() {
         int players = 0;
 
+        if (global) {
+            return BUCore.getApi().getPlayerUtils().getTotalCount();
+        }
+
         for (String server : servers) {
             players += BUCore.getApi().getPlayerUtils().getPlayerCount(server);
         }
@@ -66,6 +70,10 @@ public class ServerGroup {
 
     public List<String> getPlayerList() {
         List<String> players = Lists.newArrayList();
+
+        if (global) {
+            return BUCore.getApi().getPlayerUtils().getPlayers();
+        }
 
         for (String server : servers) {
             players.addAll(BUCore.getApi().getPlayerUtils().getPlayers(server));

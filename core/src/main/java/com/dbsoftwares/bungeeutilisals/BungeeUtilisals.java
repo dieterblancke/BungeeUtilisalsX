@@ -22,14 +22,15 @@ import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.DefaultPlaceHolders;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.PluginCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
@@ -102,6 +103,7 @@ public class BungeeUtilisals extends Plugin {
 
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack(new DefaultPlaceHolders());
+        PlaceHolderAPI.loadPlaceHolderPack(new InputPlaceHolders());
 
         // Loading libraries
         loadLibraries();

@@ -7,7 +7,6 @@
         <sourceOutputDir name="../builds/api/generated-sources/annotations" />
         <sourceTestOutputDir name="../builds/api/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="api" />
       </profile>
       <profile name="Annotation profile for BungeeUtilisals" enabled="true">
         <sourceOutputDir name="../builds/core/generated-sources/annotations" />
