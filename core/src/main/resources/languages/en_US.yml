@@ -11,9 +11,6 @@ chat-protection:
 
 placeholders:
   timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
-  isonline:
-    online: 'online'
-    offline: 'offline'
 
 general-commands:
   announce:
@@ -32,6 +29,10 @@ general-commands:
   clearchat:
     usage: '&ePlease use &b/clearchat (local / global)&e!'
     cleared: '&eYour chat has been cleared by &b{user}&e!'
+  chatlock:
+    usage: '&ePlease use &b/chatlock (local / global)&e!'
+    locked: '&eThe chat has been locked by &b{user}&e!'
+    unlocked: '&eThe chat has been unlocked by &b{user}&e!'
   glag:
   - '&eBungeeCord statistics:'
   - '&eTPS: &b{tps}'

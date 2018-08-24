@@ -3,10 +3,11 @@
   <component name="CompilerConfiguration">
     <annotationProcessing>
       <profile default="true" name="Default" enabled="true" />
-      <profile name="Annotation profile for api" enabled="true">
+      <profile name="Annotation profile for API" enabled="true">
         <sourceOutputDir name="../builds/api/generated-sources/annotations" />
         <sourceTestOutputDir name="../builds/api/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="API" />
       </profile>
       <profile name="Annotation profile for BungeeUtilisals" enabled="true">
         <sourceOutputDir name="../builds/core/generated-sources/annotations" />
@@ -16,6 +17,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
+      <module name="API" target="1.8" />
       <module name="api" target="1.8" />
       <module name="api (1)" target="1.8" />
       <module name="BungeeUtilisals" target="1.8" />
