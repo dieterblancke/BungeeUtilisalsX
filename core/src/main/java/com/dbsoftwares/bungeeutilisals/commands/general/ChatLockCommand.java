@@ -11,12 +11,16 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.utils.LanguageUtils;
+import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
@@ -67,12 +71,15 @@ public class ChatLockCommand extends Command implements Listener {
             user.sendLangMessage("general-commands.chatlock.usage");
             return;
         }
-        String server = args[0].toLowerCase().contains("g") ? "ALL" : user.getServerName();
+        final String server = args[0].toLowerCase().contains("g") ? "ALL" : user.getServerName();
 
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-            // TODO: Send chatlock message
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.CHATLOCK,
+                    new LockData(server, user.getName())
+            );
         } else {
-            // TODO: Lock chat
+            lockChat(server, user.getName());
         }
     }
 
@@ -81,7 +88,23 @@ public class ChatLockCommand extends Command implements Listener {
         if (event.isCommand() || event.isCancelled()) {
             return;
         }
-        // TODO
+        final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
+        final boolean canTalk = player.hasPermission(FileLocation.GENERALCOMMANDS.getConfiguration().getString("chatlock.bypass"))
+                || !lockedChatServers.contains("ALL") && !lockedChatServers.contains(player.getServer().getInfo().getName());
+
+        if (!canTalk) {
+            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance(), player);
+
+            event.setCancelled(true);
+            LanguageUtils.sendLangMessage(player, "general-commands.chatlock.onchat");
+        }
+    }
+
+    @Override
+    public void unload() {
+        super.unload();
+
+        ProxyServer.getInstance().getPluginManager().unregisterListener(this);
     }
 
     @Data

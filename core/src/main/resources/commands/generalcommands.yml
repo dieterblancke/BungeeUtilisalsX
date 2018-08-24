@@ -70,6 +70,7 @@ chatlock:
   enabled: true
   aliases: 'cl, lock, lockchat'
   permission: bungeeutilisals.chatlock
+  bypass: bungeeutilisals.chatlock.bypass
 glag:
   enabled: true
   aliases: 'bgc, blag'

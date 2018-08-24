@@ -7,6 +7,7 @@ package com.dbsoftwares.bungeeutilisals.utils.redis;
  */
 
 import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.ChatLockCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;
 import com.google.gson.Gson;
 
@@ -33,6 +34,17 @@ public enum Channels {
             ClearChatCommand.ClearData data = gson.fromJson(message, ClearChatCommand.ClearData.class);
 
             ClearChatCommand.clearChat(data.getServer(), data.getBy());
+        }
+    },
+    CHATLOCK() {
+
+        private Gson gson = new Gson();
+
+        @Override
+        public void execute(String message) {
+            ChatLockCommand.LockData data = gson.fromJson(message, ChatLockCommand.LockData.class);
+
+            ChatLockCommand.lockChat(data.getServer(), data.getBy());
         }
     };
 

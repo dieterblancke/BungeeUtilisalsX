@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/api/API.iml" filepath="$PROJECT_DIR$/api/API.iml" />
       <module fileurl="file://$PROJECT_DIR$/BungeeUtilisals.iml" filepath="$PROJECT_DIR$/BungeeUtilisals.iml" />
+      <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
       <module fileurl="file://$PROJECT_DIR$/core/core.iml" filepath="$PROJECT_DIR$/core/core.iml" />
     </modules>
   </component>

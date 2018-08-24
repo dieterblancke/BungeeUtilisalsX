@@ -33,6 +33,7 @@ general-commands:
     usage: '&ePlease use &b/chatlock (local / global)&e!'
     locked: '&eThe chat has been locked by &b{user}&e!'
     unlocked: '&eThe chat has been unlocked by &b{user}&e!'
+    onchat: '&eThe chat has been locked! &aYou cannot send messages at the moment.'
   glag:
   - '&eBungeeCord statistics:'
   - '&eTPS: &b{tps}'
