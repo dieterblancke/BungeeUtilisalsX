@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -43,6 +44,9 @@ public class BUser implements User {
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private PunishmentInfo mute;
+
+    @Getter
+    private boolean inStaffChat;
 
     @Override
     public void load(String name, UUID uuid, String IP) {

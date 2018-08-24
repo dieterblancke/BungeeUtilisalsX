@@ -41,6 +41,9 @@ general-commands:
   - '&eFree Memory: &b{freememory}'
   - '&eTotal Memory: &b{totalmemory}'
   - '&eProxy online since: &b{onlinesince}'
+  staffchat:
+    enabled: '&eYou are now talking in the &bstaff chat&e!'
+    disabled: '&eYou are now talking in the &bpublic chat&e!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

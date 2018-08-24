@@ -83,6 +83,13 @@ public class ChatLockCommand extends Command implements Listener {
         }
     }
 
+    @Override
+    public void unload() {
+        super.unload();
+
+        ProxyServer.getInstance().getPluginManager().unregisterListener(this);
+    }
+
     @EventHandler
     public void onChat(ChatEvent event) {
         if (event.isCommand() || event.isCancelled()) {
@@ -98,13 +105,6 @@ public class ChatLockCommand extends Command implements Listener {
             event.setCancelled(true);
             LanguageUtils.sendLangMessage(player, "general-commands.chatlock.onchat");
         }
-    }
-
-    @Override
-    public void unload() {
-        super.unload();
-
-        ProxyServer.getInstance().getPluginManager().unregisterListener(this);
     }
 
     @Data

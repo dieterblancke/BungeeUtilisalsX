@@ -2,7 +2,7 @@ glist:
   # Enable this command or not?
   enabled: true
   aliases: 'blist, globallist'
-  permission: bungeeutilisals.glist
+  permission: bungeeutilisals.commands.glist
   format:
     text: '&c%server% &7(%players%) &f» %playerlist%'
     hover:
@@ -33,7 +33,7 @@ glist:
 announce:
   enabled: true
   aliases: 'alert, bigalert'
-  permission: bungeeutilisals.announce
+  permission: bungeeutilisals.commands.announce
   types:
     bossbar:
       enabled: true
@@ -57,21 +57,25 @@ announce:
 find:
   enabled: true
   aliases: 'search'
-  permission: bungeeutilisals.find
+  permission: bungeeutilisals.commands.find
 server:
   enabled: true
   aliases: 'switch'
-  permission: bungeeutilisals.server
+  permission: bungeeutilisals.commands.server
 clearchat:
   enabled: true
   aliases: 'cc'
-  permission: bungeeutilisals.clearchat
+  permission: bungeeutilisals.commands.clearchat
 chatlock:
   enabled: true
   aliases: 'cl, lock, lockchat'
-  permission: bungeeutilisals.chatlock
+  permission: bungeeutilisals.commands.chatlock
   bypass: bungeeutilisals.chatlock.bypass
 glag:
   enabled: true
   aliases: 'bgc, blag'
-  permission: bungeeutilisals.glag
+  permission: bungeeutilisals.commands.glag
+staffchat:
+  enabled: true
+  aliases: 'sc, schat'
+  permission: bungeeutilisals.commands.staffchat

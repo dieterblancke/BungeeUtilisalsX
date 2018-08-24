@@ -210,4 +210,15 @@ public interface User {
      * @param info The info to be stored.
      */
     void setMute(PunishmentInfo info);
+
+    /**
+     * Changes staffchat state.
+     * @param staffchat true if staffchat should be enabled, false if it should be disabled.
+     */
+    void setInStaffChat(boolean staffchat);
+
+    /**
+     * @return true if staffchat is enabled, false if not.
+     */
+    boolean isInStaffChat();
 }

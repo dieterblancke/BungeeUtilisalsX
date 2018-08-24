@@ -210,4 +210,14 @@ public class ConsoleUser implements User {
     public void setMute(PunishmentInfo info) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    @Override
+    public void setInStaffChat(boolean staffchat) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public boolean isInStaffChat() {
+        return false;
+    }
 }
