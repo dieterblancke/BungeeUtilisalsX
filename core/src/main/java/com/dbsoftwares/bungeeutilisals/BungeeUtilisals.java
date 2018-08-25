@@ -143,9 +143,6 @@ public class BungeeUtilisals extends Plugin {
         loader.register(UserLoadEvent.class, new UserExecutor());
         loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
 
-        // Loading commands ...
-        new PluginCommand();
-
         // Loading Punishment system
         if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getBoolean("enabled")) {
             loadPunishmentCommand("ban", BanCommand.class);
@@ -255,6 +252,8 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadGeneralCommands() {
+        new PluginCommand();
+
         loadGeneralCommand("glist", GListCommand.class);
         loadGeneralCommand("announce", AnnounceCommand.class);
         loadGeneralCommand("find", FindCommand.class);
@@ -262,6 +261,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("clearchat", ClearChatCommand.class);
         loadGeneralCommand("chatlock", ChatLockCommand.class);
         loadGeneralCommand("glag", GLagCommand.class);
+        loadGeneralCommand("staffchat", StaffChatCommand.class);
     }
 
     private void loadCustomCommands() {

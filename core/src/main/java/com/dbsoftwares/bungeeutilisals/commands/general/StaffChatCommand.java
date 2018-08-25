@@ -5,6 +5,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -34,6 +35,13 @@ public class StaffChatCommand extends Command implements Listener {
         ProxyServer.getInstance().getPluginManager().registerListener(BungeeUtilisals.getInstance(), this);
     }
 
+    public static void sendStaffChatMessage(String serverName, String userName, String message) {
+        BUCore.getApi().getUsers().stream()
+                .filter(u -> u.getParent().hasPermission(FileLocation.GENERALCOMMANDS.getConfiguration().getString("staffchat.permission")))
+                .forEach(user -> user.sendLangMessage("general-commands.staffchat.format",
+                        "{user}", userName, "{server}", serverName, "{message}", message));
+    }
+
     @Override
     public List<String> onTabComplete(User user, String[] args) {
         return Lists.newArrayList("on", "off");
@@ -61,11 +69,17 @@ public class StaffChatCommand extends Command implements Listener {
         final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         BUCore.getApi().getUser(player).ifPresent(user -> {
             if (user.isInStaffChat()) {
-                // TODO: send staffchat message (check redis too)
+                if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+                    BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                            Channels.STAFFCHAT,
+                            new StaffChatData(user.getServerName(), user.getName(), event.getMessage())
+                    );
+                } else {
+                    sendStaffChatMessage(user.getServerName(), user.getName(), event.getMessage());
+                }
             }
         });
     }
-
 
     @Data
     @AllArgsConstructor
