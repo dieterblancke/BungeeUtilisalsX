@@ -11,8 +11,6 @@
     <artifactId>api</artifactId>
 
     <build>
-        <directory>../builds/api</directory>
-
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
