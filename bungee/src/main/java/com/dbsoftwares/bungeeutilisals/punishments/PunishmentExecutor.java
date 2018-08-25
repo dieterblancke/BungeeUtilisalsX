@@ -2,21 +2,18 @@ package com.dbsoftwares.bungeeutilisals.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.google.common.collect.Lists;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public String getDateFormat() {
-        return FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("date-format");
+        return FileLocation.PUNISHMENTS.getConfiguration().getString("date-format");
     }
 
     @Override

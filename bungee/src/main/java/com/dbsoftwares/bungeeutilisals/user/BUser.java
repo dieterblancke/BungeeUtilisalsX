@@ -81,7 +81,7 @@ public class BUser implements User {
             dao.getUserDao().setName(uuid, name);
         }
 
-        if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getBoolean("enabled")) {
+        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
             if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, uuid, null, true)) {
                 mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, uuid, null);
             } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, uuid, null, true)) {

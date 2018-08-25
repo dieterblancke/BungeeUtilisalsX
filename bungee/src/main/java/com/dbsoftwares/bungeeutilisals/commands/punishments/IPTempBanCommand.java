@@ -11,15 +11,16 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class IPTempBanCommand extends Command {
 
     public IPTempBanCommand() {
-        super("iptempban", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("iptempban", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.iptempban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.iptempban.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.permission"));
     }
 
     @Override
@@ -77,7 +78,7 @@ public class IPTempBanCommand extends Command {
         user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.iptempban.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.iptempban.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

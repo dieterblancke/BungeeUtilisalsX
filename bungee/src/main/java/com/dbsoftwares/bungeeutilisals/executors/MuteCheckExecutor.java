@@ -31,7 +31,7 @@ public class MuteCheckExecutor implements EventExecutor {
             return;
         }
 
-        if (FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getStringList("blocked-mute-commands")
+        if (FileLocation.PUNISHMENTS.getConfiguration().getStringList("blocked-mute-commands")
                 .contains(event.getActualCommand().replaceFirst("/", ""))) {
 
             user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",

@@ -11,15 +11,16 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class MuteCommand extends Command {
 
     public MuteCommand() {
-        super("mute", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("mute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.mute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.mute.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.permission"));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class MuteCommand extends Command {
         user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.mute.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.mute.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

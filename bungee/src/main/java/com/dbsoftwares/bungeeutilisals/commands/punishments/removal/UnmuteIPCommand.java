@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
@@ -9,7 +10,6 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -17,9 +17,9 @@ import java.util.List;
 public class UnmuteIPCommand extends Command {
 
     public UnmuteIPCommand() {
-        super("unmuteip", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("unmuteip", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.unmuteip.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unmuteip.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmuteip.permission"));
     }
 
     @Override
@@ -65,7 +65,7 @@ public class UnmuteIPCommand extends Command {
         user.sendLangMessage("punishments.unmuteip.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.unmuteip.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unmuteip.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmuteip.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

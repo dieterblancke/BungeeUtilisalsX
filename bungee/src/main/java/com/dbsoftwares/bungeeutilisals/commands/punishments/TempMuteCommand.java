@@ -11,15 +11,16 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class TempMuteCommand extends Command {
 
     public TempMuteCommand() {
-        super("tempmute", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("tempmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.tempmute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.tempmute.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempmute.permission"));
     }
 
     @Override
@@ -72,7 +73,7 @@ public class TempMuteCommand extends Command {
         user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.tempmute.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.tempmute.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

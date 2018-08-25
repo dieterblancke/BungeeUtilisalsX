@@ -1,16 +1,15 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 
 import java.util.Arrays;
 import java.util.List;
@@ -18,9 +17,9 @@ import java.util.List;
 public class UnbanCommand extends Command {
 
     public UnbanCommand() {
-        super("unban", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("unban", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.unban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unban.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unban.permission"));
     }
 
     @Override
@@ -66,7 +65,7 @@ public class UnbanCommand extends Command {
         user.sendLangMessage("punishments.unban.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.unban.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unban.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

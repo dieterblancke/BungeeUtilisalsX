@@ -13,6 +13,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEve
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import net.md_5.bungee.api.ProxyServer;
+
 import java.util.Date;
 import java.util.List;
 
@@ -27,10 +28,10 @@ public class UserPunishExecutor implements EventExecutor {
 
     @Event
     public void executeActions(UserPunishEvent event) {
-        if (!FileLocation.PUNISHMENTS_CONFIG.hasData(event.getType().toString())) {
+        if (!FileLocation.PUNISHMENTS.hasData(event.getType().toString())) {
             return;
         }
-        List<PunishmentAction> actions = FileLocation.PUNISHMENTS_CONFIG.getData(event.getType().toString());
+        List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData(event.getType().toString());
 
         for (PunishmentAction action : actions) {
             long amount;

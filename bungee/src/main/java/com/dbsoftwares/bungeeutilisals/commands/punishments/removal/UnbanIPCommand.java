@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
@@ -9,16 +10,16 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class UnbanIPCommand extends Command {
 
     public UnbanIPCommand() {
-        super("unbanip", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("unbanip", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.unbanip.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unbanip.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unbanip.permission"));
     }
 
     @Override
@@ -64,7 +65,7 @@ public class UnbanIPCommand extends Command {
         user.sendLangMessage("punishments.unbanip.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.unbanip.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.unbanip.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unbanip.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

@@ -11,6 +11,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class BanCommand extends Command {
     public BanCommand() {
         super(
                 "ban",
-                Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.ban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.ban.permission")
+                Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.aliases").split(", ")),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.permission")
         );
     }
 
@@ -73,7 +74,7 @@ public class BanCommand extends Command {
         user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.ban.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.ban.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

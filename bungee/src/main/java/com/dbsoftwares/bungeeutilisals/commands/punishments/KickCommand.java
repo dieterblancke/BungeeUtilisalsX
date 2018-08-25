@@ -10,6 +10,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,9 @@ import java.util.Optional;
 public class KickCommand extends Command {
 
     public KickCommand() {
-        super("kick", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("kick", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.kick.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.kick.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.permission"));
     }
 
     @Override
@@ -61,7 +62,7 @@ public class KickCommand extends Command {
         target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
         api.langBroadcast("punishments.kick.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.kick.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

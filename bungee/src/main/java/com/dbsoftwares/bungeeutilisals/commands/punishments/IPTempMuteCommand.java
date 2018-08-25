@@ -18,9 +18,9 @@ import java.util.List;
 public class IPTempMuteCommand extends Command {
 
     public IPTempMuteCommand() {
-        super("iptempmute", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("iptempmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.iptempmute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.iptempmute.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.permission"));
     }
 
     @Override
@@ -74,7 +74,7 @@ public class IPTempMuteCommand extends Command {
         user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.iptempmute.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.iptempmute.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

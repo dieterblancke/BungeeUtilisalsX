@@ -10,6 +10,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -17,9 +18,9 @@ import java.util.Optional;
 public class WarnCommand extends Command {
 
     public WarnCommand() {
-        super("warn", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("warn", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.warn.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.warn.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.permission"));
     }
 
     @Override
@@ -62,7 +63,7 @@ public class WarnCommand extends Command {
         user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.warn.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.warn.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }

@@ -118,7 +118,7 @@ public enum FileLocation {
         public void loadData() {
         }
     },
-    PUNISHMENTS_CONFIG("punishments/config.yml") {
+    PUNISHMENTS("config.yml") {
         @Override @SuppressWarnings("unchecked")
         public void loadData() {
             for (ISection section : configuration.getSectionList("actions")) {

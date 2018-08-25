@@ -11,15 +11,16 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+
 import java.util.Arrays;
 import java.util.List;
 
 public class IPMuteCommand extends Command {
 
     public IPMuteCommand() {
-        super("ipmute", Arrays.asList(FileLocation.PUNISHMENTS_CONFIG.getConfiguration()
+        super("ipmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
                         .getString("commands.ipmute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.ipmute.permission"));
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ipmute.permission"));
     }
 
     @Override
@@ -67,7 +68,7 @@ public class IPMuteCommand extends Command {
         user.sendLangMessage("punishments.ipmute.executed", executor.getPlaceHolders(info));
 
         api.langBroadcast("punishments.ipmute.broadcast",
-                FileLocation.PUNISHMENTS_CONFIG.getConfiguration().getString("commands.ipmute.broadcast"),
+                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ipmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }
 }
