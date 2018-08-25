@@ -11,7 +11,7 @@
 
     <modules>
         <module>api</module>
-        <module>core</module>
+        <module>bungee</module>
     </modules>
 
     <developers>

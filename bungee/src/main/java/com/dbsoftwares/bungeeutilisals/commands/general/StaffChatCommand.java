@@ -36,10 +36,17 @@ public class StaffChatCommand extends Command implements Listener {
     }
 
     public static void sendStaffChatMessage(String serverName, String userName, String message) {
-        BUCore.getApi().getUsers().stream()
-                .filter(u -> u.getParent().hasPermission(FileLocation.GENERALCOMMANDS.getConfiguration().getString("staffchat.permission")))
-                .forEach(user -> user.sendLangMessage("general-commands.staffchat.format",
-                        "{user}", userName, "{server}", serverName, "{message}", message));
+        for (User user : BUCore.getApi().getUsers()) {
+            ProxiedPlayer parent = user.getParent();
+
+            if (parent.hasPermission(FileLocation.GENERALCOMMANDS.getConfiguration().getString("staffchat.permission"))
+                    || parent.hasPermission("bungeeutilisals.commands.*")
+                    || parent.hasPermission("bungeeutilisals.*")
+                    || parent.hasPermission("*")) {
+                user.sendLangMessage("general-commands.staffchat.format",
+                        "{user}", userName, "{server}", serverName, "{message}", message);
+            }
+        }
     }
 
     @Override
@@ -69,6 +76,7 @@ public class StaffChatCommand extends Command implements Listener {
         final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         BUCore.getApi().getUser(player).ifPresent(user -> {
             if (user.isInStaffChat()) {
+                event.setCancelled(true);
                 if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
                     BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
                             Channels.STAFFCHAT,
