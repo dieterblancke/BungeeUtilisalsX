@@ -6,22 +6,22 @@ package com.dbsoftwares.bungeeutilisals.user;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
@@ -159,24 +159,46 @@ public class BUser implements User {
 
     @Override
     public void sendLangMessage(String path) {
-        if (getLanguageConfig().isList(path)) {
-            for (String message : getLanguageConfig().getStringList(path)) {
-                sendMessage(message);
-            }
-        } else {
-            sendMessage(getLanguageConfig().getString(path));
-        }
+        sendLangMessage(true, path);
     }
 
     @Override
     public void sendLangMessage(String path, Object... placeholders) {
+        sendLangMessage(true, path, placeholders);
+    }
+
+    @Override
+    public void sendLangMessage(boolean prefix, String path) {
+        if (getLanguageConfig().isList(path)) {
+            for (String message : getLanguageConfig().getStringList(path)) {
+                if (prefix) {
+                    sendMessage(message);
+                } else {
+                    sendRawColorMessage(message);
+                }
+            }
+        } else {
+            if (prefix) {
+                sendMessage(getLanguageConfig().getString(path));
+            } else {
+                sendRawColorMessage(getLanguageConfig().getString(path));
+            }
+        }
+    }
+
+    @Override
+    public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
         if (getLanguageConfig().isList(path)) {
             for (String message : getLanguageConfig().getStringList(path)) {
                 for (int i = 0; i < placeholders.length - 1; i += 2) {
                     message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
                 }
 
-                sendMessage(message);
+                if (prefix) {
+                    sendMessage(message);
+                } else {
+                    sendRawColorMessage(message);
+                }
             }
         } else {
             String message = getLanguageConfig().getString(path);
@@ -184,7 +206,11 @@ public class BUser implements User {
                 message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
             }
 
-            sendMessage(message);
+            if (prefix) {
+                sendMessage(message);
+            } else {
+                sendRawColorMessage(message);
+            }
         }
     }
 

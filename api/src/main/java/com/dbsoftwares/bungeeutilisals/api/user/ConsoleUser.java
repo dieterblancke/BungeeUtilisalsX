@@ -7,17 +7,18 @@ package com.dbsoftwares.bungeeutilisals.api.user;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import java.util.UUID;
 
 public class ConsoleUser implements User {
@@ -87,24 +88,46 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendLangMessage(String path) {
-        if (getLanguageConfig().isList(path)) {
-            for (String message : getLanguageConfig().getStringList(path)) {
-                sendMessage(message);
-            }
-        } else {
-            sendMessage(getLanguageConfig().getString(path));
-        }
+        sendLangMessage(true, path);
     }
 
     @Override
     public void sendLangMessage(String path, Object... placeholders) {
+        sendLangMessage(true, path, placeholders);
+    }
+
+    @Override
+    public void sendLangMessage(boolean prefix, String path) {
+        if (getLanguageConfig().isList(path)) {
+            for (String message : getLanguageConfig().getStringList(path)) {
+                if (prefix) {
+                    sendMessage(message);
+                } else {
+                    sendRawColorMessage(message);
+                }
+            }
+        } else {
+            if (prefix) {
+                sendMessage(getLanguageConfig().getString(path));
+            } else {
+                sendRawColorMessage(getLanguageConfig().getString(path));
+            }
+        }
+    }
+
+    @Override
+    public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
         if (getLanguageConfig().isList(path)) {
             for (String message : getLanguageConfig().getStringList(path)) {
                 for (int i = 0; i < placeholders.length - 1; i += 2) {
                     message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
                 }
 
-                sendMessage(message);
+                if (prefix) {
+                    sendMessage(message);
+                } else {
+                    sendRawColorMessage(message);
+                }
             }
         } else {
             String message = getLanguageConfig().getString(path);
@@ -112,7 +135,11 @@ public class ConsoleUser implements User {
                 message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
             }
 
-            sendMessage(message);
+            if (prefix) {
+                sendMessage(message);
+            } else {
+                sendRawColorMessage(message);
+            }
         }
     }
 

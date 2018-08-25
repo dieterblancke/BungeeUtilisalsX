@@ -43,7 +43,7 @@ public class StaffChatCommand extends Command implements Listener {
                     || parent.hasPermission("bungeeutilisals.commands.*")
                     || parent.hasPermission("bungeeutilisals.*")
                     || parent.hasPermission("*")) {
-                user.sendLangMessage("general-commands.staffchat.format",
+                user.sendLangMessage(false, "general-commands.staffchat.format",
                         "{user}", userName, "{server}", serverName, "{message}", message);
             }
         }
@@ -57,6 +57,7 @@ public class StaffChatCommand extends Command implements Listener {
     @Override
     public void onExecute(User user, String[] args) {
         user.setInStaffChat(!user.isInStaffChat());
+
         user.sendLangMessage("general-commands.staffchat."
                 + (user.isInStaffChat() ? "enabled" : "disabled"));
     }

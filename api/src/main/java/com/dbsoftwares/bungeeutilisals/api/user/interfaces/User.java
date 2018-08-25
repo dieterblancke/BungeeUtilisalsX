@@ -100,6 +100,23 @@ public interface User {
     void sendLangMessage(String path, Object... placeholders);
 
     /**
+     * Searches a message in the user's language configuration and sends that message.
+     *
+     * @param prefix Should a prefix be added in front of the message or not?
+     * @param path   The path to the message in the language file.
+     */
+    void sendLangMessage(boolean prefix, String path);
+
+    /**
+     * Searches a message in the user's language configuration and sends that message formatted with placeholders.
+     *
+     * @param prefix       Should a prefix be added in front of the message or not?
+     * @param path         The path to the message in the language file.
+     * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
+     */
+    void sendLangMessage(boolean prefix, String path, Object... placeholders);
+
+    /**
      * Sends a message to the User with the given prefix + colors will be replaced.
      *
      * @param prefix  The prefix for the message. Mostly used for plugin prefixes.
