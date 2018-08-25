@@ -1,3 +1,3 @@
-[![pipeline status](https://git.diviwork.nl/DBSoftwares/BungeeUtilisals/badges/master/pipeline.svg)](https://git.diviwork.nl/DBSoftwares/BungeeUtilisals/commits/master)
+[![Build Status](https://ci.dbsoftwares.eu/buildStatus/icon?job=BungeeUtilisals)](https://ci.dbsoftwares.eu/job/BungeeUtilisals)
 
 # BungeeUtilisals
