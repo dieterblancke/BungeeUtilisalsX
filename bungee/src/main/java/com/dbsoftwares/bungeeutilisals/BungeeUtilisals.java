@@ -117,11 +117,6 @@ public class BungeeUtilisals extends Plugin {
         // Initialize metric system
         new Metrics(this);
 
-        // Creating datafolder
-        if (!getDataFolder().exists()) {
-            getDataFolder().mkdir();
-        }
-
         redisMessenger = getConfig().getBoolean("redis") ? new RedisMessenger() : null;
         if (redisMessenger != null) {
             ProxyServer.getInstance().getPluginManager().registerListener(this, redisMessenger);
