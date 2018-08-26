@@ -19,11 +19,12 @@ public class SystemInfo {
     private String platformVersion;
     private double TPS;
     private String maxMemory;
+    private String usedMemory;
     private String freeMemory;
-    private String totalMemory;
     private String onlineSince;
     private String totalSystemMemory;
     private String usedSystemMemory;
     private String freeSystemMemory;
+    private int players;
 
 }

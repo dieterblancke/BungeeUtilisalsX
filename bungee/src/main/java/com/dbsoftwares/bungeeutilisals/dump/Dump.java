@@ -19,6 +19,8 @@ public class Dump {
     private String plugin;
     private SystemInfo systemInfo;
     private List<PluginInfo> plugins;
+    private List<PluginSchedulerInfo> tasks;
     private Map<String, Map<String, Object>> configurations;
     private Map<String, Map<String, Object>> languages;
+
 }
