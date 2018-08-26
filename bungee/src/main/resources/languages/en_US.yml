@@ -12,6 +12,9 @@ chat-protection:
 placeholders:
   timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
 
+subcommands:
+  usage: '&ePlease use &b%usage%&e!'
+
 general-commands:
   announce:
     usage: '&ePlease use &b/announce (b/c/a/t) (message)&e.'

@@ -2,8 +2,8 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
@@ -14,7 +14,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Command extends net.md_5.bungee.api.plugin.Command implements ICommand, TabExecutor {
+public abstract class Command extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
 
     public BUAPI api;
     private String permission = null;
@@ -110,6 +110,8 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     }
 
     public abstract List<String> onTabComplete(User user, String[] args);
+
+    public abstract void onExecute(User user, String[] args);
 
     public void unload() {
         ProxyServer.getInstance().getPluginManager().unregisterCommand(this);

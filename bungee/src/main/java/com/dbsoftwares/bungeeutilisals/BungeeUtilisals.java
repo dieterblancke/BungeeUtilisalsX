@@ -29,8 +29,8 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
+import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
