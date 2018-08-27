@@ -163,7 +163,7 @@ public class Utils {
     /**
      * Attempts to parse a long time from a given string.
      *
-     * @param time The string you want to convert to time.
+     * @param time The string you want to importer to time.
      * @return The time, in millis, you requested.
      */
     public static long parseDateDiff(String time) {
@@ -338,7 +338,7 @@ public class Utils {
             Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class, map.getClass());
             register.setAccessible(true);
 
-            register.invoke(direction, packetClass, (Object[]) map);
+            register.invoke(direction, packetClass, map);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
