@@ -31,6 +31,21 @@ public abstract class Importer {
                     }
                 }
             });
+    protected final LoadingCache<String, String> nameCache = CacheBuilder.newBuilder().maximumSize(15000)
+            .expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
+                public String load(final String uuid) throws IllegalStateException {
+                    if (ProxyServer.getInstance().getConfig().isOnlineMode()) {
+                        String name = MojangUtils.getName(UUID.fromString(uuid));
+                        if (uuid != null) {
+                            return uuid;
+                        } else {
+                            throw new IllegalStateException("Could not retrieve name of " + uuid);
+                        }
+                    } else {
+                        throw new IllegalStateException("Could not retrieve name of " + uuid);
+                    }
+                }
+            });
     protected ImporterStatus status;
 
     protected abstract void importData(final ImporterCallback<ImporterStatus> importerCallback, final Map<String, String> properties) throws Exception;

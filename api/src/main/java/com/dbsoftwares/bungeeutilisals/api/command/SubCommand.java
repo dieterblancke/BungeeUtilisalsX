@@ -13,6 +13,10 @@ public abstract class SubCommand {
     private int espectedArgs;
     private int maximumArgs;
 
+    public SubCommand(String name) {
+        this(name, -1, -1);
+    }
+
     public SubCommand(String name, int espectedArgs) {
         this(name, espectedArgs, espectedArgs);
     }
@@ -33,9 +37,11 @@ public abstract class SubCommand {
         if (!args[0].equalsIgnoreCase(name)) {
             return ConditionResult.FAILURE_WRONG_NAME;
         }
-        if ((args.length - 1) != espectedArgs) {
-            if ((args.length - 1) > maximumArgs) {
-                return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
+        if (espectedArgs != -1 && maximumArgs != -1) {
+            if ((args.length - 1) != espectedArgs) {
+                if ((args.length - 1) > maximumArgs) {
+                    return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
+                }
             }
         }
         if (!getPermission().isEmpty() && !user.sender().hasPermission(getPermission())) {
