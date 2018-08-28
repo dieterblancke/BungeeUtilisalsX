@@ -20,8 +20,11 @@ import java.util.logging.Level;
 
 public class MojangUtils {
 
-    private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
-    private static final String NAME_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
+    //private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
+    //private static final String NAME_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
+
+    private static final String UUID_URL = "https://use.gameapis.net/mc/player/uuid/";
+    private static final String NAME_URL = "https://use.gameapis.net/mc/player/name/";
     private static final Gson gson = new Gson();
 
     public static String getUUID(final String name) {
@@ -52,7 +55,7 @@ public class MojangUtils {
 
     public static String getName(final UUID uuid) {
         try {
-            final URL url = new URL(UUID_URL + uuid.toString().replace("-", ""));
+            final URL url = new URL(NAME_URL + uuid.toString().replace("-", ""));
             final URLConnection conn = url.openConnection();
 
             try (InputStreamReader isr = new InputStreamReader(conn.getInputStream());
