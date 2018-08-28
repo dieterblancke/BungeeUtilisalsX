@@ -29,6 +29,12 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
+        createUser(uuid.toString(), username, ip, language);
+    }
+
+
+    @Override
+    public void createUser(String uuid, String username, String ip, Language language) {
         Mapping<String, Object> mapping = new Mapping<>(true);
         Date date = new Date(System.currentTimeMillis());
 

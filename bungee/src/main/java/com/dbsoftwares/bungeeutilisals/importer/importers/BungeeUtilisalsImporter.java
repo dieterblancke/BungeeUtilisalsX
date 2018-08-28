@@ -46,7 +46,7 @@ public class BungeeUtilisalsImporter extends Importer {
                 );
             }
 
-            try (ResultSet rs = stmt.executeQuery(
+            try (final ResultSet rs = stmt.executeQuery(
                     "SELECT BannedBy executed_by, Banned user, BanTime time, Reason reason FROM Bans;"
             )) {
                 while (rs.next()) {
@@ -61,7 +61,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     importerCallback.onStatusUpdate(status);
                 }
             }
-            try (ResultSet rs = stmt.executeQuery(
+            try (final ResultSet rs = stmt.executeQuery(
                     "SELECT MutedBy executed_by, Muted user, MuteTime time, Reason reason FROM Mutes;"
             )) {
                 while (rs.next()) {
@@ -76,16 +76,10 @@ public class BungeeUtilisalsImporter extends Importer {
                     importerCallback.onStatusUpdate(status);
                 }
             }
-            try (ResultSet rs = stmt.executeQuery(
+            try (final ResultSet rs = stmt.executeQuery(
                     "SELECT BannedBy executed_by, Banned user, '-1' time, Reason reason FROM IPBans;"
             )) {
-                int i = 0;
                 while (rs.next()) {
-                    i++;
-
-                    if (i >= 10) { // TODO: remove
-                        break;
-                    }
                     try {
                         importPunishment(PunishmentType.IPBAN, connection, rs);
                     } catch (Exception e) {
@@ -98,7 +92,7 @@ public class BungeeUtilisalsImporter extends Importer {
                 }
             }
 
-            try (ResultSet rs = stmt.executeQuery(
+            try (final ResultSet rs = stmt.executeQuery(
                     "SELECT Player, IP FROM PlayerInfo;"
             )) {
                 while (rs.next()) {
@@ -109,19 +103,20 @@ public class BungeeUtilisalsImporter extends Importer {
 
                     String uuid = usingUUID ? user : null;
                     String name = usingUUID ? null : user;
+
                     try {
                         if (uuid == null) {
                             uuid = uuidCache.get(name);
                         } else {
                             name = nameCache.get(uuid);
                         }
-                    } catch (ExecutionException e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                         continue;
                     }
 
                     BUCore.getApi().getStorageManager().getDao().getUserDao().createUser(
-                            UUID.fromString(uuid),
+                            uuid,
                             name,
                             IP,
                             BUCore.getApi().getLanguageManager().getDefaultLanguage()
@@ -165,9 +160,6 @@ public class BungeeUtilisalsImporter extends Importer {
         } else {
             punishmentType = type;
         }
-
-        System.out.println(type + " " + executedBy + " " + user + " " + time + " " + reason
-                + " " + id + " " + usingUUID + " " + uuid + " " + name + " " + IP);
 
         BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
                 punishmentType,

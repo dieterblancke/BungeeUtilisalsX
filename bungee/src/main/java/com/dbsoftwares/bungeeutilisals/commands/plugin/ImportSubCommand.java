@@ -3,6 +3,7 @@ package com.dbsoftwares.bungeeutilisals.commands.plugin;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.importer.Importer;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.importer.importers.BungeeUtilisalsImporter;
@@ -53,13 +54,13 @@ public class ImportSubCommand extends SubCommand {
                 importer.startImport(new ImporterCallback<Importer.ImporterStatus>() {
                     @Override
                     public void onStatusUpdate(Importer.ImporterStatus status) {
-                        // if (status.getConvertedEntries() % 100 == 0) {
+                        if (status.getConvertedEntries() % 100 == 0) {
                             BUCore.log(
                                     Level.INFO,
                                     "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
-                                            + " entries (" + status.getProgressionPercent() + " %)"
+                                            + " entries (" + MathUtils.formatNumber(status.getProgressionPercent(), 2) + " %)"
                             );
-                        // }
+                        }
                     }
 
                     @Override

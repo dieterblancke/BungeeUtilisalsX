@@ -17,6 +17,8 @@ public interface UserDao {
 
     void createUser(UUID uuid, String username, String ip, Language language);
 
+    void createUser(String uuid, String username, String ip, Language language);
+
     void updateUser(UUID uuid, String name, String ip, Language language, Date logout);
 
     boolean exists(String name);

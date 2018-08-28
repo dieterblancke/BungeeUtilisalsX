@@ -6,15 +6,16 @@ package com.dbsoftwares.bungeeutilisals.utils;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.google.gson.Gson;
 import lombok.Data;
 
-import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -23,30 +24,26 @@ public class MojangUtils {
     //private static final String UUID_URL = "https://api.mojang.com/users/profiles/minecraft/";
     //private static final String NAME_URL = "https://sessionserver.mojang.com/session/minecraft/profile/";
 
-    private static final String UUID_URL = "https://use.gameapis.net/mc/player/uuid/";
-    private static final String NAME_URL = "https://use.gameapis.net/mc/player/name/";
+    private static final String UUID_URL = "https://ss.gameapis.net/uuid/";
+    private static final String NAME_URL = "https://ss.gameapis.net/name/";
     private static final Gson gson = new Gson();
 
     public static String getUUID(final String name) {
         try {
             final URL url = new URL(UUID_URL + name);
-            final URLConnection conn = url.openConnection();
+            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            try (InputStreamReader isr = new InputStreamReader(conn.getInputStream());
-                 BufferedReader reader = new BufferedReader(isr)) {
+            conn.setRequestProperty("User-Agent", "BungeeUtilisals/" + BungeeUtilisals.getInstance().getDescription().getVersion());
 
-                StringBuilder content = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    content.append(line);
-                }
+            try (final InputStream input = conn.getInputStream();
+                 final InputStreamReader isr = new InputStreamReader(input)) {
+                final MojangProfile profile = gson.fromJson(isr, MojangProfile.class);
 
-                MojangProfile profile = gson.fromJson(content.toString(), MojangProfile.class);
-                if (profile != null && !profile.id.isEmpty()) {
-                    return profile.id;
+                if (profile != null && !profile.uuid_formatted.isEmpty()) {
+                    return profile.uuid_formatted;
                 }
             }
-        } catch (IOException e) {
+        } catch (final IOException e) {
             BUCore.log(Level.WARNING, "Could not retrieve uuid of " + name);
             e.printStackTrace();
         }
@@ -56,26 +53,21 @@ public class MojangUtils {
     public static String getName(final UUID uuid) {
         try {
             final URL url = new URL(NAME_URL + uuid.toString().replace("-", ""));
-            final URLConnection conn = url.openConnection();
+            final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            try (InputStreamReader isr = new InputStreamReader(conn.getInputStream());
-                 BufferedReader reader = new BufferedReader(isr)) {
+            conn.setRequestProperty("User-Agent", "BungeeUtilisals/" + BungeeUtilisals.getInstance().getDescription().getVersion());
 
-                StringBuilder content = new StringBuilder();
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    content.append(line);
-                }
-                System.out.println(content.toString());
+            try (final InputStream input = conn.getInputStream();
+                 final InputStreamReader isr = new InputStreamReader(input)) {
+                final MojangProfile profile = gson.fromJson(isr, MojangProfile.class);
 
-                MojangProfile profile = gson.fromJson(content.toString(), MojangProfile.class);
                 if (profile != null && !profile.name.isEmpty()) {
                     return profile.name;
                 }
             }
-        } catch (IOException e) {
-            BUCore.log(Level.WARNING, "Could not retrieve name of " + uuid.toString());
+        } catch (final IOException e) {
             e.printStackTrace();
+            BUCore.log(Level.WARNING, "Could not retrieve name of " + uuid.toString());
         }
         return null;
     }
@@ -85,6 +77,7 @@ public class MojangUtils {
 
         private String id;
         private String name;
+        private String uuid_formatted;
 
     }
 }

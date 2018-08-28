@@ -8,7 +8,10 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.google.common.collect.Lists;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -33,11 +36,16 @@ public class SQLUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
+        createUser(uuid.toString(), username, ip, language);
+    }
+
+    @Override
+    public void createUser(String uuid, String username, String ip, Language language) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 
-            pstmt.setString(1, uuid.toString());
+            pstmt.setString(1, uuid);
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
