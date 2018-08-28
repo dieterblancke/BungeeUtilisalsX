@@ -40,77 +40,59 @@ public class BungeeUtilisalsImporter extends Importer {
                             " (SELECT COUNT(*) FROM Mutes) mutes," +
                             " (SELECT COUNT(*) FROM PlayerInfo) players;");
 
-            status = new ImporterStatus(
-                    counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
-            );
+            if (counter.next()) {
+                status = new ImporterStatus(
+                        counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
+                );
+            }
 
             try (ResultSet rs = stmt.executeQuery(
-                    "SELECT BannedBy executed_by, Banned user, BanTime time, Reason reason FROM Bans " +
-                            "UNION SELECT MutedBy executed_by, Muted user, MuteTime time, Reason reason FROM Mutes " +
-                            "UNION SELECT BannedBy executed_by, Banned user, '-1' time, Reason reason FROM IPBans;"
+                    "SELECT BannedBy executed_by, Banned user, BanTime time, Reason reason FROM Bans;"
             )) {
                 while (rs.next()) {
-                    String table = rs.getMetaData().getTableName(0);
-                    String executedBy = rs.getString("executed_by");
-                    String user = rs.getString("user");
-                    Long time = rs.getLong("time");
-                    String reason = rs.getString("reason");
-
-                    String id = user.contains(".") ? getIdOnIP(connection, user) : user;
-
-                    boolean usingUUID = id.contains("-");
-
-                    String uuid = usingUUID ? user : null;
-                    String name = usingUUID ? null : user;
                     try {
-                        if (uuid == null) {
-                            uuid = uuidCache.get(name);
-                        } else {
-                            name = nameCache.get(name);
-                        }
-                    } catch (ExecutionException e) {
+                        importPunishment(PunishmentType.BAN, connection, rs);
+                    } catch (Exception e) {
                         e.printStackTrace();
                         continue;
                     }
-                    String IP = user.contains(".") ? user : getIP(connection, user);
 
-                    if (table.equalsIgnoreCase("Bans")) {
-                        BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                                time == -1 ? PunishmentType.BAN : PunishmentType.TEMPBAN,
-                                UUID.fromString(uuid),
-                                name,
-                                IP,
-                                reason,
-                                time,
-                                "UNKNOWN",
-                                true,
-                                executedBy
-                        );
-                    } else if (table.equalsIgnoreCase("IPBans")) {
-                        BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                                PunishmentType.IPBAN,
-                                UUID.fromString(uuid),
-                                name,
-                                IP,
-                                reason,
-                                time,
-                                "UNKNOWN",
-                                true,
-                                executedBy
-                        );
-                    } else {
-                        BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                                time == -1 ? PunishmentType.MUTE : PunishmentType.TEMPMUTE,
-                                UUID.fromString(uuid),
-                                name,
-                                IP,
-                                reason,
-                                time,
-                                "UNKNOWN",
-                                true,
-                                executedBy
-                        );
+                    status.incrementConvertedEntries(1);
+                    importerCallback.onStatusUpdate(status);
+                }
+            }
+            try (ResultSet rs = stmt.executeQuery(
+                    "SELECT MutedBy executed_by, Muted user, MuteTime time, Reason reason FROM Mutes;"
+            )) {
+                while (rs.next()) {
+                    try {
+                        importPunishment(PunishmentType.MUTE, connection, rs);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        continue;
                     }
+
+                    status.incrementConvertedEntries(1);
+                    importerCallback.onStatusUpdate(status);
+                }
+            }
+            try (ResultSet rs = stmt.executeQuery(
+                    "SELECT BannedBy executed_by, Banned user, '-1' time, Reason reason FROM IPBans;"
+            )) {
+                int i = 0;
+                while (rs.next()) {
+                    i++;
+
+                    if (i >= 10) { // TODO: remove
+                        break;
+                    }
+                    try {
+                        importPunishment(PunishmentType.IPBAN, connection, rs);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        continue;
+                    }
+
                     status.incrementConvertedEntries(1);
                     importerCallback.onStatusUpdate(status);
                 }
@@ -131,7 +113,7 @@ public class BungeeUtilisalsImporter extends Importer {
                         if (uuid == null) {
                             uuid = uuidCache.get(name);
                         } else {
-                            name = nameCache.get(name);
+                            name = nameCache.get(uuid);
                         }
                     } catch (ExecutionException e) {
                         e.printStackTrace();
@@ -149,9 +131,55 @@ public class BungeeUtilisalsImporter extends Importer {
                     importerCallback.onStatusUpdate(status);
                 }
             }
+
+            importerCallback.done(status, null);
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    private void importPunishment(final PunishmentType type, final Connection connection, final ResultSet rs) throws ExecutionException, SQLException {
+        final String executedBy = rs.getString("executed_by");
+        final String user = rs.getString("user");
+        final Long time = rs.getLong("time");
+        final String reason = rs.getString("reason");
+
+        final String id = user.contains(".") ? getIdOnIP(connection, user) : user;
+
+        final boolean usingUUID = id.contains("-");
+        String uuid = usingUUID ? id : null;
+        String name = usingUUID ? null : id;
+
+        if (uuid == null) {
+            uuid = uuidCache.get(name);
+        } else {
+            name = nameCache.get(uuid);
+        }
+        final String IP = user.contains(".") ? user : getIP(connection, user);
+
+        final PunishmentType punishmentType;
+        if (type.equals(PunishmentType.BAN)) {
+            punishmentType = time == -1 ? PunishmentType.BAN : PunishmentType.TEMPBAN;
+        } else if (type.equals(PunishmentType.MUTE)) {
+            punishmentType = time == -1 ? PunishmentType.MUTE : PunishmentType.TEMPMUTE;
+        } else {
+            punishmentType = type;
+        }
+
+        System.out.println(type + " " + executedBy + " " + user + " " + time + " " + reason
+                + " " + id + " " + usingUUID + " " + uuid + " " + name + " " + IP);
+
+        BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+                punishmentType,
+                UUID.fromString(uuid),
+                name,
+                IP,
+                reason,
+                time,
+                "UNKNOWN",
+                true,
+                executedBy
+        );
     }
 
     private String getIP(final Connection connection, final String id) throws SQLException {

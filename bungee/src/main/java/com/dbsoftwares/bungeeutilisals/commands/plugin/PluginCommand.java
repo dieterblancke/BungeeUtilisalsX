@@ -23,6 +23,7 @@ public class PluginCommand extends Command {
         subCommands.add(new VersionSubCommand());
         subCommands.add(new ReloadSubCommand());
         subCommands.add(new DumpSubCommand());
+        subCommands.add(new ImportSubCommand());
     }
 
     @Override

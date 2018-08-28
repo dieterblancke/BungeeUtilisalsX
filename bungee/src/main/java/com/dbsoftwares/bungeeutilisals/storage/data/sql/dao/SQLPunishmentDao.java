@@ -62,7 +62,7 @@ public class SQLPunishmentDao implements PunishmentDao {
         if (type.isActivatable()) {
             if (type.isTemporary()) {
                 sql += "(uuid, user, ip, time, reason, server, active, executed_by) "
-                        + "VALUES ('%s', '%s', '%s', %s, '%s', '%s', %s, '%s');";
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -81,7 +81,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                 }
             } else {
                 sql += "(uuid, user, ip, reason, server, active, executed_by) "
-                        + "VALUES ('%s', '%s', '%s', '%s', '%s', %s, '%s');";
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
 
                 try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -100,7 +100,7 @@ public class SQLPunishmentDao implements PunishmentDao {
             }
         } else {
             sql += "(uuid, user, ip, reason, server, executed_by) "
-                    + "VALUES ('%s', '%s', '%s', '%s', '%s', '%s');";
+                    + "VALUES (?, ?, ?, ?, ?, ?);";
 
             try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                  PreparedStatement preparedStatement = connection.prepareStatement(sql)) {

@@ -53,13 +53,13 @@ public class ImportSubCommand extends SubCommand {
                 importer.startImport(new ImporterCallback<Importer.ImporterStatus>() {
                     @Override
                     public void onStatusUpdate(Importer.ImporterStatus status) {
-                        if (status.getConvertedEntries() % 100 == 0) {
+                        // if (status.getConvertedEntries() % 100 == 0) {
                             BUCore.log(
                                     Level.INFO,
                                     "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                             + " entries (" + status.getProgressionPercent() + " %)"
                             );
-                        }
+                        // }
                     }
 
                     @Override

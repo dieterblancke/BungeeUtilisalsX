@@ -34,13 +34,9 @@ public abstract class Importer {
     protected final LoadingCache<String, String> nameCache = CacheBuilder.newBuilder().maximumSize(15000)
             .expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
                 public String load(final String uuid) throws IllegalStateException {
-                    if (ProxyServer.getInstance().getConfig().isOnlineMode()) {
-                        String name = MojangUtils.getName(UUID.fromString(uuid));
-                        if (uuid != null) {
-                            return uuid;
-                        } else {
-                            throw new IllegalStateException("Could not retrieve name of " + uuid);
-                        }
+                    String name = MojangUtils.getName(UUID.fromString(uuid));
+                    if (name != null) {
+                        return name;
                     } else {
                         throw new IllegalStateException("Could not retrieve name of " + uuid);
                     }

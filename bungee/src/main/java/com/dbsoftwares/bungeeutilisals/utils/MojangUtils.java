@@ -63,9 +63,10 @@ public class MojangUtils {
                 while ((line = reader.readLine()) != null) {
                     content.append(line);
                 }
+                System.out.println(content.toString());
 
                 MojangProfile profile = gson.fromJson(content.toString(), MojangProfile.class);
-                if (profile != null && !profile.id.isEmpty()) {
+                if (profile != null && !profile.name.isEmpty()) {
                     return profile.name;
                 }
             }
