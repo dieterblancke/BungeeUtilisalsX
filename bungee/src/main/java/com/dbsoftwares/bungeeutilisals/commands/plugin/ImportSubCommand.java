@@ -6,6 +6,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.importer.Importer;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
+import com.dbsoftwares.bungeeutilisals.importer.importers.BungeeAdminToolsImporter;
 import com.dbsoftwares.bungeeutilisals.importer.importers.BungeeUtilisalsImporter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
@@ -48,9 +49,14 @@ public class ImportSubCommand extends SubCommand {
                 properties.put(property.split(":")[0], property.split(":")[1]);
             }
 
+            Importer importer = null;
             if (plugin.equalsIgnoreCase("BungeeUtilisals")) {
-                Importer importer = new BungeeUtilisalsImporter();
+                importer = new BungeeUtilisalsImporter();
+            } else if (plugin.equalsIgnoreCase("BungeeAdminTools") || plugin.equalsIgnoreCase("BAT")) {
+                importer = new BungeeAdminToolsImporter();
+            }
 
+            if (importer != null) {
                 importer.startImport(new ImporterCallback<Importer.ImporterStatus>() {
                     @Override
                     public void onStatusUpdate(Importer.ImporterStatus status) {
