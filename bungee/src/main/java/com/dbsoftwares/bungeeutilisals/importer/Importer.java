@@ -54,6 +54,19 @@ public abstract class Importer {
         }
     }
 
+    protected UUID readUUIDFromString(String str) {
+        try {
+            return UUID.fromString(str);
+        } catch (IllegalArgumentException e) {
+            return UUID.fromString(
+                    str.replaceFirst(
+                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                            "$1-$2-$3-$4-$5"
+                    )
+            );
+        }
+    }
+
     @Data
     public class ImporterStatus {
 

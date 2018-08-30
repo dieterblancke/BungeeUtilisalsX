@@ -29,21 +29,21 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
-        createUser(uuid.toString(), username, ip, language);
+        Date date = new Date(System.currentTimeMillis());
+
+        createUser(uuid, username, ip, language, date, date);
     }
 
-
     @Override
-    public void createUser(String uuid, String username, String ip, Language language) {
+    public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
         Mapping<String, Object> mapping = new Mapping<>(true);
-        Date date = new Date(System.currentTimeMillis());
 
         mapping.append("uuid", uuid)
                 .append("username", username)
                 .append("ip", ip)
                 .append("language", language.getName())
-                .append("firstlogin", date)
-                .append("lastlogout", date);
+                .append("firstlogin", login)
+                .append("lastlogout", logout);
 
         getDatabase().getCollection(format("{users-table}")).insertOne(new Document(mapping.getMap()));
     }

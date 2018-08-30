@@ -57,12 +57,19 @@ public class SQLPunishmentDao implements PunishmentDao {
     public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
                                            String ip, String reason, Long time, String server,
                                            Boolean active, String executedby) {
+        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, null);
+    }
+
+    @Override
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
+                                           String ip, String reason, Long time, String server,
+                                           Boolean active, String executedby, String removedby) {
         String sql = PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + " ");
 
         if (type.isActivatable()) {
             if (type.isTemporary()) {
-                sql += "(uuid, user, ip, time, reason, server, active, executed_by) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+                sql += "(uuid, user, ip, time, reason, server, active, executed_by, removed_by) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -74,14 +81,15 @@ public class SQLPunishmentDao implements PunishmentDao {
                     preparedStatement.setString(6, server);
                     preparedStatement.setBoolean(7, active);
                     preparedStatement.setString(8, executedby);
+                    preparedStatement.setString(9, removedby);
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             } else {
-                sql += "(uuid, user, ip, reason, server, active, executed_by) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?);";
+                sql += "(uuid, user, ip, reason, server, active, executed_by, removed_by) "
+                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
 
                 try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                      PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
@@ -92,6 +100,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                     preparedStatement.setString(5, server);
                     preparedStatement.setBoolean(6, active);
                     preparedStatement.setString(7, executedby);
+                    preparedStatement.setString(8, removedby);
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
@@ -117,7 +126,28 @@ public class SQLPunishmentDao implements PunishmentDao {
             }
         }
 
-        return null;
+        PunishmentInfo info = new PunishmentInfo();
+
+        info.setUuid(uuid);
+        info.setUser(user);
+        info.setIP(ip);
+        info.setReason(reason);
+        info.setServer(server);
+        info.setExecutedBy(executedby);
+        info.setDate(new Date(System.currentTimeMillis()));
+        info.setType(type);
+
+        if (time != null) {
+            info.setExpireTime(time);
+        }
+        if (active != null) {
+            info.setActive(active);
+        }
+        if (removedby != null) {
+            info.setRemovedBy(removedby);
+        }
+
+        return info;
     }
 
     @Override

@@ -29,6 +29,12 @@ public class Validate {
         }
     }
 
+    public static <T> void ifNull(T toCheck, Consumer<T> consumer) {
+        if (toCheck == null) {
+            consumer.accept(toCheck);
+        }
+    }
+
     public static <T> void ifNotNull(T toCheck, Consumer<T> consumer) {
         if (toCheck != null) {
             consumer.accept(toCheck);

@@ -42,6 +42,13 @@ public class MongoPunishmentDao implements PunishmentDao {
     public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
                                            String ip, String reason, Long time, String server,
                                            Boolean active, String executedby) {
+        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, null);
+    }
+
+    @Override
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
+                                           String ip, String reason, Long time, String server,
+                                           Boolean active, String executedby, String removedby) {
         PunishmentInfo info = new PunishmentInfo();
 
         info.setUuid(uuid);
@@ -64,6 +71,10 @@ public class MongoPunishmentDao implements PunishmentDao {
         if (active != null) {
             info.setActive(active);
             mapping.append("active", active);
+        }
+        if (removedby != null) {
+            info.setRemovedBy(removedby);
+            mapping.append("removed_by", removedby);
         }
         mapping.append("executed_by", executedby);
 

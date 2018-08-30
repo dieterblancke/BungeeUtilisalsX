@@ -20,6 +20,11 @@ public interface PunishmentDao {
             Long time, String server, Boolean active, String executedby
     );
 
+    PunishmentInfo insertPunishment(
+            PunishmentType type, UUID uuid, String user, String ip, String reason,
+            Long time, String server, Boolean active, String executedby, String removedby
+    );
+
     boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive);
 
     PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP);

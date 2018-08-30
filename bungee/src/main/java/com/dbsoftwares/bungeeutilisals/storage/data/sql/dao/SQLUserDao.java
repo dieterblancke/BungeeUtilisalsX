@@ -36,21 +36,23 @@ public class SQLUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
-        createUser(uuid.toString(), username, ip, language);
+        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+
+        createUser(uuid, username, ip, language, date, date);
     }
 
     @Override
-    public void createUser(String uuid, String username, String ip, Language language) {
+    public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
             java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
 
-            pstmt.setString(1, uuid);
+            pstmt.setString(1, uuid.toString());
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
-            pstmt.setDate(5, date);
-            pstmt.setDate(6, date);
+            pstmt.setDate(5, new java.sql.Date(login.getTime()));
+            pstmt.setDate(6, new java.sql.Date(logout.getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

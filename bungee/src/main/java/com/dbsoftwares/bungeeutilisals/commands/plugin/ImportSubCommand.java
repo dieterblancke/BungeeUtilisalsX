@@ -29,24 +29,25 @@ public class ImportSubCommand extends SubCommand {
 
     @Override
     public String getUsage() {
-        return "/bungeeutilisals import (plugin) (properties)";
+        return "/bungeeutilisals import (plugin) [properties]";
     }
 
     @Override
     public String getPermission() {
-        return "bungeeutilisals.admin.reload";
+        return "bungeeutilisals.admin.import";
     }
 
     @Override
     public void onExecute(User user, String[] args) {
-        if (args.length == 2) {
+        if (args.length == 1 || args.length == 2) {
             // TODO: testing + MAKE CONVERTORS (from MySQL to SQLite, SQLite to MySQL, ...)
-            // properties example: host:host,port:port,database:database,username:username,password:password
             final String plugin = args[0];
             final Map<String, String> properties = Maps.newHashMap();
 
-            for (String property : args[1].split(",")) {
-                properties.put(property.split(":")[0], property.split(":")[1]);
+            if (args.length == 2) {
+                for (String property : args[1].split(",")) {
+                    properties.put(property.split(":")[0], property.split(":")[1]);
+                }
             }
 
             Importer importer = null;

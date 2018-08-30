@@ -14,6 +14,9 @@ import java.util.concurrent.ExecutionException;
 public class BungeeUtilisalsImporter extends Importer {
 
     private Connection createConnection(final Map<String, String> properties) throws SQLException {
+        if (properties.isEmpty()) {
+            return BUCore.getApi().getStorageManager().getConnection();
+        }
         return DriverManager.getConnection(
                 "jdbc:mysql://" + properties.get("host") + ":"
                         + properties.get("port")
@@ -116,7 +119,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     }
 
                     BUCore.getApi().getStorageManager().getDao().getUserDao().createUser(
-                            uuid,
+                            readUUIDFromString(uuid),
                             name,
                             IP,
                             BUCore.getApi().getLanguageManager().getDefaultLanguage()
