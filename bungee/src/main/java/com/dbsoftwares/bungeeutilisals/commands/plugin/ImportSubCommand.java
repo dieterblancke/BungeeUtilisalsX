@@ -40,7 +40,6 @@ public class ImportSubCommand extends SubCommand {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length == 1 || args.length == 2) {
-            // TODO: testing + MAKE CONVERTORS (from MySQL to SQLite, SQLite to MySQL, ...)
             final String plugin = args[0];
             final Map<String, String> properties = Maps.newHashMap();
 

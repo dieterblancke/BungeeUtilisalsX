@@ -11,4 +11,6 @@ public interface Dao {
 
     PunishmentDao getPunishmentDao();
 
+    FriendsDao getFriendsDao();
+
 }
