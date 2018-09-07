@@ -19,15 +19,15 @@ public class RedisPlayerUtils implements IPlayerUtils {
 
     @Override
     public int getPlayerCount(String server) {
-        ServerInfo info = ProxyServer.getInstance().getServerInfo(server); // checking if server really exists
+        final ServerInfo info = ProxyServer.getInstance().getServerInfo(server); // checking if server really exists
 
         return info == null ? 0 : RedisBungee.getApi().getPlayersOnServer(server).size();
     }
 
     @Override
     public List<String> getPlayers(String server) {
-        List<String> players = Lists.newArrayList();
-        ServerInfo info = ProxyServer.getInstance().getServerInfo(server);
+        final List<String> players = Lists.newArrayList();
+        final ServerInfo info = ProxyServer.getInstance().getServerInfo(server);
 
         if (info != null) {
             RedisBungee.getApi().getPlayersOnServer(server).forEach(uuid ->
@@ -44,7 +44,7 @@ public class RedisPlayerUtils implements IPlayerUtils {
 
     @Override
     public List<String> getPlayers() {
-        List<String> players = Lists.newArrayList();
+        final List<String> players = Lists.newArrayList();
 
         RedisBungee.getApi().getPlayersOnline().forEach(uuid -> players.add(RedisBungee.getApi().getNameFromUuid(uuid)));
 
@@ -53,12 +53,19 @@ public class RedisPlayerUtils implements IPlayerUtils {
 
     @Override
     public ServerInfo findPlayer(String name) {
-        UUID uuid = RedisBungee.getApi().getUuidFromName(name);
+        final UUID uuid = RedisBungee.getApi().getUuidFromName(name);
 
         if (RedisBungee.getApi().isPlayerOnline(uuid)) {
             return RedisBungee.getApi().getServerFor(uuid);
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isOnline(String name) {
+        final UUID uuid = RedisBungee.getApi().getUuidFromName(name);
+
+        return RedisBungee.getApi().isPlayerOnline(uuid);
     }
 }

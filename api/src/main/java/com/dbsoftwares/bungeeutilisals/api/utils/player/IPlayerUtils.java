@@ -22,4 +22,6 @@ public interface IPlayerUtils {
 
     ServerInfo findPlayer(String name);
 
+    boolean isOnline(String name);
+
 }

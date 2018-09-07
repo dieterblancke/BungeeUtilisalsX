@@ -14,11 +14,9 @@ import java.util.UUID;
 
 public interface FriendsDao {
 
-    void addFriend(User user, UUID identifier, String name);
+    void addFriend(User user, UUID identifier);
 
     void removeFriend(User user, UUID identifier);
 
-    void removeFriend(User user, String name);
-
-    List<FriendData> getFriends(String user);
+    List<FriendData> getFriends(UUID user);
 }
