@@ -1,9 +1,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.plugin;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.ImmutableList;
@@ -48,11 +46,6 @@ public class ReloadSubCommand extends SubCommand {
             }
         }
         BungeeUtilisals.getInstance().reload();
-
-        for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
-            BUCore.getApi().getLanguageManager().reloadConfig(BungeeUtilisals.getInstance(), language);
-        }
-
         user.sendMessage("&fAll configuration files have been reloaded!");
     }
 

@@ -12,10 +12,11 @@ import java.util.UUID;
  * Developer: Dieter Blancke
  * Project: BungeeUtilisals
  */
+
 public class MongoFriendsDao implements FriendsDao {
 
     @Override
-    public void addFriend(User user, UUID uuid, String s) {
+    public void addFriend(User user, UUID uuid) {
 
     }
 
@@ -25,12 +26,7 @@ public class MongoFriendsDao implements FriendsDao {
     }
 
     @Override
-    public void removeFriend(User user, String s) {
-
-    }
-
-    @Override
-    public List<FriendData> getFriends(String s) {
+    public List<FriendData> getFriends(UUID uuid) {
         return null;
     }
 }

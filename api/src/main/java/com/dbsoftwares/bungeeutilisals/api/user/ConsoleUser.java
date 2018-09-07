@@ -12,6 +12,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
@@ -246,5 +247,10 @@ public class ConsoleUser implements User {
     @Override
     public boolean isInStaffChat() {
         return false;
+    }
+
+    @Override
+    public Version getVersion() {
+        return Version.latest();
     }
 }

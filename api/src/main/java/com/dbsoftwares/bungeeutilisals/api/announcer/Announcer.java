@@ -7,16 +7,18 @@ package com.dbsoftwares.bungeeutilisals.api.announcer;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
+
 import java.io.File;
+import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -144,4 +146,25 @@ public abstract class Announcer {
     }
 
     public abstract void loadAnnouncements();
+
+    public void reload() {
+        try {
+            configuration.reload();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
+        }
+        stop();
+        announcements.clear();
+
+        enabled = configuration.getBoolean("enabled");
+        unit = TimeUnit.valueOfOrElse(configuration.getString("delay.unit"), TimeUnit.SECONDS);
+        delay = configuration.getInteger("delay.time");
+        random = configuration.getBoolean("random");
+
+        if (enabled) {
+            loadAnnouncements();
+            start();
+        }
+    }
 }

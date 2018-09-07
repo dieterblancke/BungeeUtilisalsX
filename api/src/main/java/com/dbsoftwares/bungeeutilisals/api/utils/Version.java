@@ -39,6 +39,16 @@ public enum Version {
         return null;
     }
 
+    public static Version latest() {
+        Version version = null;
+        for (Version v : values()) {
+            if (version == null || version.getVersion() < v.getVersion()) {
+                version = v;
+            }
+        }
+        return version;
+    }
+
     @Override
     public String toString() {
         return super.toString().replace("MINECRAFT_", "").replace("_", ".");

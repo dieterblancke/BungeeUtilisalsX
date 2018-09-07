@@ -4,6 +4,7 @@ import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -238,4 +239,9 @@ public interface User {
      * @return true if staffchat is enabled, false if not.
      */
     boolean isInStaffChat();
+
+    /**
+     * @return the version the user is playing on
+     */
+    Version getVersion();
 }

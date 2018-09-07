@@ -7,10 +7,6 @@ package com.dbsoftwares.bungeeutilisals.api.bossbar;
  */
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBarAction;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
@@ -18,6 +14,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
+import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -25,6 +22,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Set;
 import java.util.UUID;
+import java.util.logging.Level;
 
 @Getter
 public class BossBar implements IBossBar {
@@ -125,6 +123,10 @@ public class BossBar implements IBossBar {
     @Override
     public void addUser(User user) {
         if (!users.contains(user)) {
+            if (user.getVersion() == null || user.getVersion().getVersion() < Version.MINECRAFT_1_9.getVersion()) {
+                BUCore.log(Level.INFO, "Could not add " + user.getName() + " to the bossbar. Reason: Unsupported Version.");
+                return;
+            }
             users.add(user);
 
             user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style));

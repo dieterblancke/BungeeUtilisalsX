@@ -21,6 +21,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
+import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
@@ -83,6 +84,9 @@ public class BungeeUtilisals extends Plugin {
     private AbstractStorageManager databaseManagement;
 
     @Getter
+    private List<Command> generalCommands = Lists.newArrayList();
+
+    @Getter
     private List<Command> customCommands = Lists.newArrayList();
 
     @Getter
@@ -140,22 +144,7 @@ public class BungeeUtilisals extends Plugin {
 
         // Loading Punishment system
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            loadPunishmentCommand("ban", BanCommand.class);
-            loadPunishmentCommand("ipban", IPBanCommand.class);
-            loadPunishmentCommand("tempban", TempBanCommand.class);
-            loadPunishmentCommand("iptempban", IPTempBanCommand.class);
-            loadPunishmentCommand("mute", MuteCommand.class);
-            loadPunishmentCommand("ipmute", IPMuteCommand.class);
-            loadPunishmentCommand("tempmute", TempMuteCommand.class);
-            loadPunishmentCommand("iptempmute", IPTempMuteCommand.class);
-
-            loadPunishmentCommand("kick", KickCommand.class);
-            loadPunishmentCommand("warn", WarnCommand.class);
-
-            loadPunishmentCommand("unban", UnbanCommand.class);
-            loadPunishmentCommand("unbanip", UnbanIPCommand.class);
-            loadPunishmentCommand("unmute", UnmuteCommand.class);
-            loadPunishmentCommand("unmuteip", UnmuteIPCommand.class);
+            loadPunishmentCommands();
 
             ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
@@ -179,6 +168,7 @@ public class BungeeUtilisals extends Plugin {
 
     @Override
     public void onDisable() {
+        BUCore.getApi().getUsers().forEach(User::unload);
         try {
             databaseManagement.close();
         } catch (SQLException e) {
@@ -187,7 +177,19 @@ public class BungeeUtilisals extends Plugin {
     }
 
     public void reload() {
+        generalCommands.forEach(Command::unload);
+        generalCommands.clear();
+        loadGeneralCommands();
+        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
+            loadPunishmentCommands();
+        }
         loadCustomCommands();
+
+        Announcer.getAnnouncers().values().forEach(Announcer::reload);
+
+        for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
+            BUCore.getApi().getLanguageManager().reloadConfig(BungeeUtilisals.getInstance(), language);
+        }
     }
 
     private void loadDatabase() {
@@ -259,6 +261,25 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("staffchat", StaffChatCommand.class);
     }
 
+    private void loadPunishmentCommands() {
+        loadPunishmentCommand("ban", BanCommand.class);
+        loadPunishmentCommand("ipban", IPBanCommand.class);
+        loadPunishmentCommand("tempban", TempBanCommand.class);
+        loadPunishmentCommand("iptempban", IPTempBanCommand.class);
+        loadPunishmentCommand("mute", MuteCommand.class);
+        loadPunishmentCommand("ipmute", IPMuteCommand.class);
+        loadPunishmentCommand("tempmute", TempMuteCommand.class);
+        loadPunishmentCommand("iptempmute", IPTempMuteCommand.class);
+
+        loadPunishmentCommand("kick", KickCommand.class);
+        loadPunishmentCommand("warn", WarnCommand.class);
+
+        loadPunishmentCommand("unban", UnbanCommand.class);
+        loadPunishmentCommand("unbanip", UnbanIPCommand.class);
+        loadPunishmentCommand("unmute", UnmuteCommand.class);
+        loadPunishmentCommand("unmuteip", UnmuteIPCommand.class);
+    }
+
     private void loadCustomCommands() {
         customCommands.forEach(Command::unload);
         customCommands.clear();
@@ -311,7 +332,9 @@ public class BungeeUtilisals extends Plugin {
     private void loadCommand(String enabledPath, IConfiguration configuration, Class<? extends Command> clazz) {
         if (configuration.getBoolean(enabledPath)) {
             try {
-                clazz.newInstance();
+                Command command = clazz.newInstance();
+
+                generalCommands.add(command);
             } catch (InstantiationException | IllegalAccessException e) {
                 e.printStackTrace();
             }

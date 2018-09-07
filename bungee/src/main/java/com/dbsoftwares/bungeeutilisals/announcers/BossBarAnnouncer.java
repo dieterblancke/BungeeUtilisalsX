@@ -9,16 +9,15 @@ package com.dbsoftwares.bungeeutilisals.announcers;
 import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarAnnouncement;
 import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarMessage;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.configuration.api.ISection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarAnnouncement;
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarMessage;
+import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -64,5 +63,11 @@ public class BossBarAnnouncer extends Announcer {
             }
             addAnnouncement(new BossBarAnnouncement(messages, unit, time, group, permission));
         }
+    }
+
+    @Override
+    public void stop() {
+        super.stop();
+        super.getAnnouncements().keySet().forEach(Announcement::clear);
     }
 }

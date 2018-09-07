@@ -20,6 +20,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
@@ -320,6 +321,11 @@ public class BUser implements User {
     @Override
     public PunishmentInfo getMuteInfo() {
         return mute;
+    }
+
+    @Override
+    public Version getVersion() {
+        return Version.getVersion(getParent().getPendingConnection().getVersion());
     }
 
     @Override
