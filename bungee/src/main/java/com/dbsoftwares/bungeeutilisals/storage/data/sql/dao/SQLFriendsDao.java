@@ -59,25 +59,28 @@ public class SQLFriendsDao implements FriendsDao {
         final List<FriendData> friends = Lists.newArrayList();
 
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             // TODO: more advanced SQL query, selecting username, uuid & lastLogin from USERS table.
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {friends-table} WHERE userid = %s;", SELECT_ID)
+                     format("SELECT friendsince, u.username friendname, u.lastlogout lastlogout FROM {friends-table}" +
+                             " JOIN {users-table} u ON friendid = u.id" +
+                             " WHERE userid = %s;", SELECT_ID)
              )) {
             pstmt.setString(1, uuid.toString());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
                     friends.add(new FriendData(
-                            // TODO
+                            uuid,
+                            rs.getString("friendname"),
+                            rs.getDate("friendsince"),
+                            rs.getDate("lastlogout")
                     ));
-                    //    public FriendData(UUID uuid, String friend, Date friendSince, Date lastSeen) {
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return null;
+        return friends;
     }
 
     private String format(String line) {

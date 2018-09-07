@@ -3,6 +3,7 @@ enabled: false
 
 # Recommended to write the names in lowercase.
 # Permissions would be like 'bungeeutilisals.friends.limit.RANK' f.e. 'bungeeutilisals.friends.limit.vip'
+# Permissions like 'bungeeutilisals.friends.limit.AMOUNT' also work, f.e. 'bungeeutilisals.friends.limit.50'
 friendlimit:
   default: 10
   vip: 15
