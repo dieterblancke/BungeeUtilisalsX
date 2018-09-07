@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.api.friends;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,13 +13,16 @@ import java.util.UUID;
 @AllArgsConstructor
 public class FriendData {
 
-    private UUID identifier;
-    private String name;
-    private Long friendSince;
+    private UUID uuid;
+    private String friend;
+    private Date friendSince;
     private boolean online;
-    private Long lastOnline;
+    private Date lastOnline;
 
-    public Date getLastOnlineDate() {
-        return new Date(lastOnline);
+    public FriendData(UUID uuid, String friend, Date friendSince, Date lastSeen) {
+        this.uuid = uuid;
+        this.friend = friend;
+        this.friendSince = friendSince;
+        this.online = BUCore.getApi().getPlayerUtils().isOnline(friend);
     }
 }

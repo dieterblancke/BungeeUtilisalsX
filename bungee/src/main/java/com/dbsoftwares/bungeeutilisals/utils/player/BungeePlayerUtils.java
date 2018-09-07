@@ -58,4 +58,9 @@ public class BungeePlayerUtils implements IPlayerUtils {
 
         return null;
     }
+
+    @Override
+    public boolean isOnline(String name) {
+        return ProxyServer.getInstance().getPlayer(name) != null;
+    }
 }
