@@ -18,6 +18,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
 
     public BUAPI api;
     private String permission = null;
+    protected List<SubCommand> subCommands = Lists.newArrayList();
 
     public Command(String name) {
         this(name, Lists.newArrayList(), null);
@@ -85,18 +86,14 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
 
             if (tabCompletion == null) {
                 if (args.length == 0) {
-                    List<String> list = Lists.newArrayList();
-                    for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
-                        list.add(p.getName());
-                    }
-                    return list;
+                    return BUCore.getApi().getPlayerUtils().getPlayers();
                 } else {
                     String lastWord = args[args.length - 1];
                     List<String> list = Lists.newArrayList();
 
-                    for (ProxiedPlayer p : ProxyServer.getInstance().getPlayers()) {
-                        if (p.getName().toLowerCase().startsWith(lastWord.toLowerCase())) {
-                            list.add(p.getName());
+                    for (String p : BUCore.getApi().getPlayerUtils().getPlayers()) {
+                        if (p.toLowerCase().startsWith(lastWord.toLowerCase())) {
+                            list.add(p);
                         }
                     }
 
@@ -115,5 +112,27 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
 
     public void unload() {
         ProxyServer.getInstance().getPluginManager().unregisterCommand(this);
+    }
+
+    protected SubCommand findSubCommand(String name) {
+        return subCommands.stream().filter(subCommand -> subCommand.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    }
+
+    protected List<String> getSubcommandCompletions(User user, String[] args) {
+        List<String> completions = Lists.newArrayList();
+
+        if (args.length == 0) {
+            subCommands.forEach(subCommand -> completions.add(subCommand.getName()));
+        } else if (args.length == 1) {
+            subCommands.stream().filter(subCommand -> subCommand.getName().toLowerCase().startsWith(args[0].toLowerCase()))
+                    .forEach(subCommand -> completions.add(subCommand.getName()));
+        } else {
+            SubCommand command = findSubCommand(args[0]);
+
+            if (command != null) {
+                return command.getCompletions(user, args);
+            }
+        }
+        return completions;
     }
 }

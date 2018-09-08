@@ -10,6 +10,10 @@ friendlimit:
   mvp: 20
   helper: 25
 
+command:
+  aliases: 'friend, bfriends'
+  permission: bungeeutilisals.friends
+
 subcommands:
   add:
     aliases: ''

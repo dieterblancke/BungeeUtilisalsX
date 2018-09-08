@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.commands.plugin;
+package com.dbsoftwares.bungeeutilisals.commands.friends;
 
 /*
  * Created by DBSoftwares on 10/01/2018
@@ -9,19 +9,23 @@ package com.dbsoftwares.bungeeutilisals.commands.plugin;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.google.common.collect.Lists;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.friends.sub.AddFriendSubCommand;
 
+import java.util.Arrays;
 import java.util.List;
 
-public class PluginCommand extends Command {
+public class FriendsCommand extends Command {
 
-    public PluginCommand() {
-        super("bungeeutilisals", Lists.newArrayList("bu", "butilisals", "butili"), "bungeeutilisals.admin");
+    public FriendsCommand() {
+        super(
+                "friends",
+                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.aliases").split(", ")),
+                FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.permission")
+        );
 
-        subCommands.add(new VersionSubCommand());
-        subCommands.add(new ReloadSubCommand());
-        subCommands.add(new DumpSubCommand());
-        subCommands.add(new ImportSubCommand());
+
+        subCommands.add(new AddFriendSubCommand());
     }
 
     @Override
@@ -44,7 +48,7 @@ public class PluginCommand extends Command {
     }
 
     private void sendHelpList(User user) {
-        user.sendMessage("&aAdmin Commands help:");
-        subCommands.forEach(cmd -> user.sendMessage("&b- &e" + cmd.getUsage()));
+        user.sendLangMessage("friends.help.header");
+        subCommands.forEach(cmd -> user.sendLangMessage("friends.help.format", "%usage%", cmd.getUsage()));
     }
 }

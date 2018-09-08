@@ -49,6 +49,11 @@ general-commands:
     disabled: '&eYou are now talking in the &bpublic chat&e!'
     format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
 
+friends:
+  help:
+    header: '&aFriends Commands Help:'
+    format: '&b- &e%usage%'
+
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
 
