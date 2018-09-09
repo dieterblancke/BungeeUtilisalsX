@@ -1,28 +1,39 @@
-package com.dbsoftwares.bungeeutilisals.api;
-
 /*
- * Created by DBSoftwares on 14 oktober 2017
- * Developer: Dieter Blancke
- * Project: BungeeUtilisals
+ * Copyright (C) 2018 DBSoftwares - Dieter Blancke
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
  */
+
+package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
-import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.DatabaseUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -77,11 +88,6 @@ public interface BUAPI {
      * @return A new UserCollection instance.
      */
     UserCollection newUserCollection();
-
-    /**
-     * @return DatabaseUser class providing utilities to get and set user data from and into the database.
-     */
-    DatabaseUser getUserData();
 
     /**
      * @return The BungeeUtilisals chat utility class.

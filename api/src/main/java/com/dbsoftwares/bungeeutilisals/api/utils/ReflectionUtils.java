@@ -1,15 +1,29 @@
+/*
+ * Copyright (C) 2018 DBSoftwares - Dieter Blancke
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
 package com.dbsoftwares.bungeeutilisals.api.utils;
-
-import lombok.experimental.UtilityClass;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-@UtilityClass
 public class ReflectionUtils {
 
-    public Object getHandle(Class<?> clazz, Object o) {
+    public static Object getHandle(Class<?> clazz, Object o) {
         try {
             return clazz.getMethod("getHandle").invoke(o);
         } catch (Exception e) {
@@ -17,7 +31,7 @@ public class ReflectionUtils {
         }
     }
 
-    public Object getHandle(Object o) {
+    public static Object getHandle(Object o) {
         try {
             return getMethod("getHandle", o.getClass()).invoke(o);
         } catch (Exception e) {
@@ -25,7 +39,7 @@ public class ReflectionUtils {
         }
     }
 
-    public Class<?> getClass(String name) {
+    public static Class<?> getClass(String name) {
         try {
             return Class.forName(name);
         } catch (Exception e) {
@@ -34,7 +48,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    public Boolean isLoaded(String clazz) {
+    public static Boolean isLoaded(String clazz) {
         try {
             Class.forName(clazz);
             return true;
@@ -43,7 +57,7 @@ public class ReflectionUtils {
         }
     }
 
-    public Method getMethod(String name, Class<?> clazz, Class<?>... paramTypes) {
+    public static Method getMethod(String name, Class<?> clazz, Class<?>... paramTypes) {
         for (Method m : clazz.getMethods()) {
             Class<?>[] types = m.getParameterTypes();
             if (m.getName().equals(name) && equalsTypeArray(types, paramTypes)) {
@@ -53,7 +67,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    public Method getMethod(Class<?> clazz, String name, Class<?>... args) {
+    public static Method getMethod(Class<?> clazz, String name, Class<?>... args) {
         for (Method m : clazz.getDeclaredMethods()) {
             if (m.getName().equals(name) && (args.length == 0 || classList(args, m.getParameterTypes()))) {
                 m.setAccessible(true);
@@ -69,7 +83,7 @@ public class ReflectionUtils {
         return null;
     }
 
-    public Field getField(Class<?> clazz, String name) {
+    public static Field getField(Class<?> clazz, String name) {
         try {
             Field field = clazz.getDeclaredField(name);
             field.setAccessible(true);
@@ -80,27 +94,27 @@ public class ReflectionUtils {
         return null;
     }
 
-    public Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         return getField(clazz, fieldName).get(instance);
     }
 
-    public Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         return getValue(instance, instance.getClass(), fieldName);
     }
 
-    public void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         getField(clazz, fieldName).set(instance, value);
     }
 
-    public void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
         setValue(instance, instance.getClass(), fieldName, value);
     }
 
-    public Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
+    public static Constructor<?> getConstructor(Class<?> clazz, Class<?>... parameterTypes) throws NoSuchMethodException {
         return clazz.getConstructor(parameterTypes);
     }
 
-    private boolean equalsTypeArray(Class<?>[] a, Class<?>[] o) {
+    private static boolean equalsTypeArray(Class<?>[] a, Class<?>[] o) {
         if (a.length != o.length) {
             return false;
         }
@@ -112,7 +126,7 @@ public class ReflectionUtils {
         return true;
     }
 
-    private boolean classList(Class<?>[] l1, Class<?>[] l2) {
+    private static boolean classList(Class<?>[] l1, Class<?>[] l2) {
         boolean equal = true;
         if (l1.length != l2.length) {
             return false;
