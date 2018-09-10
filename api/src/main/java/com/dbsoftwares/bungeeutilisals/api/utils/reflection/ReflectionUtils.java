@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils;
+package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;

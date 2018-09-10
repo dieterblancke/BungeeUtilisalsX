@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;

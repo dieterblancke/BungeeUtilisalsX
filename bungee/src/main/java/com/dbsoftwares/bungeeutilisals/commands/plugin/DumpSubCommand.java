@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;

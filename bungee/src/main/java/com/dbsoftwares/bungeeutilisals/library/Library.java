@@ -130,7 +130,7 @@ public enum Library {
             }
         }
 
-        BungeeUtilisals.getInstance().getLibraryClassLoader().loadLibrary(path);
+        BungeeUtilisals.getInstance().getJarClassLoader().loadJar(path);
         BUCore.log("Loaded " + toString() + " libary!");
     }
 

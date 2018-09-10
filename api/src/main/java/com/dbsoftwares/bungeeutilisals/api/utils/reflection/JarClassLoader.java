@@ -16,10 +16,9 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.library.classloader;
+package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -28,7 +27,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-public class LibraryClassLoader {
+public class JarClassLoader {
 
     private static final Method ADD_URL;
 
@@ -38,7 +37,7 @@ public class LibraryClassLoader {
 
     private final URLClassLoader classLoader;
 
-    public LibraryClassLoader(BungeeUtilisals instance) throws IllegalStateException {
+    public JarClassLoader(Plugin instance) throws IllegalStateException {
         ClassLoader classLoader = instance.getClass().getClassLoader();
 
         if (classLoader instanceof URLClassLoader) {
@@ -48,7 +47,7 @@ public class LibraryClassLoader {
         }
     }
 
-    public void loadLibrary(URL url) {
+    public void loadJar(URL url) {
         try {
             ADD_URL.invoke(this.classLoader, url);
         } catch (IllegalAccessException | InvocationTargetException e) {
@@ -56,9 +55,9 @@ public class LibraryClassLoader {
         }
     }
 
-    public void loadLibrary(File file) {
+    public void loadJar(File file) {
         try {
-            loadLibrary(file.toURI().toURL());
+            loadJar(file.toURI().toURL());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         }

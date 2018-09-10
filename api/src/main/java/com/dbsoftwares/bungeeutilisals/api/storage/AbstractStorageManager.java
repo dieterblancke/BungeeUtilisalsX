@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 

@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.experimental.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.BUDecoder;
 import com.dbsoftwares.bungeeutilisals.api.experimental.encoder.BUEncoder;
-import com.dbsoftwares.bungeeutilisals.api.utils.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import io.netty.channel.Channel;
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

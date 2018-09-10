@@ -42,6 +42,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.Storag
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
@@ -56,7 +57,6 @@ import com.dbsoftwares.bungeeutilisals.executors.UserPunishExecutor;
 import com.dbsoftwares.bungeeutilisals.experimental.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.library.Library;
-import com.dbsoftwares.bungeeutilisals.library.classloader.LibraryClassLoader;
 import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
@@ -90,7 +90,7 @@ public class BungeeUtilisals extends Plugin {
     private static BUtilisalsAPI api;
 
     @Getter
-    private LibraryClassLoader libraryClassLoader;
+    private JarClassLoader jarClassLoader;
 
     @Getter
     private AbstractStorageManager databaseManagement;
@@ -221,7 +221,7 @@ public class BungeeUtilisals extends Plugin {
 
     private void loadLibraries() {
         BUCore.log("Loading libraries ...");
-        libraryClassLoader = new LibraryClassLoader(this);
+        jarClassLoader = new JarClassLoader(this);
 
         for (Library library : Library.values()) {
             if (library.shouldBeLoaded() && !library.isPresent()) {

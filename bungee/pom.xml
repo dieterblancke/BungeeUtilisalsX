@@ -8,7 +8,6 @@
         <version>3.0.1</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
     <artifactId>bungee</artifactId>
 
     <repositories>
