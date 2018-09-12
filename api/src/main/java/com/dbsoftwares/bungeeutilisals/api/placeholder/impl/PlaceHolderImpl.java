@@ -16,24 +16,19 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.dump;
+package com.dbsoftwares.bungeeutilisals.api.placeholder.impl;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
-import java.util.Map;
+@RequiredArgsConstructor
+public abstract class PlaceHolderImpl extends PlaceHolderEventHandler {
 
-@Data
-@AllArgsConstructor
-public class Dump {
+    private final String placeHolder;
+    private final boolean requiresUser;
 
-    private String plugin;
-    private SystemInfo systemInfo;
-    private List<PluginInfo> plugins;
-    private List<PluginSchedulerInfo> tasks;
-    private Map<String, String> scripts;
-    private Map<String, Map<String, Object>> configurations;
-    private Map<String, Map<String, Object>> languages;
-
+    public void register() {
+        PlaceHolderAPI.addPlaceHolder(placeHolder, requiresUser, this);
+    }
 }

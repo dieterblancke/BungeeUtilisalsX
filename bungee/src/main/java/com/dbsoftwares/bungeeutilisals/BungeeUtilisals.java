@@ -30,12 +30,11 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEve
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.DefaultPlaceHolders;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
@@ -61,6 +60,10 @@ import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
+import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
+import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
+import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
+import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
@@ -76,7 +79,10 @@ import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
 import org.bstats.bungeecord.Metrics;
 
+import javax.script.ScriptException;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -104,6 +110,9 @@ public class BungeeUtilisals extends Plugin {
     @Getter
     private RedisMessenger redisMessenger;
 
+    @Getter
+    private List<Script> scripts = Lists.newArrayList();
+
     @Override
     public void onEnable() {
         // Setting instance
@@ -120,6 +129,8 @@ public class BungeeUtilisals extends Plugin {
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack(new DefaultPlaceHolders());
         PlaceHolderAPI.loadPlaceHolderPack(new InputPlaceHolders());
+        new JavaScriptPlaceHolder().register();
+        loadScripts();
 
         // Loading libraries
         loadLibraries();
@@ -152,6 +163,7 @@ public class BungeeUtilisals extends Plugin {
         final IEventLoader loader = api.getEventLoader();
 
         loader.register(UserLoadEvent.class, new UserExecutor());
+        loader.register(UserUnloadEvent.class, new UserExecutor());
         loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
 
         // Loading Punishment system
@@ -186,12 +198,15 @@ public class BungeeUtilisals extends Plugin {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+        scripts.forEach(Script::unload);
     }
 
     public void reload() {
         generalCommands.forEach(Command::unload);
         generalCommands.clear();
         loadGeneralCommands();
+
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
             loadPunishmentCommands();
         }
@@ -201,6 +216,36 @@ public class BungeeUtilisals extends Plugin {
 
         for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
             BUCore.getApi().getLanguageManager().reloadConfig(BungeeUtilisals.getInstance(), language);
+        }
+
+        loadScripts();
+    }
+
+    private void loadScripts() {
+        scripts.forEach(Script::unload);
+        scripts.clear();
+        final File scripts = new File(getDataFolder(), "scripts");
+
+        if (!scripts.exists()) {
+            scripts.mkdir();
+
+            IConfiguration.createDefaultFile(getResourceAsStream("scripts/hello.js"), new File(scripts, "hello.js"));
+            IConfiguration.createDefaultFile(getResourceAsStream("scripts/coins.js"), new File(scripts, "coins.js"));
+        }
+
+        for (final File file : scripts.listFiles()) {
+            if (file.isDirectory()) {
+                continue;
+            }
+            try {
+                final String code = new String(Files.readAllBytes(file.toPath()));
+                final Script script = new Script(file.getName(), code);
+
+                this.scripts.add(script);
+            } catch (IOException | ScriptException e) {
+                BUCore.log("Could not load script " + file.getName());
+                e.printStackTrace();
+            }
         }
     }
 

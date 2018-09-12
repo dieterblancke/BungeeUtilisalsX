@@ -38,11 +38,9 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
-import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-
 import java.sql.Date;
 import java.util.Objects;
 import java.util.UUID;
@@ -50,8 +48,11 @@ import java.util.UUID;
 @Setter
 public class BUser implements User {
 
+    private ProxiedPlayer parent;
+
     private String name;
     private UUID uuid;
+    private String IP;
     private Boolean socialspy;
     private ExperimentalUser experimental;
     private UserCooldowns cooldowns;
@@ -62,17 +63,24 @@ public class BUser implements User {
     private boolean inStaffChat;
 
     @Override
-    public void load(String name, UUID uuid, String IP) {
+    public void load(ProxiedPlayer parent) {
         Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
-        this.name = name;
-        this.uuid = uuid;
+        this.parent = parent;
+        this.name = parent.getName();
+        this.uuid = parent.getUniqueId();
+        this.IP = Utils.getIP(parent.getAddress());
         this.experimental = new ExperimentalUser(this);
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
         if (dao.getUserDao().exists(uuid)) {
             storage = dao.getUserDao().getUserData(uuid);
+
+            if (!storage.getUserName().equalsIgnoreCase(name)) {
+                dao.getUserDao().setName(uuid, name);
+                storage.setUserName(name);
+            }
 
             storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(uuid));
         } else {
@@ -99,10 +107,10 @@ public class BUser implements User {
                 mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, uuid, null);
             } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, uuid, null, true)) {
                 mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, uuid, null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, getIP(), true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, getIP());
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, getIP(), true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, getIP());
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, IP, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, IP);
+            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, IP, true)) {
+                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, IP);
             }
         }
 
@@ -117,12 +125,13 @@ public class BUser implements User {
 
         UserUnloadEvent event = new UserUnloadEvent(this);
         BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
+
+        parent = null;
     }
 
     @Override
     public void save() {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao()
-                .updateUser(uuid, getName(), getIP(), getLanguage(), new Date(System.currentTimeMillis()));
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser(uuid, getName(), IP, getLanguage(), new Date(System.currentTimeMillis()));
     }
 
     @Override
@@ -137,7 +146,7 @@ public class BUser implements User {
 
     @Override
     public String getIP() {
-        return Utils.getIP(getParent().getAddress());
+        return IP;
     }
 
     @Override
@@ -302,7 +311,7 @@ public class BUser implements User {
 
     @Override
     public ProxiedPlayer getParent() {
-        return ProxyServer.getInstance().getPlayer(name);
+        return parent;
     }
 
     @Override
@@ -337,7 +346,11 @@ public class BUser implements User {
 
     @Override
     public Version getVersion() {
-        return Version.getVersion(getParent().getPendingConnection().getVersion());
+        try {
+            return Version.getVersion(parent.getPendingConnection().getVersion());
+        } catch (Exception e) {
+            return Version.MINECRAFT_1_8;
+        }
     }
 
     @Override

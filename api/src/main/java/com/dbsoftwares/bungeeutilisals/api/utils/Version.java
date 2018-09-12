@@ -48,7 +48,7 @@ public enum Version {
                 return v;
             }
         }
-        return null;
+        return MINECRAFT_1_8;
     }
 
     public static Version latest() {

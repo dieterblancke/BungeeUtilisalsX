@@ -24,9 +24,9 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
-import com.dbsoftwares.bungeeutilisals.storage.mongodb.Mapping;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -35,6 +35,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -72,25 +73,30 @@ public class MongoPunishmentDao implements PunishmentDao {
         info.setDate(new Date(System.currentTimeMillis()));
         info.setType(type);
 
-        Mapping<String, Object> mapping = new Mapping<>(true);
-        mapping.append("uuid", uuid).append("user", user).append("ip", ip)
-                .append("reason", reason).append("server", server)
-                .append("date", new Date(System.currentTimeMillis()));
+        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+
+        data.put("uuid", uuid);
+        data.put("user", user);
+        data.put("ip", ip);
+        data.put("reason", reason);
+        data.put("server", server);
+        data.put("date", new Date(System.currentTimeMillis()));
+
         if (time != null) {
             info.setExpireTime(time);
-            mapping.append("time", time);
+            data.put("time", time);
         }
         if (active != null) {
             info.setActive(active);
-            mapping.append("active", active);
+            data.put("active", active);
         }
         if (removedby != null) {
             info.setRemovedBy(removedby);
-            mapping.append("removed_by", removedby);
+            data.put("removed_by", removedby);
         }
-        mapping.append("executed_by", executedby);
+        data.put("executed_by", executedby);
 
-        getDatabase().getCollection(format(type.getTablePlaceHolder())).insertOne(new Document(mapping.getMap()));
+        getDatabase().getCollection(format(type.getTablePlaceHolder())).insertOne(new Document(data));
         return info;
     }
 

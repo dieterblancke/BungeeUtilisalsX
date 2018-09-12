@@ -136,12 +136,14 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(1, uuid.toString());
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                storage.setUuid(uuid);
-                storage.setUserName(rs.getString("username"));
-                storage.setIp(rs.getString("ip"));
-                storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
-                storage.setFirstLogin(rs.getDate("firstlogin"));
-                storage.setLastLogout(rs.getDate("lastlogout"));
+                if (rs.next()) {
+                    storage.setUuid(uuid);
+                    storage.setUserName(rs.getString("username"));
+                    storage.setIp(rs.getString("ip"));
+                    storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
+                    storage.setFirstLogin(rs.getDate("firstlogin"));
+                    storage.setLastLogout(rs.getDate("lastlogout"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
@@ -159,12 +161,14 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(1, name);
 
             try (ResultSet rs = pstmt.executeQuery()) {
-                storage.setUuid(UUID.fromString(rs.getString("uuid")));
-                storage.setUserName(name);
-                storage.setIp(rs.getString("ip"));
-                storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
-                storage.setFirstLogin(rs.getDate("firstlogin"));
-                storage.setLastLogout(rs.getDate("lastlogout"));
+                if (rs.next()) {
+                    storage.setUuid(UUID.fromString(rs.getString("uuid")));
+                    storage.setUserName(name);
+                    storage.setIp(rs.getString("ip"));
+                    storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
+                    storage.setFirstLogin(rs.getDate("firstlogin"));
+                    storage.setLastLogout(rs.getDate("lastlogout"));
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();

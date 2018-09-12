@@ -24,7 +24,7 @@ commands:
       action: '/buy'
   # Commands to be executed by the CONSOLE
   execute:
-  - 'test'
+  - 'hello'
 - name: 'vote'
   permission: ''
   messages:

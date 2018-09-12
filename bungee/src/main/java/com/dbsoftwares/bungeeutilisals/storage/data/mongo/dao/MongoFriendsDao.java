@@ -23,9 +23,9 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.storage.mongodb.Mapping;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
@@ -33,6 +33,7 @@ import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,13 +41,13 @@ public class MongoFriendsDao implements FriendsDao {
 
     @Override
     public void addFriend(User user, UUID uuid) {
-        final Mapping<String, Object> mapping = new Mapping<>(true);
+        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        mapping.append("user", user.getUUID());
-        mapping.append("friend", uuid);
-        mapping.append("friendsince", new Date(System.currentTimeMillis()));
+        data.put("user", user.getUUID());
+        data.put("friend", uuid);
+        data.put("friendsince", new Date(System.currentTimeMillis()));
 
-        getDatabase().getCollection(format("{friends-table}")).insertOne(new Document(mapping.getMap()));
+        getDatabase().getCollection(format("{friends-table}")).insertOne(new Document(data));
     }
 
     @Override

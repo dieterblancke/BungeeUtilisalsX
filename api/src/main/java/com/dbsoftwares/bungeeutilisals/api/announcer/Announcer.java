@@ -123,7 +123,7 @@ public abstract class Announcer {
 
     public void stop() {
         if (task == null) {
-            throw new IllegalStateException("Announcer is not running.");
+            return;
         }
         task.cancel();
         task = null;
@@ -168,6 +168,7 @@ public abstract class Announcer {
         }
         stop();
         announcements.clear();
+        announcementIterator = null;
 
         enabled = configuration.getBoolean("enabled");
         unit = TimeUnit.valueOfOrElse(configuration.getString("delay.unit"), TimeUnit.SECONDS);

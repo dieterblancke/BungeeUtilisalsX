@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.listeners;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.user.BUser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
@@ -45,7 +44,7 @@ public class UserConnectionListener implements Listener {
         }
 
         BUser user = new BUser();
-        user.load(player.getName(), player.getUniqueId(), Utils.getIP(player.getAddress()));
+        user.load(player);
     }
 
     @EventHandler

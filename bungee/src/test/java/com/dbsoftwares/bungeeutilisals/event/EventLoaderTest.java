@@ -27,7 +27,7 @@ import org.junit.Test;
 public class EventLoaderTest {
 
     @Test
-    public void testEventLoader() { // not really a real tester, this is just used to test event priority by console output.
+    public void testEventLoader() { // not really a real tester, this is just used to hello event priority by console output.
         EventLoader loader = new EventLoader();
 
         loader.register(TestEvent.class, new EventExecutor() {

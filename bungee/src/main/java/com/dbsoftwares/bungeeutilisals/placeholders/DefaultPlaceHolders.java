@@ -16,9 +16,11 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.placeholder;
+package com.dbsoftwares.bungeeutilisals.placeholders;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 

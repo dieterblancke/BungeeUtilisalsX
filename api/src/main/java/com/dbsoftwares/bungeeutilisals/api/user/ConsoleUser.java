@@ -40,7 +40,7 @@ public class ConsoleUser implements User {
     private UserCooldowns cooldowns = new UserCooldowns();
 
     @Override
-    public void load(String name, UUID uuid, String IP) {
+    public void load(ProxiedPlayer parent) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

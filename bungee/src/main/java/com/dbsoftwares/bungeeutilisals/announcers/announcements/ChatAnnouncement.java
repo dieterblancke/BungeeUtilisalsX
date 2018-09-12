@@ -78,7 +78,7 @@ public class ChatAnnouncement extends Announcement {
                 if (prefix) {
                     message = config.getString("prefix") + " " + message;
                 }
-                player.sendMessage(Utils.format(message));
+                player.sendMessage(Utils.format(player, message));
             }
         });
     }

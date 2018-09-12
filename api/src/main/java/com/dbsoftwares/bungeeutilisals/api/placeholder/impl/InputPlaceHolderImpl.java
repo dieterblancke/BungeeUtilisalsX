@@ -16,33 +16,20 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.storage.mongodb;
+package com.dbsoftwares.bungeeutilisals.api.placeholder.impl;
 
-import java.util.LinkedHashMap;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
+import lombok.RequiredArgsConstructor;
 
-public class Mapping<K, V> {
+@RequiredArgsConstructor
+public abstract class InputPlaceHolderImpl extends InputPlaceHolderEventHandler {
 
-    private boolean nonNull;
-    private LinkedHashMap<K, V> map;
+    private final boolean requiresUser;
+    private final String prefix;
 
-    public Mapping() {
-        this(false);
-    }
-
-    public Mapping(boolean nonNull) {
-        this.nonNull = nonNull;
-        this.map = new LinkedHashMap<>();
-    }
-
-    public Mapping<K, V> append(K key, V value) {
-        if (nonNull && (key == null || value == null)) {
-            return this;
-        }
-        map.put(key, value);
-        return this;
-    }
-
-    public LinkedHashMap<K, V> getMap() {
-        return map;
+    public void register() {
+        PlaceHolderAPI.addPlaceHolder(requiresUser, prefix, this);
     }
 }

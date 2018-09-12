@@ -23,8 +23,8 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisals.dump.PluginSchedulerInfo;
@@ -79,9 +79,9 @@ public class DumpSubCommand extends SubCommand {
     public void onExecute(User user, String[] args) {
         final Dump dump = getDump();
         ProxyServer.getInstance().getScheduler().runAsync(BungeeUtilisals.getInstance(), () -> {
-            final Gson gson = new GsonBuilder().create();
+            final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             try {
-                final HttpURLConnection con = (HttpURLConnection) new URL("https://api.dbsoftwares.eu/createdump/").openConnection();
+                final HttpURLConnection con = (HttpURLConnection) new URL("https://paste.dbsoftwares.eu/documents/").openConnection();
 
                 con.addRequestProperty(
                         "User-Agent", "BungeeUtilisals v" + BungeeUtilisals.getInstance().getDescription().getVersion()
@@ -105,12 +105,12 @@ public class DumpSubCommand extends SubCommand {
 
                 final JsonObject jsonResponse = gson.fromJson(response, JsonObject.class);
 
-                if (!jsonResponse.has("dumpId")) {
+                if (!jsonResponse.has("key")) {
                     throw new IllegalStateException("Could not create dump correctly, did something go wrong?");
                 }
 
                 user.sendMessage("&eSuccessfully created a dump at: "
-                        + "https://dump.dbsoftwares.eu/" + jsonResponse.get("dumpId").getAsString());
+                        + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get("key").getAsString() + ".dump");
             } catch (IOException e) {
                 user.sendMessage("Could not create dump. Please check the console for errors.");
                 BUCore.log(Level.WARNING, "Could not create dump request");
@@ -172,7 +172,7 @@ public class DumpSubCommand extends SubCommand {
             }
         }
 
-        return new Dump("BungeeUtilisals", systemInfo, plugins, getTasks(), configurations, languages);
+        return new Dump("BungeeUtilisals", systemInfo, plugins, getTasks(), getScripts(), configurations, languages);
     }
 
     private Map<String, Object> readValues(Map<String, Object> map) {
@@ -199,7 +199,7 @@ public class DumpSubCommand extends SubCommand {
                     values.put(key, "***********");
                 } else {
                     if (value instanceof String) {
-                        value = ((String) value).replace("\n", "----NL----");
+                        value = ((String) value).replace("\r\n", " ").replace("\n", " ");
                     }
                     values.put(key, value);
                 }
@@ -253,6 +253,14 @@ public class DumpSubCommand extends SubCommand {
             e.printStackTrace();
             return Lists.newArrayList();
         }
+    }
+
+    private Map<String, String> getScripts() {
+        final LinkedHashMap<String, String> scripts = Maps.newLinkedHashMap();
+
+        BungeeUtilisals.getInstance().getScripts().forEach(script -> scripts.put(script.getFile(), script.getScript().replace("\r\n", " ").replace("\t", "    ")));
+
+        return scripts;
     }
 
     @Override

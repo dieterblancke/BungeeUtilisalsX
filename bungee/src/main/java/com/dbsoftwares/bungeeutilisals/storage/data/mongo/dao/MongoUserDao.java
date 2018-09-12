@@ -24,9 +24,9 @@ import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.storage.mongodb.Mapping;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -34,6 +34,7 @@ import org.bson.Document;
 import org.bson.conversions.Bson;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,16 +49,16 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
-        Mapping<String, Object> mapping = new Mapping<>(true);
+        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        mapping.append("uuid", uuid)
-                .append("username", username)
-                .append("ip", ip)
-                .append("language", language.getName())
-                .append("firstlogin", login)
-                .append("lastlogout", logout);
+        data.put("uuid", uuid);
+        data.put("username", username);
+        data.put("ip", ip);
+        data.put("language", language.getName());
+        data.put("firstlogin", login);
+        data.put("lastlogout", logout);
 
-        getDatabase().getCollection(format("{users-table}")).insertOne(new Document(mapping.getMap()));
+        getDatabase().getCollection(format("{users-table}")).insertOne(new Document(data));
     }
 
     @Override
