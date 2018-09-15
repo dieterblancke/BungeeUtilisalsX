@@ -72,7 +72,7 @@ public class MessageBuilder {
     private static String searchAndFormat(IConfiguration config, String str, Object... placeholders) {
         String text = str;
 
-        if (config.exists(str) && config.isString(str)) {
+        if (config.exists(str)) {
             if (config.isString(str)) {
                 text = config.getString(str);
             } else if (config.isList(str)) {
