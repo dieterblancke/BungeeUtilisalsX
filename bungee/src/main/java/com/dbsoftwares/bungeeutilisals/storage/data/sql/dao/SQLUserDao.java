@@ -62,7 +62,7 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
             pstmt.setDate(5, new java.sql.Date(login.getTime()));
-            pstmt.setDate(6, new java.sql.Da²te(logout.getTime()));
+            pstmt.setDate(6, new java.sql.Date(logout.getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
