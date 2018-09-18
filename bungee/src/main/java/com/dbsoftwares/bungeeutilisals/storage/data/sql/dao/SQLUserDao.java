@@ -57,14 +57,12 @@ public class SQLUserDao implements UserDao {
     public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
-            java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
-
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
             pstmt.setDate(5, new java.sql.Date(login.getTime()));
-            pstmt.setDate(6, new java.sql.Date(logout.getTime()));
+            pstmt.setDate(6, new java.sql.Da²te(logout.getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

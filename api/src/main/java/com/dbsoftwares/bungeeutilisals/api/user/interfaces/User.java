@@ -35,9 +35,6 @@ public interface User {
     /**
      * Loads the user in RAM.
      * @param parent The parent player, null if console
-     * @param name The user's name.
-     * @param uuid The user's UUID.
-     * @param IP The user's IP.
      */
     void load(ProxiedPlayer parent);
 
