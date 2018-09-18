@@ -90,7 +90,7 @@ public class BossBar implements IBossBar {
             packet = new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE);
         }
 
-        users.forEach(user -> user.experimental().sendPacket(packet));
+        users.forEach(user -> user.sendPacket(packet));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class BossBar implements IBossBar {
         this.color = color;
 
         if (visible) {
-            users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_STYLE, color, style)));
+            users.forEach(user -> user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_STYLE, color, style)));
         }
     }
 
@@ -106,7 +106,7 @@ public class BossBar implements IBossBar {
     public void setStyle(BarStyle style) {
         this.style = style;
         if (visible) {
-            users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_STYLE, color, style)));
+            users.forEach(user -> user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_STYLE, color, style)));
         }
     }
 
@@ -114,7 +114,7 @@ public class BossBar implements IBossBar {
     public void setProgress(float progress) {
         this.progress = progress;
         if (visible) {
-            users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_HEALTH, progress)));
+            users.forEach(user -> user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_HEALTH, progress)));
         }
     }
 
@@ -128,7 +128,7 @@ public class BossBar implements IBossBar {
     public void setMessage(BaseComponent[] message) {
         this.message = message;
         if (visible) {
-            users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_TITLE, message)));
+            users.forEach(user -> user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.UPDATE_TITLE, message)));
         }
     }
 
@@ -141,7 +141,7 @@ public class BossBar implements IBossBar {
             }
             users.add(user);
 
-            user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style));
+            user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.ADD, message, progress, color, style));
         }
     }
 
@@ -150,7 +150,7 @@ public class BossBar implements IBossBar {
         if (users.contains(user)) {
             users.remove(user);
 
-            user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE));
+            user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE));
         }
     }
 
@@ -161,7 +161,7 @@ public class BossBar implements IBossBar {
 
     @Override
     public void clearUsers() {
-        users.forEach(user -> user.experimental().sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE)));
+        users.forEach(user -> user.sendPacket(new PacketPlayOutBossBar(uuid, BossBarAction.REMOVE)));
         users.clear();
     }
 

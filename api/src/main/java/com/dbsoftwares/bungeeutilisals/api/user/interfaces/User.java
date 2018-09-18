@@ -30,7 +30,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.UUID;
 
-public interface User {
+public interface User extends ExperimentalUser {
 
     /**
      * Loads the user in RAM.
@@ -211,12 +211,6 @@ public interface User {
      * @return The user his language config.
      */
     IConfiguration getLanguageConfig();
-
-    /**
-     * Returns an ExperimentalUser object (containing functions which are unstable or in development).
-     * @return An ExperimentalUser Object.
-     */
-    IExperimentalUser experimental();
 
     /**
      * @return True if console, false if player.

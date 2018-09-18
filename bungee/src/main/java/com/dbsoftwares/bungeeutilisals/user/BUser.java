@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -29,7 +30,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
@@ -41,6 +41,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
 import java.sql.Date;
 import java.util.Objects;
 import java.util.UUID;
@@ -54,7 +55,6 @@ public class BUser implements User {
     private UUID uuid;
     private String IP;
     private Boolean socialspy;
-    private ExperimentalUser experimental;
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private PunishmentInfo mute;
@@ -70,7 +70,6 @@ public class BUser implements User {
         this.name = parent.getName();
         this.uuid = parent.getUniqueId();
         this.IP = Utils.getIP(parent.getAddress());
-        this.experimental = new ExperimentalUser(this);
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
@@ -97,7 +96,7 @@ public class BUser implements User {
             storage = new UserStorage(uuid, name, IP, defLanguage, date, date);
         }
 
-        if (!storage.getUserName().equalsIgnoreCase(name)) { // Stored name != user current name | Name changed?
+        if (!storage.getUserName().equals(name)) { // Stored name != user current name | Name changed?
             storage.setUserName(name);
             dao.getUserDao().setName(uuid, name);
         }
@@ -320,11 +319,6 @@ public class BUser implements User {
     }
 
     @Override
-    public IExperimentalUser experimental() {
-        return experimental;
-    }
-
-    @Override
     public boolean isConsole() {
         return false;
     }
@@ -372,5 +366,13 @@ public class BUser implements User {
     @Override
     public int hashCode() {
         return Objects.hash(name, uuid);
+    }
+
+    @Override
+    public void sendPacket(Packet packet) {
+        if (parent == null || !parent.isConnected()) {
+            return;
+        }
+        parent.unsafe().sendPacket(packet);
     }
 }

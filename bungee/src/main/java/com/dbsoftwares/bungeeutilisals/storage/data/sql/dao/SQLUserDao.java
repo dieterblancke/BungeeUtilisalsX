@@ -48,7 +48,7 @@ public class SQLUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
-        java.sql.Date date = new java.sql.Date(System.currentTimeMillis());
+        Date date = new Date(System.currentTimeMillis());
 
         createUser(uuid, username, ip, language, date, date);
     }

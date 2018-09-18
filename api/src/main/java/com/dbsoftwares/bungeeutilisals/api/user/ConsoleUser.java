@@ -19,9 +19,10 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.IExperimentalUser;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.ExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
@@ -222,11 +223,6 @@ public class ConsoleUser implements User {
     }
 
     @Override
-    public IExperimentalUser experimental() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
     public boolean isConsole() {
         return true;
     }
@@ -264,5 +260,10 @@ public class ConsoleUser implements User {
     @Override
     public Version getVersion() {
         return Version.latest();
+    }
+
+    @Override
+    public void sendPacket(Packet packet) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 }
