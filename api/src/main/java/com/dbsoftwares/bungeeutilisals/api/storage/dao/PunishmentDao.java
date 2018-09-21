@@ -42,5 +42,5 @@ public interface PunishmentDao {
 
     PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP);
 
-    void removePunishment(PunishmentType type, UUID uuid, String IP);
+    void removePunishment(PunishmentType type, UUID uuid, String IP, String removedBy);
 }

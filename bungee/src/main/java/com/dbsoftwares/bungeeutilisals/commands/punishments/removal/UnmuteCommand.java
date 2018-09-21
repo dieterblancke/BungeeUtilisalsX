@@ -72,7 +72,7 @@ public class UnmuteCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(PunishmentType.MUTE, storage.getUuid(), null);
+        dao.getPunishmentDao().removePunishment(PunishmentType.MUTE, storage.getUuid(), null, user.getName());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

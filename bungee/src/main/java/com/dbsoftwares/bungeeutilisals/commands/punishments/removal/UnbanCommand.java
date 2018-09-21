@@ -71,8 +71,9 @@ public class UnbanCommand extends Command {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
+
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(PunishmentType.BAN, storage.getUuid(), null);
+        dao.getPunishmentDao().removePunishment(PunishmentType.BAN, storage.getUuid(), null, user.getName());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

@@ -72,7 +72,7 @@ public class UnbanIPCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(PunishmentType.IPBAN, null, storage.getIp());
+        dao.getPunishmentDao().removePunishment(PunishmentType.IPBAN, null, storage.getIp(), user.getName());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

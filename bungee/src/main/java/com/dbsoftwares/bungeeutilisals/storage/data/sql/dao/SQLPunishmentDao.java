@@ -230,19 +230,20 @@ public class SQLPunishmentDao implements PunishmentDao {
     }
 
     @Override
-    public void removePunishment(PunishmentType type, UUID uuid, String IP) {
+    public void removePunishment(PunishmentType type, UUID uuid, String IP, String removedBy) {
         String statement = format(
                 UPDATE,
                 type.getTablePlaceHolder(),
-                "active = ?",
+                "active = ?, removed_by = ?",
                 (type.isIP() ? "ip" : "uuid") + " = ? AND active = ?"
         );
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setBoolean(1, true);
-            pstmt.setString(2, type.isIP() ? IP : uuid.toString());
-            pstmt.setBoolean(3, false);
+            pstmt.setBoolean(1, false);
+            pstmt.setString(2, removedBy);
+            pstmt.setString(3, type.isIP() ? IP : uuid.toString());
+            pstmt.setBoolean(4, true);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

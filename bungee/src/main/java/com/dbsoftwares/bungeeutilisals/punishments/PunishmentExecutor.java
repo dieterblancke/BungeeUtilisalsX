@@ -58,22 +58,42 @@ public class PunishmentExecutor implements IPunishmentExecutor {
     public List<String> getPlaceHolders(PunishmentInfo info) {
         List<String> placeholders = Lists.newArrayList();
 
-        placeholders.add("{reason}");
-        placeholders.add(info.getReason());
-        placeholders.add("{date}");
-        placeholders.add(Utils.formatDate(getDateFormat(), info.getDate()));
-        placeholders.add("{by}");
-        placeholders.add(info.getExecutedBy());
-        placeholders.add("{server}");
-        placeholders.add(info.getServer());
+        if (info.getReason() != null) {
+            placeholders.add("{reason}");
+            placeholders.add(info.getReason());
+        }
+
+        if (info.getDate() != null) {
+            placeholders.add("{date}");
+            placeholders.add(Utils.formatDate(getDateFormat(), info.getDate()));
+        }
+
+        if (info.getExecutedBy() != null) {
+            placeholders.add("{by}");
+            placeholders.add(info.getExecutedBy());
+        }
+
+        if (info.getServer() != null) {
+            placeholders.add("{server}");
+            placeholders.add(info.getServer());
+        }
 
         // Just adding in case someone wants them ...
-        placeholders.add("{uuid}");
-        placeholders.add(info.getUuid().toString());
-        placeholders.add("{ip}");
-        placeholders.add(info.getIP());
-        placeholders.add("{user}");
-        placeholders.add(info.getUser());
+        if (info.getUuid() != null) {
+            placeholders.add("{uuid}");
+            placeholders.add(info.getUuid().toString());
+        }
+
+        if (info.getIP() != null) {
+            placeholders.add("{ip}");
+            placeholders.add(info.getIP());
+        }
+
+        if (info.getUser() != null) {
+            placeholders.add("{user}");
+            placeholders.add(info.getUser());
+        }
+
         placeholders.add("{id}");
         placeholders.add(String.valueOf(info.getId()));
 

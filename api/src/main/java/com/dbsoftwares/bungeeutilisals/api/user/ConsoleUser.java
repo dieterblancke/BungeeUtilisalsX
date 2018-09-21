@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.ExperimentalUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
