@@ -51,15 +51,19 @@ public class UnmuteCommand extends Command {
             user.sendLangMessage("punishments.unmute.usage");
             return;
         }
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
+        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (!dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), null, true)) {
-            user.sendLangMessage("punishments.unmute.not-banned");
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        PunishmentType type = PunishmentType.MUTE;
+
+        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, storage.getUuid(), storage.getIp(), true)) {
+            type = PunishmentType.TEMPMUTE;
+        } else if (!dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, storage.getUuid(), storage.getIp(), true)) {
+            user.sendLangMessage("punishments.unmute.not-muted");
             return;
         }
 
@@ -72,7 +76,7 @@ public class UnmuteCommand extends Command {
             return;
         }
         IPunishmentExecutor executor = api.getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(PunishmentType.MUTE, storage.getUuid(), null, user.getName());
+        dao.getPunishmentDao().removePunishment(type, storage.getUuid(), storage.getIp(), user.getName());
 
         PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);

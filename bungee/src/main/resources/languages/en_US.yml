@@ -239,14 +239,14 @@ punishments:
 
   unmute:
     usage: '&fPlease use &a/unmute (user)&f!'
-    not-mutened: '&fThis user is not mutened!'
+    not-muted: '&fThis user is not mutened!'
     executed: '&fYou have unmutened &e{user} &ffor &e{reason}&f!'
     broadcast:
     - '&a{user} &fhas been unmutened by &a{by} &fat &a{server}&f!'
 
   unmuteip:
     usage: '&fPlease use &a/unmuteip (user)&f!'
-    not-mutened: '&fThis user is not ipmutened!'
+    not-muted: '&fThis user is not ipmutened!'
     executed: '&fYou have unmutened &e{user}&f''s IP for &e{reason}&f!'
     broadcast:
     - '&a{user}&f''s IP has been unmutened by &a{by} &fat &a{server}&f!'
