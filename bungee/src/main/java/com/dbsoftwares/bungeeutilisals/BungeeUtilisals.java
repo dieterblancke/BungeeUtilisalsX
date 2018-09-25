@@ -42,6 +42,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
@@ -86,6 +87,7 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 public class BungeeUtilisals extends Plugin {
 
@@ -115,6 +117,13 @@ public class BungeeUtilisals extends Plugin {
 
     @Override
     public void onEnable() {
+        if (ReflectionUtils.getJavaVersion() < 8) {
+            BUCore.log(Level.SEVERE, "You are running a Java version older then Java 8.");
+            BUCore.log(Level.SEVERE, "Please upgrade to Java 8 (9 recommended).");
+            BUCore.log(Level.SEVERE, "BungeeUtilisals is not able to start up on Java versions older then 8.");
+            return;
+        }
+
         // Setting instance
         instance = this;
 

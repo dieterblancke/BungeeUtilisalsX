@@ -17,6 +17,7 @@
  */
 
 package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -138,5 +139,15 @@ public class ReflectionUtils {
             }
         }
         return equal;
+    }
+
+    public static int getJavaVersion() {
+        String version = System.getProperty("java.version");
+        if (version.startsWith("1.")) {
+            version = version.substring(2);
+        }
+        int dotPos = version.indexOf('.');
+        int dashPos = version.indexOf('-');
+        return Integer.parseInt(version.substring(0, dotPos > -1 ? dotPos : dashPos > -1 ? dashPos : 1));
     }
 }

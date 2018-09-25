@@ -2,7 +2,7 @@
 redis: false
 
 storage:
-  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE | MySQL recommended
+  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, MONGODB | MySQL recommended
   # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.
   type: 'MYSQL'
 

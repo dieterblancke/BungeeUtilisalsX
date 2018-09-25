@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.library;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.google.common.collect.Lists;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,48 +30,67 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
+import java.util.Collection;
+import java.util.List;
 
 public enum Library {
 
     SQLITE(
             "org.sqlite.JDBC",
-            "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/3.23.1/sqlite-jdbc-3.23.1.jar",
+            "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
+            "3.23.1",
             checkType("SQLITE")
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
-            "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/2.2.5/mariadb-java-client-2.2.5.jar",
+            "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
+            "2.3.0",
             checkType("MARIADB")
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
-            "http://central.maven.org/maven2/org/postgresql/postgresql/42.2.4/postgresql-42.2.4.jar",
+            "http://central.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
+            "42.2.5",
             checkType("POSTGRESQL")
     ),
     MONGODB(
             "com.mongodb.MongoClient",
-            "http://central.maven.org/maven2/org/mongodb/mongo-java-driver/3.8.0/mongo-java-driver-3.8.0.jar",
+            "http://central.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
+            "3.8.2",
             checkType("MONGODB")
     ),
     SLF4J(
             "org.slf4j.LogginFactory",
-            "http://central.maven.org/maven2/org/slf4j/slf4j-api/1.7.25/slf4j-api-1.7.25.jar",
+            "http://central.maven.org/maven2/org/slf4j/slf4j-api/{version}/slf4j-api-{version}.jar",
+            "1.7.25",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")
     ),
     HIKARIDB(
             "com.zaxxer.hikari.HikariDataSource",
-            "http://central.maven.org/maven2/com/zaxxer/HikariCP/3.2.0/HikariCP-3.2.0.jar",
+            "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
+            "3.2.0",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")
     );
 
-    private String className;
-    private String downloadURL;
-    private boolean load;
+    private final String className;
+    private final String downloadURL;
+    private final String version;
+    private final boolean load;
 
-    Library(String className, String downloadURL, boolean load) {
+    Library(String className, String downloadURL, String version, boolean load) {
         this.className = className;
-        this.downloadURL = downloadURL;
+        this.downloadURL = downloadURL.replace("{version}", version);
+        this.version = version;
         this.load = load;
+    }
+
+    private static boolean checkType(String... types) {
+        for (String type : types) {
+            if (BungeeUtilisals.getInstance().getConfig().getString("storage.type").equalsIgnoreCase(type)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean shouldBeLoaded() {
@@ -85,61 +105,49 @@ public enum Library {
         if (isPresent()) {
             return;
         }
-        File path = new File(BungeeUtilisals.getInstance().getDataFolder(), "libraries/" + toString().toLowerCase() + ".jar");
-        if (!path.getParentFile().exists()) {
-            path.getParentFile().mkdirs();
+        final File folder = new File(BungeeUtilisals.getInstance().getDataFolder(), "libraries");
+        if (!folder.exists()) {
+            folder.mkdir();
         }
+
+        final String name = toString();
+        final File path = new File(folder, String.format("%s-v%s.jar", name.toLowerCase(), version));
 
         // Download libary if not present
         if (!path.exists()) {
             BUCore.log("Downloading libary for " + toString());
 
-            InputStream input = null;
-            FileOutputStream output = null;
-            ReadableByteChannel channel = null;
-            try {
-                input = new URL(downloadURL).openStream();
-                channel = Channels.newChannel(input);
-                output = new FileOutputStream(path);
+            try (final InputStream input = new URL(downloadURL).openStream();
+                 final ReadableByteChannel channel = Channels.newChannel(input);
+                 final FileOutputStream output = new FileOutputStream(path)) {
 
                 output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
+                BUCore.log("Successfully downloaded libary for " + toString());
+
+                BUCore.log("Removing older versions of " + toString());
+                getOutdatedFiles(folder).forEach(File::delete);
+                BUCore.log("Successfully removed older versions of " + toString());
             } catch (IOException e) {
                 throw new RuntimeException("Failed downloading library for " + toString().toLowerCase(), e);
-            } finally {
-                if (channel != null) {
-                    try {
-                        channel.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (input != null) {
-                    try {
-                        input.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                if (output != null) {
-                    try {
-                        output.close();
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
             }
         }
 
         BungeeUtilisals.getInstance().getJarClassLoader().loadJar(path);
-        BUCore.log("Loaded " + toString() + " libary!");
+        BUCore.log("Loaded " + name + " libary!");
     }
 
-    private static boolean checkType(String... types) {
-        for (String type : types) {
-            if (BungeeUtilisals.getInstance().getConfig().getString("storage.type").equalsIgnoreCase(type)) {
-                return true;
+    private Collection<File> getOutdatedFiles(final File folder) {
+        final List<File> outdatedFiles = Lists.newArrayList();
+        final String name = toString().toLowerCase();
+
+        for (File library : folder.listFiles()) {
+            final String jarName = library.getName();
+
+            if (jarName.startsWith(name) && !jarName.equals(String.format("%s-v%s.jar", name.toLowerCase(), version))) {
+                outdatedFiles.add(library);
             }
         }
-        return false;
+
+        return outdatedFiles;
     }
 }

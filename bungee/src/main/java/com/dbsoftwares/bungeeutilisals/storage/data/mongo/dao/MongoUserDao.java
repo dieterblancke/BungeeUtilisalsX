@@ -65,7 +65,7 @@ public class MongoUserDao implements UserDao {
     public void updateUser(UUID uuid, String name, String ip, Language language, Date date) {
         List<Bson> updates = Lists.newArrayList();
 
-        updates.add(Updates.set("name", name));
+        updates.add(Updates.set("username", name));
         updates.add(Updates.set("ip", ip));
         updates.add(Updates.set("language", language.getName()));
         updates.add(Updates.set("lastlogout", date));
@@ -76,12 +76,8 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public boolean exists(String name) {
-        if (name.contains(".")) {
-            return getDatabase().getCollection(format("{users-table}"))
-                    .find().iterator().hasNext();
-        }
         return getDatabase().getCollection(format("{users-table}")).find(
-                name.contains(".") ? Filters.eq("ip", name) : Filters.eq("name", name)
+                name.contains(".") ? Filters.eq("ip", name) : Filters.eq("username", name)
         ).iterator().hasNext();
     }
 
@@ -160,7 +156,7 @@ public class MongoUserDao implements UserDao {
     @Override
     public void setName(UUID uuid, String name) {
         getDatabase().getCollection(format("{users-table}"))
-                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("name", name));
+                .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("username", name));
     }
 
     @Override

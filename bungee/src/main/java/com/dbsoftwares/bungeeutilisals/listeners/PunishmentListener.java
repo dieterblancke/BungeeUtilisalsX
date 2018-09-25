@@ -59,9 +59,9 @@ public class PunishmentListener implements Listener {
             if (info.isTemporary()) {
                 if (info.getExpireTime() <= System.currentTimeMillis()) {
                     if (info.getType().equals(PunishmentType.TEMPBAN)) {
-                        dao.removePunishment(PunishmentType.TEMPBAN, uuid, null);
+                        dao.removePunishment(PunishmentType.TEMPBAN, uuid, null, "CONSOLE");
                     } else {
-                        dao.removePunishment(PunishmentType.IPTEMPBAN, null, IP);
+                        dao.removePunishment(PunishmentType.IPTEMPBAN, null, IP, "CONSOLE");
                     }
                     return;
                 }

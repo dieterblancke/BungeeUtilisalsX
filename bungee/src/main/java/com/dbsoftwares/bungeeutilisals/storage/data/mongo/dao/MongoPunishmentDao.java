@@ -156,13 +156,19 @@ public class MongoPunishmentDao implements PunishmentDao {
     }
 
     @Override
-    public void removePunishment(PunishmentType type, UUID uuid, String ip) {
+    public void removePunishment(PunishmentType type, UUID uuid, String ip, String removedBy) {
         MongoCollection<Document> coll = getDatabase().getCollection(format(type.getTablePlaceHolder()));
 
         if (uuid != null) {
-            coll.updateOne(Filters.eq("uuid", uuid), Updates.set("active", false));
+            coll.updateOne(
+                    Filters.eq("uuid", uuid),
+                    Updates.combine(Updates.set("active", false), Updates.set("removed_by", removedBy))
+            );
         } else if (ip != null) {
-            coll.updateOne(Filters.eq("ip", ip), Updates.set("active", false));
+            coll.updateOne(
+                    Filters.eq("ip", ip),
+                    Updates.combine(Updates.set("active", false), Updates.set("removed_by", removedBy))
+            );
         }
     }
 

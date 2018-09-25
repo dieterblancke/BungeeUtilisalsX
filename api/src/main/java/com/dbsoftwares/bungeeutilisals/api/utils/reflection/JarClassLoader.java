@@ -48,6 +48,7 @@ public class JarClassLoader {
     }
 
     public void loadJar(URL url) {
+        // TODO: Try & find a better way to do this (Java 9 & above, ADD_URL being illegal access)
         try {
             ADD_URL.invoke(this.classLoader, url);
         } catch (IllegalAccessException | InvocationTargetException e) {

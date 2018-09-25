@@ -75,11 +75,11 @@ public class MuteCheckExecutor implements EventExecutor {
             if (info.getExpireTime() <= System.currentTimeMillis()) {
                 if (info.getType().equals(PunishmentType.TEMPMUTE)) {
                     BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.TEMPMUTE, user.getParent().getUniqueId(), null
+                            PunishmentType.TEMPMUTE, user.getParent().getUniqueId(), null, "CONSOLE"
                     );
                 } else {
                     BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.IPTEMPMUTE, null, user.getIP()
+                            PunishmentType.IPTEMPMUTE, null, user.getIP(), "CONSOLE"
                     );
                 }
                 return true;
