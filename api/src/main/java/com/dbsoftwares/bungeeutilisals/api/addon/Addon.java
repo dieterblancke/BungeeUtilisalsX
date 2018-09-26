@@ -17,7 +17,7 @@ public abstract class Addon {
     private BUAPI api;
     private AddonDescription description;
 
-    protected void init(ProxyServer proxy, BUAPI api, AddonDescription description) {
+    protected void initialize(ProxyServer proxy, BUAPI api, AddonDescription description) {
         this.proxy = proxy;
         this.api = api;
         this.description = description;

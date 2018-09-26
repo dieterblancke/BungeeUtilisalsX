@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
@@ -209,6 +210,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         scripts.forEach(Script::unload);
+        api.getEventLoader().getHandlers().forEach(EventHandler::unregister);
     }
 
     public void reload() {

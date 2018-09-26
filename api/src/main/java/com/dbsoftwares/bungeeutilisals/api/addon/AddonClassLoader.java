@@ -1,13 +1,16 @@
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
+import com.google.common.collect.Lists;
+
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 public class AddonClassLoader extends URLClassLoader {
 
-    private static final Set<AddonClassLoader> allLoaders = new CopyOnWriteArraySet<>();
+    private static final List<AddonClassLoader> classLoaders = Lists.newCopyOnWriteArrayList();
 
     static {
         ClassLoader.registerAsParallelCapable();
@@ -15,7 +18,7 @@ public class AddonClassLoader extends URLClassLoader {
 
     public AddonClassLoader(URL[] urls) {
         super(urls);
-        allLoaders.add(this);
+        classLoaders.add(this);
     }
 
     @Override
@@ -29,7 +32,7 @@ public class AddonClassLoader extends URLClassLoader {
         } catch (ClassNotFoundException ignored) {
         }
         if (checkOther) {
-            for (AddonClassLoader loader : allLoaders) {
+            for (AddonClassLoader loader : classLoaders) {
                 if (loader != this) {
                     try {
                         return loader.loadClass(name, resolve, false);
