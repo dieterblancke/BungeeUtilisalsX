@@ -74,7 +74,6 @@ public class MongoPunishmentDao implements PunishmentDao {
         info.setType(type);
 
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-
         data.put("uuid", uuid);
         data.put("user", user);
         data.put("ip", ip);
