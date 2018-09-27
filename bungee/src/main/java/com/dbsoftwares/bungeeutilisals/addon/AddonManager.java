@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.addon;
 
 /*
  * Created by DBSoftwares on 26/09/2018
@@ -6,17 +6,27 @@ package com.dbsoftwares.bungeeutilisals.api.addon;
  * Project: BungeeUtilisals
  */
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.addon.*;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.Multimaps;
+import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.io.File;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -26,14 +36,28 @@ import java.util.logging.Level;
 
 public class AddonManager implements IAddonManager {
 
+    @Getter
+    private final File addonsFolder;
+    private final IScheduler scheduler;
     private final Map<String, Addon> addons = Maps.newHashMap();
     private final Map<String, AddonDescription> toBeLoaded = Maps.newHashMap();
 
-    private final Map<String, List<ScheduledTask>> scheduledTasks = Maps.newConcurrentMap();
-    private final Map<String, List<Listener>> listeners = Maps.newConcurrentMap();
-    private final Map<String, List<Command>> commands = Maps.newConcurrentMap();
+    private final Multimap<String, Listener> listeners = Multimaps.synchronizedMultimap(HashMultimap.create());
+    private final Multimap<String, EventHandler> eventHandlers = Multimaps.synchronizedMultimap(HashMultimap.create());
+    private final Multimap<String, Command> commands = Multimaps.synchronizedMultimap(HashMultimap.create());
 
-    // TODO: registerListener, registerCommand, registerTask
+    public AddonManager() {
+        scheduler = new AddonScheduler();
+
+        addonsFolder = new File(BungeeUtilisals.getInstance().getDataFolder(), "addons");
+        if (!addonsFolder.exists()) {
+            addonsFolder.mkdir();
+        }
+
+        findAddons(addonsFolder);
+        loadAddons();
+        enableAddons();
+    }
 
     @Override
     public void findAddons(final File folder) {
@@ -81,7 +105,7 @@ public class AddonManager implements IAddonManager {
                         "Loaded addon " + addon.getDescription().getName() + " version "
                                 + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
                 );
-            } catch (Throwable t) {
+            } catch (final Throwable t) {
                 BUCore.log(Level.WARNING, "Exception encountered when loading addon: " + addon.getDescription().getName(), t);
             }
         });
@@ -89,6 +113,13 @@ public class AddonManager implements IAddonManager {
 
     @Override
     public void disableAddons() {
+        for (final String addon : addons.keySet()) {
+            try {
+                disableAddon(addon);
+            } catch (final Throwable t) {
+                BUCore.log(Level.WARNING, "Exception encountered when unloading addon: " + addon, t);
+            }
+        }
         addons.keySet().forEach(this::disableAddon);
     }
 
@@ -99,13 +130,17 @@ public class AddonManager implements IAddonManager {
         if (addon != null) {
             addon.onDisable();
 
-            Validate.ifNotNull(scheduledTasks.get(addonName), (tasks) -> tasks.forEach(ScheduledTask::cancel));
+            Validate.ifNotNull(scheduler.getTasks(addonName), (tasks) -> tasks.forEach(IAddonTask::cancel));
+            Validate.ifNotNull(eventHandlers.get(addonName), (handlers) -> handlers.forEach(EventHandler::unregister));
             Validate.ifNotNull(listeners.get(addonName), (listeners) -> listeners.forEach(listener -> {
                 ProxyServer.getInstance().getPluginManager().unregisterListener(listener);
             }));
             Validate.ifNotNull(commands.get(addonName), (commands) -> commands.forEach(command -> {
                 ProxyServer.getInstance().getPluginManager().unregisterCommand(command);
             }));
+
+            addon.getExecutorService().shutdown();
+            addons.remove(addonName);
         }
     }
 
@@ -117,6 +152,41 @@ public class AddonManager implements IAddonManager {
     @Override
     public Collection<Addon> getAddons() {
         return Collections.unmodifiableCollection(addons.values());
+    }
+
+    @Override
+    public IScheduler getScheduler() {
+        return scheduler;
+    }
+
+    @Override
+    public void registerListener(final Addon addon, final Listener listener) {
+        this.listeners.put(addon.getDescription().getName(), listener);
+    }
+
+    @Override
+    public void registerEventHandler(final Addon addon, final EventHandler handler) {
+        this.eventHandlers.put(addon.getDescription().getName(), handler);
+    }
+
+    @Override
+    public void registerCommand(final Addon addon, final Command command) {
+        this.commands.put(addon.getDescription().getName(), command);
+    }
+
+    @Override
+    public Collection<Listener> getListeners(final String addonName) {
+        return Collections.unmodifiableCollection(listeners.get(addonName));
+    }
+
+    @Override
+    public Collection<EventHandler> getEventHandlers(final String addonName) {
+        return Collections.unmodifiableCollection(eventHandlers.get(addonName));
+    }
+
+    @Override
+    public Collection<Command> getCommands(final String addonName) {
+        return Collections.unmodifiableCollection(commands.get(addonName));
     }
 
     private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Stack<AddonDescription> dependStack, final AddonDescription description) {
@@ -136,7 +206,7 @@ public class AddonManager implements IAddonManager {
 
             if (dependStatus == null) {
                 if (dependStack.contains(depend)) {
-                    StringBuilder builder = new StringBuilder();
+                    final StringBuilder builder = new StringBuilder();
                     for (AddonDescription element : dependStack) {
                         builder.append(element.getName()).append(" -> ");
                     }
@@ -163,13 +233,12 @@ public class AddonManager implements IAddonManager {
         // do actual loading
         if (status) {
             try {
-                URLClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
-                Class<?> main = loader.loadClass(description.getMain());
-                Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
+                final URLClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+                final Class<?> main = loader.loadClass(description.getMain());
+                final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 
-                addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
+                initialize(addon, ProxyServer.getInstance(), BUCore.getApi(), description);
                 addons.put(description.getName(), addon);
-                addon.onLoad();
 
                 BUCore.log(Level.INFO, "Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
             } catch (final Throwable t) {
@@ -182,4 +251,15 @@ public class AddonManager implements IAddonManager {
         return status;
     }
 
+    private void initialize(final Addon addon, final ProxyServer proxy, final BUAPI api, final AddonDescription desc) {
+        try {
+            final Method initialize = ReflectionUtils.getMethod(
+                    addon.getClass(), "initialize", ProxyServer.class, BUAPI.class, AddonDescription.class
+            );
+
+            initialize.invoke(addon, proxy, api, desc);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
 }

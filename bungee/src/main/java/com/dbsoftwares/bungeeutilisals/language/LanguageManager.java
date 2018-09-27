@@ -16,10 +16,13 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.language;
+package com.dbsoftwares.bungeeutilisals.language;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.FileStorageType;

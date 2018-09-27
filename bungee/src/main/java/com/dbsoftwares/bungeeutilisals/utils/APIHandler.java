@@ -16,7 +16,10 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api;
+package com.dbsoftwares.bungeeutilisals.utils;
+
+import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 
 import java.lang.reflect.Method;
 

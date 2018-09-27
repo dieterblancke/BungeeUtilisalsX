@@ -18,17 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.api.APIHandler;
+import com.dbsoftwares.bungeeutilisals.addon.AddonManager;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
-import com.dbsoftwares.bungeeutilisals.api.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
@@ -37,10 +36,13 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
+import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
+import com.dbsoftwares.bungeeutilisals.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.user.UserList;
+import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -65,6 +67,7 @@ public class BUtilisalsAPI implements BUAPI {
     private SimpleExecutor simpleExecutor;
     private PunishmentExecutor punishmentExecutor;
     private IPlayerUtils playerUtils;
+    private IAddonManager addonManager;
 
     public BUtilisalsAPI(BungeeUtilisals instance) {
         APIHandler.registerProvider(this);
@@ -79,6 +82,7 @@ public class BUtilisalsAPI implements BUAPI {
         this.punishmentExecutor = new PunishmentExecutor();
         this.playerUtils = FileLocation.CONFIG.getConfiguration().getBoolean("redis")
                 ? new RedisPlayerUtils() : new BungeePlayerUtils();
+        this.addonManager = new AddonManager();
     }
 
     @Override
@@ -94,6 +98,11 @@ public class BUtilisalsAPI implements BUAPI {
     @Override
     public AbstractStorageManager getStorageManager() {
         return BungeeUtilisals.getInstance().getDatabaseManagement();
+    }
+
+    @Override
+    public IAddonManager getAddonManager() {
+        return addonManager;
     }
 
     @Override

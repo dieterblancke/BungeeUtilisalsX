@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api;
 
+import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -233,4 +234,9 @@ public interface BUAPI {
      * @return the storage manager used.
      */
     AbstractStorageManager getStorageManager();
+
+    /**
+     * @return the addon manager that is being used
+     */
+    IAddonManager getAddonManager();
 }
