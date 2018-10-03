@@ -142,6 +142,11 @@ public class BungeeUtilisals extends Plugin {
         // Initializing API
         api = new BUtilisalsAPI(this);
 
+        // Loading & enabling addons
+        api.getAddonManager().findAddons(api.getAddonManager().getAddonsFolder());
+        api.getAddonManager().loadAddons();
+        api.getAddonManager().enableAddons();
+
         // Initialize metric system
         new Metrics(this);
 

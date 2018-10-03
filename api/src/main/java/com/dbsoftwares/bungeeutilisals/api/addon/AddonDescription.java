@@ -19,13 +19,19 @@
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 import java.io.File;
+import java.util.List;
 import java.util.Set;
 
 @Data
+@ToString
+@EqualsAndHashCode
 public class AddonDescription {
 
     private final String name;
@@ -44,8 +50,10 @@ public class AddonDescription {
         this.author = configuration.getString("author");
         this.description = configuration.getString("description");
 
-        this.requiredDependencies = Sets.newHashSet(configuration.getStringList("dependencies.required"));
-        this.optionalDependencies = Sets.newHashSet(configuration.getStringList("dependencies.optional"));
+        final List<String> required = configuration.getStringList("dependencies.required");
+        final List<String> optional = configuration.getStringList("dependencies.optional");
+        this.requiredDependencies = Sets.newHashSet(required == null ? Lists.newArrayList() : required);
+        this.optionalDependencies = Sets.newHashSet(optional == null ? Lists.newArrayList() : optional);
 
         this.file = file;
     }

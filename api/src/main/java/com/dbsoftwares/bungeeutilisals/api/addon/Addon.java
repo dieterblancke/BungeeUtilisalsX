@@ -41,7 +41,10 @@ public abstract class Addon {
     private AddonDescription description;
     private ExecutorService executorService;
 
-    private void initialize(final ProxyServer proxy, final BUAPI api, final AddonDescription description) {
+    public void initialize(final ProxyServer proxy, final BUAPI api, final AddonDescription description) {
+        if (this.proxy != null || this.api != null || this.description != null) {
+            throw new RuntimeException("Addon is already initialized.");
+        }
         this.proxy = proxy;
         this.api = api;
         this.description = description;

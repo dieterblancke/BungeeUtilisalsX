@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.google.common.collect.Lists;
 
 import java.net.URL;
@@ -33,7 +34,7 @@ public class AddonClassLoader extends URLClassLoader {
     }
 
     public AddonClassLoader(URL[] urls) {
-        super(urls);
+        super(urls, BUCore.getApi().getPlugin().getClass().getClassLoader());
         classLoaders.add(this);
     }
 
