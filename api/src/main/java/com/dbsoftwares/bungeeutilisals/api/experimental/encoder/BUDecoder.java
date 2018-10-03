@@ -40,9 +40,9 @@ public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {
     }
 
     @Override
-    protected void decode(ChannelHandlerContext chx, PacketWrapper wrapper, List<Object> out) {
+    protected void decode(ChannelHandlerContext context, PacketWrapper wrapper, List<Object> output) {
         if (wrapper.packet == null) {
-            out.add(wrapper);
+            output.add(wrapper);
             return;
         }
 
@@ -57,13 +57,13 @@ public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {
         }
 
         if (event == null) {
-            out.add(wrapper);
+            output.add(wrapper);
             return;
         }
 
         BUCore.getApi().getEventLoader().launchEvent(event);
         if (!event.isCancelled()) {
-            out.add(wrapper);
+            output.add(wrapper);
         }
     }
 }

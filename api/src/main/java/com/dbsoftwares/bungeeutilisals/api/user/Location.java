@@ -16,16 +16,20 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.api.user;
 
-public interface IAddonTask {
+import lombok.*;
 
-    int getId();
+@Data
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+public class Location {
 
-    Addon getOwner();
-
-    Runnable getTask();
-
-    void cancel();
+    private double x;
+    private double y;
+    private double z;
+    private boolean onGround;
 
 }

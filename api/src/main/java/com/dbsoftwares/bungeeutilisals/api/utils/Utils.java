@@ -81,7 +81,7 @@ public class Utils {
     /**
      * Formats a message to TextComponent, translates color codes and replaces placeholders.
      *
-     * @param player The player for which the placeholders should be formatted.
+     * @param player  The player for which the placeholders should be formatted.
      * @param message The message to be formatted.
      * @return The formatted message.
      */
@@ -92,7 +92,7 @@ public class Utils {
     /**
      * Formats a message to TextComponent, translates color codes and replaces placeholders.
      *
-     * @param user The user for which the placeholders should be formatted.
+     * @param user    The user for which the placeholders should be formatted.
      * @param message The message to be formatted.
      * @return The formatted message.
      */
@@ -337,7 +337,7 @@ public class Utils {
         return a.toString().split("/")[1].split(":")[0];
     }
 
-    public static boolean  registerPacket(Protocol.DirectionData direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
+    public static boolean registerPacket(Protocol.DirectionData direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
         try {
             Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
 

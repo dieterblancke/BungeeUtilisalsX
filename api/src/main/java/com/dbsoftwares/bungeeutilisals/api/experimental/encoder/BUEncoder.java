@@ -40,25 +40,25 @@ public class BUEncoder extends MessageToMessageEncoder<DefinedPacket> {
     }
 
     @Override
-    protected void encode(ChannelHandlerContext ctx, DefinedPacket msg, List<Object> out) {
+    protected void encode(ChannelHandlerContext context, DefinedPacket packet, List<Object> output) {
         PacketUpdateEvent event = null;
         if (server) {
-            event = new PacketUpdateEvent(msg, p, new BungeeConnection(), p);
+            event = new PacketUpdateEvent(packet, p, new BungeeConnection(), p);
         } else {
             if (p instanceof UserConnection) {
                 UserConnection u = (UserConnection) p;
-                event = new PacketUpdateEvent(msg, p, new BungeeConnection(), u.getServer());
+                event = new PacketUpdateEvent(packet, p, new BungeeConnection(), u.getServer());
             }
         }
 
         if (event == null) {
-            out.add(msg);
+            output.add(packet);
             return;
         }
 
         BUCore.getApi().getEventLoader().launchEvent(event);
         if (!event.isCancelled()) {
-            out.add(msg);
+            output.add(packet);
         }
     }
 }

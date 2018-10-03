@@ -16,16 +16,21 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.api.experimental.packets;
 
-public interface IAddonTask {
+import lombok.Data;
+import net.md_5.bungee.protocol.Protocol;
 
-    int getId();
+@Data
+public class PacketData {
 
-    Addon getOwner();
+    private Class<? extends Packet> packetClass;
+    private Protocol.DirectionData direction;
+    private int[] protocolIds;
 
-    Runnable getTask();
-
-    void cancel();
-
+    public PacketData(Class<? extends Packet> packetClass, Protocol.DirectionData direction, int... protocolIds) {
+        this.packetClass = packetClass;
+        this.direction = direction;
+        this.protocolIds = protocolIds;
+    }
 }

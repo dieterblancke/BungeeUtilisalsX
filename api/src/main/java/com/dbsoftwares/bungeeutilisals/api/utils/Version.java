@@ -33,7 +33,8 @@ public enum Version {
     MINECRAFT_1_12(335),
     MINECRAFT_1_12_1(338),
     MINECRAFT_1_12_2(340),
-    MINECRAFT_1_13(393);
+    MINECRAFT_1_13(393),
+    MINECRAFT_1_13_1(401);
 
     @Getter
     private int version;

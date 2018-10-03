@@ -31,12 +31,6 @@ import java.util.Optional;
 
 public abstract class Packet extends DefinedPacket {
 
-    private int id;
-
-    public Packet(int id) {
-        this.id = id;
-    }
-
     @Override
     public abstract void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion);
 
@@ -44,11 +38,6 @@ public abstract class Packet extends DefinedPacket {
     public abstract void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion);
 
     public abstract void handle(User user) throws Exception;
-
-    @Override
-    public int hashCode() {
-        return id;
-    }
 
     @Override
     public void handle(AbstractPacketHandler handler) throws Exception {

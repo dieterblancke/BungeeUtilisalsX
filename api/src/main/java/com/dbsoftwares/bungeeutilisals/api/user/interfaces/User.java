@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
@@ -254,4 +255,16 @@ public interface User extends ExperimentalUser {
      * @return the version the user is playing on
      */
     Version getVersion();
+
+    /**
+     * @return the current location of the user
+     */
+    Location getLocation();
+
+    /**
+     * Updates the user location in memory
+     *
+     * @param location the new user location
+     */
+    void setLocation(Location location);
 }

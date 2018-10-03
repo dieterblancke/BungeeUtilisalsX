@@ -34,13 +34,12 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayOutBossBar;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.PacketRegistry;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
@@ -77,8 +76,6 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.protocol.Protocol;
-import net.md_5.bungee.protocol.ProtocolConstants;
 import org.bstats.bungeecord.Metrics;
 
 import javax.script.ScriptException;
@@ -289,10 +286,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void registerExperimentalFeatures() {
-        Utils.registerPacket(Protocol.GAME.TO_CLIENT, PacketPlayOutBossBar.class,
-                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_9, 12),
-                Utils.createProtocolMapping(ProtocolConstants.MINECRAFT_1_12_2, 12));
-
+        PacketRegistry.registerPackets();
         ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
 
         PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();

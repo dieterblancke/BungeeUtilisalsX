@@ -21,10 +21,14 @@ package com.dbsoftwares.bungeeutilisals.experimental.executors;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserMoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketSendEvent;
 import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
+import com.dbsoftwares.bungeeutilisals.api.experimental.packets.client.PacketPlayInPlayerPosition;
+import com.dbsoftwares.bungeeutilisals.api.user.Location;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
@@ -34,7 +38,6 @@ public class PacketUpdateExecutor implements EventExecutor {
     public void onPacketUpdate(PacketUpdateEvent event) {
         if (event.getSender() instanceof ServerConnection && event.getReciever() instanceof BungeeConnection) {
             PacketSendEvent packetEvent = new PacketSendEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReciever());
-
             BUCore.getApi().getEventLoader().launchEvent(packetEvent);
 
             if (packetEvent.isCancelled()) {
@@ -42,7 +45,6 @@ public class PacketUpdateExecutor implements EventExecutor {
             }
         } else if (event.getSender() instanceof ProxiedPlayer && event.getReciever() instanceof BungeeConnection) {
             PacketReceiveEvent packetEvent = new PacketReceiveEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReciever());
-
             BUCore.getApi().getEventLoader().launchEvent(packetEvent);
 
             if (packetEvent.isCancelled()) {
@@ -53,6 +55,15 @@ public class PacketUpdateExecutor implements EventExecutor {
 
     @Event
     public void onPacketReceive(PacketReceiveEvent event) {
+        if (event.getPacket() instanceof PacketPlayInPlayerPosition) {
+            final User user = event.getUser();
+            final PacketPlayInPlayerPosition packet = (PacketPlayInPlayerPosition) event.getPacket();
+            final Location location = new Location(packet.getX(), packet.getY(), packet.getZ(), packet.isGround());
 
+            final UserMoveEvent userMoveEvent = new UserMoveEvent(user, user.getLocation() == null ? location : user.getLocation(), location);
+            BUCore.getApi().getEventLoader().launchEvent(userMoveEvent);
+
+            user.setLocation(location);
+        }
     }
 }

@@ -20,9 +20,11 @@ package com.dbsoftwares.bungeeutilisals.api.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+@EqualsAndHashCode
 public class AbstractEvent implements BUEvent {
 
     @Getter @Setter BUAPI api;

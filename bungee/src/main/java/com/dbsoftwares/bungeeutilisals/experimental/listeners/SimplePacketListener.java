@@ -44,8 +44,8 @@ public class SimplePacketListener implements Listener {
             ChannelWrapper wrapper = server.getCh();
             if (wrapper != null) {
                 try {
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new BUDecoder(true, p));
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new BUEncoder(true, p));
+                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_DECODER, "bungeeutilisals-decoder", new BUDecoder(true, p));
+                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "bungeeutilisals-encoder", new BUEncoder(true, p));
                 } catch (Exception ignore) { }
             }
         }
@@ -56,11 +56,11 @@ public class SimplePacketListener implements Listener {
         try {
             ProxiedPlayer p = event.getPlayer();
             Object ch = ReflectionUtils.getField(p.getClass(), "ch").get(p);
-            Method method = ReflectionUtils.getMethod(ch.getClass(), "getHandle", new Class[0]);
+            Method method = ReflectionUtils.getMethod(ch.getClass(), "getHandle");
             Channel channel = (Channel) method.invoke(ch, new Object[0]);
 
-            channel.pipeline().addAfter(PipelineUtils.PACKET_DECODER, "custom-decoder", new BUDecoder(false, p));
-            channel.pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "custom-encoder", new BUEncoder(false, p));
+            channel.pipeline().addAfter(PipelineUtils.PACKET_DECODER, "bungeeutilisals-decoder", new BUDecoder(false, p));
+            channel.pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "bungeeutilisals-encoder", new BUEncoder(false, p));
         } catch (Exception ignore) { }
     }
 }

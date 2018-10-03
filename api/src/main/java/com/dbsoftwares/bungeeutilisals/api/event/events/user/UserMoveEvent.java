@@ -16,16 +16,24 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
-public interface IAddonTask {
+import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
+import com.dbsoftwares.bungeeutilisals.api.user.Location;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-    int getId();
+@Data
+@ToString
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+public class UserMoveEvent extends AbstractEvent {
 
-    Addon getOwner();
-
-    Runnable getTask();
-
-    void cancel();
+    private User user;
+    private Location from;
+    private Location to;
 
 }
