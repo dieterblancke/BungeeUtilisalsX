@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
+import net.md_5.bungee.protocol.DefinedPacket;
 
 public interface ExperimentalUser {
 
@@ -26,5 +26,5 @@ public interface ExperimentalUser {
      * Sends a packet.
      * @param packet The packet to be sent.
      */
-    void sendPacket(Packet packet);
+    void sendPacket(DefinedPacket packet);
 }

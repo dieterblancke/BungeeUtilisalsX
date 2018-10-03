@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals;
 
 import com.dbsoftwares.bungeeutilisals.announcers.ActionBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
@@ -32,9 +31,6 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketReceiveEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.event.PacketUpdateEvent;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.PacketRegistry;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
@@ -54,8 +50,6 @@ import com.dbsoftwares.bungeeutilisals.executors.MuteCheckExecutor;
 import com.dbsoftwares.bungeeutilisals.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.executors.UserPunishExecutor;
-import com.dbsoftwares.bungeeutilisals.experimental.executors.PacketUpdateExecutor;
-import com.dbsoftwares.bungeeutilisals.experimental.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
@@ -156,9 +150,6 @@ public class BungeeUtilisals extends Plugin {
             ProxyServer.getInstance().getPluginManager().registerListener(this, redisMessenger);
         }
 
-        // Registering experimental features
-        registerExperimentalFeatures();
-
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
@@ -187,8 +178,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         // Loading Announcers
-        Announcer.registerAnnouncers(ActionBarAnnouncer.class, BossBarAnnouncer.class,
-                ChatAnnouncer.class, TitleAnnouncer.class);
+        Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class);
 
         // Loading Custom Commands
         loadGeneralCommands();
@@ -283,15 +273,6 @@ public class BungeeUtilisals extends Plugin {
             }
         }
         BUCore.log("Libraries have been loaded.");
-    }
-
-    private void registerExperimentalFeatures() {
-        PacketRegistry.registerPackets();
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
-
-        PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-        api.getEventLoader().register(PacketUpdateEvent.class, packetUpdateExecutor);
-        api.getEventLoader().register(PacketReceiveEvent.class, packetUpdateExecutor);
     }
 
     public IConfiguration getConfig() {

@@ -17,7 +17,7 @@ subcommands:
 
 general-commands:
   announce:
-    usage: '&ePlease use &b/announce (b/c/a/t) (message)&e.'
+    usage: '&ePlease use &b/announce (c/a/t) (message)&e.'
   find:
     usage: '&ePlease use &b/find (name)&e!'
     message: '&b{user} &eis online in &b{server}&e!'

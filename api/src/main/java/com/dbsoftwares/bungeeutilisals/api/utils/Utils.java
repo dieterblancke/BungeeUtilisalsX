@@ -32,15 +32,11 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.connection.DownstreamBridge;
 import net.md_5.bungee.connection.UpstreamBridge;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
-import net.md_5.bungee.protocol.DefinedPacket;
-import net.md_5.bungee.protocol.Protocol;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
@@ -181,7 +177,7 @@ public class Utils {
     public static long parseDateDiff(String time) {
         try {
             Matcher m = timePattern.matcher(time);
-            Integer years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
+            int years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
             boolean found = false;
             while (m.find()) {
                 if (m.group() == null || m.group().isEmpty()) {
@@ -335,39 +331,6 @@ public class Utils {
      */
     public static String getIP(InetAddress a) {
         return a.toString().split("/")[1].split(":")[0];
-    }
-
-    public static boolean registerPacket(Protocol.DirectionData direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
-        try {
-            Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
-
-            Object map = Array.newInstance(protocolMap, protocolMappings.length);
-
-            for (int i = 0; i < protocolMappings.length; i++) {
-                Array.set(map, i, protocolMappings[i]);
-            }
-
-            Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class, map.getClass());
-            register.setAccessible(true);
-
-            register.invoke(direction, packetClass, map);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    public static Object createProtocolMapping(int protocol, int id) {
-        try {
-            Method map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
-            map.setAccessible(true);
-
-            return map.invoke(null, protocol, id);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
     }
 
     /**

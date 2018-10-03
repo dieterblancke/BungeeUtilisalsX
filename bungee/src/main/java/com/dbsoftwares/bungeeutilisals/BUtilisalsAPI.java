@@ -22,9 +22,6 @@ import com.dbsoftwares.bungeeutilisals.addon.AddonManager;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
@@ -36,7 +33,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
-import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.LanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
@@ -46,7 +42,6 @@ import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -54,7 +49,6 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
-import java.util.UUID;
 
 public class BUtilisalsAPI implements BUAPI {
 
@@ -211,32 +205,5 @@ public class BUtilisalsAPI implements BUAPI {
     public void langBroadcast(String message, String permission, Object... placeholders) {
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
         getConsole().sendLangMessage(message, placeholders);
-    }
-
-    @Override
-    public IBossBar createBossBar() {
-        return new BossBar();
-    }
-
-    @Override
-    @Deprecated
-    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message) {
-        return new BossBar(color, style, progress, message);
-    }
-
-    @Override
-    @Deprecated
-    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message) {
-        return new BossBar(uuid, color, style, progress, message);
-    }
-
-    @Override
-    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message) {
-        return new BossBar(color, style, progress, message);
-    }
-
-    @Override
-    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
-        return new BossBar(uuid, color, style, progress, message);
     }
 }

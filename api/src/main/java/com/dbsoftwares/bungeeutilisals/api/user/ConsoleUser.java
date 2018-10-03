@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.experimental.packets.Packet;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -31,6 +30,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.util.UUID;
 
@@ -247,12 +247,12 @@ public class ConsoleUser implements User {
     }
 
     @Override
-    public void setInStaffChat(boolean staffchat) {
+    public boolean isInStaffChat() {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
-    public boolean isInStaffChat() {
+    public void setInStaffChat(boolean staffchat) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
@@ -272,7 +272,7 @@ public class ConsoleUser implements User {
     }
 
     @Override
-    public void sendPacket(Packet packet) {
+    public void sendPacket(DefinedPacket packet) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 }

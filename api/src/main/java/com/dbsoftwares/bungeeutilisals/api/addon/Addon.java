@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Data;
@@ -28,6 +29,7 @@ import net.md_5.bungee.api.plugin.Listener;
 
 import java.io.File;
 import java.io.InputStream;
+import java.util.Collection;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -76,11 +78,41 @@ public abstract class Addon {
         api.getAddonManager().registerListener(this, listener);
     }
 
-    public void registerEventHandler(final EventHandler handler) {
+    public void registerListeners(final Listener... listeners) {
+        for (Listener listener : listeners) {
+            registerListener(listener);
+        }
+    }
+
+    public void registerListeners(final Collection<Listener> listeners) {
+        for (Listener listener : listeners) {
+            registerListener(listener);
+        }
+    }
+
+    public <T extends BUEvent> void registerEventHandler(final EventHandler<T> handler) {
         api.getAddonManager().registerEventHandler(this, handler);
+    }
+
+    public <T extends BUEvent> void registerEventHandlers(final Collection<EventHandler<T>> handlers) {
+        for (EventHandler<T> handler : handlers) {
+            registerEventHandler(handler);
+        }
     }
 
     public void registerCommand(final Command command) {
         api.getAddonManager().registerCommand(this, command);
+    }
+
+    public void registerCommands(final Command... commands) {
+        for (Command command : commands) {
+            registerCommand(command);
+        }
+    }
+
+    public void registerCommands(final Collection<Command> commands) {
+        for (Command command : commands) {
+            registerCommand(command);
+        }
     }
 }

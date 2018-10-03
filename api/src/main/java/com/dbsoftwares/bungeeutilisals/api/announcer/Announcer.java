@@ -31,6 +31,7 @@ import net.md_5.bungee.api.scheduler.ScheduledTask;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -38,8 +39,16 @@ import java.util.Map;
 @Data
 public abstract class Announcer {
 
+    private static final File folder;
     @Getter
     private static Map<AnnouncementType, Announcer> announcers = Maps.newHashMap();
+
+    static {
+        folder = new File(BUCore.getApi().getPlugin().getDataFolder(), "announcer");
+        if (!folder.exists()) {
+            folder.mkdirs();
+        }
+    }
 
     protected IConfiguration configuration;
     private ScheduledTask task;
@@ -51,20 +60,15 @@ public abstract class Announcer {
     private int delay;
     private boolean random;
 
-    public Announcer(AnnouncementType type) {
+    public Announcer(final AnnouncementType type) {
+        this(type, new File(folder, type.toString().toLowerCase() + ".yml"), BUCore.getApi().getPlugin().getResourceAsStream("announcers/" + type.toString().toLowerCase() + ".yml"));
+    }
+
+    public Announcer(final AnnouncementType type, final File file, final InputStream defaultStream) {
         this.type = type;
 
-        File folder = new File(BUCore.getApi().getPlugin().getDataFolder(), "announcer");
-        if (!folder.exists()) {
-            folder.mkdirs();
-        }
-        File file = new File(folder, type.toString().toLowerCase() + ".yml");
         if (!file.exists()) {
-            IConfiguration.createDefaultFile(
-                    BUCore.getApi().getPlugin().getResourceAsStream(
-                            "announcers/" + type.toString().toLowerCase() + ".yml"
-                    ), file
-            );
+            IConfiguration.createDefaultFile(defaultStream, file);
         }
 
         configuration = IConfiguration.loadYamlConfiguration(file);
