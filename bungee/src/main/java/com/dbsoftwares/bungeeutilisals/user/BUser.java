@@ -28,6 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -58,6 +59,7 @@ public class BUser implements User {
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private PunishmentInfo mute;
+    private Location location;
 
     @Getter
     private boolean inStaffChat;
@@ -345,6 +347,16 @@ public class BUser implements User {
         } catch (Exception e) {
             return Version.MINECRAFT_1_8;
         }
+    }
+
+    @Override
+    public Location getLocation() {
+        return location;
+    }
+
+    @Override
+    public void setLocation(Location location) {
+        this.location = location;
     }
 
     @Override

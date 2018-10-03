@@ -178,7 +178,7 @@ public class ConsoleUser implements User {
 
     @Override
     public void langKick(String path, Object... placeholders) {
-
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -213,7 +213,7 @@ public class ConsoleUser implements User {
 
     @Override
     public ProxiedPlayer getParent() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -233,12 +233,12 @@ public class ConsoleUser implements User {
 
     @Override
     public boolean isMuted() {
-        return false;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public PunishmentInfo getMuteInfo() {
-        return null;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
@@ -253,12 +253,22 @@ public class ConsoleUser implements User {
 
     @Override
     public boolean isInStaffChat() {
-        return false;
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
     public Version getVersion() {
         return Version.latest();
+    }
+
+    @Override
+    public Location getLocation() {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public void setLocation(Location location) {
+        throw new UnsupportedOperationException("Not supported yet.");
     }
 
     @Override
