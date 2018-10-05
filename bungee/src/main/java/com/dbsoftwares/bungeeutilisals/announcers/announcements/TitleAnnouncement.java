@@ -62,7 +62,7 @@ public class TitleAnnouncement extends Announcement {
 
     private void send(Stream<ProxiedPlayer> stream) {
         stream.forEach(player -> {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance(), player);
+            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
             BungeeTitle bungeeTitle = new BungeeTitle();
 
             bungeeTitle.title(Utils.format(player, language ? config.getString(title) : title));

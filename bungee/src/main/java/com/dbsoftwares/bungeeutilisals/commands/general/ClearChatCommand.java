@@ -25,9 +25,8 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.ChatActionData;
 import com.google.common.collect.ImmutableList;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -81,19 +80,10 @@ public class ClearChatCommand extends Command {
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
             BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
                     Channels.CLEARCHAT,
-                    new ClearData(server, user.getName())
+                    new ChatActionData(server, user.getName())
             );
         } else {
             clearChat(server, user.getName());
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public class ClearData {
-
-        private String server;
-        private String by;
-
     }
 }

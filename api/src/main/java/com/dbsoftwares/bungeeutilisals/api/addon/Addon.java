@@ -21,8 +21,11 @@ package com.dbsoftwares.bungeeutilisals.api.addon;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Data;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
@@ -53,6 +56,8 @@ public abstract class Addon {
     public abstract void onEnable();
 
     public abstract void onDisable();
+
+    public abstract void onReload();
 
     public ExecutorService getExecutorService() {
         if (this.executorService == null) {
@@ -117,5 +122,21 @@ public abstract class Addon {
         for (Command command : commands) {
             registerCommand(command);
         }
+    }
+
+    public void sendLangMessage(final CommandSender sender, final String path) {
+        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), sender, path);
+    }
+
+    public void sendLangMessage(final CommandSender sender, final String path, final Object... placeholders) {
+        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), sender, path, placeholders);
+    }
+
+    public void sendLangMessage(final User user, final String path) {
+        sendLangMessage(user.getParent(), path);
+    }
+
+    public void sendLangMessage(final User user, final String path, final Object... placeholders) {
+        sendLangMessage(user.getParent(), path, placeholders);
     }
 }

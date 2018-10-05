@@ -218,7 +218,7 @@ public class ConsoleUser implements User {
 
     @Override
     public IConfiguration getLanguageConfig() {
-        return BUCore.getApi().getLanguageManager().getConfig(BUCore.getApi().getPlugin(), getLanguage());
+        return BUCore.getApi().getLanguageManager().getConfig(BUCore.getApi().getPlugin().getDescription().getName(), getLanguage());
     }
 
     @Override

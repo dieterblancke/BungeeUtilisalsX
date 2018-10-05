@@ -47,7 +47,7 @@ public final class BUCore {
     }
 
     public static void sendMessage(CommandSender sender, String message) {
-        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin(), sender);
+        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin().getDescription().getName(), sender);
 
         sender.sendMessage(Utils.format(config.getString("prefix"), message));
     }

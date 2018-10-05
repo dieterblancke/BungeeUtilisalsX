@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
 
@@ -57,4 +58,5 @@ public interface IAddonManager {
 
     Collection<Command> getCommands(final String addonName);
 
+    ILanguageManager getLanguageManager();
 }

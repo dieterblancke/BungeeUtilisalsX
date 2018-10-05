@@ -22,7 +22,9 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.addon.*;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.dbsoftwares.bungeeutilisals.language.AddonLanguageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.*;
 import lombok.Getter;
@@ -42,6 +44,7 @@ public class AddonManager implements IAddonManager {
 
     @Getter
     private final File addonsFolder;
+    private ILanguageManager languageManager;
     private final IScheduler scheduler;
     private final Map<String, Addon> addons = Maps.newHashMap();
     private final Map<String, AddonDescription> toBeLoaded = Maps.newHashMap();
@@ -57,6 +60,7 @@ public class AddonManager implements IAddonManager {
         if (!addonsFolder.exists()) {
             addonsFolder.mkdir();
         }
+        this.languageManager = new AddonLanguageManager(BungeeUtilisals.getInstance());
     }
 
     @Override
@@ -189,6 +193,11 @@ public class AddonManager implements IAddonManager {
     @Override
     public Collection<Command> getCommands(final String addonName) {
         return Collections.unmodifiableCollection(commands.get(addonName));
+    }
+
+    @Override
+    public ILanguageManager getLanguageManager() {
+        return languageManager;
     }
 
     private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Stack<AddonDescription> dependStack, final AddonDescription description) {

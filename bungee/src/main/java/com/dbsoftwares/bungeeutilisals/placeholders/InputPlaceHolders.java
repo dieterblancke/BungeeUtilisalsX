@@ -76,7 +76,7 @@ public class InputPlaceHolders implements PlaceHolderPack {
     private IConfiguration getLanguageConfiguration(User user) {
         if (user == null) {
             return BUCore.getApi().getLanguageManager().getConfig(
-                    BUCore.getApi().getPlugin(),
+                    BUCore.getApi().getPlugin().getDescription().getName(),
                     BUCore.getApi().getLanguageManager().getDefaultLanguage()
             );
         }

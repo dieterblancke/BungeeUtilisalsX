@@ -18,64 +18,96 @@
 
 package com.dbsoftwares.bungeeutilisals.utils.redis;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ChatLockCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommand;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.APIAnnouncement;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.AnnounceMessage;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.ChatActionData;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.StaffChatData;
 import com.google.gson.Gson;
+
+import java.util.stream.Stream;
 
 public enum Channels {
 
-    ANNOUNCE() {
+    API_BROADCAST() {
 
-        private Gson gson = new Gson();
+        private final Gson gson = new Gson();
 
         @Override
-        public void execute(String message) {
-            AnnounceCommand.AnnounceMessage announcement
-                    = gson.fromJson(message, AnnounceCommand.AnnounceMessage.class);
+        public void execute(final String message) {
+            final APIAnnouncement announcement = gson.fromJson(message, APIAnnouncement.class);
+            Stream<User> users = BUCore.getApi().getUsers().stream();
+
+            if (announcement.getPermission() != null) {
+                users = users.filter(user -> user.getParent().hasPermission(announcement.getPermission()));
+            }
+
+            if (announcement.isLanguage()) {
+                users.forEach(user -> user.sendLangMessage(announcement.getMessage(), announcement.getPlaceHolders()));
+            } else {
+                if (announcement.getPrefix() == null) {
+                    users.forEach(user -> user.sendMessage(announcement.getMessage()));
+                } else {
+                    users.forEach(user -> user.sendMessage(announcement.getPrefix(), announcement.getMessage()));
+                }
+            }
+        }
+    },
+    ANNOUNCE() {
+
+        private final Gson gson = new Gson();
+
+        @Override
+        public void execute(final String message) {
+            final AnnounceMessage announcement = gson.fromJson(message, AnnounceMessage.class);
 
             AnnounceCommand.sendAnnounce(announcement);
         }
     },
     CLEARCHAT() {
 
-        private Gson gson = new Gson();
+        private final Gson gson = new Gson();
 
         @Override
-        public void execute(String message) {
-            ClearChatCommand.ClearData data = gson.fromJson(message, ClearChatCommand.ClearData.class);
+        public void execute(final String message) {
+            final ChatActionData data = gson.fromJson(message, ChatActionData.class);
 
             ClearChatCommand.clearChat(data.getServer(), data.getBy());
         }
     },
     CHATLOCK() {
 
-        private Gson gson = new Gson();
+        private final Gson gson = new Gson();
 
         @Override
-        public void execute(String message) {
-            ChatLockCommand.LockData data = gson.fromJson(message, ChatLockCommand.LockData.class);
+        public void execute(final String message) {
+            final ChatActionData data = gson.fromJson(message, ChatActionData.class);
 
             ChatLockCommand.lockChat(data.getServer(), data.getBy());
         }
     },
     STAFFCHAT() {
 
-        private Gson gson = new Gson();
+        private final Gson gson = new Gson();
 
         @Override
-        public void execute(String message) {
-            StaffChatCommand.StaffChatData data = gson.fromJson(message, StaffChatCommand.StaffChatData.class);
+        public void execute(final String message) {
+            final StaffChatData data = gson.fromJson(message, StaffChatData.class);
 
             StaffChatCommand.sendStaffChatMessage(data.getServer(), data.getPlayer(), data.getMessage());
         }
     };
 
-    public abstract void execute(String message);
+    public abstract void execute(final String message);
 
     @Override
     public String toString() {
         return "BUNGEEUTILISALS_" + super.toString();
     }
+
 }

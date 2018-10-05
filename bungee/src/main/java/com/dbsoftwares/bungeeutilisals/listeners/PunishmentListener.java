@@ -43,7 +43,7 @@ public class PunishmentListener implements Listener {
 
         BUAPI api = BUCore.getApi();
         PunishmentInfo info = null;
-        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance(), api.getLanguageManager().getDefaultLanguage());
+        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance().getDescription().getName(), api.getLanguageManager().getDefaultLanguage());
         PunishmentDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao();
 
         if (dao.isPunishmentPresent(PunishmentType.BAN, uuid, null, true)) {

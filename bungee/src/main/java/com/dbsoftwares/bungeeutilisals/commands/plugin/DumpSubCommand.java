@@ -165,7 +165,7 @@ public class DumpSubCommand extends SubCommand {
         final Map<String, Map<String, Object>> languages = Maps.newHashMap();
         for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
             try {
-                IConfiguration config = BUCore.getApi().getLanguageManager().getConfig(BungeeUtilisals.getInstance(), language);
+                IConfiguration config = BUCore.getApi().getLanguageManager().getConfig(BungeeUtilisals.getInstance().getDescription().getName(), language);
 
                 languages.put(language.getName(), readValues(config.getValues()));
             } catch (RuntimeException ignored) {

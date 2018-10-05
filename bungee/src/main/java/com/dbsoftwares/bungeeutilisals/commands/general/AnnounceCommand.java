@@ -26,12 +26,11 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.md_5.bungee.BungeeTitle;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
@@ -141,14 +140,5 @@ public class AnnounceCommand extends Command {
         }
 
         return announcementTypes;
-    }
-
-    @Data
-    @AllArgsConstructor
-    public class AnnounceMessage {
-
-        private Set<AnnouncementType> types;
-        private String message;
-
     }
 }

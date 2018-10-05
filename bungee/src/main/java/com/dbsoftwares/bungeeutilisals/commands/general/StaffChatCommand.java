@@ -24,9 +24,8 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.StaffChatData;
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -100,15 +99,5 @@ public class StaffChatCommand extends Command implements Listener {
                 }
             }
         });
-    }
-
-    @Data
-    @AllArgsConstructor
-    public class StaffChatData {
-
-        private String server;
-        private String player;
-        private String message;
-
     }
 }

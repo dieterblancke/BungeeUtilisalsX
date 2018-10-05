@@ -34,13 +34,15 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
-import com.dbsoftwares.bungeeutilisals.language.LanguageManager;
+import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.user.UserList;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
+import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.APIAnnouncement;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -54,12 +56,12 @@ public class BUtilisalsAPI implements BUAPI {
 
     private final BungeeUtilisals instance;
     private ConsoleUser console;
-    private UserList users;
-    private ChatManager chatManager;
-    private EventLoader eventLoader;
-    private LanguageManager languageManager;
+    private UserCollection users;
+    private IChatManager chatManager;
+    private IEventLoader eventLoader;
+    private ILanguageManager languageManager;
     private SimpleExecutor simpleExecutor;
-    private PunishmentExecutor punishmentExecutor;
+    private IPunishmentExecutor punishmentExecutor;
     private IPlayerUtils playerUtils;
     private IAddonManager addonManager;
 
@@ -71,7 +73,7 @@ public class BUtilisalsAPI implements BUAPI {
         this.users = new UserList();
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
-        this.languageManager = new LanguageManager(instance);
+        this.languageManager = new PluginLanguageManager(instance);
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
         this.playerUtils = FileLocation.CONFIG.getConfiguration().getBoolean("redis")
@@ -173,36 +175,56 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public void broadcast(String message) {
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(null, message, null, false)
+            );
+        }
         users.forEach(user -> user.sendMessage(message));
         getConsole().sendMessage(message);
     }
 
     @Override
     public void broadcast(String message, String permission) {
+        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                Channels.API_BROADCAST, new APIAnnouncement(null, message, permission, false)
+        );
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(message));
         getConsole().sendMessage(message);
     }
 
     @Override
     public void announce(String prefix, String message) {
+        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                Channels.API_BROADCAST, new APIAnnouncement(prefix, message, null, false)
+        );
         users.forEach(user -> user.sendMessage(prefix, message));
         getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void announce(String prefix, String message, String permission) {
+        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                Channels.API_BROADCAST, new APIAnnouncement(prefix, message, permission, false)
+        );
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(prefix, message));
         getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void langBroadcast(String message, Object... placeholders) {
+        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                Channels.API_BROADCAST, new APIAnnouncement(null, message, null, true, placeholders)
+        );
         users.forEach(user -> user.sendLangMessage(message, placeholders));
         getConsole().sendLangMessage(message, placeholders);
     }
 
     @Override
     public void langBroadcast(String message, String permission, Object... placeholders) {
+        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                Channels.API_BROADCAST, new APIAnnouncement(null, message, permission, true, placeholders)
+        );
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
         getConsole().sendLangMessage(message, placeholders);
     }

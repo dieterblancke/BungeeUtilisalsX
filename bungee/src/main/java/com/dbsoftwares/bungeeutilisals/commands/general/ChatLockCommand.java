@@ -22,14 +22,13 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
+import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.ChatActionData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -88,7 +87,7 @@ public class ChatLockCommand extends Command implements Listener {
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
             BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
                     Channels.CHATLOCK,
-                    new LockData(server, user.getName())
+                    new ChatActionData(server, user.getName())
             );
         } else {
             lockChat(server, user.getName());
@@ -112,19 +111,10 @@ public class ChatLockCommand extends Command implements Listener {
                 || !lockedChatServers.contains("ALL") && !lockedChatServers.contains(player.getServer().getInfo().getName());
 
         if (!canTalk) {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance(), player);
+            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
 
             event.setCancelled(true);
             LanguageUtils.sendLangMessage(player, "general-commands.chatlock.onchat");
         }
-    }
-
-    @Data
-    @AllArgsConstructor
-    public class LockData {
-
-        private String server;
-        private String by;
-
     }
 }

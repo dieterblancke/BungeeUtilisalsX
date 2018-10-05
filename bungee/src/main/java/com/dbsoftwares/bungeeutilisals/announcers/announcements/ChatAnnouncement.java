@@ -66,7 +66,7 @@ public class ChatAnnouncement extends Announcement {
     private void send(Stream<ProxiedPlayer> stream) {
         stream.forEach(player -> {
             IConfiguration config = BUCore.getApi().getLanguageManager()
-                    .getLanguageConfiguration(BungeeUtilisals.getInstance(), player);
+                    .getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
 
             List<String> messages;
             if (languagePath != null) {

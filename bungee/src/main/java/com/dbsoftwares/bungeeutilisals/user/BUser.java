@@ -35,6 +35,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
@@ -95,7 +96,7 @@ public class BUser implements User {
                     defLanguage
             );
 
-            storage = new UserStorage(uuid, name, IP, defLanguage, date, date);
+            storage = new UserStorage(uuid, name, IP, defLanguage, date, date, Maps.newHashMap());
         }
 
         if (!storage.getUserName().equals(name)) { // Stored name != user current name | Name changed?
@@ -128,6 +129,7 @@ public class BUser implements User {
         BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
 
         parent = null;
+        storage.getData().clear();
     }
 
     @Override
@@ -317,7 +319,7 @@ public class BUser implements User {
 
     @Override
     public IConfiguration getLanguageConfig() {
-        return BUCore.getApi().getLanguageManager().getLanguageConfiguration(BUCore.getApi().getPlugin(), this);
+        return BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), this);
     }
 
     @Override

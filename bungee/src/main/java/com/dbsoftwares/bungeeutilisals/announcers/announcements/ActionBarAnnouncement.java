@@ -87,7 +87,7 @@ public class ActionBarAnnouncement extends Announcement {
 
             if (language) {
                 bar = BUCore.getApi().getLanguageManager().getLanguageConfiguration(
-                        BungeeUtilisals.getInstance(), player
+                        BungeeUtilisals.getInstance().getDescription().getName(), player
                 ).getString(message);
             }
 

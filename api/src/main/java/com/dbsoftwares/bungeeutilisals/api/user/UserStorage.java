@@ -24,6 +24,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 
 @Data
@@ -38,4 +39,18 @@ public class UserStorage {
     private Date firstLogin;
     private Date lastLogout;
 
+    private Map<String, Object> data;
+
+    @SuppressWarnings("unchecked")
+    public <T> T getData(String key) {
+        return !data.containsKey(key) ? null : (T) data.get(key);
+    }
+
+    public void setData(String key, Object value) {
+        data.put(key, value);
+    }
+
+    public boolean hasData(String key) {
+        return data.containsKey(key);
+    }
 }

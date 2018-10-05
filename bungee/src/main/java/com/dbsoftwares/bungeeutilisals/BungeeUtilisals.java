@@ -62,6 +62,7 @@ import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
+import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
@@ -142,6 +143,10 @@ public class BungeeUtilisals extends Plugin {
         // Initializing API
         api = new BUtilisalsAPI(this);
 
+        // Loading language manager
+        api.getLanguageManager().addPlugin(getDescription().getName(), new File(getDataFolder(), "languages"), FileStorageType.YAML);
+        api.getLanguageManager().loadLanguages(getDescription().getName());
+
         // Loading & enabling addons
         api.getAddonManager().findAddons(api.getAddonManager().getAddonsFolder());
         api.getAddonManager().loadAddons();
@@ -219,7 +224,7 @@ public class BungeeUtilisals extends Plugin {
         Announcer.getAnnouncers().values().forEach(Announcer::reload);
 
         for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
-            BUCore.getApi().getLanguageManager().reloadConfig(BungeeUtilisals.getInstance(), language);
+            BUCore.getApi().getLanguageManager().reloadConfig(getDescription().getName(), language);
         }
 
         loadScripts();

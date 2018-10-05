@@ -35,8 +35,8 @@ import java.util.Optional;
 public abstract class Command extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
 
     public BUAPI api;
-    private String permission = null;
     protected List<SubCommand> subCommands = Lists.newArrayList();
+    private String permission;
 
     public Command(String name) {
         this(name, Lists.newArrayList(), null);
@@ -51,7 +51,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     }
 
     public Command(String name, List<String> aliases, String permission) {
-        super(name, "", aliases.toArray(new String[] {}));
+        super(name, "", aliases.toArray(new String[]{}));
         this.permission = permission;
         this.api = BUCore.getApi();
 
@@ -61,7 +61,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     @Override
     public void execute(CommandSender sender, String[] args) {
         BUAPI api = BUCore.getApi();
-        IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin(), sender);
+        IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin().getDescription().getName(), sender);
 
         if (permission != null && !permission.isEmpty()) {
             if (!sender.hasPermission(permission)
