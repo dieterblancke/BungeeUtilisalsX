@@ -167,6 +167,26 @@ public interface BUAPI {
     void langBroadcast(String message, String permission, Object... placeholders);
 
     /**
+     * Broadcasts a message with the BungeeUtilisals prefix.
+     *
+     * @param manager      The languagemanager instance to be used.
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void langBroadcast(ILanguageManager manager, String message, Object... placeholders);
+
+    /**
+     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     *
+     * @param manager      The languagemanager instance to be used.
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param permission   The permission the user must have to receive the message.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void langBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders);
+
+
+    /**
      * @return a list of all announcers.
      */
     Collection<Announcer> getAnnouncers();

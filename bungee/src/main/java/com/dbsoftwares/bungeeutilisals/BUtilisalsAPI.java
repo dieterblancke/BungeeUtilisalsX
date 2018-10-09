@@ -31,6 +31,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
+import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
@@ -177,8 +178,9 @@ public class BUtilisalsAPI implements BUAPI {
     public void broadcast(String message) {
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
             BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                    Channels.API_BROADCAST, new APIAnnouncement(null, message, null, false)
+                    Channels.API_BROADCAST, new APIAnnouncement(true, null, message, null, false)
             );
+            return;
         }
         users.forEach(user -> user.sendMessage(message));
         getConsole().sendMessage(message);
@@ -186,46 +188,71 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public void broadcast(String message, String permission) {
-        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                Channels.API_BROADCAST, new APIAnnouncement(null, message, permission, false)
-        );
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(true, null, message, permission, false)
+            );
+            return;
+        }
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(message));
         getConsole().sendMessage(message);
     }
 
     @Override
     public void announce(String prefix, String message) {
-        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                Channels.API_BROADCAST, new APIAnnouncement(prefix, message, null, false)
-        );
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(true, prefix, message, null, false)
+            );
+            return;
+        }
         users.forEach(user -> user.sendMessage(prefix, message));
         getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void announce(String prefix, String message, String permission) {
-        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                Channels.API_BROADCAST, new APIAnnouncement(prefix, message, permission, false)
-        );
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(true, prefix, message, permission, false)
+            );
+            return;
+        }
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(prefix, message));
         getConsole().sendMessage(prefix, message);
     }
 
     @Override
     public void langBroadcast(String message, Object... placeholders) {
-        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                Channels.API_BROADCAST, new APIAnnouncement(null, message, null, true, placeholders)
-        );
-        users.forEach(user -> user.sendLangMessage(message, placeholders));
-        getConsole().sendLangMessage(message, placeholders);
+        langBroadcast(languageManager, message, placeholders);
     }
 
     @Override
     public void langBroadcast(String message, String permission, Object... placeholders) {
-        BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                Channels.API_BROADCAST, new APIAnnouncement(null, message, permission, true, placeholders)
-        );
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendLangMessage(message, placeholders));
-        getConsole().sendLangMessage(message, placeholders);
+        langBroadcast(languageManager, message, permission, placeholders);
+    }
+
+    @Override
+    public void langBroadcast(ILanguageManager manager, String message, Object... placeholders) {
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(manager instanceof PluginLanguageManager, null, message, null, true, placeholders)
+            );
+            return;
+        }
+        users.forEach(user -> LanguageUtils.sendLangMessage(user.getParent(), message, placeholders));
+        LanguageUtils.sendLangMessage(getConsole().sender(), message, placeholders);
+    }
+
+    @Override
+    public void langBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders) {
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
+                    Channels.API_BROADCAST, new APIAnnouncement(manager instanceof PluginLanguageManager, null, message, permission, true, placeholders)
+            );
+            return;
+        }
+        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> LanguageUtils.sendLangMessage(user.getParent(), message, placeholders));
+        LanguageUtils.sendLangMessage(getConsole().sender(), message, placeholders);
     }
 }

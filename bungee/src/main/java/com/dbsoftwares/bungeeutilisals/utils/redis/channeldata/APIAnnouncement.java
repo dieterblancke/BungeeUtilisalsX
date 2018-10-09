@@ -23,13 +23,15 @@ import lombok.Data;
 @Data
 public class APIAnnouncement {
 
+    private boolean pluginLanguageManager; // true if plugin, false if addon
     private String prefix;
     private String message;
     private String permission;
     private boolean language;
     private Object[] placeHolders;
 
-    public APIAnnouncement(String prefix, String message, String permission, boolean language, Object... placeholders) {
+    public APIAnnouncement(boolean pluginLanguageManager, String prefix, String message, String permission, boolean language, Object... placeholders) {
+        this.pluginLanguageManager = pluginLanguageManager;
         this.prefix = prefix;
         this.message = message;
         this.permission = permission;

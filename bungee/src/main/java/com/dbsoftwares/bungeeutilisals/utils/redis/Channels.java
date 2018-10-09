@@ -19,7 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.utils.redis;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ChatLockCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;
@@ -48,7 +50,8 @@ public enum Channels {
             }
 
             if (announcement.isLanguage()) {
-                users.forEach(user -> user.sendLangMessage(announcement.getMessage(), announcement.getPlaceHolders()));
+                ILanguageManager languageManager = announcement.isPluginLanguageManager() ? BUCore.getApi().getLanguageManager() : BUCore.getApi().getAddonManager().getLanguageManager();
+                users.forEach(user -> LanguageUtils.sendLangMessage(languageManager, user, announcement.getMessage(), announcement.getPlaceHolders()));
             } else {
                 if (announcement.getPrefix() == null) {
                     users.forEach(user -> user.sendMessage(announcement.getMessage()));

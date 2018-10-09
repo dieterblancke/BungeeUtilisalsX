@@ -24,14 +24,14 @@
         <repository>
             <id>dbsoftwares</id>
             <name>DBSoftwares Repo</name>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+            <url>https://nexus.dbsoftwares.eu/repository/dbsoftwares/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>dbsoftwares-repo</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+            <url>https://nexus.dbsoftwares.eu/repository/dbsoftwares/</url>
         </repository>
         <repository>
             <id>mvdw-repo</id>

@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -70,6 +71,37 @@ public class LanguageUtils {
             }
 
             sender.sendMessage(Utils.format(message));
+        }
+    }
+
+    public static void sendLangMessage(final ILanguageManager languageManager, final User user, final String path) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), user);
+        if (config.isList(path)) {
+            for (String message : config.getStringList(path)) {
+                user.sendMessage(Utils.format(message));
+            }
+        } else {
+            user.sendMessage(Utils.format(config.getString(path)));
+        }
+    }
+
+    public static void sendLangMessage(final ILanguageManager languageManager, final User user, final String path, final Object... placeholders) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), user);
+        if (config.isList(path)) {
+            for (String message : config.getStringList(path)) {
+                for (int i = 0; i < placeholders.length - 1; i += 2) {
+                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+                }
+
+                user.sendMessage(Utils.format(message));
+            }
+        } else {
+            String message = config.getString(path);
+            for (int i = 0; i < placeholders.length - 1; i += 2) {
+                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+            }
+
+            user.sendMessage(Utils.format(message));
         }
     }
 }

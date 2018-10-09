@@ -43,6 +43,7 @@ public class RedisMessenger implements Listener {
         for (Channels channel : Channels.values()) {
             if (channel.toString().equalsIgnoreCase(event.getChannel())) {
                 channel.execute(event.getMessage());
+                break;
             }
         }
     }

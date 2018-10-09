@@ -63,7 +63,7 @@ public class BungeeAdminToolsImporter extends Importer {
     protected void importData(final ImporterCallback<ImporterStatus> importerCallback, final Map<String, String> properties) {
         try (Connection connection = createConnection(properties); Statement stmt = connection.createStatement()) {
             final DatabaseMetaData databaseMetaData = connection.getMetaData();
-            for (final String table : Lists.newArrayList("BAT_ban", "BAT_mute", "BAT_players")) { // TODO
+            for (final String table : Lists.newArrayList("BAT_ban", "BAT_mute", "BAT_players")) {
                 final ResultSet tables = databaseMetaData.getTables(null, null, table, null);
                 if (!tables.next()) {
                     throw new IllegalArgumentException("Could not find table " + table + ", stopping importer ...");
