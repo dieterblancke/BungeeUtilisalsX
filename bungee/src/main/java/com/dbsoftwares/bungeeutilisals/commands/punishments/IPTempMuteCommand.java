@@ -91,7 +91,7 @@ public class IPTempMuteCommand extends Command {
 
         user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.iptempmute.broadcast",
+        api.langPermissionBroadcast("punishments.iptempmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

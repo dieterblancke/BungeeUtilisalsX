@@ -22,11 +22,18 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.addon.*;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.exceptions.AddonException;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.dbsoftwares.bungeeutilisals.language.AddonLanguageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpResponse;
+import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.collect.*;
+import com.google.gson.Gson;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
@@ -34,8 +41,11 @@ import net.md_5.bungee.api.plugin.Listener;
 
 import java.io.File;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.logging.Level;
@@ -44,14 +54,16 @@ public class AddonManager implements IAddonManager {
 
     @Getter
     private final File addonsFolder;
-    private ILanguageManager languageManager;
     private final IScheduler scheduler;
     private final Map<String, Addon> addons = Maps.newHashMap();
     private final Map<String, AddonDescription> toBeLoaded = Maps.newHashMap();
-
     private final Multimap<String, Listener> listeners = Multimaps.synchronizedMultimap(HashMultimap.create());
     private final Multimap<String, EventHandler> eventHandlers = Multimaps.synchronizedMultimap(HashMultimap.create());
     private final Multimap<String, Command> commands = Multimaps.synchronizedMultimap(HashMultimap.create());
+    private ILanguageManager languageManager;
+
+    @Getter
+    private LinkedList<AddonData> allAddons;
 
     public AddonManager() {
         scheduler = new AddonScheduler();
@@ -61,6 +73,35 @@ public class AddonManager implements IAddonManager {
             addonsFolder.mkdir();
         }
         this.languageManager = new AddonLanguageManager(BungeeUtilisals.getInstance());
+
+        loadAllAddons();
+    }
+
+    public void loadAllAddons() {
+        final HttpRequestFactory factory = new NetHttpTransport().createRequestFactory();
+        final Gson gson = new Gson();
+
+        ProxyServer.getInstance().getScheduler().schedule(BungeeUtilisals.getInstance(), () -> {
+            try {
+                final GenericUrl url = new GenericUrl("https://api.dbsoftwares.eu/plugin/BungeeUtilisals/addons/");
+                final HttpRequest request = factory.buildGetRequest(url);
+                final Future<HttpResponse> futureResponse = request.executeAsync();
+
+                final HttpResponse response = futureResponse.get();
+                if (response.isSuccessStatusCode()) {
+                    try (final InputStream input = response.getContent();
+                         final InputStreamReader isr = new InputStreamReader(input)) {
+                        final AddonData[] addons = gson.fromJson(isr, AddonData[].class);
+
+                        if (addons.length > 0) {
+                            allAddons = Lists.newLinkedList(Arrays.asList(addons));
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }, 0, 1, TimeUnit.MINUTES);
     }
 
     @Override
@@ -81,8 +122,7 @@ public class AddonManager implements IAddonManager {
                         toBeLoaded.put(description.getName(), description);
                     }
                 } catch (final Exception ex) {
-                    BUCore.log(Level.WARNING, "Could not load addon from file " + file.getName(), ex);
-                    ex.printStackTrace();
+                    throw new AddonException("Could not load addon from file " + file.getName(), ex);
                 }
             }
         }
@@ -93,16 +133,68 @@ public class AddonManager implements IAddonManager {
         final Map<AddonDescription, Boolean> addonStatuses = new HashMap<>();
         for (final Map.Entry<String, AddonDescription> entry : toBeLoaded.entrySet()) {
             final AddonDescription addon = entry.getValue();
-            if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
-                BUCore.log(Level.WARNING, "Could not enable addon " + entry.getKey());
+            try {
+                if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
+                    BUCore.log(Level.WARNING, "Could not enable addon " + entry.getKey());
+                }
+            } catch (AddonException e) {
+                e.printStackTrace();
             }
         }
         toBeLoaded.clear();
     }
 
     @Override
+    public void loadSingleAddon(File addonFile) {
+        if (addonFile.isFile() && addonFile.getName().endsWith(".jar")) {
+            try (final JarFile jar = new JarFile(addonFile)) {
+                final JarEntry entry = jar.getJarEntry("addon.yml");
+
+                Validate.checkNotNull(entry, "Addon must have an addon.yml file");
+
+                try (InputStream in = jar.getInputStream(entry)) {
+                    final AddonDescription description = new AddonDescription(IConfiguration.loadYamlConfiguration(in), addonFile);
+
+                    loadSingleAddon(description);
+                }
+            } catch (final Exception ex) {
+                throw new AddonException("Could not load addon from file " + addonFile.getName(), ex);
+            }
+        }
+    }
+
+    private void loadSingleAddon(final AddonDescription description) {
+        for (String dependency : description.getRequiredDependencies()) {
+            if (!isRegistered(dependency)) {
+                throw new AddonException("Dependency " + dependency + " is required by " + description.getName() + " but not found.");
+            }
+        }
+        try {
+            final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+            final Class<?> main = loader.loadClass(description.getMain());
+            final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
+
+            addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
+            addons.put(description.getName(), addon);
+
+            BUCore.log(Level.INFO, "Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
+        } catch (final Throwable t) {
+            throw new AddonException("Error occured while enabling addon " + description.getName(), t);
+        }
+    }
+
+    @Override
     public void enableAddons() {
-        addons.values().forEach(addon -> {
+        addons.values().forEach(this::enableAddon);
+    }
+
+    @Override
+    public void enableAddon(final String addonName) {
+        enableAddon(getAddon(addonName));
+    }
+
+    private void enableAddon(final Addon addon) {
+        if (addon != null) {
             try {
                 addon.onEnable();
                 BUCore.log(
@@ -111,10 +203,9 @@ public class AddonManager implements IAddonManager {
                                 + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
                 );
             } catch (final Throwable t) {
-                BUCore.log(Level.WARNING, "Exception encountered when loading addon: " + addon.getDescription().getName(), t);
-                t.printStackTrace();
+                throw new AddonException("Exception encountered when loading addon: " + addon.getDescription().getName(), t);
             }
-        });
+        }
     }
 
     @Override
@@ -123,8 +214,7 @@ public class AddonManager implements IAddonManager {
             try {
                 disableAddon(addon);
             } catch (final Throwable t) {
-                BUCore.log(Level.WARNING, "Exception encountered when unloading addon: " + addon, t);
-                t.printStackTrace();
+                throw new AddonException("Exception encountered when unloading addon: " + addon, t);
             }
         }
     }
@@ -145,14 +235,34 @@ public class AddonManager implements IAddonManager {
                 ProxyServer.getInstance().getPluginManager().unregisterCommand(command);
             }));
 
+            if (addon.getClass().getClassLoader() instanceof AddonClassLoader) {
+                final AddonClassLoader classLoader = (AddonClassLoader) addon.getClass().getClassLoader();
+
+                AddonClassLoader.getClassLoaders().remove(classLoader);
+            }
+
             addon.getExecutorService().shutdown();
             addons.remove(addonName);
         }
     }
 
     @Override
+    public void reloadAddon(String addonName) {
+        final Addon addon = getAddon(addonName);
+
+        if (addon != null) {
+            addon.onReload();
+        }
+    }
+
+    @Override
     public Addon getAddon(final String addonName) {
         return addons.getOrDefault(addonName, null);
+    }
+
+    @Override
+    public boolean isRegistered(String addonName) {
+        return addons.containsKey(addonName);
     }
 
     @Override
@@ -168,6 +278,7 @@ public class AddonManager implements IAddonManager {
     @Override
     public void registerListener(final Addon addon, final Listener listener) {
         this.listeners.put(addon.getDescription().getName(), listener);
+        ProxyServer.getInstance().getPluginManager().registerListener(BungeeUtilisals.getInstance(), listener);
     }
 
     @Override
@@ -253,9 +364,8 @@ public class AddonManager implements IAddonManager {
 
                 BUCore.log(Level.INFO, "Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
             } catch (final Throwable t) {
-                BUCore.log(Level.WARNING, "Error enabling addon " + description.getName(), t);
-                t.printStackTrace();
-                status = false;
+                statuses.put(description, false);
+                throw new AddonException("Error enabling addon " + description.getName(), t);
             }
         }
 

@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.addon;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.google.common.collect.Lists;
+import lombok.Getter;
 
 import java.net.URL;
 import java.net.URLClassLoader;
@@ -27,6 +28,7 @@ import java.util.List;
 
 public class AddonClassLoader extends URLClassLoader {
 
+    @Getter
     private static final List<AddonClassLoader> classLoaders = Lists.newCopyOnWriteArrayList();
 
     static {
@@ -41,6 +43,11 @@ public class AddonClassLoader extends URLClassLoader {
     @Override
     protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
         return loadClass(name, resolve, true);
+    }
+
+    @Override
+    public URL getResource(String name) {
+        return findResource(name);
     }
 
     private Class<?> loadClass(String name, boolean resolve, boolean checkOther) throws ClassNotFoundException {

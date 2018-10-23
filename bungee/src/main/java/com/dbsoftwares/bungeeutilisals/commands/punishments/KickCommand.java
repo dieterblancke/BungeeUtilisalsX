@@ -79,7 +79,7 @@ public class KickCommand extends Command {
 
         target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
-        api.langBroadcast("punishments.kick.broadcast",
+        api.langPermissionBroadcast("punishments.kick.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

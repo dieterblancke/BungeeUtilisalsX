@@ -55,7 +55,7 @@ public class TempBanCommand extends Command {
         Dao dao = BUCore.getApi().getStorageManager().getDao();
         String timeFormat = args[1];
         String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        Long time = Utils.parseDateDiff(timeFormat);
+        long time = Utils.parseDateDiff(timeFormat);
 
         if (time == 0L) {
             user.sendLangMessage("punishments.tempban.non-valid");
@@ -95,7 +95,7 @@ public class TempBanCommand extends Command {
 
         user.sendLangMessage("punishments.tempban.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.tempban.broadcast",
+        api.langPermissionBroadcast("punishments.tempban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

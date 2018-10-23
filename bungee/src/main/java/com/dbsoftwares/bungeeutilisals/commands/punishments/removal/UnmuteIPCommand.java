@@ -86,7 +86,7 @@ public class UnmuteIPCommand extends Command {
 
         user.sendLangMessage("punishments.unmuteip.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.unmuteip.broadcast",
+        api.langPermissionBroadcast("punishments.unmuteip.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmuteip.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

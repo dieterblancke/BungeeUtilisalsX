@@ -51,7 +51,7 @@ public enum Channels {
 
             if (announcement.isLanguage()) {
                 ILanguageManager languageManager = announcement.isPluginLanguageManager() ? BUCore.getApi().getLanguageManager() : BUCore.getApi().getAddonManager().getLanguageManager();
-                users.forEach(user -> LanguageUtils.sendLangMessage(languageManager, user, announcement.getMessage(), announcement.getPlaceHolders()));
+                users.forEach(user -> LanguageUtils.sendLangMessage(languageManager, announcement.getPlugin(), user, announcement.getMessage(), announcement.getPlaceHolders()));
             } else {
                 if (announcement.getPrefix() == null) {
                     users.forEach(user -> user.sendMessage(announcement.getMessage()));

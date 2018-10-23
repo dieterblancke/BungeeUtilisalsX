@@ -70,6 +70,12 @@ public enum Library {
             "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.2.0",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")
+    ),
+    GOOGLE_HTTP_CLIENT(
+            "com.google.api.client.http.HttpRequest",
+            "http://central.maven.org/maven2/com/google/http-client/google-http-client/1.26.0/google-http-client-{version}.jar",
+            "1.26.0",
+            true
     );
 
     private final String className;

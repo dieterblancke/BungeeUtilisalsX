@@ -36,15 +36,15 @@ public class LanguageUtils {
     }
 
     public static void sendLangMessage(final CommandSender sender, final String path) {
-        sendLangMessage(BUCore.getApi().getLanguageManager(), sender, path);
+        sendLangMessage(BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path);
     }
 
     public static void sendLangMessage(final CommandSender sender, final String path, final Object... placeholders) {
-        sendLangMessage(BUCore.getApi().getLanguageManager(), sender, path, placeholders);
+        sendLangMessage(BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path, placeholders);
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final CommandSender sender, final String path) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), sender);
+    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 sender.sendMessage(Utils.format(message));
@@ -54,8 +54,8 @@ public class LanguageUtils {
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final CommandSender sender, final String path, final Object... placeholders) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), sender);
+    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path, final Object... placeholders) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 for (int i = 0; i < placeholders.length - 1; i += 2) {
@@ -74,8 +74,8 @@ public class LanguageUtils {
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final User user, final String path) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), user);
+    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 user.sendMessage(Utils.format(message));
@@ -85,8 +85,8 @@ public class LanguageUtils {
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final User user, final String path, final Object... placeholders) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(BUCore.getApi().getPlugin().getDescription().getName(), user);
+    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders) {
+        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 for (int i = 0; i < placeholders.length - 1; i += 2) {

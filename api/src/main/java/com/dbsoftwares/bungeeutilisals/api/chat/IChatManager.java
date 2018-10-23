@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.manager;
+package com.dbsoftwares.bungeeutilisals.api.chat;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 

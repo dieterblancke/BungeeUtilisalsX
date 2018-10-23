@@ -90,7 +90,7 @@ public class TempMuteCommand extends Command {
 
         user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.tempmute.broadcast",
+        api.langPermissionBroadcast("punishments.tempmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

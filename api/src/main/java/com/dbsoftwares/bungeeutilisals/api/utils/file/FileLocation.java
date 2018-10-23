@@ -87,7 +87,7 @@ public enum FileLocation {
                         getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
                     } else {
                         BUCore.log(Level.WARNING, "An invalid MOTD condition has been entered.");
-                        BUCore.log(Level.WARNING, "Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-manager#conditions");
+                        BUCore.log(Level.WARNING, "Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
                     }
                 }
             }

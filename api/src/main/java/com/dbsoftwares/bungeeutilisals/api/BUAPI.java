@@ -20,10 +20,10 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
-import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
@@ -48,7 +48,7 @@ public interface BUAPI {
     Plugin getPlugin();
 
     /**
-     * @return The language manager of BungeeUtilisals.
+     * @return The language chat of BungeeUtilisals.
      */
     ILanguageManager getLanguageManager();
 
@@ -164,7 +164,7 @@ public interface BUAPI {
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast(String message, String permission, Object... placeholders);
+    void langPermissionBroadcast(String message, String permission, Object... placeholders);
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
@@ -183,7 +183,28 @@ public interface BUAPI {
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders);
+    void langPermissionBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders);
+
+    /**
+     * Broadcasts a message with the BungeeUtilisals prefix.
+     *
+     * @param manager      The languagemanager instance to be used.
+     * @param plugin       The plugin name to be used.
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void pluginLangBroadcast(ILanguageManager manager, String plugin, String message, Object... placeholders);
+
+    /**
+     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     *
+     * @param manager      The languagemanager instance to be used.
+     * @param plugin       The plugin name to be used.
+     * @param message      The location (in the languages file) of the message to be broadcasted.
+     * @param permission   The permission the user must have to receive the message.
+     * @param placeholders PlaceHolders + their replacements
+     */
+    void pluginLangPermissionBroadcast(ILanguageManager manager, String plugin, String message, String permission, Object... placeholders);
 
 
     /**
@@ -197,12 +218,12 @@ public interface BUAPI {
     IPlayerUtils getPlayerUtils();
 
     /**
-     * @return the storage manager used.
+     * @return the storage chat used.
      */
     AbstractStorageManager getStorageManager();
 
     /**
-     * @return the addon manager that is being used
+     * @return the addon chat that is being used
      */
     IAddonManager getAddonManager();
 }

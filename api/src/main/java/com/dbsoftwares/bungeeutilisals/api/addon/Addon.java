@@ -40,7 +40,7 @@ import java.util.concurrent.Executors;
 public abstract class Addon {
 
     private ProxyServer proxy;
-    private BUAPI api;
+    protected BUAPI api;
     private AddonDescription description;
     private ExecutorService executorService;
 
@@ -125,11 +125,11 @@ public abstract class Addon {
     }
 
     public void sendLangMessage(final CommandSender sender, final String path) {
-        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), sender, path);
+        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), description.getName(), sender, path);
     }
 
     public void sendLangMessage(final CommandSender sender, final String path, final Object... placeholders) {
-        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), sender, path, placeholders);
+        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), description.getName(), sender, path, placeholders);
     }
 
     public void sendLangMessage(final User user, final String path) {

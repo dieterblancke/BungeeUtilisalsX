@@ -95,7 +95,7 @@ public class IPTempBanCommand extends Command {
 
         user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.iptempban.broadcast",
+        api.langPermissionBroadcast("punishments.iptempban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

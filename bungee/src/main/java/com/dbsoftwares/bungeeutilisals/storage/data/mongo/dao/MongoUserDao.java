@@ -51,7 +51,7 @@ public class MongoUserDao implements UserDao {
     public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put("uuid", uuid);
+        data.put("uuid", uuid.toString());
         data.put("username", username);
         data.put("ip", ip);
         data.put("language", language.getName());
@@ -93,7 +93,6 @@ public class MongoUserDao implements UserDao {
 
         Document document = getDatabase().getCollection(format("{users-table}"))
                 .find(Filters.eq("uuid", uuid.toString())).first();
-
         if (document != null) {
             storage.setUuid(uuid);
             storage.setUserName(document.getString("username"));

@@ -89,7 +89,7 @@ public class IPBanCommand extends Command {
 
         user.sendLangMessage("punishments.ipban.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.ipban.broadcast",
+        api.langPermissionBroadcast("punishments.ipban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ipban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

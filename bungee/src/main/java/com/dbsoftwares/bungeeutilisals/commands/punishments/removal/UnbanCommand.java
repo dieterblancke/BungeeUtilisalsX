@@ -87,7 +87,7 @@ public class UnbanCommand extends Command {
 
         user.sendLangMessage("punishments.unban.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.unban.broadcast",
+        api.langPermissionBroadcast("punishments.unban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

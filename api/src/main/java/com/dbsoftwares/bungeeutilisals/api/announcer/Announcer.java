@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.announcer;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.math.MathUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;

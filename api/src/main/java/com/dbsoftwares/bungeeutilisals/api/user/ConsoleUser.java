@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -32,6 +33,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
+import java.util.List;
 import java.util.UUID;
 
 public class ConsoleUser implements User {
@@ -111,48 +113,21 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendLangMessage(boolean prefix, String path) {
-        if (getLanguageConfig().isList(path)) {
-            for (String message : getLanguageConfig().getStringList(path)) {
-                if (prefix) {
-                    sendMessage(message);
-                } else {
-                    sendRawColorMessage(message);
-                }
-            }
+        final String message = buildLangMessage(path);
+        if (prefix) {
+            sendMessage(message);
         } else {
-            if (prefix) {
-                sendMessage(getLanguageConfig().getString(path));
-            } else {
-                sendRawColorMessage(getLanguageConfig().getString(path));
-            }
+            sendRawColorMessage(message);
         }
     }
 
     @Override
     public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
-        if (getLanguageConfig().isList(path)) {
-            for (String message : getLanguageConfig().getStringList(path)) {
-                for (int i = 0; i < placeholders.length - 1; i += 2) {
-                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-                }
-
-                if (prefix) {
-                    sendMessage(message);
-                } else {
-                    sendRawColorMessage(message);
-                }
-            }
+        final String message = buildLangMessage(path, placeholders);
+        if (prefix) {
+            sendMessage(message);
         } else {
-            String message = getLanguageConfig().getString(path);
-            for (int i = 0; i < placeholders.length - 1; i += 2) {
-                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-            }
-
-            if (prefix) {
-                sendMessage(message);
-            } else {
-                sendRawColorMessage(message);
-            }
+            sendRawColorMessage(message);
         }
     }
 
@@ -269,6 +244,37 @@ public class ConsoleUser implements User {
     @Override
     public void setLocation(Location location) {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    @Override
+    public String buildLangMessage(final String path, final Object... placeholders) {
+        final StringBuilder builder = new StringBuilder();
+
+        if (getLanguageConfig().isList(path)) {
+            final List<String> messages = getLanguageConfig().getStringList(path);
+
+            for (int i = 0; i < messages.size(); i++) {
+                final String message = replacePlaceHolders(messages.get(i), placeholders);
+                builder.append(message);
+
+                if (i < messages.size() - 1) {
+                    builder.append("\n");
+                }
+            }
+        } else {
+            final String message = replacePlaceHolders(getLanguageConfig().getString(path), placeholders);
+
+            builder.append(message);
+        }
+        return builder.toString();
+    }
+
+    private String replacePlaceHolders(String message, Object... placeholders) {
+        for (int i = 0; i < placeholders.length - 1; i += 2) {
+            message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+        }
+        message = PlaceHolderAPI.formatMessage(this, message);
+        return message;
     }
 
     @Override

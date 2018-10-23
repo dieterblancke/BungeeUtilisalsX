@@ -85,7 +85,7 @@ public class MuteCommand extends Command {
 
         user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.mute.broadcast",
+        api.langPermissionBroadcast("punishments.mute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

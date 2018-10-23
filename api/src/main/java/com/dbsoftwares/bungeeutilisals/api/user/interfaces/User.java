@@ -267,4 +267,13 @@ public interface User extends ExperimentalUser {
      * @param location the new user location
      */
     void setLocation(Location location);
+
+    /**
+     * Formats a language message from the given path.
+     *
+     * @param path         The language file path to be used.
+     * @param placeholders The placeholders to be replaced.
+     * @return A language message with given placeholders replaced.
+     */
+    String buildLangMessage(String path, Object... placeholders);
 }

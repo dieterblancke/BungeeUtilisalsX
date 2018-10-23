@@ -86,7 +86,7 @@ public class UnmuteCommand extends Command {
 
         user.sendLangMessage("punishments.unmute.executed", executor.getPlaceHolders(info));
 
-        api.langBroadcast("punishments.unmute.broadcast",
+        api.langPermissionBroadcast("punishments.unmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

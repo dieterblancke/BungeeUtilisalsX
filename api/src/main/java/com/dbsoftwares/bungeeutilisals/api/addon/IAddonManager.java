@@ -25,6 +25,7 @@ import net.md_5.bungee.api.plugin.Listener;
 
 import java.io.File;
 import java.util.Collection;
+import java.util.List;
 
 public interface IAddonManager {
 
@@ -34,13 +35,21 @@ public interface IAddonManager {
 
     void loadAddons();
 
+    void loadSingleAddon(final File addonFile);
+
     void enableAddons();
+
+    void enableAddon(final String addonName);
 
     void disableAddons();
 
     void disableAddon(final String addonName);
 
+    void reloadAddon(final String addonName);
+
     Addon getAddon(final String addonName);
+
+    boolean isRegistered(final String addonName);
 
     Collection<Addon> getAddons();
 
@@ -59,4 +68,6 @@ public interface IAddonManager {
     Collection<Command> getCommands(final String addonName);
 
     ILanguageManager getLanguageManager();
+
+    List<AddonData> getAllAddons();
 }

@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -39,7 +40,7 @@ public class UserStorage {
     private Date firstLogin;
     private Date lastLogout;
 
-    private Map<String, Object> data;
+    private Map<String, Object> data = Maps.newHashMap();
 
     @SuppressWarnings("unchecked")
     public <T> T getData(String key) {

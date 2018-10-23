@@ -39,6 +39,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
@@ -143,7 +144,7 @@ public class BungeeUtilisals extends Plugin {
         // Initializing API
         api = new BUtilisalsAPI(this);
 
-        // Loading language manager
+        // Loading language chat
         api.getLanguageManager().addPlugin(getDescription().getName(), new File(getDataFolder(), "languages"), FileStorageType.YAML);
         api.getLanguageManager().loadLanguages(getDescription().getName());
 
@@ -304,6 +305,7 @@ public class BungeeUtilisals extends Plugin {
 
     private void loadGeneralCommands() {
         new PluginCommand();
+        new AddonCommand();
 
         loadGeneralCommand("glist", GListCommand.class);
         loadGeneralCommand("announce", AnnounceCommand.class);

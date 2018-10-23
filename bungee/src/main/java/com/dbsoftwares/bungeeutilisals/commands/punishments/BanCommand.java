@@ -61,6 +61,7 @@ public class BanCommand extends Command {
             user.sendLangMessage("never-joined");
             return;
         }
+
         UserStorage storage = dao.getUserDao().getUserData(args[0]);
         if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), null, true)) {
             user.sendLangMessage("punishments.ban.already-banned");
@@ -82,6 +83,7 @@ public class BanCommand extends Command {
                 reason, 0L, user.getServerName(), true, user.getName()
         );
 
+
         api.getUser(storage.getUserName()).ifPresent(banned -> {
             String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
@@ -90,8 +92,7 @@ public class BanCommand extends Command {
         });
 
         user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
-
-        api.langBroadcast("punishments.ban.broadcast",
+        api.langPermissionBroadcast("punishments.ban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

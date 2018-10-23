@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.manager;
 
-import com.dbsoftwares.bungeeutilisals.api.manager.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;

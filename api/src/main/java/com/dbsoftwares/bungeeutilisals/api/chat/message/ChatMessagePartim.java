@@ -16,28 +16,17 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils.redis.channeldata;
+package com.dbsoftwares.bungeeutilisals.api.chat.message;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class APIAnnouncement {
+@AllArgsConstructor
+public class ChatMessagePartim {
 
-    private boolean pluginLanguageManager; // true if plugin, false if addon
-    private String plugin;
-    private String prefix;
     private String message;
-    private String permission;
-    private boolean language;
-    private Object[] placeHolders;
+    private HoverPartim hoverPartim;
+    private ClickPartim clickPartim;
 
-    public APIAnnouncement(boolean pluginLanguageManager, String plugin, String prefix, String message, String permission, boolean language, Object... placeholders) {
-        this.pluginLanguageManager = pluginLanguageManager;
-        this.plugin = plugin;
-        this.prefix = prefix;
-        this.message = message;
-        this.permission = permission;
-        this.language = language;
-        this.placeHolders = placeholders;
-    }
 }

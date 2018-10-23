@@ -73,6 +73,7 @@ public class MongoPunishmentDao implements PunishmentDao {
         info.setDate(new Date(System.currentTimeMillis()));
         info.setType(type);
 
+
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put("uuid", uuid);
         data.put("user", user);
@@ -93,6 +94,7 @@ public class MongoPunishmentDao implements PunishmentDao {
             info.setRemovedBy(removedby);
             data.put("removed_by", removedby);
         }
+
         data.put("executed_by", executedby);
 
         getDatabase().getCollection(format(type.getTablePlaceHolder())).insertOne(new Document(data));
