@@ -16,27 +16,21 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.updater;
 
+import com.google.api.client.http.GenericUrl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-
-import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class AddonData {
+public class Updatable {
 
-    private int id;
-    private int pluginid;
     private String name;
-    private String version;
-    private String author;
-    private List<String> requiredDependencies;
-    private List<String> optionalDependencies;
-    private String description;
-    private String downloadURL;
+    private String currentVersion;
+    private GenericUrl url;
 
+    public Updatable(final String name, final String currentVersion, final String url) {
+        this(name, currentVersion, new GenericUrl(url));
+    }
 }

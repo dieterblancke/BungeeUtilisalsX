@@ -1,6 +1,14 @@
 # Should BungeeUtilisals use RedisBungee?
 redis: false
 
+updater:
+  # Set to true to enable updater checks.
+  enabled: true
+  # How fast should BungeeUtilisals check for new updates (in minutes)? Set to -1 to disable repeating updater checks.
+  delay: 30
+  # Set to true to automatically install updates on restart.
+  install: false
+
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, MONGODB | MySQL recommended
   # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.

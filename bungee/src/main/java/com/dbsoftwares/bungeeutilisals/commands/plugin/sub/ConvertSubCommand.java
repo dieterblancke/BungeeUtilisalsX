@@ -18,13 +18,22 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.plugin.sub;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisals.converter.Converter;
+import com.dbsoftwares.bungeeutilisals.converter.converters.MongoToMongoConverter;
+import com.dbsoftwares.bungeeutilisals.converter.converters.MongoToSQLConverter;
+import com.dbsoftwares.bungeeutilisals.converter.converters.SQLtoMongoConverter;
+import com.dbsoftwares.bungeeutilisals.converter.converters.SQLtoSQLConverter;
+import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class ConvertSubCommand extends SubCommand {
 
@@ -45,7 +54,6 @@ public class ConvertSubCommand extends SubCommand {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length == 1 || args.length == 2) {
-            // TODO: MAKE CONVERTORS (from MySQL to SQLite, SQLite to MySQL, ...)
             final String oldtype = args[0];
             final Map<String, String> properties = Maps.newHashMap();
 
@@ -55,7 +63,43 @@ public class ConvertSubCommand extends SubCommand {
                 }
             }
 
+            final Converter converter;
+            if (oldtype.toLowerCase().contains("sql")) {
+                if (BUCore.getApi().getStorageManager().getType().toString().contains("SQL")) {
+                    converter = new SQLtoSQLConverter();
+                } else {
+                    converter = new SQLtoMongoConverter();
+                }
+            } else {
+                if (BUCore.getApi().getStorageManager().getType().toString().contains("SQL")) {
+                    converter = new MongoToSQLConverter();
+                } else {
+                    converter = new MongoToMongoConverter();
+                }
+            }
 
+            converter.startImport(new ImporterCallback<Converter.ConverterStatus>() {
+                @Override
+                public void onStatusUpdate(Converter.ConverterStatus status) {
+                    if (status.getConvertedEntries() % 100 == 0) {
+                        BUCore.log(
+                                Level.INFO,
+                                "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
+                                        + " entries (" + MathUtils.formatNumber(status.getProgressionPercent(), 2) + " %)"
+                        );
+                    }
+                }
+
+                @Override
+                public void done(Converter.ConverterStatus status, Throwable throwable) {
+                    BUCore.log(
+                            Level.INFO,
+                            "Finished converting " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
+                                    + ". " + status.getRemainingEntries() + " could not be converted ("
+                                    + status.getProgressionPercent() + " %)"
+                    );
+                }
+            }, properties);
         }
     }
 

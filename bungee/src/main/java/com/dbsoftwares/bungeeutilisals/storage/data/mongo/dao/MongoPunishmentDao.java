@@ -62,6 +62,11 @@ public class MongoPunishmentDao implements PunishmentDao {
     public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
                                            String ip, String reason, Long time, String server,
                                            Boolean active, String executedby, String removedby) {
+        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, new Date(System.currentTimeMillis()), removedby);
+    }
+
+    @Override
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, Long time, String server, Boolean active, String executedby, Date date, String removedby) {
         PunishmentInfo info = new PunishmentInfo();
 
         info.setUuid(uuid);
@@ -80,7 +85,7 @@ public class MongoPunishmentDao implements PunishmentDao {
         data.put("ip", ip);
         data.put("reason", reason);
         data.put("server", server);
-        data.put("date", new Date(System.currentTimeMillis()));
+        data.put("date", date);
 
         if (time != null) {
             info.setExpireTime(time);

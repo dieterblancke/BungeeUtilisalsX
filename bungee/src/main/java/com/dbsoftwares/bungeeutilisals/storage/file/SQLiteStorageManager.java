@@ -55,7 +55,8 @@ public class SQLiteStorageManager extends AbstractStorageManager {
 
             connection = DriverManager.getConnection("jdbc:sqlite:" + database.getPath());
         } catch (ClassNotFoundException e) {
-            e.printStackTrace(); // should never occur | library loaded before
+            // should never occur | library loaded before
+            e.printStackTrace();
         }
     }
 

@@ -16,27 +16,17 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.addon;
+package com.dbsoftwares.bungeeutilisals.updater;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
-import java.util.List;
+@RequiredArgsConstructor
+public class UpdateRunner implements Runnable {
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-public class AddonData {
+    private final Updater updater;
 
-    private int id;
-    private int pluginid;
-    private String name;
-    private String version;
-    private String author;
-    private List<String> requiredDependencies;
-    private List<String> optionalDependencies;
-    private String description;
-    private String downloadURL;
+    @Override
+    public void run() {
 
+    }
 }

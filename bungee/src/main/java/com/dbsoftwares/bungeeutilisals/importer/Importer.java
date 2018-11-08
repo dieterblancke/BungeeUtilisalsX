@@ -93,7 +93,7 @@ public abstract class Importer {
 
         public ImporterStatus(final int totalEntries) {
             if (totalEntries < 1) {
-                throw new IllegalArgumentException("There is no entry to convert.");
+                throw new IllegalArgumentException("There is no entry to import.");
             }
             this.totalEntries = totalEntries;
             convertedEntries = 0;

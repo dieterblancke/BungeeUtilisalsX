@@ -45,7 +45,6 @@ public interface UserDao {
 
     Language getLanguage(UUID uuid);
 
-
     void setName(UUID uuid, String name);
 
     void setIP(UUID uuid, String ip);

@@ -21,10 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.plugin;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.DumpSubCommand;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.ImportSubCommand;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.ReloadSubCommand;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.VersionSubCommand;
+import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.*;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -38,6 +35,7 @@ public class PluginCommand extends Command {
         subCommands.add(new ReloadSubCommand());
         subCommands.add(new DumpSubCommand());
         subCommands.add(new ImportSubCommand());
+        subCommands.add(new ConvertSubCommand());
     }
 
     @Override
