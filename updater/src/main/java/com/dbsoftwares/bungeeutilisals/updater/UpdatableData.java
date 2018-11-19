@@ -18,12 +18,22 @@
 
 package com.dbsoftwares.bungeeutilisals.updater;
 
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
+import com.google.api.client.http.GenericUrl;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Updatable {
+import java.io.File;
 
-    String url() default "";
+@Data
+@AllArgsConstructor
+public class UpdatableData {
 
+    private String name;
+    private String currentVersion;
+    private GenericUrl url;
+    private File file;
+
+    public UpdatableData(final String name, final String currentVersion, final String url, final File file) {
+        this(name, currentVersion, new GenericUrl(url), file);
+    }
 }

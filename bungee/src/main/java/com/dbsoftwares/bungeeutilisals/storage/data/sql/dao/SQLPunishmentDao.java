@@ -76,6 +76,11 @@ public class SQLPunishmentDao implements PunishmentDao {
     public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
                                            String ip, String reason, Long time, String server,
                                            Boolean active, String executedby, String removedby) {
+        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, new Date(System.currentTimeMillis()), removedby);
+    }
+
+    @Override
+    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, Long time, String server, Boolean active, String executedby, Date date, String removedby) {
         String sql = PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + " ");
 
         if (type.isActivatable()) {
@@ -146,7 +151,7 @@ public class SQLPunishmentDao implements PunishmentDao {
         info.setReason(reason);
         info.setServer(server);
         info.setExecutedBy(executedby);
-        info.setDate(new Date(System.currentTimeMillis()));
+        info.setDate(date);
         info.setType(type);
 
         if (time != null) {
@@ -160,6 +165,7 @@ public class SQLPunishmentDao implements PunishmentDao {
         }
 
         return info;
+
     }
 
     @Override

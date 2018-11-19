@@ -8,6 +8,8 @@ updater:
   delay: 30
   # Set to true to automatically install updates on restart.
   install: false
+  # Permission to get notified when an update has been found.
+  permission: 'bungeeutilisals.updater.notify'
 
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, MONGODB | MySQL recommended

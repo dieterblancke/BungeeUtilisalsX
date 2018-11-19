@@ -4,6 +4,12 @@ never-joined: '&fThat user never joined before!'
 offline: '&fThat user is not online!'
 no-number: '&ePlease enter a valid number!'
 
+updater:
+  update-found:
+  - '&eAn update has been found for &b{name}&e.'
+  - '&eInstalled version: &b{version}'
+  - '&eNew Version: &b{newVersion}'
+
 chat-protection:
   swear: '&fPlease do not swear!'
   caps: '&fPlease do not use that much caps!'

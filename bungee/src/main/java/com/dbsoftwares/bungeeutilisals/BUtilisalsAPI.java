@@ -77,8 +77,7 @@ public class BUtilisalsAPI implements BUAPI {
         this.languageManager = new PluginLanguageManager(instance);
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
-        this.playerUtils = FileLocation.CONFIG.getConfiguration().getBoolean("redis")
-                ? new RedisPlayerUtils() : new BungeePlayerUtils();
+        this.playerUtils = getConfig(FileLocation.CONFIG).getBoolean("redis") ? new RedisPlayerUtils() : new BungeePlayerUtils();
         this.addonManager = new AddonManager();
     }
 

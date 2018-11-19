@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
@@ -58,17 +59,12 @@ public class LanguageUtils {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
-                for (int i = 0; i < placeholders.length - 1; i += 2) {
-                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-                }
+                message = replacePlaceHolders(null, message, placeholders);
 
                 sender.sendMessage(Utils.format(message));
             }
         } else {
-            String message = config.getString(path);
-            for (int i = 0; i < placeholders.length - 1; i += 2) {
-                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-            }
+            String message = replacePlaceHolders(null, config.getString(path), placeholders);
 
             sender.sendMessage(Utils.format(message));
         }
@@ -89,19 +85,22 @@ public class LanguageUtils {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
-                for (int i = 0; i < placeholders.length - 1; i += 2) {
-                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-                }
+                message = replacePlaceHolders(user, message, placeholders);
 
                 user.sendMessage(Utils.format(message));
             }
         } else {
-            String message = config.getString(path);
-            for (int i = 0; i < placeholders.length - 1; i += 2) {
-                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
-            }
+            String message = replacePlaceHolders(user, config.getString(path), placeholders);
 
             user.sendMessage(Utils.format(message));
         }
+    }
+
+    private static String replacePlaceHolders(User user, String message, Object... placeholders) {
+        for (int i = 0; i < placeholders.length - 1; i += 2) {
+            message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+        }
+        message = PlaceHolderAPI.formatMessage(user, message);
+        return message;
     }
 }
