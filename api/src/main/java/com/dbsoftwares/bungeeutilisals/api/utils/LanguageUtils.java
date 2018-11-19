@@ -83,15 +83,14 @@ public class LanguageUtils {
 
     public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders) {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
+
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 message = replacePlaceHolders(user, message, placeholders);
-
                 user.sendMessage(Utils.format(message));
             }
         } else {
             String message = replacePlaceHolders(user, config.getString(path), placeholders);
-
             user.sendMessage(Utils.format(message));
         }
     }

@@ -228,7 +228,7 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public void langPermissionBroadcast(String message, String permission, Object... placeholders) {
-        langBroadcast(languageManager, message, permission, placeholders);
+        langPermissionBroadcast(languageManager, message, permission, placeholders);
     }
 
     @Override
