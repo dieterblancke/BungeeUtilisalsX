@@ -36,7 +36,6 @@ public class FriendsCommand extends Command {
                 FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.permission")
         );
 
-
         subCommands.add(new AddFriendSubCommand());
     }
 

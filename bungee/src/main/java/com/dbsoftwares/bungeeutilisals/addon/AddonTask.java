@@ -21,12 +21,11 @@ package com.dbsoftwares.bungeeutilisals.addon;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.addon.Addon;
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonTask;
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import lombok.Data;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Level;
 
 @Data
 public class AddonTask implements Runnable, IAddonTask {
@@ -73,7 +72,7 @@ public class AddonTask implements Runnable, IAddonTask {
             try {
                 task.run();
             } catch (Throwable t) {
-                BUCore.log(Level.SEVERE, String.format("Task %s encountered an exception", this), t);
+                BUCore.getLogger().error(String.format("Task %s encountered an exception", id), t);
             }
 
             if (period <= 0) {

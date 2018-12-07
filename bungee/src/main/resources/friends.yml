@@ -1,14 +1,17 @@
 # Set to true if you want to use the BungeeUtilisals friend system.
 enabled: false
 
-# Recommended to write the names in lowercase.
-# Permissions would be like 'bungeeutilisals.friends.limit.RANK' f.e. 'bungeeutilisals.friends.limit.vip'
-# Permissions like 'bungeeutilisals.friends.limit.AMOUNT' also work, f.e. 'bungeeutilisals.friends.limit.50'
-friendlimit:
-  default: 10
-  vip: 15
-  mvp: 20
-  helper: 25
+friendlimits:
+  # With what the limit permission should start, by default an example would be: "bungeeutilisals.friends.limit.25", "bungeeutilisals.friends.limit.default", ...
+  permission: 'bungeeutilisals.friends.limit.'
+  # Allows you to use "bungeeutilisals.friends.limit.vip" (if the option above is the default one), which will equal to 15 friends.
+  # This is very useful if you are ever to change the friend limit someone should have.
+  limits:
+    # The default limit is required.
+    default: 10
+    vip: 15
+    mvp: 20
+    helper: 25
 
 command:
   aliases: 'friend, bfriends'
@@ -16,7 +19,7 @@ command:
 
 subcommands:
   add:
-    aliases: ''
+    aliases: 'send, request'
     permission: bungeeutilisals.friends.add
   remove:
     aliases: 'delete, del'

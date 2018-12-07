@@ -137,7 +137,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager {
         File lang = getFile(plugin, language);
 
         if (!configurations.containsKey(lang)) {
-            BUCore.log("The plugin " + plugin + " did not register the language " + language.getName() + " yet!");
+            BUCore.getLogger().warn("The plugin " + plugin + " did not register the language " + language.getName() + " yet!");
 
             File deflang = getFile(plugin, getDefaultLanguage());
             if (configurations.containsKey(deflang)) {

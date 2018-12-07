@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.punishments;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -16,9 +16,9 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
+package com.dbsoftwares.bungeeutilisals.api.motd.handlers;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.ConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
 
 public class DomainConditionHandler extends ConditionHandler {

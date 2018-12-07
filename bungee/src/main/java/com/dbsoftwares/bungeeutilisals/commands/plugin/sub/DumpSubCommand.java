@@ -57,7 +57,6 @@ import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.logging.Level;
 
 public class DumpSubCommand extends SubCommand {
 
@@ -113,7 +112,7 @@ public class DumpSubCommand extends SubCommand {
                         + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get("key").getAsString() + ".dump");
             } catch (IOException e) {
                 user.sendMessage("Could not create dump. Please check the console for errors.");
-                BUCore.log(Level.WARNING, "Could not create dump request");
+                BUCore.getLogger().warn("Could not create dump request");
                 e.printStackTrace();
             }
         });

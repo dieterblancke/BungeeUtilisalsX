@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.user;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;

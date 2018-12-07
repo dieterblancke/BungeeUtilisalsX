@@ -65,7 +65,7 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
             executor.invoke(executorInstance, castedEvent);
             uses.getAndIncrement();
         } catch (Throwable t) {
-            BUCore.log("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
+            BUCore.getLogger().warn("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
             t.printStackTrace();
         }
     }

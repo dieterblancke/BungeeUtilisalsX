@@ -46,6 +46,12 @@ public class DefaultPlaceHolders implements PlaceHolderPack {
                 return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendrequests");
             }
         });
+        PlaceHolderAPI.addPlaceHolder("{friendsettings-table}", false, new PlaceHolderEventHandler() {
+            @Override
+            public String getReplacement(PlaceHolderEvent event) {
+                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendsettings");
+            }
+        });
         PlaceHolderAPI.addPlaceHolder("{bans-table}", false, new PlaceHolderEventHandler() {
             @Override
             public String getReplacement(PlaceHolderEvent event) {

@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
@@ -43,6 +44,20 @@ public class AddFriendSubCommand extends SubCommand {
     @Override
     public void onExecute(User user, String[] args) {
         // TODO
+        final int friendLimit = FriendUtils.getFriendsLimit(user);
+
+        if (user.getFriends().size() >= friendLimit) {
+            user.sendLangMessage("friends.add.limited", "{limit}", friendLimit);
+            return;
+        }
+        final String name = args[0];
+
+        if (user.getFriends().stream().anyMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
+            user.sendLangMessage("friends.add.alreadyfriend", "{friend}", name);
+            return;
+        }
+
+
     }
 
     @Override

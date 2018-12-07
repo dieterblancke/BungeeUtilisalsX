@@ -16,14 +16,12 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers;
+package com.dbsoftwares.bungeeutilisals.api.motd.handlers;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
-
-import java.util.logging.Level;
 
 public class VersionConditionHandler extends ConditionHandler {
 
@@ -63,9 +61,9 @@ public class VersionConditionHandler extends ConditionHandler {
         try {
             return Version.valueOf("MINECRAFT_" + mcVersion.replace(".", "_"));
         } catch (IllegalArgumentException e) {
-            BUCore.log(Level.WARNING, "Found an invalid version in condition 'version " + condition + "'!");
-            BUCore.log(Level.WARNING, "Available versions:");
-            BUCore.log(listVersions());
+            BUCore.getLogger().warn("Found an invalid version in condition 'version " + condition + "'!");
+            BUCore.getLogger().warn("Available versions:");
+            BUCore.getLogger().warn(listVersions());
             return null;
         }
     }

@@ -63,7 +63,7 @@ public class GListCommand extends Command {
                 ServerGroup group = FileLocation.SERVERGROUPS.getData(server);
 
                 if (group == null) {
-                    BUCore.log("Could not find a servergroup or -name for " + server + "!");
+                    BUCore.getLogger().warn("Could not find a servergroup or -name for " + server + "!");
                     return;
                 }
 

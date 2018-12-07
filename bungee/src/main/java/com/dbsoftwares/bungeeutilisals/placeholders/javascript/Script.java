@@ -37,7 +37,6 @@ import java.nio.charset.StandardCharsets;
 @Data
 public class Script {
 
-
     private final static File cacheFolder;
 
     static {

@@ -146,8 +146,8 @@ public class ReflectionUtils {
         if (version.startsWith("1.")) {
             version = version.substring(2);
         }
-        int dotPos = version.indexOf('.');
-        int dashPos = version.indexOf('-');
+        final int dotPos = version.indexOf('.');
+        final int dashPos = version.indexOf('-');
         return Integer.parseInt(version.substring(0, dotPos > -1 ? dotPos : dashPos > -1 ? dashPos : 1));
     }
 }

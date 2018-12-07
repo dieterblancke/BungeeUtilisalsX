@@ -103,6 +103,9 @@ friends:
   help:
     header: '&aFriends Commands Help:'
     format: '&b- &e%usage%'
+  add:
+    limited: '&eYou cannot have more then &b{limit} &efriends!'
+    alreadyfriend: '&b{friend} &eis already in your friends list!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

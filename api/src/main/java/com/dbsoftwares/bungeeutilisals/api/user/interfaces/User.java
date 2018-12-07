@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
@@ -29,6 +30,7 @@ import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface User extends ExperimentalUser {
@@ -276,4 +278,9 @@ public interface User extends ExperimentalUser {
      * @return A language message with given placeholders replaced.
      */
     String buildLangMessage(String path, Object... placeholders);
+
+    /**
+     * @return a list of the user's Friends
+     */
+    List<FriendData> getFriends();
 }

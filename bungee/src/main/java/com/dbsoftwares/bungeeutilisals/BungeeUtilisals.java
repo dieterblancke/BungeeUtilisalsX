@@ -40,6 +40,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
+import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
@@ -52,10 +53,16 @@ import com.dbsoftwares.bungeeutilisals.executors.UserChatExecutor;
 import com.dbsoftwares.bungeeutilisals.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisals.executors.UserPunishExecutor;
 import com.dbsoftwares.bungeeutilisals.library.Library;
+import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
+import com.dbsoftwares.bungeeutilisals.packet.PacketRegistry;
+import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
+import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
+import com.dbsoftwares.bungeeutilisals.packet.executors.PacketUpdateExecutor;
+import com.dbsoftwares.bungeeutilisals.packet.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
@@ -83,7 +90,6 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin {
@@ -115,9 +121,9 @@ public class BungeeUtilisals extends Plugin {
     @Override
     public void onEnable() {
         if (ReflectionUtils.getJavaVersion() < 8) {
-            BUCore.log(Level.SEVERE, "You are running a Java version older then Java 8.");
-            BUCore.log(Level.SEVERE, "Please upgrade to Java 8 (9 recommended).");
-            BUCore.log(Level.SEVERE, "BungeeUtilisals is not able to start up on Java versions older then 8.");
+            BUCore.getLogger().warn("You are running a Java version older then Java 8.");
+            BUCore.getLogger().warn("Please upgrade to Java 8 (9 recommended).");
+            BUCore.getLogger().warn("BungeeUtilisals is not able to start up on Java versions older then 8.");
             return;
         }
 
@@ -180,8 +186,6 @@ public class BungeeUtilisals extends Plugin {
 
         // Loading Punishment system
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            loadPunishmentCommands();
-
             ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
             loader.register(UserPunishEvent.class, new UserPunishExecutor());
@@ -194,9 +198,18 @@ public class BungeeUtilisals extends Plugin {
         // Loading Announcers
         Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class);
 
-        // Loading Custom Commands
-        loadGeneralCommands();
-        loadCustomCommands();
+        // Loading all (enabled) Commands
+        loadCommands();
+
+        // Loading packet system (if enabled)
+        if (getConfig().getBoolean("packets")) {
+            PacketRegistry.registerPackets();
+            ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
+
+            PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
+            loader.register(PacketUpdateEvent.class, packetUpdateExecutor);
+            loader.register(PacketReceiveEvent.class, packetUpdateExecutor);
+        }
 
         ProxyServer.getInstance().getScheduler().schedule(this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS);
 
@@ -221,14 +234,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     public void reload() {
-        generalCommands.forEach(Command::unload);
-        generalCommands.clear();
-        loadGeneralCommands();
-
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            loadPunishmentCommands();
-        }
-        loadCustomCommands();
+        loadCommands();
 
         Announcer.getAnnouncers().values().forEach(Announcer::reload);
 
@@ -261,7 +267,7 @@ public class BungeeUtilisals extends Plugin {
 
                 this.scripts.add(script);
             } catch (IOException | ScriptException e) {
-                BUCore.log("Could not load script " + file.getName());
+                BUCore.getLogger().info("Could not load script " + file.getName());
                 e.printStackTrace();
             }
         }
@@ -283,15 +289,17 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadLibraries() {
-        BUCore.log("Loading libraries ...");
+        BUCore.getLogger().info("Loading libraries ...");
         jarClassLoader = new JarClassLoader(this);
 
-        for (Library library : Library.values()) {
-            if (library.shouldBeLoaded() && !library.isPresent()) {
+        for (StandardLibrary standardLibrary : StandardLibrary.values()) {
+            final Library library = standardLibrary.getLibrary();
+
+            if (library.isToLoad() && !library.isPresent()) {
                 library.load();
             }
         }
-        BUCore.log("Libraries have been loaded.");
+        BUCore.getLogger().info("Libraries have been loaded.");
     }
 
     public IConfiguration getConfig() {
@@ -309,6 +317,21 @@ public class BungeeUtilisals extends Plugin {
             location.loadConfiguration(file);
             location.loadData();
         }
+    }
+
+    private void loadCommands() {
+        generalCommands.forEach(Command::unload);
+        generalCommands.clear();
+        loadGeneralCommands();
+
+        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
+            loadPunishmentCommands();
+        }
+        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
+            generalCommands.add(new FriendsCommand());
+        }
+
+        loadCustomCommands();
     }
 
     private void loadGeneralCommands() {

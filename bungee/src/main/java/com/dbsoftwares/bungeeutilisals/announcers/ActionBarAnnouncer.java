@@ -38,7 +38,7 @@ public class ActionBarAnnouncer extends Announcer {
             ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
             if (group == null) {
-                BUCore.log("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                BUCore.getLogger().warn("Could not find a servergroup or -name for " + section.getString("server") + "!");
                 return;
             }
 

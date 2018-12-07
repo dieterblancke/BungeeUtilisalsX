@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -38,6 +37,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public interface BUAPI {
@@ -70,20 +70,15 @@ public interface BUAPI {
     Optional<User> getUser(ProxiedPlayer player);
 
     /**
-     * @return A custom ConcurrentList containing all online Users.
+     * @return A list containing all online Users.
      */
-    UserCollection getUsers();
+    List<User> getUsers();
 
     /**
      * @param permission The permission the users must have.
-     * @return A custom ConcurrentList containing all online users WITH the given permission.
+     * @return A list containing all online users WITH the given permission.
      */
-    UserCollection getUsers(String permission);
-
-    /**
-     * @return A new UserCollection instance.
-     */
-    UserCollection newUserCollection();
+    List<User> getUsers(String permission);
 
     /**
      * @return The BungeeUtilisals chat utility class.

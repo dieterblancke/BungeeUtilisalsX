@@ -39,7 +39,6 @@ import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class AddonInstallSubCommand extends SubCommand {
@@ -99,8 +98,7 @@ public class AddonInstallSubCommand extends SubCommand {
         Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
         try {
             addon.onEnable();
-            BUCore.log(
-                    Level.INFO,
+            BUCore.getLogger().info(
                     "Enabled addon " + addon.getDescription().getName() + " version "
                             + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
             );

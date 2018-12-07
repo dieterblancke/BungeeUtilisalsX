@@ -24,9 +24,9 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.InputPlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.text.ParseException;

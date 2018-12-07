@@ -20,9 +20,9 @@ package com.dbsoftwares.bungeeutilisals.manager;
 
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
-import com.dbsoftwares.bungeeutilisals.api.utils.unicode.UnicodeTranslator;
+import com.dbsoftwares.bungeeutilisals.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;

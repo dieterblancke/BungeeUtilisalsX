@@ -21,13 +21,13 @@ package com.dbsoftwares.bungeeutilisals.api;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public final class BUCore {
 
     private static BUAPI instance = null;
+    private static Logger logger = LoggerFactory.getLogger("BungeeUtilisals");
 
     private BUCore() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");
@@ -52,19 +52,8 @@ public final class BUCore {
         sender.sendMessage(Utils.format(config.getString("prefix"), message));
     }
 
-    public static void log(String message) {
-        getLogger().log(Level.INFO, message);
-    }
+    public static Logger getLogger() {
 
-    public static void log(Level level, String message) {
-        getLogger().log(level, message);
-    }
-
-    public static void log(Level level, String message, Throwable throwable) {
-        getLogger().log(level, message, throwable);
-    }
-
-    private static Logger getLogger() {
-        return instance == null ? Logger.getLogger("BungeeUtilisals") : instance.getPlugin().getLogger();
+        return logger;
     }
 }

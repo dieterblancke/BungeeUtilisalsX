@@ -89,13 +89,13 @@ public class AddonLanguageManager extends AbstractLanguageManager {
                 target.createNewFile();
                 try (InputStream in = addon.getResource(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
-                        BUCore.log("Didn't found default configuration for language " +
+                        BUCore.getLogger().info("Could not find default language configuration configuration for " +
                                 source.replace("languages/", "").replace(".json", "") +
                                 " for addon " + addonName);
                         return null;
                     }
                     ByteStreams.copy(in, out);
-                    BUCore.log("Loading default configuration for language "
+                    BUCore.getLogger().info("Loading default language configuration for "
                             + source.replace("languages/", "").replace(".json", "") + " for addon "
                             + addonName);
                 }

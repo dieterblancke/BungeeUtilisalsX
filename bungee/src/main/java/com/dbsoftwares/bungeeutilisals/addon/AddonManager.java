@@ -48,7 +48,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 
 public class AddonManager implements IAddonManager {
 
@@ -135,7 +134,7 @@ public class AddonManager implements IAddonManager {
             final AddonDescription addon = entry.getValue();
             try {
                 if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
-                    BUCore.log(Level.WARNING, "Could not enable addon " + entry.getKey());
+                    BUCore.getLogger().warn("Could not enable addon " + entry.getKey());
                 }
             } catch (AddonException e) {
                 e.printStackTrace();
@@ -177,7 +176,7 @@ public class AddonManager implements IAddonManager {
             addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
             addons.put(description.getName(), addon);
 
-            BUCore.log(Level.INFO, "Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
+            BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
         } catch (final Throwable t) {
             throw new AddonException("Error occured while enabling addon " + description.getName(), t);
         }
@@ -197,8 +196,7 @@ public class AddonManager implements IAddonManager {
         if (addon != null) {
             try {
                 addon.onEnable();
-                BUCore.log(
-                        Level.INFO,
+                BUCore.getLogger().info(
                         "Enabled addon " + addon.getDescription().getName() + " version "
                                 + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
                 );
@@ -333,7 +331,7 @@ public class AddonManager implements IAddonManager {
                         builder.append(element.getName()).append(" -> ");
                     }
                     builder.append(description.getName()).append(" -> ").append(dependency);
-                    BUCore.log(Level.WARNING, "Circular dependency detected: " + builder);
+                    BUCore.getLogger().warn("Circular dependency detected: " + builder);
                     status = false;
                 } else {
                     dependStack.push(description);
@@ -343,7 +341,7 @@ public class AddonManager implements IAddonManager {
             }
 
             if (dependStatus == Boolean.FALSE && description.getRequiredDependencies().contains(dependency)) {
-                BUCore.log(Level.WARNING, dependency + " (required by " + description.getName() + ") is unavailable");
+                BUCore.getLogger().warn(dependency + " (required by " + description.getName() + ") is unavailable");
                 status = false;
             }
 
@@ -362,7 +360,7 @@ public class AddonManager implements IAddonManager {
                 addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
                 addons.put(description.getName(), addon);
 
-                BUCore.log(Level.INFO, "Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
+                BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
             } catch (final Throwable t) {
                 statuses.put(description, false);
                 throw new AddonException("Error enabling addon " + description.getName(), t);

@@ -1,6 +1,10 @@
 # Should BungeeUtilisals use RedisBungee?
 redis: false
 
+# Set to true to allow usage of things such as Bossbar, SimpleInventory, Movement registration, ...
+# This might (and probably will) increase load on your servers (especially with addons using SimpleInventory or Movement packets enabled (f.e. AntiAFKAddon or FriendGUIAddon))
+packets: false
+
 updater:
   # Set to true to enable updater checks.
   enabled: true
@@ -48,6 +52,7 @@ storage:
     users: 'bu_users'
     friends: 'bu_friends'
     friendrequests: 'bu_friendrequests'
+    friendsettings: 'bu_friendsettings'
     bans: 'bu_bans'
     ipbans: 'bu_ipbans'
     tempbans: 'bu_tempbans'

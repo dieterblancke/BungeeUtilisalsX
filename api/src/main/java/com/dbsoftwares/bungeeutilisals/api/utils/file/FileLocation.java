@@ -19,14 +19,14 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
+import com.dbsoftwares.bungeeutilisals.api.motd.handlers.DomainConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.motd.handlers.NameConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.motd.handlers.VersionConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.MotdData;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.DomainConditionHandler;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.NameConditionHandler;
-import com.dbsoftwares.bungeeutilisals.api.utils.motd.handlers.VersionConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -38,7 +38,6 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 
 public enum FileLocation {
 
@@ -86,8 +85,8 @@ public enum FileLocation {
                     } else if (condition.toLowerCase().startsWith("name")) {
                         getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
                     } else {
-                        BUCore.log(Level.WARNING, "An invalid MOTD condition has been entered.");
-                        BUCore.log(Level.WARNING, "Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
+                        BUCore.getLogger().warn("An invalid MOTD condition has been entered.");
+                        BUCore.getLogger().warn("Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
                     }
                 }
             }
@@ -131,7 +130,7 @@ public enum FileLocation {
         public void loadData() {
         }
     },
-    FRIENDS_CONFIG("friends/config.yml") {
+    FRIENDS_CONFIG("friends.yml") {
         @Override
         public void loadData() {
         }

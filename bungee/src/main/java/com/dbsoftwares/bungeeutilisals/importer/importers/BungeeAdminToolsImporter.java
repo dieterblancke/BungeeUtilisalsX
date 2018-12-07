@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.importer.Importer;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.library.Library;
+import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
 import com.google.common.collect.Lists;
 
 import java.sql.*;
@@ -50,8 +51,9 @@ public class BungeeAdminToolsImporter extends Importer {
                     properties.get("password")
             );
         } else {
-            if (!Library.SQLITE.isPresent()) {
-                Library.SQLITE.load();
+            final Library sqlite = StandardLibrary.SQLITE.getLibrary();
+            if (!sqlite.isPresent()) {
+                sqlite.load();
             }
             return DriverManager.getConnection(
                     "jdbc:sqlite:" + properties.getOrDefault("path", "plugins/BungeeAdminTools/bat_database.db")

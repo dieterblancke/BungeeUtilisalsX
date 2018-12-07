@@ -31,7 +31,6 @@ import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 public class ImportSubCommand extends SubCommand {
 
@@ -73,8 +72,7 @@ public class ImportSubCommand extends SubCommand {
                     @Override
                     public void onStatusUpdate(Importer.ImporterStatus status) {
                         if (status.getConvertedEntries() % 100 == 0) {
-                            BUCore.log(
-                                    Level.INFO,
+                            BUCore.getLogger().info(
                                     "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                             + " entries (" + MathUtils.formatNumber(status.getProgressionPercent(), 2) + " %)"
                             );
@@ -83,8 +81,7 @@ public class ImportSubCommand extends SubCommand {
 
                     @Override
                     public void done(Importer.ImporterStatus status, Throwable throwable) {
-                        BUCore.log(
-                                Level.INFO,
+                        BUCore.getLogger().info(
                                 "Finished converting " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                         + ". " + status.getRemainingEntries() + " could not be converted ("
                                         + status.getProgressionPercent() + " %)"

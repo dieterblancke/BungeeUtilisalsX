@@ -29,7 +29,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
-import java.util.logging.Level;
 
 public class MojangUtils {
 
@@ -56,7 +55,7 @@ public class MojangUtils {
                 }
             }
         } catch (final IOException e) {
-            BUCore.log(Level.WARNING, "Could not retrieve uuid of " + name);
+            BUCore.getLogger().warn("Could not retrieve uuid of " + name);
             e.printStackTrace();
         }
         return null;
@@ -79,7 +78,7 @@ public class MojangUtils {
             }
         } catch (final IOException e) {
             e.printStackTrace();
-            BUCore.log(Level.WARNING, "Could not retrieve name of " + uuid.toString());
+            BUCore.getLogger().warn("Could not retrieve name of " + uuid.toString());
         }
         return null;
     }

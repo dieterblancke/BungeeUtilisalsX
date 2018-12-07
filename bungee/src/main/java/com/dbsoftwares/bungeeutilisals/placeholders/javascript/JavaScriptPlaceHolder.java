@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.placeholders.javascript;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.InputPlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.impl.InputPlaceHolderImpl;
+
 import java.util.Optional;
 
 public class JavaScriptPlaceHolder extends InputPlaceHolderImpl {
@@ -32,7 +33,8 @@ public class JavaScriptPlaceHolder extends InputPlaceHolderImpl {
     @Override
     public String getReplacement(InputPlaceHolderEvent event) {
         final Optional<Script> optional = BungeeUtilisals.getInstance().getScripts()
-                .stream().filter(s -> s.getFile().equalsIgnoreCase(event.getArgument())).findFirst();
+                .stream().filter(s -> s.getFile().equalsIgnoreCase(event.getArgument()))
+                .findFirst();
 
         if (optional.isPresent()) {
             return optional.get().getReplacement(event.getUser());

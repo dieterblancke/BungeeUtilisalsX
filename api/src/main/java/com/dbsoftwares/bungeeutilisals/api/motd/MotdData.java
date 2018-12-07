@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils.motd;
+package com.dbsoftwares.bungeeutilisals.api.motd;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

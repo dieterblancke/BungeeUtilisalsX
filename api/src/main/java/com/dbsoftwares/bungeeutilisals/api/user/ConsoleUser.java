@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -26,6 +27,8 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Lists;
+import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -40,6 +43,9 @@ public class ConsoleUser implements User {
 
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
+
+    @Getter
+    private List<FriendData> friends = Lists.newArrayList();
 
     @Override
     public void load(ProxiedPlayer parent) {

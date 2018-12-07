@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -62,6 +63,9 @@ public class BUser implements User {
     private UserStorage storage;
     private PunishmentInfo mute;
     private Location location;
+
+    @Getter
+    private List<FriendData> friends;
 
     @Getter
     private boolean inStaffChat;
@@ -115,6 +119,10 @@ public class BUser implements User {
             } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, IP, true)) {
                 mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, IP);
             }
+        }
+
+        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
+            friends = dao.getFriendsDao().getFriends(uuid);
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);

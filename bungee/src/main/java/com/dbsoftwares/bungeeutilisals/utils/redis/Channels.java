@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.utils.redis;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ChatLockCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;

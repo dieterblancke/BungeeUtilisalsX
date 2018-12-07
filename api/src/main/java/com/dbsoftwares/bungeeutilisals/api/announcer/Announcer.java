@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.announcer;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.time.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -88,7 +88,7 @@ public abstract class Announcer {
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    BUCore.log("Loading " + announcer.getType().toString().toLowerCase() + " announcements ...");
+                    BUCore.getLogger().info("Loading " + announcer.getType().toString().toLowerCase() + " announcements ...");
                 }
 
                 announcers.put(announcer.getType(), announcer);

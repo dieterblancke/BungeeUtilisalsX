@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;

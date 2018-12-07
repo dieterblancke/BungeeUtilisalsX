@@ -30,34 +30,36 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.UserCollection;
-import com.dbsoftwares.bungeeutilisals.api.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.user.UserList;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
 import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.APIAnnouncement;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Lists;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class BUtilisalsAPI implements BUAPI {
 
     private final BungeeUtilisals instance;
     private ConsoleUser console;
-    private UserCollection users;
+    private List<User> users;
     private IChatManager chatManager;
     private IEventLoader eventLoader;
     private ILanguageManager languageManager;
@@ -71,7 +73,7 @@ public class BUtilisalsAPI implements BUAPI {
 
         this.instance = instance;
         this.console = new ConsoleUser();
-        this.users = new UserList();
+        this.users = Collections.synchronizedList(Lists.newArrayList());
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
         this.languageManager = new PluginLanguageManager(instance);
@@ -118,29 +120,22 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public Optional<User> getUser(String name) {
-        return users.fromName(name);
+        return users.stream().filter(user -> user.getName().equalsIgnoreCase(name)).findFirst();
     }
 
     @Override
     public Optional<User> getUser(ProxiedPlayer player) {
-        return users.fromPlayer(player);
+        return getUser(player.getName());
     }
 
     @Override
-    public UserCollection getUsers() {
+    public List<User> getUsers() {
         return users;
     }
 
     @Override
-    public UserCollection getUsers(String permission) {
-        UserList list = new UserList();
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(list::add);
-        return list;
-    }
-
-    @Override
-    public UserCollection newUserCollection() {
-        return new UserList();
+    public List<User> getUsers(String permission) {
+        return users.stream().filter(user -> user.getParent().hasPermission(permission)).collect(Collectors.toList());
     }
 
     @Override
