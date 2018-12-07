@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.md_5.bungee.BungeeCord;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -59,7 +58,7 @@ public class ActionBarAnnouncement extends Announcement {
         }
 
         if (time > 1) {
-            task = BungeeCord.getInstance().getScheduler().schedule(BungeeUtilisals.getInstance(), new Runnable() {
+            task = ProxyServer.getInstance().getScheduler().schedule(BungeeUtilisals.getInstance(), new Runnable() {
 
                 private int count = 1;
 

@@ -26,8 +26,8 @@ import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import net.md_5.bungee.BungeeTitle;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.stream.Stream;
@@ -63,7 +63,7 @@ public class TitleAnnouncement extends Announcement {
     private void send(Stream<ProxiedPlayer> stream) {
         stream.forEach(player -> {
             IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
-            BungeeTitle bungeeTitle = new BungeeTitle();
+            Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
             bungeeTitle.title(Utils.format(player, language ? config.getString(title) : title));
             bungeeTitle.subTitle(Utils.format(player, language ? config.getString(subtitle) : subtitle));

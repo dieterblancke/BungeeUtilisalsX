@@ -24,19 +24,21 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserMoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.packet.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketSendEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.packet.packets.position.PacketPlayInPlayerPosition;
-import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class PacketUpdateExecutor implements EventExecutor {
 
+    private static final Class<?> ServerConnection = ReflectionUtils.getClass("net.md_5.bungee.ServerConnection");
+
     @Event
     public void onPacketUpdate(PacketUpdateEvent event) {
-        if (event.getSender() instanceof ServerConnection && event.getReceiver() instanceof BungeeConnection) {
+        if (ServerConnection.isInstance(event.getSender()) && event.getReceiver() instanceof BungeeConnection) {
             final PacketSendEvent packetEvent = new PacketSendEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver());
             BUCore.getApi().getEventLoader().launchEvent(packetEvent);
 
@@ -65,6 +67,5 @@ public class PacketUpdateExecutor implements EventExecutor {
 
             user.setLocation(location);
         }
-        // TODO: check for PacketPlayInWindowClick & launch InventoryClickEvent
     }
 }

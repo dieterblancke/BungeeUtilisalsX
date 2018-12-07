@@ -24,19 +24,18 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.connection.DownstreamBridge;
-import net.md_5.bungee.connection.UpstreamBridge;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
@@ -297,18 +296,16 @@ public class Utils {
      * @param handler The handler
      * @return UserConnection from handler.
      */
-    public static UserConnection getConnection(AbstractPacketHandler handler) {
+    public static String getName(AbstractPacketHandler handler) {
         try {
-            if (handler instanceof DownstreamBridge) {
-                DownstreamBridge bridge = (DownstreamBridge) handler;
-                return (UserConnection) ReflectionUtils.getField(bridge.getClass(), "con").get(bridge);
-            }
+            if (handler.getClass().getSimpleName().equalsIgnoreCase("DownstreamBridge")
+                    || handler.getClass().getSimpleName().equalsIgnoreCase("UpstreamBridge")) {
+                Object userConn = ReflectionUtils.getField(handler.getClass(), "con").get(handler);
+                Method getName = ReflectionUtils.getMethod(userConn.getClass(), "getName");
 
-            if (handler instanceof UpstreamBridge) {
-                UpstreamBridge bridge = (UpstreamBridge) handler;
-                return (UserConnection) ReflectionUtils.getField(bridge.getClass(), "con").get(bridge);
+                return (String) getName.invoke(userConn);
             }
-        } catch (IllegalAccessException ignored) {
+        } catch (InvocationTargetException | IllegalAccessException ignored) {
         }
         return null;
     }

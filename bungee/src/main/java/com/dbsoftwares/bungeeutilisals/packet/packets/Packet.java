@@ -22,11 +22,9 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import io.netty.buffer.ByteBuf;
-import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.ProtocolConstants;
-
 import java.util.Optional;
 
 public abstract class Packet extends DefinedPacket {
@@ -41,8 +39,8 @@ public abstract class Packet extends DefinedPacket {
 
     @Override
     public void handle(AbstractPacketHandler handler) throws Exception {
-        UserConnection connection = Utils.getConnection(handler);
-        Optional<User> optionalUser = BUCore.getApi().getUser(connection.getName());
+        final String name = Utils.getName(handler);
+        final Optional<User> optionalUser = BUCore.getApi().getUser(name);
 
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();

@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.packet.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageDecoder;
-import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.PacketWrapper;
 
@@ -46,19 +45,11 @@ public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {
             return;
         }
 
-        PacketUpdateEvent event = null;
+        PacketUpdateEvent event;
         if (server) {
-            if (p instanceof UserConnection) {
-                UserConnection u = (UserConnection) p;
-                event = new PacketUpdateEvent(wrapper.packet, p, u.getServer(), new BungeeConnection());
-            }
+            event = new PacketUpdateEvent(wrapper.packet, p, p.getServer(), new BungeeConnection());
         } else {
             event = new PacketUpdateEvent(wrapper.packet, p, p, new BungeeConnection());
-        }
-
-        if (event == null) {
-            output.add(wrapper);
-            return;
         }
 
         BUCore.getApi().getEventLoader().launchEvent(event);

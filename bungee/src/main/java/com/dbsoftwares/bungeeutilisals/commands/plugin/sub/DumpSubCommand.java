@@ -44,19 +44,20 @@ import gnu.trove.map.TIntObjectMap;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
+import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
-import net.md_5.bungee.scheduler.BungeeTask;
-
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.lang.management.ManagementFactory;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class DumpSubCommand extends SubCommand {
 
@@ -214,15 +215,15 @@ public class DumpSubCommand extends SubCommand {
             final TaskScheduler scheduler = ProxyServer.getInstance().getScheduler();
             final Field tasksField = ReflectionUtils.getField(scheduler.getClass(), "tasks");
 
-            final TIntObjectMap<BungeeTask> map = (TIntObjectMap<BungeeTask>) tasksField.get(scheduler);
-            final Collection<BungeeTask> tasks = map.valueCollection();
+            final TIntObjectMap<ScheduledTask> map = (TIntObjectMap<ScheduledTask>) tasksField.get(scheduler);
+            final Collection<ScheduledTask> tasks = map.valueCollection();
 
             int running = 0;
             int total = 0;
 
             final List<PluginSchedulerInfo> schedulerInfoList = Lists.newLinkedList();
 
-            for (BungeeTask task : tasks) {
+            for (ScheduledTask task : tasks) {
                 final Optional<PluginSchedulerInfo> optional = schedulerInfoList.stream()
                         .filter(i -> i.getPlugin().equalsIgnoreCase(task.getOwner().getDescription().getName())).findFirst();
 
@@ -238,7 +239,9 @@ public class DumpSubCommand extends SubCommand {
                 total++;
                 info.setTotal(info.getTotal() + 1);
 
-                if (task.getRunning().get()) {
+                final Method getRunning = ReflectionUtils.getMethod(task.getClass(), "getRunning");
+                final AtomicBoolean isRunning = (AtomicBoolean) getRunning.invoke(task);
+                if (isRunning.get()) {
                     running++;
 
                     info.setRunning(info.getRunning() + 1);

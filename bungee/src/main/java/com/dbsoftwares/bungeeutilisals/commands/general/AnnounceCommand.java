@@ -31,9 +31,9 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Sets;
-import net.md_5.bungee.BungeeTitle;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.Title;
 
 import java.util.Arrays;
 import java.util.List;
@@ -88,7 +88,7 @@ public class AnnounceCommand extends Command {
                     int fadeout = config.getInteger("announce.types.title.fadeout");
 
                     ProxyServer.getInstance().getPlayers().forEach(p -> {
-                        BungeeTitle bungeeTitle = new BungeeTitle();
+                        Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
                         bungeeTitle.title(Utils.format(p, title));
                         bungeeTitle.subTitle(Utils.format(p, subtitle));

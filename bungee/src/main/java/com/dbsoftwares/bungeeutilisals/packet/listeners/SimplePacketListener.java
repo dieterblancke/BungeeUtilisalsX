@@ -22,14 +22,12 @@ import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.packet.encoder.BUDecoder;
 import com.dbsoftwares.bungeeutilisals.packet.encoder.BUEncoder;
 import io.netty.channel.Channel;
-import net.md_5.bungee.ServerConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.connection.Server;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
-import net.md_5.bungee.netty.ChannelWrapper;
-import net.md_5.bungee.netty.PipelineUtils;
 
 import java.lang.reflect.Method;
 
@@ -38,16 +36,21 @@ public class SimplePacketListener implements Listener {
     @EventHandler
     public void onServerConnected(ServerConnectedEvent event) {
         ProxiedPlayer p = event.getPlayer();
-        ServerConnection server = (ServerConnection) event.getServer();
+        Server server = event.getServer();
 
         if (p != null && server != null) {
-            ChannelWrapper wrapper = server.getCh();
-            if (wrapper != null) {
-                try {
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_DECODER, "bungeeutilisals-decoder", new BUDecoder(true, p));
-                    wrapper.getHandle().pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "bungeeutilisals-encoder", new BUEncoder(true, p));
-                } catch (Exception ignore) {
+
+            try {
+                final Object ch = ReflectionUtils.getField(server.getClass(), "ch").get(server);
+
+                if (ch != null) {
+                    final Method handle = ReflectionUtils.getMethod(ch.getClass(), "getHandle");
+
+                    final Channel channel = (Channel) handle.invoke(ch);
+                    channel.pipeline().addAfter("packet-decoder", "bungeeutilisals-decoder", new BUDecoder(true, p));
+                    channel.pipeline().addAfter("packet-encoder", "bungeeutilisals-encoder", new BUEncoder(true, p));
                 }
+            } catch (Exception ignore) {
             }
         }
     }
@@ -60,8 +63,8 @@ public class SimplePacketListener implements Listener {
             Method method = ReflectionUtils.getMethod(ch.getClass(), "getHandle");
             Channel channel = (Channel) method.invoke(ch, new Object[0]);
 
-            channel.pipeline().addAfter(PipelineUtils.PACKET_DECODER, "bungeeutilisals-decoder", new BUDecoder(false, p));
-            channel.pipeline().addAfter(PipelineUtils.PACKET_ENCODER, "bungeeutilisals-encoder", new BUEncoder(false, p));
+            channel.pipeline().addAfter("packet-decoder", "bungeeutilisals-decoder", new BUDecoder(false, p));
+            channel.pipeline().addAfter("packet-encoder", "bungeeutilisals-encoder", new BUEncoder(false, p));
         } catch (Exception ignore) {
         }
     }

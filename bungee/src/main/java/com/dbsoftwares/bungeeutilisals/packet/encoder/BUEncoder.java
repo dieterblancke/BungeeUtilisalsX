@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.packet.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToMessageEncoder;
-import net.md_5.bungee.UserConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
@@ -41,19 +40,11 @@ public class BUEncoder extends MessageToMessageEncoder<DefinedPacket> {
 
     @Override
     protected void encode(ChannelHandlerContext context, DefinedPacket packet, List<Object> output) {
-        PacketUpdateEvent event = null;
+        PacketUpdateEvent event;
         if (server) {
             event = new PacketUpdateEvent(packet, p, new BungeeConnection(), p);
         } else {
-            if (p instanceof UserConnection) {
-                UserConnection u = (UserConnection) p;
-                event = new PacketUpdateEvent(packet, p, new BungeeConnection(), u.getServer());
-            }
-        }
-
-        if (event == null) {
-            output.add(packet);
-            return;
+            event = new PacketUpdateEvent(packet, p, new BungeeConnection(), p.getServer());
         }
 
         BUCore.getApi().getEventLoader().launchEvent(event);
