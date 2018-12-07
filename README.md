@@ -1,3 +1,3 @@
-[![Build Status](https://ci.dbsoftwares.eu/buildStatus/icon?job=BungeeUtilisals)](https://ci.dbsoftwares.eu/job/BungeeUtilisals)
+[![Build Status](https://travis-ci.org/didjee2/BungeeUtilisalsX.svg?branch=development)](https://travis-ci.org/didjee2/BungeeUtilisalsX)
 
 # BungeeUtilisals
