@@ -8,9 +8,17 @@ cache:
   directories:
   - "$HOME/.cache"
 
+before_deploy:
+- git config --local user.name "didjee2"
+- git config --local user.email "dieter08@live.be"
+- export TRAVIS_TAG=${TRAVIS_TAG:-$(date +'%Y%m%d%H%M%S')-$(git log --format=%h -1)}
+- git tag $TRAVIS_TAG
+
 deploy:
-  provider: script
+- provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
   skip_cleanup: true
-  on:
-    tags: true
+- provider: releases
+  api_key: "GITHUB OAUTH TOKEN"
+  file: "FILE TO UPLOAD"
+  skip_cleanup: true

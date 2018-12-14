@@ -5,6 +5,9 @@ redis: false
 # This might (and probably will) increase load on your servers (especially with addons using SimpleInventory or Movement packets enabled (f.e. AntiAFKAddon or FriendGUIAddon))
 packets: false
 
+# Set to true to enable the use of addons ...
+addons: false
+
 updater:
   # Set to true to enable updater checks.
   enabled: true
@@ -43,7 +46,7 @@ storage:
     # It is recommended to set this to the same value as the max-pool-size
     min-idle: 5
     # Maximum lifetime of a connection. Time in seconds.
-    max-lifetime: 1500 # 25 min
+    max-lifetime: 1500
     # How long should BungeeUtilisals wait before timing out a connection?
     connection-timeout: 8
 

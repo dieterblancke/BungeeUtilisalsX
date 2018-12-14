@@ -80,7 +80,10 @@ public class BUtilisalsAPI implements BUAPI {
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
         this.playerUtils = getConfig(FileLocation.CONFIG).getBoolean("redis") ? new RedisPlayerUtils() : new BungeePlayerUtils();
-        this.addonManager = new AddonManager();
+
+        if (getConfig(FileLocation.CONFIG).getBoolean("addons")) {
+            this.addonManager = new AddonManager();
+        }
     }
 
     @Override

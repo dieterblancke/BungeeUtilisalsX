@@ -156,9 +156,11 @@ public class BungeeUtilisals extends Plugin {
         api.getLanguageManager().loadLanguages(getDescription().getName());
 
         // Loading & enabling addons
-        api.getAddonManager().findAddons(api.getAddonManager().getAddonsFolder());
-        api.getAddonManager().loadAddons();
-        api.getAddonManager().enableAddons();
+        if (getConfig().getBoolean("addons")) {
+            api.getAddonManager().findAddons(api.getAddonManager().getAddonsFolder());
+            api.getAddonManager().loadAddons();
+            api.getAddonManager().enableAddons();
+        }
 
         // Initialize metric system
         new Metrics(this);
@@ -318,23 +320,21 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadCommands() {
-        generalCommands.forEach(Command::unload);
-        generalCommands.clear();
         loadGeneralCommands();
 
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
             loadPunishmentCommands();
-        }
-        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
-            generalCommands.add(new FriendsCommand());
         }
 
         loadCustomCommands();
     }
 
     private void loadGeneralCommands() {
-        new PluginCommand();
-        new AddonCommand();
+        generalCommands.forEach(Command::unload);
+        generalCommands.clear();
+
+        generalCommands.add(new PluginCommand());
+        loadCommand("addons", getConfig(), AddonCommand.class);
 
         loadGeneralCommand("glist", GListCommand.class);
         loadGeneralCommand("announce", AnnounceCommand.class);
@@ -344,6 +344,10 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("chatlock", ChatLockCommand.class);
         loadGeneralCommand("glag", GLagCommand.class);
         loadGeneralCommand("staffchat", StaffChatCommand.class);
+
+        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
+            generalCommands.add(new FriendsCommand());
+        }
     }
 
     private void loadPunishmentCommands() {
