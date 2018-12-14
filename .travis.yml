@@ -20,7 +20,7 @@ before_deploy:
     export BEFORE_DEPLOY_RUN=1;
     git config --local user.name "didjee2";
     git config --local user.email "dieter08@live.be";
-    export TRAVIS_TAG=$TRAVIS_BUILD_ID;
+    export TRAVIS_TAG=$TRAVIS_BUILD_NUMBER;
     git tag $TRAVIS_TAG;
   fi
 
