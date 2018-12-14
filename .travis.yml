@@ -15,10 +15,10 @@ before_deploy:
 - git tag $TRAVIS_TAG
 
 deploy:
+- provider: releases
+  api_key: $OAUTH_TOKEN
+  file: "*.jar"
+  skip_cleanup: true
 - provider: script
   script: "cp .travis.settings.xml $HOME/.m2/settings.xml && mvn deploy"
-  skip_cleanup: true
-- provider: releases
-  api_key: "GITHUB OAUTH TOKEN"
-  file: "FILE TO UPLOAD"
   skip_cleanup: true
