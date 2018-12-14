@@ -46,6 +46,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
+
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -81,7 +82,7 @@ public class DumpSubCommand extends SubCommand {
         ProxyServer.getInstance().getScheduler().runAsync(BungeeUtilisals.getInstance(), () -> {
             final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             try {
-                final HttpURLConnection con = (HttpURLConnection) new URL("https://paste.dbsoftwares.eu/documents/").openConnection();
+                final HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents/").openConnection();
 
                 con.addRequestProperty(
                         "User-Agent", "BungeeUtilisals v" + BungeeUtilisals.getInstance().getDescription().getVersion()
@@ -110,7 +111,7 @@ public class DumpSubCommand extends SubCommand {
                 }
 
                 user.sendMessage("&eSuccessfully created a dump at: "
-                        + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get("key").getAsString() + ".dump");
+                        + "&bhttps://hastebin.com/" + jsonResponse.get("key").getAsString() + ".dump");
             } catch (IOException e) {
                 user.sendMessage("Could not create dump. Please check the console for errors.");
                 BUCore.getLogger().warn("Could not create dump request");
