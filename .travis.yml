@@ -25,3 +25,5 @@ deploy:
   - '/home/travis/build/didjee2/BungeeUtilisalsX/bungee/target/BungeeUtilisals.jar'
   skip_cleanup: true
   overwrite: true
+  on:
+    tags: false
