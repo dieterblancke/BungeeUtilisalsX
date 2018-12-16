@@ -29,9 +29,9 @@ public class NameConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        String[] args = condition.split(" ");
-        String operator = args[0];
-        String value = args[1];
+        final String[] args = condition.split(" ");
+        final String operator = args[0];
+        final String value = args[1];
 
         if (operator.equalsIgnoreCase("==")) {
             if (connection.getName() == null) {

@@ -19,8 +19,10 @@
 package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -34,6 +36,7 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MotdPingListener implements Listener {
 
@@ -43,27 +46,56 @@ public class MotdPingListener implements Listener {
 
         insertName(event.getConnection());
 
-        for (final MotdData motdData : dataList) {
-            if (motdData.isDef() || motdData.getConditionHandler().checkCondition(event.getConnection())) {
-                final Version version = Version.getVersion(event.getConnection().getVersion());
-                String motd = motdData.getMotd();
+        if (!loadConditionalMotd(event, dataList)) {
+            loadDefaultMotd(event, dataList);
+        }
+    }
 
-                motd = motd.replace("{user}", event.getConnection().getName() == null ? "Unknown" : event.getConnection().getName());
-                motd = motd.replace("{version}", version == null ? "Unknown" : version.toString());
+    private void loadMotd(final ProxyPingEvent event, final MotdData motd) {
+        if (motd == null) {
+            return;
+        }
+        final Version version = Version.getVersion(event.getConnection().getVersion());
+        String message = motd.getMotd();
 
-                if (event.getConnection().getVirtualHost() == null || event.getConnection().getVirtualHost().getHostName() == null) {
-                    motd = motd.replace("{domain}", "Unknown");
-                } else {
-                    motd = motd.replace("{domain}", event.getConnection().getVirtualHost().getHostName());
-                }
-                motd = PlaceHolderAPI.formatMessage(motd);
+        message = message.replace("{user}", event.getConnection().getName() == null ? "Unknown" : event.getConnection().getName());
+        message = message.replace("{version}", version == null ? "Unknown" : version.toString());
 
-                final BaseComponent component = new TextComponent(Utils.format(motd));
+        if (event.getConnection().getVirtualHost() == null || event.getConnection().getVirtualHost().getHostName() == null) {
+            message = message.replace("{domain}", "Unknown");
+        } else {
+            message = message.replace("{domain}", event.getConnection().getVirtualHost().getHostName());
+        }
+        message = PlaceHolderAPI.formatMessage(message);
+        final BaseComponent component = new TextComponent(Utils.format(message));
 
-                event.getResponse().setDescriptionComponent(component);
-                break;
+        event.getResponse().setDescriptionComponent(component);
+    }
+
+    private void loadDefaultMotd(final ProxyPingEvent event, final List<MotdData> motds) {
+        final List<MotdData> defMotds = motds.stream().filter(MotdData::isDef).collect(Collectors.toList());
+        final MotdData motd = MathUtils.getRandomFromList(defMotds);
+
+        loadMotd(event, motd);
+    }
+
+    private boolean loadConditionalMotd(final ProxyPingEvent event, final List<MotdData> motds) {
+        final List<MotdData> conditions = motds.stream().filter(data -> !data.isDef()).collect(Collectors.toList());
+
+        for (final MotdData condition : conditions) {
+            final ConditionHandler handler = condition.getConditionHandler();
+
+            if (handler.checkCondition(event.getConnection())) {
+                final List<MotdData> conditionalMotds = conditions.stream().filter(
+                        data -> data.getConditionHandler().getCondition().equalsIgnoreCase(handler.getCondition())
+                ).collect(Collectors.toList());
+                final MotdData motd = MathUtils.getRandomFromList(conditionalMotds);
+
+                loadMotd(event, motd);
+                return true;
             }
         }
+        return false;
     }
 
     // Name not known on serverlist ping, so we're loading the last seen name on the IP as the initial connection name.

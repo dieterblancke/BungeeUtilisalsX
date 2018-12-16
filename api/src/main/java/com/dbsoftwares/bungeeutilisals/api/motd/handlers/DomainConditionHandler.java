@@ -32,10 +32,10 @@ public class DomainConditionHandler extends ConditionHandler {
         if (connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null) {
             return false;
         }
-        String[] args = condition.split(" ");
-        String operator = args[0];
-        String conditionHost = args[1];
-        String joinedHost = connection.getVirtualHost().getHostName();
+        final String[] args = condition.split(" ");
+        final String operator = args[0];
+        final String conditionHost = args[1];
+        final String joinedHost = connection.getVirtualHost().getHostName();
 
         return operator.equalsIgnoreCase("==") == joinedHost.equalsIgnoreCase(conditionHost);
     }

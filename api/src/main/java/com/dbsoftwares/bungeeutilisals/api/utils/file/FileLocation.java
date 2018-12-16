@@ -69,29 +69,22 @@ public enum FileLocation {
     MOTD("motd.yml") {
         @Override
         public void loadData() {
-            MotdData def = null;
-
             for (ISection section : configuration.getSectionList("motd")) {
-                String condition = section.getString("condition");
-                String motd = section.getString("motd");
+                final String condition = section.getString("condition");
+                final String motd = section.getString("motd");
 
                 if (condition.equalsIgnoreCase("default")) {
-                    def = new MotdData(null, true, motd);
+                    getDataList().add(new MotdData(null, true, motd));
+                } else if (condition.toLowerCase().startsWith("domain")) {
+                    getDataList().add(new MotdData(new DomainConditionHandler(condition), false, motd));
+                } else if (condition.toLowerCase().startsWith("version")) {
+                    getDataList().add(new MotdData(new VersionConditionHandler(condition), false, motd));
+                } else if (condition.toLowerCase().startsWith("name")) {
+                    getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
                 } else {
-                    if (condition.toLowerCase().startsWith("domain")) {
-                        getDataList().add(new MotdData(new DomainConditionHandler(condition), false, motd));
-                    } else if (condition.toLowerCase().startsWith("version")) {
-                        getDataList().add(new MotdData(new VersionConditionHandler(condition), false, motd));
-                    } else if (condition.toLowerCase().startsWith("name")) {
-                        getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
-                    } else {
-                        BUCore.getLogger().warn("An invalid MOTD condition has been entered.");
-                        BUCore.getLogger().warn("Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
-                    }
+                    BUCore.getLogger().warn("An invalid MOTD condition has been entered.");
+                    BUCore.getLogger().warn("Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
                 }
-            }
-            if (def != null) {
-                getDataList().add(def);
             }
         }
     },
@@ -136,7 +129,8 @@ public enum FileLocation {
         }
     },
     PUNISHMENTS("punishments.yml") {
-        @Override @SuppressWarnings("unchecked")
+        @Override
+        @SuppressWarnings("unchecked")
         public void loadData() {
             for (ISection section : configuration.getSectionList("actions")) {
                 try {
@@ -183,15 +177,12 @@ public enum FileLocation {
     };
 
     @Getter
+    protected IConfiguration configuration;
+    @Getter
     private String path;
-
     @Getter
     private LinkedHashMap<String, Object> data;
-
     private LinkedList<Object> dataList;
-
-    @Getter
-    protected IConfiguration configuration;
 
     FileLocation(String path) {
         this.path = path;

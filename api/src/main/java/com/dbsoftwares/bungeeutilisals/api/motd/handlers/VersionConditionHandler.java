@@ -31,9 +31,9 @@ public class VersionConditionHandler extends ConditionHandler {
 
     @Override
     public boolean checkCondition(PendingConnection connection) {
-        String[] args = condition.split(" ");
-        String operator = args[0];
-        Version version = formatVersion(args[1]);
+        final String[] args = condition.split(" ");
+        final String operator = args[0];
+        final Version version = formatVersion(args[1]);
 
         if (version == null) {
             return false;
@@ -69,15 +69,15 @@ public class VersionConditionHandler extends ConditionHandler {
     }
 
     private String listVersions() {
-        StringBuilder builder = new StringBuilder();
+        final StringBuilder builder = new StringBuilder();
         int length = Version.values().length;
 
         for (int i = 0; i < length; i++) {
-            Version version = Version.values()[i];
+            final Version version = Version.values()[i];
 
             builder.append(version.toString());
 
-            if (i < length) {
+            if (i < length - 1) {
                 builder.append(", ");
             }
         }
