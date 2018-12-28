@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -51,7 +52,7 @@ public class JarClassLoader {
         try {
             ADD_URL.invoke(this.classLoader, url);
         } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -59,7 +60,7 @@ public class JarClassLoader {
         try {
             loadJar(file.toURI().toURL());
         } catch (MalformedURLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 }

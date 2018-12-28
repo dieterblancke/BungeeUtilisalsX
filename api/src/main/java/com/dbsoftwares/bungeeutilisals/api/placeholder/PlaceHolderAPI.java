@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.DefaultPlaceHolder;
@@ -42,7 +43,7 @@ public class PlaceHolderAPI {
             }
             return message;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return message;
         }
     }
@@ -57,7 +58,7 @@ public class PlaceHolderAPI {
             }
             return message;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return message;
         }
     }

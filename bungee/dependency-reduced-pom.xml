@@ -82,6 +82,10 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
+          <artifactId>brigadier</artifactId>
+          <groupId>net.md-5</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>netty-codec</artifactId>
           <groupId>io.netty</groupId>
         </exclusion>

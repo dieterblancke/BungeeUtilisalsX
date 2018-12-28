@@ -71,7 +71,7 @@ public class MongoToSQLConverter extends Converter {
             }
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         for (PunishmentType type : PunishmentType.values()) {
             try (final Connection connection = BUCore.getApi().getStorageManager().getConnection()) {
@@ -88,7 +88,7 @@ public class MongoToSQLConverter extends Converter {
                 }
                 connection.commit();
             } catch (SQLException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }

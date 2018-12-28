@@ -75,7 +75,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.BAN, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error("An error occured: ", e);
                         continue;
                     }
 
@@ -90,7 +90,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.MUTE, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error("An error occured: ", e);
                         continue;
                     }
 
@@ -105,7 +105,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.IPBAN, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error("An error occured: ", e);
                         continue;
                     }
 
@@ -133,7 +133,7 @@ public class BungeeUtilisalsImporter extends Importer {
                             name = nameCache.get(uuid);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error("An error occured: ", e);
                         continue;
                     }
 
@@ -151,7 +151,7 @@ public class BungeeUtilisalsImporter extends Importer {
 
             importerCallback.done(status, null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

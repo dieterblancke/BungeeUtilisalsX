@@ -56,7 +56,7 @@ public class MojangUtils {
             }
         } catch (final IOException e) {
             BUCore.getLogger().warn("Could not retrieve uuid of " + name);
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return null;
     }
@@ -77,7 +77,7 @@ public class MojangUtils {
                 }
             }
         } catch (final IOException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             BUCore.getLogger().warn("Could not retrieve name of " + uuid.toString());
         }
         return null;

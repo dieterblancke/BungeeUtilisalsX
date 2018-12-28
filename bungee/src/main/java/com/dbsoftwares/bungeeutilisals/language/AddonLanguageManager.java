@@ -69,7 +69,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
                 configurations.put(lang, configuration);
                 saveLanguage(addonName, language);
             } catch (IOException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }
@@ -101,7 +101,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return target;
     }

@@ -86,7 +86,7 @@ public class Script {
         try {
             return String.valueOf(engine.eval(script));
         } catch (ScriptException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return "SCRIPT ERROR";
         }
     }

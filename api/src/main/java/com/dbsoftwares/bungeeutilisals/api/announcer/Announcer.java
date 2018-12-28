@@ -93,7 +93,7 @@ public abstract class Announcer {
 
                 announcers.put(announcer.getType(), announcer);
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }
@@ -167,7 +167,7 @@ public abstract class Announcer {
         try {
             configuration.reload();
         } catch (IOException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return;
         }
         stop();

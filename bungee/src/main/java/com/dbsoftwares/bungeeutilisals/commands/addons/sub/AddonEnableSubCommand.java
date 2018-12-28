@@ -61,7 +61,7 @@ public class AddonEnableSubCommand extends SubCommand {
                     user.sendLangMessage("general-commands.addon.enable.success", "{name}", addonName);
                 } catch (AddonException e) {
                     user.sendLangMessage("general-commands.addon.enable.failed", "{name}", addonName);
-                    e.printStackTrace();
+                    BUCore.getLogger().error("An error occured: ", e);
                 }
             }
         }

@@ -66,7 +66,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -82,7 +82,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -99,7 +99,7 @@ public class SQLUserDao implements UserDao {
                 present = rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return present;
@@ -118,7 +118,7 @@ public class SQLUserDao implements UserDao {
                 present = rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return present;
@@ -144,7 +144,7 @@ public class SQLUserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return storage;
     }
@@ -169,7 +169,7 @@ public class SQLUserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return storage;
     }
@@ -189,7 +189,7 @@ public class SQLUserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return users;
     }
@@ -209,7 +209,7 @@ public class SQLUserDao implements UserDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return language;
     }
@@ -223,7 +223,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -236,7 +236,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -249,7 +249,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -262,7 +262,7 @@ public class SQLUserDao implements UserDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

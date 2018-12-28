@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.plugin.sub;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -53,7 +54,7 @@ public class ReloadSubCommand extends SubCommand {
                 location.getDataList().clear();
                 location.loadData();
             } catch (IOException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
                 user.sendMessage("&fCould not reload " + location.toString().toLowerCase().replace("_", " ") + "!");
             }
         }

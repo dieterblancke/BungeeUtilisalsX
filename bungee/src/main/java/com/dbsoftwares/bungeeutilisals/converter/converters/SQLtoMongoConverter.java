@@ -45,7 +45,7 @@ public class SQLtoMongoConverter extends Converter {
         try {
             storageManager = createStorageManager(properties);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return;
         }
 
@@ -74,7 +74,7 @@ public class SQLtoMongoConverter extends Converter {
                 status = new ConverterStatus(count);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         try (final Connection connection = storageManager.getConnection();
@@ -87,7 +87,7 @@ public class SQLtoMongoConverter extends Converter {
                 importerCallback.onStatusUpdate(status);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         for (PunishmentType type : PunishmentType.values()) {
@@ -101,7 +101,7 @@ public class SQLtoMongoConverter extends Converter {
                     importerCallback.onStatusUpdate(status);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }

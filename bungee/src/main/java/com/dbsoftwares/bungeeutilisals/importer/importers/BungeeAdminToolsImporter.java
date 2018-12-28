@@ -225,7 +225,7 @@ public class BungeeAdminToolsImporter extends Importer {
 
             importerCallback.done(status, null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

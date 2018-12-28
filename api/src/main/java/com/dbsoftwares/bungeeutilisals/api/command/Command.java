@@ -83,7 +83,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
                     BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(user, args));
                     // onExecute(user, args); | testing plugin with Async Commands.
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    BUCore.getLogger().error("An error occured: ", e);
                 }
                 return;
             }
@@ -92,7 +92,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
             BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
             // onExecute(sender, args);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

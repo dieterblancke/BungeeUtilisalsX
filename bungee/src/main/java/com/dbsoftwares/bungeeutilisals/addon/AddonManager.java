@@ -38,6 +38,7 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
+
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -97,7 +98,7 @@ public class AddonManager implements IAddonManager {
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }, 0, 1, TimeUnit.MINUTES);
     }
@@ -136,7 +137,7 @@ public class AddonManager implements IAddonManager {
                     BUCore.getLogger().warn("Could not enable addon {}", entry.getKey());
                 }
             } catch (AddonException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
         toBeLoaded.clear();
@@ -222,14 +223,15 @@ public class AddonManager implements IAddonManager {
         if (addon != null) {
             addon.onDisable();
 
-            Validate.ifNotNull(scheduler.getTasks(addonName), tasks -> tasks.forEach(IAddonTask::cancel));
-            Validate.ifNotNull(eventHandlers.get(addonName), handlers -> handlers.forEach(EventHandler::unregister));
-            Validate.ifNotNull(listeners.get(addonName), listeners -> listeners.forEach(listener -> {
-                ProxyServer.getInstance().getPluginManager().unregisterListener(listener);
-            }));
-            Validate.ifNotNull(commands.get(addonName), commands -> commands.forEach(command -> {
-                ProxyServer.getInstance().getPluginManager().unregisterCommand(command);
-            }));
+
+            Validate.ifNotNull(scheduler.getTasks(addonName), taskList -> taskList.forEach(IAddonTask::cancel));
+            Validate.ifNotNull(eventHandlers.get(addonName), handlerList -> handlerList.forEach(EventHandler::unregister));
+            Validate.ifNotNull(listeners.get(addonName), listenerList -> listenerList.forEach(listener ->
+                    ProxyServer.getInstance().getPluginManager().unregisterListener(listener)
+            ));
+            Validate.ifNotNull(commands.get(addonName), commandList -> commandList.forEach(command ->
+                    ProxyServer.getInstance().getPluginManager().unregisterCommand(command)
+            ));
 
             if (addon.getClass().getClassLoader() instanceof AddonClassLoader) {
                 final AddonClassLoader classLoader = (AddonClassLoader) addon.getClass().getClassLoader();

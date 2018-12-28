@@ -179,7 +179,7 @@ public class AddonListSubCommand extends SubCommand {
                 CMS.getInstance().getAddonManager().registerAddon(addon);
                 user.sendMessage("&6The addon &b" + addonname + " &6should have been enabled!");
             } catch(InvalidAddonException e){
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e)();
             }
             return;
         }

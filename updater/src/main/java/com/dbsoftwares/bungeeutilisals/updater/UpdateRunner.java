@@ -86,9 +86,9 @@ public class UpdateRunner implements Runnable {
                 }
             }
         } catch (IOException | ExecutionException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             Thread.currentThread().interrupt();
         }
     }
@@ -105,9 +105,9 @@ public class UpdateRunner implements Runnable {
                     }
                 }
             } catch (IOException | ExecutionException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
                 Thread.currentThread().interrupt();
             }
         }

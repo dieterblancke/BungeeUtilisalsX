@@ -47,7 +47,7 @@ public class SQLFriendsDao implements FriendsDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -62,7 +62,7 @@ public class SQLFriendsDao implements FriendsDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -89,7 +89,7 @@ public class SQLFriendsDao implements FriendsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return friends;

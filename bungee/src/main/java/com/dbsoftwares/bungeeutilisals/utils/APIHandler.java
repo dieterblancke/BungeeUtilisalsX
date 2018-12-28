@@ -33,7 +33,7 @@ public class APIHandler {
             register = BUCore.class.getDeclaredMethod("initAPI", BUAPI.class);
             register.setAccessible(true);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         REGISTER = register;
@@ -43,7 +43,7 @@ public class APIHandler {
         try {
             REGISTER.invoke(null, api);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 }

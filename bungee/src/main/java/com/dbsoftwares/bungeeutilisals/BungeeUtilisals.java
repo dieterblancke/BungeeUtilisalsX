@@ -225,7 +225,7 @@ public class BungeeUtilisals extends Plugin {
         try {
             databaseManagement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         scripts.forEach(Script::unload);
@@ -268,7 +268,7 @@ public class BungeeUtilisals extends Plugin {
                 this.scripts.add(script);
             } catch (IOException | ScriptException e) {
                 BUCore.getLogger().info("Could not load script " + file.getName());
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }
@@ -284,7 +284,7 @@ public class BungeeUtilisals extends Plugin {
             databaseManagement = type.getManager().getConstructor(Plugin.class).newInstance(this);
             databaseManagement.initialize();
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
@@ -425,7 +425,7 @@ public class BungeeUtilisals extends Plugin {
 
                 generalCommands.add(command);
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }

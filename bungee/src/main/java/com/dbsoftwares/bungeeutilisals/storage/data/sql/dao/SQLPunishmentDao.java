@@ -59,7 +59,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return amount;
@@ -102,7 +102,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    BUCore.getLogger().error("An error occured: ", e);
                 }
             } else {
                 sql += "(uuid, user, ip, reason, server, active, executed_by, removed_by) "
@@ -121,7 +121,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    e.printStackTrace();
+                    BUCore.getLogger().error("An error occured: ", e);
                 }
             }
         } else {
@@ -139,7 +139,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
 
@@ -186,7 +186,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                 present = rs.next();
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return present;
@@ -229,7 +229,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         return info;
@@ -253,7 +253,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
