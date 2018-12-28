@@ -55,16 +55,17 @@ public class BungeeUtilisalsImporter extends Importer {
                 }
             }
 
-            final ResultSet counter = stmt.executeQuery(
+            try (ResultSet counter = stmt.executeQuery(
                     "SELECT (SELECT COUNT(*) FROM Bans) bans," +
                             " (SELECT COUNT(*) FROM IPBans) ipbans," +
                             " (SELECT COUNT(*) FROM Mutes) mutes," +
-                            " (SELECT COUNT(*) FROM PlayerInfo) players;");
-
-            if (counter.next()) {
-                status = new ImporterStatus(
-                        counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
-                );
+                            " (SELECT COUNT(*) FROM PlayerInfo) players;"
+            )) {
+                if (counter.next()) {
+                    status = new ImporterStatus(
+                            counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
+                    );
+                }
             }
 
             try (final ResultSet rs = stmt.executeQuery(

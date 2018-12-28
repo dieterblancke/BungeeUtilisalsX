@@ -72,16 +72,16 @@ public class BungeeAdminToolsImporter extends Importer {
                 }
             }
 
-            final ResultSet counter = stmt.executeQuery(
+            try (ResultSet counter = stmt.executeQuery(
                     "SELECT (SELECT COUNT(*) FROM BAT_ban) bans," +
                             " (SELECT COUNT(*) FROM BAT_mute) mutes," +
                             " (SELECT COUNT(*) FROM BAT_players) players;"
-            );
-
-            if (counter.next()) {
-                status = new ImporterStatus(
-                        counter.getInt("bans") + counter.getInt("mutes") + counter.getInt("players")
-                );
+            )) {
+                if (counter.next()) {
+                    status = new ImporterStatus(
+                            counter.getInt("bans") + counter.getInt("mutes") + counter.getInt("players")
+                    );
+                }
             }
 
             try (final ResultSet rs = stmt.executeQuery(

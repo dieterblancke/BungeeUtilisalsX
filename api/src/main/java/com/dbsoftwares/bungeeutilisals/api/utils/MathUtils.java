@@ -54,7 +54,7 @@ public class MathUtils {
     static private final double CEIL = 0.9999999;
     static private final double BIG_ENOUGH_CEIL = 16384.999999999996;
     static private final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5f;
-    public static Random random = new Random();
+    public static Random randomInstance = new Random();
 
     public static float sin(float radians) {
         return Sin.table[(int) (radians * radToIndex) & SIN_MASK];
@@ -176,15 +176,15 @@ public class MathUtils {
     }
 
     public static int random(int range) {
-        return random.nextInt(range + 1);
+        return randomInstance.nextInt(range + 1);
     }
 
     public static int random(int start, int end) {
-        return start + random.nextInt(end - start + 1);
+        return start + randomInstance.nextInt(end - start + 1);
     }
 
     public static boolean randomBoolean() {
-        return random.nextBoolean();
+        return randomInstance.nextBoolean();
     }
 
     public static boolean randomBoolean(float chance) {
@@ -192,15 +192,15 @@ public class MathUtils {
     }
 
     public static float random() {
-        return random.nextFloat();
+        return randomInstance.nextFloat();
     }
 
     public static float random(float range) {
-        return random.nextFloat() * range;
+        return randomInstance.nextFloat() * range;
     }
 
     public static float random(float start, float end) {
-        return start + random.nextFloat() * (end - start);
+        return start + randomInstance.nextFloat() * (end - start);
     }
 
     public static int nextPowerOfTwo(int value) {
@@ -299,11 +299,11 @@ public class MathUtils {
     }
 
     public static <T> T getRandomFromArray(T[] array) {
-        return array[random.nextInt(array.length)];
+        return array[randomInstance.nextInt(array.length)];
     }
 
     public static double getRandomAngle() {
-        return random.nextDouble() * 2 * Math.PI;
+        return randomInstance.nextDouble() * 2 * Math.PI;
     }
 
     public static double randomDouble(double min, double max) {
@@ -319,7 +319,7 @@ public class MathUtils {
     }
 
     public static byte randomByte(int max) {
-        return (byte) random.nextInt(max + 1);
+        return (byte) randomInstance.nextInt(max + 1);
     }
 
     public static int randomRangeInt(int min, int max) {

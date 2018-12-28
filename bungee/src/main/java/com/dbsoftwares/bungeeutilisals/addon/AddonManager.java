@@ -168,8 +168,7 @@ public class AddonManager implements IAddonManager {
                 throw new AddonException("Dependency " + dependency + " is required by " + description.getName() + " but not found.");
             }
         }
-        try {
-            final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+        try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
             final Class<?> main = loader.loadClass(description.getMain());
             final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 
@@ -352,8 +351,7 @@ public class AddonManager implements IAddonManager {
 
         // do actual loading
         if (status) {
-            try {
-                final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+            try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
                 final Class<?> main = loader.loadClass(description.getMain());
                 final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 

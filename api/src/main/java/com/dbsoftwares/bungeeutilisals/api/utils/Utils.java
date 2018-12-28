@@ -171,7 +171,7 @@ public class Utils {
      * Attempts to parse a long time from a given string.
      *
      * @param time The string you want to importer to time.
-     * @return The time, in millis, you requested.
+     * @return The time, in MILLIS, you requested.
      */
     public static long parseDateDiff(String time) {
         try {
