@@ -54,7 +54,7 @@ public class MathUtils {
     static private final double CEIL = 0.9999999;
     static private final double BIG_ENOUGH_CEIL = 16384.999999999996;
     static private final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5f;
-    public static Random randomInstance = new Random();
+    public static final Random RANDOM_INSTANCE = new Random();
 
     public static float sin(float radians) {
         return Sin.table[(int) (radians * radToIndex) & SIN_MASK];
@@ -176,15 +176,15 @@ public class MathUtils {
     }
 
     public static int random(int range) {
-        return randomInstance.nextInt(range + 1);
+        return RANDOM_INSTANCE.nextInt(range + 1);
     }
 
     public static int random(int start, int end) {
-        return start + randomInstance.nextInt(end - start + 1);
+        return start + RANDOM_INSTANCE.nextInt(end - start + 1);
     }
 
     public static boolean randomBoolean() {
-        return randomInstance.nextBoolean();
+        return RANDOM_INSTANCE.nextBoolean();
     }
 
     public static boolean randomBoolean(float chance) {
@@ -192,15 +192,15 @@ public class MathUtils {
     }
 
     public static float random() {
-        return randomInstance.nextFloat();
+        return RANDOM_INSTANCE.nextFloat();
     }
 
     public static float random(float range) {
-        return randomInstance.nextFloat() * range;
+        return RANDOM_INSTANCE.nextFloat() * range;
     }
 
     public static float random(float start, float end) {
-        return start + randomInstance.nextFloat() * (end - start);
+        return start + RANDOM_INSTANCE.nextFloat() * (end - start);
     }
 
     public static int nextPowerOfTwo(int value) {
@@ -299,11 +299,11 @@ public class MathUtils {
     }
 
     public static <T> T getRandomFromArray(T[] array) {
-        return array[randomInstance.nextInt(array.length)];
+        return array[RANDOM_INSTANCE.nextInt(array.length)];
     }
 
     public static double getRandomAngle() {
-        return randomInstance.nextDouble() * 2 * Math.PI;
+        return RANDOM_INSTANCE.nextDouble() * 2 * Math.PI;
     }
 
     public static double randomDouble(double min, double max) {
@@ -319,7 +319,7 @@ public class MathUtils {
     }
 
     public static byte randomByte(int max) {
-        return (byte) randomInstance.nextInt(max + 1);
+        return (byte) RANDOM_INSTANCE.nextInt(max + 1);
     }
 
     public static int randomRangeInt(int min, int max) {

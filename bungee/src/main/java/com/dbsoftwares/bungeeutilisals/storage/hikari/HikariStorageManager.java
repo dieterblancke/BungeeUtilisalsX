@@ -49,8 +49,8 @@ public abstract class HikariStorageManager extends AbstractStorageManager {
 
         config.setMaximumPoolSize(configuration.getInteger("storage.pool.max-pool-size"));
         config.setMinimumIdle(configuration.getInteger("storage.pool.min-idle"));
-        config.setMaxLifetime(configuration.getInteger("storage.pool.max-lifetime") * 1000);
-        config.setConnectionTimeout(configuration.getInteger("storage.pool.connection-timeout") * 1000);
+        config.setMaxLifetime((long) (configuration.getInteger("storage.pool.max-lifetime") * 1000));
+        config.setConnectionTimeout((long) (configuration.getInteger("storage.pool.connection-timeout") * 1000));
 
         config.setPoolName("BungeeUtilisals");
         config.setLeakDetectionThreshold(10000);

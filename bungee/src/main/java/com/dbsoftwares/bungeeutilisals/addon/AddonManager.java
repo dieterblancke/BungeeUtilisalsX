@@ -38,7 +38,6 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.Listener;
-
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -134,7 +133,7 @@ public class AddonManager implements IAddonManager {
             final AddonDescription addon = entry.getValue();
             try {
                 if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
-                    BUCore.getLogger().warn("Could not enable addon " + entry.getKey());
+                    BUCore.getLogger().warn("Could not enable addon {}", entry.getKey());
                 }
             } catch (AddonException e) {
                 e.printStackTrace();
@@ -175,8 +174,8 @@ public class AddonManager implements IAddonManager {
             addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
             addons.put(description.getName(), addon);
 
-            BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
-        } catch (final Throwable t) {
+            BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
+        } catch (final Exception t) {
             throw new AddonException("Error occured while enabling addon " + description.getName(), t);
         }
     }
@@ -196,10 +195,10 @@ public class AddonManager implements IAddonManager {
             try {
                 addon.onEnable();
                 BUCore.getLogger().info(
-                        "Enabled addon " + addon.getDescription().getName() + " version "
-                                + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
+                        "Enabled addon {} version {} by {}",
+                        addon.getDescription().getName(), addon.getDescription().getVersion(), addon.getDescription().getAuthor()
                 );
-            } catch (final Throwable t) {
+            } catch (final Exception t) {
                 throw new AddonException("Exception encountered when loading addon: " + addon.getDescription().getName(), t);
             }
         }
@@ -210,7 +209,7 @@ public class AddonManager implements IAddonManager {
         for (final String addon : Sets.newHashSet(addons.keySet())) {
             try {
                 disableAddon(addon);
-            } catch (final Throwable t) {
+            } catch (final Exception t) {
                 throw new AddonException("Exception encountered when unloading addon: " + addon, t);
             }
         }
@@ -223,12 +222,12 @@ public class AddonManager implements IAddonManager {
         if (addon != null) {
             addon.onDisable();
 
-            Validate.ifNotNull(scheduler.getTasks(addonName), (tasks) -> tasks.forEach(IAddonTask::cancel));
-            Validate.ifNotNull(eventHandlers.get(addonName), (handlers) -> handlers.forEach(EventHandler::unregister));
-            Validate.ifNotNull(listeners.get(addonName), (listeners) -> listeners.forEach(listener -> {
+            Validate.ifNotNull(scheduler.getTasks(addonName), tasks -> tasks.forEach(IAddonTask::cancel));
+            Validate.ifNotNull(eventHandlers.get(addonName), handlers -> handlers.forEach(EventHandler::unregister));
+            Validate.ifNotNull(listeners.get(addonName), listeners -> listeners.forEach(listener -> {
                 ProxyServer.getInstance().getPluginManager().unregisterListener(listener);
             }));
-            Validate.ifNotNull(commands.get(addonName), (commands) -> commands.forEach(command -> {
+            Validate.ifNotNull(commands.get(addonName), commands -> commands.forEach(command -> {
                 ProxyServer.getInstance().getPluginManager().unregisterCommand(command);
             }));
 
@@ -330,7 +329,7 @@ public class AddonManager implements IAddonManager {
                         builder.append(element.getName()).append(" -> ");
                     }
                     builder.append(description.getName()).append(" -> ").append(dependency);
-                    BUCore.getLogger().warn("Circular dependency detected: " + builder);
+                    BUCore.getLogger().warn("Circular dependency detected: {}", builder);
                     status = false;
                 } else {
                     dependStack.push(description);
@@ -340,7 +339,7 @@ public class AddonManager implements IAddonManager {
             }
 
             if (dependStatus == Boolean.FALSE && description.getRequiredDependencies().contains(dependency)) {
-                BUCore.getLogger().warn(dependency + " (required by " + description.getName() + ") is unavailable");
+                BUCore.getLogger().warn("{} (required by {}) is unavailable", dependency, description.getName());
                 status = false;
             }
 
@@ -358,8 +357,8 @@ public class AddonManager implements IAddonManager {
                 addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
                 addons.put(description.getName(), addon);
 
-                BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
-            } catch (final Throwable t) {
+                BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
+            } catch (final Exception t) {
                 statuses.put(description, false);
                 throw new AddonException("Error enabling addon " + description.getName(), t);
             }

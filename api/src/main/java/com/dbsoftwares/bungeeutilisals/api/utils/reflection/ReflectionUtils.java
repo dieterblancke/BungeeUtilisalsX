@@ -34,7 +34,13 @@ public class ReflectionUtils {
 
     public static Object getHandle(Object o) {
         try {
-            return getMethod("getHandle", o.getClass()).invoke(o);
+            final Method getHandle = getMethod("getHandle", o.getClass());
+
+            if (getHandle == null) {
+                return null;
+            } else {
+                return getHandle.invoke(o);
+            }
         } catch (Exception e) {
             return null;
         }
@@ -96,7 +102,13 @@ public class ReflectionUtils {
     }
 
     public static Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
-        return getField(clazz, fieldName).get(instance);
+        final Field field = getField(clazz, fieldName);
+
+        if (field == null) {
+            return null;
+        } else {
+            return field.get(instance);
+        }
     }
 
     public static Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
@@ -104,7 +116,11 @@ public class ReflectionUtils {
     }
 
     public static void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
-        getField(clazz, fieldName).set(instance, value);
+        final Field field = getField(clazz, fieldName);
+
+        if (field != null) {
+            field.set(instance, value);
+        }
     }
 
     public static void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {

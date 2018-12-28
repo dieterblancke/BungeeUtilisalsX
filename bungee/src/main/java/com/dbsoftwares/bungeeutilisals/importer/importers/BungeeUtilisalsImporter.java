@@ -158,10 +158,14 @@ public class BungeeUtilisalsImporter extends Importer {
     private void importPunishment(final PunishmentType type, final Connection connection, final ResultSet rs) throws ExecutionException, SQLException {
         final String executedBy = rs.getString("executed_by");
         final String user = rs.getString("user");
-        final Long time = rs.getLong("time");
+        final long time = rs.getLong("time");
         final String reason = rs.getString("reason");
 
         final String id = user.contains(".") ? getIdOnIP(connection, user) : user;
+
+        if (id == null) {
+            return;
+        }
 
         final boolean usingUUID = id.contains("-");
         String uuid = usingUUID ? id : null;

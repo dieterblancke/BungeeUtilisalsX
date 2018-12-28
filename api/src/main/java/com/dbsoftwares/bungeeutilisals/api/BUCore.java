@@ -53,7 +53,6 @@ public final class BUCore {
     }
 
     public static Logger getLogger() {
-
         return logger;
     }
 }

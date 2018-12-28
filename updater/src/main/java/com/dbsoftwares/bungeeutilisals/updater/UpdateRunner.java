@@ -85,8 +85,11 @@ public class UpdateRunner implements Runnable {
                     }
                 }
             }
-        } catch (IOException | ExecutionException | InterruptedException e) {
+        } catch (IOException | ExecutionException e) {
             e.printStackTrace();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+            Thread.currentThread().interrupt();
         }
     }
 
@@ -101,8 +104,11 @@ public class UpdateRunner implements Runnable {
                         response.download(fos);
                     }
                 }
-            } catch (IOException | InterruptedException | ExecutionException e) {
+            } catch (IOException | ExecutionException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
             }
         }
     }
