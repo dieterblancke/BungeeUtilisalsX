@@ -34,7 +34,6 @@ import java.util.Optional;
 
 public abstract class Command extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
 
-    public BUAPI api;
     protected List<SubCommand> subCommands = Lists.newArrayList();
     private String permission;
 
@@ -53,7 +52,6 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
     public Command(String name, List<String> aliases, String permission) {
         super(name, "", aliases.toArray(new String[]{}));
         this.permission = permission;
-        this.api = BUCore.getApi();
 
         ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
     }
@@ -98,7 +96,7 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Optional<User> optional = api.getUser(sender.getName());
+        Optional<User> optional = BUCore.getApi().getUser(sender.getName());
         if (sender instanceof ProxiedPlayer && optional.isPresent()) {
             List<String> tabCompletion = onTabComplete(optional.get(), args);
 

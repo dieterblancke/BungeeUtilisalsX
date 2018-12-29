@@ -41,6 +41,7 @@ public class UpdateRunner implements Runnable {
 
     private static final Gson gson;
     private static final HttpRequestFactory requestFactory;
+    private final static String ERROR_STRING = "An error occured: ";
 
     static {
         gson = new Gson();
@@ -86,9 +87,9 @@ public class UpdateRunner implements Runnable {
                 }
             }
         } catch (IOException | ExecutionException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.getLogger().error(ERROR_STRING, e);
         } catch (InterruptedException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.getLogger().error(ERROR_STRING, e);
             Thread.currentThread().interrupt();
         }
     }
@@ -105,9 +106,9 @@ public class UpdateRunner implements Runnable {
                     }
                 }
             } catch (IOException | ExecutionException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                BUCore.getLogger().error(ERROR_STRING, e);
             } catch (InterruptedException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                BUCore.getLogger().error(ERROR_STRING, e);
                 Thread.currentThread().interrupt();
             }
         }

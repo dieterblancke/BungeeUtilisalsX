@@ -55,8 +55,8 @@ public class AddonReloadSubCommand extends SubCommand {
             try {
                 BUCore.getApi().getAddonManager().reloadAddon(addon);
                 user.sendLangMessage("general-commands.addon.reload.success", "{name}", addon);
-            } catch (Throwable t) {
-                t.printStackTrace();
+            } catch (Exception e) {
+                BUCore.getLogger().error("An error occured: ", e);
                 user.sendLangMessage("general-commands.addon.reload.error", "{name}", addon);
             }
         } else {
