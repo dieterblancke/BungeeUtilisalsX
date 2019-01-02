@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.commands.addons.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.addon.Addon;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
@@ -46,12 +45,10 @@ public class AddonDisableSubCommand extends SubCommand {
     public void onExecute(User user, String[] args) {
         final String addonName = args[0];
         if (BUCore.getApi().getAddonManager().isRegistered(addonName)) {
-            final Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
-
             try {
                 BUCore.getApi().getAddonManager().disableAddon(addonName);
                 user.sendLangMessage("general-commands.addon.disable.success", "{name}", addonName);
-            } catch (Throwable t) {
+            } catch (Exception e) {
                 user.sendLangMessage("general-commands.addon.disable.error", "{name}", addonName);
             }
         } else {

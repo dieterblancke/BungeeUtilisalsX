@@ -38,11 +38,11 @@ public class JarClassLoader {
 
     private final URLClassLoader classLoader;
 
-    public JarClassLoader(Plugin instance) throws IllegalStateException {
-        ClassLoader classLoader = instance.getClass().getClassLoader();
+    public JarClassLoader(Plugin instance) {
+        final ClassLoader loader = instance.getClass().getClassLoader();
 
-        if (classLoader instanceof URLClassLoader) {
-            this.classLoader = (URLClassLoader) classLoader;
+        if (loader instanceof URLClassLoader) {
+            this.classLoader = (URLClassLoader) loader;
         } else {
             throw new IllegalStateException("Plugin ClassLoader is not instance of URLClassLoader");
         }

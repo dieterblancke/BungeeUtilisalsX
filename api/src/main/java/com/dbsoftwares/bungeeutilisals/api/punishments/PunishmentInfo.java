@@ -34,7 +34,7 @@ public class PunishmentInfo {
 
     private int id;
     private String user;
-    private String IP;
+    private String ip;
     private UUID uuid;
     private String executedBy;
     private String server;

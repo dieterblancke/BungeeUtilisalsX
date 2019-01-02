@@ -45,10 +45,12 @@ import java.util.regex.Pattern;
 
 public class Utils {
 
-    private final static Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
-                    + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
-                    + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?",
-            Pattern.CASE_INSENSITIVE);
+    private static final Pattern timePattern = Pattern.compile("(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
+            + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
+            + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE);
+
+    private Utils() {
+    }
 
     /**
      * Formats a message.
@@ -145,23 +147,14 @@ public class Utils {
      * @return A list containing all lines from the input stream.
      */
     public static List<String> readFromStream(InputStream stream) {
-        InputStreamReader inputStreamReader = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(inputStreamReader);
+        final List<String> lines = Lists.newArrayList();
 
-        List<String> lines = Lists.newArrayList();
-        reader.lines().forEach(lines::add);
-
-        try {
-            reader.close();
+        try (InputStream input = stream;
+             InputStreamReader inputStreamReader = new InputStreamReader(input);
+             BufferedReader reader = new BufferedReader(inputStreamReader)) {
+            reader.lines().forEach(lines::add);
         } catch (IOException ignored) {
-        }
-        try {
-            inputStreamReader.close();
-        } catch (IOException ignored) {
-        }
-        try {
-            stream.close();
-        } catch (IOException ignored) {
+            // ignored
         }
 
         return lines;
@@ -176,7 +169,13 @@ public class Utils {
     public static long parseDateDiff(String time) {
         try {
             Matcher m = timePattern.matcher(time);
-            int years = 0, months = 0, weeks = 0, days = 0, hours = 0, minutes = 0, seconds = 0;
+            int years = 0;
+            int months = 0;
+            int weeks = 0;
+            int days = 0;
+            int hours = 0;
+            int minutes = 0;
+            int seconds = 0;
             boolean found = false;
             while (m.find()) {
                 if (m.group() == null || m.group().isEmpty()) {
@@ -306,6 +305,7 @@ public class Utils {
                 return (String) getName.invoke(userConn);
             }
         } catch (InvocationTargetException | IllegalAccessException ignored) {
+            // ignored
         }
         return null;
     }
@@ -334,22 +334,22 @@ public class Utils {
      * Formatting a list into a string with given seperators.
      *
      * @param objects    Iterable which has to be converted.
-     * @param separators Seperator which will be used to seperate the list.
+     * @param separator  Seperator which will be used to seperate the list.
      * @return A string in which all sendable of the list are seperated by the separator.
      */
-    public static String formatList(Iterable<?> objects, String separators) {
-        return Utils.c(Joiner.on(separators).join(objects));
+    public static String formatList(Iterable<?> objects, String separator) {
+        return Utils.c(Joiner.on(separator).join(objects));
     }
 
     /**
      * Similar to {@link #formatList(Iterable, String)} but for Arrays.
      *
      * @param objects    Array which has to be converted.
-     * @param separators Seperator which will be used to seperate the array.
+     * @param separator  Seperator which will be used to seperate the array.
      * @return A string in which all sendable of the array are seperated by the separator.
      */
-    public static String formatList(Object[] objects, String separators) {
-        return Utils.c(Joiner.on(separators).join(objects));
+    public static String formatList(Object[] objects, String separator) {
+        return Utils.c(Joiner.on(separator).join(objects));
     }
 
     /**

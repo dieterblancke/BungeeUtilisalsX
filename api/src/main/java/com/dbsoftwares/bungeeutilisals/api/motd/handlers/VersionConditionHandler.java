@@ -52,16 +52,16 @@ public class VersionConditionHandler extends ConditionHandler {
                 return connection.getVersion() >= version.getVersion();
             case ">":
                 return connection.getVersion() > version.getVersion();
+            default:
+                return false;
         }
-
-        return false;
     }
 
     private Version formatVersion(String mcVersion) {
         try {
             return Version.valueOf("MINECRAFT_" + mcVersion.replace(".", "_"));
         } catch (IllegalArgumentException e) {
-            BUCore.getLogger().warn("Found an invalid version in condition 'version " + condition + "'!");
+            BUCore.getLogger().warn("Found an invalid version in condition 'version {}'!", condition);
             BUCore.getLogger().warn("Available versions:");
             BUCore.getLogger().warn(listVersions());
             return null;

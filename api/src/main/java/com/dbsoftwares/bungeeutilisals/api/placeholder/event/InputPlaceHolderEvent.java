@@ -20,9 +20,11 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder.event;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 @Getter
+@EqualsAndHashCode(callSuper = true)
 public class InputPlaceHolderEvent extends PlaceHolderEvent {
 
     private String argument;

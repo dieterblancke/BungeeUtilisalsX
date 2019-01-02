@@ -39,18 +39,17 @@ import java.util.concurrent.Executors;
 @Data
 public abstract class Addon {
 
-    private ProxyServer proxy;
     protected BUAPI api;
+    private ProxyServer proxy;
     private AddonDescription description;
     private ExecutorService executorService;
 
     public void initialize(final ProxyServer proxy, final BUAPI api, final AddonDescription description) {
-        if (this.proxy != null || this.api != null || this.description != null) {
-            throw new RuntimeException("Addon is already initialized.");
+        if (this.proxy == null && this.api == null && this.description == null) {
+            this.proxy = proxy;
+            this.api = api;
+            this.description = description;
         }
-        this.proxy = proxy;
-        this.api = api;
-        this.description = description;
     }
 
     public abstract void onEnable();

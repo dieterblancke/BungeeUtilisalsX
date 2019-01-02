@@ -20,7 +20,6 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder.impl;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor

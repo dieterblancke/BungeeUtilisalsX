@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPMuteCommand extends Command {
+public class IPMuteCommand extends BUCommand {
 
     public IPMuteCommand() {
         super("ipmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -67,25 +67,25 @@ public class IPMuteCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.IPMUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
                 PunishmentType.IPMUTE, storage.getUuid(), storage.getUserName(), storage.getIp(),
                 reason, 0L, user.getServerName(), true, user.getName()
         );
 
-        api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.ipmute.onmute",
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.ipmute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
         user.sendLangMessage("punishments.ipmute.executed", executor.getPlaceHolders(info));
 
-        api.langPermissionBroadcast("punishments.ipmute.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.ipmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ipmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

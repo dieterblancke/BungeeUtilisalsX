@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 
 public class FriendUtils {
 
+    private FriendUtils() {
+    }
+
     public static int getFriendsLimit(User user) {
         return getFriendsLimit(user.sender());
     }

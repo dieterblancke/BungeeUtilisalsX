@@ -85,8 +85,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
             folder.mkdir();
         }
         try {
-            if (!target.exists()) {
-                target.createNewFile();
+            if (!target.exists() && target.createNewFile()) {
                 try (InputStream in = addon.getResource(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
                         BUCore.getLogger().info("Could not find default language configuration configuration for " +

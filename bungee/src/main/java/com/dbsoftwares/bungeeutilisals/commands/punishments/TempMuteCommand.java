@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class TempMuteCommand extends Command {
+public class TempMuteCommand extends BUCommand {
 
     public TempMuteCommand() {
         super("tempmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -55,7 +55,7 @@ public class TempMuteCommand extends Command {
         Dao dao = BUCore.getApi().getStorageManager().getDao();
         String timeFormat = args[1];
         String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        Long time = Utils.parseDateDiff(timeFormat);
+        long time = Utils.parseDateDiff(timeFormat);
 
         if (time == 0L) {
             user.sendLangMessage("punishments.tempmute.non-valid");
@@ -73,24 +73,24 @@ public class TempMuteCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.TEMPMUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
         PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
                 PunishmentType.TEMPMUTE, storage.getUuid(), storage.getUserName(), storage.getIp(),
                 reason, time, user.getServerName(), true, user.getName()
         );
 
-        api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.tempmute.onmute",
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.tempmute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
         user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info));
 
-        api.langPermissionBroadcast("punishments.tempmute.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.tempmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempmute.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

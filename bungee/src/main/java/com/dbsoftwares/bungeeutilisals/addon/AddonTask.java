@@ -71,8 +71,8 @@ public class AddonTask implements Runnable, IAddonTask {
         while (running.get()) {
             try {
                 task.run();
-            } catch (Throwable t) {
-                BUCore.getLogger().error(String.format("Task %s encountered an exception", id), t);
+            } catch (Exception e) {
+                BUCore.getLogger().error(String.format("Task %s encountered an exception", id), e);
             }
 
             if (period <= 0) {

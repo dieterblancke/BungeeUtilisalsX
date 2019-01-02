@@ -44,6 +44,7 @@ public enum FileLocation {
     CONFIG("config.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     SERVERGROUPS("servergroups.yml") {
@@ -83,7 +84,7 @@ public enum FileLocation {
                     getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
                 } else {
                     BUCore.getLogger().warn("An invalid MOTD condition has been entered.");
-                    BUCore.getLogger().warn("Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
+                    BUCore.getLogger().warn("For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
                 }
             }
         }
@@ -91,41 +92,49 @@ public enum FileLocation {
     CUSTOMCOMMANDS("commands/customcommands.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     GENERALCOMMANDS("commands/generalcommands.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     ANTISWEAR("chat/protection/antiswear.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     ANTICAPS("chat/protection/anticaps.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     ANTIAD("chat/protection/antiadvertise.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     ANTISPAM("chat/protection/antispam.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     UTFSYMBOLS("chat/utfsymbols.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     FRIENDS_CONFIG("friends.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     },
     PUNISHMENTS("punishments.yml") {
@@ -134,13 +143,14 @@ public enum FileLocation {
         public void loadData() {
             for (ISection section : configuration.getSectionList("actions")) {
                 try {
-                    PunishmentType type = PunishmentType.valueOf(section.getString("type"));
+                    final PunishmentType type = PunishmentType.valueOf(section.getString("type"));
 
                     try {
-                        TimeUnit unit = TimeUnit.valueOf(section.getString("time.unit"));
+                        final TimeUnit unit = TimeUnit.valueOf(section.getString("time.unit"));
+                        final String amountKey = "time.amount";
 
-                        if (section.isInteger("time.amount")) {
-                            int amount = section.getInteger("time.amount");
+                        if (section.isInteger(amountKey)) {
+                            int amount = section.getInteger(amountKey);
                             int limit = section.getInteger("limit");
 
                             PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
@@ -152,7 +162,7 @@ public enum FileLocation {
                             setData(type.toString(), actions);
                         } else {
                             BUCore.getApi().getPlugin().getLogger().warning(
-                                    "An invalid number has been entered (" + section.getString("time.amount") + ")."
+                                    "An invalid number has been entered (" + section.getString(amountKey) + ")."
                             );
                         }
                     } catch (IllegalArgumentException e) {
@@ -160,7 +170,6 @@ public enum FileLocation {
                                 "An invalid time unit has been entered (" + section.getString("time.unit") + ")."
                         );
                     }
-
                 } catch (IllegalArgumentException e) {
                     BUCore.getApi().getPlugin().getLogger().warning(
                             "An invalid punishment type has been entered (" + section.getString("type") + ")."
@@ -173,6 +182,7 @@ public enum FileLocation {
     LANGUAGES_CONFIG("languages/config.yml") {
         @Override
         public void loadData() {
+            // do nothing
         }
     };
 

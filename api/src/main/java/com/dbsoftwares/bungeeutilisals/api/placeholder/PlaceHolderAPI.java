@@ -33,6 +33,9 @@ public class PlaceHolderAPI {
 
     private static List<PlaceHolder> placeholders = Lists.newArrayList();
 
+    private PlaceHolderAPI() {
+    }
+
     public static String formatMessage(User user, String message) {
         if (user == null) {
             return formatMessage(message);
@@ -77,7 +80,7 @@ public class PlaceHolderAPI {
 
     public static PlaceHolder getPlaceHolder(String placeholder) {
         for (PlaceHolder ph : placeholders) {
-            if (ph.getPlaceHolder().toLowerCase().equals(placeholder.toLowerCase())) {
+            if (ph.getPlaceHolderName().equalsIgnoreCase(placeholder)) {
                 return ph;
             }
         }

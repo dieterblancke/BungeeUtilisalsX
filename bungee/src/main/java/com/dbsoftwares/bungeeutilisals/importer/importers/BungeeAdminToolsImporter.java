@@ -88,7 +88,7 @@ public class BungeeAdminToolsImporter extends Importer {
                     "SELECT * FROM BAT_ban;"
             )) {
                 while (rs.next()) {
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("ban_ip");
                     String executedBy = rs.getString("ban_staff");
                     String reason = rs.getString("ban_reason");
@@ -141,7 +141,7 @@ public class BungeeAdminToolsImporter extends Importer {
                     "SELECT * FROM BAT_mute;"
             )) {
                 while (rs.next()) {
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("mute_ip");
                     String executedBy = rs.getString("mute_staff");
                     String reason = rs.getString("mute_reason");
@@ -198,7 +198,7 @@ public class BungeeAdminToolsImporter extends Importer {
             )) {
                 while (rs.next()) {
                     String name = rs.getString("BAT_player");
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("lastip");
                     Date login;
                     Date logout;

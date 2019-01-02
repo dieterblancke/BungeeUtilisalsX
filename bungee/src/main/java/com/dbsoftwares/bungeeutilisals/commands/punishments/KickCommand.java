@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class KickCommand extends Command {
+public class KickCommand extends BUCommand {
 
     public KickCommand() {
         super("kick", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -64,13 +64,13 @@ public class KickCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.KICK, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
                 PunishmentType.KICK, storage.getUuid(), storage.getUserName(), storage.getIp(),
@@ -79,7 +79,7 @@ public class KickCommand extends Command {
 
         target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
-        api.langPermissionBroadcast("punishments.kick.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.kick.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

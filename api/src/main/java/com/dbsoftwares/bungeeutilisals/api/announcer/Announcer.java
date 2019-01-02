@@ -88,7 +88,7 @@ public abstract class Announcer {
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    BUCore.getLogger().info("Loading " + announcer.getType().toString().toLowerCase() + " announcements ...");
+                    BUCore.getLogger().info("Loading {} announcements ...", announcer.getType().toString().toLowerCase());
                 }
 
                 announcers.put(announcer.getType(), announcer);
@@ -142,16 +142,16 @@ public abstract class Announcer {
             announcements.replaceAll((key, value) -> false);
         }
 
-        List<Announcement> announcementsKeys = Lists.newArrayList();
+        final List<Announcement> announcementsKeys = Lists.newArrayList();
         announcements.forEach((key, value) -> {
             if (!value) {
                 announcementsKeys.add(key);
             }
         });
 
-        Announcement random = MathUtils.getRandomFromList(announcementsKeys);
-        announcements.put(random, true);
-        return random;
+        final Announcement announcement = MathUtils.getRandomFromList(announcementsKeys);
+        announcements.put(announcement, true);
+        return announcement;
     }
 
     private Announcement getNextAnnouncement() {

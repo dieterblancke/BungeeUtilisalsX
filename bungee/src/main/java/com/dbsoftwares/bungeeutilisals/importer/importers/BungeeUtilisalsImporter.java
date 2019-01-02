@@ -31,6 +31,8 @@ import java.util.concurrent.ExecutionException;
 
 public class BungeeUtilisalsImporter extends Importer {
 
+    private static final String ERROR_STRING = "An error occured: ";
+
     private Connection createConnection(final Map<String, String> properties) throws SQLException {
         if (properties.isEmpty()) {
             return BUCore.getApi().getStorageManager().getConnection();
@@ -75,7 +77,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.BAN, connection, rs);
                     } catch (Exception e) {
-                        BUCore.getLogger().error("An error occured: ", e);
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -90,7 +92,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.MUTE, connection, rs);
                     } catch (Exception e) {
-                        BUCore.getLogger().error("An error occured: ", e);
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -105,7 +107,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.IPBAN, connection, rs);
                     } catch (Exception e) {
-                        BUCore.getLogger().error("An error occured: ", e);
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -133,7 +135,7 @@ public class BungeeUtilisalsImporter extends Importer {
                             name = nameCache.get(uuid);
                         }
                     } catch (Exception e) {
-                        BUCore.getLogger().error("An error occured: ", e);
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -151,7 +153,7 @@ public class BungeeUtilisalsImporter extends Importer {
 
             importerCallback.done(status, null);
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
     }
 

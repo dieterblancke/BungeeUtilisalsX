@@ -31,10 +31,10 @@ public class DefaultPlaceHolder extends PlaceHolder {
 
     @Override
     public String format(User user, String message) {
-        if (placeHolder == null || !message.contains(placeHolder)) {
+        if (placeHolderName == null || !message.contains(placeHolderName)) {
             return message;
         }
         PlaceHolderEvent event = new PlaceHolderEvent(user, this, message);
-        return message.replace(placeHolder, Utils.c(eventHandler.getReplacement(event)));
+        return message.replace(placeHolderName, Utils.c(eventHandler.getReplacement(event)));
     }
 }

@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPTempBanCommand extends Command {
+public class IPTempBanCommand extends BUCommand {
 
     public IPTempBanCommand() {
         super("iptempban", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -73,20 +73,20 @@ public class IPTempBanCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.IPTEMPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
                 PunishmentType.IPTEMPBAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
                 reason, time, user.getServerName(), true, user.getName()
         );
 
-        api.getUser(storage.getUserName()).ifPresent(banned -> {
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
             String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.iptempban.kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
 
@@ -95,7 +95,7 @@ public class IPTempBanCommand extends Command {
 
         user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
 
-        api.langPermissionBroadcast("punishments.iptempban.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.iptempban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

@@ -37,11 +37,15 @@ import java.util.stream.Stream;
 public class TitleAnnouncement extends Announcement {
 
     private boolean language;
-    private String title, subtitle;
-    private int fadeIn, stay, fadeOut;
+    private String title;
+    private String subtitle;
+    private int fadeIn;
+    private int stay;
+    private int fadeOut;
 
     public TitleAnnouncement(boolean language, String title, String subtitle,
-                             int fadeIn, int stay, int fadeOut, ServerGroup serverGroup, String receivePermission) {
+                             int fadeIn, int stay, int fadeOut, ServerGroup serverGroup,
+                             String receivePermission) {
         super(serverGroup, receivePermission);
 
         this.language = language;

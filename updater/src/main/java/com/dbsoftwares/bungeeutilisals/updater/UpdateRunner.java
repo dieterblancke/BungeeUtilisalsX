@@ -41,7 +41,7 @@ public class UpdateRunner implements Runnable {
 
     private static final Gson gson;
     private static final HttpRequestFactory requestFactory;
-    private final static String ERROR_STRING = "An error occured: ";
+    private static final String ERROR_STRING = "An error occured: ";
 
     static {
         gson = new Gson();

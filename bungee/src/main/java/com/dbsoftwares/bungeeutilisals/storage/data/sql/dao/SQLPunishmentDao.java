@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
+import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,11 +35,11 @@ import java.util.UUID;
 
 public class SQLPunishmentDao implements PunishmentDao {
 
-    private final static String SELECT = "SELECT %s FROM %s WHERE %s;";
-    private final static String UPDATE = "UPDATE %s SET %s WHERE %s;";
+    private static final String SELECT = "SELECT %s FROM %s WHERE %s;";
+    private static final String UPDATE = "UPDATE %s SET %s WHERE %s;";
 
     @Override
-    public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
+    public long getPunishmentsSince(final String identifier, final PunishmentType type, final Date date) {
         long amount = 0;
 
         String statement = format(
@@ -59,28 +60,31 @@ public class SQLPunishmentDao implements PunishmentDao {
                 }
             }
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
 
         return amount;
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby) {
+    public PunishmentInfo insertPunishment(final PunishmentType type, final UUID uuid, final String user,
+                                           final String ip, final String reason, final Long time, final String server,
+                                           final Boolean active, final String executedby) {
         return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, null);
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby, String removedby) {
+    public PunishmentInfo insertPunishment(final PunishmentType type, final UUID uuid, final String user,
+                                           final String ip, final String reason, final Long time, final String server,
+                                           final Boolean active, final String executedby, final String removedby) {
         return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, new Date(System.currentTimeMillis()), removedby);
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, Long time, String server, Boolean active, String executedby, Date date, String removedby) {
+    public PunishmentInfo insertPunishment(final PunishmentType type, final UUID uuid, final String user, final String ip,
+                                           final String reason, final Long time, final String server,
+                                           final Boolean active, final String executedby, final Date date,
+                                           final String removedby) {
         String sql = PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + " ");
 
         if (type.isActivatable()) {
@@ -102,7 +106,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    BUCore.getLogger().error("An error occured: ", e);
+                    BUCore.logException(e);
                 }
             } else {
                 sql += "(uuid, user, ip, reason, server, active, executed_by, removed_by) "
@@ -121,7 +125,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                     preparedStatement.executeUpdate();
                 } catch (SQLException e) {
-                    BUCore.getLogger().error("An error occured: ", e);
+                    BUCore.logException(e);
                 }
             }
         } else {
@@ -139,7 +143,7 @@ public class SQLPunishmentDao implements PunishmentDao {
 
                 preparedStatement.executeUpdate();
             } catch (SQLException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                BUCore.logException(e);
             }
         }
 
@@ -154,22 +158,15 @@ public class SQLPunishmentDao implements PunishmentDao {
         info.setDate(date);
         info.setType(type);
 
-        if (time != null) {
-            info.setExpireTime(time);
-        }
-        if (active != null) {
-            info.setActive(active);
-        }
-        if (removedby != null) {
-            info.setRemovedBy(removedby);
-        }
+        Validate.ifNotNull(time, info::setExpireTime);
+        Validate.ifNotNull(active, info::setActive);
+        Validate.ifNotNull(removedby, info::setRemovedBy);
 
         return info;
-
     }
 
     @Override
-    public boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive) {
+    public boolean isPunishmentPresent(final PunishmentType type, final UUID uuid, final String ip, final boolean checkActive) {
         boolean present = false;
         String statement = format(
                 SELECT,
@@ -180,20 +177,20 @@ public class SQLPunishmentDao implements PunishmentDao {
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setString(1, type.isIP() ? IP : uuid.toString());
+            pstmt.setString(1, type.isIP() ? ip : uuid.toString());
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 present = rs.next();
             }
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
 
         return present;
     }
 
     @Override
-    public PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP) {
+    public PunishmentInfo getPunishment(final PunishmentType type, final UUID uuid, final String ip) {
         PunishmentInfo info = new PunishmentInfo();
         info.setType(PunishmentType.BAN);
 
@@ -205,7 +202,7 @@ public class SQLPunishmentDao implements PunishmentDao {
         );
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setString(1, type.isIP() ? IP : uuid.toString());
+            pstmt.setString(1, type.isIP() ? ip : uuid.toString());
             pstmt.setBoolean(2, true);
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -229,14 +226,14 @@ public class SQLPunishmentDao implements PunishmentDao {
                 }
             }
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
 
         return info;
     }
 
     @Override
-    public void removePunishment(PunishmentType type, UUID uuid, String IP, String removedBy) {
+    public void removePunishment(final PunishmentType type, final UUID uuid, final String ip, final String removedBy) {
         String statement = format(
                 UPDATE,
                 type.getTablePlaceHolder(),
@@ -248,20 +245,16 @@ public class SQLPunishmentDao implements PunishmentDao {
              PreparedStatement pstmt = connection.prepareStatement(statement)) {
             pstmt.setBoolean(1, false);
             pstmt.setString(2, removedBy);
-            pstmt.setString(3, type.isIP() ? IP : uuid.toString());
+            pstmt.setString(3, type.isIP() ? ip : uuid.toString());
             pstmt.setBoolean(4, true);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
     }
 
-    private String format(String line) {
-        return PlaceHolderAPI.formatMessage(line);
-    }
-
-    private String format(String line, Object... replacements) {
+    private String format(final String line, final Object... replacements) {
         return PlaceHolderAPI.formatMessage(String.format(line, replacements));
     }
 }

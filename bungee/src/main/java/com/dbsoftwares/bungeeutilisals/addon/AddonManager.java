@@ -90,10 +90,10 @@ public class AddonManager implements IAddonManager {
                 if (response.isSuccessStatusCode()) {
                     try (final InputStream input = response.getContent();
                          final InputStreamReader isr = new InputStreamReader(input)) {
-                        final AddonData[] addons = gson.fromJson(isr, AddonData[].class);
+                        final AddonData[] addonData = gson.fromJson(isr, AddonData[].class);
 
-                        if (addons.length > 0) {
-                            allAddons = Lists.newLinkedList(Arrays.asList(addons));
+                        if (addonData.length > 0) {
+                            allAddons = Lists.newLinkedList(Arrays.asList(addonData));
                         }
                     }
                 }
@@ -133,7 +133,7 @@ public class AddonManager implements IAddonManager {
         for (final Map.Entry<String, AddonDescription> entry : toBeLoaded.entrySet()) {
             final AddonDescription addon = entry.getValue();
             try {
-                if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
+                if (!loadAddon(addonStatuses, new ArrayDeque<>(), addon)) {
                     BUCore.getLogger().warn("Could not enable addon {}", entry.getKey());
                 }
             } catch (AddonException e) {
@@ -309,7 +309,7 @@ public class AddonManager implements IAddonManager {
         return languageManager;
     }
 
-    private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Stack<AddonDescription> dependStack, final AddonDescription description) {
+    private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Deque<AddonDescription> dependStack, final AddonDescription description) {
         if (statuses.containsKey(description)) {
             return statuses.get(description);
         }
@@ -360,9 +360,9 @@ public class AddonManager implements IAddonManager {
                 addons.put(description.getName(), addon);
 
                 BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
-            } catch (final Exception t) {
+            } catch (final Exception e) {
                 statuses.put(description, false);
-                throw new AddonException("Error enabling addon " + description.getName(), t);
+                throw new AddonException("Error enabling addon " + description.getName(), e);
             }
         }
 

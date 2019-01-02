@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class BanCommand extends Command {
+public class BanCommand extends BUCommand {
 
     public BanCommand() {
         super(
@@ -70,13 +70,13 @@ public class BanCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
                 PunishmentType.BAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
@@ -84,7 +84,7 @@ public class BanCommand extends Command {
         );
 
 
-        api.getUser(storage.getUserName()).ifPresent(banned -> {
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
             String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
             kick = executor.setPlaceHolders(kick, info);
 
@@ -92,7 +92,7 @@ public class BanCommand extends Command {
         });
 
         user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
-        api.langPermissionBroadcast("punishments.ban.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.ban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

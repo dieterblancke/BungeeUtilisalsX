@@ -54,6 +54,7 @@ public class AddonClassLoader extends URLClassLoader {
         try {
             return super.loadClass(name, resolve);
         } catch (ClassNotFoundException ignored) {
+            // ignored
         }
         if (checkOther) {
             for (AddonClassLoader loader : classLoaders) {
@@ -61,6 +62,7 @@ public class AddonClassLoader extends URLClassLoader {
                     try {
                         return loader.loadClass(name, resolve, false);
                     } catch (ClassNotFoundException ignored) {
+                        // ignored
                     }
                 }
             }

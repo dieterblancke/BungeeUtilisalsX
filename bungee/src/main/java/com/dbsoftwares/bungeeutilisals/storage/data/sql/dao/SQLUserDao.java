@@ -36,16 +36,16 @@ import java.util.UUID;
 
 public class SQLUserDao implements UserDao {
 
-    private final static String INSERT_USER = "INSERT INTO {users-table} " +
+    private static final String INSERT_USER = "INSERT INTO {users-table} " +
             "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);";
 
-    private final static String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
-    private final static String UPDATE_USER = "UPDATE {users-table} " +
+    private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
+    private static final String UPDATE_USER = "UPDATE {users-table} " +
             "SET username = ?, ip = ?, language = ?, lastlogout = ? " +
             "WHERE uuid = ?;";
 
-    private final static String UPDATE_USER_COLUMN = "UPDATE {users-table} SET %s = ? WHERE uuid = ?;";
-    private final static String ERROR_STRING = "An error occured: ";
+    private static final String UPDATE_USER_COLUMN = "UPDATE {users-table} SET %s = ? WHERE uuid = ?;";
+    private static final String ERROR_STRING = "An error occured: ";
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {

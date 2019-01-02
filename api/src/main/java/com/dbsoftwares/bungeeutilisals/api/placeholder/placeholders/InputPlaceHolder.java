@@ -21,10 +21,12 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.InputPlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import lombok.EqualsAndHashCode;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@EqualsAndHashCode(callSuper = true)
 public class InputPlaceHolder extends PlaceHolder {
 
     private Pattern pattern;

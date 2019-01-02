@@ -41,7 +41,9 @@ public class SQLiteStorageManager extends AbstractStorageManager {
         database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
         if (!database.exists()) {
             try {
-                database.createNewFile();
+                if (!database.createNewFile()) {
+                    return;
+                }
             } catch (IOException e) {
                 BUCore.getLogger().error("An error occured: ", e);
             }

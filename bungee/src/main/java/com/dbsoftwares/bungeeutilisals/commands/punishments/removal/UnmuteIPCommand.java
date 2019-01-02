@@ -19,7 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -32,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class UnmuteIPCommand extends Command {
+public class UnmuteIPCommand extends BUCommand {
 
     public UnmuteIPCommand() {
         super("unmuteip", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -69,13 +70,13 @@ public class UnmuteIPCommand extends Command {
 
         UserPunishRemoveEvent event = new UserPunishRemoveEvent(UserPunishRemoveEvent.PunishmentRemovalAction.UNMUTEIP, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), user.getServerName());
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
         dao.getPunishmentDao().removePunishment(type, storage.getUuid(), storage.getIp(), user.getName());
 
         PunishmentInfo info = new PunishmentInfo();
@@ -86,7 +87,7 @@ public class UnmuteIPCommand extends Command {
 
         user.sendLangMessage("punishments.unmuteip.executed", executor.getPlaceHolders(info));
 
-        api.langPermissionBroadcast("punishments.unmuteip.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.unmuteip.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmuteip.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -39,7 +39,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class AnnounceCommand extends Command {
+public class AnnounceCommand extends BUCommand {
 
     public AnnounceCommand() {
         super(

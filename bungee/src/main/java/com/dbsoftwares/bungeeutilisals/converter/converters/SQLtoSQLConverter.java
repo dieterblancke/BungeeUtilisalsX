@@ -42,7 +42,7 @@ public class SQLtoSQLConverter extends Converter {
         try {
             storageManager = createStorageManager(properties);
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
             return;
         }
 
@@ -71,7 +71,7 @@ public class SQLtoSQLConverter extends Converter {
                 status = new ConverterStatus(count);
             }
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
 
         try (final Connection connection = storageManager.getConnection();
@@ -92,7 +92,7 @@ public class SQLtoSQLConverter extends Converter {
                 newConnection.commit();
             }
         } catch (SQLException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.logException(e);
         }
 
         for (PunishmentType type : PunishmentType.values()) {
@@ -114,7 +114,7 @@ public class SQLtoSQLConverter extends Converter {
                     newConnection.commit();
                 }
             } catch (SQLException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                BUCore.logException(e);
             }
         }
     }

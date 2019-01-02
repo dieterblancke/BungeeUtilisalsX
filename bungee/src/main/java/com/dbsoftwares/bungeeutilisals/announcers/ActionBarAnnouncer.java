@@ -35,18 +35,18 @@ public class ActionBarAnnouncer extends Announcer {
     @Override
     public void loadAnnouncements() {
         for (ISection section : configuration.getSectionList("announcements")) {
-            ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
+            final ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
             if (group == null) {
-                BUCore.getLogger().warn("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                BUCore.getLogger().warn("Could not find a servergroup or -name for {}!", section.getString("server"));
                 return;
             }
 
-            boolean useLanguage = section.getBoolean("use-language");
-            int time = section.getInteger("time");
-            String permission = section.getString("permission");
+            final boolean useLanguage = section.getBoolean("use-language");
+            final int time = section.getInteger("time");
+            final String permission = section.getString("permission");
 
-            String message = section.getString("message");
+            final String message = section.getString("message");
 
             addAnnouncement(new ActionBarAnnouncement(useLanguage, time, message, group, permission));
         }
