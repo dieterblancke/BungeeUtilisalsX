@@ -39,14 +39,13 @@ public class SQLiteStorageManager extends AbstractStorageManager {
         super(plugin, StorageType.SQLITE, new SQLDao());
 
         database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
-        if (!database.exists()) {
-            try {
-                if (!database.createNewFile()) {
-                    return;
-                }
-            } catch (IOException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+
+        try {
+            if (!database.exists() && !database.createNewFile()) {
+                return;
             }
+        } catch (IOException e) {
+            BUCore.getLogger().error("An error occured: ", e);
         }
 
         initializeConnection();
