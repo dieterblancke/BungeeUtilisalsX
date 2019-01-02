@@ -90,15 +90,15 @@ public class AddonManager implements IAddonManager {
                 if (response.isSuccessStatusCode()) {
                     try (final InputStream input = response.getContent();
                          final InputStreamReader isr = new InputStreamReader(input)) {
-                        final AddonData[] addons = gson.fromJson(isr, AddonData[].class);
+                        final AddonData[] addonData = gson.fromJson(isr, AddonData[].class);
 
-                        if (addons.length > 0) {
-                            allAddons = Lists.newLinkedList(Arrays.asList(addons));
+                        if (addonData.length > 0) {
+                            allAddons = Lists.newLinkedList(Arrays.asList(addonData));
                         }
                     }
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }, 0, 1, TimeUnit.MINUTES);
     }
@@ -133,11 +133,11 @@ public class AddonManager implements IAddonManager {
         for (final Map.Entry<String, AddonDescription> entry : toBeLoaded.entrySet()) {
             final AddonDescription addon = entry.getValue();
             try {
-                if (!loadAddon(addonStatuses, new Stack<>(), addon)) {
-                    BUCore.getLogger().warn("Could not enable addon " + entry.getKey());
+                if (!loadAddon(addonStatuses, new ArrayDeque<>(), addon)) {
+                    BUCore.getLogger().warn("Could not enable addon {}", entry.getKey());
                 }
             } catch (AddonException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
         toBeLoaded.clear();
@@ -168,16 +168,15 @@ public class AddonManager implements IAddonManager {
                 throw new AddonException("Dependency " + dependency + " is required by " + description.getName() + " but not found.");
             }
         }
-        try {
-            final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+        try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
             final Class<?> main = loader.loadClass(description.getMain());
             final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 
             addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
             addons.put(description.getName(), addon);
 
-            BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
-        } catch (final Throwable t) {
+            BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
+        } catch (final Exception t) {
             throw new AddonException("Error occured while enabling addon " + description.getName(), t);
         }
     }
@@ -197,10 +196,10 @@ public class AddonManager implements IAddonManager {
             try {
                 addon.onEnable();
                 BUCore.getLogger().info(
-                        "Enabled addon " + addon.getDescription().getName() + " version "
-                                + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
+                        "Enabled addon {} version {} by {}",
+                        addon.getDescription().getName(), addon.getDescription().getVersion(), addon.getDescription().getAuthor()
                 );
-            } catch (final Throwable t) {
+            } catch (final Exception t) {
                 throw new AddonException("Exception encountered when loading addon: " + addon.getDescription().getName(), t);
             }
         }
@@ -211,7 +210,7 @@ public class AddonManager implements IAddonManager {
         for (final String addon : Sets.newHashSet(addons.keySet())) {
             try {
                 disableAddon(addon);
-            } catch (final Throwable t) {
+            } catch (final Exception t) {
                 throw new AddonException("Exception encountered when unloading addon: " + addon, t);
             }
         }
@@ -224,14 +223,15 @@ public class AddonManager implements IAddonManager {
         if (addon != null) {
             addon.onDisable();
 
-            Validate.ifNotNull(scheduler.getTasks(addonName), (tasks) -> tasks.forEach(IAddonTask::cancel));
-            Validate.ifNotNull(eventHandlers.get(addonName), (handlers) -> handlers.forEach(EventHandler::unregister));
-            Validate.ifNotNull(listeners.get(addonName), (listeners) -> listeners.forEach(listener -> {
-                ProxyServer.getInstance().getPluginManager().unregisterListener(listener);
-            }));
-            Validate.ifNotNull(commands.get(addonName), (commands) -> commands.forEach(command -> {
-                ProxyServer.getInstance().getPluginManager().unregisterCommand(command);
-            }));
+
+            Validate.ifNotNull(scheduler.getTasks(addonName), taskList -> taskList.forEach(IAddonTask::cancel));
+            Validate.ifNotNull(eventHandlers.get(addonName), handlerList -> handlerList.forEach(EventHandler::unregister));
+            Validate.ifNotNull(listeners.get(addonName), listenerList -> listenerList.forEach(listener ->
+                    ProxyServer.getInstance().getPluginManager().unregisterListener(listener)
+            ));
+            Validate.ifNotNull(commands.get(addonName), commandList -> commandList.forEach(command ->
+                    ProxyServer.getInstance().getPluginManager().unregisterCommand(command)
+            ));
 
             if (addon.getClass().getClassLoader() instanceof AddonClassLoader) {
                 final AddonClassLoader classLoader = (AddonClassLoader) addon.getClass().getClassLoader();
@@ -309,7 +309,7 @@ public class AddonManager implements IAddonManager {
         return languageManager;
     }
 
-    private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Stack<AddonDescription> dependStack, final AddonDescription description) {
+    private boolean loadAddon(final Map<AddonDescription, Boolean> statuses, final Deque<AddonDescription> dependStack, final AddonDescription description) {
         if (statuses.containsKey(description)) {
             return statuses.get(description);
         }
@@ -331,7 +331,7 @@ public class AddonManager implements IAddonManager {
                         builder.append(element.getName()).append(" -> ");
                     }
                     builder.append(description.getName()).append(" -> ").append(dependency);
-                    BUCore.getLogger().warn("Circular dependency detected: " + builder);
+                    BUCore.getLogger().warn("Circular dependency detected: {}", builder);
                     status = false;
                 } else {
                     dependStack.push(description);
@@ -341,7 +341,7 @@ public class AddonManager implements IAddonManager {
             }
 
             if (dependStatus == Boolean.FALSE && description.getRequiredDependencies().contains(dependency)) {
-                BUCore.getLogger().warn(dependency + " (required by " + description.getName() + ") is unavailable");
+                BUCore.getLogger().warn("{} (required by {}) is unavailable", dependency, description.getName());
                 status = false;
             }
 
@@ -352,18 +352,17 @@ public class AddonManager implements IAddonManager {
 
         // do actual loading
         if (status) {
-            try {
-                final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
+            try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
                 final Class<?> main = loader.loadClass(description.getMain());
                 final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 
                 addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
                 addons.put(description.getName(), addon);
 
-                BUCore.getLogger().info("Loaded addon " + description.getName() + " version " + description.getVersion() + " by " + description.getAuthor());
-            } catch (final Throwable t) {
+                BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
+            } catch (final Exception e) {
                 statuses.put(description, false);
-                throw new AddonException("Error enabling addon " + description.getName(), t);
+                throw new AddonException("Error enabling addon " + description.getName(), e);
             }
         }
 

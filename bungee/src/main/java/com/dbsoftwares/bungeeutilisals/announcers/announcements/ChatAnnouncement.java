@@ -68,13 +68,13 @@ public class ChatAnnouncement extends Announcement {
             IConfiguration config = BUCore.getApi().getLanguageManager()
                     .getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
 
-            List<String> messages;
+            final List<String> messageList;
             if (languagePath != null) {
-                messages = config.getStringList(languagePath);
+                messageList = config.getStringList(languagePath);
             } else {
-                messages = this.messages;
+                messageList = messages;
             }
-            for (String message : messages) {
+            for (String message : messageList) {
                 if (prefix) {
                     message = config.getString("prefix") + " " + message;
                 }

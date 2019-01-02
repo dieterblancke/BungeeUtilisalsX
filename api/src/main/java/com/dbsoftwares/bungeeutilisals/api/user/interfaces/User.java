@@ -184,7 +184,7 @@ public interface User extends ExperimentalUser {
     String getName();
 
     /**
-     * @return The user's UUID.
+     * @return The user's uuid.
      */
     UUID getUUID();
 

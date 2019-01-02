@@ -30,13 +30,13 @@ import lombok.experimental.Accessors;
 @EqualsAndHashCode
 public abstract class PlaceHolder {
 
-    protected String placeHolder;
+    protected String placeHolderName;
     @Accessors(fluent = true)
     protected boolean requiresUser;
     protected PlaceHolderEventHandler eventHandler;
 
-    public PlaceHolder(String placeHolder, boolean requiresUser, PlaceHolderEventHandler eventHandler) {
-        this.placeHolder = placeHolder;
+    public PlaceHolder(String placeHolderName, boolean requiresUser, PlaceHolderEventHandler eventHandler) {
+        this.placeHolderName = placeHolderName;
         this.requiresUser = requiresUser;
         this.eventHandler = eventHandler;
     }

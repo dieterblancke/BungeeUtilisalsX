@@ -28,9 +28,7 @@ import com.dbsoftwares.bungeeutilisals.converter.Converter;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager;
-import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
-import com.mongodb.client.MongoDatabase;
 
 import java.sql.*;
 import java.util.Collection;
@@ -45,7 +43,7 @@ public class SQLtoMongoConverter extends Converter {
         try {
             storageManager = createStorageManager(properties);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
             return;
         }
 
@@ -74,7 +72,7 @@ public class SQLtoMongoConverter extends Converter {
                 status = new ConverterStatus(count);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
 
         try (final Connection connection = storageManager.getConnection();
@@ -87,7 +85,7 @@ public class SQLtoMongoConverter extends Converter {
                 importerCallback.onStatusUpdate(status);
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
 
         for (PunishmentType type : PunishmentType.values()) {
@@ -101,7 +99,7 @@ public class SQLtoMongoConverter extends Converter {
                     importerCallback.onStatusUpdate(status);
                 }
             } catch (SQLException e) {
-                e.printStackTrace();
+                BUCore.logException(e);
             }
         }
     }
@@ -200,9 +198,5 @@ public class SQLtoMongoConverter extends Converter {
                 }
             };
         }
-    }
-
-    private MongoDatabase getDatabase() {
-        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

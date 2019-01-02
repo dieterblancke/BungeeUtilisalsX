@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -33,7 +33,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class WarnCommand extends Command {
+public class WarnCommand extends BUCommand {
 
     public WarnCommand() {
         super("warn", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
@@ -64,13 +64,13 @@ public class WarnCommand extends Command {
 
         UserPunishEvent event = new UserPunishEvent(PunishmentType.WARN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
                 PunishmentType.WARN, storage.getUuid(), storage.getUserName(), storage.getIp(),
@@ -80,7 +80,7 @@ public class WarnCommand extends Command {
         target.sendLangMessage("punishments.warn.onwarn", executor.getPlaceHolders(info).toArray(new Object[]{}));
         user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info));
 
-        api.langPermissionBroadcast("punishments.warn.broadcast",
+        BUCore.getApi().langPermissionBroadcast("punishments.warn.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));
     }

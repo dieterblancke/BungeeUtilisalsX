@@ -60,13 +60,12 @@ public abstract class SubCommand {
         if (length < minimumArgs || length > maximumArgs) {
             return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
         }
-        if (!getPermission().isEmpty()) {
-            if (!user.sender().hasPermission(getPermission())
-                    && !user.sender().hasPermission("bungeeutilisals.commands.*")
-                    && !user.sender().hasPermission("bungeeutilisals.*")
-                    && !user.sender().hasPermission("*")) {
-                return ConditionResult.FAILURE_PERMISSION;
-            }
+        if (!getPermission().isEmpty()
+                && !user.sender().hasPermission(getPermission())
+                && !user.sender().hasPermission("bungeeutilisals.commands.*")
+                && !user.sender().hasPermission("bungeeutilisals.*")
+                && !user.sender().hasPermission("*")) {
+            return ConditionResult.FAILURE_PERMISSION;
         }
         return ConditionResult.SUCCESS;
     }

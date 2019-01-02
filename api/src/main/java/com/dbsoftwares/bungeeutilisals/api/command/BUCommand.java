@@ -27,33 +27,33 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Command;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
-public abstract class Command extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
+public abstract class BUCommand extends Command implements TabExecutor {
 
-    public BUAPI api;
     protected List<SubCommand> subCommands = Lists.newArrayList();
     private String permission;
 
-    public Command(String name) {
+    public BUCommand(String name) {
         this(name, Lists.newArrayList(), null);
     }
 
-    public Command(String name, String... aliases) {
+    public BUCommand(String name, String... aliases) {
         this(name, Lists.newArrayList(aliases), null);
     }
 
-    public Command(String name, List<String> aliases) {
+    public BUCommand(String name, List<String> aliases) {
         this(name, aliases, null);
     }
 
-    public Command(String name, List<String> aliases, String permission) {
+    public BUCommand(String name, List<String> aliases, String permission) {
         super(name, "", aliases.toArray(new String[]{}));
         this.permission = permission;
-        this.api = BUCore.getApi();
 
         ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
     }
@@ -63,14 +63,15 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
         BUAPI api = BUCore.getApi();
         IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin().getDescription().getName(), sender);
 
-        if (permission != null && !permission.isEmpty()) {
-            if (!sender.hasPermission(permission)
-                    && !sender.hasPermission("bungeeutilisals.commands.*")
-                    && !sender.hasPermission("bungeeutilisals.*")
-                    && !sender.hasPermission("*")) {
-                BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
-                return;
-            }
+        if (permission != null
+                && !permission.isEmpty()
+                && !sender.hasPermission(permission)
+                && !sender.hasPermission("bungeeutilisals.commands.*")
+                && !sender.hasPermission("bungeeutilisals.*")
+                && !sender.hasPermission("*")) {
+            BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
+            return;
+
         }
 
         if (sender instanceof ProxiedPlayer) {
@@ -81,24 +82,22 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
 
                 try {
                     BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(user, args));
-                    // onExecute(user, args); | testing plugin with Async Commands.
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    BUCore.getLogger().error("An error occured: ", e);
                 }
                 return;
             }
         }
         try {
             BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
-            // onExecute(sender, args);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Optional<User> optional = api.getUser(sender.getName());
+        Optional<User> optional = BUCore.getApi().getUser(sender.getName());
         if (sender instanceof ProxiedPlayer && optional.isPresent()) {
             List<String> tabCompletion = onTabComplete(optional.get(), args);
 
@@ -152,5 +151,26 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
             }
         }
         return completions;
+    }
+
+    @Override
+    public boolean equals(final Object other) {
+        if (this == other) {
+            return true;
+        }
+        if (other == null || getClass() != other.getClass()) {
+            return false;
+        }
+        if (!super.equals(other)) {
+            return false;
+        }
+        final BUCommand command = (BUCommand) other;
+        return Objects.equals(subCommands, command.subCommands) &&
+                Objects.equals(permission, command.permission);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(super.hashCode(), subCommands, permission);
     }
 }

@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.DefaultPlaceHolder;
@@ -32,6 +33,9 @@ public class PlaceHolderAPI {
 
     private static List<PlaceHolder> placeholders = Lists.newArrayList();
 
+    private PlaceHolderAPI() {
+    }
+
     public static String formatMessage(User user, String message) {
         if (user == null) {
             return formatMessage(message);
@@ -42,7 +46,7 @@ public class PlaceHolderAPI {
             }
             return message;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return message;
         }
     }
@@ -57,7 +61,7 @@ public class PlaceHolderAPI {
             }
             return message;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return message;
         }
     }
@@ -76,7 +80,7 @@ public class PlaceHolderAPI {
 
     public static PlaceHolder getPlaceHolder(String placeholder) {
         for (PlaceHolder ph : placeholders) {
-            if (ph.getPlaceHolder().toLowerCase().equals(placeholder.toLowerCase())) {
+            if (ph.getPlaceHolderName().equalsIgnoreCase(placeholder)) {
                 return ph;
             }
         }

@@ -70,7 +70,7 @@ public class PluginLanguageManager extends AbstractLanguageManager {
                 configurations.put(lang, configuration);
                 saveLanguage(pluginName, language);
             } catch (IOException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }
@@ -86,8 +86,7 @@ public class PluginLanguageManager extends AbstractLanguageManager {
             folder.mkdir();
         }
         try {
-            if (!target.exists()) {
-                target.createNewFile();
+            if (!target.exists() && target.createNewFile()) {
                 try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
                         BUCore.getLogger().info("Could not find default language configuration configuration for " +
@@ -102,7 +101,7 @@ public class PluginLanguageManager extends AbstractLanguageManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return target;
     }

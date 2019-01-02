@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.ImmutableList;
@@ -28,7 +28,7 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindCommand extends Command {
+public class FindCommand extends BUCommand {
 
     public FindCommand() {
         super(

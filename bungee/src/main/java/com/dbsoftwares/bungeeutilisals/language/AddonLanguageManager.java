@@ -69,7 +69,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
                 configurations.put(lang, configuration);
                 saveLanguage(addonName, language);
             } catch (IOException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
     }
@@ -85,8 +85,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
             folder.mkdir();
         }
         try {
-            if (!target.exists()) {
-                target.createNewFile();
+            if (!target.exists() && target.createNewFile()) {
                 try (InputStream in = addon.getResource(source); OutputStream out = new FileOutputStream(target)) {
                     if (in == null) {
                         BUCore.getLogger().info("Could not find default language configuration configuration for " +
@@ -101,7 +100,7 @@ public class AddonLanguageManager extends AbstractLanguageManager {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return target;
     }

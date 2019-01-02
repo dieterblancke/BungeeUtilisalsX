@@ -33,11 +33,12 @@ import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 
 @Data
 public class Script {
 
-    private final static File cacheFolder;
+    private static final File cacheFolder;
 
     static {
         cacheFolder = new File(BungeeUtilisals.getInstance().getDataFolder(), "scripts" + File.separator + "cache");
@@ -58,12 +59,16 @@ public class Script {
 
         final File storage = new File(cacheFolder, hash(file));
 
-        if (!storage.exists()) {
-            storage.createNewFile();
+        if (!storage.exists() && !storage.createNewFile()) {
+            return;
         }
 
         this.storage = IConfiguration.loadYamlConfiguration(storage);
         this.engine = loadEngine();
+    }
+
+    private static String hash(String str) {
+        return Hashing.sha256().hashString(str, StandardCharsets.UTF_8).toString();
     }
 
     private ScriptEngine loadEngine() throws ScriptException {
@@ -86,7 +91,7 @@ public class Script {
         try {
             return String.valueOf(engine.eval(script));
         } catch (ScriptException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
             return "SCRIPT ERROR";
         }
     }
@@ -95,11 +100,11 @@ public class Script {
         final File storage = new File(cacheFolder, hash(file));
 
         if (storage.length() == 0) {
-            storage.delete();
+            try {
+                Files.delete(storage.toPath());
+            } catch (IOException e) {
+                BUCore.getLogger().info("Could not remove empty script storage.", e);
+            }
         }
-    }
-
-    private static String hash(String str) {
-        return Hashing.sha256().hashString(str, StandardCharsets.UTF_8).toString();
     }
 }

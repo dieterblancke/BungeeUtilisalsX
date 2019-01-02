@@ -33,7 +33,7 @@ import java.util.UUID;
 @AllArgsConstructor
 public class UserStorage {
 
-    private UUID Uuid;
+    private UUID uuid;
     private String userName;
     private String ip;
     private Language language;

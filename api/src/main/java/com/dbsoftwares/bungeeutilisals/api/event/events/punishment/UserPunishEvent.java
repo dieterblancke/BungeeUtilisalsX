@@ -38,7 +38,7 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
 
     private PunishmentType type;
     private User executor;
-    private UUID UUID;
+    private UUID uuid;
     private String name;
     private String ip;
     private String reason;
@@ -53,7 +53,7 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     public UserPunishEvent(PunishmentType type, User executor, UUID uuid, String name, String ip, String reason, String executionServer, Long expire) {
         this.type = type;
         this.executor = executor;
-        this.UUID = uuid;
+        this.uuid = uuid;
         this.name = name;
         this.ip = ip;
         this.reason = reason;
@@ -62,7 +62,7 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable {
     }
 
     public PunishmentInfo getInfo() {
-        return new PunishmentInfo(type, 0, name, ip, UUID, executor.getName(),
+        return new PunishmentInfo(type, 0, name, ip, uuid, executor.getName(),
                 executionServer, reason, date, expire, true, null);
     }
 

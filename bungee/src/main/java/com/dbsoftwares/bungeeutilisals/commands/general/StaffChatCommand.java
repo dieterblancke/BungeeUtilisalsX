@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
@@ -35,7 +35,7 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.Arrays;
 import java.util.List;
 
-public class StaffChatCommand extends Command implements Listener {
+public class StaffChatCommand extends BUCommand implements Listener {
 
     public StaffChatCommand() {
         super(

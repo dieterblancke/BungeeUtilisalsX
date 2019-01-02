@@ -82,7 +82,7 @@ public class AddonInstallSubCommand extends SubCommand {
                 enableAddon(user, addonData.getName());
             } catch (Exception e) {
                 user.sendLangMessage("general-commands.addon.install.error.download", "{name}", addonName);
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         } else {
             user.sendLangMessage("general-commands.addon.notfound", "{name}", addonName);

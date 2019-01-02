@@ -35,20 +35,20 @@ public class TitleAnnouncer extends Announcer {
     @Override
     public void loadAnnouncements() {
         for (ISection section : configuration.getSectionList("announcements")) {
-            ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
+            final ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
 
             if (group == null) {
-                BUCore.getLogger().warn("Could not find a servergroup or -name for " + section.getString("server") + "!");
+                BUCore.getLogger().warn("Could not find a servergroup or -name for {}!", section.getString("server"));
                 return;
             }
 
-            int fadeIn = section.getInteger("fadein");
-            int stay = section.getInteger("stay");
-            int fadeOut = section.getInteger("fadeout");
-            String permission = section.getString("permission");
-            boolean language = section.getBoolean("language");
-            String title = section.getString("title");
-            String subtitle = section.getString("subtitle");
+            final int fadeIn = section.getInteger("fadein");
+            final int stay = section.getInteger("stay");
+            final int fadeOut = section.getInteger("fadeout");
+            final String permission = section.getString("permission");
+            final boolean language = section.getBoolean("language");
+            final String title = section.getString("title");
+            final String subtitle = section.getString("subtitle");
 
             addAnnouncement(new TitleAnnouncement(language, title, subtitle, fadeIn, stay, fadeOut, group, permission));
         }

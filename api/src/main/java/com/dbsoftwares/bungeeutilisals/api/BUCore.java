@@ -42,18 +42,21 @@ public final class BUCore {
         return instance;
     }
 
-    private static void initAPI(BUAPI inst) {
+    private static void initAPI(final BUAPI inst) {
         instance = inst;
     }
 
-    public static void sendMessage(CommandSender sender, String message) {
+    public static void sendMessage(final CommandSender sender, final String message) {
         IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin().getDescription().getName(), sender);
 
         sender.sendMessage(Utils.format(config.getString("prefix"), message));
     }
 
     public static Logger getLogger() {
-
         return logger;
+    }
+
+    public static void logException(final Exception e) {
+        logger.error("An error occured: ", e);
     }
 }

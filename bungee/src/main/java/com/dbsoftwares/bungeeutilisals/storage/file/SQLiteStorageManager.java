@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.storage.file;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -40,9 +41,11 @@ public class SQLiteStorageManager extends AbstractStorageManager {
         database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
         if (!database.exists()) {
             try {
-                database.createNewFile();
+                if (!database.createNewFile()) {
+                    return;
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         }
 
@@ -56,7 +59,7 @@ public class SQLiteStorageManager extends AbstractStorageManager {
             connection = DriverManager.getConnection("jdbc:sqlite:" + database.getPath());
         } catch (ClassNotFoundException e) {
             // should never occur | library loaded before
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

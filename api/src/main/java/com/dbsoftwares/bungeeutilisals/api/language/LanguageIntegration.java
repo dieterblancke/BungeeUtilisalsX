@@ -23,10 +23,10 @@ import java.util.UUID;
 public interface LanguageIntegration {
 
     /**
-     * Gets the language for the given UUID.
+     * Gets the language for the given uuid.
      *
-     * @param uuid UUID you want the language from.
-     * @return Language of this UUID, default if not found.
+     * @param uuid uuid you want the language from.
+     * @return Language of this uuid, default if not found.
      */
     Language getLanguage(UUID uuid);
 

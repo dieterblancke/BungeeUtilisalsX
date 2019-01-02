@@ -26,50 +26,53 @@ import java.util.Random;
 
 public class MathUtils {
 
-    public static final float nanoToSec = 1 / 1000000000f;
+    public static final float NANO_TO_SEC = 1 / 1000000000f;
     public static final float FLOAT_ROUNDING_ERROR = 0.000001f;
     public static final float PI = 3.141592653589793238462643383279f;
     public static final float PI2 = PI * 2;
     public static final float SQRT_3 = 1.73205080757f;
     public static final float E = 2.7182818284590452354f;
-    public static final float radiansToDegrees = 180f / PI;
-    public static final float radDeg = radiansToDegrees;
-    public static final float degreesToRadians = PI / 180;
-    public static final float degRad = degreesToRadians;
-    static private final int SIN_BITS = 14;
-    static private final int SIN_MASK = ~(-1 << SIN_BITS);
-    static private final int SIN_COUNT = SIN_MASK + 1;
-    static private final float radFull = PI * 2;
-    static private final float degFull = 360;
-    static private final float radToIndex = SIN_COUNT / radFull;
-    static private final float degToIndex = SIN_COUNT / degFull;
-    static private final int ATAN2_BITS = 7;
-    static private final int ATAN2_BITS2 = ATAN2_BITS << 1;
-    static private final int ATAN2_MASK = ~(-1 << ATAN2_BITS2);
-    static private final int ATAN2_COUNT = ATAN2_MASK + 1;
-    static final int ATAN2_DIM = (int) Math.sqrt(ATAN2_COUNT);
-    static private final float INV_ATAN2_DIM_MINUS_1 = 1.0f / (ATAN2_DIM - 1);
-    static private final int BIG_ENOUGH_INT = 16 * 1024;
-    static private final double BIG_ENOUGH_FLOOR = BIG_ENOUGH_INT;
-    static private final double CEIL = 0.9999999;
-    static private final double BIG_ENOUGH_CEIL = 16384.999999999996;
-    static private final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5f;
-    public static Random random = new Random();
+    public static final float RADIANS_TO_DEGREES = 180f / PI;
+    public static final float RAD_DEG = RADIANS_TO_DEGREES;
+    public static final float DEGREES_TO_RADIANS = PI / 180;
+    public static final float DEG_RAD = DEGREES_TO_RADIANS;
+    public static final Random RANDOM_INSTANCE = new Random();
+    private static final int SIN_BITS = 14;
+    private static final int SIN_MASK = ~(-1 << SIN_BITS);
+    private static final int SIN_COUNT = SIN_MASK + 1;
+    private static final float RAD_FULL = PI * 2;
+    private static final float DEG_FULL = 360;
+    private static final float RAD_TO_INDEX = SIN_COUNT / RAD_FULL;
+    private static final float DEG_TO_INDEX = SIN_COUNT / DEG_FULL;
+    private static final int ATAN2_BITS = 7;
+    private static final int ATAN2_BITS2 = ATAN2_BITS << 1;
+    private static final int ATAN2_MASK = ~(-1 << ATAN2_BITS2);
+    private static final int ATAN2_COUNT = ATAN2_MASK + 1;
+    private static final int ATAN2_DIM = (int) Math.sqrt(ATAN2_COUNT);
+    private static final float INV_ATAN2_DIM_MINUS_1 = 1.0f / (ATAN2_DIM - 1);
+    private static final int BIG_ENOUGH_INT = 16 * 1024;
+    private static final double BIG_ENOUGH_FLOOR = BIG_ENOUGH_INT;
+    private static final double CEIL = 0.9999999;
+    private static final double BIG_ENOUGH_CEIL = 16384.999999999996;
+    private static final double BIG_ENOUGH_ROUND = BIG_ENOUGH_INT + 0.5f;
+
+    private MathUtils() {
+    }
 
     public static float sin(float radians) {
-        return Sin.table[(int) (radians * radToIndex) & SIN_MASK];
+        return Sin.table[(int) (radians * RAD_TO_INDEX) & SIN_MASK];
     }
 
     public static float cos(float radians) {
-        return Sin.table[(int) ((radians + PI / 2) * radToIndex) & SIN_MASK];
+        return Sin.table[(int) ((radians + PI / 2) * RAD_TO_INDEX) & SIN_MASK];
     }
 
     public static float sinDeg(float degrees) {
-        return Sin.table[(int) (degrees * degToIndex) & SIN_MASK];
+        return Sin.table[(int) (degrees * DEG_TO_INDEX) & SIN_MASK];
     }
 
     public static float cosDeg(float degrees) {
-        return Sin.table[(int) ((degrees + 90) * degToIndex) & SIN_MASK];
+        return Sin.table[(int) ((degrees + 90) * DEG_TO_INDEX) & SIN_MASK];
     }
 
     public static boolean isInteger(Object object) {
@@ -145,7 +148,8 @@ public class MathUtils {
     }
 
     public static float atan2(float y, float x) {
-        float add, mul;
+        float add;
+        float mul;
         if (x < 0) {
             if (y < 0) {
                 y = -y;
@@ -176,15 +180,15 @@ public class MathUtils {
     }
 
     public static int random(int range) {
-        return random.nextInt(range + 1);
+        return RANDOM_INSTANCE.nextInt(range + 1);
     }
 
     public static int random(int start, int end) {
-        return start + random.nextInt(end - start + 1);
+        return start + RANDOM_INSTANCE.nextInt(end - start + 1);
     }
 
     public static boolean randomBoolean() {
-        return random.nextBoolean();
+        return RANDOM_INSTANCE.nextBoolean();
     }
 
     public static boolean randomBoolean(float chance) {
@@ -192,15 +196,15 @@ public class MathUtils {
     }
 
     public static float random() {
-        return random.nextFloat();
+        return RANDOM_INSTANCE.nextFloat();
     }
 
     public static float random(float range) {
-        return random.nextFloat() * range;
+        return RANDOM_INSTANCE.nextFloat() * range;
     }
 
     public static float random(float start, float end) {
-        return start + random.nextFloat() * (end - start);
+        return start + RANDOM_INSTANCE.nextFloat() * (end - start);
     }
 
     public static int nextPowerOfTwo(int value) {
@@ -299,11 +303,11 @@ public class MathUtils {
     }
 
     public static <T> T getRandomFromArray(T[] array) {
-        return array[random.nextInt(array.length)];
+        return array[RANDOM_INSTANCE.nextInt(array.length)];
     }
 
     public static double getRandomAngle() {
-        return random.nextDouble() * 2 * Math.PI;
+        return RANDOM_INSTANCE.nextDouble() * 2 * Math.PI;
     }
 
     public static double randomDouble(double min, double max) {
@@ -319,28 +323,28 @@ public class MathUtils {
     }
 
     public static byte randomByte(int max) {
-        return (byte) random.nextInt(max + 1);
+        return (byte) RANDOM_INSTANCE.nextInt(max + 1);
     }
 
     public static int randomRangeInt(int min, int max) {
-        return (int) (Math.random() < 0.5 ? ((1 - Math.random()) * (max - min) + min) : (Math.random() * (max - min) + min));
+        return (int) (RANDOM_INSTANCE.nextDouble() < 0.5 ? ((1 - RANDOM_INSTANCE.nextDouble()) * (max - min) + min) : (RANDOM_INSTANCE.nextDouble() * (max - min) + min));
     }
 
-    static private class Sin {
+    private static class Sin {
 
         static final float[] table = new float[SIN_COUNT];
 
         static {
             for (int i = 0; i < SIN_COUNT; i++) {
-                table[i] = (float) Math.sin((i + 0.5f) / SIN_COUNT * radFull);
+                table[i] = (float) Math.sin((i + 0.5f) / SIN_COUNT * RAD_FULL);
             }
             for (int i = 0; i < 360; i += 90) {
-                table[(int) (i * degToIndex) & SIN_MASK] = (float) Math.sin(i * degreesToRadians);
+                table[(int) (i * DEG_TO_INDEX) & SIN_MASK] = (float) Math.sin(i * DEGREES_TO_RADIANS);
             }
         }
     }
 
-    static private class Atan2 {
+    private static class Atan2 {
 
         static final float[] table = new float[ATAN2_COUNT];
 

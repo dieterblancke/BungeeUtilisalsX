@@ -115,7 +115,7 @@ public class DumpSubCommand extends SubCommand {
             } catch (IOException e) {
                 user.sendMessage("Could not create dump. Please check the console for errors.");
                 BUCore.getLogger().warn("Could not create dump request");
-                e.printStackTrace();
+                BUCore.getLogger().error("An error occured: ", e);
             }
         });
     }
@@ -253,7 +253,7 @@ public class DumpSubCommand extends SubCommand {
 
             return schedulerInfoList;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return Lists.newArrayList();
         }
     }

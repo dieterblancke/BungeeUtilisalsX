@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends;
 
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisals.commands.friends.sub.AddFriendSubCommand;
 import java.util.Arrays;
 import java.util.List;
 
-public class FriendsCommand extends Command {
+public class FriendsCommand extends BUCommand {
 
     public FriendsCommand() {
         super(

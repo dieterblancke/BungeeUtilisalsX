@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.addons;
 
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.commands.addons.sub.*;
@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class AddonCommand extends Command {
+public class AddonCommand extends BUCommand {
 
     public AddonCommand() {
         super("addon", Lists.newArrayList("addons"), "bungeeutilisals.admin.addons");

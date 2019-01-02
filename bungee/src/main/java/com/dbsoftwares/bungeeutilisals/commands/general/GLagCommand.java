@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
@@ -31,7 +31,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class GLagCommand extends Command {
+public class GLagCommand extends BUCommand {
 
     public GLagCommand() {
         super(

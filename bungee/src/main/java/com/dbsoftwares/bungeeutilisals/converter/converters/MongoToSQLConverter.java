@@ -44,6 +44,8 @@ import java.util.Map;
 
 public class MongoToSQLConverter extends Converter {
 
+    private static final String ERROR_STRING = "An error occured: ";
+
     @Override
     protected void importData(final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties) {
         final MongoDBStorageManager storageManager = new MongoDBStorageManager(BungeeUtilisals.getInstance(), AbstractStorageManager.StorageType.MONGODB, properties);
@@ -71,7 +73,7 @@ public class MongoToSQLConverter extends Converter {
             }
             connection.commit();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
         for (PunishmentType type : PunishmentType.values()) {
             try (final Connection connection = BUCore.getApi().getStorageManager().getConnection()) {
@@ -88,7 +90,7 @@ public class MongoToSQLConverter extends Converter {
                 }
                 connection.commit();
             } catch (SQLException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error(ERROR_STRING, e);
             }
         }
     }

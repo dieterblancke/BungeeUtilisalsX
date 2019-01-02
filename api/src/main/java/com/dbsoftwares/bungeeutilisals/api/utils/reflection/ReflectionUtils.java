@@ -18,11 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class ReflectionUtils {
+
+    private ReflectionUtils() {
+    }
 
     public static Object getHandle(Class<?> clazz, Object o) {
         try {
@@ -34,7 +39,13 @@ public class ReflectionUtils {
 
     public static Object getHandle(Object o) {
         try {
-            return getMethod("getHandle", o.getClass()).invoke(o);
+            final Method getHandle = getMethod("getHandle", o.getClass());
+
+            if (getHandle == null) {
+                return null;
+            } else {
+                return getHandle.invoke(o);
+            }
         } catch (Exception e) {
             return null;
         }
@@ -44,7 +55,7 @@ public class ReflectionUtils {
         try {
             return Class.forName(name);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return null;
     }
@@ -90,24 +101,34 @@ public class ReflectionUtils {
             field.setAccessible(true);
             return field;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return null;
     }
 
-    public static Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
-        return getField(clazz, fieldName).get(instance);
+    public static Object getValue(Object instance, Class<?> clazz, String fieldName) throws IllegalAccessException {
+        final Field field = getField(clazz, fieldName);
+
+        if (field == null) {
+            return null;
+        } else {
+            return field.get(instance);
+        }
     }
 
-    public static Object getValue(Object instance, String fieldName) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static Object getValue(Object instance, String fieldName) throws IllegalAccessException {
         return getValue(instance, instance.getClass(), fieldName);
     }
 
-    public static void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
-        getField(clazz, fieldName).set(instance, value);
+    public static void setValue(Object instance, Class<?> clazz, String fieldName, Object value) throws IllegalAccessException {
+        final Field field = getField(clazz, fieldName);
+
+        if (field != null) {
+            field.set(instance, value);
+        }
     }
 
-    public static void setValue(Object instance, String fieldName, Object value) throws IllegalArgumentException, IllegalAccessException, SecurityException {
+    public static void setValue(Object instance, String fieldName, Object value) throws IllegalAccessException {
         setValue(instance, instance.getClass(), fieldName, value);
     }
 

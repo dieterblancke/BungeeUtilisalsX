@@ -41,6 +41,8 @@ import java.util.UUID;
 
 public class ConsoleUser implements User {
 
+    private static final String NOT_SUPPORTED = "Not supported yet.";
+
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
 
@@ -49,17 +51,17 @@ public class ConsoleUser implements User {
 
     @Override
     public void load(ProxiedPlayer parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void unload() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void save() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -84,7 +86,7 @@ public class ConsoleUser implements User {
 
     @Override
     public void setLanguage(Language language) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -154,17 +156,17 @@ public class ConsoleUser implements User {
 
     @Override
     public void kick(String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void langKick(String path, Object... placeholders) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void forceKick(String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -184,17 +186,17 @@ public class ConsoleUser implements User {
 
     @Override
     public void setSocialspy(Boolean socialspy) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public Boolean isSocialSpy() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public ProxiedPlayer getParent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -214,27 +216,27 @@ public class ConsoleUser implements User {
 
     @Override
     public boolean isMuted() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public PunishmentInfo getMuteInfo() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void setMute(PunishmentInfo info) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public boolean isInStaffChat() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void setInStaffChat(boolean staffchat) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -244,12 +246,12 @@ public class ConsoleUser implements User {
 
     @Override
     public Location getLocation() {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
     public void setLocation(Location location) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     @Override
@@ -285,6 +287,6 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendPacket(DefinedPacket packet) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 }

@@ -34,6 +34,7 @@ import java.util.UUID;
 
 public class SQLFriendsDao implements FriendsDao {
 
+    private static final String ERROR_STRING = "An error occured: ";
     private final String SELECT_ID = "(SELECT id FROM {users-table} WHERE uuid = ?)";
 
     @Override
@@ -47,7 +48,7 @@ public class SQLFriendsDao implements FriendsDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
     }
 
@@ -62,7 +63,7 @@ public class SQLFriendsDao implements FriendsDao {
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
     }
 
@@ -89,7 +90,7 @@ public class SQLFriendsDao implements FriendsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
 
         return friends;

@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ import java.net.InetAddress;
  * Event which get's called right before an User get's loaded in.
  */
 @RequiredArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class UserPreLoadEvent extends AbstractEvent implements Cancellable {
 
     @Getter

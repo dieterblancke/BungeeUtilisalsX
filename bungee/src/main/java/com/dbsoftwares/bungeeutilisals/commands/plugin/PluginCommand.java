@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.plugin;
 
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.sub.*;
@@ -26,7 +26,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class PluginCommand extends Command {
+public class PluginCommand extends BUCommand {
 
     public PluginCommand() {
         super("bungeeutilisals", Lists.newArrayList("bu", "butilisals", "butili"), "bungeeutilisals.admin");

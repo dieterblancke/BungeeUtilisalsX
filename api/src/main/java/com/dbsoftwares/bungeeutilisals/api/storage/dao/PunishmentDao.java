@@ -43,9 +43,9 @@ public interface PunishmentDao {
             Long time, String server, Boolean active, String executedby, Date date, String removedby
     );
 
-    boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive);
+    boolean isPunishmentPresent(PunishmentType type, UUID uuid, String ip, boolean checkActive);
 
-    PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP);
+    PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String ip);
 
-    void removePunishment(PunishmentType type, UUID uuid, String IP, String removedBy);
+    void removePunishment(PunishmentType type, UUID uuid, String ip, String removedBy);
 }

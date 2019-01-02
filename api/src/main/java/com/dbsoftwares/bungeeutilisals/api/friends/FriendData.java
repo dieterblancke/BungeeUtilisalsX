@@ -42,5 +42,6 @@ public class FriendData {
         this.friend = friend;
         this.friendSince = friendSince;
         this.online = BUCore.getApi().getPlayerUtils().isOnline(friend);
+        this.lastOnline = lastSeen;
     }
 }

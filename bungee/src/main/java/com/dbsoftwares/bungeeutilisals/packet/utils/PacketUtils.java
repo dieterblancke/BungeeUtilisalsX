@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.packet.utils;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
@@ -43,7 +44,7 @@ public class PacketUtils {
             register.invoke(direction, packetClass, map);
             return true;
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
             return false;
         }
     }
@@ -55,7 +56,7 @@ public class PacketUtils {
 
             return map.invoke(null, protocol, id);
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
         return null;
     }

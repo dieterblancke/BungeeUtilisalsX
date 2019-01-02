@@ -49,7 +49,7 @@ public class UserPunishExecutor implements EventExecutor {
             long amount;
 
             if (event.isUserPunishment()) {
-                // UUID involved
+                // uuid involved
                 amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
                         event.getUUID().toString(),
                         event.getType(),

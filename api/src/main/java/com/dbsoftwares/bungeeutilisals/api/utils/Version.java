@@ -38,15 +38,15 @@ public enum Version {
     MINECRAFT_1_13_2(404);
 
     @Getter
-    private int version;
+    private int versionId;
 
-    Version(int version) {
-        this.version = version;
+    Version(final int version) {
+        this.versionId = version;
     }
 
     public static Version getVersion(int version) {
         for (Version v : values()) {
-            if (v.getVersion() == version) {
+            if (v.getVersionId() == version) {
                 return v;
             }
         }
@@ -56,7 +56,7 @@ public enum Version {
     public static Version latest() {
         Version version = null;
         for (Version v : values()) {
-            if (version == null || version.getVersion() < v.getVersion()) {
+            if (version == null || version.getVersionId() < v.getVersionId()) {
                 version = v;
             }
         }

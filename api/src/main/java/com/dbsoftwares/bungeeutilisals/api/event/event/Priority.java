@@ -27,4 +27,6 @@ public class Priority {
     public static final int HIGHEST = 2000;
     public static final int DEBUG = Integer.MAX_VALUE;
 
+    private Priority() {
+    }
 }

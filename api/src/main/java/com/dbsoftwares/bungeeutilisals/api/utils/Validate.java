@@ -22,6 +22,9 @@ import java.util.function.Consumer;
 
 public class Validate {
 
+    private Validate() {
+    }
+
     public static void checkNotNull(Object toCheck, String error) {
         if (toCheck == null) {
             throw new NullPointerException(error);

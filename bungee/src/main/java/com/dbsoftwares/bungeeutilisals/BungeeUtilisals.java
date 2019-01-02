@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
@@ -92,6 +92,9 @@ import java.util.concurrent.TimeUnit;
 // @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin {
 
+    private static final String ERROR_STRING = "An error occured: ";
+    private static final String ENABLED_CONFIG_KEY = "enabled";
+
     @Getter
     private static BungeeUtilisals instance;
 
@@ -105,10 +108,10 @@ public class BungeeUtilisals extends Plugin {
     private AbstractStorageManager databaseManagement;
 
     @Getter
-    private List<Command> generalCommands = Lists.newArrayList();
+    private List<BUCommand> generalCommands = Lists.newArrayList();
 
     @Getter
-    private List<Command> customCommands = Lists.newArrayList();
+    private List<BUCommand> customCommands = Lists.newArrayList();
 
     @Getter
     private RedisMessenger redisMessenger;
@@ -174,7 +177,7 @@ public class BungeeUtilisals extends Plugin {
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
         ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
 
-        if (FileLocation.MOTD.getConfiguration().getBoolean("enabled")) {
+        if (FileLocation.MOTD.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdPingListener());
         }
 
@@ -185,7 +188,7 @@ public class BungeeUtilisals extends Plugin {
         loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
 
         // Loading Punishment system
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
+        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
             loader.register(UserPunishEvent.class, new UserPunishExecutor());
@@ -225,7 +228,7 @@ public class BungeeUtilisals extends Plugin {
         try {
             databaseManagement.close();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
 
         scripts.forEach(Script::unload);
@@ -248,16 +251,20 @@ public class BungeeUtilisals extends Plugin {
     private void loadScripts() {
         scripts.forEach(Script::unload);
         scripts.clear();
-        final File scripts = new File(getDataFolder(), "scripts");
+        final File scriptsFolder = new File(getDataFolder(), "scripts");
 
-        if (!scripts.exists()) {
-            scripts.mkdir();
+        if (!scriptsFolder.exists()) {
+            scriptsFolder.mkdir();
 
-            IConfiguration.createDefaultFile(getResourceAsStream("scripts/hello.js"), new File(scripts, "hello.js"));
-            IConfiguration.createDefaultFile(getResourceAsStream("scripts/coins.js"), new File(scripts, "coins.js"));
+            IConfiguration.createDefaultFile(
+                    getResourceAsStream("scripts/hello.js"), new File(scriptsFolder, "hello.js")
+            );
+            IConfiguration.createDefaultFile(
+                    getResourceAsStream("scripts/coins.js"), new File(scriptsFolder, "coins.js")
+            );
         }
 
-        for (final File file : scripts.listFiles()) {
+        for (final File file : scriptsFolder.listFiles()) {
             if (file.isDirectory()) {
                 continue;
             }
@@ -267,8 +274,7 @@ public class BungeeUtilisals extends Plugin {
 
                 this.scripts.add(script);
             } catch (IOException | ScriptException e) {
-                BUCore.getLogger().info("Could not load script " + file.getName());
-                e.printStackTrace();
+                BUCore.getLogger().error("Could not load script " + file.getName(), e);
             }
         }
     }
@@ -284,7 +290,7 @@ public class BungeeUtilisals extends Plugin {
             databaseManagement = type.getManager().getConstructor(Plugin.class).newInstance(this);
             databaseManagement.initialize();
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
     }
 
@@ -322,7 +328,7 @@ public class BungeeUtilisals extends Plugin {
     private void loadCommands() {
         loadGeneralCommands();
 
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
+        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             loadPunishmentCommands();
         }
 
@@ -330,7 +336,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadGeneralCommands() {
-        generalCommands.forEach(Command::unload);
+        generalCommands.forEach(BUCommand::unload);
         generalCommands.clear();
 
         generalCommands.add(new PluginCommand());
@@ -345,7 +351,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("glag", GLagCommand.class);
         loadGeneralCommand("staffchat", StaffChatCommand.class);
 
-        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
+        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             generalCommands.add(new FriendsCommand());
         }
     }
@@ -370,7 +376,7 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadCustomCommands() {
-        customCommands.forEach(Command::unload);
+        customCommands.forEach(BUCommand::unload);
         customCommands.clear();
 
         IConfiguration config = FileLocation.CUSTOMCOMMANDS.getConfiguration();
@@ -381,16 +387,17 @@ public class BungeeUtilisals extends Plugin {
             String permission = section.exists("permission") ? section.getString("permission") : null;
             List<String> commands = section.exists("execute") ? section.getStringList("execute") : Lists.newArrayList();
 
-            Command command = new Command(name, aliases, permission) {
+            BUCommand command = new BUCommand(name, aliases, permission) {
 
                 @Override
                 public void onExecute(User user, String[] args) {
-                    List<TextComponent> components;
+                    final String messagesKey = "messages";
+                    final List<TextComponent> components;
 
-                    if (section.isList("messages")) {
-                        components = MessageBuilder.buildMessage(user, section.getSectionList("messages"));
+                    if (section.isList(messagesKey)) {
+                        components = MessageBuilder.buildMessage(user, section.getSectionList(messagesKey));
                     } else {
-                        components = Lists.newArrayList(MessageBuilder.buildMessage(user, section.getSection("messages")));
+                        components = Lists.newArrayList(MessageBuilder.buildMessage(user, section.getSection(messagesKey)));
                     }
 
                     components.forEach(user::sendMessage);
@@ -410,22 +417,22 @@ public class BungeeUtilisals extends Plugin {
         }
     }
 
-    private void loadPunishmentCommand(String name, Class<? extends Command> clazz) {
+    private void loadPunishmentCommand(String name, Class<? extends BUCommand> clazz) {
         loadCommand("commands." + name + ".enabled", FileLocation.PUNISHMENTS.getConfiguration(), clazz);
     }
 
-    private void loadGeneralCommand(String name, Class<? extends Command> clazz) {
+    private void loadGeneralCommand(String name, Class<? extends BUCommand> clazz) {
         loadCommand(name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz);
     }
 
-    private void loadCommand(String enabledPath, IConfiguration configuration, Class<? extends Command> clazz) {
+    private void loadCommand(String enabledPath, IConfiguration configuration, Class<? extends BUCommand> clazz) {
         if (configuration.getBoolean(enabledPath)) {
             try {
-                Command command = clazz.newInstance();
+                BUCommand command = clazz.newInstance();
 
                 generalCommands.add(command);
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                BUCore.getLogger().error(ERROR_STRING, e);
             }
         }
     }

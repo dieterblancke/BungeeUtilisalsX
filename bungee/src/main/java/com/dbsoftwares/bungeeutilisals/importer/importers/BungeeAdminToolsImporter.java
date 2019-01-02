@@ -72,23 +72,23 @@ public class BungeeAdminToolsImporter extends Importer {
                 }
             }
 
-            final ResultSet counter = stmt.executeQuery(
+            try (ResultSet counter = stmt.executeQuery(
                     "SELECT (SELECT COUNT(*) FROM BAT_ban) bans," +
                             " (SELECT COUNT(*) FROM BAT_mute) mutes," +
                             " (SELECT COUNT(*) FROM BAT_players) players;"
-            );
-
-            if (counter.next()) {
-                status = new ImporterStatus(
-                        counter.getInt("bans") + counter.getInt("mutes") + counter.getInt("players")
-                );
+            )) {
+                if (counter.next()) {
+                    status = new ImporterStatus(
+                            counter.getInt("bans") + counter.getInt("mutes") + counter.getInt("players")
+                    );
+                }
             }
 
             try (final ResultSet rs = stmt.executeQuery(
                     "SELECT * FROM BAT_ban;"
             )) {
                 while (rs.next()) {
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("ban_ip");
                     String executedBy = rs.getString("ban_staff");
                     String reason = rs.getString("ban_reason");
@@ -141,7 +141,7 @@ public class BungeeAdminToolsImporter extends Importer {
                     "SELECT * FROM BAT_mute;"
             )) {
                 while (rs.next()) {
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("mute_ip");
                     String executedBy = rs.getString("mute_staff");
                     String reason = rs.getString("mute_reason");
@@ -198,7 +198,7 @@ public class BungeeAdminToolsImporter extends Importer {
             )) {
                 while (rs.next()) {
                     String name = rs.getString("BAT_player");
-                    UUID uuid = readUUIDFromString(rs.getString("UUID"));
+                    UUID uuid = readUUIDFromString(rs.getString("uuid"));
                     String ip = rs.getString("lastip");
                     Date login;
                     Date logout;
@@ -225,7 +225,7 @@ public class BungeeAdminToolsImporter extends Importer {
 
             importerCallback.done(status, null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error("An error occured: ", e);
         }
     }
 

@@ -31,6 +31,8 @@ import java.util.concurrent.ExecutionException;
 
 public class BungeeUtilisalsImporter extends Importer {
 
+    private static final String ERROR_STRING = "An error occured: ";
+
     private Connection createConnection(final Map<String, String> properties) throws SQLException {
         if (properties.isEmpty()) {
             return BUCore.getApi().getStorageManager().getConnection();
@@ -55,16 +57,17 @@ public class BungeeUtilisalsImporter extends Importer {
                 }
             }
 
-            final ResultSet counter = stmt.executeQuery(
+            try (ResultSet counter = stmt.executeQuery(
                     "SELECT (SELECT COUNT(*) FROM Bans) bans," +
                             " (SELECT COUNT(*) FROM IPBans) ipbans," +
                             " (SELECT COUNT(*) FROM Mutes) mutes," +
-                            " (SELECT COUNT(*) FROM PlayerInfo) players;");
-
-            if (counter.next()) {
-                status = new ImporterStatus(
-                        counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
-                );
+                            " (SELECT COUNT(*) FROM PlayerInfo) players;"
+            )) {
+                if (counter.next()) {
+                    status = new ImporterStatus(
+                            counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
+                    );
+                }
             }
 
             try (final ResultSet rs = stmt.executeQuery(
@@ -74,7 +77,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.BAN, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -89,7 +92,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.MUTE, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -104,7 +107,7 @@ public class BungeeUtilisalsImporter extends Importer {
                     try {
                         importPunishment(PunishmentType.IPBAN, connection, rs);
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -132,7 +135,7 @@ public class BungeeUtilisalsImporter extends Importer {
                             name = nameCache.get(uuid);
                         }
                     } catch (Exception e) {
-                        e.printStackTrace();
+                        BUCore.getLogger().error(ERROR_STRING, e);
                         continue;
                     }
 
@@ -150,17 +153,21 @@ public class BungeeUtilisalsImporter extends Importer {
 
             importerCallback.done(status, null);
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.getLogger().error(ERROR_STRING, e);
         }
     }
 
     private void importPunishment(final PunishmentType type, final Connection connection, final ResultSet rs) throws ExecutionException, SQLException {
         final String executedBy = rs.getString("executed_by");
         final String user = rs.getString("user");
-        final Long time = rs.getLong("time");
+        final long time = rs.getLong("time");
         final String reason = rs.getString("reason");
 
         final String id = user.contains(".") ? getIdOnIP(connection, user) : user;
+
+        if (id == null) {
+            return;
+        }
 
         final boolean usingUUID = id.contains("-");
         String uuid = usingUUID ? id : null;
