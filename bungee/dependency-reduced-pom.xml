@@ -82,9 +82,13 @@
       <scope>provided</scope>
       <exclusions>
         <exclusion>
-          <artifactId>netty-codec</artifactId>
-          <groupId>io.netty</groupId>
+            <artifactId>brigadier</artifactId>
+            <groupId>net.md-5</groupId>
         </exclusion>
+          <exclusion>
+              <artifactId>netty-codec</artifactId>
+              <groupId>io.netty</groupId>
+          </exclusion>
         <exclusion>
           <artifactId>core</artifactId>
           <groupId>net.sf.trove4j</groupId>
