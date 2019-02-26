@@ -67,6 +67,8 @@ import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
+import com.dbsoftwares.bungeeutilisals.updater.Updatable;
+import com.dbsoftwares.bungeeutilisals.updater.Updater;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
@@ -89,7 +91,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-// @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
+@Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin {
 
     private static final String ERROR_STRING = "An error occured: ";
@@ -216,9 +218,9 @@ public class BungeeUtilisals extends Plugin {
 
         ProxyServer.getInstance().getScheduler().schedule(this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS);
 
-        // if (getConfig().getBoolean("updater.enabled")) {
-        //     Updater.initialize(this);
-        // }
+        if (getConfig().getBoolean("updater.enabled")) {
+            Updater.initialize(this);
+        }
     }
 
     @Override
@@ -233,7 +235,7 @@ public class BungeeUtilisals extends Plugin {
 
         scripts.forEach(Script::unload);
         api.getEventLoader().getHandlers().forEach(EventHandler::unregister);
-        // updater.shutdownUpdaters();
+        Updater.shutdownUpdaters();
     }
 
     public void reload() {
