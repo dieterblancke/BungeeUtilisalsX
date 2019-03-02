@@ -64,7 +64,7 @@ public interface User extends ExperimentalUser {
     /**
      * @return The IP of the User.
      */
-    String getIP();
+    String getIp();
 
     /**
      * @return The language of the User.

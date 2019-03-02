@@ -20,32 +20,45 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
+import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 
 import java.util.Date;
 import java.util.UUID;
 
 public interface PunishmentDao {
 
-    long getPunishmentsSince(String identifier, PunishmentType type, Date date);
+    static PunishmentInfo buildPunishmentInfo(final PunishmentType type, final UUID uuid, final String user,
+                                              final String ip, final String reason, final String server,
+                                              final String executedby, final Date date, final long time,
+                                              final boolean active, final String removedby) {
+        final PunishmentInfo info = new PunishmentInfo();
 
-    PunishmentInfo insertPunishment(
-            PunishmentType type, UUID uuid, String user, String ip, String reason,
-            Long time, String server, Boolean active, String executedby
-    );
+        info.setUuid(uuid);
+        info.setUser(user);
+        info.setIp(ip);
+        info.setReason(reason);
+        info.setServer(server);
+        info.setExecutedBy(executedby);
+        info.setDate(date);
+        info.setType(type);
 
-    PunishmentInfo insertPunishment(
-            PunishmentType type, UUID uuid, String user, String ip, String reason,
-            Long time, String server, Boolean active, String executedby, String removedby
-    );
+        info.setExpireTime(time);
+        info.setActive(active);
+        Validate.ifNotNull(removedby, info::setRemovedBy);
 
-    PunishmentInfo insertPunishment(
-            PunishmentType type, UUID uuid, String user, String ip, String reason,
-            Long time, String server, Boolean active, String executedby, Date date, String removedby
-    );
+        return info;
+    }
 
-    boolean isPunishmentPresent(PunishmentType type, UUID uuid, String ip, boolean checkActive);
+    BansDao getBansDao();
 
-    PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String ip);
+    MutesDao getMutesDao();
 
-    void removePunishment(PunishmentType type, UUID uuid, String ip, String removedBy);
+    KickAndWarnDao getKickAndWarnDao();
+
+    long getPunishmentsSince(PunishmentType type, UUID uuid, Date date);
+
+    long getIPPunishmentsSince(PunishmentType type, String ip, Date date);
 }

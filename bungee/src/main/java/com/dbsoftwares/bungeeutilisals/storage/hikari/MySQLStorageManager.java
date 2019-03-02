@@ -32,7 +32,7 @@ public class MySQLStorageManager extends HikariStorageManager {
     }
 
     private static HikariConfig getProperties() {
-        HikariConfig config = new HikariConfig();
+        final HikariConfig config = new HikariConfig();
         config.addDataSourceProperty("cachePrepStmts", "true");
         config.addDataSourceProperty("alwaysSendSetIsolation", "false");
         config.addDataSourceProperty("cacheServerConfiguration", "true");

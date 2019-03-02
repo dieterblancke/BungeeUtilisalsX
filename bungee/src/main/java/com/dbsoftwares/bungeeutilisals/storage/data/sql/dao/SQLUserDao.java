@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.google.common.collect.Lists;
@@ -37,7 +38,7 @@ import java.util.UUID;
 public class SQLUserDao implements UserDao {
 
     private static final String INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);";
+            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name = ?;";
 
     private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
     private static final String UPDATE_USER = "UPDATE {users-table} " +
@@ -62,8 +63,9 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
-            pstmt.setDate(5, new java.sql.Date(login.getTime()));
-            pstmt.setDate(6, new java.sql.Date(logout.getTime()));
+            pstmt.setString(5, Dao.formatDate(login));
+            pstmt.setString(6, Dao.formatDate(logout));
+            pstmt.setString(7, username);
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -78,7 +80,7 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(1, name);
             pstmt.setString(2, ip);
             pstmt.setString(3, language.getName());
-            pstmt.setDate(4, new java.sql.Date(logout.getTime()));
+            pstmt.setString(4, Dao.formatDate(logout));
             pstmt.setString(5, uuid.toString());
 
             pstmt.executeUpdate();
@@ -258,7 +260,7 @@ public class SQLUserDao implements UserDao {
     public void setLogout(UUID uuid, Date logout) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "lastlogout"))) {
-            pstmt.setDate(1, new java.sql.Date(logout.getTime()));
+            pstmt.setString(1, Dao.formatDate(logout));
             pstmt.setString(2, uuid.toString());
 
             pstmt.executeUpdate();

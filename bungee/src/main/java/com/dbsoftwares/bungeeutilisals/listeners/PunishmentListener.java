@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -37,31 +37,29 @@ public class PunishmentListener implements Listener {
 
     @EventHandler
     public void onLogin(LoginEvent event) {
-        PendingConnection connection = event.getConnection();
-        UUID uuid = connection.getUniqueId();
-        String IP = Utils.getIP(connection.getAddress());
+        final PendingConnection connection = event.getConnection();
+        final UUID uuid = connection.getUniqueId();
+        final String ip = Utils.getIP(connection.getAddress());
 
-        BUAPI api = BUCore.getApi();
+        final BUAPI api = BUCore.getApi();
+        final IConfiguration language = api.getLanguageManager().getConfig(
+                BungeeUtilisals.getInstance().getDescription().getName(), api.getLanguageManager().getDefaultLanguage()
+        );
+        final BansDao bansDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
         PunishmentInfo info = null;
-        IConfiguration language = api.getLanguageManager().getConfig(BungeeUtilisals.getInstance().getDescription().getName(), api.getLanguageManager().getDefaultLanguage());
-        PunishmentDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao();
 
-        if (dao.isPunishmentPresent(PunishmentType.BAN, uuid, null, true)) {
-            info = dao.getPunishment(PunishmentType.BAN, uuid, null);
-        } else if (dao.isPunishmentPresent(PunishmentType.IPBAN, null, IP, true)) {
-            info = dao.getPunishment(PunishmentType.IPBAN, null, IP);
-        } else if (dao.isPunishmentPresent(PunishmentType.TEMPBAN, uuid, null, true)) {
-            info = dao.getPunishment(PunishmentType.TEMPBAN, uuid, null);
-        } else if (dao.isPunishmentPresent(PunishmentType.IPTEMPBAN, null, IP, true)) {
-            info = dao.getPunishment(PunishmentType.IPTEMPBAN, null, IP);
+        if (bansDao.isBanned(uuid)) {
+            info = bansDao.getCurrentBan(uuid);
+        } else if (bansDao.isIPBanned(ip)) {
+            info = bansDao.getCurrentIPBan(ip);
         }
         if (info != null) { // active punishment found
             if (info.isTemporary()) {
                 if (info.getExpireTime() <= System.currentTimeMillis()) {
                     if (info.getType().equals(PunishmentType.TEMPBAN)) {
-                        dao.removePunishment(PunishmentType.TEMPBAN, uuid, null, "CONSOLE");
+                        bansDao.removeCurrentBan(uuid, "CONSOLE");
                     } else {
-                        dao.removePunishment(PunishmentType.IPTEMPBAN, null, IP, "CONSOLE");
+                        bansDao.removeCurrentIPBan(ip, "CONSOLE");
                     }
                     return;
                 }

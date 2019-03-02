@@ -26,8 +26,8 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -57,7 +57,7 @@ public class BUser implements User {
 
     private String name;
     private UUID uuid;
-    private String IP;
+    private String ip;
     private Boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
@@ -77,7 +77,7 @@ public class BUser implements User {
         this.parent = parent;
         this.name = parent.getName();
         this.uuid = parent.getUniqueId();
-        this.IP = Utils.getIP(parent.getAddress());
+        this.ip = Utils.getIP(parent.getAddress());
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
@@ -97,11 +97,11 @@ public class BUser implements User {
             dao.getUserDao().createUser(
                     uuid,
                     name,
-                    IP,
+                    ip,
                     defLanguage
             );
 
-            storage = new UserStorage(uuid, name, IP, defLanguage, date, date, Maps.newHashMap());
+            storage = new UserStorage(uuid, name, ip, defLanguage, date, date, Maps.newHashMap());
         }
 
         if (!storage.getUserName().equals(name)) { // Stored name != user current name | Name changed?
@@ -110,14 +110,12 @@ public class BUser implements User {
         }
 
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, uuid, null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, uuid, null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, uuid, null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, uuid, null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, IP, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, IP);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, IP, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, IP);
+            final MutesDao mutesDao = dao.getPunishmentDao().getMutesDao();
+
+            if (mutesDao.isMuted(uuid)) {
+                this.mute = mutesDao.getCurrentMute(uuid);
+            } else if (mutesDao.isIPMuted(ip)) {
+                this.mute = mutesDao.getCurrentIPMute(ip);
             }
         }
 
@@ -143,7 +141,7 @@ public class BUser implements User {
 
     @Override
     public void save() {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser(uuid, getName(), IP, getLanguage(), new Date(System.currentTimeMillis()));
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser(uuid, getName(), ip, getLanguage(), new Date(System.currentTimeMillis()));
     }
 
     @Override
@@ -157,8 +155,8 @@ public class BUser implements User {
     }
 
     @Override
-    public String getIP() {
-        return IP;
+    public String getIp() {
+        return ip;
     }
 
     @Override

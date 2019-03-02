@@ -52,17 +52,17 @@ public class KickCommand extends BUCommand {
             user.sendLangMessage("punishments.kick.usage");
             return;
         }
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
-        Optional<User> optionalUser = BUCore.getApi().getUser(args[0]);
+        final Optional<User> optionalUser = BUCore.getApi().getUser(args[0]);
         if (!optionalUser.isPresent()) {
             user.sendLangMessage("offline");
             return;
         }
-        User target = optionalUser.get();
-        UserStorage storage = target.getStorage();
+        final User target = optionalUser.get();
+        final UserStorage storage = target.getStorage();
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.KICK, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.KICK, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -70,11 +70,11 @@ public class KickCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                PunishmentType.KICK, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().insertKick(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), user.getName()
         );
 
         target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));

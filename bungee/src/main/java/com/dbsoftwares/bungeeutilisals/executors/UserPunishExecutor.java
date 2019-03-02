@@ -43,7 +43,7 @@ public class UserPunishExecutor implements EventExecutor {
         if (!FileLocation.PUNISHMENTS.hasData(event.getType().toString())) {
             return;
         }
-        List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData(event.getType().toString());
+        final List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData(event.getType().toString());
 
         for (PunishmentAction action : actions) {
             long amount;
@@ -51,15 +51,15 @@ public class UserPunishExecutor implements EventExecutor {
             if (event.isUserPunishment()) {
                 // uuid involved
                 amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                        event.getUUID().toString(),
                         event.getType(),
+                        event.getUuid(),
                         new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
                 );
             } else {
-                // IP involved
-                amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                        event.getIp(),
+                // ip involved
+                amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
                         event.getType(),
+                        event.getIp(),
                         new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
                 );
             }

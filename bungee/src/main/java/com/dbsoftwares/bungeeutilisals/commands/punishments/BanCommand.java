@@ -54,21 +54,21 @@ public class BanCommand extends BUCommand {
             user.sendLangMessage("punishments.ban.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
 
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), null, true)) {
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().getBansDao().isBanned(storage.getUuid())) {
             user.sendLangMessage("punishments.ban.already-banned");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -76,13 +76,12 @@ public class BanCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.BAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao.getPunishmentDao().getBansDao().insertBan(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), true, user.getName()
         );
-
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
             String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");

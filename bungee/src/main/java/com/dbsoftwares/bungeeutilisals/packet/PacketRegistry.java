@@ -59,7 +59,7 @@ public class PacketRegistry {
             if (id == -1) {
                 continue;
             }
-            final int versionId = Version.values()[i].getVersion();
+            final int versionId = Version.values()[i].getVersionId();
 
             if (PacketUtils.getProxyProtocol() < versionId) {
                 continue; // avoiding errors for older bungee versions

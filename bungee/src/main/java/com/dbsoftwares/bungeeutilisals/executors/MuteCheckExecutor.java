@@ -26,6 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
@@ -33,12 +34,12 @@ public class MuteCheckExecutor implements EventExecutor {
 
     @Event
     public void onCommand(UserCommandEvent event) {
-        User user = event.getUser();
+        final User user = event.getUser();
 
         if (!user.isMuted()) {
             return;
         }
-        PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = user.getMuteInfo();
         if (checkTemporaryMute(user, info)) {
             return;
         }
@@ -60,7 +61,7 @@ public class MuteCheckExecutor implements EventExecutor {
         if (!user.isMuted()) {
             return;
         }
-        PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = user.getMuteInfo();
         if (checkTemporaryMute(user, info)) {
             return;
         }
@@ -71,19 +72,15 @@ public class MuteCheckExecutor implements EventExecutor {
     }
 
     private boolean checkTemporaryMute(User user, PunishmentInfo info) {
-        if (info.isTemporary()) {
-            if (info.getExpireTime() <= System.currentTimeMillis()) {
-                if (info.getType().equals(PunishmentType.TEMPMUTE)) {
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.TEMPMUTE, user.getParent().getUniqueId(), null, "CONSOLE"
-                    );
-                } else {
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.IPTEMPMUTE, null, user.getIP(), "CONSOLE"
-                    );
-                }
-                return true;
+        if (info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis()) {
+            final MutesDao mutesDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
+
+            if (info.getType().equals(PunishmentType.TEMPMUTE)) {
+                mutesDao.removeCurrentMute(user.getParent().getUniqueId(), "CONSOLE");
+            } else {
+                mutesDao.removeCurrentIPMute(user.getIp(), "CONSOLE");
             }
+            return true;
         }
         return false;
     }

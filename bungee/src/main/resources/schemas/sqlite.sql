@@ -47,153 +47,48 @@ CREATE TABLE IF NOT EXISTS `{friendsettings-table}` (
 CREATE INDEX IF NOT EXISTS idx_friendsettings
   ON `{friendsettings-table}` (userid);
 
-
-CREATE TABLE IF NOT EXISTS `{bans-table}` (
+CREATE TABLE IF NOT EXISTS `{bans-table}`
+(
   id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
+  uuid        VARCHAR(48) NOT NULL,
+  user        VARCHAR(32) NOT NULL,
+  ip          VARCHAR(32) NOT NULL,
+  reason      TEXT        NOT NULL,
+  server      VARCHAR(32) NOT NULL,
+  date        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  active      TINYINT(1)  NOT NULL,
+  executed_by VARCHAR(64) NOT NULL,
+  duration    LONG        NOT NULL,
+  type        VARCHAR(16) NOT NULL,
+  removed     TINYINT(1)  NOT NULL DEFAULT 0,
   removed_by  VARCHAR(32),
   FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
 CREATE INDEX IF NOT EXISTS idx_bans
-  ON `{bans-table}` (id, uuid, user, ip, active);
+  ON `{bans-table}` (id, uuid, user, ip, active, server);
 
 
-CREATE TABLE IF NOT EXISTS `{ipbans-table}` (
+CREATE TABLE IF NOT EXISTS `{mutes-table}`
+(
   id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_ipbans
-  ON `{ipbans-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{tempbans-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  time        LONG                              NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_tempbans
-  ON `{tempbans-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{iptempbans-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  time        LONG                              NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_iptempbans
-  ON `{iptempbans-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{mutes-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
+  uuid        VARCHAR(48) NOT NULL,
+  user        VARCHAR(32) NOT NULL,
+  ip          VARCHAR(32) NOT NULL,
+  reason      TEXT        NOT NULL,
+  server      VARCHAR(32) NOT NULL,
+  date        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  active      TINYINT(1)  NOT NULL,
+  executed_by VARCHAR(64) NOT NULL,
+  duration    LONG        NOT NULL,
+  type        VARCHAR(16) NOT NULL,
+  removed     TINYINT(1)  NOT NULL DEFAULT 0,
   removed_by  VARCHAR(32),
   FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
 CREATE INDEX IF NOT EXISTS idx_mutes
-  ON `{mutes-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{ipmutes-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_ipmutes
-  ON `{ipmutes-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{tempmutes-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  time        LONG                              NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_tempmutes
-  ON `{tempmutes-table}` (id, uuid, user, ip, active);
-
-
-CREATE TABLE IF NOT EXISTS `{iptempmutes-table}` (
-  id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-  uuid        VARCHAR(36)                       NOT NULL,
-  user        VARCHAR(32)                       NOT NULL,
-  ip          VARCHAR(32)                       NOT NULL,
-  time        LONG                              NOT NULL,
-  reason      TEXT                              NOT NULL,
-  server      VARCHAR(32)                       NOT NULL,
-  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  active      TINYINT(1)                        NOT NULL,
-  executed_by VARCHAR(64)                       NOT NULL,
-  removed_by  VARCHAR(32),
-  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
-);
-
-CREATE INDEX IF NOT EXISTS idx_iptempmutes
-  ON `{iptempmutes-table}` (id, uuid, user, ip, active);
+  ON `{mutes-table}` (id, uuid, user, ip, active, server);
 
 
 CREATE TABLE IF NOT EXISTS `{kicks-table}` (

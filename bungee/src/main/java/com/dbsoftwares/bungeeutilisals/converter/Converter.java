@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.converter;
 
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
+import com.dbsoftwares.bungeeutilisals.utils.ImportUtils;
 import lombok.Data;
 
 import java.util.Map;
@@ -26,6 +27,7 @@ import java.util.Map;
 @Data
 public abstract class Converter {
 
+    private final ImportUtils importUtils = new ImportUtils();
     protected ConverterStatus status;
 
     protected abstract void importData(final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties) throws Exception;

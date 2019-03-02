@@ -119,7 +119,7 @@ public class BungeeAdminToolsImporter extends Importer {
                     if (ip == null) {
                         ip = getIP(connection, uuid);
                     }
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+                    getImportUtils().insertPunishment(
                             type,
                             uuid,
                             name,
@@ -128,8 +128,7 @@ public class BungeeAdminToolsImporter extends Importer {
                             time,
                             "UNKNOWN",
                             active,
-                            executedBy,
-                            removedBy
+                            executedBy
                     );
 
                     status.incrementConvertedEntries(1);
@@ -173,7 +172,7 @@ public class BungeeAdminToolsImporter extends Importer {
                         ip = getIP(connection, uuid);
                     }
 
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+                    getImportUtils().insertPunishment(
                             type,
                             uuid,
                             name,
@@ -182,8 +181,7 @@ public class BungeeAdminToolsImporter extends Importer {
                             time,
                             "UNKNOWN",
                             active,
-                            executedBy,
-                            removedBy
+                            executedBy
                     );
 
                     status.incrementConvertedEntries(1);

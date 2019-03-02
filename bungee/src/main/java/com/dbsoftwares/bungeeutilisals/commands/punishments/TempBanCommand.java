@@ -52,10 +52,10 @@ public class TempBanCommand extends BUCommand {
             user.sendLangMessage("punishments.tempban.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String timeFormat = args[1];
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        long time = Utils.parseDateDiff(timeFormat);
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String timeFormat = args[1];
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
+        final long time = Utils.parseDateDiff(timeFormat);
 
         if (time == 0L) {
             user.sendLangMessage("punishments.tempban.non-valid");
@@ -65,13 +65,13 @@ public class TempBanCommand extends BUCommand {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPBAN, storage.getUuid(), null, true)) {
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().getBansDao().isBanned(storage.getUuid())) {
             user.sendLangMessage("punishments.tempban.already-banned");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.TEMPBAN, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.TEMPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -79,11 +79,11 @@ public class TempBanCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.TEMPBAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, time, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao.getPunishmentDao().getBansDao().insertTempBan(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), true, user.getName(), time
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {

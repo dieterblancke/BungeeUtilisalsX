@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.importer;
 
+import com.dbsoftwares.bungeeutilisals.utils.ImportUtils;
 import com.dbsoftwares.bungeeutilisals.utils.MojangUtils;
 import com.google.common.base.Charsets;
 import com.google.common.cache.CacheBuilder;
@@ -33,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 @Data
 public abstract class Importer {
 
+    private final ImportUtils importUtils = new ImportUtils();
     protected final LoadingCache<String, String> uuidCache = CacheBuilder.newBuilder().maximumSize(15000)
             .expireAfterAccess(30, TimeUnit.MINUTES).build(new CacheLoader<String, String>() {
                 public String load(final String name) throws IllegalStateException {

@@ -75,7 +75,7 @@ public class ConsoleUser implements User {
     }
 
     @Override
-    public String getIP() {
+    public String getIp() {
         return "127.0.0.1";
     }
 

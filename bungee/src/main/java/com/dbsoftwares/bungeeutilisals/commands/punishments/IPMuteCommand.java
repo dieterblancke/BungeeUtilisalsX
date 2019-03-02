@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -52,20 +53,22 @@ public class IPMuteCommand extends BUCommand {
             user.sendLangMessage("punishments.ipmute.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, storage.getIp(), true)) {
+        final MutesDao mutesDao = dao.getPunishmentDao().getMutesDao();
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+
+        if (mutesDao.isIPMuted(storage.getIp())) {
             user.sendLangMessage("punishments.ipmute.already-muted");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPMUTE, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.IPMUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -73,15 +76,15 @@ public class IPMuteCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.IPMUTE, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = mutesDao.insertMute(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), true, user.getName()
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.ipmute.onmute",
-                executor.getPlaceHolders(info).toArray(new Object[]{})));
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted ->
+                muted.sendLangMessage("punishments.ipmute.onmute", executor.getPlaceHolders(info).toArray(new Object[0])));
 
         user.sendLangMessage("punishments.ipmute.executed", executor.getPlaceHolders(info));
 

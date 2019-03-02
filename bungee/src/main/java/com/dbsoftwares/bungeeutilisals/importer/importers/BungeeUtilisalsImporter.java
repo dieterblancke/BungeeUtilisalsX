@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 
 import java.sql.*;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 public class BungeeUtilisalsImporter extends Importer {
@@ -189,17 +188,7 @@ public class BungeeUtilisalsImporter extends Importer {
             punishmentType = type;
         }
 
-        BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                punishmentType,
-                UUID.fromString(uuid),
-                name,
-                IP,
-                reason,
-                time,
-                "UNKNOWN",
-                true,
-                executedBy
-        );
+        getImportUtils().insertPunishment(punishmentType, readUUIDFromString(uuid), name, IP, reason, time, "UNKNOWN", true, executedBy);
     }
 
     private String getIP(final Connection connection, final String id) throws SQLException {

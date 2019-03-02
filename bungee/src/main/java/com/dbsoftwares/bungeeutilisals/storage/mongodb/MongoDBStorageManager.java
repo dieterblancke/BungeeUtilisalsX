@@ -27,14 +27,14 @@ import com.mongodb.MongoClientOptions;
 import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoDatabase;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
 public class MongoDBStorageManager extends AbstractStorageManager {
 
     private MongoClient client;

@@ -43,7 +43,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
         // Just adding in case someone wants them ...
         line = line.replace("{uuid}", info.getUuid().toString());
-        line = line.replace("{ip}", info.getIP());
+        line = line.replace("{ip}", info.getIp());
         line = line.replace("{user}", info.getUser());
         line = line.replace("{id}", String.valueOf(info.getId()));
 
@@ -84,9 +84,9 @@ public class PunishmentExecutor implements IPunishmentExecutor {
             placeholders.add(info.getUuid().toString());
         }
 
-        if (info.getIP() != null) {
+        if (info.getIp() != null) {
             placeholders.add("{ip}");
-            placeholders.add(info.getIP());
+            placeholders.add(info.getIp());
         }
 
         if (info.getUser() != null) {

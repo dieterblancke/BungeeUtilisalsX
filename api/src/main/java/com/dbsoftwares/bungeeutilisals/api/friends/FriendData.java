@@ -19,16 +19,12 @@
 package com.dbsoftwares.bungeeutilisals.api.friends;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
 public class FriendData {
 
     private UUID uuid;
@@ -37,7 +33,10 @@ public class FriendData {
     private boolean online;
     private Date lastOnline;
 
-    public FriendData(UUID uuid, String friend, Date friendSince, Date lastSeen) {
+    public FriendData() {
+    }
+
+    public FriendData(final UUID uuid, final String friend, final Date friendSince, final Date lastSeen) {
         this.uuid = uuid;
         this.friend = friend;
         this.friendSince = friendSince;

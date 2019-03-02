@@ -81,49 +81,16 @@ public class MongoToMongoConverter extends Converter {
     }
 
     private void createPunishment(PunishmentType type, Document document) {
-        if (!type.isActivatable()) {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                    type,
-                    UUID.fromString(document.getString("uuid")),
-                    document.getString("user"),
-                    document.getString("ip"),
-                    document.getString("reason"),
-                    -1L,
-                    document.getString("server"),
-                    false,
-                    document.getString("executed_by"),
-                    document.getDate("date"),
-                    null
-            );
-        } else if (type.isTemporary()) {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                    type,
-                    UUID.fromString(document.getString("uuid")),
-                    document.getString("user"),
-                    document.getString("ip"),
-                    document.getString("reason"),
-                    document.getLong("time"),
-                    document.getString("server"),
-                    document.getBoolean("active"),
-                    document.getString("executed_by"),
-                    document.getDate("date"),
-                    document.getString("removed_by")
-            );
-        } else {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                    type,
-                    UUID.fromString(document.getString("uuid")),
-                    document.getString("user"),
-                    document.getString("ip"),
-                    document.getString("reason"),
-                    -1L,
-                    document.getString("server"),
-                    document.getBoolean("active"),
-                    document.getString("executed_by"),
-                    document.getDate("date"),
-                    document.getString("removed_by")
-            );
-        }
+        final UUID uuid = UUID.fromString(document.getString("uuid"));
+        final String user = document.getString("user");
+        final String ip = document.getString("ip");
+        final String reason = document.getString("reason");
+        final String server = document.getString("server");
+        final String executedBy = document.getString("executedBy");
+        final long duration = document.containsKey("duration") ? -1L : document.getLong("duration");
+        final boolean active = document.containsKey("active") ? false : document.getBoolean("active");
+
+        getImportUtils().insertPunishment(type, uuid, user, ip, reason, duration, server, active, executedBy);
     }
 
     private MongoDatabase getDatabase() {

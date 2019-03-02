@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolder
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class PlaceHolderImpl extends PlaceHolderEventHandler {
+public abstract class PlaceHolderImpl implements PlaceHolderEventHandler {
 
     private final String placeHolder;
     private final boolean requiresUser;

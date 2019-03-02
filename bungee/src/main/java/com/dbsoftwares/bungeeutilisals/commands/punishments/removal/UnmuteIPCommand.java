@@ -24,7 +24,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -59,16 +58,13 @@ public class UnmuteIPCommand extends BUCommand {
             return;
         }
         final UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        PunishmentType type = PunishmentType.IPMUTE;
 
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, storage.getUuid(), storage.getIp(), true)) {
-            type = PunishmentType.IPTEMPMUTE;
-        } else if (!dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, storage.getUuid(), storage.getIp(), true)) {
+        if (!dao.getPunishmentDao().getMutesDao().isIPMuted(storage.getIp())) {
             user.sendLangMessage("punishments.unmuteip.not-muted");
             return;
         }
 
-        UserPunishRemoveEvent event = new UserPunishRemoveEvent(UserPunishRemoveEvent.PunishmentRemovalAction.UNMUTEIP, user, storage.getUuid(),
+        final UserPunishRemoveEvent event = new UserPunishRemoveEvent(UserPunishRemoveEvent.PunishmentRemovalAction.UNMUTEIP, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), user.getServerName());
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -76,10 +72,10 @@ public class UnmuteIPCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(type, storage.getUuid(), storage.getIp(), user.getName());
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        dao.getPunishmentDao().getMutesDao().removeCurrentMute(storage.getUuid(), user.getName());
 
-        PunishmentInfo info = new PunishmentInfo();
+        final PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);
         info.setId(-1);
         info.setExecutedBy(user.getName());

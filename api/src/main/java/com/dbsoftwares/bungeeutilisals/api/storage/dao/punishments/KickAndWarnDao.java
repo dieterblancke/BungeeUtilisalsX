@@ -16,21 +16,15 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.storage.dao;
+package com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 
-public interface Dao {
+import java.util.UUID;
 
-    UserDao getUserDao();
+public interface KickAndWarnDao {
 
-    PunishmentDao getPunishmentDao();
+    PunishmentInfo insertWarn(UUID uuid, String user, String ip, String reason, String server, String executedby);
 
-    FriendsDao getFriendsDao();
-
-    static String formatDate(final Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
-    }
-
+    PunishmentInfo insertKick(UUID uuid, String user, String ip, String reason, String server, String executedby);
 }

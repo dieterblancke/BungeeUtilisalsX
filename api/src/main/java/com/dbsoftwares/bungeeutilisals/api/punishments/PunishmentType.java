@@ -18,6 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.api.punishments;
 
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+
 public enum PunishmentType {
 
     BAN(true, false), TEMPBAN(true, true), IPBAN(true, false), IPTEMPBAN(true, true),
@@ -26,10 +28,23 @@ public enum PunishmentType {
 
     private final boolean activatable;
     private final boolean temporary;
+    private final String tablePlaceHolder;
 
     PunishmentType(boolean activatable, boolean temporary) {
         this.activatable = activatable;
         this.temporary = temporary;
+
+        final String toString = toString();
+        final String type;
+
+        if (toString.contains("BAN")) {
+            type = "ban";
+        } else if (toString.contains("MUTE")) {
+            type = "mute";
+        } else {
+            type = toString.toLowerCase();
+        }
+        this.tablePlaceHolder = "{" + type + "s-table}";
     }
 
     public boolean isActivatable() {
@@ -41,10 +56,22 @@ public enum PunishmentType {
     }
 
     public String getTablePlaceHolder() {
-        return "{" + toString().toLowerCase() + "s-table}";
+        return tablePlaceHolder;
+    }
+
+    public String getTable() {
+        return PlaceHolderAPI.formatMessage(getTablePlaceHolder());
     }
 
     public boolean isIP() {
         return toString().startsWith("IP");
+    }
+
+    public boolean isBan() {
+        return toString().contains("BAN");
+    }
+
+    public boolean isMute() {
+        return toString().contains("MUTE");
     }
 }

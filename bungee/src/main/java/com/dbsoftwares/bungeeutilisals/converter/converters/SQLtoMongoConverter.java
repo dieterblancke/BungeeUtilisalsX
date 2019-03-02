@@ -117,7 +117,7 @@ public class SQLtoMongoConverter extends Converter {
 
     private void createPunishment(PunishmentType type, ResultSet rs) throws SQLException {
         if (!type.isActivatable()) {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+            getImportUtils().insertPunishment(
                     type,
                     UUID.fromString(rs.getString("uuid")),
                     rs.getString("user"),
@@ -126,12 +126,10 @@ public class SQLtoMongoConverter extends Converter {
                     -1L,
                     rs.getString("server"),
                     false,
-                    rs.getString("executed_by"),
-                    rs.getDate("date"),
-                    null
+                    rs.getString("executed_by")
             );
         } else if (type.isTemporary()) {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+            getImportUtils().insertPunishment(
                     type,
                     UUID.fromString(rs.getString("uuid")),
                     rs.getString("user"),
@@ -140,12 +138,10 @@ public class SQLtoMongoConverter extends Converter {
                     rs.getLong("time"),
                     rs.getString("server"),
                     rs.getBoolean("active"),
-                    rs.getString("executed_by"),
-                    rs.getDate("date"),
-                    rs.getString("removed_by")
+                    rs.getString("executed_by")
             );
         } else {
-            BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
+            getImportUtils().insertPunishment(
                     type,
                     UUID.fromString(rs.getString("uuid")),
                     rs.getString("user"),
@@ -154,9 +150,7 @@ public class SQLtoMongoConverter extends Converter {
                     -1L,
                     rs.getString("server"),
                     rs.getBoolean("active"),
-                    rs.getString("executed_by"),
-                    rs.getDate("date"),
-                    rs.getString("removed_by")
+                    rs.getString("executed_by")
             );
         }
     }

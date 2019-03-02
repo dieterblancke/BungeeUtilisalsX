@@ -52,20 +52,20 @@ public class IPBanCommand extends BUCommand {
             user.sendLangMessage("punishments.ipban.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPBAN, null, storage.getIp(), true)) {
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().getBansDao().isIPBanned(storage.getIp())) {
             user.sendLangMessage("punishments.ipban.already-banned");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPBAN, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.IPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -73,11 +73,10 @@ public class IPBanCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.IPBAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao.getPunishmentDao().getBansDao().insertIPBan(
+                storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), true, user.getName()
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {

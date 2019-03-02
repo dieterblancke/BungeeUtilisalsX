@@ -41,17 +41,17 @@ public class VersionConditionHandler extends ConditionHandler {
 
         switch (operator) {
             case "<":
-                return connection.getVersion() < version.getVersion();
+                return connection.getVersion() < version.getVersionId();
             case "<=":
-                return connection.getVersion() <= version.getVersion();
+                return connection.getVersion() <= version.getVersionId();
             case "==":
-                return connection.getVersion() == version.getVersion();
+                return connection.getVersion() == version.getVersionId();
             case "!=":
-                return connection.getVersion() != version.getVersion();
+                return connection.getVersion() != version.getVersionId();
             case ">=":
-                return connection.getVersion() >= version.getVersion();
+                return connection.getVersion() >= version.getVersionId();
             case ">":
-                return connection.getVersion() > version.getVersion();
+                return connection.getVersion() > version.getVersionId();
             default:
                 return false;
         }

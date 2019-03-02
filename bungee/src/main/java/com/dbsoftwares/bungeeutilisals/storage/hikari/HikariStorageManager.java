@@ -23,19 +23,18 @@ import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
 public abstract class HikariStorageManager extends AbstractStorageManager {
 
+    @Getter
     protected HikariConfig config;
+
+    @Getter
     protected HikariDataSource dataSource;
 
-    @SuppressWarnings("deprecation")
-    public HikariStorageManager(Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg) {
+    HikariStorageManager(Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg) {
         super(plugin, type, new SQLDao());
         config = cfg == null ? new HikariConfig() : cfg;
         config.setDataSourceClassName(getDataSourceClass());

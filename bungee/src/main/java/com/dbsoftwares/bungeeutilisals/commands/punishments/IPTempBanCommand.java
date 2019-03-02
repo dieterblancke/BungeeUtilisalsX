@@ -52,10 +52,10 @@ public class IPTempBanCommand extends BUCommand {
             user.sendLangMessage("punishments.iptempban.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String timeFormat = args[1];
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        Long time = Utils.parseDateDiff(timeFormat);
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String timeFormat = args[1];
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
+        final long time = Utils.parseDateDiff(timeFormat);
 
         if (time == 0L) {
             user.sendLangMessage("punishments.iptempban.non-valid");
@@ -65,25 +65,25 @@ public class IPTempBanCommand extends BUCommand {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPBAN, null, storage.getIp(), true)) {
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().getBansDao().isIPBanned(storage.getIp())) {
             user.sendLangMessage("punishments.iptempban.already-banned");
             return;
         }
-
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPTEMPBAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
+        final UserPunishEvent event = new UserPunishEvent(
+                PunishmentType.IPTEMPBAN, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
+        );
         BUCore.getApi().getEventLoader().launchEvent(event);
 
         if (event.isCancelled()) {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.IPTEMPBAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, time, user.getServerName(), true, user.getName()
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final PunishmentInfo info = dao.getPunishmentDao().getBansDao().insertTempIPBan(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), true, user.getName(), time
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
@@ -94,7 +94,6 @@ public class IPTempBanCommand extends BUCommand {
         });
 
         user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
-
         BUCore.getApi().langPermissionBroadcast("punishments.iptempban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

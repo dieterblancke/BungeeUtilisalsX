@@ -52,20 +52,20 @@ public class MuteCommand extends BUCommand {
             user.sendLangMessage("punishments.mute.usage");
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
 
         if (!dao.getUserDao().exists(args[0])) {
             user.sendLangMessage("never-joined");
             return;
         }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, storage.getUuid(), null, true)) {
+        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        if (dao.getPunishmentDao().getMutesDao().isMuted(storage.getUuid())) {
             user.sendLangMessage("punishments.mute.already-muted");
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.MUTE, user, storage.getUuid(),
+        final UserPunishEvent event = new UserPunishEvent(PunishmentType.MUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
         BUCore.getApi().getEventLoader().launchEvent(event);
 
@@ -73,11 +73,11 @@ public class MuteCommand extends BUCommand {
             user.sendLangMessage("punishments.cancelled");
             return;
         }
-        IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.MUTE, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao.getPunishmentDao().getMutesDao().insertMute(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), true, user.getName()
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.mute.onmute",

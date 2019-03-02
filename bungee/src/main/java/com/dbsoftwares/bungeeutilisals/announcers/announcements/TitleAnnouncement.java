@@ -24,16 +24,20 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.stream.Stream;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(callSuper = false)
 public class TitleAnnouncement extends Announcement {
 
     private boolean language;
