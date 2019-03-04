@@ -11,9 +11,8 @@ deploy:
     - master
   script:
     - mvn clean package install -Dmaven.repo.local=.m2/repository
-    - ls -R
   artifacts:
     name: "BungeeUtilisals"
     expire_in: 1 week
     paths:
-      - target/*.jar
+      - bungee/target/BungeeUtilisals.jar
