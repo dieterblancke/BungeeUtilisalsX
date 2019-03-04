@@ -28,7 +28,7 @@ import java.lang.reflect.Method;
 
 public class PacketUtils {
 
-    public static boolean registerPacket(Protocol.DirectionData direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
+    public static boolean registerPacket(Object direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
         try {
             Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
 
@@ -38,7 +38,7 @@ public class PacketUtils {
                 Array.set(map, i, protocolMappings[i]);
             }
 
-            Method register = Protocol.DirectionData.class.getDeclaredMethod("registerPacket", Class.class, map.getClass());
+            Method register = direction.getClass().getDeclaredMethod("registerPacket", Class.class, map.getClass());
             register.setAccessible(true);
 
             register.invoke(direction, packetClass, map);

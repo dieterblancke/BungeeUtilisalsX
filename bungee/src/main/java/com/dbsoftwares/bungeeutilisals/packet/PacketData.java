@@ -18,21 +18,20 @@
 package com.dbsoftwares.bungeeutilisals.packet;
 
 import com.dbsoftwares.bungeeutilisals.packet.packets.Packet;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.ToString;
-import net.md_5.bungee.protocol.Protocol;
 
-@Data
+@Getter
 @ToString
 @EqualsAndHashCode
 public class PacketData {
 
     private Class<? extends Packet> packetClass;
-    private Protocol.DirectionData direction;
+    private Object direction;
     private int[] protocolIds;
 
-    public PacketData(Class<? extends Packet> packetClass, Protocol.DirectionData direction, int... protocolIds) {
+    public PacketData(Class<? extends Packet> packetClass, Object direction, int... protocolIds) {
         this.packetClass = packetClass;
         this.direction = direction;
         this.protocolIds = protocolIds;

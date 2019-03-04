@@ -82,7 +82,7 @@ public class DumpSubCommand extends SubCommand {
         ProxyServer.getInstance().getScheduler().runAsync(BungeeUtilisals.getInstance(), () -> {
             final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             try {
-                final HttpURLConnection con = (HttpURLConnection) new URL("https://hastebin.com/documents/").openConnection();
+                final HttpURLConnection con = (HttpURLConnection) new URL("https://paste.dbsoftwares.eu/documents/").openConnection();
 
                 con.addRequestProperty(
                         "User-Agent", "BungeeUtilisals v" + BungeeUtilisals.getInstance().getDescription().getVersion()
@@ -111,7 +111,7 @@ public class DumpSubCommand extends SubCommand {
                 }
 
                 user.sendMessage("&eSuccessfully created a dump at: "
-                        + "&bhttps://hastebin.com/" + jsonResponse.get("key").getAsString() + ".dump");
+                        + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get("key").getAsString() + ".dump");
             } catch (IOException e) {
                 user.sendMessage("Could not create dump. Please check the console for errors.");
                 BUCore.getLogger().warn("Could not create dump request");
