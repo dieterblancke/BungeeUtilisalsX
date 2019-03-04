@@ -1,3 +1,3 @@
-[![Build Status](https://travis-ci.org/didjee2/BungeeUtilisalsX.svg?branch=development)](https://travis-ci.org/didjee2/BungeeUtilisalsX)
+[![Build Status](https://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX/badges/master/pipeline.svg)](https://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX/commits/master)
 
 # BungeeUtilisals
