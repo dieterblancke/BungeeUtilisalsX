@@ -58,7 +58,7 @@
         </repository>
         <repository>
             <id>bungeecord-repo</id>
-            <url>sl</url>
+            <url>https://oss.sonatype.org/repositories/snapshots</url>
         </repository>
         <repository>
             <id>dbsoftwares</id>
