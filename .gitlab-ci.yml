@@ -1,9 +1,6 @@
 cache:
   paths:
-    - .m2/repository
-
-variables:
-  MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+    - .m2
 
 stages:
   - deploy
@@ -13,7 +10,8 @@ deploy:
   only:
     - master
   script:
-    - mvn clean package install
+    - mvn clean package install -Dmaven.repo.local=.m2/repository
+    - ls -R
   artifacts:
     name: "BungeeUtilisals"
     expire_in: 1 week
