@@ -49,14 +49,6 @@
 
     <repositories>
         <repository>
-            <id>mvdw-repo</id>
-            <url>http://repo.mvdw-software.be/content/groups/public/</url>
-        </repository>
-        <repository>
-            <id>md_5-snapshots</id>
-            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/repositories/snapshots</url>
         </repository>
