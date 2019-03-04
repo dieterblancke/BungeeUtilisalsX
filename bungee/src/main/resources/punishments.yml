@@ -81,7 +81,6 @@ commands:
     aliases: ''
     permission: bungeeutilisals.punishments.warn
     broadcast: bungeeutilisals.punishments.warn.broadcast
-
   unban:
     enabled: true
     aliases: 'punban, gunban, unsetban, removeban'

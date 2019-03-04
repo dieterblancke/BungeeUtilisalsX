@@ -225,7 +225,9 @@ public class BungeeUtilisals extends Plugin {
 
     @Override
     public void onDisable() {
-        api.getAddonManager().disableAddons();
+        if (getConfig().getBoolean("addons")) {
+            api.getAddonManager().disableAddons();
+        }
         BUCore.getApi().getUsers().forEach(User::unload);
         try {
             databaseManagement.close();

@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.commands.plugin.sub;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
@@ -30,7 +29,6 @@ import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisals.dump.PluginSchedulerInfo;
 import com.dbsoftwares.bungeeutilisals.dump.SystemInfo;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -163,17 +161,7 @@ public class DumpSubCommand extends SubCommand {
             configurations.put(location.toString().toLowerCase(), values);
         }
 
-        final Map<String, Map<String, Object>> languages = Maps.newHashMap();
-        for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
-            try {
-                IConfiguration config = BUCore.getApi().getLanguageManager().getConfig(BungeeUtilisals.getInstance().getDescription().getName(), language);
-
-                languages.put(language.getName(), readValues(config.getValues()));
-            } catch (RuntimeException ignored) {
-            }
-        }
-
-        return new Dump("BungeeUtilisals", systemInfo, plugins, getTasks(), getScripts(), configurations, languages);
+        return new Dump("BungeeUtilisals", systemInfo, plugins, getTasks(), getScripts(), configurations);
     }
 
     private Map<String, Object> readValues(Map<String, Object> map) {

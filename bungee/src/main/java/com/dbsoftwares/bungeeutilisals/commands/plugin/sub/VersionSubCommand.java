@@ -43,7 +43,7 @@ public class VersionSubCommand extends SubCommand {
 
     @Override
     public void onExecute(User user, String[] args) {
-        user.sendMessage("&fYou are running BungeeUtilisals v&c" + BungeeUtilisals.getInstance().getDescription().getVersion() + "&f!");
+        user.sendMessage("&fYou are running BungeeUtilisals &cv" + BungeeUtilisals.getInstance().getDescription().getVersion() + "&f!");
     }
 
     @Override

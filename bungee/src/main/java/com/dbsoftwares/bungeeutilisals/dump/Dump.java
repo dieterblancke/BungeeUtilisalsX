@@ -34,6 +34,5 @@ public class Dump {
     private List<PluginSchedulerInfo> tasks;
     private Map<String, String> scripts;
     private Map<String, Map<String, Object>> configurations;
-    private Map<String, Map<String, Object>> languages;
 
 }

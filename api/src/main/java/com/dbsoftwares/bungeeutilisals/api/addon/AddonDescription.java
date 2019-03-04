@@ -41,6 +41,7 @@ public class AddonDescription {
     private final Set<String> requiredDependencies; // using Set to prevent duplicates
     private final Set<String> optionalDependencies; // using Set to prevent duplicates
     private final String description;
+    private final String source;
     private final File file;
 
     public AddonDescription(IConfiguration configuration, File file) {
@@ -49,6 +50,7 @@ public class AddonDescription {
         this.main = configuration.getString("main");
         this.author = configuration.getString("author");
         this.description = configuration.getString("description");
+        this.source = configuration.exists("source") ? configuration.getString("source") : null;
 
         final List<String> required = configuration.getStringList("dependencies.required");
         final List<String> optional = configuration.getStringList("dependencies.optional");

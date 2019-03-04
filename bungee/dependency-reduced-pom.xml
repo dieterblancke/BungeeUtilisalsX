@@ -3,7 +3,7 @@
   <parent>
     <artifactId>BungeeUtilisals</artifactId>
     <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-    <version>3.0.1.5</version>
+      <version>3.0.1.6</version>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>bungee</artifactId>
@@ -114,12 +114,6 @@
       <artifactId>HikariCP</artifactId>
       <version>3.2.0</version>
       <scope>provided</scope>
-      <exclusions>
-        <exclusion>
-          <artifactId>slf4j-api</artifactId>
-          <groupId>org.slf4j</groupId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
