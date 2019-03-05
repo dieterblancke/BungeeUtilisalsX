@@ -23,7 +23,7 @@
     <parent>
         <artifactId>BungeeUtilisals</artifactId>
         <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-        <version>3.0.1.6</version>
+        <version>1.0.1.7</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>api</artifactId>
-            <version>3.0.1.6</version>
+            <version>1.0.1.7</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

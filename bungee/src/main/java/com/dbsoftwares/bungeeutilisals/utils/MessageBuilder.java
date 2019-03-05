@@ -36,7 +36,7 @@ public class MessageBuilder {
         if (section.isList("text")) {
             TextComponent component = new TextComponent();
 
-            section.getSectionList("text").forEach(text -> component.addExtra(buildMessage(user, text)));
+            section.getSectionList("text").forEach(text -> component.addExtra(buildMessage(user, text, placeholders)));
             return component;
         }
         String text = searchAndFormat(user.getLanguageConfig(), section.getString("text"), placeholders);

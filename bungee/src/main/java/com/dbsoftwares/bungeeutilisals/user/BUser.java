@@ -35,6 +35,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -201,17 +202,21 @@ public class BUser implements User {
 
     @Override
     public void sendLangMessage(boolean prefix, String path) {
-        final String message = buildLangMessage(path);
-        if (prefix) {
-            sendMessage(message);
-        } else {
-            sendRawColorMessage(message);
-        }
+        sendLangMessage(prefix, path, new Object[0]);
     }
 
     @Override
     public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
+        if (getLanguageConfig().isSection(path)) {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage(this, getLanguageConfig().getSection(path), placeholders);
+
+            sendMessage(component);
+            return;
+        }
+
         final String message = buildLangMessage(path, placeholders);
+
         if (prefix) {
             sendMessage(message);
         } else {

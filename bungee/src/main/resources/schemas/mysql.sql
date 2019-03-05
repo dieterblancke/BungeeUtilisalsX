@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
   userid   INT(11) NOT NULL,
-  settings JSON    NOT NULL,
+  settings JSON    NOT NULL, /* TODO: change this to columns ... */
   PRIMARY KEY (userid),
   KEY idx_friendsettings (userid),
   FOREIGN KEY (userid) REFERENCES `{users-table}` (id)

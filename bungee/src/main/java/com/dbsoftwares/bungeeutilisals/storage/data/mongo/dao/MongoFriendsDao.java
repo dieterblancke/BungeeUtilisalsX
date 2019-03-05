@@ -47,12 +47,12 @@ public class MongoFriendsDao implements FriendsDao {
         data.put("friend", uuid);
         data.put("friendsince", new Date(System.currentTimeMillis()));
 
-        getDatabase().getCollection(format("{friends-table}")).insertOne(new Document(data));
+        db().getCollection(format("{friends-table}")).insertOne(new Document(data));
     }
 
     @Override
     public void removeFriend(User user, UUID uuid) {
-        final MongoCollection<Document> coll = getDatabase().getCollection(format("{friends-table}"));
+        final MongoCollection<Document> coll = db().getCollection(format("{friends-table}"));
 
         coll.deleteOne(
                 Filters.and(
@@ -65,8 +65,8 @@ public class MongoFriendsDao implements FriendsDao {
     @Override
     public List<FriendData> getFriends(UUID uuid) {
         final List<FriendData> friends = Lists.newArrayList();
-        final MongoCollection<Document> coll = getDatabase().getCollection(format("{friends-table}"));
-        final MongoCollection<Document> userColl = getDatabase().getCollection(format("{users-table}"));
+        final MongoCollection<Document> coll = db().getCollection(format("{friends-table}"));
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
 
         coll.find(Filters.eq("user", uuid)).forEach((Block<? super Document>) doc -> {
             final Document friend = userColl.find(Filters.eq("user", doc.getString("friend"))).first();
@@ -90,7 +90,7 @@ public class MongoFriendsDao implements FriendsDao {
         return PlaceHolderAPI.formatMessage(String.format(line, replacements));
     }
 
-    private MongoDatabase getDatabase() {
+    private MongoDatabase db() {
         return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

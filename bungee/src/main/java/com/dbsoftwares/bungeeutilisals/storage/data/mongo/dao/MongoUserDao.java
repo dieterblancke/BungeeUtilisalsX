@@ -42,7 +42,7 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language) {
-        Date date = new Date(System.currentTimeMillis());
+        final Date date = new Date(System.currentTimeMillis());
 
         createUser(uuid, username, ip, language, date, date);
     }
@@ -58,7 +58,7 @@ public class MongoUserDao implements UserDao {
         data.put("firstlogin", login);
         data.put("lastlogout", logout);
 
-        getDatabase().getCollection(format("{users-table}")).insertOne(new Document(data));
+        db().getCollection(format("{users-table}")).insertOne(new Document(data));
     }
 
     @Override
@@ -70,20 +70,20 @@ public class MongoUserDao implements UserDao {
         updates.add(Updates.set("language", language.getName()));
         updates.add(Updates.set("lastlogout", date));
 
-        getDatabase().getCollection(format("{users-table}"))
+        db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.combine(updates));
     }
 
     @Override
     public boolean exists(String name) {
-        return getDatabase().getCollection(format("{users-table}")).find(
+        return db().getCollection(format("{users-table}")).find(
                 name.contains(".") ? Filters.eq("ip", name) : Filters.eq("username", name)
         ).iterator().hasNext();
     }
 
     @Override
     public boolean exists(UUID uuid) {
-        return getDatabase().getCollection(format("{users-table}"))
+        return db().getCollection(format("{users-table}"))
                 .find(Filters.eq("uuid", uuid.toString())).iterator().hasNext();
     }
 
@@ -91,7 +91,7 @@ public class MongoUserDao implements UserDao {
     public UserStorage getUserData(UUID uuid) {
         UserStorage storage = new UserStorage();
 
-        Document document = getDatabase().getCollection(format("{users-table}"))
+        Document document = db().getCollection(format("{users-table}"))
                 .find(Filters.eq("uuid", uuid.toString())).first();
         if (document != null) {
             storage.setUuid(uuid);
@@ -111,7 +111,7 @@ public class MongoUserDao implements UserDao {
     public UserStorage getUserData(String name) {
         UserStorage storage = new UserStorage();
 
-        Document document = getDatabase().getCollection(format("{users-table}"))
+        Document document = db().getCollection(format("{users-table}"))
                 .find(Filters.eq("username", name)).first();
 
         if (document != null) {
@@ -132,7 +132,7 @@ public class MongoUserDao implements UserDao {
     public List<String> getUsersOnIP(String ip) {
         List<String> users = Lists.newArrayList();
 
-        for (Document document : getDatabase().getCollection(format("{users-table}")).find(Filters.eq("ip", ip))) {
+        for (Document document : db().getCollection(format("{users-table}")).find(Filters.eq("ip", ip))) {
             users.add(document.getString("username"));
         }
 
@@ -143,7 +143,7 @@ public class MongoUserDao implements UserDao {
     public Language getLanguage(UUID uuid) {
         Language language = null;
 
-        Document document = getDatabase().getCollection(format("{users-table}")).find(Filters.eq("uuid", uuid.toString())).first();
+        Document document = db().getCollection(format("{users-table}")).find(Filters.eq("uuid", uuid.toString())).first();
 
         if (document != null) {
             language = BUCore.getApi().getLanguageManager().getLangOrDefault(document.getString("language"));
@@ -154,25 +154,25 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public void setName(UUID uuid, String name) {
-        getDatabase().getCollection(format("{users-table}"))
+        db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("username", name));
     }
 
     @Override
     public void setIP(UUID uuid, String ip) {
-        getDatabase().getCollection(format("{users-table}"))
+        db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("ip", ip));
     }
 
     @Override
     public void setLanguage(UUID uuid, Language language) {
-        getDatabase().getCollection(format("{users-table}"))
+        db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("language", language.getName()));
     }
 
     @Override
     public void setLogout(UUID uuid, Date logout) {
-        getDatabase().getCollection(format("{users-table}"))
+        db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("lastlogout", logout));
     }
 
@@ -184,7 +184,7 @@ public class MongoUserDao implements UserDao {
         return PlaceHolderAPI.formatMessage(String.format(line, replacements));
     }
 
-    private MongoDatabase getDatabase() {
+    private MongoDatabase db() {
         return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

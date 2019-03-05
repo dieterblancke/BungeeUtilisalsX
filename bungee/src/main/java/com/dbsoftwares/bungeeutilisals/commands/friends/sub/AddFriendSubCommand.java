@@ -18,8 +18,12 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
@@ -43,7 +47,7 @@ public class AddFriendSubCommand extends SubCommand {
 
     @Override
     public void onExecute(User user, String[] args) {
-        // TODO
+        // TODO: RETHINK FRIEND SYSTEM && DATABASE | FOR SURE THE FRIENDSDAO (as there isn't even a request system)
         final int friendLimit = FriendUtils.getFriendsLimit(user);
 
         if (user.getFriends().size() >= friendLimit) {
@@ -57,7 +61,16 @@ public class AddFriendSubCommand extends SubCommand {
             return;
         }
 
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        if (!dao.getUserDao().exists(args[0])) {
+            user.sendLangMessage("never-joined");
+            return;
+        }
 
+        final UserStorage storage = dao.getUserDao().getUserData(name);
+
+        dao.getFriendsDao().addFriend(user, storage.getUuid());
+        user.getFriends().add(new FriendData());
     }
 
     @Override
