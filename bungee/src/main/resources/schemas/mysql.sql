@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `{users-table}`
 (
   id         INT(11) AUTO_INCREMENT NOT NULL,
-  uuid       VARCHAR(36) UNIQUE     NOT NULL,
+  uuid       VARCHAR(48) UNIQUE     NOT NULL,
   username   VARCHAR(32)            NOT NULL,
   ip         VARCHAR(32)            NOT NULL,
   language   VARCHAR(24)            NOT NULL,
@@ -16,11 +16,9 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
 
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
-  userid   INT(11) NOT NULL,
-  settings JSON    NOT NULL, /* TODO: change this to columns ... */
-  PRIMARY KEY (userid),
-  KEY idx_friendsettings (userid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id)
+  user     VARCHAR(48) NOT NULL,
+  settings JSON        NOT NULL, /* TODO: change this to columns ... */
+  PRIMARY KEY (user)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1
@@ -28,13 +26,10 @@ CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 
 CREATE TABLE IF NOT EXISTS `{friends-table}`
 (
-  userid      INT(11)                            NOT NULL,
-  friendid    INT(11)                            NOT NULL,
-  friendsince DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (userid, friendid),
-  KEY idx_friends (userid, friendid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id),
-  FOREIGN KEY (friendid) REFERENCES `{users-table}` (id)
+  user    VARCHAR(48)                        NOT NULL,
+  friend  VARCHAR(48)                        NOT NULL,
+  created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  PRIMARY KEY (user, friend)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1
@@ -42,13 +37,10 @@ CREATE TABLE IF NOT EXISTS `{friends-table}`
 
 CREATE TABLE IF NOT EXISTS `{friendrequests-table}`
 (
-  userid       INT(11)                            NOT NULL,
-  friendid     INT(11)                            NOT NULL,
+  user         VARCHAR(48)                        NOT NULL,
+  friend       VARCHAR(48)                        NOT NULL,
   requested_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (userid, friendid),
-  KEY idx_friendreq (userid, friendid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id),
-  FOREIGN KEY (friendid) REFERENCES `{users-table}` (id)
+  PRIMARY KEY (user, friend)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1

@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -35,16 +36,15 @@ import java.util.UUID;
 public class SQLFriendsDao implements FriendsDao {
 
     private static final String ERROR_STRING = "An error occured: ";
-    private final String SELECT_ID = "(SELECT id FROM {users-table} WHERE uuid = ?)";
 
     @Override
-    public void addFriend(User user, UUID identifier) {
+    public void addFriend(User user, UUID uuid) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("INSERT INTO {friends-table}(userid, friendid) VALUES(%s, %s);", SELECT_ID, SELECT_ID)
+                     format("INSERT INTO {friends-table}(user, friend) VALUES(?, ?);")
              )) {
             pstmt.setString(1, user.getUUID().toString());
-            pstmt.setString(2, identifier.toString());
+            pstmt.setString(2, uuid.toString());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -53,13 +53,13 @@ public class SQLFriendsDao implements FriendsDao {
     }
 
     @Override
-    public void removeFriend(User user, UUID identifier) {
+    public void removeFriend(User user, UUID uuid) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("DELETE FROM {friends-table} WHERE userid = %s AND friendid = %s;", SELECT_ID, SELECT_ID)
+                     format("DELETE FROM {friends-table} WHERE userid = ? AND friendid = ?;")
              )) {
             pstmt.setString(1, user.getUUID().toString());
-            pstmt.setString(2, identifier.toString());
+            pstmt.setString(2, uuid.toString());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -73,9 +73,9 @@ public class SQLFriendsDao implements FriendsDao {
 
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT friendsince, u.username friendname, u.lastlogout lastlogout FROM {friends-table}" +
-                             " JOIN {users-table} u ON friendid = u.id" +
-                             " WHERE userid = %s;", SELECT_ID)
+                     format("SELECT created, user, friend, u.username friendname, u.lastlogout lastlogout FROM {friends-table}" +
+                             " JOIN {users-table} u ON friend = u.uuid" +
+                             " WHERE user = ?;")
              )) {
             pstmt.setString(1, uuid.toString());
 
@@ -94,6 +94,88 @@ public class SQLFriendsDao implements FriendsDao {
         }
 
         return friends;
+    }
+
+    @Override
+    public void addFriendRequest(User user, UUID uuid) {
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("INSERT INTO {friendrequests-table}(user, friend) VALUES(?, ?);")
+             )) {
+            pstmt.setString(1, user.getUUID().toString());
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+    }
+
+    @Override
+    public void removeFriendRequest(User user, UUID uuid) {
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("DELETE FROM {friendrequests-table} WHERE user = ? AND friend = ?;")
+             )) {
+            pstmt.setString(1, user.getUUID().toString());
+            pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+    }
+
+    @Override
+    public List<FriendRequest> getIncomingFriendRequests(UUID uuid) {
+        final List<FriendRequest> friendRequests = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT * FROM {friendrequests-table} WHERE friend = ?;")
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    friendRequests.add(new FriendRequest(
+                            uuid,
+                            UUID.fromString(rs.getString("friend")),
+                            rs.getTimestamp("requested_at")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return friendRequests;
+    }
+
+    @Override
+    public List<FriendRequest> getOutgoingFriendRequests(UUID uuid) {
+        final List<FriendRequest> friendRequests = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT * FROM {friendrequests-table} WHERE user = ?;")
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    friendRequests.add(new FriendRequest(
+                            uuid,
+                            UUID.fromString(rs.getString("friend")),
+                            rs.getTimestamp("requested_at")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return friendRequests;
     }
 
     private String format(String line) {
