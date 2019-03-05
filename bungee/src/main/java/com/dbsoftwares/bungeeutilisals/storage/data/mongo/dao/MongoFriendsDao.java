@@ -136,6 +136,26 @@ public class MongoFriendsDao implements FriendsDao {
         return friendRequests;
     }
 
+    @Override
+    public boolean hasIncomingFriendRequest(User user, UUID uuid) {
+        final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
+
+        return coll.find(Filters.and(
+                Filters.eq("user", uuid.toString()),
+                Filters.eq("friend", user.getUUID())
+        )).limit(1).iterator().hasNext();
+    }
+
+    @Override
+    public boolean hasOutgoingFriendRequest(User user, UUID uuid) {
+        final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
+
+        return coll.find(Filters.and(
+                Filters.eq("user", user.getUUID()),
+                Filters.eq("friend", uuid.toString())
+        )).limit(1).iterator().hasNext();
+    }
+
     private String format(String line) {
         return PlaceHolderAPI.formatMessage(line);
     }

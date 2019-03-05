@@ -20,7 +20,6 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -28,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public class AddFriendSubCommand extends SubCommand {
 
@@ -47,7 +47,6 @@ public class AddFriendSubCommand extends SubCommand {
 
     @Override
     public void onExecute(User user, String[] args) {
-        // TODO: RETHINK FRIEND SYSTEM && DATABASE | FOR SURE THE FRIENDSDAO (as there isn't even a request system)
         final int friendLimit = FriendUtils.getFriendsLimit(user);
 
         if (user.getFriends().size() >= friendLimit) {
@@ -55,22 +54,45 @@ public class AddFriendSubCommand extends SubCommand {
             return;
         }
         final String name = args[0];
+        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+
+        if (user.getName().equalsIgnoreCase(name)) {
+            user.sendLangMessage("friends.add.selfadd");
+            return;
+        }
 
         if (user.getFriends().stream().anyMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
-            user.sendLangMessage("friends.add.alreadyfriend", "{friend}", name);
+            user.sendLangMessage("friends.add.already-friend", "{friend}", name);
             return;
         }
 
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
+        final UserStorage storage;
+
+        if (optionalTarget.isPresent()) {
+            storage = optionalTarget.get().getStorage();
+        } else {
+            if (!dao.getUserDao().exists(args[0])) {
+                user.sendLangMessage("never-joined");
+                return;
+            }
+
+            storage = dao.getUserDao().getUserData(name);
+        }
+
+        if (dao.getFriendsDao().hasOutgoingFriendRequest(user, storage.getUuid())) {
+            user.sendLangMessage("friends.add.already-requested", "{name}", name);
+            return;
+        }
+        if (dao.getFriendsDao().hasIncomingFriendRequest(user, storage.getUuid())) {
+            user.sendLangMessage("friends.add.use-add-instead", "{name}", name);
             return;
         }
 
-        final UserStorage storage = dao.getUserDao().getUserData(name);
+        dao.getFriendsDao().addFriendRequest(user, storage.getUuid());
+        user.sendLangMessage("friends.add.request-sent", "{user}", name);
 
-        dao.getFriendsDao().addFriend(user, storage.getUuid());
-        user.getFriends().add(new FriendData());
+        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.request-received"));
     }
 
     @Override

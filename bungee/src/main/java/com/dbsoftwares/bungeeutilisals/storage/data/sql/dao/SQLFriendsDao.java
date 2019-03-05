@@ -178,6 +178,52 @@ public class SQLFriendsDao implements FriendsDao {
         return friendRequests;
     }
 
+    @Override
+    public boolean hasIncomingFriendRequest(User user, UUID uuid) {
+        boolean found = false;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT EXISTS(SELECT * FROM {friendrequests-table} WHERE user = ? AND friend = ?);")
+             )) {
+            pstmt.setString(1, uuid.toString());
+            pstmt.setString(2, user.getUUID().toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    found = rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return found;
+    }
+
+    @Override
+    public boolean hasOutgoingFriendRequest(User user, UUID uuid) {
+        boolean found = false;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT EXISTS(SELECT * FROM {friendrequests-table} WHERE user = ? AND friend = ?);")
+             )) {
+            pstmt.setString(1, user.getUUID().toString());
+            pstmt.setString(2, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    found = rs.getBoolean(1);
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return found;
+    }
+
     private String format(String line) {
         return PlaceHolderAPI.formatMessage(line);
     }

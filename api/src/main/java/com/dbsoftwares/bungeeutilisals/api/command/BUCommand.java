@@ -97,16 +97,20 @@ public abstract class BUCommand extends Command implements TabExecutor {
 
     @Override
     public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Optional<User> optional = BUCore.getApi().getUser(sender.getName());
-        if (sender instanceof ProxiedPlayer && optional.isPresent()) {
-            List<String> tabCompletion = onTabComplete(optional.get(), args);
+        if (!(sender instanceof ProxiedPlayer)) {
+            return ImmutableList.of();
+        }
+
+        final Optional<User> user = BUCore.getApi().getUser(sender.getName());
+        if (user.isPresent()) {
+            final List<String> tabCompletion = onTabComplete(user.get(), args);
 
             if (tabCompletion == null) {
                 if (args.length == 0) {
                     return BUCore.getApi().getPlayerUtils().getPlayers();
                 } else {
-                    String lastWord = args[args.length - 1];
-                    List<String> list = Lists.newArrayList();
+                    final String lastWord = args[args.length - 1];
+                    final List<String> list = Lists.newArrayList();
 
                     for (String p : BUCore.getApi().getPlayerUtils().getPlayers()) {
                         if (p.toLowerCase().startsWith(lastWord.toLowerCase())) {

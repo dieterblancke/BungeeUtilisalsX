@@ -100,12 +100,40 @@ general-commands:
     format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
 
 friends:
+  request-received:
+    text:
+      - text: '&eYou have received a friend request from &b{name}&e!\n'
+      - text: '&eType &b/friends accept {name}'
+      - text: '&e or &bclick here'
+        hover:
+          - '&eClick here to accept &b{name}''s &efriend request!'
+        click:
+          # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+          # RUN_COMMAND will only work for BungeeCord commands.
+          type: 'RUN_COMMAND'
+          action: '/friend accept {name}'
+      - text: '&e to accept this friend request.'
   help:
     header: '&aFriends Commands Help:'
     format: '&b- &e%usage%'
   add:
+    selfadd: '&eYou cannot add yourself as a friend!'
     limited: '&eYou cannot have more then &b{limit} &efriends!'
-    alreadyfriend: '&b{friend} &eis already in your friends list!'
+    already-friend: '&b{friend} &eis already in your friends list!'
+    already-requested: '&eThere is already a pending friend request to &b{name}&e!'
+    use-add-instead:
+      text:
+        - text: '&b{name} &ealready sent you a friend request! Please use '
+        - text: '&b/friend accept {name} '
+          hover:
+            - '&eClick here to accept &b{name}''s &efriend request!'
+          click:
+            # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+            # RUN_COMMAND will only work for BungeeCord commands.
+            type: 'RUN_COMMAND'
+            action: '/friend accept {name}'
+        - text: '&einstead!'
+    request-sent: '&eA friend request has been sent to &b{user}&e!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

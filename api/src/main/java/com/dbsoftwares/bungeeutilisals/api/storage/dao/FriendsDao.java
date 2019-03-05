@@ -40,4 +40,8 @@ public interface FriendsDao {
     List<FriendRequest> getIncomingFriendRequests(UUID uuid);
 
     List<FriendRequest> getOutgoingFriendRequests(UUID uuid);
+
+    boolean hasIncomingFriendRequest(User user, UUID uuid);
+
+    boolean hasOutgoingFriendRequest(User user, UUID uuid);
 }

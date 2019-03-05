@@ -71,7 +71,7 @@ public abstract class SubCommand {
     }
 
     public boolean execute(User user, String[] args) {
-        ConditionResult result = checkConditions(user, args);
+        final ConditionResult result = checkConditions(user, args);
 
         if (result == ConditionResult.FAILURE_WRONG_ARGS_LENGTH) {
             user.sendLangMessage("subcommands.usage", "{usage}", getUsage());
