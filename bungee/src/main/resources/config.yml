@@ -18,6 +18,17 @@ updater:
   # Permission to get notified when an update has been found.
   permission: 'bungeeutilisals.updater.notify'
 
+# See: https://api.minetools.eu/uuid/
+# This can be changed to any API you like, as long as the name / uuid is an URL parameter.
+# The return type also MUST BE JSON + the json response MUST contain:
+# - The "name" key for uuid to name convertion
+# - The "id" key for name to uuid convertion (or uuid key if id key was not found).
+#
+# This should not be getting used often, at the time of writing (06/03/2019), it is only being used for the Importer tool.
+urls:
+  uuid-to-name: 'https://api.minetools.eu/uuid/'
+  name-to-uuid: 'https://api.minetools.eu/uuid/'
+
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, MONGODB | MySQL recommended
   # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.
