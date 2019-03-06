@@ -36,13 +36,8 @@ public class AddonClassLoader extends URLClassLoader {
     }
 
     public AddonClassLoader(URL[] urls) {
-        super(urls, BUCore.getApi().getPlugin().getClass().getClassLoader());
+        super(urls, BUCore.class.getClassLoader());
         classLoaders.add(this);
-    }
-
-    @Override
-    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        return loadClass(name, resolve, true);
     }
 
     @Override
@@ -50,19 +45,23 @@ public class AddonClassLoader extends URLClassLoader {
         return findResource(name);
     }
 
+    @Override
+    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
+        return loadClass(name, resolve, true);
+    }
+
     private Class<?> loadClass(String name, boolean resolve, boolean checkOther) throws ClassNotFoundException {
         try {
             return super.loadClass(name, resolve);
         } catch (ClassNotFoundException ignored) {
-            // ignored
-        }
-        if (checkOther) {
-            for (AddonClassLoader loader : classLoaders) {
-                if (loader != this) {
-                    try {
-                        return loader.loadClass(name, resolve, false);
-                    } catch (ClassNotFoundException ignored) {
-                        // ignored
+            if (checkOther) {
+                for (AddonClassLoader loader : classLoaders) {
+                    if (loader != this) {
+                        try {
+                            return loader.loadClass(name, resolve, false);
+                        } catch (ClassNotFoundException ignore) {
+                            // ignored
+                        }
                     }
                 }
             }

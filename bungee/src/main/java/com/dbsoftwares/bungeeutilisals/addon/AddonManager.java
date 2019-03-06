@@ -352,7 +352,8 @@ public class AddonManager implements IAddonManager {
 
         // do actual loading
         if (status) {
-            try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
+            try {
+                final AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()});
                 final Class<?> main = loader.loadClass(description.getMain());
                 final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
 
