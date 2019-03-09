@@ -30,6 +30,9 @@ subcommands:
   deny:
     aliases: ''
     permission: bungeeutilisals.friends.deny
+  removerequest:
+    aliases: 'rr'
+    permission: bungeeutilisals.friends.removerequest
   list:
     aliases: 'fl'
     permission: bungeeutilisals.friends.list

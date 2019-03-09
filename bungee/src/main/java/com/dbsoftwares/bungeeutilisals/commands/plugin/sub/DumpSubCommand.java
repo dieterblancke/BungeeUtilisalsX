@@ -27,7 +27,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisals.dump.PluginSchedulerInfo;
-import com.dbsoftwares.bungeeutilisals.dump.SystemInfo;
 import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
@@ -45,6 +44,7 @@ import net.md_5.bungee.api.plugin.PluginDescription;
 import net.md_5.bungee.api.scheduler.ScheduledTask;
 import net.md_5.bungee.api.scheduler.TaskScheduler;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
@@ -54,6 +54,7 @@ import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -120,25 +121,32 @@ public class DumpSubCommand extends SubCommand {
 
     private Dump getDump() {
         final OperatingSystemMXBean operatingSystemMXBean = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
-        final long totalMemory = operatingSystemMXBean.getTotalPhysicalMemorySize() / 1024 / 1024;
-        final long freeMemory = operatingSystemMXBean.getFreePhysicalMemorySize() / 1024 / 1024;
+        final long totalMemory = bytesToMegaBytes(operatingSystemMXBean.getTotalPhysicalMemorySize());
+        final long freeMemory = bytesToMegaBytes(operatingSystemMXBean.getFreePhysicalMemorySize());
         final long usedMemory = totalMemory - freeMemory;
+        final File root = new File("/");
+        final File bungeeRoot = Paths.get(".").toFile();
 
-        final SystemInfo systemInfo = new SystemInfo(
-                System.getProperty("java.version"),
-                System.getProperty("os.name"),
-                ProxyServer.getInstance().getName(),
-                ProxyServer.getInstance().getVersion(),
-                TPSRunnable.getTPS(),
-                (Runtime.getRuntime().totalMemory() / 1024 / 1024) + " MB",
-                ((Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1024 / 1024) + " MB",
-                (Runtime.getRuntime().freeMemory() / 1024 / 1024) + " MB",
-                new SimpleDateFormat("kk:mm dd-MM-yyyy").format(new Date(ManagementFactory.getRuntimeMXBean().getStartTime())),
-                totalMemory + " MB",
-                usedMemory + " MB",
-                freeMemory + " MB",
-                ProxyServer.getInstance().getOnlineCount()
-        );
+        final Map<String, Object> systemInfo = Maps.newLinkedHashMap();
+        systemInfo.put("javaVersion", System.getProperty("java.version"));
+        systemInfo.put("operatingSystem", System.getProperty("os.name"));
+        systemInfo.put("arch", ManagementFactory.getOperatingSystemMXBean().getArch());
+        systemInfo.put("systemMaxMemory", totalMemory + " MB");
+        systemInfo.put("systemUsedMemory", usedMemory + " MB");
+        systemInfo.put("systemFreeMemory", freeMemory + " MB");
+        systemInfo.put("amountOfSystemCores", ManagementFactory.getOperatingSystemMXBean().getAvailableProcessors());
+        systemInfo.put("averageLoad", ManagementFactory.getOperatingSystemMXBean().getSystemLoadAverage());
+        systemInfo.put("systemStorage", bytesToGigaBytes(root.getFreeSpace()) + " GB / " + bytesToGigaBytes(root.getTotalSpace()) + " GB");
+        systemInfo.put("____________________", "____________________");
+        systemInfo.put("bungeeVersion", ProxyServer.getInstance().getName() + " " + ProxyServer.getInstance().getVersion());
+        systemInfo.put("tps", TPSRunnable.getTPS());
+        systemInfo.put("startup", new SimpleDateFormat("kk:mm dd-MM-yyyy").format(new Date(ManagementFactory.getRuntimeMXBean().getStartTime())));
+        systemInfo.put("maxMemory", bytesToMegaBytes(Runtime.getRuntime().totalMemory()) + " MB");
+        systemInfo.put("usedMemory", bytesToMegaBytes(Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) + " MB");
+        systemInfo.put("freeMemory", bytesToMegaBytes(Runtime.getRuntime().freeMemory()) + " MB");
+        systemInfo.put("amountOfAvailableCores", Runtime.getRuntime().availableProcessors());
+        systemInfo.put("onlinePlayers", BUCore.getApi().getPlayerUtils().getTotalCount());
+        systemInfo.put("proxyStorage", bytesToGigaBytes(bungeeRoot.getFreeSpace()) + " GB / " + bytesToGigaBytes(bungeeRoot.getTotalSpace()) + " GB");
 
         final List<PluginInfo> plugins = Lists.newArrayList();
         for (final Plugin plugin : ProxyServer.getInstance().getPluginManager().getPlugins()) {
@@ -257,5 +265,13 @@ public class DumpSubCommand extends SubCommand {
     @Override
     public List<String> getCompletions(User user, String[] strings) {
         return ImmutableList.of();
+    }
+
+    private long bytesToMegaBytes(long bytes) {
+        return bytes / 1024 / 1024;
+    }
+
+    private long bytesToGigaBytes(long bytes) {
+        return bytesToMegaBytes(bytes) / 1024;
     }
 }

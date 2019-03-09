@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -41,10 +40,10 @@ import java.util.UUID;
 public class MongoFriendsDao implements FriendsDao {
 
     @Override
-    public void addFriend(User user, UUID uuid) {
+    public void addFriend(UUID user, UUID uuid) {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put("user", user.getUUID());
+        data.put("user", user);
         data.put("friend", uuid);
         data.put("created", new Date(System.currentTimeMillis()));
 
@@ -52,12 +51,12 @@ public class MongoFriendsDao implements FriendsDao {
     }
 
     @Override
-    public void removeFriend(User user, UUID uuid) {
+    public void removeFriend(UUID user, UUID uuid) {
         final MongoCollection<Document> coll = db().getCollection(format("{friends-table}"));
 
         coll.deleteOne(
                 Filters.and(
-                        Filters.eq("user", user.getUUID()),
+                        Filters.eq("user", user),
                         Filters.eq("friend", uuid)
                 )
         );
@@ -84,10 +83,17 @@ public class MongoFriendsDao implements FriendsDao {
     }
 
     @Override
-    public void addFriendRequest(User user, UUID uuid) {
+    public long getAmountOfFriends(UUID uuid) {
+        final MongoCollection<Document> coll = db().getCollection(format("{friends-table}"));
+
+        return coll.countDocuments(Filters.eq("user", uuid));
+    }
+
+    @Override
+    public void addFriendRequest(UUID user, UUID uuid) {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put("user", user.getUUID());
+        data.put("user", user);
         data.put("friend", uuid);
         data.put("requested_at", new Date(System.currentTimeMillis()));
 
@@ -95,13 +101,13 @@ public class MongoFriendsDao implements FriendsDao {
     }
 
     @Override
-    public void removeFriendRequest(User user, UUID uuid) {
+    public void removeFriendRequest(UUID user, UUID uuid) {
         final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
 
         coll.deleteOne(
                 Filters.and(
-                        Filters.eq("user", user.getUUID()),
-                        Filters.eq("friend", uuid)
+                        Filters.eq("user", uuid),
+                        Filters.eq("friend", user)
                 )
         );
     }
@@ -137,21 +143,21 @@ public class MongoFriendsDao implements FriendsDao {
     }
 
     @Override
-    public boolean hasIncomingFriendRequest(User user, UUID uuid) {
+    public boolean hasIncomingFriendRequest(UUID user, UUID uuid) {
         final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
 
         return coll.find(Filters.and(
                 Filters.eq("user", uuid.toString()),
-                Filters.eq("friend", user.getUUID())
+                Filters.eq("friend", user)
         )).limit(1).iterator().hasNext();
     }
 
     @Override
-    public boolean hasOutgoingFriendRequest(User user, UUID uuid) {
+    public boolean hasOutgoingFriendRequest(UUID user, UUID uuid) {
         final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
 
         return coll.find(Filters.and(
-                Filters.eq("user", user.getUUID()),
+                Filters.eq("user", user),
                 Filters.eq("friend", uuid.toString())
         )).limit(1).iterator().hasNext();
     }

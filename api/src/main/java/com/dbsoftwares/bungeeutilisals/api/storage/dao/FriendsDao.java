@@ -20,28 +20,29 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface FriendsDao {
 
-    void addFriend(User user, UUID uuid);
+    void addFriend(UUID user, UUID uuid);
 
-    void removeFriend(User user, UUID uuid);
+    void removeFriend(UUID user, UUID uuid);
 
     List<FriendData> getFriends(UUID uuid);
 
-    void addFriendRequest(User user, UUID uuid);
+    long getAmountOfFriends(UUID uuid);
 
-    void removeFriendRequest(User user, UUID uuid);
+    void addFriendRequest(UUID user, UUID uuid);
+
+    void removeFriendRequest(UUID user, UUID uuid);
 
     List<FriendRequest> getIncomingFriendRequests(UUID uuid);
 
     List<FriendRequest> getOutgoingFriendRequests(UUID uuid);
 
-    boolean hasIncomingFriendRequest(User user, UUID uuid);
+    boolean hasIncomingFriendRequest(UUID user, UUID uuid);
 
-    boolean hasOutgoingFriendRequest(User user, UUID uuid);
+    boolean hasOutgoingFriendRequest(UUID user, UUID uuid);
 }

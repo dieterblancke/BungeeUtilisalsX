@@ -278,7 +278,7 @@ public class BUser implements User {
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID getUuid() {
         return uuid;
     }
 

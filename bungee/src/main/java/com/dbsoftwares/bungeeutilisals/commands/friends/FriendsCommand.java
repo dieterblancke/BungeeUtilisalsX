@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.friends.sub.AddFriendSubCommand;
+import com.dbsoftwares.bungeeutilisals.commands.friends.sub.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +36,11 @@ public class FriendsCommand extends BUCommand {
                 FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.permission")
         );
 
-        subCommands.add(new AddFriendSubCommand());
+        subCommands.add(new FriendAddSubCommand());
+        subCommands.add(new FriendAcceptSubCommand());
+        subCommands.add(new FriendDenySubCommand());
+        subCommands.add(new FriendRemoveRequestSubCommand());
+        subCommands.add(new FriendRemoveSubCommand());
     }
 
     @Override

@@ -186,7 +186,7 @@ public interface User extends ExperimentalUser {
     /**
      * @return The user's uuid.
      */
-    UUID getUUID();
+    UUID getUuid();
 
     /**
      * Sends the standard no permission message to the User.

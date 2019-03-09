@@ -29,7 +29,7 @@ import java.util.Map;
 public class Dump {
 
     private String plugin;
-    private SystemInfo systemInfo;
+    private Map<String, Object> systemInfo;
     private List<PluginInfo> plugins;
     private List<PluginSchedulerInfo> tasks;
     private Map<String, String> scripts;

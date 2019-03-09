@@ -121,7 +121,7 @@ friends:
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
     already-requested: '&eThere is already a pending friend request to &b{name}&e!'
-    use-add-instead:
+    use-accept-instead:
       text:
         - text: '&b{name} &ealready sent you a friend request! Please use '
         - text: '&b/friend accept {name} '
@@ -134,6 +134,29 @@ friends:
             action: '/friend accept {name}'
         - text: '&einstead!'
     request-sent: '&eA friend request has been sent to &b{user}&e!'
+  accept:
+    limited: '&eYou cannot have more then &b{limit} &efriends!'
+    already-friend: '&b{friend} &eis already in your friends list!'
+    no-request: '&eCould not find a friend request from &b{user}&e!'
+    accepted: '&eYou are now friends with &b{user}&e!'
+    request-accepted: '&b{user} &ehas accepted your friend request!'
+  deny:
+    no-request: '&eCould not find a friend request from &b{user}&e!'
+    denied: '&eYou have denied the friend request from &b{user}&e!'
+    request-denied: '&b{user} &ehas denied your friend request!'
+  removerequest:
+    no-request: '&eYou have no outgoing friend request towards &b{user}&e!'
+    removed: '&eYou have removed the friend request towards &b{user}&e!'
+    request-removed: '&b{user} &eremoved his friend request towards you!'
+  remove:
+    no-friend: '&b{user} &eis not in your friends list!'
+    removed: '&eYou have removed &b{user} &efrom your friends list!'
+    friend-removed: '&b{user} &ehas removed you from his friends list!'
+  list:
+    no-friends: '&eIt seems that you do not have any friends at the moment!'
+    head: '&eYou currently have a total of &b{friendAmount} &efriends!'
+    foot: '' # TODO
+    format: '' # TODO
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

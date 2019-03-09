@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.Arrays;
@@ -30,6 +31,7 @@ public abstract class SubCommand {
     private String name;
     private int minimumArgs;
     private int maximumArgs;
+    private List<String> aliases;
 
     public SubCommand(String name) {
         this(name, 0, 0);
@@ -40,9 +42,14 @@ public abstract class SubCommand {
     }
 
     public SubCommand(String name, int minimumArgs, int maximumArgs) {
+        this(name, minimumArgs, maximumArgs, Lists.newArrayList());
+    }
+
+    public SubCommand(String name, int minimumArgs, int maximumArgs, List<String> aliases) {
         this.name = name;
         this.minimumArgs = minimumArgs;
         this.maximumArgs = maximumArgs;
+        this.aliases = aliases;
     }
 
     public abstract String getUsage();

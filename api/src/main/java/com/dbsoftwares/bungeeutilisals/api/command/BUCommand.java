@@ -71,7 +71,6 @@ public abstract class BUCommand extends Command implements TabExecutor {
                 && !sender.hasPermission("*")) {
             BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
             return;
-
         }
 
         if (sender instanceof ProxiedPlayer) {
@@ -80,18 +79,26 @@ public abstract class BUCommand extends Command implements TabExecutor {
             if (optional.isPresent()) {
                 User user = optional.get();
 
-                try {
-                    BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(user, args));
-                } catch (Exception e) {
-                    BUCore.getLogger().error("An error occured: ", e);
-                }
+                BUCore.getApi().getSimpleExecutor().asyncExecute(() -> {
+                    try {
+                        onExecute(user, args);
+                    } catch (Exception e) {
+                        BUCore.getLogger().error("An error occured: ", e);
+                    }
+                });
                 return;
             }
         }
         try {
-            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
+            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> {
+                try {
+                    onExecute(BUCore.getApi().getConsole(), args);
+                } catch (Exception e) {
+                    BUCore.getLogger().error("An error occured: ", e);
+                }
+            });
         } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            e.printStackTrace();
         }
     }
 
@@ -136,7 +143,9 @@ public abstract class BUCommand extends Command implements TabExecutor {
     }
 
     protected SubCommand findSubCommand(String name) {
-        return subCommands.stream().filter(subCommand -> subCommand.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+        return subCommands.stream().filter(
+                subCommand -> subCommand.getName().equalsIgnoreCase(name) || subCommand.getAliases().contains(name)
+        ).findFirst().orElse(null);
     }
 
     protected List<String> getSubcommandCompletions(User user, String[] args) {

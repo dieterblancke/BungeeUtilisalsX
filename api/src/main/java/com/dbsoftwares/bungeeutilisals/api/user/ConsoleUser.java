@@ -175,7 +175,7 @@ public class ConsoleUser implements User {
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID getUuid() {
         return UUID.randomUUID();
     }
 

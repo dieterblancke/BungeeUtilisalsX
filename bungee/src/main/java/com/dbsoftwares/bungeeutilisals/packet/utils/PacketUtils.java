@@ -31,7 +31,6 @@ public class PacketUtils {
     public static boolean registerPacket(Object direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
         try {
             Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
-
             Object map = Array.newInstance(protocolMap, protocolMappings.length);
 
             for (int i = 0; i < protocolMappings.length; i++) {
