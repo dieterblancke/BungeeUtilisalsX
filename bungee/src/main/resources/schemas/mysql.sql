@@ -29,7 +29,8 @@ CREATE TABLE IF NOT EXISTS `{friends-table}`
   user    VARCHAR(48)                        NOT NULL,
   friend  VARCHAR(48)                        NOT NULL,
   created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (user, friend)
+  PRIMARY KEY (user, friend),
+  KEY idx_friends (user, friend)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1
@@ -40,7 +41,8 @@ CREATE TABLE IF NOT EXISTS `{friendrequests-table}`
   user         VARCHAR(48)                        NOT NULL,
   friend       VARCHAR(48)                        NOT NULL,
   requested_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (user, friend)
+  PRIMARY KEY (user, friend),
+  KEY idx_friendreq (user, friend)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1

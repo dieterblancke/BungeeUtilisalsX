@@ -12,40 +12,37 @@ CREATE INDEX IF NOT EXISTS idx_users
   ON `{users-table}` (uuid, username, ip);
 
 
-CREATE TABLE IF NOT EXISTS `{friends-table}` (
-  userid      INTEGER NOT NULL,
-  friendid    INTEGER NOT NULL,
-  friendsince DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (userid, friendid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id),
-  FOREIGN KEY (friendid) REFERENCES `{users-table}` (id)
+CREATE TABLE IF NOT EXISTS `{friends-table}`
+(
+  user    VARCHAR(48)                        NOT NULL,
+  friend  VARCHAR(48)                        NOT NULL,
+  created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  PRIMARY KEY (user, friend)
 );
 
 CREATE INDEX IF NOT EXISTS idx_friends
-  ON `{friends-table}` (userid, friendid);
+  ON `{friends-table}` (user, friend);
 
 
-CREATE TABLE IF NOT EXISTS `{friendrequests-table}` (
-  userid       INTEGER NOT NULL,
-  friendid     INTEGER NOT NULL,
+CREATE TABLE IF NOT EXISTS `{friendrequests-table}`
+(
+  user         VARCHAR(48)                        NOT NULL,
+  friend       VARCHAR(48)                        NOT NULL,
   requested_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (userid, friendid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id),
-  FOREIGN KEY (friendid) REFERENCES `{users-table}` (id)
+  PRIMARY KEY (user, friend)
 );
 
 CREATE INDEX IF NOT EXISTS idx_friendreq
-  ON `{friends-table}` (userid, friendid);
+  ON `{friends-table}` (user, friend);
 
-CREATE TABLE IF NOT EXISTS `{friendsettings-table}` (
-  userid   INT(11) NOT NULL,
-  settings TEXT    NOT NULL,
-  PRIMARY KEY (userid),
-  FOREIGN KEY (userid) REFERENCES `{users-table}` (id)
+
+CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
+(
+  user     VARCHAR(48) NOT NULL,
+  settings JSON        NOT NULL, /* TODO: change this to columns ... */
+  PRIMARY KEY (user)
 );
 
-CREATE INDEX IF NOT EXISTS idx_friendsettings
-  ON `{friendsettings-table}` (userid);
 
 CREATE TABLE IF NOT EXISTS `{bans-table}`
 (

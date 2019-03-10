@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -38,7 +39,10 @@ import java.util.UUID;
 public class SQLUserDao implements UserDao {
 
     private static final String INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE name = ?;";
+            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
+
+    private static final String SQLITE_INSERT_USER = "INSERT INTO {users-table} " +
+            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;";
 
     private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
     private static final String UPDATE_USER = "UPDATE {users-table} " +
@@ -57,8 +61,12 @@ public class SQLUserDao implements UserDao {
 
     @Override
     public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
+        final String statement =
+                BungeeUtilisals.getInstance().getDatabaseManagement().getType().equals(AbstractStorageManager.StorageType.SQLITE)
+                ? SQLITE_INSERT_USER : INSERT_USER;
+
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(format(INSERT_USER))) {
+             PreparedStatement pstmt = connection.prepareStatement(format(statement))) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, username);
             pstmt.setString(3, ip);

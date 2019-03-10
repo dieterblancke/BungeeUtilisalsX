@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS "{users-table}"
 (
   "id"         SERIAL PRIMARY KEY NOT NULL,
-  "uuid"       VARCHAR(36) UNIQUE NOT NULL,
+  "uuid"       VARCHAR(48) UNIQUE NOT NULL,
   "username"   VARCHAR(32)        NOT NULL,
   "ip"         VARCHAR(32)        NOT NULL,
   "language"   VARCHAR(24)        NOT NULL,
@@ -10,42 +10,38 @@ CREATE TABLE IF NOT EXISTS "{users-table}"
 );
 
 CREATE INDEX IF NOT EXISTS idx_users
-  ON "{users-table}" ("uuid", "username", "ip");
+ON "{users-table}" ("uuid", "username", "ip");
 
 
 CREATE TABLE IF NOT EXISTS "{friends-table}"
 (
-  "userid"      INTEGER REFERENCES "users-table}" (id)  NOT NULL,
-  "friendid"    INTEGER REFERENCES "{users-table}" (id) NOT NULL,
-  "friendsince" TIMESTAMP                               NOT NULL,
-  PRIMARY KEY (userid, friendid)
+  "user"        VARCHAR(48) NOT NULL,
+  "friend"      VARCHAR(48) NOT NULL,
+  "friendsince" TIMESTAMP   NOT NULL,
+  PRIMARY KEY (user, friend)
 );
-
 CREATE INDEX IF NOT EXISTS idx_friends
-  ON "{friends-table}" ("userid", "friendid");
+ON "{friends-table}" ("user", "friend");
 
 
 CREATE TABLE IF NOT EXISTS "{friendrequests-table}"
 (
-  "userid"      INTEGER REFERENCES "{users-table}" (id) NOT NULL,
-  "friendid"    INTEGER REFERENCES "{users-table}" (id) NOT NULL,
-  "friendsince" TIMESTAMP                               NOT NULL,
-  PRIMARY KEY (userid, friendid)
+  "userid"      VARCHAR(48) NOT NULL,
+  "friendid"    VARCHAR(48) NOT NULL,
+  "friendsince" TIMESTAMP   NOT NULL,
+  PRIMARY KEY (user, friend)
 );
 
 CREATE INDEX IF NOT EXISTS idx_friendreq
-  ON "{friendrequests-table}" ("userid", "friendid");
+ON "{friendrequests-table}" ("user", "friend");
 
 
 CREATE TABLE IF NOT EXISTS "{friendsettings-table}"
 (
-  userid   INTEGER REFERENCES "{friendsettings-table}" (id) NOT NULL,
-  settings JSON                                             NOT NULL,
+  userid   VARCHAR(48) NOT NULL,
+  settings JSON        NOT NULL,
   PRIMARY KEY (userid)
 );
-
-CREATE INDEX IF NOT EXISTS idx_friendreq
-  ON "{friendsettings-table}" ("userid", "friendid");
 
 
 CREATE TABLE IF NOT EXISTS `{bans-table}`
@@ -66,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `{bans-table}`
 );
 
 CREATE INDEX IF NOT EXISTS idx_bans
-  ON "{bans-table}" ("id", "uuid", "user", "ip", "active", "server");
+ON "{bans-table}" ("id", "uuid", "user", "ip", "active", "server");
 
 
 CREATE TABLE IF NOT EXISTS `{mutes-table}`
@@ -87,7 +83,7 @@ CREATE TABLE IF NOT EXISTS `{mutes-table}`
 );
 
 CREATE INDEX IF NOT EXISTS idx_mutes
-  ON "{mutes-table}" ("id", "uuid", "user", "ip", "active", "server");
+ON "{mutes-table}" ("id", "uuid", "user", "ip", "active", "server");
 
 
 CREATE TABLE IF NOT EXISTS "{kicks-table}"
@@ -103,7 +99,7 @@ CREATE TABLE IF NOT EXISTS "{kicks-table}"
 );
 
 CREATE INDEX IF NOT EXISTS idx_kicks
-  ON "{kicks-table}" ("id", "uuid", "user", "ip");
+ON "{kicks-table}" ("id", "uuid", "user", "ip");
 
 
 CREATE TABLE IF NOT EXISTS "{warns-table}"
@@ -119,4 +115,4 @@ CREATE TABLE IF NOT EXISTS "{warns-table}"
 );
 
 CREATE INDEX IF NOT EXISTS idx_warns
-  ON "{warns-table}" ("id", "uuid", "user", "ip");
+ON "{warns-table}" ("id", "uuid", "user", "ip");

@@ -37,6 +37,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
@@ -66,14 +67,14 @@ public class BUser implements User {
     private Location location;
 
     @Getter
-    private List<FriendData> friends;
+    private List<FriendData> friends = Lists.newArrayList();
 
     @Getter
     private boolean inStaffChat;
 
     @Override
     public void load(ProxiedPlayer parent) {
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
+        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         this.parent = parent;
         this.name = parent.getName();
