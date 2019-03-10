@@ -15,9 +15,9 @@ ON "{users-table}" ("uuid", "username", "ip");
 
 CREATE TABLE IF NOT EXISTS "{friends-table}"
 (
-  "user"        VARCHAR(48) NOT NULL,
-  "friend"      VARCHAR(48) NOT NULL,
-  "friendsince" TIMESTAMP   NOT NULL,
+  "user"    VARCHAR(48) NOT NULL,
+  "friend"  VARCHAR(48) NOT NULL,
+  "created" TIMESTAMP   NOT NULL,
   PRIMARY KEY (user, friend)
 );
 CREATE INDEX IF NOT EXISTS idx_friends
@@ -26,9 +26,9 @@ ON "{friends-table}" ("user", "friend");
 
 CREATE TABLE IF NOT EXISTS "{friendrequests-table}"
 (
-  "userid"      VARCHAR(48) NOT NULL,
-  "friendid"    VARCHAR(48) NOT NULL,
-  "friendsince" TIMESTAMP   NOT NULL,
+  "user"    VARCHAR(48) NOT NULL,
+  "friend"  VARCHAR(48) NOT NULL,
+  "created" TIMESTAMP   NOT NULL,
   PRIMARY KEY (user, friend)
 );
 
@@ -38,9 +38,9 @@ ON "{friendrequests-table}" ("user", "friend");
 
 CREATE TABLE IF NOT EXISTS "{friendsettings-table}"
 (
-  userid   VARCHAR(48) NOT NULL,
+  user     VARCHAR(48) NOT NULL,
   settings JSON        NOT NULL,
-  PRIMARY KEY (userid)
+  PRIMARY KEY (user)
 );
 
 

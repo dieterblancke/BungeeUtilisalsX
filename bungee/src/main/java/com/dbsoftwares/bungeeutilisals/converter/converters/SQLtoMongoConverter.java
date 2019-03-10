@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.converter.Converter;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
@@ -110,8 +111,8 @@ public class SQLtoMongoConverter extends Converter {
                 rs.getString("username"),
                 rs.getString("ip"),
                 BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")),
-                rs.getDate("firstlogin"),
-                rs.getDate("lastlogout")
+                Dao.formatStringToDate(rs.getString("firstlogin")),
+                Dao.formatStringToDate(rs.getString("lastlogout"))
         );
     }
 

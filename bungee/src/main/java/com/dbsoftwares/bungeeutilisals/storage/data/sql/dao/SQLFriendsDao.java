@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
 import com.google.common.collect.Lists;
 
@@ -55,7 +56,7 @@ public class SQLFriendsDao implements FriendsDao {
     public void removeFriend(UUID user, UUID uuid) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("DELETE FROM {friends-table} WHERE userid = ? AND friendid = ?;")
+                     format("DELETE FROM {friends-table} WHERE user = ? AND friend = ?;")
              )) {
             pstmt.setString(1, user.toString());
             pstmt.setString(2, uuid.toString());
@@ -83,8 +84,8 @@ public class SQLFriendsDao implements FriendsDao {
                     friends.add(new FriendData(
                             uuid,
                             rs.getString("friendname"),
-                            rs.getDate("friendsince"),
-                            rs.getDate("lastlogout")
+                            Dao.formatStringToDate(rs.getString("created")),
+                            Dao.formatStringToDate(rs.getString("lastlogout"))
                     ));
                 }
             }

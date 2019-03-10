@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.converter.Converter;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
@@ -127,8 +128,8 @@ public class SQLtoSQLConverter extends Converter {
             preparedStatement.setString(2, rs.getString("username"));
             preparedStatement.setString(3, rs.getString("ip"));
             preparedStatement.setString(4, rs.getString("language"));
-            preparedStatement.setDate(5, rs.getDate("firstlogin"));
-            preparedStatement.setDate(6, rs.getDate("lastlogout"));
+            preparedStatement.setString(5, rs.getString("firstlogin"));
+            preparedStatement.setString(6, rs.getString("lastlogout"));
 
             preparedStatement.executeUpdate();
         }
@@ -144,7 +145,7 @@ public class SQLtoSQLConverter extends Converter {
                 preparedStatement.setString(3, rs.getString("ip"));
                 preparedStatement.setString(4, rs.getString("reason"));
                 preparedStatement.setString(5, rs.getString("server"));
-                preparedStatement.setDate(6, rs.getDate("date"));
+                preparedStatement.setString(6, rs.getString("date"));
                 preparedStatement.setString(7, rs.getString("executed_by"));
 
                 preparedStatement.executeUpdate();
@@ -159,7 +160,7 @@ public class SQLtoSQLConverter extends Converter {
                 preparedStatement.setLong(4, rs.getLong("time"));
                 preparedStatement.setString(5, rs.getString("reason"));
                 preparedStatement.setString(6, rs.getString("server"));
-                preparedStatement.setDate(7, rs.getDate("date"));
+                preparedStatement.setString(7, rs.getString("date"));
                 preparedStatement.setBoolean(8, rs.getBoolean("active"));
                 preparedStatement.setString(9, rs.getString("executed_by"));
                 preparedStatement.setString(10, rs.getString("removed_by"));
@@ -175,7 +176,7 @@ public class SQLtoSQLConverter extends Converter {
                 preparedStatement.setString(3, rs.getString("ip"));
                 preparedStatement.setString(4, rs.getString("reason"));
                 preparedStatement.setString(5, rs.getString("server"));
-                preparedStatement.setDate(6, rs.getDate("date"));
+                preparedStatement.setString(6, rs.getString("date"));
                 preparedStatement.setBoolean(7, rs.getBoolean("active"));
                 preparedStatement.setString(8, rs.getString("executed_by"));
                 preparedStatement.setString(9, rs.getString("removed_by"));

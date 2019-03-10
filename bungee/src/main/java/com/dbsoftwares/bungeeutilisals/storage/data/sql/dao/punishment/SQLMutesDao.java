@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.punishment;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -254,7 +255,7 @@ public class SQLMutesDao implements MutesDao {
                     final String reason = rs.getString("reason");
                     final String server = rs.getString("server");
                     final String executedby = rs.getString("executed_by");
-                    final Date date = rs.getDate("date");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
                     final long time = rs.getLong("duration");
                     final boolean active = rs.getBoolean("active");
                     final String removedby = rs.getString("removed_by");
@@ -289,7 +290,7 @@ public class SQLMutesDao implements MutesDao {
                     final String reason = rs.getString("reason");
                     final String server = rs.getString("server");
                     final String executedby = rs.getString("executed_by");
-                    final Date date = rs.getDate("date");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
                     final long time = rs.getLong("duration");
                     final boolean active = rs.getBoolean("active");
                     final String removedby = rs.getString("removed_by");

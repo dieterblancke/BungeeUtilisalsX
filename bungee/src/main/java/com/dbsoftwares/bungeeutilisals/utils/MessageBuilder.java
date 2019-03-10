@@ -76,9 +76,16 @@ public class MessageBuilder {
             if (config.isString(str)) {
                 text = config.getString(str);
             } else if (config.isList(str)) {
-                text = Utils.formatList(config.getStringList(str), "\n");
+                text = Utils.formatList(config.getStringList(str), System.lineSeparator());
             }
         }
+        text = text.replace("%nl%", "\n")
+                .replace("%newline%", "\n")
+                .replace("{nl}", "\n")
+                .replace("{newline}", "\n")
+                .replace("\r\n", "\n")
+                .replace("\n", "\n");
+
         return format(text, placeholders);
     }
 

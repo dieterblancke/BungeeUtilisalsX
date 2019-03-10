@@ -71,8 +71,8 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(2, username);
             pstmt.setString(3, ip);
             pstmt.setString(4, language.getName());
-            pstmt.setString(5, Dao.formatDate(login));
-            pstmt.setString(6, Dao.formatDate(logout));
+            pstmt.setString(5, Dao.formatDateToString(login));
+            pstmt.setString(6, Dao.formatDateToString(logout));
             pstmt.setString(7, username);
 
             pstmt.executeUpdate();
@@ -88,7 +88,7 @@ public class SQLUserDao implements UserDao {
             pstmt.setString(1, name);
             pstmt.setString(2, ip);
             pstmt.setString(3, language.getName());
-            pstmt.setString(4, Dao.formatDate(logout));
+            pstmt.setString(4, Dao.formatDateToString(logout));
             pstmt.setString(5, uuid.toString());
 
             pstmt.executeUpdate();
@@ -150,8 +150,12 @@ public class SQLUserDao implements UserDao {
                     storage.setUserName(rs.getString("username"));
                     storage.setIp(rs.getString("ip"));
                     storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
-                    storage.setFirstLogin(rs.getDate("firstlogin"));
-                    storage.setLastLogout(rs.getDate("lastlogout"));
+                    storage.setFirstLogin(
+                            Dao.formatStringToDate(rs.getString("firstlogin"))
+                    );
+                    storage.setLastLogout(
+                            Dao.formatStringToDate(rs.getString("lastlogout"))
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -175,8 +179,12 @@ public class SQLUserDao implements UserDao {
                     storage.setUserName(name);
                     storage.setIp(rs.getString("ip"));
                     storage.setLanguage(BUCore.getApi().getLanguageManager().getLangOrDefault(rs.getString("language")));
-                    storage.setFirstLogin(rs.getDate("firstlogin"));
-                    storage.setLastLogout(rs.getDate("lastlogout"));
+                    storage.setFirstLogin(
+                            Dao.formatStringToDate(rs.getString("firstlogin"))
+                    );
+                    storage.setLastLogout(
+                            Dao.formatStringToDate(rs.getString("lastlogout"))
+                    );
                 }
             }
         } catch (SQLException e) {
@@ -268,7 +276,7 @@ public class SQLUserDao implements UserDao {
     public void setLogout(UUID uuid, Date logout) {
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "lastlogout"))) {
-            pstmt.setString(1, Dao.formatDate(logout));
+            pstmt.setString(1, Dao.formatDateToString(logout));
             pstmt.setString(2, uuid.toString());
 
             pstmt.executeUpdate();

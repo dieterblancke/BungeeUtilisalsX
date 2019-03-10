@@ -96,7 +96,7 @@ public class FriendAddSubCommand extends SubCommand {
         dao.getFriendsDao().addFriendRequest(user.getUuid(), storage.getUuid());
         user.sendLangMessage("friends.add.request-sent", "{user}", name);
 
-        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.add.request-received"));
+        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.request-received", "{name}", user.getName()));
     }
 
     @Override

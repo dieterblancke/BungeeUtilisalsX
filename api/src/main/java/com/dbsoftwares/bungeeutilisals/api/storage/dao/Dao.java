@@ -18,10 +18,13 @@
 
 package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public interface Dao {
+
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     UserDao getUserDao();
 
@@ -29,8 +32,15 @@ public interface Dao {
 
     FriendsDao getFriendsDao();
 
-    static String formatDate(final Date date) {
-        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(date);
+    static String formatDateToString(final Date date) {
+        return format.format(date);
     }
 
+    static Date formatStringToDate(final String date) {
+        try {
+            return format.parse(date);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
 }

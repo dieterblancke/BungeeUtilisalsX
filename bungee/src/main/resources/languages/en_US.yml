@@ -102,7 +102,7 @@ general-commands:
 friends:
   request-received:
     text:
-      - text: '&eYou have received a friend request from &b{name}&e!\n'
+      - text: '&eYou have received a friend request from &b{name}&e!{nl}'
       - text: '&eType &b/friends accept {name}'
       - text: '&e or &bclick here'
         hover:

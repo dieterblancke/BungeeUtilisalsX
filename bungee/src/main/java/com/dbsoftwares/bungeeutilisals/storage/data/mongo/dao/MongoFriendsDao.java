@@ -74,7 +74,7 @@ public class MongoFriendsDao implements FriendsDao {
             friends.add(new FriendData(
                     uuid,
                     friend.getString("name"),
-                    doc.getDate("friendsince"),
+                    doc.getDate("created"),
                     friend.getDate("lastlogout")
             ));
         });

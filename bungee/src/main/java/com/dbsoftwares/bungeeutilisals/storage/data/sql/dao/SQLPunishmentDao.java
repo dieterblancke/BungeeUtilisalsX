@@ -73,7 +73,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND type = ?;"
                  )) {
                 pstmt.setString(1, uuid.toString());
-                pstmt.setString(2, Dao.formatDate(date));
+                pstmt.setString(2, Dao.formatDateToString(date));
                 pstmt.setString(3, type.toString());
 
                 try (ResultSet rs = pstmt.executeQuery()) {
@@ -90,7 +90,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ?;"
                  )) {
                 pstmt.setString(1, uuid.toString());
-                pstmt.setString(2, Dao.formatDate(date));
+                pstmt.setString(2, Dao.formatDateToString(date));
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
@@ -114,7 +114,7 @@ public class SQLPunishmentDao implements PunishmentDao {
                      "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= ? AND type = ?;"
              )) {
             pstmt.setString(1, ip);
-            pstmt.setString(2, Dao.formatDate(date));
+            pstmt.setString(2, Dao.formatDateToString(date));
             pstmt.setString(3, type.toString());
 
             try (ResultSet rs = pstmt.executeQuery()) {
