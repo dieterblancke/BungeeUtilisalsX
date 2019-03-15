@@ -38,7 +38,7 @@ public class InputPlaceHolder extends PlaceHolder {
     }
 
     private static Pattern makePlaceholderWithArgsPattern(String prefix) {
-        return Pattern.compile("(\\{" + Pattern.quote(prefix) + ":)(.+?)(\\})");
+        return Pattern.compile("(\\{" + Pattern.quote(prefix) + ":)(.+?)(})");
     }
 
     private static String extractArgumentFromPlaceholder(Matcher matcher) {

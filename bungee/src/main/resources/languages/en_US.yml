@@ -154,9 +154,19 @@ friends:
     friend-removed: '&b{user} &ehas removed you from his friends list!'
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
-    head: '&eYou currently have a total of &b{friendAmount} &efriends!'
-    foot: '' # TODO
-    format: '' # TODO
+    head: '&bYour friends: '
+    foot: '&eYou currently have a total of &b{friendAmount} &efriends!'
+    format:
+      text: '{if (online): &a else: &c} {friendName} - &7{lastOnline}'
+      hover:
+        - 'Online: {if (online): &ayes else: &cno}'
+        - 'Friends since: {friendSince}'
+        - 'Last seen: {lastOnline}'
+      click:
+        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        # RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/friend msg {name} '
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
