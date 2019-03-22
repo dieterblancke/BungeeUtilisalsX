@@ -41,6 +41,7 @@ public class FriendsCommand extends BUCommand {
         subCommands.add(new FriendDenySubCommand());
         subCommands.add(new FriendRemoveRequestSubCommand());
         subCommands.add(new FriendRemoveSubCommand());
+        subCommands.add(new FriendListSubCommand());
     }
 
     @Override

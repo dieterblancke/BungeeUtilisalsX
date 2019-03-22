@@ -1,6 +1,6 @@
 enabled: true
 
-# For more info about conditions, please go to https://docs.dbsoftwares.eu/bungeeutilisals/motd-manager#conditions
+# For more info about conditions, please go to https://wiki.dbsoftwares.eu/display/BungeeUtilisals/MOTD+Manager
 motd:
 # Default, this one will show when all others do not apply.
 - condition: 'default'

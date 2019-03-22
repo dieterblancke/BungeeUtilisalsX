@@ -6,9 +6,9 @@ no-number: '&ePlease enter a valid number!'
 
 updater:
   update-found:
-  - '&eAn update has been found for &b{name}&e.'
-  - '&eInstalled version: &b{version}'
-  - '&eNew Version: &b{newVersion}'
+    - '&eAn update has been found for &b{name}&e.'
+    - '&eInstalled version: &b{version}'
+    - '&eNew Version: &b{newVersion}'
 
 chat-protection:
   swear: '&fPlease do not swear!'
@@ -31,22 +31,22 @@ general-commands:
       item:
         text: '&b#{id}: {addon}'
         hover:
-        - '&f&m⎯⎯⎯⎯⎯ &eAddon &b#{id} {name} &f&m⎯⎯⎯⎯⎯&r'
-        - '&eVersion: &b{version}'
-        - '&eAuthor: &b{author}'
-        - '&eRequired Dependencies: &b{reqDepends}'
-        - '&eOptional Dependencies: &b{optDepends}'
-        - '&eDescription: &b{description}'
-        - '&f&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+          - '&f&m⎯⎯⎯⎯⎯ &eAddon &b#{id} {name} &f&m⎯⎯⎯⎯⎯&r'
+          - '&eVersion: &b{version}'
+          - '&eAuthor: &b{author}'
+          - '&eRequired Dependencies: &b{reqDepends}'
+          - '&eOptional Dependencies: &b{optDepends}'
+          - '&eDescription: &b{description}'
+          - '&f&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
     info:
-    - '&f&m⎯⎯⎯⎯⎯ &eAddon &b{name} &eInfo &f&m⎯⎯⎯⎯⎯&r'
-    - '&eInstalled: &b{installed}'
-    - '&eVersion: &b{version}'
-    - '&eAuthor: &b{author}'
-    - '&eRequired Dependencies: &b{reqDepends}'
-    - '&eOptional Dependencies: &b{optDepends}'
-    - '&eDescription: &b{description}'
-    - '&f&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+      - '&f&m⎯⎯⎯⎯⎯ &eAddon &b{name} &eInfo &f&m⎯⎯⎯⎯⎯&r'
+      - '&eInstalled: &b{installed}'
+      - '&eVersion: &b{version}'
+      - '&eAuthor: &b{author}'
+      - '&eRequired Dependencies: &b{reqDepends}'
+      - '&eOptional Dependencies: &b{optDepends}'
+      - '&eDescription: &b{description}'
+      - '&f&m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
     reload:
       error: '&cCould not reload addon &4{name}&c, check the console for errors!'
       success: '&aYou have reloaded the addon &2{name}&a!'
@@ -73,9 +73,9 @@ general-commands:
     message: '&b{user} &eis online in &b{server}&e!'
   server:
     usage:
-    - '&eYou are playing in &b{server}&e!'
-    - ''
-    - '&eYou can switch servers using &d/server (servername)&e!'
+      - '&eYou are playing in &b{server}&e!'
+      - ''
+      - '&eYou can switch servers using &d/server (servername)&e!'
     notfound: '&eThe server &b{server} &edoes not exist!'
     alreadyconnected: '&eYou are already connected to &b{server}&e!'
     connecting: '&eYou are being connected to &b{server}&e!'
@@ -88,12 +88,12 @@ general-commands:
     unlocked: '&eThe chat has been unlocked by &b{user}&e!'
     onchat: '&eThe chat has been locked! &aYou cannot send messages at the moment.'
   glag:
-  - '&eBungeeCord statistics:'
-  - '&eTPS: &b{tps}'
-  - '&eMax Memory: &b{maxmemory}'
-  - '&eFree Memory: &b{freememory}'
-  - '&eTotal Memory: &b{totalmemory}'
-  - '&eProxy online since: &b{onlinesince}'
+    - '&eBungeeCord statistics:'
+    - '&eTPS: &b{tps}'
+    - '&eMax Memory: &b{maxmemory}'
+    - '&eFree Memory: &b{freememory}'
+    - '&eTotal Memory: &b{totalmemory}'
+    - '&eProxy online since: &b{onlinesince}'
   staffchat:
     enabled: '&eYou are now talking in the &bstaff chat&e!'
     disabled: '&eYou are now talking in the &bpublic chat&e!'
@@ -154,12 +154,21 @@ friends:
     friend-removed: '&b{user} &ehas removed you from his friends list!'
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
-    head: '&bYour friends: '
-    foot: '&eYou currently have a total of &b{friendAmount} &efriends!'
+    head:
+      text:
+        - text: '&a<-'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {previousPage}'
+        - text: '&eFriends List &b({currentPage} of {maxPages})'
+        - text: '&c->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {nextPage}'
     format:
-      text: '{if (online): &a else: &c} {friendName} - &7{lastOnline}'
+      text: '- &b{friendName} - &7{lastOnline}'
       hover:
-        - 'Online: {if (online): &ayes else: &cno}'
+        - 'Online: {online}'
         - 'Friends since: {friendSince}'
         - 'Last seen: {lastOnline}'
       click:
@@ -167,6 +176,7 @@ friends:
         # RUN_COMMAND will only work for BungeeCord commands.
         type: 'SUGGEST_COMMAND'
         action: '/friend msg {name} '
+    foot: '&eYou currently have a total of &b{friendAmount} &efriends!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
@@ -176,32 +186,32 @@ punishments:
     already-banned: '&fThis user is already banned!'
     executed: '&fYou have banned &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been permanently banned by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} &fhas been permanently banned by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     kick:
-    - '&c&lBungeeUtilisals &8» &fYou have been permanently banned!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cBanned on: &f{date}'
-    - '&cBanned by: &f{by}'
-    - '&cBanned at: &f{server}'
-    - '&cUnban at: &fNever'
+      - '&c&lBungeeUtilisals &8» &fYou have been permanently banned!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cBanned on: &f{date}'
+      - '&cBanned by: &f{by}'
+      - '&cBanned at: &f{server}'
+      - '&cUnban at: &fNever'
 
   ipban:
     usage: '&fPlease use &a/ipban (user / IP) (reason)&f!'
     already-banned: '&fThis user is already ipbanned!'
     executed: '&fYou have ipbanned &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been permanently ipbanned by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} (&f{ip}&a) &fhas been permanently ipbanned by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     kick:
-    - '&c&lBungeeUtilisals &8» &fYou have been permanently IPBanned!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cBanned on: &f{date}'
-    - '&cBanned by: &f{by}'
-    - '&cBanned at: &f{server}'
-    - '&cUnban at: &fNever'
+      - '&c&lBungeeUtilisals &8» &fYou have been permanently IPBanned!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cBanned on: &f{date}'
+      - '&cBanned by: &f{by}'
+      - '&cBanned at: &f{server}'
+      - '&cUnban at: &fNever'
 
   tempban:
     usage: '&fPlease use &a/tempban (user) (timeformat) (reason)&f!'
@@ -209,17 +219,17 @@ punishments:
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempbanned &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been temporary banned by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
-    - '&fExpires at: &e{expire}'
+      - '&a{user} (&f{ip}&a) &fhas been temporary banned by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
+      - '&fExpires at: &e{expire}'
     kick:
-    - '&c&lBungeeUtilisals &8» &fYou have been temporary banned!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cBanned on: &f{date}'
-    - '&cBanned by: &f{by}'
-    - '&cBanned at: &f{server}'
-    - '&cUnban at: &f{expire}'
+      - '&c&lBungeeUtilisals &8» &fYou have been temporary banned!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cBanned on: &f{date}'
+      - '&cBanned by: &f{by}'
+      - '&cBanned at: &f{server}'
+      - '&cUnban at: &f{expire}'
 
   iptempban:
     usage: '&fPlease use &a/iptempban (user / IP) (timeformat) (reason)&f!'
@@ -227,49 +237,49 @@ punishments:
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempbanned &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been temporary ipbanned by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
-    - '&fExpires at: &e{expire}'
+      - '&a{user} (&f{ip}&a) &fhas been temporary ipbanned by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
+      - '&fExpires at: &e{expire}'
     kick:
-    - '&c&lBungeeUtilisals &8» &fYou have been temporary ipbanned!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cBanned on: &f{date}'
-    - '&cBanned by: &f{by}'
-    - '&cBanned at: &f{server}'
-    - '&cUnban at: &f{expire}'
+      - '&c&lBungeeUtilisals &8» &fYou have been temporary ipbanned!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cBanned on: &f{date}'
+      - '&cBanned by: &f{by}'
+      - '&cBanned at: &f{server}'
+      - '&cUnban at: &f{expire}'
 
   mute:
     usage: '&fPlease use &a/mute (user) (reason)&f!'
     already-muted: '&fThis user is already muted!'
     executed: '&fYou have muted &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been permanently muted by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} &fhas been permanently muted by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     onmute:
-    - '&c&lBungeeUtilisals &8» &fYou have been permanently muted!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cMuted on: &f{date}'
-    - '&cMuted by: &f{by}'
-    - '&cMuted at: &f{server}'
-    - '&cUnmute at: &fNever'
+      - '&c&lBungeeUtilisals &8» &fYou have been permanently muted!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cMuted on: &f{date}'
+      - '&cMuted by: &f{by}'
+      - '&cMuted at: &f{server}'
+      - '&cUnmute at: &fNever'
 
   ipmute:
     usage: '&fPlease use &a/ipmute (user / IP) (reason)&f!'
     already-muted: '&fThis user is already ipmuted!'
     executed: '&fYou have ipmuted &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been permanently ipmuted by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} (&f{ip}&a) &fhas been permanently ipmuted by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     onmute:
-    - '&c&lBungeeUtilisals &8» &fYou have been permanently IPMuted!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cMuted on: &f{date}'
-    - '&cMuted by: &f{by}'
-    - '&cMuted at: &f{server}'
-    - '&cUnmute at: &fNever'
+      - '&c&lBungeeUtilisals &8» &fYou have been permanently IPMuted!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cMuted on: &f{date}'
+      - '&cMuted by: &f{by}'
+      - '&cMuted at: &f{server}'
+      - '&cUnmute at: &fNever'
 
   tempmute:
     usage: '&fPlease use &a/tempmute (user) (timeformat) (reason)&f!'
@@ -277,17 +287,17 @@ punishments:
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempmuted &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been temporary muted by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
-    - '&fExpires at: &e{expire}'
+      - '&a{user} (&f{ip}&a) &fhas been temporary muted by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
+      - '&fExpires at: &e{expire}'
     onmute:
-    - '&c&lBungeeUtilisals &8» &fYou have been temporary muted!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cMuted on: &f{date}'
-    - '&cMuted by: &f{by}'
-    - '&cMuted at: &f{server}'
-    - '&cUnmute at: &f{expire}'
+      - '&c&lBungeeUtilisals &8» &fYou have been temporary muted!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cMuted on: &f{date}'
+      - '&cMuted by: &f{by}'
+      - '&cMuted at: &f{server}'
+      - '&cUnmute at: &f{expire}'
 
   iptempmute:
     usage: '&fPlease use &a/iptempmute (user / IP) (timeformat) (reason)&f!'
@@ -295,82 +305,82 @@ punishments:
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempmuted &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} (&f{ip}&a) &fhas been temporary ipmuted by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
-    - '&fExpires at: &e{expire}'
+      - '&a{user} (&f{ip}&a) &fhas been temporary ipmuted by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
+      - '&fExpires at: &e{expire}'
     onmute:
-    - '&c&lBungeeUtilisals &8» &fYou have been temporary ipmuted!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cMuted on: &f{date}'
-    - '&cMuted by: &f{by}'
-    - '&cMuted at: &f{server}'
-    - '&cUnmute at: &f{expire}'
+      - '&c&lBungeeUtilisals &8» &fYou have been temporary ipmuted!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cMuted on: &f{date}'
+      - '&cMuted by: &f{by}'
+      - '&cMuted at: &f{server}'
+      - '&cUnmute at: &f{expire}'
 
   kick:
     usage: '&fPlease use &a/kick (user) (reason)&f!'
     already-muted: '&fThis user is already muted!'
     executed: '&fYou have kicked &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     onkick:
-    - '&c&lBungeeUtilisals &8» &fYou have been kicked!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cKicked on: &f{date}'
-    - '&cKicked by: &f{by}'
-    - '&cKicked at: &f{server}'
+      - '&c&lBungeeUtilisals &8» &fYou have been kicked!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cKicked on: &f{date}'
+      - '&cKicked by: &f{by}'
+      - '&cKicked at: &f{server}'
 
   warn:
     usage: '&fPlease use &a/warn (user) (reason)&f!'
     already-muted: '&fThis user is already muted!'
     executed: '&fYou have warned &e{user} for &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been warned by &a{by} &fat &a{server}&f!'
-    - '&fReason: &e{reason}'
+      - '&a{user} &fhas been warned by &a{by} &fat &a{server}&f!'
+      - '&fReason: &e{reason}'
     onwarn:
-    - '&c&lBungeeUtilisals &8» &fYou have been warned!'
-    - ''
-    - '&cReason: &f{reason}'
-    - '&cWarned on: &f{date}'
-    - '&cWarned by: &f{by}'
-    - '&cWarned at: &f{server}'
+      - '&c&lBungeeUtilisals &8» &fYou have been warned!'
+      - ''
+      - '&cReason: &f{reason}'
+      - '&cWarned on: &f{date}'
+      - '&cWarned by: &f{by}'
+      - '&cWarned at: &f{server}'
 
   unban:
     usage: '&fPlease use &a/unban (user)&f!'
     not-banned: '&fThis user is not banned!'
     executed: '&fYou have unbanned &e{user} &ffor &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been unbanned by &a{by} &fat &a{server}&f!'
+      - '&a{user} &fhas been unbanned by &a{by} &fat &a{server}&f!'
 
   unbanip:
     usage: '&fPlease use &a/unbanip (user)&f!'
     not-banned: '&fThis user is not ipbanned!'
     executed: '&fYou have unbanned &e{user}&f''s IP for &e{reason}&f!'
     broadcast:
-    - '&a{user}&f''s IP has been unbanned by &a{by} &fat &a{server}&f!'
+      - '&a{user}&f''s IP has been unbanned by &a{by} &fat &a{server}&f!'
 
   unmute:
     usage: '&fPlease use &a/unmute (user)&f!'
     not-muted: '&fThis user is not mutened!'
     executed: '&fYou have unmutened &e{user} &ffor &e{reason}&f!'
     broadcast:
-    - '&a{user} &fhas been unmutened by &a{by} &fat &a{server}&f!'
+      - '&a{user} &fhas been unmutened by &a{by} &fat &a{server}&f!'
 
   unmuteip:
     usage: '&fPlease use &a/unmuteip (user)&f!'
     not-muted: '&fThis user is not ipmutened!'
     executed: '&fYou have unmutened &e{user}&f''s IP for &e{reason}&f!'
     broadcast:
-    - '&a{user}&f''s IP has been unmutened by &a{by} &fat &a{server}&f!'
+      - '&a{user}&f''s IP has been unmutened by &a{by} &fat &a{server}&f!'
 
 custom:
   announcements:
     chat:
       minigame1:
-      - '&eThank you for playing on our Minigame Servers!'
-      - '&bWe hope you enjoy your stay!'
+        - '&eThank you for playing on our Minigame Servers!'
+        - '&bWe hope you enjoy your stay!'
     actionbar:
       minigame1: '&eWelcome to our server &b{user}&e!'
     bossbar:

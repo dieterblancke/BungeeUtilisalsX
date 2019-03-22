@@ -18,78 +18,87 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.placeholders.IfElsePlaceHolder;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class FriendListSubCommand extends SubCommand {
 
     public FriendListSubCommand() {
         super(
-                "list", 0, 0,
+                "list", 0, 1,
                 Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.aliases").split(", "))
         );
     }
 
     @Override
     public String getUsage() {
-        return "/friends deny (name)";
+        return "/friends list [page]";
     }
 
     @Override
     public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.deny.permission");
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.permission");
     }
 
     @Override
     public void onExecute(User user, String[] args) {
-        final String name = args[0];
-        final int friendLimit = FriendUtils.getFriendsLimit(user);
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
-        final UserStorage storage;
+        final List<FriendData> allFriends = user.getFriends();
+        final int pages = (int) Math.ceil((double) allFriends.size() / 15);
 
-        if (optionalTarget.isPresent()) {
-            storage = optionalTarget.get().getStorage();
-        } else {
-            if (!dao.getUserDao().exists(args[0])) {
-                user.sendLangMessage("never-joined");
-                return;
+        final int page;
+
+        if (args.length >= 1) {
+            if (MathUtils.isInteger(args[0])) {
+                final int tempPage = Integer.parseInt(args[0]);
+
+                if (tempPage > pages) {
+                    page = pages;
+                } else {
+                    page = tempPage;
+                }
+            } else {
+                page = 1;
             }
-
-            storage = dao.getUserDao().getUserData(name);
+        } else {
+            page = 1;
         }
 
-        if (!dao.getFriendsDao().hasIncomingFriendRequest(user.getUuid(), storage.getUuid())) {
-            user.sendLangMessage("friends.deny.no-request", "{user}", name);
+        final int previous = page > 1 ? page - 1 : 1;
+        final int next = page + 1 > pages ? pages : page + 1;
+
+        if (allFriends.isEmpty()) {
+            user.sendLangMessage("friends.list.no-friends");
             return;
         }
+        int maxNumber = page * 10;
+        int minNumber = maxNumber - 10;
 
-        dao.getFriendsDao().removeFriendRequest(user.getUuid(), storage.getUuid());
-        user.sendLangMessage("friends.deny.denied", "{user}", name);
+        final List<FriendData> friends = allFriends.subList(minNumber, maxNumber);
+        user.sendLangMessage(
+                "friends.list.head",
+                "{previousPage}", previous,
+                "{currentPage}", page,
+                "{nextPage}", next,
+                "{maxPages}", pages
+        );
 
-        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.deny.request-denied", "{user}", user.getName()));
-
-        // TODO
-        IfElsePlaceHolder.format("myCustomMessage", (condition, ifResult, elseResult) -> {
-            if (condition.equalsIgnoreCase("online")) {
-                if (optionalTarget.isPresent()) {
-                    return ifResult;
-                } else {
-                    return elseResult;
-                }
-            }
-            return null;
-        });
+        friends.forEach(friend ->
+                user.sendLangMessage(
+                        "friends.list.format",
+                        "{friendName}", friend.getFriend(),
+                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate(friend.getLastOnline()),
+                        "{online}", friend.isOnline(),
+                        "{friendSince}", Utils.formatDate(friend.getFriendSince())
+                )
+        );
+        user.sendLangMessage("friends.list.foot", "{friendAmount}", allFriends.size());
     }
 
     @Override
