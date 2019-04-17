@@ -84,8 +84,9 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.List;
@@ -221,6 +222,8 @@ public class BungeeUtilisals extends Plugin {
         if (getConfig().getBoolean("updater.enabled")) {
             Updater.initialize(this);
         }
+
+        sendBuyerMessage();
     }
 
     @Override
@@ -238,6 +241,36 @@ public class BungeeUtilisals extends Plugin {
         scripts.forEach(Script::unload);
         api.getEventLoader().getHandlers().forEach(EventHandler::unregister);
         Updater.shutdownUpdaters();
+    }
+
+    public void sendBuyerMessage() {
+        final String userid = "%%USER_ID%%";
+        String username = "Unknown User";
+
+        // retrieving username ...
+        if (!userid.equals("%%__USER__%")) {
+            try {
+                URL url = new URL("https://www.spigotmc.org/members/" + userid);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0");
+
+                try (InputStream inputStream = connection.getInputStream();
+                     InputStreamReader isr = new InputStreamReader(inputStream);
+                     BufferedReader br = new BufferedReader(isr)) {
+
+                    String line;
+                    final StringBuilder builder = new StringBuilder();
+                    while ((line = br.readLine()) != null) {
+                        builder.append(line);
+                    }
+                    username = builder.toString().split("<title>")[1].split("</title>")[0].split(" | ")[0];
+                }
+            } catch (IOException e) {
+                // do nothing
+            }
+        }
+
+        api.getConsole().sendLangMessage(false, "general.startup-message", "{buyer_name}", username);
     }
 
     public void reload() {

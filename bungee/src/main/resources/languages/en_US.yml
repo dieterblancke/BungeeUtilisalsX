@@ -4,6 +4,21 @@ never-joined: '&fThat user never joined before!'
 offline: '&fThat user is not online!'
 no-number: '&ePlease enter a valid number!'
 
+general:
+  startup-message:
+    - ''
+    - '&b<-----------------------------------> &e&lBungeeUtilisals &b<----------------------------------->'
+    - ''
+    - '&aBungeeUtilisals successfully started up.'
+    - '&aThank you &e{buyer_name} &afor buying BungeeUtilisals! We truly appreciate your support.'
+    - ''
+    - '&6If you encounter any issues, do not hesitate to contact us by:'
+    - '&e- PM''ing &bdidjee2 &eon SpigotMC'
+    - '&e- contacting us on our Discord: &bhttps://discord.dbsoftwares.eu'
+    - '&e- creating an issue at our Git repository: &bhttps://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX'
+    - ''
+    - '&b<-----------------------------------> &e&lBungeeUtilisals &b<----------------------------------->'
+
 updater:
   update-found:
     - '&eAn update has been found for &b{name}&e.'
