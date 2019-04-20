@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 
 public class ReflectionUtils {
 
@@ -99,10 +98,8 @@ public class ReflectionUtils {
     public static Field getField(Class<?> clazz, String name) {
         try {
             Field field = clazz.getDeclaredField(name);
+            field.setAccessible(true);
 
-            if (Modifier.isPrivate(field.getModifiers())) {
-                field.setAccessible(true);
-            }
             return field;
         } catch (Exception e) {
             BUCore.getLogger().error("An error occured: ", e);
