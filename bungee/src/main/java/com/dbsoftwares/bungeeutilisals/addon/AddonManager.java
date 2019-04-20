@@ -154,30 +154,13 @@ public class AddonManager implements IAddonManager {
                 try (InputStream in = jar.getInputStream(entry)) {
                     final AddonDescription description = new AddonDescription(IConfiguration.loadYamlConfiguration(in), addonFile);
 
-                    loadSingleAddon(description);
+                    if (!loadAddon(Maps.newHashMap(), new ArrayDeque<>(), description)) {
+                        BUCore.getLogger().warn("Could not enable addon {}", addonFile.getName().replace(".jar", ""));
+                    }
                 }
             } catch (final Exception ex) {
                 throw new AddonException("Could not load addon from file " + addonFile.getName(), ex);
             }
-        }
-    }
-
-    private void loadSingleAddon(final AddonDescription description) {
-        for (String dependency : description.getRequiredDependencies()) {
-            if (!isRegistered(dependency)) {
-                throw new AddonException("Dependency " + dependency + " is required by " + description.getName() + " but not found.");
-            }
-        }
-        try (AddonClassLoader loader = new AddonClassLoader(new URL[]{description.getFile().toURI().toURL()})) {
-            final Class<?> main = loader.loadClass(description.getMain());
-            final Addon addon = (Addon) main.getDeclaredConstructor().newInstance();
-
-            addon.initialize(ProxyServer.getInstance(), BUCore.getApi(), description);
-            addons.put(description.getName(), addon);
-
-            BUCore.getLogger().info("Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor());
-        } catch (final Exception t) {
-            throw new AddonException("Error occured while enabling addon " + description.getName(), t);
         }
     }
 

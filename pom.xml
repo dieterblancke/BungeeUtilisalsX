@@ -26,7 +26,7 @@
     <groupId>com.dbsoftwares.bungeeutilisals</groupId>
     <artifactId>BungeeUtilisals</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.1.7</version>
+    <version>1.0.1.8</version>
 
     <modules>
         <module>api</module>

@@ -43,15 +43,19 @@ public class UserStorage {
     private Map<String, Object> data = Maps.newHashMap();
 
     @SuppressWarnings("unchecked")
-    public <T> T getData(String key) {
+    public <T> T getData(final String key) {
         return !data.containsKey(key) ? null : (T) data.get(key);
     }
 
-    public void setData(String key, Object value) {
+    public void setData(final String key, final Object value) {
         data.put(key, value);
     }
 
-    public boolean hasData(String key) {
+    public boolean hasData(final String key) {
         return data.containsKey(key);
+    }
+
+    public void removeData(final String key) {
+        this.data.remove(key);
     }
 }
