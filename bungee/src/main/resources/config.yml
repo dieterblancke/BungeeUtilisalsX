@@ -1,8 +1,9 @@
 # Should BungeeUtilisals use RedisBungee?
 redis: false
 
-# Set to true to allow usage of things such as Bossbar, SimpleInventory, Movement registration, ...
-# This might (and probably will) increase load on your servers (especially with addons using SimpleInventory or Movement packets enabled (f.e. AntiAFKAddon or FriendGUIAddon))
+# Currently this should only be enabled for AntiAFKAddon.
+# This feature is highly experimental and might increase load on your server.
+# This might also cause errors when newer versions come out, and BungeeUtilisals isn't updated yet.
 packets: false
 
 # Set to true to enable the use of addons ...

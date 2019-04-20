@@ -15,25 +15,19 @@
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
  */
+
 package com.dbsoftwares.bungeeutilisals.packet;
 
-import com.dbsoftwares.bungeeutilisals.packet.packets.Packet;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
+import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import lombok.Data;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-public class PacketData {
+@Data
+public class ProtocolMapping {
 
-    private Class<? extends Packet> packetClass;
-    private Object direction;
-    private ProtocolMapping[] mappings;
+    private final Version version;
+    private final int packet;
 
-    public PacketData(Class<? extends Packet> packetClass, Object direction, ProtocolMapping... mappings) {
-        this.packetClass = packetClass;
-        this.direction = direction;
-        this.mappings = mappings;
+    public static ProtocolMapping map(final Version version, final int packet) {
+        return new ProtocolMapping(version, packet);
     }
 }

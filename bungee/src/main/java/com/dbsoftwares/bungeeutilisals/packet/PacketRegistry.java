@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.packet;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.packet.packets.position.PacketPlayInPlayerPosition;
 import com.dbsoftwares.bungeeutilisals.packet.utils.PacketUtils;
 import com.google.common.collect.Lists;
@@ -38,7 +37,15 @@ public class PacketRegistry {
         // when version not supported, -1 will be provided | ids are in order of Version (enum) versions
 
         // https://wiki.vg/Protocol#Player_Position
-        registry.add(new PacketData(PacketPlayInPlayerPosition.class, getServerDirection(Protocol.GAME), 0x04, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0C, 0x0E, 0x0D, 0x0D, 0x10, 0x10, 0x10));
+        registry.add(new PacketData(
+                PacketPlayInPlayerPosition.class,
+                getServerDirection(Protocol.GAME),
+                ProtocolMapping.map(Version.MINECRAFT_1_8, 0x04),
+                ProtocolMapping.map(Version.MINECRAFT_1_9, 0x0C),
+                ProtocolMapping.map(Version.MINECRAFT_1_12, 0x0E),
+                ProtocolMapping.map(Version.MINECRAFT_1_12_1, 0x0D),
+                ProtocolMapping.map(Version.MINECRAFT_1_13, 0x10)
+        ));
 
         /* For if we ever (try to) add back the inventory packets
         registry.add(new PacketData(PacketPlayInCloseWindow.class, Protocol.GAME.TO_SERVER, 0x0D, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x09, 0x08, 0x08, 0x09, 0x09, 0x09));
@@ -50,22 +57,26 @@ public class PacketRegistry {
     }
 
     private static Object getServerDirection(final Protocol protocol) {
-        final Field field = ReflectionUtils.getField(protocol.getClass(), "TO_SERVER");
-
         try {
+            final Field field = protocol.getClass().getSuperclass().getDeclaredField("TO_SERVER");
+
+            field.setAccessible(true);
+
             return field.get(protocol);
-        } catch (IllegalAccessException e) {
-            return null;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
     private static Object getClientDirection(final Protocol protocol) {
-        final Field field = ReflectionUtils.getField(protocol.getClass(), "TO_CLIENT");
-
         try {
+            final Field field = protocol.getClass().getSuperclass().getDeclaredField("TO_CLIENT");
+
+            field.setAccessible(true);
+
             return field.get(protocol);
-        } catch (IllegalAccessException e) {
-            return null;
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -73,23 +84,15 @@ public class PacketRegistry {
         if (!registry.contains(data)) {
             registry.add(data);
         }
-        List<Object> mappings = Lists.newArrayList();
+        final Object[] mappings = new Object[data.getMappings().length];
 
-        for (int i = 0; i < data.getProtocolIds().length; i++) {
-            final int id = data.getProtocolIds()[i];
+        for (int i = 0; i < data.getMappings().length; i++) {
+            final ProtocolMapping mapping = data.getMappings()[i];
 
-            if (id == -1) {
-                continue;
-            }
-            final int versionId = Version.values()[i].getVersionId();
-
-            if (PacketUtils.getProxyProtocol() < versionId) {
-                continue; // avoiding errors for older bungee versions
-            }
-            mappings.add(PacketUtils.createProtocolMapping(versionId, id));
+            mappings[i] = PacketUtils.createProtocolMapping(mapping.getVersion().getVersionId(), mapping.getPacket());
         }
 
-        PacketUtils.registerPacket(data.getDirection(), data.getPacketClass(), mappings.toArray(new Object[0]));
+        PacketUtils.registerPacket(data.getDirection(), data.getPacketClass(), mappings);
     }
 
     public static void registerPackets() {
