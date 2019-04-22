@@ -81,7 +81,7 @@ public class UnbanIPCommand extends BUCommand {
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
 
-        user.sendLangMessage("punishments.unbanip.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.unbanip.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.unbanip.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unbanip.broadcast"),

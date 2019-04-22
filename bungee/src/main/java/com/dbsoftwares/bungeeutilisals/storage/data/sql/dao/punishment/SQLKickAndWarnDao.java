@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDa
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.UUID;
 
@@ -36,8 +37,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
     public PunishmentInfo insertWarn(UUID uuid, String user, String ip, String reason, String server, String executedby) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by)" +
-                             " VALUES (?, ?, ?, ?, ?, ?);"
+                     "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                             " VALUES (?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -45,6 +46,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
             pstmt.setString(4, reason);
             pstmt.setString(5, server);
             pstmt.setString(6, executedby);
+            pstmt.setTimestamp(7, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -57,8 +59,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
     public PunishmentInfo insertKick(UUID uuid, String user, String ip, String reason, String server, String executedby) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by)" +
-                             " VALUES (?, ?, ?, ?, ?, ?);"
+                     "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                             " VALUES (?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -66,6 +68,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
             pstmt.setString(4, reason);
             pstmt.setString(5, server);
             pstmt.setString(6, executedby);
+            pstmt.setTimestamp(7, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

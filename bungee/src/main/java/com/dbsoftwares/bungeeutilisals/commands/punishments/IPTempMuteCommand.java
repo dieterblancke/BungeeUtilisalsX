@@ -89,7 +89,7 @@ public class IPTempMuteCommand extends BUCommand {
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.iptempmute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
-        user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.iptempmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.broadcast"),

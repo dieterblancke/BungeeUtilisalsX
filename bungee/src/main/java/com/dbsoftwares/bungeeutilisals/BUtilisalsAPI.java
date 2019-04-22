@@ -250,7 +250,7 @@ public class BUtilisalsAPI implements BUAPI {
             );
             return;
         }
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), user, message, placeholders));
+        users.stream().filter(user -> user.getParent().hasPermission(permission) || user.getParent().hasPermission("bungeeutilisals.*")).forEach(user -> LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), user, message, placeholders));
         LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), getConsole(), message, placeholders);
     }
 

@@ -90,7 +90,7 @@ public class TempMuteCommand extends BUCommand {
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.tempmute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
-        user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.tempmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.tempmute.broadcast"),

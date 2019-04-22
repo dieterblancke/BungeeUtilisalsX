@@ -77,7 +77,7 @@ public class WarnCommand extends BUCommand {
         );
 
         target.sendLangMessage("punishments.warn.onwarn", executor.getPlaceHolders(info).toArray(new Object[]{}));
-        user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
         BUCore.getApi().langPermissionBroadcast("punishments.warn.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.broadcast"),

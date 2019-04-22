@@ -86,7 +86,7 @@ public class IPBanCommand extends BUCommand {
             banned.kick(kick);
         });
 
-        user.sendLangMessage("punishments.ipban.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.ipban.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.ipban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ipban.broadcast"),

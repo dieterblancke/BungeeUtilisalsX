@@ -93,7 +93,7 @@ public class IPTempBanCommand extends BUCommand {
             banned.kick(kick);
         });
 
-        user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
         BUCore.getApi().langPermissionBroadcast("punishments.iptempban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

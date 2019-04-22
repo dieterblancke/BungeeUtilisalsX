@@ -79,8 +79,10 @@ public class UnmuteCommand extends BUCommand {
         info.setId(-1);
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
+        info.setServer(user.getServerName());
 
-        user.sendLangMessage("punishments.unmute.executed", executor.getPlaceHolders(info));
+        BUCore.getApi().getUser(args[0]).ifPresent(target -> target.setMute(null));
+        user.sendLangMessage("punishments.unmute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.unmute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmute.broadcast"),

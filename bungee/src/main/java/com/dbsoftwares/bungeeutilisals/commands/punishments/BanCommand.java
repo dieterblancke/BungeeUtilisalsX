@@ -90,7 +90,7 @@ public class BanCommand extends BUCommand {
             banned.kick(kick);
         });
 
-        user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
         BUCore.getApi().langPermissionBroadcast("punishments.ban.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.broadcast"),
                 executor.getPlaceHolders(info).toArray(new Object[]{}));

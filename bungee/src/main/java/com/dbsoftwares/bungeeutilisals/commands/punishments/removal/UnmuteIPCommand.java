@@ -80,8 +80,10 @@ public class UnmuteIPCommand extends BUCommand {
         info.setId(-1);
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
+        info.setServer(user.getServerName());
 
-        user.sendLangMessage("punishments.unmuteip.executed", executor.getPlaceHolders(info));
+        BUCore.getApi().getUser(args[0]).ifPresent(target -> target.setMute(null));
+        user.sendLangMessage("punishments.unmuteip.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.unmuteip.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unmuteip.broadcast"),

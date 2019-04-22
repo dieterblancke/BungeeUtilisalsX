@@ -365,30 +365,30 @@ punishments:
   unban:
     usage: '&fPlease use &a/unban (user)&f!'
     not-banned: '&fThis user is not banned!'
-    executed: '&fYou have unbanned &e{user} &ffor &e{reason}&f!'
+    executed: '&fYou have unbanned &e{user}&f!'
     broadcast:
       - '&a{user} &fhas been unbanned by &a{by} &fat &a{server}&f!'
 
   unbanip:
     usage: '&fPlease use &a/unbanip (user)&f!'
     not-banned: '&fThis user is not ipbanned!'
-    executed: '&fYou have unbanned &e{user}&f''s IP for &e{reason}&f!'
+    executed: '&fYou have unbanned &e{user}&f''s IP&f!'
     broadcast:
       - '&a{user}&f''s IP has been unbanned by &a{by} &fat &a{server}&f!'
 
   unmute:
     usage: '&fPlease use &a/unmute (user)&f!'
-    not-muted: '&fThis user is not mutened!'
-    executed: '&fYou have unmutened &e{user} &ffor &e{reason}&f!'
+    not-muted: '&fThis user is not muted!'
+    executed: '&fYou have unmuted &e{user}&f!'
     broadcast:
-      - '&a{user} &fhas been unmutened by &a{by} &fat &a{server}&f!'
+      - '&a{user} &fhas been unmuted by &a{by} &fat &a{server}&f!'
 
   unmuteip:
     usage: '&fPlease use &a/unmuteip (user)&f!'
-    not-muted: '&fThis user is not ipmutened!'
-    executed: '&fYou have unmutened &e{user}&f''s IP for &e{reason}&f!'
+    not-muted: '&fThis user is not ipmuted!'
+    executed: '&fYou have unmuted &e{user}&f''s IP&f!'
     broadcast:
-      - '&a{user}&f''s IP has been unmutened by &a{by} &fat &a{server}&f!'
+      - '&a{user}&f''s IP has been unmuted by &a{by} &fat &a{server}&f!'
 
 custom:
   announcements:

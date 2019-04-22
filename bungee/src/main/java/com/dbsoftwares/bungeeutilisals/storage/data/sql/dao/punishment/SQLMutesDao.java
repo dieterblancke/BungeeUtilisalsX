@@ -26,10 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.Date;
 import java.util.UUID;
 
@@ -144,7 +141,7 @@ public class SQLMutesDao implements MutesDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                             "active, executed_by, duration, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                             "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -155,6 +152,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, -1);
             pstmt.setString(9, PunishmentType.MUTE.toString());
+            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -168,7 +166,7 @@ public class SQLMutesDao implements MutesDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                             "active, executed_by, duration, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                             "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -179,6 +177,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, -1);
             pstmt.setString(9, PunishmentType.IPMUTE.toString());
+            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -192,7 +191,7 @@ public class SQLMutesDao implements MutesDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                             "active, executed_by, duration, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                             "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -203,6 +202,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, duration);
             pstmt.setString(9, PunishmentType.TEMPMUTE.toString());
+            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -216,7 +216,7 @@ public class SQLMutesDao implements MutesDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                             "active, executed_by, duration, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                             "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setString(2, user);
@@ -227,6 +227,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, duration);
             pstmt.setString(9, PunishmentType.IPTEMPMUTE.toString());
+            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

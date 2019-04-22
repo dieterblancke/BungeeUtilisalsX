@@ -83,7 +83,7 @@ public class MuteCommand extends BUCommand {
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.mute.onmute",
                 executor.getPlaceHolders(info).toArray(new Object[]{})));
 
-        user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 
         BUCore.getApi().langPermissionBroadcast("punishments.mute.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.broadcast"),
