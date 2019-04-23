@@ -80,6 +80,10 @@ public class FriendListSubCommand extends SubCommand {
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
 
+        if (maxNumber > allFriends.size()) {
+            maxNumber = allFriends.size();
+        }
+
         final List<FriendData> friends = allFriends.subList(minNumber, maxNumber);
         user.sendLangMessage(
                 "friends.list.head",

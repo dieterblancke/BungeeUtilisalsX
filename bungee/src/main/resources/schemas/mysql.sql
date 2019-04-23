@@ -129,3 +129,19 @@ CREATE TABLE IF NOT EXISTS `{warns-table}`
   ENGINE = InnoDB
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = UTF8MB4;
+
+CREATE TABLE IF NOT EXISTS `{punishmentactions-table}`
+(
+  id          INT(11) AUTO_INCREMENT             NOT NULL,
+  uuid        VARCHAR(36)                        NOT NULL,
+  user        VARCHAR(32)                        NOT NULL,
+  ip          VARCHAR(32)                        NOT NULL,
+  actionid    VARCHAR(36)                        NOT NULL,
+  date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+  PRIMARY KEY (id),
+  KEY idx_punishactions (id, uuid, user, ip, actionid),
+  FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = UTF8MB4;

@@ -83,6 +83,7 @@ public class UnbanCommand extends BUCommand {
         info.setId(-1);
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
+        info.setServer(user.getServerName());
 
         user.sendLangMessage("punishments.unban.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 

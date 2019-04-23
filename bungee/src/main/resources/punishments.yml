@@ -15,11 +15,6 @@ actions:
     unit: DAYS
     amount: 7
   limit: 5
-  # How often can this be issued on one player? (recommended to keep this the same as the duration of this action)
-  # This makes sure a player cannot be tempmuted multiple times for the same warns.
-  refresh:
-    time: DAYS
-    amount: 7
   actions:
   - 'tempmute %user% 1d You have received too many warns recently!'
 # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
@@ -30,11 +25,6 @@ actions:
     unit: WEEKS
     amount: 2
   limit: 3
-  # How often can this be issued on one player? (recommended to keep this the same as the duration of this action)
-  # This makes sure a player cannot be tempmuted multiple times for the same warns.
-  refresh:
-    time: DAYS
-    amount: 7
   actions:
   - 'tempban %user% 1w You have received too many tempmutes recently!'
 

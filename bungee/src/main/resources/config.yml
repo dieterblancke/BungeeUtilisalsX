@@ -74,3 +74,4 @@ storage:
     mutes: 'bu_mutes'
     kicks: 'bu_kicks'
     warns: 'bu_warns'
+    punishmentactions: 'bu_punishmentactions'

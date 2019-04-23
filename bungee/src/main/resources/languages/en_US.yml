@@ -171,26 +171,26 @@ friends:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
     head:
       text:
-        - text: '&a<-'
+        - text: '&6<- '
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {previousPage}'
         - text: '&eFriends List &b({currentPage} of {maxPages})'
-        - text: '&c->'
+        - text: ' &6->'
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {nextPage}'
     format:
       text: '- &b{friendName} - &7{lastOnline}'
       hover:
-        - 'Online: {online}'
-        - 'Friends since: {friendSince}'
-        - 'Last seen: {lastOnline}'
+        - '&eOnline: &b{online}'
+        - '&eFriends since: &b{friendSince}'
+        - '&eLast seen: &b{lastOnline}'
       click:
         # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
         # RUN_COMMAND will only work for BungeeCord commands.
         type: 'SUGGEST_COMMAND'
-        action: '/friend msg {name} '
+        action: '/friend msg {friendName} '
     foot: '&eYou currently have a total of &b{friendAmount} &efriends!'
 
 punishments:

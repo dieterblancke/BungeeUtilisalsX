@@ -80,6 +80,7 @@ public class UnbanIPCommand extends BUCommand {
         info.setId(-1);
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
+        info.setServer(user.getServerName());
 
         user.sendLangMessage("punishments.unbanip.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 

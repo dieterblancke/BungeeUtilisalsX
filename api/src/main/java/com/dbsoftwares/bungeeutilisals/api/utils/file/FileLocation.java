@@ -35,9 +35,11 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.UUID;
 
 public enum FileLocation {
 
@@ -141,20 +143,24 @@ public enum FileLocation {
         @Override
         @SuppressWarnings("unchecked")
         public void loadData() {
+            boolean changed = false;
             for (ISection section : configuration.getSectionList("actions")) {
+                if (!section.exists("uuid")) {
+                    section.set("uuid", UUID.randomUUID().toString());
+                    changed = true;
+                }
                 try {
                     final PunishmentType type = PunishmentType.valueOf(section.getString("type"));
 
                     try {
                         final TimeUnit unit = TimeUnit.valueOf(section.getString("time.unit"));
-                        final String amountKey = "time.amount";
 
-                        if (section.isInteger(amountKey)) {
-                            int amount = section.getInteger(amountKey);
-                            int limit = section.getInteger("limit");
+                        if (section.isInteger("time.amount")) {
+                            final int amount = section.getInteger("time.amount");
+                            final int limit = section.getInteger("limit");
 
-                            PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
-                            List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
+                            final PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
+                            final List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
                                     type.toString(), Lists.newArrayList()
                             );
 
@@ -162,7 +168,7 @@ public enum FileLocation {
                             setData(type.toString(), actions);
                         } else {
                             BUCore.getApi().getPlugin().getLogger().warning(
-                                    "An invalid number has been entered (" + section.getString(amountKey) + ")."
+                                    "An invalid number has been entered (" + section.getString("time.amount") + ")."
                             );
                         }
                     } catch (IllegalArgumentException e) {
@@ -175,7 +181,13 @@ public enum FileLocation {
                             "An invalid punishment type has been entered (" + section.getString("type") + ")."
                     );
                 }
-
+            }
+            if (changed) {
+                try {
+                    configuration.save();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     },
