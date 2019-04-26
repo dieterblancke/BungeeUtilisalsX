@@ -56,6 +56,12 @@ public class LanguageCommand extends BUCommand {
             return;
         }
         final String langName = args[0];
+
+        if (user.getLanguage().getName().equalsIgnoreCase(langName)) {
+            user.sendLangMessage("general-commands.language.already", "{language}", langName);
+            return;
+        }
+
         final Optional<Language> optional = BUCore.getApi().getLanguageManager().getLanguage(langName);
 
         if (optional.isPresent()) {

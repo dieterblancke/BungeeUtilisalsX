@@ -82,7 +82,7 @@ general-commands:
       failed: '&cCould not disable &4{name}&c, check the console for errors!'
       success: '&aSuccessfully disabled &2{name}&a!'
   announce:
-    usage: '&ePlease use &b/announce (c/a/t) (message)&e.'
+    usage: '&ePlease use &b/announce (b/c/a/t) (message)&e.'
   find:
     usage: '&ePlease use &b/find (name)&e!'
     message: '&b{user} &eis online in &b{server}&e!'
@@ -120,7 +120,8 @@ general-commands:
     notfound:
       - '&cCould not find a language called &4{language}&c!'
       - '&eAvailable languages: &b{languages}'
-    changed: '&eYour language has been changed to &b{language}!'
+    changed: '&eYour language has been changed to &b{language}&e!'
+    already: '&eYou are already using the &b{language} &elanguage!'
 
 friends:
   request-received:
