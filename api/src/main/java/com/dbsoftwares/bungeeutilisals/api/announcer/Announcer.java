@@ -119,7 +119,7 @@ public abstract class Announcer {
                         previous = next;
                     }
                 },
-                delay,
+                0,
                 delay,
                 unit.toJavaTimeUnit()
         );
