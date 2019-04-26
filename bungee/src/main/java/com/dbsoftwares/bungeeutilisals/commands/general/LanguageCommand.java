@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -42,7 +41,7 @@ public class LanguageCommand extends BUCommand {
 
     @Override
     public List<String> onTabComplete(User user, String[] args) {
-        return ImmutableList.of();
+        return BUCore.getApi().getLanguageManager().getLanguages().stream().map(Language::getName).collect(Collectors.toList());
     }
 
     @Override
