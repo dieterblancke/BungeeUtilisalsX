@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.announcers;
 
+import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarAnnouncement;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;

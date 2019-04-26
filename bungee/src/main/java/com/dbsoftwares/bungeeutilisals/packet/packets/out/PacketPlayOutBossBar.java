@@ -22,8 +22,11 @@ import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBarAction;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.packet.packets.Packet;
 import io.netty.buffer.ByteBuf;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -31,7 +34,7 @@ public class PacketPlayOutBossBar extends Packet {
 
     private UUID uuid;
     private int action;
-    private String name;
+    private BaseComponent[] title;
     private float percent;
     private int color;
     private int overlay;
@@ -44,7 +47,7 @@ public class PacketPlayOutBossBar extends Packet {
         return uuid;
     }
 
-    public void setUuid(UUID uuid) {
+    public void setUuid(final UUID uuid) {
         this.uuid = uuid;
     }
 
@@ -52,23 +55,23 @@ public class PacketPlayOutBossBar extends Packet {
         return action;
     }
 
-    public void setAction(int action) {
+    public void setAction(final int action) {
         this.action = action;
     }
 
-    public String getName() {
-        return name;
+    public BaseComponent[] getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(final BaseComponent[] title) {
+        this.title = title;
     }
 
     public float getPercent() {
         return percent;
     }
 
-    public void setPercent(float percent) {
+    public void setPercent(final float percent) {
         this.percent = percent;
     }
 
@@ -76,7 +79,7 @@ public class PacketPlayOutBossBar extends Packet {
         return color;
     }
 
-    public void setColor(int color) {
+    public void setColor(final int color) {
         this.color = color;
     }
 
@@ -84,7 +87,7 @@ public class PacketPlayOutBossBar extends Packet {
         return overlay;
     }
 
-    public void setOverlay(int overlay) {
+    public void setOverlay(final int overlay) {
         this.overlay = overlay;
     }
 
@@ -92,7 +95,7 @@ public class PacketPlayOutBossBar extends Packet {
         return flags;
     }
 
-    public void setFlags(short flags) {
+    public void setFlags(final short flags) {
         this.flags = flags;
     }
 
@@ -101,7 +104,7 @@ public class PacketPlayOutBossBar extends Packet {
         return "BossBar{"
                 + "uuid=" + uuid
                 + ", action=" + action
-                + ", name='" + name + '\''
+                + ", title='" + Arrays.toString(title) + '\''
                 + ", percent=" + percent
                 + ", color=" + color
                 + ", overlay=" + overlay
@@ -114,7 +117,7 @@ public class PacketPlayOutBossBar extends Packet {
         this.uuid = readUUID(buf);
         this.action = readVarInt(buf);
         if (action == BossBarAction.ADD.getId()) {
-            this.name = readString(buf);
+            this.title = ComponentSerializer.parse(readString(buf));
             this.percent = buf.readFloat();
             this.color = readVarInt(buf);
             this.overlay = readVarInt(buf);
@@ -124,7 +127,7 @@ public class PacketPlayOutBossBar extends Packet {
         } else if (action == BossBarAction.UPDATE_HEALTH.getId()) {
             this.percent = buf.readFloat();
         } else if (action == BossBarAction.UPDATE_TITLE.getId()) {
-            this.name = readString(buf);
+            this.title = ComponentSerializer.parse(readString(buf));
         } else if (action == BossBarAction.UPDATE_STYLE.getId()) {
             this.color = readVarInt(buf);
             this.overlay = readVarInt(buf);
@@ -144,10 +147,10 @@ public class PacketPlayOutBossBar extends Packet {
         writeVarInt(action, buf);
 
         if (action == BossBarAction.ADD.getId()) {
-            if (name == null) {
-                throw new IllegalStateException("No name specified!");
+            if (title == null) {
+                throw new IllegalStateException("No title specified!");
             }
-            writeString(name, buf);
+            writeString(ComponentSerializer.toString(title), buf);
             buf.writeFloat(percent);
             writeVarInt(color, buf);
             writeVarInt(overlay, buf);
@@ -157,10 +160,10 @@ public class PacketPlayOutBossBar extends Packet {
         } else if (action == BossBarAction.UPDATE_HEALTH.getId()) {
             buf.writeFloat(percent);
         } else if (action == BossBarAction.UPDATE_TITLE.getId()) {
-            if (name == null) {
-                throw new IllegalStateException("No name specified!");
+            if (title == null) {
+                throw new IllegalStateException("No title specified!");
             }
-            writeString(name, buf);
+            writeString(ComponentSerializer.toString(title), buf);
         } else if (action == BossBarAction.UPDATE_STYLE.getId()) {
             writeVarInt(color, buf);
             writeVarInt(overlay, buf);
@@ -191,11 +194,11 @@ public class PacketPlayOutBossBar extends Packet {
                 overlay == that.overlay &&
                 flags == that.flags &&
                 uuid.equals(that.uuid) &&
-                name.equals(that.name);
+                Arrays.equals(title, that.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, action, name, percent, color, overlay, flags);
+        return Objects.hash(uuid, action, title, percent, color, overlay, flags);
     }
 }

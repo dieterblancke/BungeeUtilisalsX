@@ -48,6 +48,7 @@ import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
 import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.APIAnnouncement;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -285,12 +286,12 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
-    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message) {
-        return new BossBar(color, style, progress, message);
+    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message) {
+        return createBossBar(UUID.randomUUID(), color, style, progress, message);
     }
 
     @Override
-    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message) {
+    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
         return new BossBar(uuid, color, style, progress, message);
     }
 }

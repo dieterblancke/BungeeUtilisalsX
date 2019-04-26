@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -117,7 +116,7 @@ public class AnnounceCommand extends BUCommand {
                 BUCore.getApi().getUsers().forEach(user -> {
                     IBossBar bossBar = BUCore.getApi().createBossBar(
                             color, style, progress,
-                            Utils.c(PlaceHolderAPI.formatMessage(user, message.replace("%sub%", "").replace("%nl%", "")))
+                            Utils.format(user, message.replace("%sub%", "").replace("%nl%", ""))
                     );
 
                     bossBar.addUser(user);

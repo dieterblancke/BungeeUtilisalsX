@@ -16,13 +16,12 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisals.announcers.announcements;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
@@ -75,9 +74,11 @@ public class BossBarAnnouncement extends Announcement {
 
             messages.forEach(message -> {
                 final IBossBar bar = BUCore.getApi().createBossBar();
-                bar.setMessage(PlaceHolderAPI.formatMessage(user, Utils.c(message.isLanguage()
-                        ? config.getString(message.getText())
-                        : message.getText())));
+                bar.setMessage(
+                        Utils.format(user, message.isLanguage()
+                                ? config.getString(message.getText())
+                                : message.getText())
+                );
                 bar.setColor(message.getColor());
                 bar.setProgress(message.getProgress());
                 bar.setStyle(message.getStyle());

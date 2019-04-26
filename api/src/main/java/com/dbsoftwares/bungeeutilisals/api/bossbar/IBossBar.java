@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.bossbar;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.UUID;
 
@@ -57,9 +58,15 @@ public interface IBossBar {
 
     void setVisible(boolean visible);
 
+    @Deprecated
     String getMessage();
 
+    @Deprecated
     void setMessage(String title);
+
+    void setMessage(BaseComponent[] title);
+
+    BaseComponent[] getBaseComponent();
 
     void addUser(User user);
 

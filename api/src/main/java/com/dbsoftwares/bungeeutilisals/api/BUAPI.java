@@ -34,6 +34,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -235,18 +236,18 @@ public interface BUAPI {
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
      * @param progress Progress of the BossBar, between 0.0 and 1.0.
-     * @param message  The display message of the BossBar (String)
+     * @param message  The display message of the BossBar
      * @return a new BossBar instance.
      */
-    IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message);
+    IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message);
 
     /**
      * @param uuid     UUID for the BossBar, should be unique!
      * @param color    Color of the BossBar.
      * @param style    Amount of divisions in the BossBar.
      * @param progress Progress of the BossBar, between 0.0 and 1.0.
-     * @param message  The display message of the BossBar (String)
+     * @param message  The display message of the BossBar
      * @return a new BossBar instance.
      */
-    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message);
+    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message);
 }
