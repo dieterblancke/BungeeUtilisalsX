@@ -152,9 +152,13 @@ public class SQLFriendsDao implements FriendsDao {
     public List<FriendRequest> getIncomingFriendRequests(UUID uuid) {
         final List<FriendRequest> friendRequests = Lists.newArrayList();
 
+        // TODO: fix so it also loads the friend / user name
+
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {friendrequests-table} WHERE friend = ?;")
+                     format("SELECT f.user, u.username, friend, requested_at FROM {friendrequests-table} f" +
+                             " JOIN {users-table} u ON f.user = u.uuid" +
+                             " WHERE friend = ?;")
              )) {
             pstmt.setString(1, uuid.toString());
 

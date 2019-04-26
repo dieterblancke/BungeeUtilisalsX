@@ -18,8 +18,9 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -28,35 +29,48 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class FriendListSubCommand extends SubCommand {
+public class FriendRequestsSubCommand extends SubCommand {
 
-    public FriendListSubCommand() {
+    public FriendRequestsSubCommand() {
         super(
-                "list", 0, 1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.aliases").split(", "))
+                "requests", 1, 2,
+                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.requests.aliases").split(", "))
         );
     }
 
     @Override
     public String getUsage() {
-        return "/friends list [page]";
+        return "/friends requests (in/out) [page]";
     }
 
     @Override
     public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.permission");
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.requests.permission");
     }
 
     @Override
     public void onExecute(User user, String[] args) {
-        final List<FriendData> allFriends = user.getFriends();
+        final String type = args[0];
+        final List<FriendRequest> allRequests;
+        final String requestType;
 
-        if (allFriends.isEmpty()) {
-            user.sendLangMessage("friends.list.no-friends");
+        if (type.contains("out")) {
+            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests(user.getUuid());
+            requestType = "outgoing";
+        } else if (type.contains("in")) {
+            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests(user.getUuid());
+            requestType = "incoming";
+        } else {
+            user.sendLangMessage("friends.requests.usage");
             return;
         }
 
-        final int pages = (int) Math.ceil((double) allFriends.size() / 15);
+        if (allRequests.isEmpty()) {
+            user.sendLangMessage("friends.requests.no-requests");
+            return;
+        }
+
+        final int pages = (int) Math.ceil((double) allRequests.size() / 15);
         final int page;
 
         if (args.length >= 1) {
@@ -81,29 +95,31 @@ public class FriendListSubCommand extends SubCommand {
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
 
-        if (maxNumber > allFriends.size()) {
-            maxNumber = allFriends.size();
+        if (maxNumber > allRequests.size()) {
+            maxNumber = allRequests.size();
         }
 
-        final List<FriendData> friends = allFriends.subList(minNumber, maxNumber);
+        final List<FriendRequest> requests = allRequests.subList(minNumber, maxNumber);
         user.sendLangMessage(
-                "friends.list.head",
+                "friends.requests.head",
                 "{previousPage}", previous,
                 "{currentPage}", page,
                 "{nextPage}", next,
-                "{maxPages}", pages
+                "{maxPages}", pages,
+                "{type}", user.getLanguageConfig().getString("friends.requests." + requestType)
         );
 
-        friends.forEach(friend ->
+        requests.forEach(request ->
                 user.sendLangMessage(
-                        "friends.list.format",
-                        "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate(friend.getLastOnline()),
-                        "{online}", friend.isOnline(),
-                        "{friendSince}", Utils.formatDate(friend.getFriendSince())
+                        "friends.requests.format",
+                        "{target}", request.getFriend(),
+                        "{requestDate}", Utils.formatDate(request.getRequestedAt())
                 )
         );
-        user.sendLangMessage("friends.list.foot", "{friendAmount}", allFriends.size());
+        user.sendLangMessage(
+                "friends.requests.foot",
+                "{requestAmount}", allRequests.size(), "{type}", requestType, "{type_lowercase}", requestType.toLowerCase()
+        );
     }
 
     @Override
