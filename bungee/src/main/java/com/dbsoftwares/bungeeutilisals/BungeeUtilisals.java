@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals;
 
 import com.dbsoftwares.bungeeutilisals.announcers.ActionBarAnnouncer;
+import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
@@ -202,7 +203,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         // Loading Announcers
-        Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class);
+        Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class);
 
         // Loading all (enabled) Commands
         loadCommands();
@@ -387,6 +388,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("chatlock", ChatLockCommand.class);
         loadGeneralCommand("glag", GLagCommand.class);
         loadGeneralCommand("staffchat", StaffChatCommand.class);
+        loadGeneralCommand("language", LanguageCommand.class);
 
         if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             generalCommands.add(new FriendsCommand());

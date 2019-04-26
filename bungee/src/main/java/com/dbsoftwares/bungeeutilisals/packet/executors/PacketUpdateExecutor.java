@@ -29,7 +29,7 @@ import com.dbsoftwares.bungeeutilisals.packet.connection.BungeeConnection;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketSendEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
-import com.dbsoftwares.bungeeutilisals.packet.packets.position.PacketPlayInPlayerPosition;
+import com.dbsoftwares.bungeeutilisals.packet.packets.in.PacketPlayInPlayerPosition;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class PacketUpdateExecutor implements EventExecutor {

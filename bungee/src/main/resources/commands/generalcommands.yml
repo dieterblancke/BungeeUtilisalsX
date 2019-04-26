@@ -79,3 +79,7 @@ staffchat:
   enabled: true
   aliases: 'sc, schat'
   permission: bungeeutilisals.commands.staffchat
+language:
+  enabled: true
+  aliases: 'lang'
+  permission: bungeeutilisals.commands.language

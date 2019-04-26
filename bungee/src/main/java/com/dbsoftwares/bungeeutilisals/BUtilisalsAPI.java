@@ -22,6 +22,9 @@ import com.dbsoftwares.bungeeutilisals.addon.AddonManager;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -33,6 +36,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
+import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
@@ -49,10 +53,7 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class BUtilisalsAPI implements BUAPI {
@@ -276,5 +277,20 @@ public class BUtilisalsAPI implements BUAPI {
         }
         users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> LanguageUtils.sendLangMessage(manager, plugin, user, message, placeholders));
         LanguageUtils.sendLangMessage(manager, plugin, getConsole(), message, placeholders);
+    }
+
+    @Override
+    public IBossBar createBossBar() {
+        return new BossBar();
+    }
+
+    @Override
+    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message) {
+        return new BossBar(color, style, progress, message);
+    }
+
+    @Override
+    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message) {
+        return new BossBar(uuid, color, style, progress, message);
     }
 }

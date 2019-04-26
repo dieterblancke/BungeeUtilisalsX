@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.packet.packets.position;
+package com.dbsoftwares.bungeeutilisals.packet.packets.in;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.packet.packets.Packet;

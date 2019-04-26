@@ -10,6 +10,10 @@ actions:
 # This is an example if an user gets warned 5 times in 7 days time, he'll receive an one day tempmute.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
 - type: 'WARN'
+  # How far back should be looked for punishments of type X?
+  # Do note that this action will also have a 'delay' of this time per user.
+  # So if for example the time is 7 DAYS, then it will look for warns for the past 7 days,
+  # and once the action got executed, it won't get executed again till the 7 days have past.
   time:
     # Possible units: MINUTES, HOURS, DAYS, WEEKS
     unit: DAYS
@@ -20,6 +24,10 @@ actions:
 # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
 - type: 'TEMPMUTE'
+  # How far back should be looked for punishments of type X?
+  # Do note that this action will also have a 'delay' of this time per user.
+  # So if for example the time is 2 WEEKS, then it will look for tempmutes for the past 2 weeks,
+  # and once the action got executed, it won't get executed again till the 2 weeks have past.
   time:
     # Possible units: MINUTES, HOURS, DAYS, WEEKS
     unit: WEEKS

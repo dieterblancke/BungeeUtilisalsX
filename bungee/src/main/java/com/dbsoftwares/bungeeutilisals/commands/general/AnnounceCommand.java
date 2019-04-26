@@ -21,8 +21,13 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
@@ -30,6 +35,7 @@ import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
@@ -100,6 +106,35 @@ public class AnnounceCommand extends BUCommand {
                     });
                 }
                 break;
+            case BOSSBAR:
+                final List<IBossBar> bossBars = Lists.newArrayList();
+
+                final BarColor color = BarColor.valueOf(config.getString("announce.types.bossbar.color"));
+                final BarStyle style = BarStyle.valueOf(config.getString("announce.types.bossbar.style"));
+                float progress = config.getFloat("announce.types.bossbar.progress");
+                long stay = config.getInteger("announce.types.bossbar.stay");
+
+                BUCore.getApi().getUsers().forEach(user -> {
+                    IBossBar bossBar = BUCore.getApi().createBossBar(
+                            color, style, progress,
+                            Utils.c(PlaceHolderAPI.formatMessage(user, message.replace("%sub%", "").replace("%nl%", "")))
+                    );
+
+                    bossBar.addUser(user);
+                    bossBars.add(bossBar);
+                });
+
+                ProxyServer.getInstance().getScheduler().schedule(
+                        BungeeUtilisals.getInstance(), () ->
+                                bossBars.forEach(bossBar -> {
+                                    bossBar.clearUsers();
+
+                                    bossBar.unregister();
+                                }),
+                        stay, TimeUnit.SECONDS.toJavaTimeUnit()
+                );
+
+                break;
         }
     }
 
@@ -137,6 +172,9 @@ public class AnnounceCommand extends BUCommand {
         }
         if (types.contains("t")) {
             announcementTypes.add(AnnouncementType.TITLE);
+        }
+        if (types.contains("b")) {
+            announcementTypes.add(AnnouncementType.BOSSBAR);
         }
 
         return announcementTypes;

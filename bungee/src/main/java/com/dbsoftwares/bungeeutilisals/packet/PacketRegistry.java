@@ -19,7 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.packet;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.packet.packets.position.PacketPlayInPlayerPosition;
+import com.dbsoftwares.bungeeutilisals.packet.packets.in.PacketPlayInPlayerPosition;
+import com.dbsoftwares.bungeeutilisals.packet.packets.out.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.packet.utils.PacketUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.protocol.Protocol;
@@ -45,6 +46,12 @@ public class PacketRegistry {
                 ProtocolMapping.map(Version.MINECRAFT_1_12, 0x0E),
                 ProtocolMapping.map(Version.MINECRAFT_1_12_1, 0x0D),
                 ProtocolMapping.map(Version.MINECRAFT_1_13, 0x10)
+        ));
+        // https://wiki.vg/Protocol#Boss_Bar
+        registry.add(new PacketData(
+                PacketPlayOutBossBar.class,
+                getClientDirection(Protocol.GAME),
+                ProtocolMapping.map(Version.MINECRAFT_1_9, 0x0C)
         ));
 
         /* For if we ever (try to) add back the inventory packets

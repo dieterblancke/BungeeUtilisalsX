@@ -113,6 +113,14 @@ general-commands:
     enabled: '&eYou are now talking in the &bstaff chat&e!'
     disabled: '&eYou are now talking in the &bpublic chat&e!'
     format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
+  language:
+    usage:
+      - '&ePlease use &b/language (language)&e!'
+      - '&eAvailable languages: &b{languages}'
+    notfound:
+      - '&cCould not find a language called &4{language}&c!'
+      - '&eAvailable languages: &b{languages}'
+    changed: '&eYour language has been changed to &b{language}!'
 
 friends:
   request-received:

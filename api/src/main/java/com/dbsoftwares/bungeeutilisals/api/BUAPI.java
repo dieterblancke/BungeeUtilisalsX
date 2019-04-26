@@ -20,6 +20,9 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -39,6 +42,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 public interface BUAPI {
 
@@ -221,4 +225,28 @@ public interface BUAPI {
      * @return the addon chat that is being used
      */
     IAddonManager getAddonManager();
+
+    /**
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar();
+
+    /**
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
+     * @param message  The display message of the BossBar (String)
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar(BarColor color, BarStyle style, float progress, String message);
+
+    /**
+     * @param uuid     UUID for the BossBar, should be unique!
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
+     * @param message  The display message of the BossBar (String)
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, String message);
 }
