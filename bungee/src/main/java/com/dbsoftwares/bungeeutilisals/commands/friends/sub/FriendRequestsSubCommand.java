@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
 import java.util.List;
@@ -109,13 +110,16 @@ public class FriendRequestsSubCommand extends SubCommand {
                 "{type}", user.getLanguageConfig().getString("friends.requests." + requestType)
         );
 
-        requests.forEach(request ->
-                user.sendLangMessage(
-                        "friends.requests.format",
-                        "{target}", request.getFriend(),
-                        "{requestDate}", Utils.formatDate(request.getRequestedAt())
-                )
-        );
+        requests.forEach(request -> {
+            final String targetName = requestType.equalsIgnoreCase("outgoing")
+                    ? request.getFriendName() : request.getUserName();
+
+            user.sendLangMessage(
+                    "friends.requests.format",
+                    "{target}", targetName,
+                    "{requestDate}", Utils.formatDate(request.getRequestedAt())
+            );
+        });
         user.sendLangMessage(
                 "friends.requests.foot",
                 "{requestAmount}", allRequests.size(), "{type}", requestType, "{type_lowercase}", requestType.toLowerCase()
@@ -124,6 +128,6 @@ public class FriendRequestsSubCommand extends SubCommand {
 
     @Override
     public List<String> getCompletions(User user, String[] args) {
-        return null;
+        return ImmutableList.of();
     }
 }

@@ -32,11 +32,11 @@ public class FriendUtils {
     private FriendUtils() {
     }
 
-    public static int getFriendsLimit(User user) {
+    public static int getFriendsLimit(final User user) {
         return getFriendsLimit(user.sender());
     }
 
-    public static int getFriendsLimit(CommandSender sender) {
+    public static int getFriendsLimit(final CommandSender sender) {
         final ISection limits = FileLocation.FRIENDS_CONFIG.getConfiguration().getSection("friendlimits");
         final List<String> permissions = sender.getPermissions().stream()
                 .filter(perm -> perm.startsWith(limits.getString("permission")))

@@ -221,6 +221,19 @@ friends:
       incoming: '&a<- &e{target} - &b{requestDate}'
       outgoing: '&c-> &e{target} - &b{requestDate}'
     foot: '&eYou currently have a total of &b{requestAmount} &e{type_lowercase} friend requests!'
+  msg:
+    not-friend: '&b{user} &eis not in your friend list!'
+
+    format:
+      send: '&7(&eMe &e-> &b{user}&7) &f{message}'
+      receive: '&7(&b{user} &e-> Me&7) &f{message}'
+  reply:
+    no-target: '&eThere is currently nobody to reply to!'
+    not-friend: '&b{user} &eis not in your friend list anymore!'
+
+    format:
+      send: '&7(&eMe &e-> &b{user}&7) &f{message}'
+      receive: '&7(&b{user} &e-> Me&7) &f{message}'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

@@ -152,13 +152,11 @@ public class SQLFriendsDao implements FriendsDao {
     public List<FriendRequest> getIncomingFriendRequests(UUID uuid) {
         final List<FriendRequest> friendRequests = Lists.newArrayList();
 
-        // TODO: fix so it also loads the friend / user name
-
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT f.user, u.username, friend, requested_at FROM {friendrequests-table} f" +
-                             " JOIN {users-table} u ON f.user = u.uuid" +
-                             " WHERE friend = ?;")
+                     format("SELECT user, username, friend, requested_at FROM {friendrequests-table}"
+                             + " JOIN {users-table} ON user = uuid"
+                             + " WHERE friend = ?;")
              )) {
             pstmt.setString(1, uuid.toString());
 
@@ -166,8 +164,10 @@ public class SQLFriendsDao implements FriendsDao {
                 while (rs.next()) {
                     friendRequests.add(new FriendRequest(
                             uuid,
+                            rs.getString("username"),
                             UUID.fromString(rs.getString("friend")),
-                            rs.getTimestamp("requested_at")
+                            null,
+                            Dao.formatStringToDate(rs.getString("requested_at"))
                     ));
                 }
             }
@@ -184,7 +184,9 @@ public class SQLFriendsDao implements FriendsDao {
 
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {friendrequests-table} WHERE user = ?;")
+                     format("SELECT user, friend, username, requested_at FROM {friendrequests-table}"
+                             + " JOIN {users-table} ON user = uuid"
+                             + " WHERE user = ?;")
              )) {
             pstmt.setString(1, uuid.toString());
 
@@ -192,8 +194,10 @@ public class SQLFriendsDao implements FriendsDao {
                 while (rs.next()) {
                     friendRequests.add(new FriendRequest(
                             uuid,
+                            null,
                             UUID.fromString(rs.getString("friend")),
-                            rs.getTimestamp("requested_at")
+                            rs.getString("username"),
+                            Dao.formatStringToDate(rs.getString("requested_at"))
                     ));
                 }
             }

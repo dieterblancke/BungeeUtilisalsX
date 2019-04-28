@@ -64,7 +64,7 @@ public abstract class SubCommand {
         }
         final int length = args.length - 1;
 
-        if (length < minimumArgs || length > maximumArgs) {
+        if (length < minimumArgs || (maximumArgs >= 0 && length > maximumArgs)) {
             return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
         }
         if (!getPermission().isEmpty()

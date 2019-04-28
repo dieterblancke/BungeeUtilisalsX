@@ -29,7 +29,9 @@ import java.util.UUID;
 public class FriendRequest {
 
     private UUID user;
+    private String userName;
     private UUID friend;
+    private String friendName;
     private Date requestedAt;
 
 }

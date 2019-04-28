@@ -36,13 +36,13 @@ subcommands:
   list:
     aliases: 'fl'
     permission: bungeeutilisals.friends.list
-  requests: # TODO
+  requests:
     aliases: 'req'
     permission: bungeeutilisals.friends.requests
-  msg: # TODO
+  msg:
     aliases: 'm, tell, w, whisper, message'
     permission: bungeeutilisals.friends.msg
-  reply: # TODO
+  reply:
     aliases: 'r'
     permission: bungeeutilisals.friends.reply
   settings: # TODO
