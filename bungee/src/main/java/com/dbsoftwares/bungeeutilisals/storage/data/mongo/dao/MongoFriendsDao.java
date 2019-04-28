@@ -73,7 +73,7 @@ public class MongoFriendsDao implements FriendsDao {
 
             friends.add(new FriendData(
                     uuid,
-                    friend.getString("name"),
+                    friend.getString("username"),
                     doc.getDate("created"),
                     friend.getDate("lastlogout")
             ));
@@ -116,13 +116,19 @@ public class MongoFriendsDao implements FriendsDao {
     public List<FriendRequest> getIncomingFriendRequests(UUID uuid) {
         final List<FriendRequest> friendRequests = Lists.newArrayList();
         final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
 
-        coll.find(Filters.eq("friend", uuid)).forEach((Block<? super Document>) doc ->
-                friendRequests.add(new FriendRequest(
-                        uuid,
-                        UUID.fromString(doc.getString("friend")),
-                        doc.getDate("requested_at")
-                )));
+        coll.find(Filters.eq("friend", uuid)).forEach((Block<? super Document>) doc -> {
+            final Document friend = userColl.find(Filters.eq("uuid", doc.getString("user"))).first();
+
+            friendRequests.add(new FriendRequest(
+                    uuid,
+                    friend.getString("username"),
+                    UUID.fromString(doc.getString("friend")),
+                    null,
+                    doc.getDate("requested_at")
+            ));
+        });
 
         return friendRequests;
     }
@@ -131,13 +137,18 @@ public class MongoFriendsDao implements FriendsDao {
     public List<FriendRequest> getOutgoingFriendRequests(UUID uuid) {
         final List<FriendRequest> friendRequests = Lists.newArrayList();
         final MongoCollection<Document> coll = db().getCollection(format("{friendrequests-table}"));
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
 
-        coll.find(Filters.eq("user", uuid)).forEach((Block<? super Document>) doc ->
-                friendRequests.add(new FriendRequest(
-                        uuid,
-                        UUID.fromString(doc.getString("friend")),
-                        doc.getDate("requested_at")
-                )));
+        coll.find(Filters.eq("user", uuid)).forEach((Block<? super Document>) doc -> {
+            final Document friend = userColl.find(Filters.eq("uuid", doc.getString("friend"))).first();
+            friendRequests.add(new FriendRequest(
+                    uuid,
+                    null,
+                    UUID.fromString(doc.getString("friend")),
+                    friend.getString("username"),
+                    doc.getDate("requested_at")
+            ));
+        });
 
         return friendRequests;
     }
