@@ -76,7 +76,7 @@ public class FriendSettingsSubCommand extends SubCommand {
             user.getFriendSettings().set(type, value);
             BUCore.getApi().getStorageManager().getDao().getFriendsDao().setSetting(user.getUuid(), type, value);
 
-            user.sendLangMessage("friends.settings.updated", "{type}", type);
+            user.sendLangMessage("friends.settings.updated", "{type}", type.toString().toLowerCase());
         } else {
             user.sendLangMessage("friends.settings.usage");
         }

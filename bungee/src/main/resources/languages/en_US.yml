@@ -247,16 +247,17 @@ friends:
     noargs:
       header: '&eFriend Settings:'
       format:
-        - text: '&e- &b{type} &e- '
-        - text: '&a&lENABLE'
-          click:
-            type: 'RUN_COMMAND'
-            action: '/friends settings {type} enable'
-        - text: ' &e- '
-        - text: '&c&lDISABLE'
-          click:
-            type: 'RUN_COMMAND'
-            action: '/friends settings {type} disable'
+        text:
+          - text: '&e- &b{type} &e- '
+          - text: '&a&lENABLE'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {type} enable'
+          - text: ' &e- '
+          - text: '&c&lDISABLE'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {type} disable'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
