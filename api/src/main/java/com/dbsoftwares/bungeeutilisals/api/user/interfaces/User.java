@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
@@ -283,4 +284,9 @@ public interface User extends ExperimentalUser {
      * @return a list of the user's Friends
      */
     List<FriendData> getFriends();
+
+    /**
+     * @return the used friend settings
+     */
+    FriendSettings getFriendSettings();
 }

@@ -49,10 +49,7 @@ import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommand;
-import com.dbsoftwares.bungeeutilisals.executors.MuteCheckExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserChatExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserPunishExecutor;
+import com.dbsoftwares.bungeeutilisals.executors.*;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
@@ -200,6 +197,10 @@ public class BungeeUtilisals extends Plugin {
             MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
             loader.register(UserChatEvent.class, muteCheckExecutor);
             loader.register(UserCommandEvent.class, muteCheckExecutor);
+        }
+
+        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
+            loader.register(UserLoadEvent.class, new FriendsExecutor());
         }
 
         // Loading Announcers

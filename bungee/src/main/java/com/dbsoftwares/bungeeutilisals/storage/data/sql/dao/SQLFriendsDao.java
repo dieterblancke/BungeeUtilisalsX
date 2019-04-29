@@ -21,6 +21,8 @@ package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
@@ -252,6 +254,98 @@ public class SQLFriendsDao implements FriendsDao {
         }
 
         return found;
+    }
+
+    @Override
+    public void setSetting(UUID uuid, FriendSettingType type, boolean value) {
+        // not really the cleanest code, but should be fine
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT COUNT(user) FROM {friendsettings-table} WHERE user = ?")
+             )) {
+            pstmt.setString(1, uuid.toString());
+            boolean exists = false;
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    exists = rs.getInt(1) > 0;
+                }
+            }
+
+            if (exists) {
+                try (PreparedStatement updatePstmt = connection.prepareStatement(
+                        format("UPDATE {friendsettings-table} SET " + type.toString().toLowerCase() + " = ? WHERE user = ?);")
+                )) {
+                    updatePstmt.setBoolean(1, value);
+                    updatePstmt.setString(2, uuid.toString());
+
+                    updatePstmt.executeUpdate();
+                }
+            } else {
+                try (PreparedStatement insertPstmt = connection.prepareStatement(
+                        format("INSERT INTO {friendsettings-table} (user, requests, messages) VALUES (?, ?, ?);")
+                )) {
+                    insertPstmt.setString(1, uuid.toString());
+                    insertPstmt.setBoolean(2, getValue(FriendSettingType.REQUESTS, type, value));
+                    insertPstmt.setBoolean(3, getValue(FriendSettingType.MESSAGES, type, value));
+
+                    insertPstmt.executeUpdate();
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+    }
+
+    private boolean getValue(final FriendSettingType setting, final FriendSettingType type, final boolean value) {
+        return setting.equals(type) ? value : setting.getDefault();
+    }
+
+    @Override
+    public boolean getSetting(UUID uuid, FriendSettingType type) {
+        boolean setting = type.getDefault();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT " + type.toString().toLowerCase() + " FROM {friendsettings-table} WHERE user = ? LIMIT 1;")
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    setting = rs.getBoolean(type.toString().toLowerCase());
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return setting;
+    }
+
+    @Override
+    public FriendSettings getSettings(UUID uuid) {
+        FriendSettings settings = null;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT * FROM {friendsettings-table} WHERE user = ? LIMIT 1;")
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    settings = new FriendSettings(
+                            rs.getBoolean("requests"),
+                            rs.getBoolean("messages")
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return settings == null ? new FriendSettings() : settings;
     }
 
     private String format(String line) {

@@ -39,9 +39,13 @@ CREATE INDEX IF NOT EXISTS idx_friendreq
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
   user     VARCHAR(48) NOT NULL,
-  settings JSON        NOT NULL, /* TODO: change this to columns ... */
-  PRIMARY KEY (user)
+  requests    TINYINT(1)  NOT NULL,
+  messages    TINYINT(1)  NOT NULL,
+    PRIMARY KEY (user)
 );
+
+CREATE INDEX IF NOT EXISTS idx_friendset
+  ON `{friendsettings-table}` (user, requests, messages);
 
 
 CREATE TABLE IF NOT EXISTS `{bans-table}`

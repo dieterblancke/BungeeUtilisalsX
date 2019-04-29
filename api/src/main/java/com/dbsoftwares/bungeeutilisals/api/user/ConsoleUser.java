@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -275,6 +276,11 @@ public class ConsoleUser implements User {
             builder.append(message);
         }
         return builder.toString();
+    }
+
+    @Override
+    public FriendSettings getFriendSettings() {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     private String replacePlaceHolders(String message, Object... placeholders) {

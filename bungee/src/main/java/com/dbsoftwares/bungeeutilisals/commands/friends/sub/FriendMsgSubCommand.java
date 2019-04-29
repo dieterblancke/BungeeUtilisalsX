@@ -61,6 +61,11 @@ public class FriendMsgSubCommand extends SubCommand {
             final String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             final User target = optional.get();
 
+            if (!target.getFriendSettings().isMessages()) {
+                user.sendLangMessage("friends.msg.disallowed");
+                return;
+            }
+
             user.getStorage().setData("FRIEND_MSG_LAST_USER", target.getName());
             target.getStorage().setData("FRIEND_MSG_LAST_USER", user.getName());
 

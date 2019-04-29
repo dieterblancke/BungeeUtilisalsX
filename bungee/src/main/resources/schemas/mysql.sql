@@ -16,9 +16,11 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
 
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
-  user     VARCHAR(48) NOT NULL,
-  settings JSON        NOT NULL, /* TODO: change this to columns ... */
-  PRIMARY KEY (user)
+  user        VARCHAR(48) NOT NULL,
+  requests    TINYINT(1)  NOT NULL,
+  messages    TINYINT(1)  NOT NULL,
+  PRIMARY KEY (user),
+  KEY idx_friendset (user, requests, messages)
 )
   ENGINE = InnoDB
   AUTO_INCREMENT = 1

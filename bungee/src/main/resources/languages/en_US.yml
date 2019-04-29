@@ -124,6 +124,8 @@ general-commands:
     already: '&eYou are already using the &b{language} &elanguage!'
 
 friends:
+  join:
+    requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
   request-received:
     text:
       - text: '&eYou have received a friend request from &b{name}&e!{nl}'
@@ -158,6 +160,7 @@ friends:
             action: '/friend accept {name}'
         - text: '&einstead!'
     request-sent: '&eA friend request has been sent to &b{user}&e!'
+    disallowed: '&eThis user does not want to receive friend requests.'
   accept:
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
@@ -223,6 +226,7 @@ friends:
     foot: '&eYou currently have a total of &b{requestAmount} &e{type_lowercase} friend requests!'
   msg:
     not-friend: '&b{user} &eis not in your friend list!'
+    disallowed: '&eThis user does not want to receive any messages!'
 
     format:
       send: '&7(&eMe &e-> &b{user}&7) &f{message}'
@@ -230,10 +234,29 @@ friends:
   reply:
     no-target: '&eThere is currently nobody to reply to!'
     not-friend: '&b{user} &eis not in your friend list anymore!'
+    disallowed: '&eThis user does not want to receive any messages!'
 
     format:
       send: '&7(&eMe &e-> &b{user}&7) &f{message}'
       receive: '&7(&b{user} &e-> Me&7) &f{message}'
+  settings:
+    usage: '&ePlease use &b/friend settings (setting) (enable / disable)'
+    invalid: '&ePlease use one of the following settings: &b{settings}'
+    updated: '&eYou have successfully updated the &b{type} setting&e!'
+
+    noargs:
+      header: '&eFriend Settings:'
+      format:
+        - text: '&e- &b{type} &e- '
+        - text: '&a&lENABLE'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends settings {type} enable'
+        - text: ' &e- '
+        - text: '&c&lDISABLE'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends settings {type} disable'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

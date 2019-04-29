@@ -38,10 +38,14 @@ ON "{friendrequests-table}" ("user", "friend");
 
 CREATE TABLE IF NOT EXISTS "{friendsettings-table}"
 (
-  user     VARCHAR(48) NOT NULL,
-  settings JSON        NOT NULL,
+  user        VARCHAR(48)  NOT NULL,
+  requests    BOOLEAN      NOT NULL,
+  messages    BOOLEAN      NOT NULL,
   PRIMARY KEY (user)
 );
+
+CREATE INDEX IF NOT EXISTS idx_friendset
+ON "{friendsettings-table}" ("user", "requests", "messages");
 
 
 CREATE TABLE IF NOT EXISTS `{bans-table}`

@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -68,6 +69,8 @@ public class BUser implements User {
 
     @Getter
     private List<FriendData> friends = Lists.newArrayList();
+    @Getter
+    private FriendSettings friendSettings;
 
     @Getter
     private boolean inStaffChat;
@@ -123,6 +126,9 @@ public class BUser implements User {
 
         if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
             friends = dao.getFriendsDao().getFriends(uuid);
+            friendSettings = dao.getFriendsDao().getSettings(uuid);
+        } else {
+            friendSettings = new FriendSettings();
         }
 
         UserLoadEvent userLoadEvent = new UserLoadEvent(this);

@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -72,9 +73,13 @@ public class FriendAddSubCommand extends SubCommand {
 
         final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
         final UserStorage storage;
+        final boolean accepts;
 
         if (optionalTarget.isPresent()) {
-            storage = optionalTarget.get().getStorage();
+            final User target = optionalTarget.get();
+
+            storage = target.getStorage();
+            accepts = target.getFriendSettings().isRequests();
         } else {
             if (!dao.getUserDao().exists(args[0])) {
                 user.sendLangMessage("never-joined");
@@ -82,6 +87,12 @@ public class FriendAddSubCommand extends SubCommand {
             }
 
             storage = dao.getUserDao().getUserData(name);
+            accepts = dao.getFriendsDao().getSetting(storage.getUuid(), FriendSettingType.REQUESTS);
+        }
+
+        if (!accepts) {
+            user.sendLangMessage("friends.add.disallowed");
+            return;
         }
 
         if (dao.getFriendsDao().hasOutgoingFriendRequest(user.getUuid(), storage.getUuid())) {

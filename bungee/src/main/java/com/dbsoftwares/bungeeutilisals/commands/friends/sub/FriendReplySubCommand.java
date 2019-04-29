@@ -67,6 +67,11 @@ public class FriendReplySubCommand extends SubCommand {
             final String message = String.join(" ", args);
             final User target = optional.get();
 
+            if (!target.getFriendSettings().isMessages()) {
+                user.sendLangMessage("friends.msg.disallowed");
+                return;
+            }
+
             // only needs to be set for target, as the current user (sender) still has this target as last user
             target.getStorage().setData("FRIEND_MSG_LAST_USER", user.getName());
 

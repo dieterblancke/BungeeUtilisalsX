@@ -20,6 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 
 import java.util.List;
 import java.util.UUID;
@@ -45,4 +47,10 @@ public interface FriendsDao {
     boolean hasIncomingFriendRequest(UUID user, UUID uuid);
 
     boolean hasOutgoingFriendRequest(UUID user, UUID uuid);
+
+    void setSetting(UUID uuid, FriendSettingType type, boolean value);
+
+    boolean getSetting(UUID uuid, FriendSettingType type);
+
+    FriendSettings getSettings(UUID uuid);
 }

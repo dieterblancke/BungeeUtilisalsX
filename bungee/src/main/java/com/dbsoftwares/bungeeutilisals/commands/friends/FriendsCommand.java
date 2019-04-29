@@ -45,6 +45,7 @@ public class FriendsCommand extends BUCommand {
         subCommands.add(new FriendRequestsSubCommand());
         subCommands.add(new FriendMsgSubCommand());
         subCommands.add(new FriendReplySubCommand());
+        subCommands.add(new FriendSettingsSubCommand());
     }
 
     @Override

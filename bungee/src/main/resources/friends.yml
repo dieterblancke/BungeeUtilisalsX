@@ -13,6 +13,11 @@ friendlimits:
     mvp: 20
     helper: 25
 
+# The settings that will be given to players by default.
+settings:
+  requests: true
+  messages: true
+
 command:
   aliases: 'friend, bfriends'
   permission: bungeeutilisals.friends
