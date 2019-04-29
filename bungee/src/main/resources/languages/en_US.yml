@@ -246,9 +246,14 @@ friends:
 
     noargs:
       header: '&eFriend Settings:'
+      enabled: '&aenabled'
+      disabled: '&cdisabled'
+
       format:
         text:
           - text: '&e- &b{type} &e- '
+            hover:
+              - '&eStatus: {status}'
           - text: '&a&lENABLE'
             click:
               type: 'RUN_COMMAND'

@@ -45,4 +45,15 @@ public class FriendSettings {
                 break;
         }
     }
+
+    public boolean check(final FriendSettingType type) {
+        switch (type) {
+            case REQUESTS:
+                return isRequests();
+            case MESSAGES:
+                return isMessages();
+            default:
+                return false;
+        }
+    }
 }

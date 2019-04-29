@@ -274,7 +274,7 @@ public class SQLFriendsDao implements FriendsDao {
 
             if (exists) {
                 try (PreparedStatement updatePstmt = connection.prepareStatement(
-                        format("UPDATE {friendsettings-table} SET " + type.toString().toLowerCase() + " = ? WHERE user = ?);")
+                        format("UPDATE {friendsettings-table} SET " + type.toString().toLowerCase() + " = ? WHERE user = ?;")
                 )) {
                     updatePstmt.setBoolean(1, value);
                     updatePstmt.setString(2, uuid.toString());

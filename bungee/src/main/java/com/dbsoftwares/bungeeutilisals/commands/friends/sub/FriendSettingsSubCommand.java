@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -53,11 +54,14 @@ public class FriendSettingsSubCommand extends SubCommand {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length == 0) {
+            final FriendSettings settings = user.getFriendSettings();
             user.sendLangMessage("friends.settings.noargs.header");
+
             for (FriendSettingType setting : FriendSettingType.values()) {
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
-                        "{type}", setting.getName(user.getLanguageConfig())
+                        "{type}", setting.getName(user.getLanguageConfig()),
+                        "{status}", user.getLanguageConfig().getString("friends.settings.noargs." + (settings.check(setting) ? "enabled" : "disabled"))
                 );
             }
         } else if (args.length == 2) {
