@@ -413,6 +413,8 @@ public class BungeeUtilisals extends Plugin {
         loadPunishmentCommand("unbanip", UnbanIPCommand.class);
         loadPunishmentCommand("unmute", UnmuteCommand.class);
         loadPunishmentCommand("unmuteip", UnmuteIPCommand.class);
+
+        loadPunishmentCommand("punishmentinfo", PunishmentInfoCommand.class);
     }
 
     private void loadCustomCommands() {

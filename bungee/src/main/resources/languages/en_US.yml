@@ -461,6 +461,9 @@ punishments:
     broadcast:
       - '&a{user}&f''s IP has been unmuted by &a{by} &fat &a{server}&f!'
 
+  punishmentinfo:
+    usage: '&ePlease use &b/punishmentinfo (user) [type / all]&e!'
+
 custom:
   announcements:
     chat:

@@ -119,3 +119,8 @@ commands:
     aliases: 'punmuteip, gunmuteip, unsetmuteip, removemuteip'
     permission: bungeeutilisals.punishments.unmuteip
     broadcast: bungeeutilisals.punishments.unmuteip.broadcast
+  punishmentinfo:
+    enabled: true
+    aliases: 'pinfo'
+    permission: bungeeutilisals.punishments.punishmentinfo
+    broadcast: bungeeutilisals.punishments.punishmentinfo.broadcast
