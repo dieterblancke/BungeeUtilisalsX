@@ -465,6 +465,15 @@ punishments:
     usage: '&ePlease use &b/punishmentinfo (user) [type / all]&e!'
 
 custom:
+  # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
+  announce:
+    welcome:
+      chat: '&eWelcome &b{user} &eto our network!'
+      actionbar: '&eWelcome &b{user} &eto our network!'
+      bossbar: '&eWelcome &b{user} &eto our network!'
+      title:
+        main: '&eWelcome &b{user}'
+        sub: '&eto our network!'
   announcements:
     chat:
       minigame1:

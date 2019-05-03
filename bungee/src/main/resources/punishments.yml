@@ -9,6 +9,7 @@ date-format: 'dd-MM-yyyy kk:mm:ss'
 actions:
 # This is an example if an user gets warned 5 times in 7 days time, he'll receive an one day tempmute.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
+  # UID (= Unique IDentifier) should be an unique string to identify the punishment action.
 - type: 'WARN'
   # How far back should be looked for punishments of type X?
   # Do note that this action will also have a 'delay' of this time per user.
@@ -23,7 +24,9 @@ actions:
   - 'tempmute %user% 1d You have received too many warns recently!'
 # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
-- type: 'TEMPMUTE'
+  # UID (= Unique IDentifier) should be an unique string to identify the punishment action.
+- uid: ''
+  type: 'TEMPMUTE'
   # How far back should be looked for punishments of type X?
   # Do note that this action will also have a 'delay' of this time per user.
   # So if for example the time is 2 WEEKS, then it will look for tempmutes for the past 2 weeks,

@@ -54,6 +54,8 @@ announce:
       fadein: 1
       stay: 3
       fadeout: 1
+  # Path to preconfigured messages in the languages file.
+  pre_configured: 'custom.announce'
 find:
   enabled: true
   aliases: 'search'
