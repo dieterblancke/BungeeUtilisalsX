@@ -27,24 +27,29 @@ import net.md_5.bungee.event.EventHandler;
 public class RedisMessenger implements Listener {
 
     private Gson gson = new Gson();
+    private static final String MAIN_CHANNEL = "BUNGEEUTILISALS_MAIN";
 
     public RedisMessenger() {
-        for (Channels channel : Channels.values()) {
-            RedisBungee.getApi().registerPubSubChannels(channel.toString());
-        }
+        RedisBungee.getApi().registerPubSubChannels(MAIN_CHANNEL);
+//        for (Channels channel : Channels.values()) {
+//            RedisBungee.getApi().registerPubSubChannels(channel.toString());
+//        }
     }
 
-    public void sendChannelMessage(Channels channel, Object message) {
-        RedisBungee.getApi().sendChannelMessage(channel.toString(), gson.toJson(message));
-    }
+//    public void sendChannelMessage(Channels channel, Object message) {
+//        RedisBungee.getApi().sendChannelMessage(channel.toString(), gson.toJson(message));
+//    }
 
     @EventHandler
     public void onPubSubEvent(PubSubMessageEvent event) {
-        for (Channels channel : Channels.values()) {
-            if (channel.toString().equalsIgnoreCase(event.getChannel())) {
-                channel.execute(event.getMessage());
-                break;
-            }
+        if (event.getChannel().equalsIgnoreCase(MAIN_CHANNEL)) {
+
         }
+//        for (Channels channel : Channels.values()) {
+//            if (channel.toString().equalsIgnoreCase(event.getChannel())) {
+//                channel.execute(event.getMessage());
+//                break;
+//            }
+//        }
     }
 }
