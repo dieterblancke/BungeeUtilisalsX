@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
@@ -29,12 +29,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 public class UserChatExecutor implements EventExecutor {
-
-    private IChatManager manager;
-
-    public UserChatExecutor(IChatManager manager) {
-        this.manager = manager;
-    }
 
     @Event(priority = Priority.HIGHEST, executeIfCancelled = false)
     public void onUnicodeReplace(UserChatEvent event) {
@@ -62,11 +56,11 @@ public class UserChatExecutor implements EventExecutor {
         String message = event.getMessage();
         IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
 
-        if (manager.checkForSwear(event.getUser(), message)) {
+        if (BUCore.getApi().getChatManager().checkForSwear(event.getUser(), message)) {
             if (config.getBoolean("cancel")) {
                 event.setCancelled(true);
             } else {
-                event.setMessage(manager.replaceSwearWords(user, message, config.getString("replace")));
+                event.setMessage(BUCore.getApi().getChatManager().replaceSwearWords(user, message, config.getString("replace")));
             }
             user.sendLangMessage("chat-protection.swear");
         }
@@ -78,7 +72,7 @@ public class UserChatExecutor implements EventExecutor {
         String message = event.getMessage();
         IConfiguration config = FileLocation.ANTICAPS.getConfiguration();
 
-        if (manager.checkForCaps(user, message)) {
+        if (BUCore.getApi().getChatManager().checkForCaps(user, message)) {
             if (config.getBoolean("cancel")) {
                 event.setCancelled(true);
             } else {
@@ -92,7 +86,7 @@ public class UserChatExecutor implements EventExecutor {
     public void onSpamChat(UserChatEvent event) {
         User user = event.getUser();
 
-        if (manager.checkForSpam(user)) {
+        if (BUCore.getApi().getChatManager().checkForSpam(user)) {
             event.setCancelled(true);
 
             user.sendLangMessage("chat-protection.spam", "%time%", user.getCooldowns().getLeftTime("CHATSPAM") / 1000);
@@ -104,7 +98,7 @@ public class UserChatExecutor implements EventExecutor {
         User user = event.getUser();
         String message = event.getMessage();
 
-        if (manager.checkForAdvertisement(user, message)) {
+        if (BUCore.getApi().getChatManager().checkForAdvertisement(user, message)) {
             event.setCancelled(true);
 
             user.sendLangMessage("chat-protection.advertise");

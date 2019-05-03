@@ -26,7 +26,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 
 public class FriendMsgSubCommand extends SubCommand {
 
@@ -55,10 +54,9 @@ public class FriendMsgSubCommand extends SubCommand {
             user.sendLangMessage("friends.msg.not-friend", "{user}", name);
             return;
         }
-        final Optional<User> optional = BUCore.getApi().getUser(name);
-
-        if (optional.isPresent()) {
+        if (BUCore.getApi().getPlayerUtils().isOnline(name)) {
             final String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+            // TODO
             final User target = optional.get();
 
             if (!target.getFriendSettings().isMessages()) {

@@ -81,6 +81,12 @@ staffchat:
   enabled: true
   aliases: 'sc, schat'
   permission: bungeeutilisals.commands.staffchat
+
+  # charchat makes it possible to chat in staffchat without using the /staffchat toggle
+  # if a message for example starts with '#' and the person has the staffchat permission, it will be seen as a staffchat message
+  charchat:
+    enabled: false
+    detect: '#'
 language:
   enabled: true
   aliases: 'lang'

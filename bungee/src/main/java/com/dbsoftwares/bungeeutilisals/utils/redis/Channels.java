@@ -104,6 +104,15 @@ public enum Channels {
 
             StaffChatCommand.sendStaffChatMessage(data.getServer(), data.getPlayer(), data.getMessage());
         }
+    },
+    FRIEND_CHANNEL() {
+
+        private final Gson gson = new Gson();
+
+        @Override
+        public void execute(String message) {
+
+        }
     };
 
     public abstract void execute(final String message);

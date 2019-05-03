@@ -186,7 +186,8 @@ public class BungeeUtilisals extends Plugin {
 
         loader.register(UserLoadEvent.class, new UserExecutor());
         loader.register(UserUnloadEvent.class, new UserExecutor());
-        loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
+        loader.register(UserChatEvent.class, new UserChatExecutor());
+        loader.register(UserChatEvent.class, new StaffCharChatExecutor());
 
         // Loading Punishment system
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {

@@ -35,11 +35,9 @@ import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 public enum FileLocation {
 
@@ -143,12 +141,7 @@ public enum FileLocation {
         @Override
         @SuppressWarnings("unchecked")
         public void loadData() {
-            boolean changed = false;
             for (ISection section : configuration.getSectionList("actions")) {
-                if (!section.exists("uuid")) {
-                    section.set("uuid", UUID.randomUUID().toString());
-                    changed = true;
-                }
                 try {
                     final PunishmentType type = PunishmentType.valueOf(section.getString("type"));
 
@@ -180,13 +173,6 @@ public enum FileLocation {
                     BUCore.getApi().getPlugin().getLogger().warning(
                             "An invalid punishment type has been entered (" + section.getString("type") + ")."
                     );
-                }
-            }
-            if (changed) {
-                try {
-                    configuration.save();
-                } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         }

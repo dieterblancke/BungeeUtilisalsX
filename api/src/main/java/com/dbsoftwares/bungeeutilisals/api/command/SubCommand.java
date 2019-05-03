@@ -59,7 +59,7 @@ public abstract class SubCommand {
     public abstract void onExecute(User user, String[] args);
 
     private ConditionResult checkConditions(User user, String[] args) {
-        if (!args[0].equalsIgnoreCase(name)) {
+        if (!args[0].equalsIgnoreCase(name) && !aliases.contains(args[0])) {
             return ConditionResult.FAILURE_WRONG_NAME;
         }
         final int length = args.length - 1;

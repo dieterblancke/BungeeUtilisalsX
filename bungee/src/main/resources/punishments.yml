@@ -10,7 +10,8 @@ actions:
 # This is an example if an user gets warned 5 times in 7 days time, he'll receive an one day tempmute.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
   # UID (= Unique IDentifier) should be an unique string to identify the punishment action.
-- type: 'WARN'
+  - uid: 'warn-uid-1'
+    type: 'WARN'
   # How far back should be looked for punishments of type X?
   # Do note that this action will also have a 'delay' of this time per user.
   # So if for example the time is 7 DAYS, then it will look for warns for the past 7 days,
@@ -25,7 +26,7 @@ actions:
 # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
   # UID (= Unique IDentifier) should be an unique string to identify the punishment action.
-- uid: ''
+  - uid: 'tempmute-uid-1'
   type: 'TEMPMUTE'
   # How far back should be looked for punishments of type X?
   # Do note that this action will also have a 'delay' of this time per user.
