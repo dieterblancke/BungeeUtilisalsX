@@ -57,7 +57,7 @@ public class FriendMsgSubCommand extends SubCommand {
         if (BUCore.getApi().getPlayerUtils().isOnline(name)) {
             final String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
             // TODO
-            final User target = optional.get();
+            final User target = null /* optional.get() */;
 
             if (!target.getFriendSettings().isMessages()) {
                 user.sendLangMessage("friends.msg.disallowed");

@@ -16,18 +16,20 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils.redis.channeldata;
+package com.dbsoftwares.bungeeutilisals.redis.handlers;
 
+import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.ChatActionData;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+public class ClearChatMessageHandler extends RedisMessageHandler<ChatActionData> {
 
-@Data
-@AllArgsConstructor
-public class StaffChatData {
+    public ClearChatMessageHandler() {
+        super(ChatActionData.class);
+    }
 
-    private String server;
-    private String player;
-    private String message;
-
+    @Override
+    public void handle(final ChatActionData data) {
+        ClearChatCommand.clearChat(data.getServer(), data.getBy());
+    }
 }

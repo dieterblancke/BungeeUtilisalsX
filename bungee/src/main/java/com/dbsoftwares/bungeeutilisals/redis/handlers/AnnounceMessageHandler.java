@@ -16,19 +16,20 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils.redis.channeldata;
+package com.dbsoftwares.bungeeutilisals.redis.handlers;
 
-import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.AnnounceMessage;
 
-import java.util.Set;
+public class AnnounceMessageHandler extends RedisMessageHandler<AnnounceMessage> {
 
-@Data
-@AllArgsConstructor
-public class AnnounceMessage {
+    public AnnounceMessageHandler() {
+        super(AnnounceMessage.class);
+    }
 
-    private Set<AnnouncementType> types;
-    private String message;
-
+    @Override
+    public void handle(final AnnounceMessage announcement) {
+        AnnounceCommand.sendAnnounce(announcement);
+    }
 }

@@ -23,8 +23,9 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
-import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.StaffChatData;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.StaffChatMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.StaffChatData;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -90,10 +91,9 @@ public class StaffChatCommand extends BUCommand implements Listener {
             if (user.isInStaffChat()) {
                 event.setCancelled(true);
                 if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-                    BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                            Channels.STAFFCHAT,
-                            new StaffChatData(user.getServerName(), user.getName(), event.getMessage())
-                    );
+                    final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffChatMessageHandler.class);
+
+                    handler.send(new StaffChatData(user.getServerName(), user.getName(), event.getMessage()));
                 } else {
                     sendStaffChatMessage(user.getServerName(), user.getName(), event.getMessage());
                 }

@@ -29,9 +29,10 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.AnnounceMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
-import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
-import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.AnnounceMessage;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.base.Joiner;
@@ -208,7 +209,9 @@ public class AnnounceCommand extends BUCommand {
             final AnnounceMessage announceMessage = new AnnounceMessage(getTypes(types), message);
 
             if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-                BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(Channels.ANNOUNCE, announceMessage);
+                final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(AnnounceMessageHandler.class);
+
+                handler.send(announceMessage);
             } else {
                 sendAnnounce(announceMessage);
             }

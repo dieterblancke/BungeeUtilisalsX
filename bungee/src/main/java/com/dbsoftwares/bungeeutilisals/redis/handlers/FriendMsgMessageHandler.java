@@ -16,16 +16,19 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils.redis.channeldata;
+package com.dbsoftwares.bungeeutilisals.redis.handlers;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.FriendMessageData;
 
-@Data
-@AllArgsConstructor
-public class ChatActionData {
+public class FriendMsgMessageHandler extends RedisMessageHandler<FriendMessageData> {
 
-    private String server;
-    private String by;
+    public FriendMsgMessageHandler() {
+        super(FriendMessageData.class);
+    }
 
+    @Override
+    public void handle(FriendMessageData data) {
+
+    }
 }

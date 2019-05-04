@@ -16,18 +16,16 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils.redis.channeldata;
-
+package com.dbsoftwares.bungeeutilisals.utils.redisdata;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FriendChannelData {
+public class ChatActionData {
 
-    private String type;
-    private String player;
-    private String message;
+    private String server;
+    private String by;
 
 }

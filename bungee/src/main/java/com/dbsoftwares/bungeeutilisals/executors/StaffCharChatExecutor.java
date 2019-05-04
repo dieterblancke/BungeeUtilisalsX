@@ -25,8 +25,9 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommand;
-import com.dbsoftwares.bungeeutilisals.utils.redis.Channels;
-import com.dbsoftwares.bungeeutilisals.utils.redis.channeldata.StaffChatData;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.StaffChatMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.StaffChatData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 public class StaffCharChatExecutor implements EventExecutor {
@@ -47,10 +48,9 @@ public class StaffCharChatExecutor implements EventExecutor {
         }
         final String message = event.getMessage().substring(detect.length());
         if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-            BungeeUtilisals.getInstance().getRedisMessenger().sendChannelMessage(
-                    Channels.STAFFCHAT,
-                    new StaffChatData(user.getServerName(), user.getName(), message)
-            );
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffChatMessageHandler.class);
+
+            handler.send(new StaffChatData(user.getServerName(), user.getName(), event.getMessage()));
         } else {
             StaffChatCommand.sendStaffChatMessage(user.getServerName(), user.getName(), message);
         }
