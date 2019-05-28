@@ -127,4 +127,7 @@ commands:
     enabled: true
     aliases: 'pinfo'
     permission: bungeeutilisals.punishments.punishmentinfo
-    broadcast: bungeeutilisals.punishments.punishmentinfo.broadcast
+  punishmenthistory:
+    enabled: true
+    aliases: 'phistory'
+    permission: bungeeutilisals.punishments.punishmenthistory

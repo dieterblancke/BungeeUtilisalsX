@@ -464,6 +464,20 @@ punishments:
   punishmentinfo:
     usage: '&ePlease use &b/punishmentinfo (user) [type / all]&e!'
 
+    typeinfo:
+      found:
+        - '&eFound an active &b{type} &efor &b{user} &eby &b{by}.'
+        - ' &ePunished on: &b{date}'
+        - ' &eExpires at: &b{expire}'
+        - ' &eReason: &b{reason}'
+        - ' &eServer: &b{server}'
+      notfound: '&b{user} &edoes not have an active {type}.'
+
+  punishmenthistory:
+    usage: '&ePlease use &b/punishmenthistory (user) [type / all]'
+
+
+
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:
