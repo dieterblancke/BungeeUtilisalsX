@@ -25,9 +25,11 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.google.api.client.util.Lists;
 
 import java.sql.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class SQLBansDao implements BansDao {
@@ -277,7 +279,7 @@ public class SQLBansDao implements BansDao {
 
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND type NOT LIKE 'IP%' LIMIT 1;"
+                     "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND type LIKE 'IP%' LIMIT 1;"
              )) {
             pstmt.setString(1, ip);
             pstmt.setBoolean(2, true);
@@ -342,5 +344,75 @@ public class SQLBansDao implements BansDao {
         } catch (SQLException e) {
             BUCore.logException(e);
         }
+    }
+
+    @Override
+    public List<PunishmentInfo> getBans(UUID uuid) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND type NOT LIKE 'IP%';"
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.BAN);
+
+                    final int id = rs.getInt("id");
+                    final String user = rs.getString("user");
+                    final String ip = rs.getString("ip");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+                    final long time = rs.getLong("duration");
+                    final boolean active = rs.getBoolean("active");
+                    final String removedby = rs.getString("removed_by");
+
+                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getIPBans(String ip) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND type LIKE 'IP%';"
+             )) {
+            pstmt.setString(1, ip);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.IPBAN);
+
+                    final int id = rs.getInt("id");
+                    final UUID uuid = UUID.fromString(rs.getString("uuid"));
+                    final String user = rs.getString("user");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+                    final long time = rs.getLong("duration");
+                    final boolean active = rs.getBoolean("active");
+                    final String removedby = rs.getString("removed_by");
+
+                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return punishments;
     }
 }

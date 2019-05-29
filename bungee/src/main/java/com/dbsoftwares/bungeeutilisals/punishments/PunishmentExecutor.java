@@ -46,6 +46,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
         line = line.replace("{ip}", info.getIp());
         line = line.replace("{user}", info.getUser());
         line = line.replace("{id}", String.valueOf(info.getId()));
+        line = line.replace("{type}", info.getType().toString().toLowerCase());
 
         // Checking if value is present, if so: replacing
         if (info.getExpireTime() != null) {

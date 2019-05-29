@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface MutesDao {
@@ -48,4 +49,8 @@ public interface MutesDao {
     void removeCurrentMute(UUID uuid, String removedBy);
 
     void removeCurrentIPMute(String ip, String removedBy);
+
+    List<PunishmentInfo> getMutes(final UUID uuid);
+
+    List<PunishmentInfo> getIPMutes(final String ip);
 }

@@ -21,14 +21,15 @@ package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.punishment;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.google.api.client.util.Lists;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 public class SQLKickAndWarnDao implements KickAndWarnDao {
@@ -75,5 +76,69 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
             BUCore.logException(e);
         }
         return PunishmentDao.buildPunishmentInfo(PunishmentType.KICK, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null);
+    }
+
+    @Override
+    public List<PunishmentInfo> getKicks(UUID uuid) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE uuid = ?;"
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.KICK);
+
+                    final int id = rs.getInt("id");
+                    final String ip = rs.getString("ip");
+                    final String user = rs.getString("user");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+
+                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getWarns(UUID uuid) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE uuid = ?;"
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.WARN);
+
+                    final int id = rs.getInt("id");
+                    final String ip = rs.getString("ip");
+                    final String user = rs.getString("user");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+
+                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return punishments;
     }
 }

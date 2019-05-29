@@ -474,9 +474,35 @@ punishments:
       notfound: '&b{user} &edoes not have an active {type}.'
 
   punishmenthistory:
-    usage: '&ePlease use &b/punishmenthistory (user) [type / all]'
+    usage: '&ePlease use &b/punishmenthistory (user) [type / all] [page]'
 
-
+    head:
+      text:
+        - text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {types} {previousPage}'
+        - text: '&ePunishment History of &a{user} &b({currentPage} of {maxPages})'
+        - text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {types} {nextPage}'
+    format:
+      text: '&a- #{id} &b{type} &eon &b{date}&e, by &a{by}'
+      hover:
+        - '&eUser: &b{user}'
+        - '&eUuid: &b{uuid}'
+        - '&eIP: &b{ip}'
+        - '&eBy: &b{by}'
+        - '&eServer: &b{server}'
+        - '&eDate: &b{date}'
+        - '&eReason: &b{reason}'
+        - '&eExpires at: &b{expire}'
+      click:
+        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        # RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
 
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")

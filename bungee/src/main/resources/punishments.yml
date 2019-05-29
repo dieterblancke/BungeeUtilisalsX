@@ -131,3 +131,7 @@ commands:
     enabled: true
     aliases: 'phistory'
     permission: bungeeutilisals.punishments.punishmenthistory
+  punishmentdata:
+    enabled: true
+    aliases: 'pdata'
+    permission: bungeeutilisals.punishments.punishmentdata

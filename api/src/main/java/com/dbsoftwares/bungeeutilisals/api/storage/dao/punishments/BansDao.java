@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface BansDao {
@@ -48,4 +49,8 @@ public interface BansDao {
     void removeCurrentBan(UUID uuid, String removedBy);
 
     void removeCurrentIPBan(String ip, String removedBy);
+
+    List<PunishmentInfo> getBans(final UUID uuid);
+
+    List<PunishmentInfo> getIPBans(final String ip);
 }
