@@ -18,11 +18,18 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.FriendMsgMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.FriendMessageData;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -56,40 +63,64 @@ public class FriendReplySubCommand extends SubCommand {
         }
 
         final String name = user.getStorage().getData("FRIEND_MSG_LAST_USER");
-
         if (user.getFriends().stream().noneMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
             user.sendLangMessage("friends.reply.not-friend", "{user}", name);
             return;
         }
-        final Optional<User> optional = BUCore.getApi().getUser(name);
-
-        if (optional.isPresent()) {
+        if (BUCore.getApi().getPlayerUtils().isOnline(name)) {
+            final Optional<User> optional = BUCore.getApi().getUser(name);
             final String message = String.join(" ", args);
-            final User target = optional.get();
 
-            if (!target.getFriendSettings().isMessages()) {
-                user.sendLangMessage("friends.msg.disallowed");
-                return;
-            }
+            if (optional.isPresent()) {
+                final User target = optional.get();
 
-            // only needs to be set for target, as the current user (sender) still has this target as last user
-            target.getStorage().setData("FRIEND_MSG_LAST_USER", user.getName());
+                if (!target.getFriendSettings().isMessages()) {
+                    user.sendLangMessage("friends.msg.disallowed");
+                    return;
+                }
 
-            {
+                // only needs to be set for target, as the current user (sender) still has this target as last user
+                target.getStorage().setData("FRIEND_MSG_LAST_USER", user.getName());
+
+                {
+                    String msgMessage = target.buildLangMessage("friends.reply.format.receive");
+                    msgMessage = Utils.c(msgMessage);
+                    msgMessage = msgMessage.replace("{user}", user.getName());
+                    msgMessage = msgMessage.replace("{message}", message);
+
+                    target.sendRawMessage(msgMessage);
+                }
+                {
+                    String msgMessage = user.buildLangMessage("friends.reply.format.send");
+                    msgMessage = Utils.c(msgMessage);
+                    msgMessage = msgMessage.replace("{user}", target.getName());
+                    msgMessage = msgMessage.replace("{message}", message);
+
+                    user.sendRawMessage(msgMessage);
+                }
+            } else if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+                final Dao dao = BUCore.getApi().getStorageManager().getDao();
+                final UserStorage storage = dao.getUserDao().getUserData(name);
+                final boolean allowed = dao.getFriendsDao().getSetting(storage.getUuid(), FriendSettingType.MESSAGES);
+
+                if (!allowed) {
+                    user.sendLangMessage("friends.msg.disallowed");
+                    return;
+                }
+
+                final RedisMessageHandler<FriendMessageData> handler = BungeeUtilisals.getInstance()
+                        .getRedisMessenger().getHandler(FriendMsgMessageHandler.class);
+
+                handler.send(new FriendMessageData("reply", user.getUuid(), user.getName(), name, message));
+
                 String msgMessage = user.buildLangMessage("friends.reply.format.send");
                 msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{user}", target.getName());
+                msgMessage = msgMessage.replace("{user}", name);
                 msgMessage = msgMessage.replace("{message}", message);
 
                 user.sendRawMessage(msgMessage);
-            }
-            {
-                String msgMessage = target.buildLangMessage("friends.reply.format.receive");
-                msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{user}", user.getName());
-                msgMessage = msgMessage.replace("{message}", message);
-
-                target.sendRawMessage(msgMessage);
+            } else {
+                user.sendLangMessage("offline");
             }
         } else {
             user.sendLangMessage("offline");

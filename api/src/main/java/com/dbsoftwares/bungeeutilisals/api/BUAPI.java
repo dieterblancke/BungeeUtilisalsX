@@ -69,6 +69,12 @@ public interface BUAPI {
     Optional<User> getUser(String name);
 
     /**
+     * @param uuid The user uuid you want to select on.
+     * @return Empty optional if user is not present, User inside if present.
+     */
+    Optional<User> getUser(UUID uuid);
+
+    /**
      * @param player The player you want to select on.
      * @return Empty optional if user is not present, User inside if present.
      */

@@ -18,8 +18,13 @@
 
 package com.dbsoftwares.bungeeutilisals.redis.handlers;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.FriendMessageData;
+
+import java.util.Optional;
 
 public class FriendMsgMessageHandler extends RedisMessageHandler<FriendMessageData> {
 
@@ -29,6 +34,28 @@ public class FriendMsgMessageHandler extends RedisMessageHandler<FriendMessageDa
 
     @Override
     public void handle(FriendMessageData data) {
+        final Optional<User> optional = BUCore.getApi().getUser(data.getReceiver());
 
+        if (optional.isPresent()) {
+            final User user = optional.get();
+
+            user.getStorage().setData("FRIEND_MSG_LAST_USER", data.getSenderName());
+
+            if (data.getType().equals("reply")) {
+                String msgMessage = user.buildLangMessage("friends.reply.format.receive");
+                msgMessage = Utils.c(msgMessage);
+                msgMessage = msgMessage.replace("{user}", data.getSenderName());
+                msgMessage = msgMessage.replace("{message}", data.getMessage());
+
+                user.sendRawMessage(msgMessage);
+            } else {
+                String msgMessage = user.buildLangMessage("friends.msg.format.receive");
+                msgMessage = Utils.c(msgMessage);
+                msgMessage = msgMessage.replace("{user}", data.getSenderName());
+                msgMessage = msgMessage.replace("{message}", data.getMessage());
+
+                user.sendRawMessage(msgMessage);
+            }
+        }
     }
 }

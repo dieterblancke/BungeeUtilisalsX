@@ -50,6 +50,6 @@ subcommands:
   reply:
     aliases: 'r'
     permission: bungeeutilisals.friends.reply
-  settings: # TODO
+  settings:
     aliases: ''
     permission: bungeeutilisals.friends.settings

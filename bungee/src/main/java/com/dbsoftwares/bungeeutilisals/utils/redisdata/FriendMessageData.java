@@ -18,16 +18,19 @@
 
 package com.dbsoftwares.bungeeutilisals.utils.redisdata;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.UUID;
 
 @Data
+@AllArgsConstructor
 public class FriendMessageData {
 
+    private String type;
     private UUID sender;
     private String senderName;
-    private UUID receiver;
+    private String receiver;
     private String message;
 
 }

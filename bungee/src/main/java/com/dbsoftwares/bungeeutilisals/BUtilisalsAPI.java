@@ -131,6 +131,11 @@ public class BUtilisalsAPI implements BUAPI {
     }
 
     @Override
+    public Optional<User> getUser(UUID uuid) {
+        return users.stream().filter(user -> user.getUuid().equals(uuid)).findFirst();
+    }
+
+    @Override
     public Optional<User> getUser(ProxiedPlayer player) {
         return getUser(player.getName());
     }

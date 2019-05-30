@@ -23,15 +23,17 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.google.api.client.util.Lists;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class PunishmentHistoryCommand extends BUCommand {
 
@@ -67,79 +69,64 @@ public class PunishmentHistoryCommand extends BUCommand {
                 ? (MathUtils.isInteger(args[2]) ? Integer.parseInt(args[2]) : 1)
                 : 1;
 
+        final List<PunishmentInfo> infos = listPunishments(storage, action);
+        // TODO: make paging system (like friend list) and send message to user.
+
+    }
+
+    private List<PunishmentInfo> listPunishments(final UserStorage storage, final String action) {
+        final List<PunishmentInfo> list = Lists.newArrayList();
+
         if (action.equalsIgnoreCase("all")) {
             for (PunishmentType type : PunishmentType.values()) {
-                if (type.equals(PunishmentType.KICK) || type.equals(PunishmentType.WARN)) {
-                    continue;
-                }
-                sendTypeInfo(user, storage, type);
+                list.addAll(listPunishments(storage, type));
             }
         } else {
             for (String typeStr : action.split(",")) {
                 final PunishmentType type = Utils.valueOfOr(typeStr.toUpperCase(), PunishmentType.BAN);
-                if (type.equals(PunishmentType.KICK) || type.equals(PunishmentType.WARN)) {
-                    continue;
-                }
-                sendTypeInfo(user, storage, type);
+
+                list.addAll(listPunishments(storage, type));
             }
         }
+        return list;
     }
 
-    private void sendTypeInfo(final User user, final UserStorage storage, final PunishmentType type) {
-        final PunishmentDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao();
+    private List<PunishmentInfo> listPunishments(final UserStorage storage, final PunishmentType type) {
+        final Predicate<PunishmentInfo> permanentFilter = punishment ->
+                punishment.getExpireTime() == null || punishment.getExpireTime() == -1;
+        final Predicate<PunishmentInfo> temporaryFilter = punishment ->
+                punishment.getExpireTime() != null || punishment.getExpireTime() > 0;
 
         switch (type) {
+            default:
             case BAN:
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans(storage.getUuid())
+                        .stream().filter(permanentFilter).collect(Collectors.toList());
             case TEMPBAN:
-                if (dao.getBansDao().isBanned(storage.getUuid())) {
-                    sendInfoMessage(user, storage, type, true, dao.getBansDao().getCurrentBan(storage.getUuid()));
-                } else {
-                    sendInfoMessage(user, storage, type, false, null);
-                }
-                break;
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans(storage.getUuid())
+                        .stream().filter(temporaryFilter).collect(Collectors.toList());
             case IPBAN:
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans(storage.getIp())
+                        .stream().filter(permanentFilter).collect(Collectors.toList());
             case IPTEMPBAN:
-                if (dao.getBansDao().isIPBanned(storage.getIp())) {
-                    sendInfoMessage(user, storage, type, true, dao.getBansDao().getCurrentIPBan(storage.getIp()));
-                } else {
-                    sendInfoMessage(user, storage, type, false, null);
-                }
-                break;
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans(storage.getIp())
+                        .stream().filter(temporaryFilter).collect(Collectors.toList());
             case MUTE:
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes(storage.getUuid())
+                        .stream().filter(permanentFilter).collect(Collectors.toList());
             case TEMPMUTE:
-                if (dao.getMutesDao().isMuted(storage.getUuid())) {
-                    sendInfoMessage(user, storage, type, true, dao.getMutesDao().getCurrentMute(storage.getUuid()));
-                } else {
-                    sendInfoMessage(user, storage, type, false, null);
-                }
-                break;
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes(storage.getUuid())
+                        .stream().filter(temporaryFilter).collect(Collectors.toList());
             case IPMUTE:
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes(storage.getIp())
+                        .stream().filter(permanentFilter).collect(Collectors.toList());
             case IPTEMPMUTE:
-                if (dao.getMutesDao().isIPMuted(storage.getIp())) {
-                    sendInfoMessage(user, storage, type, true, dao.getMutesDao().getCurrentIPMute(storage.getIp()));
-                } else {
-                    sendInfoMessage(user, storage, type, false, null);
-                }
-                break;
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes(storage.getIp())
+                        .stream().filter(temporaryFilter).collect(Collectors.toList());
             case KICK:
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks(storage.getUuid());
             case WARN:
-                break;
-        }
-    }
-
-    private void sendInfoMessage(final User user, final UserStorage storage, final PunishmentType type,
-                                 final boolean punished, final PunishmentInfo info) {
-        if (punished) {
-            user.sendLangMessage(
-                    "punishments.punishmentinfo.typeinfo.found",
-                    BUCore.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[0])
-            );
-        } else {
-            user.sendLangMessage(
-                    "punishments.punishmentinfo.typeinfo.notfound",
-                    "{user}", storage.getUserName(),
-                    "{type}", type.toString().toLowerCase()
-            );
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns(storage.getUuid());
         }
     }
 }
