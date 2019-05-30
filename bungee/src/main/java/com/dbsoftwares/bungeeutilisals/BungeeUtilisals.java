@@ -226,6 +226,7 @@ public class BungeeUtilisals extends Plugin {
             Updater.initialize(this);
         }
 
+        // Some more random stuff
         sendBuyerMessage();
     }
 
