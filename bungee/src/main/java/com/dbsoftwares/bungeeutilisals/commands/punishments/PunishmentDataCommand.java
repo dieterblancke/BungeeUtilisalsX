@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
@@ -54,6 +55,11 @@ public class PunishmentDataCommand extends BUCommand {
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final PunishmentType type = Utils.valueOfOr(args[0].toUpperCase(), PunishmentType.BAN);
         final String id = args[1];
+
+        if (BUCore.getApi().getStorageManager().getType().toString().contains("SQL") && !MathUtils.isInteger(id)) {
+            user.sendLangMessage("no-number");
+            return;
+        }
 
         PunishmentInfo info = null;
         switch (type) {
