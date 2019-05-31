@@ -47,17 +47,30 @@ public class LanguageUtils {
 
     public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path) {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
+
+        if (!config.exists(path)) {
+            return;
+        }
+
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 sender.sendMessage(Utils.format(message));
             }
         } else {
+            if (config.getString(path).isEmpty()) {
+                return;
+            }
             sender.sendMessage(Utils.format(config.getString(path)));
         }
     }
 
     public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path, final Object... placeholders) {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
+
+        if (!config.exists(path)) {
+            return;
+        }
+
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 message = replacePlaceHolders(null, message, placeholders);
@@ -65,6 +78,9 @@ public class LanguageUtils {
                 sender.sendMessage(Utils.format(message));
             }
         } else {
+            if (config.getString(path).isEmpty()) {
+                return;
+            }
             String message = replacePlaceHolders(null, config.getString(path), placeholders);
 
             sender.sendMessage(Utils.format(message));
@@ -73,11 +89,19 @@ public class LanguageUtils {
 
     public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path) {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
+
+        if (!config.exists(path)) {
+            return;
+        }
+
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 user.sendMessage(Utils.format(message));
             }
         } else {
+            if (config.getString(path).isEmpty()) {
+                return;
+            }
             user.sendMessage(Utils.format(config.getString(path)));
         }
     }
@@ -85,12 +109,19 @@ public class LanguageUtils {
     public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders) {
         final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
 
+        if (!config.exists(path)) {
+            return;
+        }
+
         if (config.isList(path)) {
             for (String message : config.getStringList(path)) {
                 message = replacePlaceHolders(user, message, placeholders);
                 user.sendMessage(Utils.format(message));
             }
         } else {
+            if (config.getString(path).isEmpty()) {
+                return;
+            }
             String message = replacePlaceHolders(user, config.getString(path), placeholders);
             user.sendMessage(Utils.format(message));
         }

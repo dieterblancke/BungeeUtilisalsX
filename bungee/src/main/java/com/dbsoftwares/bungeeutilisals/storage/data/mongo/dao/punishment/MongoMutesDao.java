@@ -25,7 +25,9 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
+import com.google.api.client.util.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -34,6 +36,7 @@ import org.bson.Document;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.UUID;
 
 public class MongoMutesDao implements MutesDao {
@@ -272,6 +275,87 @@ public class MongoMutesDao implements MutesDao {
                         Updates.set("removed_by", removedBy)
                 )
         );
+    }
+
+    @Override
+    public List<PunishmentInfo> getMutes(UUID uuid) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
+        final FindIterable<Document> documents = collection.find(Filters.and(
+                Filters.eq("uuid", uuid.toString()),
+                Filters.regex("type", "^(?!IP.*$).*")
+        ));
+
+        for (Document document : documents) {
+            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.MUTE);
+
+            final String id = document.getObjectId("_id").toString();
+            final String user = document.getString("user");
+            final String ip = document.getString("ip");
+            final String reason = document.getString("reason");
+            final String server = document.getString("server");
+            final String executedby = document.getString("executed_by");
+            final Date date = document.getDate("date");
+            final Long time = document.getLong("duration");
+            final boolean active = document.getBoolean("active");
+            final String removedby = document.getString("removed_by");
+
+            punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+        }
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getIPMutes(String ip) {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection(PunishmentType.IPMUTE.getTable());
+        final FindIterable<Document> documents = collection.find(Filters.and(
+                Filters.eq("ip", ip),
+                Filters.regex("type", "IP*")
+        ));
+
+        for (Document document : documents) {
+            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.IPMUTE);
+
+            final String id = document.getObjectId("_id").toString();
+            final UUID uuid = UUID.fromString(document.getString("uuid"));
+            final String user = document.getString("user");
+            final String reason = document.getString("reason");
+            final String server = document.getString("server");
+            final String executedby = document.getString("executed_by");
+            final Date date = document.getDate("date");
+            final Long time = document.getLong("duration");
+            final boolean active = document.getBoolean("active");
+            final String removedby = document.getString("removed_by");
+
+            punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+        }
+        return punishments;
+    }
+
+    @Override
+    public PunishmentInfo getById(String id) {
+        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
+        final Document document = collection.find(Filters.eq("_id", id)).first();
+
+        if (document != null) {
+            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.MUTE);
+
+            final UUID uuid = UUID.fromString(document.getString("uuid"));
+            final String user = document.getString("user");
+            final String ip = document.getString("ip");
+            final String reason = document.getString("reason");
+            final String server = document.getString("server");
+            final String executedby = document.getString("executed_by");
+            final Date date = document.getDate("date");
+            final Long time = document.getLong("duration");
+            final boolean active = document.getBoolean("active");
+            final String removedby = document.getString("removed_by");
+
+            return PunishmentDao.buildPunishmentInfo(type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+        }
+
+        return null;
     }
 
     private MongoDatabase db() {

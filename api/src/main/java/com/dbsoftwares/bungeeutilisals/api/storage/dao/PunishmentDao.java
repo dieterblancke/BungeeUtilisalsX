@@ -30,7 +30,7 @@ import java.util.UUID;
 
 public interface PunishmentDao {
 
-    static PunishmentInfo buildPunishmentInfo(final int id, final PunishmentType type, final UUID uuid, final String user,
+    static PunishmentInfo buildPunishmentInfo(final String id, final PunishmentType type, final UUID uuid, final String user,
                                               final String ip, final String reason, final String server,
                                               final String executedby, final Date date, final long time,
                                               final boolean active, final String removedby) {
@@ -51,6 +51,13 @@ public interface PunishmentDao {
         Validate.ifNotNull(removedby, info::setRemovedBy);
 
         return info;
+    }
+
+    static PunishmentInfo buildPunishmentInfo(final int id, final PunishmentType type, final UUID uuid, final String user,
+                                              final String ip, final String reason, final String server,
+                                              final String executedby, final Date date, final long time,
+                                              final boolean active, final String removedby) {
+        return buildPunishmentInfo(String.valueOf(id), type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
     }
 
     static PunishmentInfo buildPunishmentInfo(final PunishmentType type, final UUID uuid, final String user,

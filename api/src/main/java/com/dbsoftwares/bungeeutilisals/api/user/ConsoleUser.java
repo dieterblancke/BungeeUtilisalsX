@@ -123,6 +123,11 @@ public class ConsoleUser implements User {
     @Override
     public void sendLangMessage(boolean prefix, String path) {
         final String message = buildLangMessage(path);
+
+        if (message.isEmpty()) {
+            return;
+        }
+
         if (prefix) {
             sendMessage(message);
         } else {
@@ -133,6 +138,11 @@ public class ConsoleUser implements User {
     @Override
     public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
         final String message = buildLangMessage(path, placeholders);
+
+        if (message.isEmpty()) {
+            return;
+        }
+
         if (prefix) {
             sendMessage(message);
         } else {
@@ -257,10 +267,17 @@ public class ConsoleUser implements User {
 
     @Override
     public String buildLangMessage(final String path, final Object... placeholders) {
+        if (!getLanguageConfig().exists(path)) {
+            return "";
+        }
         final StringBuilder builder = new StringBuilder();
 
         if (getLanguageConfig().isList(path)) {
             final List<String> messages = getLanguageConfig().getStringList(path);
+
+            if (messages.isEmpty()) {
+                return "";
+            }
 
             for (int i = 0; i < messages.size(); i++) {
                 final String message = replacePlaceHolders(messages.get(i), placeholders);
@@ -272,6 +289,10 @@ public class ConsoleUser implements User {
             }
         } else {
             final String message = replacePlaceHolders(getLanguageConfig().getString(path), placeholders);
+
+            if (message.isEmpty()) {
+                return "";
+            }
 
             builder.append(message);
         }

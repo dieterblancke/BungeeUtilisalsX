@@ -32,7 +32,7 @@ public class PunishmentInfo {
 
     private PunishmentType type;
 
-    private int id;
+    private String id;
     private String user;
     private String ip;
     private UUID uuid;

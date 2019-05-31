@@ -274,7 +274,9 @@ public class BungeeUtilisals extends Plugin {
             }
         }
 
-        api.getConsole().sendLangMessage(false, "general.startup-message", "{buyer_name}", username);
+        if (!username.equals("Unknown User")) {
+            api.getConsole().sendLangMessage(false, "general.startup-message", "{buyer_name}", username);
+        }
     }
 
     public void reload() {
@@ -428,6 +430,8 @@ public class BungeeUtilisals extends Plugin {
         loadPunishmentCommand("unmuteip", UnmuteIPCommand.class);
 
         loadPunishmentCommand("punishmentinfo", PunishmentInfoCommand.class);
+        loadPunishmentCommand("punishmenthistory", PunishmentHistoryCommand.class);
+        loadPunishmentCommand("punishmentdata", PunishmentDataCommand.class);
     }
 
     private void loadCustomCommands() {

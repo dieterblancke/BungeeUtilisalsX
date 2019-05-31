@@ -32,4 +32,8 @@ public interface KickAndWarnDao {
     List<PunishmentInfo> getKicks(final UUID uuid);
 
     List<PunishmentInfo> getWarns(final UUID uuid);
+
+    PunishmentInfo getKickById(final String id);
+
+    PunishmentInfo getWarnById(final String id);
 }

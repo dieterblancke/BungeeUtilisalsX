@@ -53,4 +53,6 @@ public interface MutesDao {
     List<PunishmentInfo> getMutes(final UUID uuid);
 
     List<PunishmentInfo> getIPMutes(final String ip);
+
+    PunishmentInfo getById(final String id);
 }

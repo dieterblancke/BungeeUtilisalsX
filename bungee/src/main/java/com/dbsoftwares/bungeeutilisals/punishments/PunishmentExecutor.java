@@ -45,12 +45,18 @@ public class PunishmentExecutor implements IPunishmentExecutor {
         line = line.replace("{uuid}", info.getUuid().toString());
         line = line.replace("{ip}", info.getIp());
         line = line.replace("{user}", info.getUser());
-        line = line.replace("{id}", String.valueOf(info.getId()));
+        line = line.replace("{id}", info.getId());
         line = line.replace("{type}", info.getType().toString().toLowerCase());
 
-        // Checking if value is present, if so: replacing
-        if (info.getExpireTime() != null) {
+        if (info.getExpireTime() == null) {
+            line = line.replace("{expire}", "Never");
+        } else {
             line = line.replace("{expire}", Utils.formatDate(getDateFormat(), new Date(info.getExpireTime())));
+        }
+        if (info.getRemovedBy() == null) {
+            line = line.replace("{expire}", "Unknown");
+        } else {
+            line = line.replace("{removedBy}", info.getRemovedBy());
         }
         return line;
     }
@@ -98,11 +104,21 @@ public class PunishmentExecutor implements IPunishmentExecutor {
         placeholders.add("{id}");
         placeholders.add(String.valueOf(info.getId()));
 
-        // Checking if value is present);
-        // placeholders.add(if so: replacing
+        placeholders.add("{type}");
+        placeholders.add(info.getType().toString().toLowerCase());
+
+        placeholders.add("{expire}");
         if (info.getExpireTime() != null) {
-            placeholders.add("{expire}");
             placeholders.add(Utils.formatDate(getDateFormat(), new Date(info.getExpireTime())));
+        } else {
+            placeholders.add("Never");
+        }
+
+        placeholders.add("{removedBy}");
+        if (info.getRemovedBy() != null) {
+            placeholders.add(info.getRemovedBy());
+        } else {
+            placeholders.add("Unknown");
         }
 
         return placeholders;

@@ -417,7 +417,6 @@ public class Utils {
      * @param <T>  The enum type.
      * @return Parsed enum or default.
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Enum<T>> T valueOfOr(final String name, T def) {
         assert def != null : "Default value cannot be null.";
 

@@ -24,10 +24,12 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.api.client.util.Lists;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -47,7 +49,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
             pstmt.setString(4, reason);
             pstmt.setString(5, server);
             pstmt.setString(6, executedby);
-            pstmt.setTimestamp(7, new Timestamp(new Date().getTime()));
+            pstmt.setString(7, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -69,7 +71,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
             pstmt.setString(4, reason);
             pstmt.setString(5, server);
             pstmt.setString(6, executedby);
-            pstmt.setTimestamp(7, new Timestamp(new Date().getTime()));
+            pstmt.setString(7, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -90,8 +92,6 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.KICK);
-
                     final int id = rs.getInt("id");
                     final String ip = rs.getString("ip");
                     final String user = rs.getString("user");
@@ -100,7 +100,10 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
                     final String executedby = rs.getString("executed_by");
                     final Date date = Dao.formatStringToDate(rs.getString("date"));
 
-                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null));
+                    punishments.add(PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    ));
                 }
             }
         } catch (SQLException e) {
@@ -122,8 +125,6 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.WARN);
-
                     final int id = rs.getInt("id");
                     final String ip = rs.getString("ip");
                     final String user = rs.getString("user");
@@ -132,7 +133,10 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
                     final String executedby = rs.getString("executed_by");
                     final Date date = Dao.formatStringToDate(rs.getString("date"));
 
-                    punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null));
+                    punishments.add(PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    ));
                 }
             }
         } catch (SQLException e) {
@@ -140,5 +144,71 @@ public class SQLKickAndWarnDao implements KickAndWarnDao {
         }
 
         return punishments;
+    }
+
+    @Override
+    public PunishmentInfo getKickById(String id) {
+        PunishmentInfo info = null;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE id = ? LIMIT 1;"
+             )) {
+            pstmt.setInt(1, Integer.parseInt(id));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final UUID uuid = UUID.fromString(rs.getString("uuid"));
+                    final String user = rs.getString("user");
+                    final String ip = rs.getString("ip");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+
+                    info = PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return info;
+    }
+
+    @Override
+    public PunishmentInfo getWarnById(String id) {
+        PunishmentInfo info = null;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE id = ? LIMIT 1;"
+             )) {
+            pstmt.setInt(1, Integer.parseInt(id));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final UUID uuid = UUID.fromString(rs.getString("uuid"));
+                    final String user = rs.getString("user");
+                    final String ip = rs.getString("ip");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+
+                    info = PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    );
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return info;
     }
 }

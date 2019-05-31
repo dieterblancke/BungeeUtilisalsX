@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.converter.Converter;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.storage.data.mongo.MongoDao;
@@ -37,7 +38,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bson.Document;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
@@ -103,8 +103,8 @@ public class MongoToSQLConverter extends Converter {
             preparedStatement.setString(2, document.getString("username"));
             preparedStatement.setString(3, document.getString("ip"));
             preparedStatement.setString(4, document.getString("language"));
-            preparedStatement.setDate(5, new Date(document.getDate("firstlogin").getTime()));
-            preparedStatement.setDate(6, new Date(document.getDate("lastlogout").getTime()));
+            preparedStatement.setString(5, Dao.formatDateToString(document.getDate("firstlogin")));
+            preparedStatement.setString(6, Dao.formatDateToString(document.getDate("lastlogout")));
 
             preparedStatement.executeUpdate();
         }
@@ -120,7 +120,7 @@ public class MongoToSQLConverter extends Converter {
                 preparedStatement.setString(3, document.getString("ip"));
                 preparedStatement.setString(4, document.getString("reason"));
                 preparedStatement.setString(5, document.getString("server"));
-                preparedStatement.setDate(6, new Date(document.getDate("date").getTime()));
+                preparedStatement.setString(6, Dao.formatDateToString(document.getDate("date")));
                 preparedStatement.setString(7, document.getString("executed_by"));
 
                 preparedStatement.executeUpdate();
@@ -135,7 +135,7 @@ public class MongoToSQLConverter extends Converter {
                 preparedStatement.setLong(4, document.getLong("time"));
                 preparedStatement.setString(5, document.getString("reason"));
                 preparedStatement.setString(6, document.getString("server"));
-                preparedStatement.setDate(7, new Date(document.getDate("date").getTime()));
+                preparedStatement.setString(7, Dao.formatDateToString(document.getDate("date")));
                 preparedStatement.setBoolean(8, document.getBoolean("active"));
                 preparedStatement.setString(9, document.getString("executed_by"));
                 preparedStatement.setString(10, document.getString("removed_by"));
@@ -151,7 +151,7 @@ public class MongoToSQLConverter extends Converter {
                 preparedStatement.setString(3, document.getString("ip"));
                 preparedStatement.setString(4, document.getString("reason"));
                 preparedStatement.setString(5, document.getString("server"));
-                preparedStatement.setDate(6, new Date(document.getDate("date").getTime()));
+                preparedStatement.setString(6, Dao.formatDateToString(document.getDate("date")));
                 preparedStatement.setBoolean(7, document.getBoolean("active"));
                 preparedStatement.setString(8, document.getString("executed_by"));
                 preparedStatement.setString(9, document.getString("removed_by"));

@@ -77,7 +77,7 @@ public class UnmuteIPCommand extends BUCommand {
 
         final PunishmentInfo info = new PunishmentInfo();
         info.setUser(args[0]);
-        info.setId(-1);
+        info.setId("-1");
         info.setExecutedBy(user.getName());
         info.setRemovedBy(user.getName());
         info.setServer(user.getServerName());

@@ -27,7 +27,10 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.api.client.util.Lists;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -154,7 +157,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, -1);
             pstmt.setString(9, PunishmentType.MUTE.toString());
-            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
+            pstmt.setString(10, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -179,7 +182,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, -1);
             pstmt.setString(9, PunishmentType.IPMUTE.toString());
-            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
+            pstmt.setString(10, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -204,7 +207,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, duration);
             pstmt.setString(9, PunishmentType.TEMPMUTE.toString());
-            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
+            pstmt.setString(10, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -229,7 +232,7 @@ public class SQLMutesDao implements MutesDao {
             pstmt.setString(7, executedby);
             pstmt.setLong(8, duration);
             pstmt.setString(9, PunishmentType.IPTEMPMUTE.toString());
-            pstmt.setTimestamp(10, new Timestamp(new Date().getTime()));
+            pstmt.setString(10, Dao.formatDateToString(new Date()));
 
             pstmt.executeUpdate();
         } catch (SQLException e) {
@@ -414,5 +417,40 @@ public class SQLMutesDao implements MutesDao {
         }
 
         return punishments;
+    }
+
+    @Override
+    public PunishmentInfo getById(String id) {
+        PunishmentInfo info = null;
+
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "SELECT * FROM " + PunishmentType.MUTE.getTable() + " WHERE id = ? LIMIT 1;"
+             )) {
+            pstmt.setInt(1, Integer.parseInt(id));
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    final PunishmentType type = Utils.valueOfOr(rs.getString("type"), PunishmentType.MUTE);
+
+                    final UUID uuid = UUID.fromString(rs.getString("uuid"));
+                    final String user = rs.getString("user");
+                    final String ip = rs.getString("ip");
+                    final String reason = rs.getString("reason");
+                    final String server = rs.getString("server");
+                    final String executedby = rs.getString("executed_by");
+                    final Date date = Dao.formatStringToDate(rs.getString("date"));
+                    final long time = rs.getLong("duration");
+                    final boolean active = rs.getBoolean("active");
+                    final String removedby = rs.getString("removed_by");
+
+                    info = PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+
+        return info;
     }
 }

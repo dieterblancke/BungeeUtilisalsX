@@ -52,7 +52,7 @@ public class PunishmentHistoryCommand extends BUCommand {
     @Override
     public void onExecute(User user, String[] args) {
         if (args.length == 0) {
-            user.sendLangMessage("punishments.punishmentinfo.usage");
+            user.sendLangMessage("punishments.punishmenthistory.usage");
             return;
         }
 
@@ -65,13 +65,57 @@ public class PunishmentHistoryCommand extends BUCommand {
         }
         final UserStorage storage = dao.getUserDao().getUserData(username);
         final String action = args.length > 1 ? args[1] : "all";
-        final int page = args.length > 2
+        int page = args.length > 2
                 ? (MathUtils.isInteger(args[2]) ? Integer.parseInt(args[2]) : 1)
                 : 1;
 
-        final List<PunishmentInfo> infos = listPunishments(storage, action);
-        // TODO: make paging system (like friend list) and send message to user.
+        final List<PunishmentInfo> allPunishments = listPunishments(storage, action);
+        if (allPunishments.isEmpty()) {
+            user.sendLangMessage(
+                    "punishments.punishmenthistory.no-punishments",
+                    "{user}", username,
+                    "{type}", action
+            );
+            return;
+        }
+        final int pages = (int) Math.ceil((double) allPunishments.size() / 15);
 
+        if (page > pages) {
+            page = pages;
+        }
+
+        final int previous = page > 1 ? page - 1 : 1;
+        final int next = page + 1 > pages ? pages : page + 1;
+
+        int maxNumber = page * 10;
+        int minNumber = maxNumber - 10;
+
+        if (maxNumber > allPunishments.size()) {
+            maxNumber = allPunishments.size();
+        }
+
+        final List<PunishmentInfo> punishments = allPunishments.subList(minNumber, maxNumber);
+        user.sendLangMessage(
+                "punishments.punishmenthistory.head",
+                "{previousPage}", previous,
+                "{currentPage}", page,
+                "{nextPage}", next,
+                "{maxPages}", pages,
+                "{type}", action
+        );
+
+        punishments.forEach(punishment ->
+                user.sendLangMessage(
+                        "punishments.punishmenthistory.format",
+                        BUCore.getApi().getPunishmentExecutor().getPlaceHolders(punishment).toArray(new Object[0])
+                )
+        );
+        user.sendLangMessage(
+                "punishments.punishmenthistory.foot",
+                "{punishmentAmount}", allPunishments.size(),
+                "{user}", username,
+                "{type}", action
+        );
     }
 
     private List<PunishmentInfo> listPunishments(final UserStorage storage, final String action) {
