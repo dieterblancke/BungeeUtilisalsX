@@ -75,6 +75,9 @@ public class BUser implements User {
     @Getter
     private boolean inStaffChat;
 
+    @Getter
+    private String staffRank;
+
     @Override
     public void load(ProxiedPlayer parent) {
         final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();

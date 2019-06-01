@@ -91,3 +91,27 @@ language:
   enabled: true
   aliases: 'lang'
   permission: bungeeutilisals.commands.language
+staff:
+  enabled: false
+  aliases: 'onlinestaff'
+  permission: bungeeutilisals.commands.staff
+
+  # here the staff ranks (that are shown in /staff) should be listed
+  # when using redis, make sure that all bungees are synchronized
+  ranks:
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER)
+    - name: 'helper'
+      display: '&3&lHELPER'
+      permission: 'bungeeutilisals.staff.helper'
+    - name: 'moderator'
+      display: '&2&lMODERATOR'
+      permission: 'bungeeutilisals.staff.moderator'
+    - name: 'admin'
+      display: '&c&lADMIN'
+      permission: 'bungeeutilisals.staff.admin'
+    - name: 'developer'
+      display: '&5&lDEVELOPER'
+      permission: 'bungeeutilisals.staff.developer'
+    - name: 'owner'
+      display: '&4&lOWNER'
+      permission: 'bungeeutilisals.staff.owner'

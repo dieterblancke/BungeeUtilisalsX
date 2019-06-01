@@ -99,6 +99,7 @@ public enum FileLocation {
         @Override
         public void loadData() {
             // do nothing
+            // TODO: setData("staff_ranks", list); | load staff ranks
         }
     },
     ANTISWEAR("chat/protection/antiswear.yml") {
@@ -199,7 +200,6 @@ public enum FileLocation {
 
     public abstract void loadData();
 
-    @SuppressWarnings("unchecked")
     public <T> T getData(String key) {
         return (T) data.get(key);
     }
@@ -216,7 +216,6 @@ public enum FileLocation {
         this.configuration = IConfiguration.loadYamlConfiguration(file);
     }
 
-    @SuppressWarnings("unchecked")
     public <T> List<T> getDataList() {
         return (List<T>) dataList;
     }

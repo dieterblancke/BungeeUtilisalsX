@@ -23,6 +23,11 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
+
+import java.util.List;
 
 public class UserExecutor implements EventExecutor {
 
@@ -36,5 +41,31 @@ public class UserExecutor implements EventExecutor {
     public void onUnload(UserUnloadEvent event) {
         User user = event.getUser();
         event.getApi().getUsers().remove(user);
+    }
+
+    @Event
+    public void onStaffLoad(UserLoadEvent event) {
+        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+
+        if (!config.getBoolean("staff.enabled")) {
+            return;
+        }
+
+        final User user = event.getUser();
+        final List<ISection> sections = config.getSectionList("staff.ranks");
+
+    }
+
+    @Event
+    public void onStaffUnload(UserUnloadEvent event) {
+        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+
+        if (!config.getBoolean("staff.enabled")) {
+            return;
+        }
+
+        final User user = event.getUser();
+        final List<ISection> sections = config.getSectionList("staff.ranks");
+
     }
 }

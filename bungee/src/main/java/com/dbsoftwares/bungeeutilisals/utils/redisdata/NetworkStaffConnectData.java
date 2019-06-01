@@ -18,26 +18,21 @@
 
 package com.dbsoftwares.bungeeutilisals.utils.redisdata;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.util.UUID;
+
 @Data
-public class APIAnnouncement {
+@AllArgsConstructor
+public class NetworkStaffConnectData {
 
-    private boolean pluginLanguageManager; // true if plugin, false if addon
-    private String plugin;
-    private String prefix;
-    private String message;
-    private String permission;
-    private boolean language;
-    private Object[] placeHolders;
+    private StaffNetworkAction action;
+    private UUID uuid;
+    private String name;
+    private String rank;
 
-    public APIAnnouncement(boolean pluginLanguageManager, String plugin, String prefix, String message, String permission, boolean language, Object... placeholders) {
-        this.pluginLanguageManager = pluginLanguageManager;
-        this.plugin = plugin;
-        this.prefix = prefix;
-        this.message = message;
-        this.permission = permission;
-        this.language = language;
-        this.placeHolders = placeholders;
+    public enum StaffNetworkAction {
+        STAFF_JOIN, STAFF_LEAVE
     }
 }

@@ -304,6 +304,16 @@ public class ConsoleUser implements User {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
+    @Override
+    public String getStaffRank() {
+        return null;
+    }
+
+    @Override
+    public void setStaffRank(String rank) {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
+    }
+
     private String replacePlaceHolders(String message, Object... placeholders) {
         for (int i = 0; i < placeholders.length - 1; i += 2) {
             message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());

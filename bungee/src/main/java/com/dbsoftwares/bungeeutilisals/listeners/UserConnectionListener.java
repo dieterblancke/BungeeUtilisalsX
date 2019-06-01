@@ -34,28 +34,28 @@ public class UserConnectionListener implements Listener {
 
     @EventHandler
     public void onConnect(PostLoginEvent event) {
-        ProxiedPlayer player = event.getPlayer();
+        final ProxiedPlayer player = event.getPlayer();
 
-        UserPreLoadEvent userPreLoadEvent = new UserPreLoadEvent(player, player.getAddress().getAddress());
+        final UserPreLoadEvent userPreLoadEvent = new UserPreLoadEvent(player, player.getAddress().getAddress());
         BungeeUtilisals.getApi().getEventLoader().launchEvent(userPreLoadEvent);
 
         if (userPreLoadEvent.isCancelled()) {
             return;
         }
 
-        BUser user = new BUser();
+        final BUser user = new BUser();
         user.load(player);
     }
 
     @EventHandler
     public void onDisconnect(PlayerDisconnectEvent event) {
-        ProxiedPlayer player = event.getPlayer();
-        Optional<User> optional = BungeeUtilisals.getApi().getUser(player);
+        final ProxiedPlayer player = event.getPlayer();
+        final Optional<User> optional = BungeeUtilisals.getApi().getUser(player);
 
         if (!optional.isPresent()) {
             return;
         }
-        User user = optional.get();
+        final User user = optional.get();
         user.unload();
     }
 }
