@@ -298,7 +298,7 @@ public class BungeeUtilisals extends Plugin {
         redisMessenger.registerMessageHandlers(
                 AnnounceMessageHandler.class, BroadcastMessageHandler.class,
                 ChatLockMessageHandler.class, ClearChatMessageHandler.class,
-                StaffChatMessageHandler.class
+                StaffChatMessageHandler.class, StaffRedisMessageHandler.class
         );
     }
 

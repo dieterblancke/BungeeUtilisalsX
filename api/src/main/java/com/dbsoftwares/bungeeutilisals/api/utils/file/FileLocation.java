@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.DomainConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.NameConditionHandler;
@@ -98,8 +99,20 @@ public enum FileLocation {
     GENERALCOMMANDS("commands/generalcommands.yml") {
         @Override
         public void loadData() {
-            // do nothing
-            // TODO: setData("staff_ranks", list); | load staff ranks
+            if (configuration.getBoolean("staff.enabled")) {
+                final List<StaffRankData> ranks = Lists.newArrayList();
+                final List<ISection> sections = configuration.getSectionList("staff.ranks");
+
+                for (ISection section : sections) {
+                    final String name = section.getString("name");
+                    final String display = section.getString("display");
+                    final String permission = section.getString("permission");
+
+                    ranks.add(new StaffRankData(name, display, permission));
+                }
+
+                setData("staff_ranks", ranks);
+            }
         }
     },
     ANTISWEAR("chat/protection/antiswear.yml") {

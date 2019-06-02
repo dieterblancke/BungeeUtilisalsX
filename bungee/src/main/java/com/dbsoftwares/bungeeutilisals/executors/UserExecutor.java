@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.executors;
 
+import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
@@ -26,7 +27,9 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class UserExecutor implements EventExecutor {
@@ -45,14 +48,8 @@ public class UserExecutor implements EventExecutor {
 
     @Event
     public void onStaffLoad(UserLoadEvent event) {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getData("staff_ranks");
 
-        if (!config.getBoolean("staff.enabled")) {
-            return;
-        }
-
-        final User user = event.getUser();
-        final List<ISection> sections = config.getSectionList("staff.ranks");
 
     }
 
@@ -67,5 +64,15 @@ public class UserExecutor implements EventExecutor {
         final User user = event.getUser();
         final List<ISection> sections = config.getSectionList("staff.ranks");
 
+    }
+
+    private StaffRankData findStaffRank(final User user) {
+        final ProxiedPlayer player = user.getParent();
+        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getData("staff_ranks");
+
+        return ranks.stream()
+                .filter(rank -> player.hasPermission(rank.getPermission()))
+                .min(Comparator.comparingInt(StaffRankData::getPriority))
+                .orElse(null);
     }
 }
