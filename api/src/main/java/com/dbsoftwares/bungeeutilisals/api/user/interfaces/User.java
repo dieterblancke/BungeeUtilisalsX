@@ -289,14 +289,4 @@ public interface User extends ExperimentalUser {
      * @return the used friend settings
      */
     FriendSettings getFriendSettings();
-
-    /**
-     * @return the user's stored staff rank or null if not staff
-     */
-    String getStaffRank();
-
-    /**
-     * Sets the user staff rank to the given value.
-     */
-    void setStaffRank(String rank);
 }

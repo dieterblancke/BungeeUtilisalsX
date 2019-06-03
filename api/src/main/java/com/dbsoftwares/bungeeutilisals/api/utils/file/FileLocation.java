@@ -107,8 +107,9 @@ public enum FileLocation {
                     final String name = section.getString("name");
                     final String display = section.getString("display");
                     final String permission = section.getString("permission");
+                    final int priority = section.getInteger("priority");
 
-                    ranks.add(new StaffRankData(name, display, permission));
+                    ranks.add(new StaffRankData(name, display, permission, priority));
                 }
 
                 setData("staff_ranks", ranks);

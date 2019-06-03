@@ -122,6 +122,22 @@ general-commands:
       - '&eAvailable languages: &b{languages}'
     changed: '&eYour language has been changed to &b{language}&e!'
     already: '&eYou are already using the &b{language} &elanguage!'
+  staff:
+    no_staff: '&eThere is no staff online at the moment!'
+    head: '&fList of online staff members:'
+    foot: '&eIn total, there are &b{total} &estaff members online!'
+    users:
+      separator: ', '
+      user:
+        text: '{username}'
+        hover: '&b{username} &eis currently playing on &b{server}&e!'
+        click:
+          type: 'SUGGEST_COMMAND'
+          action: '/server {server}'
+    rank:
+      text:
+        - text: '{rank_displayname} &b({amount_online})&f: '
+        - text: '{users}'
 
 friends:
   join:

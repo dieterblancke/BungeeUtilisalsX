@@ -25,8 +25,11 @@ import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
@@ -121,6 +124,9 @@ public class BungeeUtilisals extends Plugin {
     @Getter
     private List<Script> scripts = Lists.newArrayList();
 
+    @Getter
+    private List<StaffUser> staffMembers = Lists.newArrayList();
+
     @Override
     public void onEnable() {
         if (ReflectionUtils.getJavaVersion() < 8) {
@@ -184,10 +190,15 @@ public class BungeeUtilisals extends Plugin {
 
         final IEventLoader loader = api.getEventLoader();
 
-        loader.register(UserLoadEvent.class, new UserExecutor());
-        loader.register(UserUnloadEvent.class, new UserExecutor());
+        final UserExecutor userExecutor = new UserExecutor();
+        loader.register(UserLoadEvent.class, userExecutor);
+        loader.register(UserUnloadEvent.class, userExecutor);
         loader.register(UserChatEvent.class, new UserChatExecutor());
         loader.register(UserChatEvent.class, new StaffCharChatExecutor());
+
+        final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
+        loader.register(NetworkStaffJoinEvent.class, staffNetworkExecutor);
+        loader.register(NetworkStaffLeaveEvent.class, staffNetworkExecutor);
 
         // Loading Punishment system
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
@@ -405,6 +416,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("glag", GLagCommand.class);
         loadGeneralCommand("staffchat", StaffChatCommand.class);
         loadGeneralCommand("language", LanguageCommand.class);
+        loadGeneralCommand("staff", StaffCommand.class);
 
         if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             generalCommands.add(new FriendsCommand());

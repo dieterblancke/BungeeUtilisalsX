@@ -75,9 +75,6 @@ public class BUser implements User {
     @Getter
     private boolean inStaffChat;
 
-    @Getter
-    private String staffRank;
-
     @Override
     public void load(ProxiedPlayer parent) {
         final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
@@ -134,7 +131,7 @@ public class BUser implements User {
             friendSettings = new FriendSettings();
         }
 
-        UserLoadEvent userLoadEvent = new UserLoadEvent(this);
+        final UserLoadEvent userLoadEvent = new UserLoadEvent(this);
         BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
     }
 
@@ -143,8 +140,8 @@ public class BUser implements User {
         save();
         cooldowns.remove();
 
-        UserUnloadEvent event = new UserUnloadEvent(this);
-        BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
+        final UserUnloadEvent event = new UserUnloadEvent(this);
+        BungeeUtilisals.getApi().getEventLoader().launchEvent(event);
 
         parent = null;
         storage.getData().clear();

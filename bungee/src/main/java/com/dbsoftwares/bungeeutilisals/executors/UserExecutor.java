@@ -18,15 +18,21 @@
 
 package com.dbsoftwares.bungeeutilisals.executors;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.StaffRedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData.StaffNetworkAction;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Comparator;
@@ -48,22 +54,50 @@ public class UserExecutor implements EventExecutor {
 
     @Event
     public void onStaffLoad(UserLoadEvent event) {
-        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getData("staff_ranks");
+        final User user = event.getUser();
+        final StaffRankData rank = findStaffRank(user);
 
+        if (rank == null) {
+            return;
+        }
 
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            final RedisMessageHandler<NetworkStaffConnectData> handler =
+                    BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffRedisMessageHandler.class);
+
+            final NetworkStaffConnectData data = new NetworkStaffConnectData(
+                    StaffNetworkAction.STAFF_JOIN, user.getUuid(), user.getName(), rank.getName()
+            );
+            handler.send(data);
+        } else {
+            BUCore.getApi().getEventLoader().launchEvent(
+                    new NetworkStaffJoinEvent(user.getName(), user.getUuid(), rank.getName())
+            );
+        }
     }
 
     @Event
     public void onStaffUnload(UserUnloadEvent event) {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final User user = event.getUser();
+        final StaffRankData rank = findStaffRank(user);
 
-        if (!config.getBoolean("staff.enabled")) {
+        if (rank == null) {
             return;
         }
 
-        final User user = event.getUser();
-        final List<ISection> sections = config.getSectionList("staff.ranks");
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            final RedisMessageHandler<NetworkStaffConnectData> handler =
+                    BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffRedisMessageHandler.class);
 
+            final NetworkStaffConnectData data = new NetworkStaffConnectData(
+                    StaffNetworkAction.STAFF_LEAVE, user.getUuid(), user.getName(), rank.getName()
+            );
+            handler.send(data);
+        } else {
+            BUCore.getApi().getEventLoader().launchEvent(
+                    new NetworkStaffLeaveEvent(user.getName(), user.getUuid(), rank.getName())
+            );
+        }
     }
 
     private StaffRankData findStaffRank(final User user) {
