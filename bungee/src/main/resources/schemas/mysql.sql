@@ -14,6 +14,18 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
   AUTO_INCREMENT = 1
   DEFAULT CHARSET = UTF8MB4;
 
+CREATE TABLE IF NOT EXISTS `{ignoredusers-table}`
+(
+  user      INT(11) NOT NULL,
+  ignored   INT(11) NOT NULL,
+  PRIMARY KEY(user, ignored),
+  FOREIGN KEY (user) REFERENCES `{users-table}`(id),
+  FOREIGN KEY (ignored) REFERENCES `{users-table}`(id)
+)
+  ENGINE = InnoDB
+  AUTO_INCREMENT = 1
+  DEFAULT CHARSET = UTF8MB4;
+
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
   user        VARCHAR(48) NOT NULL,

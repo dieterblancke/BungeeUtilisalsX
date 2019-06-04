@@ -28,6 +28,8 @@ public class DefaultPlaceHolders implements PlaceHolderPack {
     public void loadPack() {
         PlaceHolderAPI.addPlaceHolder("{users-table}", false,
                 event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.users"));
+        PlaceHolderAPI.addPlaceHolder("{ignoredusers-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.ignoredusers"));
         PlaceHolderAPI.addPlaceHolder("{friends-table}", false,
                 event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friends"));
         PlaceHolderAPI.addPlaceHolder("{friendrequests-table}", false,

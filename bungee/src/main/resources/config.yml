@@ -67,6 +67,7 @@ storage:
   # Storage schema names
   schemas:
     users: 'bu_users'
+    ignoredusers: 'bu_ignoredusers'
     friends: 'bu_friends'
     friendrequests: 'bu_friendrequests'
     friendsettings: 'bu_friendsettings'
