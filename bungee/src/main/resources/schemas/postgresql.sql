@@ -1,174 +1,134 @@
-/* Converted using SQLines.com/online */
-
-CREATE SEQUENCE {users-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {users-table}
+CREATE TABLE IF NOT EXISTS "{users-table}"
 (
-  id         INT DEFAULT NEXTVAL ('{users-table}_seq') NOT NULL,
-  uuid       VARCHAR(48) UNIQUE     NOT NULL,
-  username   VARCHAR(32)            NOT NULL,
-  ip         VARCHAR(32)            NOT NULL,
-  language   VARCHAR(24)            NOT NULL,
-  firstlogin TIMESTAMP(0)               NOT NULL,
-  lastlogout TIMESTAMP(0)               NOT NULL,
-  PRIMARY KEY (id)
-);
+    id         BIGINT PRIMARY KEY SERIAL,
+    uuid       VARCHAR(48) UNIQUE                NOT NULL,
+    username   VARCHAR(32)                       NOT NULL,
+    ip         VARCHAR(32)                       NOT NULL,
+    language   VARCHAR(24)                       NOT NULL,
+    firstlogin TIMESTAMP                          NOT NULL,
+    lastlogout TIMESTAMP                          NOT NULL
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {users-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_users ON "{users-table}" (id, uuid, username, ip);
 
-CREATE INDEX idx_users ON {users-table} (id, uuid, username, ip);
-
-CREATE TABLE IF NOT EXISTS {ignoredusers-table}
+CREATE TABLE IF NOT EXISTS "{ignoredusers-table}"
 (
-  user      INT NOT NULL,
-  ignored   INT NOT NULL,
-  PRIMARY KEY(user, ignored),
-  FOREIGN KEY (user) REFERENCES {users-table}(id),
-  FOREIGN KEY (ignored) REFERENCES {users-table}(id)
-);
+    "user"    BIGINT NOT NULL,
+    ignored BIGINT NOT NULL,
+    PRIMARY KEY ("user", ignored),
+    FOREIGN KEY ("user") REFERENCES "{users-table}" (id),
+    FOREIGN KEY (ignored) REFERENCES "{users-table}" (id)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {ignoredusers-table}_seq RESTART WITH 1;
-
-CREATE TABLE IF NOT EXISTS {friendsettings-table}
+CREATE TABLE IF NOT EXISTS "{friendsettings-table}"
 (
-  user        VARCHAR(48) NOT NULL,
-  requests    SMALLINT  NOT NULL,
-  messages    SMALLINT  NOT NULL,
-  PRIMARY KEY (user)
-);
+    "user"     VARCHAR(48) PRIMARY KEY NOT NULL,
+    requests BOOLEAN                 NOT NULL,
+    messages BOOLEAN                 NOT NULL
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {friendsettings-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_friendset ON "{friendsettings-table}" ("user", requests, messages);
 
-CREATE INDEX idx_friendset ON {friendsettings-table} (user, requests, messages);
-
-CREATE TABLE IF NOT EXISTS {friends-table}
+CREATE TABLE IF NOT EXISTS "{friends-table}"
 (
-  user    VARCHAR(48)                        NOT NULL,
-  friend  VARCHAR(48)                        NOT NULL,
-  created TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (user, friend)
-);
+    "user"    VARCHAR(48)                        NOT NULL,
+    friend  VARCHAR(48)                        NOT NULL,
+    created TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY ("user", friend)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {friends-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_friends ON "{friends-table}" ("user", friend);
 
-CREATE INDEX idx_friends ON {friends-table} (user, friend);
-
-CREATE TABLE IF NOT EXISTS {friendrequests-table}
+CREATE TABLE IF NOT EXISTS "{friendrequests-table}"
 (
-  user         VARCHAR(48)                        NOT NULL,
-  friend       VARCHAR(48)                        NOT NULL,
-  requested_at TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (user, friend)
-);
+    "user"         VARCHAR(48)                        NOT NULL,
+    friend       VARCHAR(48)                        NOT NULL,
+    requested_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    PRIMARY KEY ("user", friend)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {friendrequests-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_friendreq ON "{friendrequests-table}" ("user", friend);
 
-CREATE INDEX idx_friendreq ON {friendrequests-table} (user, friend);
-
-CREATE SEQUENCE {bans-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {bans-table}
+CREATE TABLE IF NOT EXISTS "{bans-table}"
 (
-  id          INT DEFAULT NEXTVAL ('{bans-table}_seq') NOT NULL,
-  uuid        VARCHAR(48)            NOT NULL,
-  user        VARCHAR(32)            NOT NULL,
-  ip          VARCHAR(32)            NOT NULL,
-  reason      TEXT                   NOT NULL,
-  server      VARCHAR(32)            NOT NULL,
-  date        TIMESTAMP(0)               NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  active      SMALLINT             NOT NULL,
-  executed_by VARCHAR(64)            NOT NULL,
-  duration    TEXT                   NOT NULL,
-  type        VARCHAR(16)            NOT NULL,
-  removed     SMALLINT             NOT NULL DEFAULT 0,
-  removed_by  VARCHAR(32),
-  PRIMARY KEY (id),
-  FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
-);
+    id          BIGINT PRIMARY KEY SERIAL,
+    uuid        VARCHAR(48)                       NOT NULL,
+    "user"        VARCHAR(32)                       NOT NULL,
+    ip          VARCHAR(32)                       NOT NULL,
+    reason      TEXT                              NOT NULL,
+    server      VARCHAR(32)                       NOT NULL,
+    date        TIMESTAMP                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active      BOOLEAN                           NOT NULL,
+    executed_by VARCHAR(64)                       NOT NULL,
+    duration    BIGINT                              NOT NULL,
+    type        VARCHAR(16)                       NOT NULL,
+    removed     BOOLEAN                           NOT NULL DEFAULT FALSE,
+    removed_by  VARCHAR(32),
+    FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {bans-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_bans ON "{bans-table}" (id, uuid, "user", ip, active, server);
 
-CREATE INDEX idx_bans ON {bans-table} (id, uuid, user, ip, active, server);
-
-CREATE SEQUENCE {mutes-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {mutes-table}
+CREATE TABLE IF NOT EXISTS "{mutes-table}"
 (
-  id          INT DEFAULT NEXTVAL ('{mutes-table}_seq') NOT NULL,
-  uuid        VARCHAR(48)            NOT NULL,
-  user        VARCHAR(32)            NOT NULL,
-  ip          VARCHAR(32)            NOT NULL,
-  reason      TEXT                   NOT NULL,
-  server      VARCHAR(32)            NOT NULL,
-  date        TIMESTAMP(0)               NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  active      SMALLINT             NOT NULL,
-  executed_by VARCHAR(64)            NOT NULL,
-  duration    TEXT                   NOT NULL,
-  type        VARCHAR(16)            NOT NULL,
-  removed     SMALLINT             NOT NULL DEFAULT 0,
-  removed_by  VARCHAR(32),
-  PRIMARY KEY (id),
-  FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
-);
+    id          BIGINT PRIMARY KEY SERIAL,
+    uuid        VARCHAR(48)                       NOT NULL,
+    "user"        VARCHAR(32)                       NOT NULL,
+    ip          VARCHAR(32)                       NOT NULL,
+    reason      TEXT                              NOT NULL,
+    server      VARCHAR(32)                       NOT NULL,
+    date        TIMESTAMP                          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active      BOOLEAN                           NOT NULL,
+    executed_by VARCHAR(64)                       NOT NULL,
+    duration    BIGINT                              NOT NULL,
+    type        VARCHAR(16)                       NOT NULL,
+    removed     BOOLEAN                           NOT NULL DEFAULT FALSE,
+    removed_by  VARCHAR(32),
+    FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {mutes-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_mutes ON "{mutes-table}" (id, uuid, "user", ip, active, server);
 
-CREATE INDEX idx_mutes ON {mutes-table} (id, uuid, user, ip, active, server);
 
-CREATE SEQUENCE {kicks-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {kicks-table}
+CREATE TABLE IF NOT EXISTS "{kicks-table}"
 (
-  id          INT DEFAULT NEXTVAL ('{kicks-table}_seq')             NOT NULL,
-  uuid        VARCHAR(36)                        NOT NULL,
-  user        VARCHAR(32)                        NOT NULL,
-  ip          VARCHAR(32)                        NOT NULL,
-  reason      TEXT                               NOT NULL,
-  server      VARCHAR(32)                        NOT NULL,
-  date        TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  executed_by VARCHAR(64)                        NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
-);
+    id          BIGINT PRIMARY KEY SERIAL,
+    uuid        VARCHAR(36)                        NOT NULL,
+    "user"        VARCHAR(32)                        NOT NULL,
+    ip          VARCHAR(32)                        NOT NULL,
+    reason      TEXT                               NOT NULL,
+    server      VARCHAR(32)                        NOT NULL,
+    date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    executed_by VARCHAR(64)                        NOT NULL,
+    FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {kicks-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_kicks ON "{kicks-table}" (id, uuid, "user", ip);
 
-CREATE INDEX idx_kicks ON {kicks-table} (id, uuid, user, ip);
-
-CREATE SEQUENCE {warns-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {warns-table}
+CREATE TABLE IF NOT EXISTS "{warns-table}"
 (
-  id          INT DEFAULT NEXTVAL ('{warns-table}_seq')             NOT NULL,
-  uuid        VARCHAR(36)                        NOT NULL,
-  user        VARCHAR(32)                        NOT NULL,
-  ip          VARCHAR(32)                        NOT NULL,
-  reason      TEXT                               NOT NULL,
-  server      VARCHAR(32)                        NOT NULL,
-  date        TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  executed_by VARCHAR(64)                        NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
-);
+    id          BIGINT PRIMARY KEY SERIAL,
+    uuid        VARCHAR(36)                        NOT NULL,
+    "user"        VARCHAR(32)                        NOT NULL,
+    ip          VARCHAR(32)                        NOT NULL,
+    reason      TEXT                               NOT NULL,
+    server      VARCHAR(32)                        NOT NULL,
+    date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    executed_by VARCHAR(64)                        NOT NULL,
+    FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {warns-table}_seq RESTART WITH 1;
+CREATE INDEX IF NOT EXISTS idx_warns ON "{warns-table}" (id, uuid, "user", ip);
 
-CREATE INDEX idx_warns ON {warns-table} (id, uuid, user, ip);
-
-CREATE SEQUENCE {punishmentactions-table}_seq;
-
-CREATE TABLE IF NOT EXISTS {punishmentactions-table}
+CREATE TABLE IF NOT EXISTS "{punishmentactions-table}"
 (
-  id          INT DEFAULT NEXTVAL ('{punishmentactions-table}_seq')             NOT NULL,
-  uuid        VARCHAR(36)                        NOT NULL,
-  user        VARCHAR(32)                        NOT NULL,
-  ip          VARCHAR(32)                        NOT NULL,
-  actionid    VARCHAR(36)                        NOT NULL,
-  date        TIMESTAMP(0) DEFAULT CURRENT_TIMESTAMP NOT NULL,
-  PRIMARY KEY (id),
-  FOREIGN KEY (uuid) REFERENCES {users-table} (uuid)
-);
+    id       BIGINT PRIMARY KEY SERIAL,
+    uuid     VARCHAR(36)                        NOT NULL,
+    "user"     VARCHAR(32)                        NOT NULL,
+    ip       VARCHAR(32)                        NOT NULL,
+    actionid VARCHAR(36)                        NOT NULL,
+    date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
+) DEFAULT CHARSET = UTF8MB4;
 
-ALTER SEQUENCE {punishmentactions-table}_seq RESTART WITH 1;
-
-CREATE INDEX idx_punishactions ON {punishmentactions-table} (id, uuid, user, ip, actionid);
+CREATE INDEX IF NOT EXISTS idx_punishactions ON "{punishmentactions-table}" (id, uuid, "user", ip, actionid);
