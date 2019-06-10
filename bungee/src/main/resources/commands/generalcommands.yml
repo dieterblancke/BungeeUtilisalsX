@@ -139,3 +139,4 @@ staff:
       permission: 'bungeeutilisals.staff.owner'
       # The priority of this rank, the higher the priority is, the higher the rank should be.
       priority: 5
+msg:
