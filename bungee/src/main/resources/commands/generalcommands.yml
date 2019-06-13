@@ -140,3 +140,14 @@ staff:
       # The priority of this rank, the higher the priority is, the higher the rank should be.
       priority: 5
 msg:
+  enabled: true
+  aliases: 'm, whisper'
+  permission: bungeeutilisals.commands.msg
+reply:
+  enabled: true
+  aliases: 'r'
+  permission: bungeeutilisals.commands.reply
+ignore:
+  enabled: true
+  aliases: 'bignore'
+  permission: bungeeutilisals.commands.ignore
