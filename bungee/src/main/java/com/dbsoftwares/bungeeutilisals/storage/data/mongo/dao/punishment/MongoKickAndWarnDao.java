@@ -51,6 +51,7 @@ public class MongoKickAndWarnDao implements KickAndWarnDao {
         data.put("server", server);
         data.put("date", new Date());
         data.put("executed_by", executedby);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.WARN.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.WARN, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null);
@@ -67,6 +68,7 @@ public class MongoKickAndWarnDao implements KickAndWarnDao {
         data.put("server", server);
         data.put("date", new Date());
         data.put("executed_by", executedby);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.KICK.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.KICK, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null);

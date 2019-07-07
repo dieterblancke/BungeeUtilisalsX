@@ -118,6 +118,7 @@ public class MongoBansDao implements BansDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.BAN.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
@@ -138,6 +139,7 @@ public class MongoBansDao implements BansDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.IPBAN.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
@@ -158,6 +160,7 @@ public class MongoBansDao implements BansDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.TEMPBAN.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);
@@ -178,6 +181,7 @@ public class MongoBansDao implements BansDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.IPTEMPBAN.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);

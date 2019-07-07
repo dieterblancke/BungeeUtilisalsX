@@ -118,6 +118,7 @@ public class MongoMutesDao implements MutesDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.MUTE.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
@@ -138,6 +139,7 @@ public class MongoMutesDao implements MutesDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.IPMUTE.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
@@ -158,6 +160,7 @@ public class MongoMutesDao implements MutesDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.TEMPMUTE.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);
@@ -178,6 +181,7 @@ public class MongoMutesDao implements MutesDao {
         data.put("executed_by", executedby);
         data.put("removed", false);
         data.put("removed_by", null);
+        data.put("punishmentaction_status", false);
 
         db().getCollection(PunishmentType.IPTEMPMUTE.getTable()).insertOne(new Document(data));
         return PunishmentDao.buildPunishmentInfo(PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);

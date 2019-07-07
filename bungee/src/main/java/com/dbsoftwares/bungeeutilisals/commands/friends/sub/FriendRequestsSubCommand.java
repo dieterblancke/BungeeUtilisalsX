@@ -115,7 +115,7 @@ public class FriendRequestsSubCommand extends SubCommand {
                     ? request.getFriendName() : request.getUserName();
 
             user.sendLangMessage(
-                    "friends.requests.format",
+                    "friends.requests.format." + requestType,
                     "{target}", targetName,
                     "{requestDate}", Utils.formatDate(request.getRequestedAt())
             );

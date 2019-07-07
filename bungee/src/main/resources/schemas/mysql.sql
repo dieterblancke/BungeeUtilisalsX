@@ -51,19 +51,20 @@ CREATE INDEX idx_friendreq ON `{friendrequests-table}` (user, friend);
 
 CREATE TABLE IF NOT EXISTS `{bans-table}`
 (
-    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    uuid        VARCHAR(48) NOT NULL,
-    user        VARCHAR(32) NOT NULL,
-    ip          VARCHAR(32) NOT NULL,
-    reason      TEXT        NOT NULL,
-    server      VARCHAR(32) NOT NULL,
-    date        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    active      BOOLEAN     NOT NULL,
-    executed_by VARCHAR(64) NOT NULL,
-    duration    LONG        NOT NULL,
-    type        VARCHAR(16) NOT NULL,
-    removed     BOOLEAN     NOT NULL DEFAULT 0,
-    removed_by  VARCHAR(32),
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid                    VARCHAR(48) NOT NULL,
+    user                    VARCHAR(32) NOT NULL,
+    ip                      VARCHAR(32) NOT NULL,
+    reason                  TEXT        NOT NULL,
+    server                  VARCHAR(32) NOT NULL,
+    date                    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active                  BOOLEAN     NOT NULL,
+    executed_by             VARCHAR(64) NOT NULL,
+    duration                LONG        NOT NULL,
+    type                    VARCHAR(16) NOT NULL,
+    removed                 BOOLEAN     NOT NULL DEFAULT 0,
+    removed_by              VARCHAR(32),
+    punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -71,19 +72,20 @@ CREATE INDEX idx_bans ON `{bans-table}` (id, uuid, user, ip, active, server);
 
 CREATE TABLE IF NOT EXISTS `{mutes-table}`
 (
-    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    uuid        VARCHAR(48) NOT NULL,
-    user        VARCHAR(32) NOT NULL,
-    ip          VARCHAR(32) NOT NULL,
-    reason      TEXT        NOT NULL,
-    server      VARCHAR(32) NOT NULL,
-    date        DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    active      BOOLEAN     NOT NULL,
-    executed_by VARCHAR(64) NOT NULL,
-    duration    LONG        NOT NULL,
-    type        VARCHAR(16) NOT NULL,
-    removed     BOOLEAN     NOT NULL DEFAULT 0,
-    removed_by  VARCHAR(32),
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid                    VARCHAR(48) NOT NULL,
+    user                    VARCHAR(32) NOT NULL,
+    ip                      VARCHAR(32) NOT NULL,
+    reason                  TEXT        NOT NULL,
+    server                  VARCHAR(32) NOT NULL,
+    date                    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    active                  BOOLEAN     NOT NULL,
+    executed_by             VARCHAR(64) NOT NULL,
+    duration                LONG        NOT NULL,
+    type                    VARCHAR(16) NOT NULL,
+    removed                 BOOLEAN     NOT NULL DEFAULT 0,
+    removed_by              VARCHAR(32),
+    punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -92,14 +94,15 @@ CREATE INDEX idx_mutes ON `{mutes-table}` (id, uuid, user, ip, active, server);
 
 CREATE TABLE IF NOT EXISTS `{kicks-table}`
 (
-    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    uuid        VARCHAR(36)                        NOT NULL,
-    user        VARCHAR(32)                        NOT NULL,
-    ip          VARCHAR(32)                        NOT NULL,
-    reason      TEXT                               NOT NULL,
-    server      VARCHAR(32)                        NOT NULL,
-    date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    executed_by VARCHAR(64)                        NOT NULL,
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid                    VARCHAR(36) NOT NULL,
+    user                    VARCHAR(32) NOT NULL,
+    ip                      VARCHAR(32) NOT NULL,
+    reason                  TEXT        NOT NULL,
+    server                  VARCHAR(32) NOT NULL,
+    date                    DATETIME             DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    executed_by             VARCHAR(64) NOT NULL,
+    punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -107,14 +110,15 @@ CREATE INDEX idx_kicks ON `{kicks-table}` (id, uuid, user, ip);
 
 CREATE TABLE IF NOT EXISTS `{warns-table}`
 (
-    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
-    uuid        VARCHAR(36)                        NOT NULL,
-    user        VARCHAR(32)                        NOT NULL,
-    ip          VARCHAR(32)                        NOT NULL,
-    reason      TEXT                               NOT NULL,
-    server      VARCHAR(32)                        NOT NULL,
-    date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    executed_by VARCHAR(64)                        NOT NULL,
+    id                      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid                    VARCHAR(36) NOT NULL,
+    user                    VARCHAR(32) NOT NULL,
+    ip                      VARCHAR(32) NOT NULL,
+    reason                  TEXT        NOT NULL,
+    server                  VARCHAR(32) NOT NULL,
+    date                    DATETIME             DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    executed_by             VARCHAR(64) NOT NULL,
+    punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 ) DEFAULT CHARSET = UTF8MB4;
 
