@@ -46,7 +46,7 @@ public class UserPunishExecutor implements EventExecutor {
         final List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData(event.getType().toString());
 
         for (PunishmentAction action : actions) {
-            long amount;
+            final long amount;
 
             if (event.isUserPunishment()) {
                 // uuid involved
@@ -65,9 +65,28 @@ public class UserPunishExecutor implements EventExecutor {
             }
 
             if (amount >= action.getLimit()) {
-                action.getActions().forEach(command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
-                        ProxyServer.getInstance().getConsole(),
-                        command.replace("%user%", event.getName())));
+                action.getActions().forEach(command ->
+                        ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                                ProxyServer.getInstance().getConsole(),
+                                command.replace("%user%", event.getName())
+                        )
+                );
+
+                if (event.isUserPunishment()) {
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().updateActionStatus(
+                            action.getLimit(),
+                            event.getType(),
+                            event.getUuid(),
+                            new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
+                    );
+                } else {
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
+                            action.getLimit(),
+                            event.getType(),
+                            event.getIp(),
+                            new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
+                    );
+                }
             }
         }
     }

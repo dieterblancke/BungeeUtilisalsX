@@ -70,11 +70,12 @@ public class SQLPunishmentDao implements PunishmentDao {
         if (type.isActivatable()) {
             try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                  PreparedStatement pstmt = connection.prepareStatement(
-                         "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND type = ?;"
+                         "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND type = ? AND punishmentaction_status = ?;"
                  )) {
                 pstmt.setString(1, uuid.toString());
                 pstmt.setString(2, Dao.formatDateToString(date));
                 pstmt.setString(3, type.toString());
+                pstmt.setBoolean(4, false);
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
@@ -87,10 +88,11 @@ public class SQLPunishmentDao implements PunishmentDao {
         } else {
             try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
                  PreparedStatement pstmt = connection.prepareStatement(
-                         "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ?;"
+                         "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND punishmentaction_status = ?;"
                  )) {
                 pstmt.setString(1, uuid.toString());
                 pstmt.setString(2, Dao.formatDateToString(date));
+                pstmt.setBoolean(3, false);
 
                 try (ResultSet rs = pstmt.executeQuery()) {
                     if (rs.next()) {
@@ -111,11 +113,12 @@ public class SQLPunishmentDao implements PunishmentDao {
 
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= ? AND type = ?;"
+                     "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= ? AND type = ? AND punishmentaction_status = ?;"
              )) {
             pstmt.setString(1, ip);
             pstmt.setString(2, Dao.formatDateToString(date));
             pstmt.setString(3, type.toString());
+            pstmt.setBoolean(4, false);
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
@@ -126,5 +129,57 @@ public class SQLPunishmentDao implements PunishmentDao {
             BUCore.logException(e);
         }
         return count;
+    }
+
+    @Override
+    public void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date) {
+        if (type.isActivatable()) {
+            try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                 PreparedStatement pstmt = connection.prepareStatement(
+                         "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= ? AND type = ? LIMIT ?;"
+                 )) {
+                pstmt.setBoolean(1, true);
+                pstmt.setString(2, uuid.toString());
+                pstmt.setString(3, Dao.formatDateToString(date));
+                pstmt.setString(4, type.toString());
+                pstmt.setInt(5, limit);
+
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                BUCore.logException(e);
+            }
+        } else {
+            try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                 PreparedStatement pstmt = connection.prepareStatement(
+                         "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= ? LIMIT ?;"
+                 )) {
+                pstmt.setBoolean(1, true);
+                pstmt.setString(2, uuid.toString());
+                pstmt.setString(3, Dao.formatDateToString(date));
+                pstmt.setInt(4, limit);
+
+                pstmt.executeUpdate();
+            } catch (SQLException e) {
+                BUCore.logException(e);
+            }
+        }
+    }
+
+    @Override
+    public void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date) {
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= ? AND type = ? LIMIT ?;"
+             )) {
+            pstmt.setBoolean(1, true);
+            pstmt.setString(2, ip);
+            pstmt.setString(3, Dao.formatDateToString(date));
+            pstmt.setString(4, type.toString());
+            pstmt.setInt(5, limit);
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
     }
 }

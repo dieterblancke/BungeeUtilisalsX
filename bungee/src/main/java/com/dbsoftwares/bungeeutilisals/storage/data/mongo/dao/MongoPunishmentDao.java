@@ -31,10 +31,13 @@ import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
 import org.bson.Document;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class MongoPunishmentDao implements PunishmentDao {
 
@@ -71,12 +74,14 @@ public class MongoPunishmentDao implements PunishmentDao {
             return collection.countDocuments(Filters.and(
                     Filters.eq("uuid", uuid.toString()),
                     Filters.gte("date", date),
-                    Filters.eq("type", type.toString())
+                    Filters.eq("type", type.toString()),
+                    Filters.eq("punishmentaction_status", false)
             ));
         } else {
             return collection.countDocuments(Filters.and(
                     Filters.eq("uuid", uuid),
-                    Filters.gte("date", date)
+                    Filters.gte("date", date),
+                    Filters.eq("punishmentaction_status", false)
             ));
         }
     }
@@ -88,8 +93,76 @@ public class MongoPunishmentDao implements PunishmentDao {
         return collection.countDocuments(Filters.and(
                 Filters.eq("ip", ip),
                 Filters.gte("date", date),
-                Filters.eq("type", type.toString())
+                Filters.eq("type", type.toString()),
+                Filters.eq("punishmentaction_status", false)
         ));
+    }
+
+    @Override
+    public void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date) {
+        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+
+        if (type.isActivatable()) {
+            collection.find(
+                    Filters.and(
+                            Filters.eq("uuid", uuid.toString()),
+                            Filters.gte("date", date),
+                            Filters.eq("type", type.toString()),
+                            Filters.eq("punishmentaction_status", false)
+                    ))
+                    .sort(Sorts.ascending("date"))
+                    .limit(limit)
+                    .forEach((Consumer<? super Document>) doc -> {
+                        doc.put("punishmentaction_status", true);
+
+                        save(collection, doc);
+                    });
+        } else {
+            collection.find(
+                    Filters.and(
+                            Filters.eq("uuid", uuid.toString()),
+                            Filters.gte("date", date),
+                            Filters.eq("punishmentaction_status", false)
+                    ))
+                    .sort(Sorts.ascending("date"))
+                    .limit(limit)
+                    .forEach((Consumer<? super Document>) doc -> {
+                        doc.put("punishmentaction_status", true);
+
+                        save(collection, doc);
+                    });
+        }
+    }
+
+    @Override
+    public void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date) {
+        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+
+        collection.find(
+                Filters.and(
+                        Filters.eq("ip", ip),
+                        Filters.gte("date", date),
+                        Filters.eq("type", type.toString()),
+                        Filters.eq("punishmentaction_status", false)
+                ))
+                .sort(Sorts.ascending("date"))
+                .limit(limit)
+                .forEach((Consumer<? super Document>) doc -> {
+                    doc.put("punishmentaction_status", true);
+
+                    save(collection, doc);
+                });
+    }
+
+    // Recreating save api ...
+    private void save(final MongoCollection<Document> collection, final Document document) {
+        final Object id = document.get("_id");
+
+        if (id == null) {
+            collection.insertOne(document);
+        } else {
+            collection.replaceOne(Filters.eq("_id", id), document, new ReplaceOptions().upsert(true));
+        }
     }
 
     private MongoDatabase db() {

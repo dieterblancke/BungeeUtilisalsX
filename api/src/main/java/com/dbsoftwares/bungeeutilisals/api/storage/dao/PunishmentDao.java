@@ -76,4 +76,8 @@ public interface PunishmentDao {
     long getPunishmentsSince(PunishmentType type, UUID uuid, Date date);
 
     long getIPPunishmentsSince(PunishmentType type, String ip, Date date);
+
+    void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date);
+
+    void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date);
 }
