@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import net.md_5.bungee.api.ProxyServer;
@@ -32,14 +33,14 @@ import java.util.List;
 public class UserPunishExecutor implements EventExecutor {
 
     @Event
-    public void updateMute(UserPunishEvent event) {
+    public void updateMute(UserPunishmentFinishEvent event) {
         if (event.isMute()) {
             event.getUser().ifPresent(user -> user.setMute(event.getInfo()));
         }
     }
 
     @Event
-    public void executeActions(UserPunishEvent event) {
+    public void executeActions(UserPunishmentFinishEvent event) {
         if (!FileLocation.PUNISHMENTS.hasData(event.getType().toString())) {
             return;
         }

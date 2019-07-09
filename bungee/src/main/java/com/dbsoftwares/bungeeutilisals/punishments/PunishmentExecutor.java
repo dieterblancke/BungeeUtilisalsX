@@ -63,7 +63,7 @@ public class PunishmentExecutor implements IPunishmentExecutor {
 
     @Override
     public List<String> getPlaceHolders(PunishmentInfo info) {
-        List<String> placeholders = Lists.newArrayList();
+        final List<String> placeholders = Lists.newArrayList();
 
         if (info.getReason() != null) {
             placeholders.add("{reason}");
@@ -104,8 +104,10 @@ public class PunishmentExecutor implements IPunishmentExecutor {
         placeholders.add("{id}");
         placeholders.add(String.valueOf(info.getId()));
 
-        placeholders.add("{type}");
-        placeholders.add(info.getType().toString().toLowerCase());
+        if (info.getType() != null) {
+            placeholders.add("{type}");
+            placeholders.add(info.getType().toString().toLowerCase());
+        }
 
         placeholders.add("{expire}");
         if (info.getExpireTime() != null) {

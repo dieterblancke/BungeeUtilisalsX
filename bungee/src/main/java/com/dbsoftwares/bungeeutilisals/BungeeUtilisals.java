@@ -30,7 +30,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
@@ -204,7 +204,7 @@ public class BungeeUtilisals extends Plugin {
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
 
-            loader.register(UserPunishEvent.class, new UserPunishExecutor());
+            loader.register(UserPunishmentFinishEvent.class, new UserPunishExecutor());
 
             MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
             loader.register(UserChatEvent.class, muteCheckExecutor);
