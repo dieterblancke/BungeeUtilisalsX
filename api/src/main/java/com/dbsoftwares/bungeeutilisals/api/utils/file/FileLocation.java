@@ -157,6 +157,7 @@ public enum FileLocation {
         public void loadData() {
             for (ISection section : configuration.getSectionList("actions")) {
                 try {
+                    final String uid = section.getString("uid");
                     final PunishmentType type = PunishmentType.valueOf(section.getString("type"));
 
                     try {
@@ -166,7 +167,7 @@ public enum FileLocation {
                             final int amount = section.getInteger("time.amount");
                             final int limit = section.getInteger("limit");
 
-                            final PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
+                            final PunishmentAction action = new PunishmentAction(uid, type, unit, amount, limit, section.getStringList("actions"));
                             final List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
                                     type.toString(), Lists.newArrayList()
                             );

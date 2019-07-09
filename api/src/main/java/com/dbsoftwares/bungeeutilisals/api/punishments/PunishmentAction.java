@@ -28,6 +28,7 @@ import java.util.List;
 @AllArgsConstructor
 public class PunishmentAction {
 
+    private String uid;
     private PunishmentType type;
     private TimeUnit unit;
     private int time;

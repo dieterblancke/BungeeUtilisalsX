@@ -80,4 +80,6 @@ public interface PunishmentDao {
     void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date);
 
     void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date);
+
+    void savePunishmentAction(final UUID uuid, final String username, final String ip, final String uid);
 }

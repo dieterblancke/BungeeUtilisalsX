@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
@@ -28,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoBa
 import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoKickAndWarnDao;
 import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoMutesDao;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
+import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -36,6 +38,7 @@ import com.mongodb.client.model.Sorts;
 import org.bson.Document;
 
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 
@@ -152,6 +155,19 @@ public class MongoPunishmentDao implements PunishmentDao {
 
                     save(collection, doc);
                 });
+    }
+
+    @Override
+    public void savePunishmentAction(UUID uuid, String username, String ip, String uid) {
+        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+
+        data.put("uuid", uuid.toString());
+        data.put("user", username);
+        data.put("ip", ip);
+        data.put("actionid", uid);
+        data.put("date", new Date());
+
+        db().getCollection(PlaceHolderAPI.formatMessage("{punishmentactions-table}")).insertOne(new Document(data));
     }
 
     // Recreating save api ...

@@ -88,6 +88,12 @@ public class UserPunishExecutor implements EventExecutor {
                             new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
                     );
                 }
+                BUCore.getApi().getStorageManager().getDao().getPunishmentDao().savePunishmentAction(
+                        event.getUuid(),
+                        event.getName(),
+                        event.getIp(),
+                        action.getUid()
+                );
             }
         }
     }

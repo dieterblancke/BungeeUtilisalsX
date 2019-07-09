@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
@@ -181,6 +182,23 @@ public class SQLPunishmentDao implements PunishmentDao {
             pstmt.setInt(6, limit);
 
             pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+    }
+
+    @Override
+    public void savePunishmentAction(UUID uuid, String username, String ip, String uid) {
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(PlaceHolderAPI.formatMessage(
+                     "INSERT INTO {punishmentactions-table} (uuid, user, ip, actionid) VALUES (?, ?, ?, ?);"
+             ))) {
+            pstmt.setString(1, uuid.toString());
+            pstmt.setString(2, username);
+            pstmt.setString(3, ip);
+            pstmt.setString(4, uid);
+
+            pstmt.execute();
         } catch (SQLException e) {
             BUCore.logException(e);
         }
