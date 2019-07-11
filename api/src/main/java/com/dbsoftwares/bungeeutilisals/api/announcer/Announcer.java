@@ -33,6 +33,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +54,7 @@ public abstract class Announcer {
     protected IConfiguration configuration;
     private ScheduledTask task;
     private AnnouncementType type;
-    private Map<Announcement, Boolean> announcements = Maps.newHashMap();
+    private LinkedHashMap<Announcement, Boolean> announcements = Maps.newLinkedHashMap();
     private Iterator<Announcement> announcementIterator;
     private boolean enabled;
     private TimeUnit unit;

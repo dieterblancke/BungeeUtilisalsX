@@ -6,7 +6,8 @@ enabled: true
 random: false
 
 delay:
-  # Possible TimeUnits: SECONDS, MINUTES & HOURS
+  # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
+  # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS
   unit: MINUTES
   time: 2
 
@@ -45,7 +46,8 @@ announcements:
     # How long should the bossbar be shown?
     # Set to -1 to keep the bossbar until the next announcement
     stay:
-      # Possible TimeUnits: SECONDS, MINUTES & HOURS
+      # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
+      # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS
       unit: MINUTES
       time: 1
     # Permission you need in order to receive the announcement, leave empty if no permission.

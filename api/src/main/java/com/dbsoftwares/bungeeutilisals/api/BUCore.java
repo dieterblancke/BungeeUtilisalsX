@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 public final class BUCore {
 
     private static BUAPI instance = null;
-    private static Logger logger = LoggerFactory.getLogger("BungeeUtilisals");
+    private static Logger logger = LoggerFactory.getLogger("BungeeUtilisalsX");
 
     private BUCore() {
         throw new UnsupportedOperationException("This class cannot be instantiated.");

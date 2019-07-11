@@ -52,7 +52,6 @@ public class PunishmentDataCommand extends BUCommand {
             return;
         }
 
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final PunishmentType type = Utils.valueOfOr(args[0].toUpperCase(), PunishmentType.BAN);
         final String id = args[1];
 

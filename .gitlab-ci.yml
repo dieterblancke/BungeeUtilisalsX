@@ -12,7 +12,7 @@ deploy:
   script:
     - mvn clean package install -Dmaven.repo.local=.m2/repository
   artifacts:
-    name: "BungeeUtilisals"
+    name: "BungeeUtilisalsX"
     expire_in: 2 weeks
     paths:
       - bungee/target/BungeeUtilisals.jar

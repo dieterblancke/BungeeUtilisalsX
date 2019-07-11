@@ -6,9 +6,10 @@ enabled: true
 random: false
 
 delay:
- # Possible TimeUnits: SECONDS, MINUTES & HOURS
- unit: SECONDS
- time: 30
+  # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
+  # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS
+  unit: SECONDS
+  time: 30
 
 announcements:
 # You can enter a ServerGroup name or a ServerName in here.

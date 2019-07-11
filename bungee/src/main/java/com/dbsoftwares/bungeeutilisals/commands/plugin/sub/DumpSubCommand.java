@@ -84,7 +84,7 @@ public class DumpSubCommand extends SubCommand {
                 final HttpURLConnection con = (HttpURLConnection) new URL("https://paste.dbsoftwares.eu/documents/").openConnection();
 
                 con.addRequestProperty(
-                        "User-Agent", "BungeeUtilisals v" + BungeeUtilisals.getInstance().getDescription().getVersion()
+                        "User-Agent", "BungeeUtilisalsX v" + BungeeUtilisals.getInstance().getDescription().getVersion()
                 );
                 con.setRequestMethod("POST");
                 con.setRequestProperty("Content-Type", "application/json");

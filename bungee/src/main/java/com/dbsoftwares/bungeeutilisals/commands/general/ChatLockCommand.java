@@ -56,7 +56,6 @@ public class ChatLockCommand extends BUCommand implements Listener {
     }
 
     public static void lockChat(String server, String by) {
-        ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo(server);
         Stream<User> users = server.equals("ALL")
                 ? BUCore.getApi().getUsers().stream()
                 : BUCore.getApi().getUsers().stream().filter(u -> u.getServerName().equalsIgnoreCase(server));
@@ -111,8 +110,6 @@ public class ChatLockCommand extends BUCommand implements Listener {
                 || !lockedChatServers.contains("ALL") && !lockedChatServers.contains(player.getServer().getInfo().getName());
 
         if (!canTalk) {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
-
             event.setCancelled(true);
             LanguageUtils.sendLangMessage(player, "general-commands.chatlock.onchat");
         }

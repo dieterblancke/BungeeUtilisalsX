@@ -132,7 +132,7 @@ public class BungeeUtilisals extends Plugin {
         if (ReflectionUtils.getJavaVersion() < 8) {
             BUCore.getLogger().warn("You are running a Java version lower then Java 8.");
             BUCore.getLogger().warn("Please upgrade to Java 8 or newer.");
-            BUCore.getLogger().warn("BungeeUtilisals is not able to start up on Java versions lower then Java 8.");
+            BUCore.getLogger().warn("BungeeUtilisalsX is not able to start up on Java versions lower then Java 8.");
             return;
         }
 

@@ -6,7 +6,8 @@ enabled: true
 random: false
 
 delay:
- # Possible TimeUnits: SECONDS, MINUTES & HOURS
+ # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
+ # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS
  unit: MINUTES
  time: 2
 
