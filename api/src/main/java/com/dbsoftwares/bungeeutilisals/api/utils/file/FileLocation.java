@@ -32,8 +32,6 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.dbsoftwares.bungeeutilisals.api.utils.stuff.RankData;
-import com.dbsoftwares.bungeeutilisals.api.utils.stuff.EventData;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -198,36 +196,6 @@ public enum FileLocation {
         @Override
         public void loadData() {
             // do nothing
-        }
-    },
-    ADVANCED_JOIN("advancedjoin.yml") {
-        @Override
-        public void loadData() {
-            // do nothing
-            for (ISection section : configuration.getSectionList("ranks")) {
-                final EventData global = this.loadEventData(section.getSection("global"));
-                final EventData local = this.loadEventData(section.getSection("local"));
-
-                final RankData data = new RankData(
-                        section.getString("name"),
-                        section.getString("permission"),
-                        section.getInteger("priority"),
-                        global,
-                        local
-                );
-
-                this.getDataList().add(data);
-            }
-        }
-
-        private EventData loadEventData(final ISection section) {
-            return new EventData(
-                    section.getBoolean("enabled"),
-                    section.getString("message"),
-                    section.getString("receive-permission"),
-                    section.getBoolean("commands.enabled"),
-                    section.getStringList("commands.commands")
-            );
         }
     };
 
