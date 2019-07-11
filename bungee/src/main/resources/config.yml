@@ -60,7 +60,7 @@ storage:
     # It is recommended to set this to the same value as the max-pool-size
     min-idle: 5
     # Maximum lifetime of a connection. Time in seconds.
-    max-lifetime: 1500
+    max-lifetime: 600
     # How long should BungeeUtilisals wait before timing out a connection?
     connection-timeout: 8
 
