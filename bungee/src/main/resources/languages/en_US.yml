@@ -563,18 +563,3 @@ custom:
       minigame1:
         title: '&e&lBungeeUtilisals'
         subtitle: '&dA plugin by DBSoftwares, maintained by &bdidjee2.'
-  advancedjoin:
-    join:
-      global:
-        vip: '&7(&aVIP&7) &b%player% &ehas joined the network!'
-        mvp: '&7(&9MVP&7) &b%player% &ehas joined the network!'
-      server:
-        vip: '&7(&aVIP&7) &b%player% &ehas joined &b{server}!'
-        mvp: '&7(&9MVP&7) &b%player% &ehas joined &b{server}!'
-    quit:
-      global:
-        vip: '&7(&aVIP&7) &b%player% &ehas left the network!'
-        mvp: '&7(&9MVP&7) &b%player% &ehas left the network!'
-      server:
-        vip: '&7(&aVIP&7) &b%player% &ehas left &b{server}!'
-        mvp: '&7(&9MVP&7) &b%player% &ehas left &b{server}!'
