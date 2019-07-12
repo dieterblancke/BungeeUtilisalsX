@@ -19,12 +19,14 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.google.api.client.util.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -39,6 +41,7 @@ public class UserStorage {
     private Language language;
     private Date firstLogin;
     private Date lastLogout;
+    private List<String> ignoredUsers = Lists.newArrayList();
 
     private Map<String, Object> data = Maps.newHashMap();
 

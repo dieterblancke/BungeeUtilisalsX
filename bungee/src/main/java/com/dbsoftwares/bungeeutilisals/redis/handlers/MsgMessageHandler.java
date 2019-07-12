@@ -26,9 +26,9 @@ import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 
 import java.util.Optional;
 
-public class FriendMsgMessageHandler extends RedisMessageHandler<MessageData> {
+public class MsgMessageHandler extends RedisMessageHandler<MessageData> {
 
-    public FriendMsgMessageHandler() {
+    public MsgMessageHandler() {
         super(MessageData.class);
     }
 
@@ -39,17 +39,17 @@ public class FriendMsgMessageHandler extends RedisMessageHandler<MessageData> {
         if (optional.isPresent()) {
             final User user = optional.get();
 
-            user.getStorage().setData("FRIEND_MSG_LAST_USER", data.getSenderName());
+            user.getStorage().setData("MSG_LAST_USER", data.getSenderName());
 
             if (data.getType().equals("reply")) {
-                String msgMessage = user.buildLangMessage("friends.reply.format.receive");
+                String msgMessage = user.buildLangMessage("general-commands.reply.format.receive");
                 msgMessage = Utils.c(msgMessage);
                 msgMessage = msgMessage.replace("{sender}", data.getSenderName());
                 msgMessage = msgMessage.replace("{message}", data.getMessage());
 
                 user.sendRawMessage(msgMessage);
             } else {
-                String msgMessage = user.buildLangMessage("friends.msg.format.receive");
+                String msgMessage = user.buildLangMessage("general-commands.msg.format.receive");
                 msgMessage = Utils.c(msgMessage);
                 msgMessage = msgMessage.replace("{sender}", data.getSenderName());
                 msgMessage = msgMessage.replace("{message}", data.getMessage());

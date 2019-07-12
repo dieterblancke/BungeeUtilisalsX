@@ -52,4 +52,8 @@ public interface UserDao {
     void setLanguage(UUID uuid, Language language);
 
     void setLogout(UUID uuid, Date logout);
+
+    void ignoreUser(UUID user, UUID ignore);
+
+    void unignoreUser(UUID user, UUID unignore);
 }

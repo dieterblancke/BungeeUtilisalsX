@@ -46,6 +46,9 @@ import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommand;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
@@ -309,7 +312,8 @@ public class BungeeUtilisals extends Plugin {
         redisMessenger.registerMessageHandlers(
                 AnnounceMessageHandler.class, BroadcastMessageHandler.class,
                 ChatLockMessageHandler.class, ClearChatMessageHandler.class,
-                StaffChatMessageHandler.class, StaffRedisMessageHandler.class
+                StaffChatMessageHandler.class, StaffRedisMessageHandler.class,
+                MsgMessageHandler.class
         );
     }
 
@@ -417,6 +421,9 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("staffchat", StaffChatCommand.class);
         loadGeneralCommand("language", LanguageCommand.class);
         loadGeneralCommand("staff", StaffCommand.class);
+        loadGeneralCommand("msg", MsgCommand.class);
+        loadGeneralCommand("reply", ReplyCommand.class);
+        loadGeneralCommand("ignore", IgnoreCommand.class);
 
         if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             generalCommands.add(new FriendsCommand());

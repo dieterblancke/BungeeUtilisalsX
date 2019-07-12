@@ -14,11 +14,9 @@ CREATE INDEX IF NOT EXISTS idx_users ON `{users-table}` (id, uuid, username, ip)
 
 CREATE TABLE IF NOT EXISTS `{ignoredusers-table}`
 (
-    user    BIGINT NOT NULL,
-    ignored BIGINT NOT NULL,
-    PRIMARY KEY (user, ignored),
-    FOREIGN KEY (user) REFERENCES `{users-table}` (id),
-    FOREIGN KEY (ignored) REFERENCES `{users-table}` (id)
+    user    VARCHAR(48) NOT NULL,
+    ignored VARCHAR(48) NOT NULL,
+    PRIMARY KEY (user, ignored)
 );
 
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`

@@ -63,7 +63,7 @@ public class SQLUserDao implements UserDao {
     public void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout) {
         final String statement =
                 BungeeUtilisals.getInstance().getDatabaseManagement().getType().equals(AbstractStorageManager.StorageType.SQLITE)
-                ? SQLITE_INSERT_USER : INSERT_USER;
+                        ? SQLITE_INSERT_USER : INSERT_USER;
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(format(statement))) {
@@ -137,8 +137,8 @@ public class SQLUserDao implements UserDao {
 
     @Override
     public UserStorage getUserData(UUID uuid) {
-        UserStorage storage = new UserStorage();
-        String statement = format(SELECT_USER, "*", "uuid = ?");
+        final UserStorage storage = new UserStorage();
+        final String statement = format(SELECT_USER, "*", "uuid = ?");
 
         try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(statement)) {
@@ -156,6 +156,8 @@ public class SQLUserDao implements UserDao {
                     storage.setLastLogout(
                             Dao.formatStringToDate(rs.getString("lastlogout"))
                     );
+
+                    storage.setIgnoredUsers(loadIgnoredUsers(connection, storage.getUuid()));
                 }
             }
         } catch (SQLException e) {
@@ -185,12 +187,30 @@ public class SQLUserDao implements UserDao {
                     storage.setLastLogout(
                             Dao.formatStringToDate(rs.getString("lastlogout"))
                     );
+
+                    storage.setIgnoredUsers(loadIgnoredUsers(connection, storage.getUuid()));
                 }
             }
         } catch (SQLException e) {
             BUCore.getLogger().error(ERROR_STRING, e);
         }
         return storage;
+    }
+
+    private List<String> loadIgnoredUsers(final Connection connection, final UUID user) throws SQLException {
+        final List<String> ignoredUsers = Lists.newArrayList();
+        try (PreparedStatement pstmt = connection.prepareStatement(
+                format("SELECT username FROM {ignoredusers-table} iu LEFT JOIN {users-table} u ON iu.ignored = u.uuid WHERE user = ?;")
+        )) {
+            pstmt.setString(1, user.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    ignoredUsers.add(rs.getString("username"));
+                }
+            }
+        }
+        return ignoredUsers;
     }
 
     @Override
@@ -278,6 +298,36 @@ public class SQLUserDao implements UserDao {
              PreparedStatement pstmt = connection.prepareStatement(format(UPDATE_USER_COLUMN, "lastlogout"))) {
             pstmt.setString(1, Dao.formatDateToString(logout));
             pstmt.setString(2, uuid.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+    }
+
+    @Override
+    public void ignoreUser(UUID user, UUID ignore) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("INSERT INTO {ignoredusers-table}(user, ignored) VALUES (?, ?);")
+             )) {
+            pstmt.setString(1, user.toString());
+            pstmt.setString(2, ignore.toString());
+
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+    }
+
+    @Override
+    public void unignoreUser(UUID user, UUID unignore) {
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("DELETE FROM {ignoredusers-table} WHERE user = ? AND ignored = ?;")
+             )) {
+            pstmt.setString(1, user.toString());
+            pstmt.setString(2, unignore.toString());
 
             pstmt.executeUpdate();
         } catch (SQLException e) {

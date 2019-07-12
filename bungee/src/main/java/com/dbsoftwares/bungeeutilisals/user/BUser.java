@@ -106,7 +106,7 @@ public class BUser implements User {
                     defLanguage
             );
 
-            storage = new UserStorage(uuid, name, ip, defLanguage, date, date, Maps.newHashMap());
+            storage = new UserStorage(uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), Maps.newHashMap());
         }
 
         if (!storage.getUserName().equals(name)) { // Stored name != user current name | Name changed?

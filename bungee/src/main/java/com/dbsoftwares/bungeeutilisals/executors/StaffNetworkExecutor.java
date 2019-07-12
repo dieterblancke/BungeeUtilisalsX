@@ -46,7 +46,7 @@ public class StaffNetworkExecutor implements EventExecutor {
     }
 
     private StaffRankData findStaffRank(final String rankName) {
-        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getData("staff_ranks");
+        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
 
         return ranks.stream()
                 .filter(rank -> rank.getName().equals(rankName))

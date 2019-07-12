@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
@@ -37,6 +38,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class MongoUserDao implements UserDao {
 
@@ -89,10 +91,12 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public UserStorage getUserData(UUID uuid) {
-        UserStorage storage = new UserStorage();
+        final UserStorage storage = new UserStorage();
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection(format("{ignoredusers-table}"));
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
 
-        Document document = db().getCollection(format("{users-table}"))
-                .find(Filters.eq("uuid", uuid.toString())).first();
+        final Document document = userColl.find(Filters.eq("uuid", uuid.toString())).first();
+
         if (document != null) {
             storage.setUuid(uuid);
             storage.setUserName(document.getString("username"));
@@ -102,6 +106,17 @@ public class MongoUserDao implements UserDao {
             );
             storage.setFirstLogin(document.getDate("lastlogin"));
             storage.setLastLogout(document.getDate("lastlogout"));
+
+            ignoredUsersColl.find(
+                    Filters.eq("user", storage.getUuid().toString())
+            ).forEach((Consumer<? super Document>) doc -> {
+                final UUID ignoredUuid = UUID.fromString(doc.getString("ignored"));
+                final Document ignoredDoc = userColl.find(Filters.eq("uuid", ignoredUuid.toString())).first();
+
+                if (ignoredDoc != null) {
+                    storage.getIgnoredUsers().add(ignoredDoc.getString("username"));
+                }
+            });
         }
 
         return storage;
@@ -109,10 +124,11 @@ public class MongoUserDao implements UserDao {
 
     @Override
     public UserStorage getUserData(String name) {
-        UserStorage storage = new UserStorage();
+        final UserStorage storage = new UserStorage();
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection(format("{ignoredusers-table}"));
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
 
-        Document document = db().getCollection(format("{users-table}"))
-                .find(Filters.eq("username", name)).first();
+        final Document document = userColl.find(Filters.eq("username", name)).first();
 
         if (document != null) {
             storage.setUuid(UUID.fromString(document.getString("uuid")));
@@ -123,6 +139,17 @@ public class MongoUserDao implements UserDao {
             );
             storage.setFirstLogin(document.getDate("lastlogin"));
             storage.setLastLogout(document.getDate("lastlogout"));
+
+            ignoredUsersColl.find(
+                    Filters.eq("user", storage.getUuid().toString())
+            ).forEach((Consumer<? super Document>) doc -> {
+                final UUID ignoredUuid = UUID.fromString(doc.getString("ignored"));
+                final Document ignoredDoc = userColl.find(Filters.eq("uuid", ignoredUuid.toString())).first();
+
+                if (ignoredDoc != null) {
+                    storage.getIgnoredUsers().add(ignoredDoc.getString("username"));
+                }
+            });
         }
 
         return storage;
@@ -174,6 +201,29 @@ public class MongoUserDao implements UserDao {
     public void setLogout(UUID uuid, Date logout) {
         db().getCollection(format("{users-table}"))
                 .findOneAndUpdate(Filters.eq("uuid", uuid.toString()), Updates.set("lastlogout", logout));
+    }
+
+    @Override
+    public void ignoreUser(UUID user, UUID ignore) {
+        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection(format("{ignoredusers-table}"));
+
+        data.put("user", user.toString());
+        data.put("ignored", ignore.toString());
+
+        ignoredUsersColl.insertOne(new Document(data));
+    }
+
+    @Override
+    public void unignoreUser(UUID user, UUID unignore) {
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection(format("{ignoredusers-table}"));
+
+        ignoredUsersColl.findOneAndDelete(
+                Filters.and(
+                        Filters.eq("user", user.toString()),
+                        Filters.eq("ignored", unignore.toString())
+                )
+        );
     }
 
     private String format(String line) {

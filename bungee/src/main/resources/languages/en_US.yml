@@ -13,7 +13,7 @@ general:
     - '&aThank you &e{buyer_name} &afor buying BungeeUtilisalsX! We truly appreciate your support.'
     - ''
     - '&6If you encounter any issues, do not hesitate to contact us by:'
-    - '&e- PM''ing &bdidjee2 &eon SpigotMC'
+    - '&e- PM''ing &bdidjee2 &eon SpigotMC or MC-Market'
     - '&e- contacting us on our Discord: &bhttps://discord.dbsoftwares.eu'
     - '&e- creating an issue at our Git repository: &bhttps://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX'
     - ''
@@ -138,6 +138,37 @@ general-commands:
       text:
         - text: '{rank_displayname} &b({amount_online})&f: '
         - text: '{users}'
+  msg:
+    usage: '&ePlease use &b/msg (user) (message)&e!'
+    ignored: '&eYou cannot send a message to this user!'
+    self-msg: '&eYou cannot message yourself!'
+
+    format:
+      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+  reply:
+    usage: '&ePlease use &b/reply (message)&e!'
+    no-target: '&eThere is currently nobody to reply to!'
+    ignored: '&eYou cannot send a message to this user!'
+
+    format:
+      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+  ignore:
+    usage: '&ePlease use &b/ignore (add / remove / list) [player]&e!'
+    self-ignore: '&eYou cannot (un)ignore yourself!'
+
+    add:
+      already-ignored: '&eYou cannot ignore someone who is already ignored!'
+      ignored: '&eYou are now ignoring &b{user}&e!'
+
+    remove:
+      not-ignored: '&eYou cannot unignore someone who is not ignored!'
+      unignored: '&eYou are not ignoring &b{user} &eanymore!'
+
+    list:
+      message: '&eList of users you are currently ignoring: &b{ignoredusers}'
+      separator: ', '
 
 friends:
   join:
@@ -245,16 +276,16 @@ friends:
     disallowed: '&eThis user does not want to receive any messages!'
 
     format:
-      send: '&7(&eMe &e-> &b{user}&7) &f{message}'
-      receive: '&7(&b{user} &e-> Me&7) &f{message}'
+      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
   reply:
     no-target: '&eThere is currently nobody to reply to!'
     not-friend: '&b{user} &eis not in your friend list anymore!'
     disallowed: '&eThis user does not want to receive any messages!'
 
     format:
-      send: '&7(&eMe &e-> &b{user}&7) &f{message}'
-      receive: '&7(&b{user} &e-> Me&7) &f{message}'
+      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
   settings:
     usage: '&ePlease use &b/friend settings (setting) (enable / disable)'
     invalid: '&ePlease use one of the following settings: &b{settings}'

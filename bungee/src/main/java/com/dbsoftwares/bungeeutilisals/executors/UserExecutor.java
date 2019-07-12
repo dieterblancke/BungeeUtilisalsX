@@ -102,7 +102,7 @@ public class UserExecutor implements EventExecutor {
 
     private StaffRankData findStaffRank(final User user) {
         final ProxiedPlayer player = user.getParent();
-        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getData("staff_ranks");
+        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
 
         return ranks.stream()
                 .filter(rank -> player.hasPermission(rank.getPermission()))

@@ -25,7 +25,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class FriendMessageData {
+public class MessageData {
 
     private String type;
     private UUID sender;

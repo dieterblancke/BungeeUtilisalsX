@@ -18,13 +18,22 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
+import com.dbsoftwares.bungeeutilisals.redis.handlers.MsgMessageHandler;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class ReplyCommand extends BUCommand {
 
@@ -38,7 +47,73 @@ public class ReplyCommand extends BUCommand {
 
     @Override
     public void onExecute(User user, String[] args) {
-        // TODO: base on friends msg? (make sure to not send to ignored players)
+        if (args.length < 1) {
+            user.sendLangMessage("general-commands.reply.usage");
+            return;
+        }
+        if (!user.getStorage().hasData("MSG_LAST_USER")) {
+            user.sendLangMessage("general-commands.reply.no-target");
+            return;
+        }
+
+        final String name = user.getStorage().getData("MSG_LAST_USER");
+        if (BUCore.getApi().getPlayerUtils().isOnline(name)) {
+            final Optional<User> optional = BUCore.getApi().getUser(name);
+            final String message = String.join(" ", args);
+
+            if (optional.isPresent()) {
+                final User target = optional.get();
+
+                if (target.getStorage().getIgnoredUsers().stream().anyMatch(ignored -> ignored.equalsIgnoreCase(user.getName()))) {
+                    user.sendLangMessage("general-commands.reply.ignored");
+                    return;
+                }
+
+                // only needs to be set for target, as the current user (sender) still has this target as last user
+                target.getStorage().setData("MSG_LAST_USER", user.getName());
+
+                {
+                    String msgMessage = target.buildLangMessage("general-commands.reply.format.receive");
+                    msgMessage = Utils.c(msgMessage);
+                    msgMessage = msgMessage.replace("{sender}", user.getName());
+                    msgMessage = msgMessage.replace("{message}", message);
+
+                    target.sendRawMessage(msgMessage);
+                }
+                {
+                    String msgMessage = user.buildLangMessage("general-commands.reply.format.send");
+                    msgMessage = Utils.c(msgMessage);
+                    msgMessage = msgMessage.replace("{receiver}", target.getName());
+                    msgMessage = msgMessage.replace("{message}", message);
+
+                    user.sendRawMessage(msgMessage);
+                }
+            } else if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+                final Dao dao = BUCore.getApi().getStorageManager().getDao();
+                final UserStorage storage = dao.getUserDao().getUserData(name);
+
+                if (storage.getIgnoredUsers().stream().anyMatch(ignored -> ignored.equalsIgnoreCase(user.getName()))) {
+                    user.sendLangMessage("general-commands.reply.ignored");
+                    return;
+                }
+
+                final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
+                        .getRedisMessenger().getHandler(MsgMessageHandler.class);
+
+                handler.send(new MessageData("reply", user.getUuid(), user.getName(), name, message));
+
+                String msgMessage = user.buildLangMessage("general-commands.reply.format.send");
+                msgMessage = Utils.c(msgMessage);
+                msgMessage = msgMessage.replace("{receiver}", name);
+                msgMessage = msgMessage.replace("{message}", message);
+
+                user.sendRawMessage(msgMessage);
+            } else {
+                user.sendLangMessage("offline");
+            }
+        } else {
+            user.sendLangMessage("offline");
+        }
     }
 
     @Override

@@ -29,7 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.redis.handlers.FriendMsgMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.FriendMessageData;
+import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -75,7 +75,7 @@ public class FriendReplySubCommand extends SubCommand {
                 final User target = optional.get();
 
                 if (!target.getFriendSettings().isMessages()) {
-                    user.sendLangMessage("friends.msg.disallowed");
+                    user.sendLangMessage("friends.reply.disallowed");
                     return;
                 }
 
@@ -85,7 +85,7 @@ public class FriendReplySubCommand extends SubCommand {
                 {
                     String msgMessage = target.buildLangMessage("friends.reply.format.receive");
                     msgMessage = Utils.c(msgMessage);
-                    msgMessage = msgMessage.replace("{user}", user.getName());
+                    msgMessage = msgMessage.replace("{sender}", user.getName());
                     msgMessage = msgMessage.replace("{message}", message);
 
                     target.sendRawMessage(msgMessage);
@@ -93,7 +93,7 @@ public class FriendReplySubCommand extends SubCommand {
                 {
                     String msgMessage = user.buildLangMessage("friends.reply.format.send");
                     msgMessage = Utils.c(msgMessage);
-                    msgMessage = msgMessage.replace("{user}", target.getName());
+                    msgMessage = msgMessage.replace("{receiver}", target.getName());
                     msgMessage = msgMessage.replace("{message}", message);
 
                     user.sendRawMessage(msgMessage);
@@ -108,14 +108,14 @@ public class FriendReplySubCommand extends SubCommand {
                     return;
                 }
 
-                final RedisMessageHandler<FriendMessageData> handler = BungeeUtilisals.getInstance()
+                final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
                         .getRedisMessenger().getHandler(FriendMsgMessageHandler.class);
 
-                handler.send(new FriendMessageData("reply", user.getUuid(), user.getName(), name, message));
+                handler.send(new MessageData("reply", user.getUuid(), user.getName(), name, message));
 
                 String msgMessage = user.buildLangMessage("friends.reply.format.send");
                 msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{user}", name);
+                msgMessage = msgMessage.replace("{receiver}", name);
                 msgMessage = msgMessage.replace("{message}", message);
 
                 user.sendRawMessage(msgMessage);

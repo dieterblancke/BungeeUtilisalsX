@@ -100,7 +100,6 @@ public enum FileLocation {
         @Override
         public void loadData() {
             if (configuration.getBoolean("staff.enabled")) {
-                final List<StaffRankData> ranks = Lists.newArrayList();
                 final List<ISection> sections = configuration.getSectionList("staff.ranks");
 
                 for (ISection section : sections) {
@@ -109,10 +108,8 @@ public enum FileLocation {
                     final String permission = section.getString("permission");
                     final int priority = section.getInteger("priority");
 
-                    ranks.add(new StaffRankData(name, display, permission, priority));
+                    getDataList().add(new StaffRankData(name, display, permission, priority));
                 }
-
-                setData("staff_ranks", ranks);
             }
         }
     },
