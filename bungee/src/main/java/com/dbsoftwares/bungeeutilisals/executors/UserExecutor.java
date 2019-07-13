@@ -106,7 +106,7 @@ public class UserExecutor implements EventExecutor {
 
         return ranks.stream()
                 .filter(rank -> player.hasPermission(rank.getPermission()))
-                .min(Comparator.comparingInt(StaffRankData::getPriority))
+                .max(Comparator.comparingInt(StaffRankData::getPriority))
                 .orElse(null);
     }
 }

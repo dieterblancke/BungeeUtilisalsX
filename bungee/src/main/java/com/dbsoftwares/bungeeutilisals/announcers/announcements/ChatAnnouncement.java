@@ -80,7 +80,7 @@ public class ChatAnnouncement extends Announcement {
             }
             for (String message : messageList) {
                 if (prefix) {
-                    message = config.getString("prefix") + " " + message;
+                    message = config.getString("prefix") + message;
                 }
                 player.sendMessage(Utils.format(player, message));
             }
