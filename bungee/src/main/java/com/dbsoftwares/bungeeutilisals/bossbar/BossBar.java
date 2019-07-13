@@ -150,7 +150,6 @@ public class BossBar implements IBossBar {
     public void addUser(User user) {
         if (!users.contains(user)) {
             if (user.getVersion() == null || user.getVersion().getVersionId() < Version.MINECRAFT_1_9.getVersionId()) {
-                BUCore.getLogger().info("Could not add " + user.getName() + " to the bossbar. Reason: Unsupported Version.");
                 return;
             }
             users.add(user);

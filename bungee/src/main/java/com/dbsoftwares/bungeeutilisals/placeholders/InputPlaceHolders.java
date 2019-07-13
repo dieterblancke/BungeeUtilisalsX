@@ -60,7 +60,6 @@ public class InputPlaceHolders implements PlaceHolderPack {
         PlaceHolderAPI.addPlaceHolder(false, "getcount", new InputPlaceHolderEventHandler() {
             @Override
             public String getReplacement(InputPlaceHolderEvent event) {
-                IConfiguration configuration = getLanguageConfiguration(event.getUser());
                 ServerGroup server = FileLocation.SERVERGROUPS.getData(event.getArgument());
 
                 if (server == null) {
