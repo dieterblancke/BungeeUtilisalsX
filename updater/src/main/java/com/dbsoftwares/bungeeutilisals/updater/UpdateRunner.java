@@ -87,9 +87,9 @@ public class UpdateRunner implements Runnable {
                 }
             }
         } catch (IOException | ExecutionException e) {
-            BUCore.getLogger().error(ERROR_STRING, e);
+            BUCore.getLogger().error(ERROR_STRING +  e.getMessage());
         } catch (InterruptedException e) {
-            BUCore.getLogger().error(ERROR_STRING, e);
+            BUCore.getLogger().error(ERROR_STRING + e.getMessage());
             Thread.currentThread().interrupt();
         }
     }
@@ -106,9 +106,9 @@ public class UpdateRunner implements Runnable {
                     }
                 }
             } catch (IOException | ExecutionException e) {
-                BUCore.getLogger().error(ERROR_STRING, e);
+                BUCore.getLogger().error(ERROR_STRING + e.getMessage());
             } catch (InterruptedException e) {
-                BUCore.getLogger().error(ERROR_STRING, e);
+                BUCore.getLogger().error(ERROR_STRING + e.getMessage());
                 Thread.currentThread().interrupt();
             }
         }
