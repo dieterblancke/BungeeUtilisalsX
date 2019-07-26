@@ -106,13 +106,13 @@
     <dependency>
       <groupId>org.mongodb</groupId>
       <artifactId>mongo-java-driver</artifactId>
-      <version>3.8.2</version>
+      <version>3.10.2</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.zaxxer</groupId>
       <artifactId>HikariCP</artifactId>
-      <version>3.2.0</version>
+      <version>3.3.1</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -130,20 +130,32 @@
     <dependency>
       <groupId>com.google.http-client</groupId>
       <artifactId>google-http-client</artifactId>
-      <version>1.26.0</version>
+      <version>1.30.2</version>
       <scope>provided</scope>
       <exclusions>
-        <exclusion>
-          <artifactId>jsr305</artifactId>
-          <groupId>com.google.code.findbugs</groupId>
-        </exclusion>
         <exclusion>
           <artifactId>httpclient</artifactId>
           <groupId>org.apache.httpcomponents</groupId>
         </exclusion>
         <exclusion>
+          <artifactId>jsr305</artifactId>
+          <groupId>com.google.code.findbugs</groupId>
+        </exclusion>
+        <exclusion>
           <artifactId>j2objc-annotations</artifactId>
           <groupId>com.google.j2objc</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>opencensus-api</artifactId>
+          <groupId>io.opencensus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>opencensus-contrib-http-util</artifactId>
+          <groupId>io.opencensus</groupId>
+        </exclusion>
+        <exclusion>
+          <artifactId>guava</artifactId>
+          <groupId>com.google.guava</groupId>
         </exclusion>
       </exclusions>
     </dependency>

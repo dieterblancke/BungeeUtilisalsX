@@ -26,36 +26,36 @@ public enum StandardLibrary {
     SQLITE(
             "org.sqlite.JDBC",
             "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
-            "3.25.2",
+            "3.28.0",
             checkType("SQLITE")
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
-            "2.3.0",
+            "2.4.2",
             checkType("MARIADB")
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "http://central.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.5",
+            "42.2.6",
             checkType("POSTGRESQL")
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "http://central.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.8.2",
+            "3.10.2",
             checkType("MONGODB")
     ),
     HIKARIDB(
             "com.zaxxer.hikari.HikariDataSource",
             "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
-            "3.2.0",
+            "3.3.1",
             checkType("MYSQL", "MARIADB", "POSTGRESQL")
     ),
     GOOGLE_HTTP_CLIENT(
             "com.google.api.client.http.HttpRequest",
-            "http://central.maven.org/maven2/com/google/http-client/google-http-client/1.26.0/google-http-client-{version}.jar",
+            "http://central.maven.org/maven2/com/google/http-client/google-http-client/{version}/google-http-client-{version}.jar",
             "1.26.0",
             true
     );
