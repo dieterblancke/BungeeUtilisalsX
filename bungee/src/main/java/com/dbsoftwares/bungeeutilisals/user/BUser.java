@@ -222,10 +222,15 @@ public class BUser implements User {
             return;
         }
 
-        final String message = buildLangMessage(path, placeholders);
+        String message = buildLangMessage(path, placeholders);
 
         if (message.isEmpty()) {
             return;
+        }
+
+        if (message.startsWith("noprefix: ")) {
+            prefix = false;
+            message = message.replaceFirst("noprefix: ", "");
         }
 
         if (prefix) {

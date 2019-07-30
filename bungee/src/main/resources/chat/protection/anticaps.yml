@@ -15,3 +15,7 @@ percentage: 65
 
 # The permission to bypass the anticaps system
 bypass: 'bungeeutilisals.bypass.anticaps'
+
+# Commands that have to be executed when someone advertises (will be executed by console)
+commands: []
+# - 'warn {user} Please use less caps.'

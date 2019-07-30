@@ -570,6 +570,20 @@ punishments:
       - '&eExpires at: &b{expire}'
       - '&eRemoved by: &b{removedBy}'
 
+  checkip:
+    usage: '&ePlease use &b/checkip (user / ip)&e!'
+
+    colors:
+      online: '&a'
+      offline: '&7'
+      banned: '&c'
+
+    head: 'noprefix: &eLooking for other accounts playing with &b{user} ({ip})&e:'
+    format:
+      separator: '&f, '
+      message: 'noprefix: &bPlayers Found: &f{players}'
+    foot: 'noprefix: &eLegenda: &aOnline  &7Offline  &cBanned'
+
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:

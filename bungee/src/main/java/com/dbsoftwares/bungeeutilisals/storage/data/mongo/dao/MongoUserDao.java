@@ -90,6 +90,12 @@ public class MongoUserDao implements UserDao {
     }
 
     @Override
+    public boolean ipExists(String ip) {
+        return db().getCollection(format("{users-table}"))
+                .find(Filters.eq("ip", ip)).iterator().hasNext();
+    }
+
+    @Override
     public UserStorage getUserData(UUID uuid) {
         final UserStorage storage = new UserStorage();
         final MongoCollection<Document> ignoredUsersColl = db().getCollection(format("{ignoredusers-table}"));

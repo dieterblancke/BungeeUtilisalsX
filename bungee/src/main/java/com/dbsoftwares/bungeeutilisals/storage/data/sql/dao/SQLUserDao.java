@@ -136,6 +136,25 @@ public class SQLUserDao implements UserDao {
     }
 
     @Override
+    public boolean ipExists(String ip) {
+        boolean present = false;
+        String statement = format(SELECT_USER, "id", "ip = ?");
+
+        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(statement)) {
+            pstmt.setString(1, ip);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                present = rs.next();
+            }
+        } catch (SQLException e) {
+            BUCore.getLogger().error(ERROR_STRING, e);
+        }
+
+        return present;
+    }
+
+    @Override
     public UserStorage getUserData(UUID uuid) {
         final UserStorage storage = new UserStorage();
         final String statement = format(SELECT_USER, "*", "uuid = ?");

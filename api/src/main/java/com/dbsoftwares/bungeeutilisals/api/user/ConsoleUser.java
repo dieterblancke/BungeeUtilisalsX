@@ -122,10 +122,15 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendLangMessage(boolean prefix, String path) {
-        final String message = buildLangMessage(path);
+        String message = buildLangMessage(path);
 
         if (message.isEmpty()) {
             return;
+        }
+
+        if (message.startsWith("noprefix: ")) {
+            prefix = false;
+            message = message.replaceFirst("noprefix: ", "");
         }
 
         if (prefix) {
@@ -137,10 +142,15 @@ public class ConsoleUser implements User {
 
     @Override
     public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
-        final String message = buildLangMessage(path, placeholders);
+        String message = buildLangMessage(path, placeholders);
 
         if (message.isEmpty()) {
             return;
+        }
+
+        if (message.startsWith("noprefix: ")) {
+            prefix = false;
+            message = message.replaceFirst("noprefix: ", "");
         }
 
         if (prefix) {

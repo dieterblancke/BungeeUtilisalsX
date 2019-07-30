@@ -24,9 +24,11 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import net.md_5.bungee.api.ProxyServer;
 
 public class UserChatExecutor implements EventExecutor {
 
@@ -52,9 +54,9 @@ public class UserChatExecutor implements EventExecutor {
 
     @Event(priority = Priority.HIGH, executeIfCancelled = false)
     public void onSwearChat(UserChatEvent event) {
-        User user = event.getUser();
-        String message = event.getMessage();
-        IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
+        final User user = event.getUser();
+        final String message = event.getMessage();
+        final IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
 
         if (BUCore.getApi().getChatManager().checkForSwear(event.getUser(), message)) {
             if (config.getBoolean("cancel")) {
@@ -63,14 +65,25 @@ public class UserChatExecutor implements EventExecutor {
                 event.setMessage(BUCore.getApi().getChatManager().replaceSwearWords(user, message, config.getString("replace")));
             }
             user.sendLangMessage("chat-protection.swear");
+
+            if (config.exists("commands")) {
+                config.getStringList("commands").forEach(command -> {
+                    command = PlaceHolderAPI.formatMessage(user, command);
+
+                    ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                            ProxyServer.getInstance().getConsole(),
+                            command
+                    );
+                });
+            }
         }
     }
 
     @Event(priority = Priority.HIGH, executeIfCancelled = false)
     public void onCapsChat(UserChatEvent event) {
-        User user = event.getUser();
-        String message = event.getMessage();
-        IConfiguration config = FileLocation.ANTICAPS.getConfiguration();
+        final User user = event.getUser();
+        final String message = event.getMessage();
+        final IConfiguration config = FileLocation.ANTICAPS.getConfiguration();
 
         if (BUCore.getApi().getChatManager().checkForCaps(user, message)) {
             if (config.getBoolean("cancel")) {
@@ -79,29 +92,64 @@ public class UserChatExecutor implements EventExecutor {
                 event.setMessage(event.getMessage().toLowerCase());
             }
             user.sendLangMessage("chat-protection.caps");
+
+            if (config.exists("commands")) {
+                config.getStringList("commands").forEach(command -> {
+                    command = PlaceHolderAPI.formatMessage(user, command);
+
+                    ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                            ProxyServer.getInstance().getConsole(),
+                            command
+                    );
+                });
+            }
         }
     }
 
     @Event(priority = Priority.HIGH, executeIfCancelled = false)
     public void onSpamChat(UserChatEvent event) {
-        User user = event.getUser();
+        final User user = event.getUser();
+        final IConfiguration config = FileLocation.ANTISPAM.getConfiguration();
 
         if (BUCore.getApi().getChatManager().checkForSpam(user)) {
             event.setCancelled(true);
 
             user.sendLangMessage("chat-protection.spam", "%time%", user.getCooldowns().getLeftTime("CHATSPAM") / 1000);
+
+            if (config.exists("commands")) {
+                config.getStringList("commands").forEach(command -> {
+                    command = PlaceHolderAPI.formatMessage(user, command);
+
+                    ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                            ProxyServer.getInstance().getConsole(),
+                            command
+                    );
+                });
+            }
         }
     }
 
     @Event(priority = Priority.HIGH, executeIfCancelled = false)
     public void onAdChat(UserChatEvent event) {
-        User user = event.getUser();
-        String message = event.getMessage();
+        final User user = event.getUser();
+        final String message = event.getMessage();
+        final IConfiguration config = FileLocation.ANTIAD.getConfiguration();
 
         if (BUCore.getApi().getChatManager().checkForAdvertisement(user, message)) {
             event.setCancelled(true);
 
             user.sendLangMessage("chat-protection.advertise");
+
+            if (config.exists("commands")) {
+                config.getStringList("commands").forEach(command -> {
+                    command = PlaceHolderAPI.formatMessage(user, command);
+
+                    ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                            ProxyServer.getInstance().getConsole(),
+                            command
+                    );
+                });
+            }
         }
     }
 }

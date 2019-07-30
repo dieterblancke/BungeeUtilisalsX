@@ -135,3 +135,7 @@ commands:
     enabled: true
     aliases: 'pdata'
     permission: bungeeutilisals.punishments.punishmentdata
+  checkip:
+    enabled: true
+    aliases: 'dupeip, checkalts'
+    permission: bungeeutilisals.punishments.checkip

@@ -37,6 +37,8 @@ public interface UserDao {
 
     boolean exists(UUID uuid);
 
+    boolean ipExists(String ip);
+
     UserStorage getUserData(UUID uuid);
 
     UserStorage getUserData(String name);

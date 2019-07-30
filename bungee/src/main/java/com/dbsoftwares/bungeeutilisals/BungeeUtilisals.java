@@ -451,6 +451,7 @@ public class BungeeUtilisals extends Plugin {
         loadPunishmentCommand("punishmentinfo", PunishmentInfoCommand.class);
         loadPunishmentCommand("punishmenthistory", PunishmentHistoryCommand.class);
         loadPunishmentCommand("punishmentdata", PunishmentDataCommand.class);
+        loadPunishmentCommand("checkip", CheckIpCommand.class);
     }
 
     private void loadCustomCommands() {
