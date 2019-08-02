@@ -54,7 +54,7 @@ public class MongoDBStorageManager extends AbstractStorageManager {
                     (password == null || password.isEmpty() ? null : password.toCharArray()));
         }
         MongoClientOptions options = MongoClientOptions.builder()
-                .applicationName("BungeeUtilisals")
+                .applicationName("BungeeUtilisalsX")
                 .connectionsPerHost(configuration.getInteger("storage.pool.max-pool-size"))
                 .connectTimeout(configuration.getInteger("storage.pool.connection-timeout") * 1000)
                 .maxConnectionLifeTime(configuration.getInteger("storage.pool.max-lifetime") * 1000)
