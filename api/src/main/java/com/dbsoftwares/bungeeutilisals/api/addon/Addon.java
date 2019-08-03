@@ -19,7 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
@@ -33,6 +35,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import java.io.File;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -82,6 +85,7 @@ public abstract class Addon {
     }
 
     public void registerListener(final Listener listener) {
+        ProxyServer.getInstance().getPluginManager().registerListener(BUCore.getApi().getPlugin(), listener);
         api.getAddonManager().registerListener(this, listener);
     }
 
@@ -95,6 +99,11 @@ public abstract class Addon {
         for (Listener listener : listeners) {
             registerListener(listener);
         }
+    }
+
+    public <T extends BUEvent> void registerEventExecutor(Class<BUEvent> event, final EventExecutor executor) {
+        Set<EventHandler<BUEvent>> handlers = BUCore.getApi().getEventLoader().register(event, executor);
+        registerEventHandlers(handlers);
     }
 
     public <T extends BUEvent> void registerEventHandler(final EventHandler<T> handler) {

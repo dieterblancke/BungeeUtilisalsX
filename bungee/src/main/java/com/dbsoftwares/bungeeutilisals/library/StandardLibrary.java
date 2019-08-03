@@ -47,7 +47,7 @@ public enum StandardLibrary {
             "3.10.2",
             checkType("MONGODB")
     ),
-    HIKARIDB(
+    HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.3.1",
