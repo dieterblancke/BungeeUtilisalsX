@@ -387,9 +387,20 @@ public class BungeeUtilisals extends Plugin {
 
             if (!file.exists()) {
                 IConfiguration.createDefaultFile(getResourceAsStream(location.getPath()), file);
-            }
 
-            location.loadConfiguration(file);
+                location.loadConfiguration(file);
+            } else {
+                // update configurations ...
+
+                location.loadConfiguration(file);
+                try {
+                    location.getConfiguration().copyDefaults(
+                            IConfiguration.loadYamlConfiguration(getResourceAsStream(location.getPath()))
+                    );
+                } catch (IOException e) {
+                    BUCore.getLogger().error("Could not update configurations: ", e);
+                }
+            }
             location.loadData();
         }
     }
