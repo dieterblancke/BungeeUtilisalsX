@@ -101,8 +101,8 @@ public abstract class Addon {
         }
     }
 
-    public <T extends BUEvent> void registerEventExecutor(Class<BUEvent> event, final EventExecutor executor) {
-        Set<EventHandler<BUEvent>> handlers = BUCore.getApi().getEventLoader().register(event, executor);
+    public <T extends BUEvent> void registerEventExecutor(Class<T> event, final EventExecutor executor) {
+        Set<EventHandler<T>> handlers = BUCore.getApi().getEventLoader().register(event, executor);
         registerEventHandlers(handlers);
     }
 
