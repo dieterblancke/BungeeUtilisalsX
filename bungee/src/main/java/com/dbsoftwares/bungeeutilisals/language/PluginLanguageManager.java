@@ -44,8 +44,8 @@ public class PluginLanguageManager extends AbstractLanguageManager {
         File folder = plugins.get(pluginName);
 
         for (Language language : languages) {
-            String name = language.getName();
-            File lang;
+            final String name = language.getName();
+            final File lang;
 
             if (fileTypes.get(pluginName).equals(FileStorageType.JSON)) {
                 lang = loadResource(pluginName, "languages/" + name + ".json", new File(folder, name + ".json"));
@@ -57,7 +57,7 @@ public class PluginLanguageManager extends AbstractLanguageManager {
                 continue;
             }
             try {
-                IConfiguration configuration;
+                final IConfiguration configuration;
 
                 if (fileTypes.get(pluginName).equals(FileStorageType.JSON)) {
                     configuration = IConfiguration.loadJsonConfiguration(lang);
