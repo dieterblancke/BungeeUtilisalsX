@@ -69,6 +69,11 @@ public class FriendsCommand extends BUCommand {
 
     private void sendHelpList(User user) {
         user.sendLangMessage("friends.help.header");
-        subCommands.forEach(cmd -> user.sendLangMessage("friends.help.format", "%usage%", cmd.getUsage()));
+        subCommands.forEach(cmd -> {
+            final boolean exists = user.getLanguageConfig().exists("friends.help.usage." + cmd.getName());
+            final String usage = exists ? user.getLanguageConfig().getString("friends.help.usage." + cmd.getName()) : cmd.getUsage();
+
+            user.sendLangMessage("friends.help.format", "%usage%", usage);
+        });
     }
 }
