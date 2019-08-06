@@ -189,6 +189,18 @@ friends:
   help:
     header: '&aFriends Commands Help:'
     format: '&b- &e%usage%'
+
+    usage:
+      add: '/friends add (name)'
+      accept: '/friends accept (name)'
+      deny: '/friends deny (name)'
+      list: '/friends list [page]'
+      msg: '/friends msg (name) (message)'
+      removerequest: '/friends removerequest (name)'
+      remove: '/friends remove (name)'
+      reply: '/friends reply (message)'
+      requests: '/friends requests (in/out) [page]'
+      settings: '/friends settings (setting) (enable / disable)'
   add:
     selfadd: '&eYou cannot add yourself as a friend!'
     limited: '&eYou cannot have more then &b{limit} &efriends!'
@@ -569,6 +581,18 @@ punishments:
       - '&eReason: &b{reason}'
       - '&eExpires at: &b{expire}'
       - '&eRemoved by: &b{removedBy}'
+
+  templates:
+    - name: 'ADVERTISING'
+      use_for: 'BAN, TEMPBAN, IPBAN, IPTEMPBAN'
+      lines:
+        - '&c&lBungeeUtilisalsX'
+        - ''
+        - '&eWe have noticed that you were advertising on our server.'
+        - '&eThis is strictly against our rules, therefore you have been punished!'
+        - ''
+        - '&5Appeal at: &bhttps://example.com/appeal'
+        - '&5Buy unban at: &bhttps://store.example.com'
 
   checkip:
     usage: '&ePlease use &b/checkip (user / ip)&e!'

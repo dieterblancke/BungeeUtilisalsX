@@ -6,6 +6,14 @@ enabled: false
 # Example of default format: 31-01-2018 08:13:34
 date-format: 'dd-MM-yyyy kk:mm:ss'
 
+# Should punishment templates be enabled?
+# For example, if someone types /ban (user) @ADVERTISING (by default) it will not use the default ban message,
+# instead it will be using the template ban message (message if they get kicked / when they try to join)
+templates:
+  enabled: true
+  # How should template reasons be detected? By default if a reason starts with @, it will be seen as a template reason.
+  detect: '@'
+
 actions:
 # This is an example if an user gets warned 5 times in 7 days time, he'll receive an one day tempmute.
 # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
