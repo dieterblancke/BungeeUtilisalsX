@@ -21,9 +21,11 @@ package com.dbsoftwares.bungeeutilisals.listeners;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -42,8 +44,11 @@ public class PunishmentListener implements Listener {
         final String ip = Utils.getIP(connection.getAddress());
 
         final BUAPI api = BUCore.getApi();
-        final IConfiguration language = api.getLanguageManager().getConfig(
-                BungeeUtilisals.getInstance().getDescription().getName(), api.getLanguageManager().getDefaultLanguage()
+        final UserStorage storage = api.getStorageManager().getDao().getUserDao().getUserData(uuid);
+        final Language language = storage.getLanguage() == null ? api.getLanguageManager().getDefaultLanguage() : storage.getLanguage();
+
+        final IConfiguration config = api.getLanguageManager().getConfig(
+                BungeeUtilisals.getInstance().getDescription().getName(), language
         );
         final BansDao bansDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
         PunishmentInfo info = null;
@@ -64,7 +69,8 @@ public class PunishmentListener implements Listener {
                     return;
                 }
             }
-            String kick = Utils.formatList(language.getStringList("punishments." + info.getType().toString().toLowerCase() + ".kick"), "\n");
+            // TODO: check for template, if yes, check for template kick message
+            String kick = Utils.formatList(config.getStringList("punishments." + info.getType().toString().toLowerCase() + ".kick"), "\n");
             kick = api.getPunishmentExecutor().setPlaceHolders(kick, info);
 
             event.setCancelled(true);

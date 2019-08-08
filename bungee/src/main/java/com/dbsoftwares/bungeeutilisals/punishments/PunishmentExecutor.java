@@ -20,14 +20,76 @@ package com.dbsoftwares.bungeeutilisals.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.Date;
 import java.util.List;
 
 public class PunishmentExecutor implements IPunishmentExecutor {
+
+    @Override
+    public boolean isTemplateReason(final String reason) {
+        if (!FileLocation.PUNISHMENTS.getConfiguration().getBoolean("templates.enabled")) {
+            return false;
+        }
+        return reason.startsWith(FileLocation.PUNISHMENTS.getConfiguration().getString("templates.detect"));
+    }
+
+    @Override
+    public List<String> searchTemplate(final IConfiguration config, final PunishmentType type, String template) {
+        template = template.replaceFirst(
+                FileLocation.PUNISHMENTS.getConfiguration().getString("templates.detect"),
+                ""
+        );
+        final List<ISection> sections = config.getSectionList("punishments.templates");
+
+        for (ISection section : sections) {
+            if (!section.getString("name").equals(template)) {
+                continue;
+            }
+            final List<PunishmentType> types = formatPunishmentTypes(section.getString("use_for"));
+
+            if (!types.contains(type)) {
+                continue;
+            }
+            return section.getStringList("lines");
+        }
+        return null;
+    }
+
+    private List<PunishmentType> formatPunishmentTypes(final String str) {
+        final List<PunishmentType> types = Lists.newArrayList();
+
+        // check for separator ", "
+        for (String s : str.split(", ")) {
+            final PunishmentType type = Utils.valueOfOr(PunishmentType.class, s, null);
+
+            if (type != null) {
+                types.add(type);
+            }
+        }
+
+        if (types.isEmpty()) {
+            // check for separator ","
+            for (String s : str.split(",")) {
+                final PunishmentType type = Utils.valueOfOr(PunishmentType.class, s, null);
+
+                if (type != null) {
+                    types.add(type);
+                }
+            }
+        }
+
+        if (types.isEmpty()) {
+            types.add(Utils.valueOfOr(PunishmentType.class, str, PunishmentType.BAN));
+        }
+        return types;
+    }
 
     @Override
     public String getDateFormat() {
