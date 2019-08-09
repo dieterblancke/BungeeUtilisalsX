@@ -81,8 +81,19 @@ public class MuteCommand extends BUCommand {
                 reason, user.getServerName(), true, user.getName()
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.mute.onmute",
-                executor.getPlaceHolders(info).toArray(new Object[]{})));
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> {
+            List<String> mute = null;
+            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+                mute = BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        muted.getLanguageConfig(), PunishmentType.MUTE, reason
+                );
+            }
+            if (mute == null) {
+                mute = muted.getLanguageConfig().getStringList("punishments.mute.onmute");
+            }
+
+            mute.forEach(str -> muted.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
+        });
 
         user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 

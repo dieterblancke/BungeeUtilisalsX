@@ -69,8 +69,16 @@ public class PunishmentListener implements Listener {
                     return;
                 }
             }
-            // TODO: check for template, if yes, check for template kick message
-            String kick = Utils.formatList(config.getStringList("punishments." + info.getType().toString().toLowerCase() + ".kick"), "\n");
+            String kick = null;
+            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(info.getReason())) {
+                kick = Utils.formatList(
+                        BUCore.getApi().getPunishmentExecutor().searchTemplate(config, info.getType(), info.getReason()),
+                        "\n"
+                );
+            }
+            if (kick == null) {
+                kick = Utils.formatList(config.getStringList("punishments." + info.getType().toString().toLowerCase() + ".kick"), "\n");
+            }
             kick = api.getPunishmentExecutor().setPlaceHolders(kick, info);
 
             event.setCancelled(true);

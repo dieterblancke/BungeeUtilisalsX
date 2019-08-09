@@ -88,8 +88,19 @@ public class TempMuteCommand extends BUCommand {
                 reason, user.getServerName(), true, user.getName(), time
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.tempmute.onmute",
-                executor.getPlaceHolders(info).toArray(new Object[]{})));
+        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> {
+            List<String> mute = null;
+            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+                mute = BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        muted.getLanguageConfig(), PunishmentType.TEMPMUTE, reason
+                );
+            }
+            if (mute == null) {
+                mute = muted.getLanguageConfig().getStringList("punishments.tempmute.onmute");
+            }
+
+            mute.forEach(str -> muted.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
+        });
 
         user.sendLangMessage("punishments.tempmute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
 

@@ -78,7 +78,19 @@ public class KickCommand extends BUCommand {
                 reason, user.getServerName(), user.getName()
         );
 
-        target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
+        String kick = null;
+        if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+            kick = Utils.formatList(BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                    target.getLanguageConfig(), PunishmentType.KICK, reason
+            ), "\n");
+
+            kick = BUCore.getApi().getPunishmentExecutor().setPlaceHolders(kick, info);
+        }
+        if (kick == null) {
+            target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
+        } else {
+            target.kick(kick);
+        }
 
         BUCore.getApi().langPermissionBroadcast("punishments.kick.broadcast",
                 FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.broadcast"),

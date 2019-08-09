@@ -85,7 +85,15 @@ public class BanCommand extends BUCommand {
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
-            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
+            String kick = null;
+            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+                kick = Utils.formatList(BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        banned.getLanguageConfig(), PunishmentType.BAN, reason
+                ), "\n");
+            }
+            if (kick == null) {
+                kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
+            }
             kick = executor.setPlaceHolders(kick, info);
 
             banned.kick(kick);

@@ -77,7 +77,18 @@ public class WarnCommand extends BUCommand {
                 storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), user.getName()
         );
 
-        target.sendLangMessage("punishments.warn.onwarn", executor.getPlaceHolders(info).toArray(new Object[]{}));
+        List<String> warn = null;
+        if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+            warn = BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                    target.getLanguageConfig(), PunishmentType.WARN, reason
+            );
+        }
+        if (warn == null) {
+            warn = target.getLanguageConfig().getStringList("punishments.warn.onwarn");
+        }
+
+        warn.forEach(str -> target.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
+
         user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info).toArray(new Object[]{}));
 
         BUCore.getApi().langPermissionBroadcast("punishments.warn.broadcast",

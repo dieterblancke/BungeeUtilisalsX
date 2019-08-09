@@ -88,7 +88,15 @@ public class TempBanCommand extends BUCommand {
         );
 
         BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
-            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.tempban.kick"), "\n");
+            String kick = null;
+            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+                kick = Utils.formatList(BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        banned.getLanguageConfig(), PunishmentType.TEMPBAN, reason
+                ), "\n");
+            }
+            if (kick == null) {
+                kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.tempban.kick"), "\n");
+            }
             kick = executor.setPlaceHolders(kick, info);
 
             banned.kick(kick);
