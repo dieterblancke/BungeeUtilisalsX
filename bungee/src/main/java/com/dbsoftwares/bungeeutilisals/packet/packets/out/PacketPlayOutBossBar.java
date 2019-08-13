@@ -116,6 +116,7 @@ public class PacketPlayOutBossBar extends Packet {
     public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
         this.uuid = readUUID(buf);
         this.action = readVarInt(buf);
+
         if (action == BossBarAction.ADD.getId()) {
             this.title = ComponentSerializer.parse(readString(buf));
             this.percent = buf.readFloat();

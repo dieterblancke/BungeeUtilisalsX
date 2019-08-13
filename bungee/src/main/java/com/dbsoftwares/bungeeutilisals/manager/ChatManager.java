@@ -42,28 +42,7 @@ public class ChatManager implements IChatManager {
     private Map<String, String> utfSymbols = Maps.newHashMap();
 
     public ChatManager() {
-        reloadPatterns();
-    }
-
-    public void reloadPatterns() {
-        swearPatterns.clear();
-
-        for (String word : FileLocation.ANTISWEAR.getConfiguration().getStringList("words")) {
-            StringBuilder builder = new StringBuilder("\\b(");
-
-            for (char o : word.toCharArray()) {
-                builder.append(o);
-                builder.append("+(\\W|\\d\\_)*");
-            }
-            builder.append(")\\b");
-
-            swearPatterns.add(Pattern.compile(builder.toString()));
-        }
-
-        ISection section = FileLocation.UTFSYMBOLS.getConfiguration().getSection("symbols.symbols");
-        for (String key : section.getKeys()) {
-            utfSymbols.put(key, section.getString(key));
-        }
+        reload();
     }
 
     @Override
@@ -177,7 +156,7 @@ public class ChatManager implements IChatManager {
 
         for (char replaceableChar : message.toCharArray()) {
             int i = 0;
-            Boolean charFound = false;
+            boolean charFound = false;
             while (!charFound && i < chars.length) {
                 if (chars[i] == replaceableChar) {
                     charFound = true;
@@ -192,5 +171,28 @@ public class ChatManager implements IChatManager {
         }
 
         return builder.toString();
+    }
+
+    @Override
+    public void reload() {
+        swearPatterns.clear();
+        utfSymbols.getClass();
+
+        for (String word : FileLocation.ANTISWEAR.getConfiguration().getStringList("words")) {
+            StringBuilder builder = new StringBuilder("\\b(");
+
+            for (char o : word.toCharArray()) {
+                builder.append(o);
+                builder.append("+(\\W|\\d\\_)*");
+            }
+            builder.append(")\\b");
+
+            swearPatterns.add(Pattern.compile(builder.toString()));
+        }
+
+        final ISection section = FileLocation.UTFSYMBOLS.getConfiguration().getSection("symbols.symbols");
+        for (String key : section.getKeys()) {
+            utfSymbols.put(key, section.getString(key));
+        }
     }
 }

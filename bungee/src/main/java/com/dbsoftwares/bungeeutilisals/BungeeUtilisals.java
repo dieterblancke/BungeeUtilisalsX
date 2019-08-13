@@ -138,7 +138,6 @@ public class BungeeUtilisals extends Plugin {
             BUCore.getLogger().warn("BungeeUtilisalsX is not able to start up on Java versions lower then Java 8.");
             return;
         }
-
         // Setting instance
         instance = this;
 
@@ -303,6 +302,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         loadScripts();
+        api.getChatManager().reload();
     }
 
     private void registerRedisMessenger() {

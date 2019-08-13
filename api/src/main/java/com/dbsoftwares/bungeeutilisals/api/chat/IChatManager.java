@@ -75,4 +75,9 @@ public interface IChatManager {
      * @return The message with replacements.
      */
     String fancyFont(String message);
+
+    /**
+     * Reloads the configuration into memory.
+     */
+    void reload();
 }
