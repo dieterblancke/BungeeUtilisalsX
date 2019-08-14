@@ -44,7 +44,7 @@ public class SQLBansDao implements BansDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
-                             " AND active = ? AND type NOT LIKE ip LIMIT 1);"
+                             " AND active = ? AND type NOT LIKE 'IP%');"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setBoolean(2, true);
@@ -68,7 +68,7 @@ public class SQLBansDao implements BansDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
-                             " AND active = ? AND type LIKE 'IP' LIMIT 1);"
+                             " AND active = ? AND type LIKE 'IP%');"
              )) {
             pstmt.setString(1, ip);
             pstmt.setBoolean(2, true);
@@ -95,7 +95,7 @@ public class SQLBansDao implements BansDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE uuid = ?" +
-                             " AND active = ? AND type = ? LIMIT 1);"
+                             " AND active = ? AND type = ?);"
              )) {
             pstmt.setString(1, uuid.toString());
             pstmt.setBoolean(2, true);
@@ -123,7 +123,7 @@ public class SQLBansDao implements BansDao {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE ip = ?" +
-                             " AND active = ? AND type = ? LIMIT 1);"
+                             " AND active = ? AND type = ?);"
              )) {
             pstmt.setString(1, ip);
             pstmt.setBoolean(2, true);
