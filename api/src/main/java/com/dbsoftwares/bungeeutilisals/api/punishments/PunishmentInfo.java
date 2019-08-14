@@ -47,10 +47,10 @@ public class PunishmentInfo {
     private String removedBy;
 
     public boolean isActivatable() {
-        return type.isActivatable();
+        return type == null || type.isActivatable();
     }
 
     public boolean isTemporary() {
-        return type.isTemporary();
+        return type != null && type.isTemporary();
     }
 }

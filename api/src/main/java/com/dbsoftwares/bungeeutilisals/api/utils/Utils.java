@@ -440,7 +440,9 @@ public class Utils {
      */
     public static <T extends Enum<T>> T valueOfOr(final Class<T> clazz, final String name, T def) {
         try {
-            return Enum.valueOf(clazz, name);
+            T value = Enum.valueOf(clazz, name);
+
+            return value == null ? def : value;
         } catch (IllegalArgumentException e) {
             return def;
         }
