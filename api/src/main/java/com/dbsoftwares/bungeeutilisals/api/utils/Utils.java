@@ -338,6 +338,9 @@ public class Utils {
      * @return A string in which all sendable of the list are seperated by the separator.
      */
     public static String formatList(Iterable<?> objects, String separator) {
+        if (objects == null) {
+            return null;
+        }
         return Utils.c(Joiner.on(separator).join(objects));
     }
 
@@ -349,6 +352,9 @@ public class Utils {
      * @return A string in which all sendable of the array are seperated by the separator.
      */
     public static String formatList(Object[] objects, String separator) {
+        if (objects == null) {
+            return null;
+        }
         return Utils.c(Joiner.on(separator).join(objects));
     }
 

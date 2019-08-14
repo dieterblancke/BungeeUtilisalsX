@@ -100,7 +100,7 @@ public abstract class AbstractStorageManager {
         POSTGRESQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.PostgreSQLStorageManager"),
                 "PostgreSQL", "schemas/postgresql.sql"),
         MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MariaDBStorageManager"),
-                "MariaDB", "schemas/mariadb.sql"),
+                "MariaDB", "schemas/mysql.sql"),
         SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager"),
                 "SQLite", "schemas/sqlite.sql"),
         MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager"),
@@ -113,7 +113,6 @@ public abstract class AbstractStorageManager {
         @Getter
         private String schema;
 
-        @SuppressWarnings("unchecked") // We know the classes are always an instance of AbstractStorageManager
         StorageType(Class<?> manager, String name, String schema) {
             this.manager = (Class<? extends AbstractStorageManager>) manager;
             this.name = name;

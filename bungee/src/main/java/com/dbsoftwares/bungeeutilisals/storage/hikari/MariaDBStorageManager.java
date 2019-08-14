@@ -33,17 +33,7 @@ public class MariaDBStorageManager extends HikariStorageManager {
     }
 
     private static HikariConfig getProperties() {
-        HikariConfig config = new HikariConfig();
-        config.addDataSourceProperty("cachePrepStmts", "true");
-        config.addDataSourceProperty("alwaysSendSetIsolation", "false");
-        config.addDataSourceProperty("cacheServerConfiguration", "true");
-        config.addDataSourceProperty("elideSetAutoCommits", "true");
-        config.addDataSourceProperty("useLocalSessionState", "true");
-        config.addDataSourceProperty("useServerPrepStmts", "true");
-        config.addDataSourceProperty("prepStmtCacheSize", "250");
-        config.addDataSourceProperty("prepStmtCacheSqlLimit", "2048");
-        config.addDataSourceProperty("cacheCallableStmts", "true");
-        return config;
+        return new HikariConfig();
     }
 
     @Override

@@ -44,7 +44,10 @@ public abstract class HikariStorageManager extends AbstractStorageManager {
         config.addDataSourceProperty("databaseName", configuration.getString("storage.database"));
         config.addDataSourceProperty("user", configuration.getString("storage.username"));
         config.addDataSourceProperty("password", configuration.getString("storage.password"));
-        config.addDataSourceProperty("useSSL", configuration.getBoolean("storage.useSSL"));
+
+        if (!type.equals(StorageType.MARIADB)) {
+            config.addDataSourceProperty("useSSL", configuration.getBoolean("storage.useSSL"));
+        }
 
         config.setMaximumPoolSize(configuration.getInteger("storage.pool.max-pool-size"));
         config.setMinimumIdle(configuration.getInteger("storage.pool.min-idle"));
