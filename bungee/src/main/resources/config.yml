@@ -75,3 +75,4 @@ storage:
     kicks: 'bu_kicks'
     warns: 'bu_warns'
     punishmentactions: 'bu_punishmentactions'
+    reports: 'bu_reports'

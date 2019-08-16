@@ -143,3 +143,17 @@ CREATE TABLE IF NOT EXISTS `{punishmentactions-table}`
 ) DEFAULT CHARSET = UTF8MB4;
 
 -- CREATE INDEX IF NOT EXISTS idx_punishactions ON `{punishmentactions-table}` (id, uuid, user, ip, actionid);
+
+CREATE TABLE IF NOT EXISTS `{reports-table}`
+(
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid        VARCHAR(36)                        NOT NULL,
+    reported_by VARCHAR(32)                        NOT NULL,
+    date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    handled     BOOLEAN                            NOT NULL,
+    reason      TEXT                               NOT NULL,
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    INDEX idx_reports (id, uuid, reported_by, handled)
+) DEFAULT CHARSET = UTF8MB4;
+
+-- CREATE INDEX IF NOT EXISTS idx_reports ON `{reports-table}` (id, uuid, reported_by, handled);
