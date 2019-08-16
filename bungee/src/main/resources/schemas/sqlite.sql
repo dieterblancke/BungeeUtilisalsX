@@ -21,16 +21,16 @@ CREATE TABLE IF NOT EXISTS `{ignoredusers-table}`
 CREATE TABLE IF NOT EXISTS `{friendsettings-table}`
 (
     user     VARCHAR(48) PRIMARY KEY NOT NULL,
-    requests TINYINT(1)                 NOT NULL,
-    messages TINYINT(1)                 NOT NULL
+    requests TINYINT(1)              NOT NULL,
+    messages TINYINT(1)              NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS idx_friendset ON `{friendsettings-table}` (user, requests, messages);
 
 CREATE TABLE IF NOT EXISTS `{friends-table}`
 (
-    user    VARCHAR(48)                        NOT NULL,
-    friend  VARCHAR(48)                        NOT NULL,
+    user    VARCHAR(48) NOT NULL,
+    friend  VARCHAR(48) NOT NULL,
     created DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (user, friend)
 );
@@ -39,8 +39,8 @@ CREATE INDEX IF NOT EXISTS idx_friends ON `{friends-table}` (user, friend);
 
 CREATE TABLE IF NOT EXISTS `{friendrequests-table}`
 (
-    user         VARCHAR(48)                        NOT NULL,
-    friend       VARCHAR(48)                        NOT NULL,
+    user         VARCHAR(48) NOT NULL,
+    friend       VARCHAR(48) NOT NULL,
     requested_at DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     PRIMARY KEY (user, friend)
 );
@@ -56,13 +56,13 @@ CREATE TABLE IF NOT EXISTS `{bans-table}`
     reason                  TEXT        NOT NULL,
     server                  VARCHAR(32) NOT NULL,
     date                    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    active                  TINYINT(1)     NOT NULL,
+    active                  TINYINT(1)  NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
-    duration                BIGINT        NOT NULL,
+    duration                BIGINT      NOT NULL,
     type                    VARCHAR(16) NOT NULL,
-    removed                 TINYINT(1)     NOT NULL DEFAULT 0,
+    removed                 TINYINT(1)  NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
-    punishmentaction_status TINYINT(1)     NOT NULL DEFAULT 0,
+    punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
@@ -77,13 +77,13 @@ CREATE TABLE IF NOT EXISTS `{mutes-table}`
     reason                  TEXT        NOT NULL,
     server                  VARCHAR(32) NOT NULL,
     date                    DATETIME    NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    active                  TINYINT(1)     NOT NULL,
+    active                  TINYINT(1)  NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
-    duration                BIGINT        NOT NULL,
+    duration                BIGINT      NOT NULL,
     type                    VARCHAR(16) NOT NULL,
-    removed                 TINYINT(1)     NOT NULL DEFAULT 0,
+    removed                 TINYINT(1)  NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
-    punishmentaction_status TINYINT(1)     NOT NULL DEFAULT 0,
+    punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
@@ -100,7 +100,7 @@ CREATE TABLE IF NOT EXISTS `{kicks-table}`
     server                  VARCHAR(32) NOT NULL,
     date                    DATETIME             DEFAULT CURRENT_TIMESTAMP NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
-    punishmentaction_status TINYINT(1)     NOT NULL DEFAULT 0,
+    punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
@@ -116,7 +116,7 @@ CREATE TABLE IF NOT EXISTS `{warns-table}`
     server                  VARCHAR(32) NOT NULL,
     date                    DATETIME             DEFAULT CURRENT_TIMESTAMP NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
-    punishmentaction_status TINYINT(1)     NOT NULL DEFAULT 0,
+    punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
@@ -125,12 +125,25 @@ CREATE INDEX IF NOT EXISTS idx_warns ON `{warns-table}` (id, uuid, user, ip);
 CREATE TABLE IF NOT EXISTS `{punishmentactions-table}`
 (
     id       INTEGER PRIMARY KEY AUTOINCREMENT,
-    uuid     VARCHAR(36)                        NOT NULL,
-    user     VARCHAR(32)                        NOT NULL,
-    ip       VARCHAR(32)                        NOT NULL,
-    actionid VARCHAR(36)                        NOT NULL,
+    uuid     VARCHAR(36) NOT NULL,
+    user     VARCHAR(32) NOT NULL,
+    ip       VARCHAR(32) NOT NULL,
+    actionid VARCHAR(36) NOT NULL,
     date     DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
 CREATE INDEX IF NOT EXISTS idx_punishactions ON `{punishmentactions-table}` (id, uuid, user, ip, actionid);
+
+CREATE TABLE IF NOT EXISTS `{reports-table}`
+(
+    id          INTEGER PRIMARY KEY AUTOINCREMENT,
+    uuid        VARCHAR(36) NOT NULL,
+    reported_by VARCHAR(32) NOT NULL,
+    date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    handled     TINYINT(1)  NOT NULL,
+    reason      TEXT        NOT NULL,
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
+);
+
+CREATE INDEX IF NOT EXISTS idx_reports ON `{reports-table}` (id, uuid, reported_by, handled);
