@@ -169,6 +169,9 @@ general-commands:
     list:
       message: '&eList of users you are currently ignoring: &b{ignoredusers}'
       separator: ', '
+  ping:
+    message: '&eYour ping is: &b{ping} ms&e!'
+    other: '&b{target}''s &eping is &b{targetPing} ms&e!'
 
 friends:
   join:

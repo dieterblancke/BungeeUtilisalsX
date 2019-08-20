@@ -6,7 +6,7 @@ glist:
   format:
     text: '&c%server% &7(%players%) &f» %playerlist%'
     hover:
-    - '&eClick here to go to &b%server%&e.'
+      - '&eClick here to go to &b%server%&e.'
     click:
       # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
       # RUN_COMMAND will only work for BungeeCord commands.
@@ -22,14 +22,14 @@ glist:
     enabled: false
     # The servers or servergroups which should occur in the /glist servers (allows you to for example group minigames)
     list:
-    - 'Lobbies'
-    - 'Factions'
-    - 'Skyblock'
-    - 'SkyWars'
+      - 'Lobbies'
+      - 'Factions'
+      - 'Skyblock'
+      - 'SkyWars'
   total:
     text: '&eThere is / are &c%total% &eplayer(s) online now!'
     hover:
-    - '%playerlist%'
+      - '%playerlist%'
 announce:
   enabled: true
   aliases: 'alert, bigalert'
@@ -151,3 +151,8 @@ ignore:
   enabled: true
   aliases: 'bignore'
   permission: bungeeutilisals.commands.ignore
+ping:
+  enabled: true
+  aliases: 'gping, bping'
+  permission: bungeeutilisals.commands.ping
+  permission-other: bungeeutilisals.commands.ping.other

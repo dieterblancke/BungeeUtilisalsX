@@ -435,6 +435,7 @@ public class BungeeUtilisals extends Plugin {
         loadGeneralCommand("msg", MsgCommand.class);
         loadGeneralCommand("reply", ReplyCommand.class);
         loadGeneralCommand("ignore", IgnoreCommand.class);
+        loadGeneralCommand("ping", PingCommand.class);
 
         if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
             generalCommands.add(new FriendsCommand());
