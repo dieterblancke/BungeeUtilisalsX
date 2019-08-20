@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
@@ -38,6 +39,7 @@ public class AddonDescription {
     private final String version;
     private final String main;
     private final String author;
+    private final String apiVersion;
     private final Set<String> requiredDependencies; // using Set to prevent duplicates
     private final Set<String> optionalDependencies; // using Set to prevent duplicates
     private final String description;
@@ -51,6 +53,9 @@ public class AddonDescription {
         this.author = configuration.getString("author");
         this.description = configuration.getString("description");
         this.source = configuration.exists("source") ? configuration.getString("source") : null;
+        this.apiVersion = configuration.exists("api-version")
+                ? configuration.getString("api-version")
+                : BUCore.getApi().getPlugin().getDescription().getVersion();
 
         final List<String> required = configuration.getStringList("dependencies.required");
         final List<String> optional = configuration.getStringList("dependencies.optional");

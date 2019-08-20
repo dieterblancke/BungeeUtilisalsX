@@ -303,6 +303,20 @@ public class AddonManager implements IAddonManager {
 
         boolean status = true;
 
+        final int numericApiVersion = Integer.parseInt(description.getApiVersion().replace(".", ""));
+        final int numericVersion = Integer.parseInt(
+                BungeeUtilisals.getInstance().getDescription().getVersion().replace(".", "")
+        );
+
+        if (numericApiVersion > numericVersion) {
+            BUCore.getLogger().warn(
+                    "{} requires your server to run BungeeUtilisalsX version {} or higher!",
+                    description.getName(),
+                    description.getApiVersion()
+            );
+            status = false;
+        }
+
         for (String dependency : dependencies) {
             AddonDescription depend = toBeLoaded.get(dependency);
             Boolean dependStatus = (depend != null) ? statuses.get(depend) : Boolean.FALSE;
