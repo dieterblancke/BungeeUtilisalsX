@@ -73,7 +73,7 @@ public class TitleAnnouncement extends Announcement {
             IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
             Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
-            bungeeTitle.title(Utils.format(player, language ? config.getString(title) : title));
+            bungeeTitle.title(Utils.format(player, language && config.exists(title) ? config.getString(title) : title));
             bungeeTitle.subTitle(Utils.format(player, language ? config.getString(subtitle) : subtitle));
             bungeeTitle.fadeIn(fadeIn * 20);
             bungeeTitle.stay(stay * 20);
