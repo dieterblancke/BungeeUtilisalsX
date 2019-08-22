@@ -74,7 +74,7 @@ public class TitleAnnouncement extends Announcement {
             Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
             bungeeTitle.title(Utils.format(player, language && config.exists(title) ? config.getString(title) : title));
-            bungeeTitle.subTitle(Utils.format(player, language ? config.getString(subtitle) : subtitle));
+            bungeeTitle.subTitle(Utils.format(player, language && config.exists(subtitle) ? config.getString(subtitle) : subtitle));
             bungeeTitle.fadeIn(fadeIn * 20);
             bungeeTitle.stay(stay * 20);
             bungeeTitle.fadeOut(fadeOut * 20);
