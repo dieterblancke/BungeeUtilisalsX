@@ -167,6 +167,7 @@ public class BUtilisalsAPI implements BUAPI {
 
     @Override
     public Connection getConnection() throws SQLException {
+        instance.getDatabaseManagement().getConnection();
         return instance.getDatabaseManagement().getConnection();
     }
 

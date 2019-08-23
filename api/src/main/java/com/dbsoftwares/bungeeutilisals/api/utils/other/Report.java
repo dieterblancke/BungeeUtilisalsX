@@ -16,33 +16,23 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.storage.dao;
+package com.dbsoftwares.bungeeutilisals.api.utils.other;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
 import java.util.Date;
+import java.util.UUID;
 
-public interface Dao {
+@Data
+@AllArgsConstructor
+public class Report {
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private final long id;
+    private final UUID uuid;
+    private final String reportedBy;
+    private final Date date;
+    private final String reason;
+    private boolean handled;
 
-    UserDao getUserDao();
-
-    PunishmentDao getPunishmentDao();
-
-    FriendsDao getFriendsDao();
-
-    ReportsDao getReportsDao();
-
-    static String formatDateToString(final Date date) {
-        return format.format(date);
-    }
-
-    static Date formatStringToDate(final String date) {
-        try {
-            return format.parse(date);
-        } catch (ParseException e) {
-            return new Date();
-        }
-    }
 }

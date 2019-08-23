@@ -18,31 +18,20 @@
 
 package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
-public interface Dao {
+import java.util.List;
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+public interface ReportsDao {
 
-    UserDao getUserDao();
+    void addReport(Report report);
 
-    PunishmentDao getPunishmentDao();
+    void removeReport(long id);
 
-    FriendsDao getFriendsDao();
+    Report getReport(long id);
 
-    ReportsDao getReportsDao();
+    List<Report> getReports();
 
-    static String formatDateToString(final Date date) {
-        return format.format(date);
-    }
+    List<Report> getRecentReports(int days);
 
-    static Date formatStringToDate(final String date) {
-        try {
-            return format.parse(date);
-        } catch (ParseException e) {
-            return new Date();
-        }
-    }
 }

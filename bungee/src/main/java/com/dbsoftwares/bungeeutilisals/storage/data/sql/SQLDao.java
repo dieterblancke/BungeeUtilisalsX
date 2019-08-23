@@ -18,38 +18,28 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.sql;
 
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.FriendsDao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.*;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLFriendsDao;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLPunishmentDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLReportsDao;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLUserDao;
+import lombok.Getter;
 
 public class SQLDao implements Dao {
 
+    @Getter
     private UserDao userDao;
+    @Getter
     private PunishmentDao punishmentDao;
+    @Getter
     private FriendsDao friendsDao;
+    @Getter
+    private ReportsDao reportsDao;
 
     public SQLDao() {
         this.userDao = new SQLUserDao();
         this.punishmentDao = new SQLPunishmentDao();
         this.friendsDao = new SQLFriendsDao();
-    }
-
-    @Override
-    public UserDao getUserDao() {
-        return userDao;
-    }
-
-    @Override
-    public PunishmentDao getPunishmentDao() {
-        return punishmentDao;
-    }
-
-    @Override
-    public FriendsDao getFriendsDao() {
-        return friendsDao;
+        this.reportsDao = new SQLReportsDao();
     }
 }
