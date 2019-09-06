@@ -120,7 +120,29 @@ public class SQLReportsDao implements ReportsDao {
 
     @Override
     public List<Report> getRecentReports(int days) {
-        return null;
+        final List<Report> reports = Lists.newArrayList();
+        try (Connection connection = BUCore.getApi().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT * FROM {reports-table} WHERE date >= DATEADD(DAY, ?, GETDATE());")
+             )) {
+            pstmt.setInt(1, -days);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    reports.add(new Report(
+                            rs.getLong("id"),
+                            UUID.fromString(rs.getString("uuid")),
+                            rs.getString("reported_by"),
+                            Dao.formatStringToDate(rs.getString("date")),
+                            rs.getString("reason"),
+                            rs.getBoolean("handled")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reports;
     }
 
     private String format(String line) {

@@ -46,6 +46,8 @@ public class DefaultPlaceHolders implements PlaceHolderPack {
                 event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.warns"));
         PlaceHolderAPI.addPlaceHolder("{punishmentactions-table}", false,
                 event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.punishmentactions"));
+        PlaceHolderAPI.addPlaceHolder("{reports-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.reports"));
         PlaceHolderAPI.addPlaceHolder("{user}", true,
                 event -> event.getUser().getName());
         PlaceHolderAPI.addPlaceHolder("{ping}", true,

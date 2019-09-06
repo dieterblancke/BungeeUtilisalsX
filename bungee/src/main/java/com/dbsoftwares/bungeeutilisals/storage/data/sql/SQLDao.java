@@ -25,15 +25,12 @@ import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLReportsDao;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLUserDao;
 import lombok.Getter;
 
+@Getter
 public class SQLDao implements Dao {
 
-    @Getter
     private UserDao userDao;
-    @Getter
     private PunishmentDao punishmentDao;
-    @Getter
     private FriendsDao friendsDao;
-    @Getter
     private ReportsDao reportsDao;
 
     public SQLDao() {

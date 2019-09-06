@@ -118,24 +118,18 @@ public class UpdateRunner implements Runnable {
         if (MathUtils.isInteger(version) && MathUtils.isInteger(newVersion)) {
             return Integer.parseInt(version) < Integer.parseInt(newVersion);
         }
-        if (version.contains("\\.") && newVersion.contains("\\.")) {
-            return checkVersionArray(version.split("\\."), newVersion.split("\\."));
+        try {
+            return checkStringVersion(version, newVersion);
+        } catch (Exception e) {
+            // if for some reason an exception pops up, it will default back to a simple equals check
+            return !newVersion.equals(version);
         }
-        return !newVersion.equals(version);
     }
 
-    private boolean checkVersionArray(final String[] version, final String[] newVersion) {
-        if (version.length != newVersion.length) {
-            return true;
-        }
-        for (int i = 0; i < version.length; i++) {
-            final String part = version[i];
-            final String newPart = newVersion[i];
+    private boolean checkStringVersion(String version, String newVersion) {
+        version = version.replaceAll("[^\\d]", "");
+        newVersion = newVersion.replaceAll("[^\\d]", "");
 
-            if (checkForUpdate(part, newPart)) {
-                return true;
-            }
-        }
-        return false;
+        return Integer.parseInt(newVersion) > Integer.parseInt(version);
     }
 }
