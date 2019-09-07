@@ -32,6 +32,10 @@ public interface ReportsDao {
 
     List<Report> getReports();
 
+    List<Report> getActiveReports();
+
+    List<Report> getHandledReports();
+
     List<Report> getRecentReports(int days);
 
 }

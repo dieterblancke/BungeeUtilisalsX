@@ -22,11 +22,18 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.storage.data.mongo.MongoDao;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.mongodb.*;
+import com.mongodb.MongoClient;
+import com.mongodb.MongoClientOptions;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.Updates;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.plugin.Plugin;
+import org.bson.Document;
 
 import java.sql.Connection;
 
@@ -69,6 +76,23 @@ public class MongoDBStorageManager extends AbstractStorageManager {
         }
 
         this.database = client.getDatabase(database);
+
+        initMongo();
+    }
+
+    private void initMongo() {
+        final MongoCollection<Document> coll = database.getCollection("bu-counters");
+
+        coll.insertOne(new Document().append("_id", "reportid").append("sequence_value", 0));
+    }
+
+    public long getNextSequenceValue(final String sequenceName) {
+        final Document sequenceDocument = database.getCollection("counters").findOneAndUpdate(
+                Filters.eq("_id", sequenceName),
+                Updates.inc("sequence_value", 1)
+        );
+
+        return sequenceDocument.getLong("sequence_value");
     }
 
     @Override

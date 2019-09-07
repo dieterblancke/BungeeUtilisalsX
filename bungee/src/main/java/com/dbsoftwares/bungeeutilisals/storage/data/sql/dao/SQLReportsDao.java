@@ -76,14 +76,7 @@ public class SQLReportsDao implements ReportsDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    report = new Report(
-                            rs.getLong("id"),
-                            UUID.fromString(rs.getString("uuid")),
-                            rs.getString("reported_by"),
-                            Dao.formatStringToDate(rs.getString("date")),
-                            rs.getString("reason"),
-                            rs.getBoolean("handled")
-                    );
+                    report = getReport(rs);
                 }
             }
         } catch (SQLException e) {
@@ -102,14 +95,36 @@ public class SQLReportsDao implements ReportsDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    reports.add(new Report(
-                            rs.getLong("id"),
-                            UUID.fromString(rs.getString("uuid")),
-                            rs.getString("reported_by"),
-                            Dao.formatStringToDate(rs.getString("date")),
-                            rs.getString("reason"),
-                            rs.getBoolean("handled")
-                    ));
+                    reports.add(getReport(rs));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return reports;
+    }
+
+    @Override
+    public List<Report> getActiveReports() {
+        return getHandledReports(true);
+    }
+
+    @Override
+    public List<Report> getHandledReports() {
+        return getHandledReports(false);
+    }
+
+    private List<Report> getHandledReports(boolean handled) {
+        final List<Report> reports = Lists.newArrayList();
+        try (Connection connection = BUCore.getApi().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT * FROM {reports-table} WHERE handled = ?;")
+             )) {
+            pstmt.setBoolean(1, handled);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    reports.add(getReport(rs));
                 }
             }
         } catch (SQLException e) {
@@ -129,14 +144,7 @@ public class SQLReportsDao implements ReportsDao {
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 while (rs.next()) {
-                    reports.add(new Report(
-                            rs.getLong("id"),
-                            UUID.fromString(rs.getString("uuid")),
-                            rs.getString("reported_by"),
-                            Dao.formatStringToDate(rs.getString("date")),
-                            rs.getString("reason"),
-                            rs.getBoolean("handled")
-                    ));
+                    reports.add(getReport(rs));
                 }
             }
         } catch (SQLException e) {
@@ -147,5 +155,16 @@ public class SQLReportsDao implements ReportsDao {
 
     private String format(String line) {
         return PlaceHolderAPI.formatMessage(line);
+    }
+
+    private Report getReport(final ResultSet rs) throws SQLException {
+        return new Report(
+                rs.getLong("id"),
+                UUID.fromString(rs.getString("uuid")),
+                rs.getString("reported_by"),
+                Dao.formatStringToDate(rs.getString("date")),
+                rs.getString("reason"),
+                rs.getBoolean("handled")
+        );
     }
 }
