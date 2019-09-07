@@ -156,3 +156,7 @@ ping:
   aliases: 'gping, bping'
   permission: bungeeutilisals.commands.ping
   permission-other: bungeeutilisals.commands.ping.other
+report:
+  enabled: true
+  aliases: 'greport, breport'
+  permission: bungeeutilisals.commands.report
