@@ -89,13 +89,20 @@ public class StaffChatCommand extends BUCommand implements Listener {
         final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
         BUCore.getApi().getUser(player).ifPresent(user -> {
             if (user.isInStaffChat()) {
-                event.setCancelled(true);
-                if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-                    final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffChatMessageHandler.class);
+                if (player.hasPermission(FileLocation.GENERALCOMMANDS.getConfiguration().getString("staffchat.permission"))
+                        || player.hasPermission("bungeeutilisals.commands.*")
+                        || player.hasPermission("bungeeutilisals.*")
+                        || player.hasPermission("*")) {
+                    event.setCancelled(true);
+                    if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+                        final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffChatMessageHandler.class);
 
-                    handler.send(new StaffChatData(user.getServerName(), user.getName(), event.getMessage()));
+                        handler.send(new StaffChatData(user.getServerName(), user.getName(), event.getMessage()));
+                    } else {
+                        sendStaffChatMessage(user.getServerName(), user.getName(), event.getMessage());
+                    }
                 } else {
-                    sendStaffChatMessage(user.getServerName(), user.getName(), event.getMessage());
+                    user.setInStaffChat(false);
                 }
             }
         });
