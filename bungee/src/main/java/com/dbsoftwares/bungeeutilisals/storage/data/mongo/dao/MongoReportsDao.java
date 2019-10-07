@@ -55,6 +55,7 @@ public class MongoReportsDao implements ReportsDao {
         data.put("reported_by", report.getReportedBy());
         data.put("date", new Date());
         data.put("handled", report.isHandled());
+        data.put("server", report.getServer());
         data.put("reason", report.getReason());
 
         db().getCollection(format("{reports-table}")).insertOne(new Document(data));
@@ -86,6 +87,7 @@ public class MongoReportsDao implements ReportsDao {
                 UUID.fromString(document.getString("uuid")),
                 document.getString("reported_by"),
                 document.getDate("date"),
+                document.getString("server"),
                 document.getString("reason"),
                 document.getBoolean("handled")
         );

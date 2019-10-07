@@ -16,32 +16,11 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.report;
+package com.dbsoftwares.bungeeutilisals.api.command;
 
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
-import java.util.List;
+public interface CommandCall {
 
-public class ReportCommand extends BUCommand {
-
-    public ReportCommand() {
-        super(
-                "report",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("report.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("report.permission")
-        );
-    }
-
-    @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return null;
-    }
-
-    @Override
-    public void onExecute(User user, String[] args) {
-
-    }
+    void onExecute(final User user, final String[] args);
 }

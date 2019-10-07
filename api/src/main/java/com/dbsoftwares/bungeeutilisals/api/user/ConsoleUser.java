@@ -314,6 +314,11 @@ public class ConsoleUser implements User {
         throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
+    @Override
+    public boolean hasPermission(String permission) {
+        return sender().hasPermission(permission);
+    }
+
     private String replacePlaceHolders(String message, Object... placeholders) {
         for (int i = 0; i < placeholders.length - 1; i += 2) {
             message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());

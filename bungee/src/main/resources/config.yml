@@ -1,3 +1,6 @@
+# Enable to get debug messages (where they are enabled)
+debug: false
+
 # Should BungeeUtilisals use RedisBungee?
 redis: false
 

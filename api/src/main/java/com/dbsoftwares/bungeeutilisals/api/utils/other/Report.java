@@ -32,6 +32,7 @@ public class Report {
     private final UUID uuid;
     private final String reportedBy;
     private final Date date;
+    private final String server;
     private final String reason;
     private boolean handled;
 

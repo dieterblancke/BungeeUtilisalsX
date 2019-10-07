@@ -1,6 +1,7 @@
 glist:
   # Enable this command or not?
   enabled: true
+  name: glist
   aliases: 'blist, globallist'
   permission: bungeeutilisals.commands.glist
   format:
@@ -32,6 +33,7 @@ glist:
       - '%playerlist%'
 announce:
   enabled: true
+  name: announce
   aliases: 'alert, bigalert'
   permission: bungeeutilisals.commands.announce
   types:
@@ -58,27 +60,33 @@ announce:
   pre_configured: 'custom.announce'
 find:
   enabled: true
+  name: find
   aliases: 'search'
   permission: bungeeutilisals.commands.find
 server:
   enabled: true
+  name: server
   aliases: 'switch'
   permission: bungeeutilisals.commands.server
 clearchat:
   enabled: true
+  name: clearchat
   aliases: 'cc'
   permission: bungeeutilisals.commands.clearchat
 chatlock:
   enabled: true
+  name: chatlock
   aliases: 'cl, lock, lockchat'
   permission: bungeeutilisals.commands.chatlock
   bypass: bungeeutilisals.chatlock.bypass
 glag:
   enabled: true
+  name: glag
   aliases: 'bgc, blag'
   permission: bungeeutilisals.commands.glag
 staffchat:
   enabled: true
+  name: staffchat
   aliases: 'sc, schat'
   permission: bungeeutilisals.commands.staffchat
 
@@ -89,10 +97,12 @@ staffchat:
     detect: '#'
 language:
   enabled: true
+  name: language
   aliases: 'lang'
   permission: bungeeutilisals.commands.language
 staff:
   enabled: false
+  name: staff
   aliases: 'onlinestaff'
   permission: bungeeutilisals.commands.staff
 
@@ -141,22 +151,36 @@ staff:
       priority: 5
 msg:
   enabled: true
+  name: msg
   aliases: 'm, whisper'
   permission: bungeeutilisals.commands.msg
 reply:
   enabled: true
+  name: reply
   aliases: 'r'
   permission: bungeeutilisals.commands.reply
 ignore:
   enabled: true
+  name: ignore
   aliases: 'bignore'
   permission: bungeeutilisals.commands.ignore
 ping:
   enabled: true
+  name: ping
   aliases: 'gping, bping'
   permission: bungeeutilisals.commands.ping
   permission-other: bungeeutilisals.commands.ping.other
 report:
   enabled: true
+  name: report
   aliases: 'greport, breport'
   permission: bungeeutilisals.commands.report
+
+  subcommands:
+    create:
+      enabled: true
+      name: create
+      aliases: 'new, c'
+      permission: bungeeutilisals.commands.report.create
+      # Cooldown in seconds ...
+      cooldown: 10

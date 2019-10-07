@@ -172,6 +172,19 @@ general-commands:
   ping:
     message: '&eYour ping is: &b{ping} ms&e!'
     other: '&b{target}''s &eping is &b{targetPing} ms&e!'
+  report:
+    help:
+      - '&eSubcommands of &b/report&e:'
+      - '- /report create (user) (reason)'
+
+    create:
+      usage: '&ePlease use &b/report create (target) (reason)&e!'
+      created: '&eYou have successfully reported &b{target}&e!'
+
+      broadcast:
+        - '&b{target} &ehas been reported by &b{user}&e!'
+        - '&eReason: &b{reason}'
+        - '&eServer: &b{server}'
 
 friends:
   join:

@@ -36,14 +36,15 @@ public class SQLReportsDao implements ReportsDao {
 
     @Override
     public void addReport(Report report) {
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("INSERT INTO {reports-table} (uuid, reported_by, handled, reason) VALUES (?, ?, ?, ?);")
+                     format("INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason) VALUES (?, ?, ?, ?, ?);")
              )) {
             pstmt.setString(1, report.getUuid().toString());
             pstmt.setString(2, report.getReportedBy());
             pstmt.setBoolean(3, report.isHandled());
-            pstmt.setString(4, report.getReason());
+            pstmt.setString(4, report.getServer());
+            pstmt.setString(5, report.getReason());
 
             pstmt.execute();
         } catch (SQLException e) {
@@ -53,7 +54,7 @@ public class SQLReportsDao implements ReportsDao {
 
     @Override
     public void removeReport(long id) {
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      format("DELETE FROM {reports-table} WHERE id = ?;")
              )) {
@@ -68,7 +69,7 @@ public class SQLReportsDao implements ReportsDao {
     @Override
     public Report getReport(long id) {
         Report report = null;
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      format("SELECT * FROM {reports-table} WHERE id = ? LIMIT 1;")
              )) {
@@ -88,7 +89,7 @@ public class SQLReportsDao implements ReportsDao {
     @Override
     public List<Report> getReports() {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      format("SELECT * FROM {reports-table};")
              )) {
@@ -116,7 +117,7 @@ public class SQLReportsDao implements ReportsDao {
 
     private List<Report> getHandledReports(boolean handled) {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      format("SELECT * FROM {reports-table} WHERE handled = ?;")
              )) {
@@ -136,7 +137,7 @@ public class SQLReportsDao implements ReportsDao {
     @Override
     public List<Report> getRecentReports(int days) {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getConnection();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
                      format("SELECT * FROM {reports-table} WHERE date >= DATEADD(DAY, ?, GETDATE());")
              )) {
@@ -163,6 +164,7 @@ public class SQLReportsDao implements ReportsDao {
                 UUID.fromString(rs.getString("uuid")),
                 rs.getString("reported_by"),
                 Dao.formatStringToDate(rs.getString("date")),
+                rs.getString("server"),
                 rs.getString("reason"),
                 rs.getBoolean("handled")
         );

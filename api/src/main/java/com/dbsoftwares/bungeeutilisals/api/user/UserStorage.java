@@ -45,7 +45,6 @@ public class UserStorage {
 
     private Map<String, Object> data = Maps.newHashMap();
 
-    @SuppressWarnings("unchecked")
     public <T> T getData(final String key) {
         return !data.containsKey(key) ? null : (T) data.get(key);
     }

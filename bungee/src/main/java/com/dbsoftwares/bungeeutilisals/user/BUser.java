@@ -396,6 +396,11 @@ public class BUser implements User {
         return builder.toString();
     }
 
+    @Override
+    public boolean hasPermission(String permission) {
+        return parent.hasPermission(permission);
+    }
+
     private String replacePlaceHolders(String message, Object... placeholders) {
         for (int i = 0; i < placeholders.length - 1; i += 2) {
             message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());

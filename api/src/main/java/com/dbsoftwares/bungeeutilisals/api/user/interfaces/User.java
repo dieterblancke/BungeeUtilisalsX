@@ -289,4 +289,6 @@ public interface User extends ExperimentalUser {
      * @return the used friend settings
      */
     FriendSettings getFriendSettings();
+
+    boolean hasPermission(String permission);
 }

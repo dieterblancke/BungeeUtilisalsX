@@ -26,7 +26,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-public abstract class SubCommand {
+public abstract class SubCommand implements CommandCall {
 
     private String name;
     private int minimumArgs;
@@ -64,7 +64,7 @@ public abstract class SubCommand {
         }
         final int length = args.length - 1;
 
-        if (length < minimumArgs || (maximumArgs >= 0 && length > maximumArgs)) {
+        if ((minimumArgs >= 0 && length < minimumArgs) || (maximumArgs >= 0 && length > maximumArgs)) {
             return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
         }
         if (!getPermission().isEmpty()

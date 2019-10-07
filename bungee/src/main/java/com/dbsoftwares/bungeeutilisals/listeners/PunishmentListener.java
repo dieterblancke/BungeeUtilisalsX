@@ -53,6 +53,10 @@ public class PunishmentListener implements Listener {
         final BansDao bansDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
         PunishmentInfo info = null;
 
+        if (BungeeUtilisals.getInstance().getConfig().getBoolean("debug", true)) {
+            System.out.println(String.format("Checking ban for UUID: %s and IP: %s", uuid.toString(), ip));
+        }
+
         if (bansDao.isBanned(uuid)) {
             info = bansDao.getCurrentBan(uuid);
         } else if (bansDao.isIPBanned(ip)) {

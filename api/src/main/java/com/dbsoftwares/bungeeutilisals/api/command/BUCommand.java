@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public abstract class BUCommand extends Command implements TabExecutor {
+public abstract class BUCommand extends Command implements CommandCall, TabExecutor {
 
     protected List<SubCommand> subCommands = Lists.newArrayList();
     private String permission;

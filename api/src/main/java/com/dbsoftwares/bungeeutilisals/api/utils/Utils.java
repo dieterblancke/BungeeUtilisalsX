@@ -447,4 +447,23 @@ public class Utils {
             return def;
         }
     }
+
+    /**
+     * Reads UUID from string, if it's undashed, it will add these.
+     *
+     * @param str The UUID to be formatted
+     * @return UUID object of the entered uuid
+     */
+    public static UUID readUUIDFromString(String str) {
+        try {
+            return UUID.fromString(str);
+        } catch (IllegalArgumentException e) {
+            return UUID.fromString(
+                    str.replaceFirst(
+                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                            "$1-$2-$3-$4-$5"
+                    )
+            );
+        }
+    }
 }

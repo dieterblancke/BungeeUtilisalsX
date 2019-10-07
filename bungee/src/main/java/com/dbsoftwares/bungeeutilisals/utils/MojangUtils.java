@@ -33,7 +33,7 @@ public class MojangUtils {
 
     private static final Gson gson = new Gson();
 
-    public static String getUUID(final String name) {
+    public static String getUuid(final String name) {
         try {
             final URL url = new URL(getNameToUuidUrl() + name);
             final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -85,7 +85,7 @@ public class MojangUtils {
         return BungeeUtilisals.getInstance().getConfig().get("urls.uuid-to-name", "https://api.minetools.eu/uuid/");
     }
 
-    private class MojangProfile {
+    public class MojangProfile {
 
         private String id;
         private String name;

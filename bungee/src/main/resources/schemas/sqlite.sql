@@ -142,6 +142,7 @@ CREATE TABLE IF NOT EXISTS `{reports-table}`
     reported_by VARCHAR(32) NOT NULL,
     date        DATETIME DEFAULT CURRENT_TIMESTAMP NOT NULL,
     handled     TINYINT(1)  NOT NULL,
+    server      VARCHAR(64) NOT NULL,
     reason      TEXT        NOT NULL,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );

@@ -62,6 +62,7 @@ import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
+import com.dbsoftwares.bungeeutilisals.manager.CommandManager;
 import com.dbsoftwares.bungeeutilisals.packet.PacketRegistry;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
@@ -123,6 +124,9 @@ public class BungeeUtilisals extends Plugin {
 
     @Getter
     private RedisMessenger redisMessenger;
+
+    @Getter
+    private CommandManager commandManager;
 
     @Getter
     private List<Script> scripts = Lists.newArrayList();
@@ -221,6 +225,7 @@ public class BungeeUtilisals extends Plugin {
         Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class);
 
         // Loading all (enabled) Commands
+        commandManager = new CommandManager();
         loadCommands();
 
         // Loading packet system (if enabled)
@@ -406,6 +411,8 @@ public class BungeeUtilisals extends Plugin {
     }
 
     private void loadCommands() {
+        commandManager.load();
+
         loadGeneralCommands();
 
         if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean(ENABLED_CONFIG_KEY)) {
