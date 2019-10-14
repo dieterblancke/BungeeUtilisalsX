@@ -38,6 +38,7 @@ subcommands:
   usage: '&ePlease use &b{usage}&e!'
 
 general-commands:
+  cooldown: '&eThis command is on cooldown for &b{time} &emore seconds!'
   addon:
     notfound: '&eCould not find an addon named &b{name}&e!'
     list:

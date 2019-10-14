@@ -98,6 +98,11 @@ public class CommandBuilder {
 
     public CommandBuilder executable(final CommandCall call) {
         this.call = call;
+
+        if (call instanceof TabCall) {
+            tab((TabCall) call);
+        }
+
         return this;
     }
 

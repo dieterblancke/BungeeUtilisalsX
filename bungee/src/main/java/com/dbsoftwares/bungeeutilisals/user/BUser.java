@@ -61,7 +61,7 @@ public class BUser implements User {
     private String name;
     private UUID uuid;
     private String ip;
-    private Boolean socialspy;
+    private boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private PunishmentInfo mute;

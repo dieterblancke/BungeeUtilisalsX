@@ -184,3 +184,10 @@ report:
       permission: bungeeutilisals.commands.report.create
       # Cooldown in seconds ...
       cooldown: 10
+    list:
+      enabled: true
+      name: list
+      aliases: 'new, c'
+      permission: bungeeutilisals.commands.report.create
+      # Amount of days for how long reports should be listed by /reports list (with no arguments)
+      recent: 31

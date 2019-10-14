@@ -67,6 +67,11 @@ public class Command {
         BUCore.getApi().getSimpleExecutor().asyncExecute(() -> {
             try {
                 if (cooldown > 0 && !user.getCooldowns().canUse("COMMAND_COOLDOWNS_" + name)) {
+                    user.sendLangMessage(
+                            "general-commands.cooldown",
+                            "{time}",
+                            user.getCooldowns().getLeftTime("COMMAND_COOLDOWNS_" + name) / 1000
+                    );
                     return;
                 }
 

@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportCreateSubCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportListSubCommandCall;
 
 public class ReportCommandCall extends ParentCommand implements CommandCall {
 
@@ -34,6 +35,13 @@ public class ReportCommandCall extends ParentCommand implements CommandCall {
                         .name("create")
                         .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.create"))
                         .executable(new ReportCreateSubCommandCall())
+                        .build()
+        );
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name("list")
+                        .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.list"))
+                        .executable(new ReportListSubCommandCall())
                         .build()
         );
     }
