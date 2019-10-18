@@ -20,9 +20,12 @@ package com.dbsoftwares.bungeeutilisals.commands.report.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils.PageNotFoundException;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
 import java.util.List;
@@ -54,65 +57,33 @@ public class ReportListSubCommandCall implements CommandCall {
             }
         }
 
-        // TODO: send reports list
-        // Paginating system ...
+        try {
+            final List<Report> pageReports = PageUtils.getPageFromList(page, reports, 10);
+            final int maxPages = MathUtils.ceil(reports.size() / 10);
 
-        /*<
-         *         final List<AddonData> addons = BUCore.getApi().getAddonManager().getAllAddons();
-         *         final int maxPages = (int) Math.ceil(addons.size() / 10.0);
-         *         int page = 1;
-         *         if (args.length != 0) {
-         *             if (!MathUtils.isInteger(args[0])) {
-         *                 user.sendLangMessage("no-number");
-         *                 return;
-         *             }
-         *             page = Integer.parseInt(args[0]);
-         *         }
-         *
-         *         if (page > maxPages) {
-         *             user.sendLangMessage("general-commands.addon.list.wrong-page", "{maxpages}", maxPages);
-         *             return;
-         *         }
-         *
-         *         final int begin = ((page - 1) * 10);
-         *         int end = begin + 10;
-         *
-         *         if (end > addons.size()) {
-         *             end = addons.size();
-         *         }
-         *
-         *         user.sendLangMessage("general-commands.addon.list.header", "{page}", page);
-         *         final ChatMessage chatMessage = new ChatMessage();
-         *
-         *         for (int i = begin; i < end; i++) {
-         *             final AddonData data = addons.get(i);
-         *             final ChatColor color = BUCore.getApi().getAddonManager().isRegistered(data.getName()) ? ChatColor.GREEN : ChatColor.RED;
-         *             final String message = user.buildLangMessage("general-commands.addon.list.item.text", "{id}", i + 1, "{addon}", color + data.getName());
-         *
-         *             chatMessage.addPartim(
-         *                     message,
-         *                     new HoverPartim(
-         *                             HoverEvent.Action.SHOW_TEXT,
-         *                             user.buildLangMessage("general-commands.addon.list.item.hover",
-         *                                     "{id}", i + 1,
-         *                                     "{name}", data.getName(),
-         *                                     "{version}", data.getVersion(),
-         *                                     "{author}", data.getAuthor(),
-         *                                     "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList(data.getRequiredDependencies(), ", "),
-         *                                     "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList(data.getOptionalDependencies(), ", "),
-         *                                     "{description}", data.getDescription()
-         *                             )
-         *                     ),
-         *                     new ClickPartim(
-         *                             ClickEvent.Action.RUN_COMMAND,
-         *                             "/addon info " + data.getName()
-         *                     )
-         *             );
-         *             if (i < end - 1) {
-         *                 chatMessage.newLine();
-         *             }
-         *         }
-         *         chatMessage.sendTo(user);
-         */
+            user.sendLangMessage(
+                    "general-commands.report.list.header",
+                    "{page}", page,
+                    "{maxPages}", maxPages
+            );
+
+            for (Report report : pageReports) {
+                user.sendLangMessage(
+                        "general-commands.report.list.item",
+                        "{reported}", report.getUserName(),
+                        "{reporter}", report.getReportedBy(),
+                        "{reason}", report.getReason(),
+                        "{server}", report.getServer(),
+                        "{date}", Dao.formatDateToString(report.getDate()),
+                        "{handled}", report.isHandled()
+                );
+            }
+        } catch (PageNotFoundException e) {
+            user.sendLangMessage(
+                    "general-commands.report.list.wrong-page",
+                    "{page}", e.getPage(),
+                    "{maxpages}", e.getMaxPages()
+            );
+        }
     }
 }

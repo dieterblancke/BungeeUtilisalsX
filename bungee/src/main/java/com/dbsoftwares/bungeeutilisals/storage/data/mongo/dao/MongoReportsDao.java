@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
@@ -82,9 +83,13 @@ public class MongoReportsDao implements ReportsDao {
 
 
     private Report getReport(final Document document) {
+        final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
+        final Document user = userColl.find(Filters.eq("uuid", document.getString("uuid"))).first();
+
         return new Report(
                 document.getInteger("_id"),
                 UUID.fromString(document.getString("uuid")),
+                user.getString("username"),
                 document.getString("reported_by"),
                 document.getDate("date"),
                 document.getString("server"),

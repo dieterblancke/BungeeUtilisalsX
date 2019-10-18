@@ -176,7 +176,8 @@ general-commands:
   report:
     help:
       - '&eSubcommands of &b/report&e:'
-      - '- /report create (user) (reason)'
+      - '&f- &b/report create (user) (reason)'
+      - '&f- &b/report list [all/active] [page]'
 
     create:
       usage: '&ePlease use &b/report create (target) (reason)&e!'
@@ -186,6 +187,20 @@ general-commands:
         - '&b{target} &ehas been reported by &b{user}&e!'
         - '&eReason: &b{reason}'
         - '&eServer: &b{server}'
+    list:
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+      header: '&eReport list (page &b{page}&e)'
+      item:
+        text: '&b#{id}&e: &b{reported} &efor &b{reason} &eby &b{reporter} &7&o(Hover Me!)'
+        hover:
+          - '&f⎯⎯⎯⎯⎯ &eReport &b#{id}: {reported} &f⎯⎯⎯⎯⎯&r'
+          - '&eReported User: &b{reported}'
+          - '&eReporter: &b{reporter}'
+          - '&eReason: &b{reason}'
+          - '&eServer: &b{server}'
+          - '&eDate: &b{date}'
+          - '&eHandled: &b{handled}'
+          - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
 
 friends:
   join:

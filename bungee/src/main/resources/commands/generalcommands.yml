@@ -189,5 +189,3 @@ report:
       name: list
       aliases: 'new, c'
       permission: bungeeutilisals.commands.report.create
-      # Amount of days for how long reports should be listed by /reports list (with no arguments)
-      recent: 31

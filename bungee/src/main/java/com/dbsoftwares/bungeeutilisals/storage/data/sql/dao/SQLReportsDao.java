@@ -71,7 +71,7 @@ public class SQLReportsDao implements ReportsDao {
         Report report = null;
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {reports-table} WHERE id = ? LIMIT 1;")
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE id = ? LIMIT 1;")
              )) {
             pstmt.setLong(1, id);
 
@@ -91,7 +91,7 @@ public class SQLReportsDao implements ReportsDao {
         final List<Report> reports = Lists.newArrayList();
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {reports-table};")
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid;")
              )) {
 
             try (ResultSet rs = pstmt.executeQuery()) {
@@ -119,7 +119,7 @@ public class SQLReportsDao implements ReportsDao {
         final List<Report> reports = Lists.newArrayList();
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {reports-table} WHERE handled = ?;")
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE handled = ?;")
              )) {
             pstmt.setBoolean(1, handled);
 
@@ -139,7 +139,7 @@ public class SQLReportsDao implements ReportsDao {
         final List<Report> reports = Lists.newArrayList();
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT * FROM {reports-table} WHERE date >= DATEADD(DAY, ?, GETDATE());")
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());")
              )) {
             pstmt.setInt(1, -days);
 
@@ -162,6 +162,7 @@ public class SQLReportsDao implements ReportsDao {
         return new Report(
                 rs.getLong("id"),
                 UUID.fromString(rs.getString("uuid")),
+                rs.getString("reported"),
                 rs.getString("reported_by"),
                 Dao.formatStringToDate(rs.getString("date")),
                 rs.getString("server"),

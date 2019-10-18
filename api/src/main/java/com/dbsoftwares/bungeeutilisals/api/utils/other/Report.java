@@ -30,6 +30,7 @@ public class Report {
 
     private final long id;
     private final UUID uuid;
+    private final String userName;
     private final String reportedBy;
     private final Date date;
     private final String server;
