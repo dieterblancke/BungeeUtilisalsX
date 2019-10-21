@@ -28,6 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
@@ -36,6 +37,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
@@ -74,6 +76,9 @@ public class BUser implements User {
 
     @Getter
     private boolean inStaffChat;
+
+    @Getter
+    private MessageQueue<QueuedMessage> messageQueue;
 
     @Override
     public void load(ProxiedPlayer parent) {
@@ -130,6 +135,11 @@ public class BUser implements User {
         } else {
             friendSettings = new FriendSettings();
         }
+
+        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> {
+            messageQueue = BUCore.getApi().getStorageManager().getDao().createMessageQueue(this);
+            executeMessageQueue();
+        });
 
         final UserLoadEvent userLoadEvent = new UserLoadEvent(this);
         BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
@@ -399,6 +409,17 @@ public class BUser implements User {
     @Override
     public boolean hasPermission(String permission) {
         return parent.hasPermission(permission);
+    }
+
+    @Override
+    public void executeMessageQueue() {
+        QueuedMessage message = messageQueue.poll();
+
+        while (message != null) {
+            sendLangMessage(message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders());
+
+            message = messageQueue.poll();
+        }
     }
 
     private String replacePlaceHolders(String message, Object... placeholders) {

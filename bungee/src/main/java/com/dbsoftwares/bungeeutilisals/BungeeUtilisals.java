@@ -74,10 +74,11 @@ import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHo
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessenger;
 import com.dbsoftwares.bungeeutilisals.redis.handlers.*;
+import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
+import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
 import com.dbsoftwares.bungeeutilisals.updater.Updatable;
 import com.dbsoftwares.bungeeutilisals.updater.Updater;
 import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
-import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -239,6 +240,7 @@ public class BungeeUtilisals extends Plugin {
         }
 
         ProxyServer.getInstance().getScheduler().schedule(this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS);
+        ProxyServer.getInstance().getScheduler().schedule(this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES);
 
         if (getConfig().getBoolean("updater.enabled")) {
             Updater.initialize(this);

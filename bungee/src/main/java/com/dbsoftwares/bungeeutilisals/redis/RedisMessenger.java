@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisals.redis;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.google.api.client.util.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
@@ -28,7 +29,7 @@ public class RedisMessenger implements Listener {
             try {
                 registerMessageHandler(clazz.newInstance());
             } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                BUCore.logException(e);
             }
         }
     }

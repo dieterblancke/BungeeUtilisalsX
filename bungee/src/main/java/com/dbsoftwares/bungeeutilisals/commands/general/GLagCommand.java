@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
+import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ChatColor;
 

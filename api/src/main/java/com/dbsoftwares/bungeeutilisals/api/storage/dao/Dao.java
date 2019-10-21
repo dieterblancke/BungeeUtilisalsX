@@ -18,6 +18,9 @@
 
 package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -25,14 +28,6 @@ import java.util.Date;
 public interface Dao {
 
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-
-    UserDao getUserDao();
-
-    PunishmentDao getPunishmentDao();
-
-    FriendsDao getFriendsDao();
-
-    ReportsDao getReportsDao();
 
     static String formatDateToString(final Date date) {
         return format.format(date);
@@ -45,4 +40,16 @@ public interface Dao {
             return new Date();
         }
     }
+
+    UserDao getUserDao();
+
+    PunishmentDao getPunishmentDao();
+
+    FriendsDao getFriendsDao();
+
+    ReportsDao getReportsDao();
+
+    MessageQueue<QueuedMessage> createMessageQueue(final User user);
+
+    MessageQueue<QueuedMessage> createMessageQueue();
 }

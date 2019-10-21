@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 
 import java.util.*;
@@ -58,6 +59,7 @@ public class MongoReportsDao implements ReportsDao {
         data.put("handled", report.isHandled());
         data.put("server", report.getServer());
         data.put("reason", report.getReason());
+        data.put("accepted", report.isAccepted());
 
         db().getCollection(format("{reports-table}")).insertOne(new Document(data));
     }
@@ -81,7 +83,6 @@ public class MongoReportsDao implements ReportsDao {
         return report;
     }
 
-
     private Report getReport(final Document document) {
         final MongoCollection<Document> userColl = db().getCollection(format("{users-table}"));
         final Document user = userColl.find(Filters.eq("uuid", document.getString("uuid"))).first();
@@ -94,7 +95,8 @@ public class MongoReportsDao implements ReportsDao {
                 document.getDate("date"),
                 document.getString("server"),
                 document.getString("reason"),
-                document.getBoolean("handled")
+                document.getBoolean("handled"),
+                document.getBoolean("accepted")
         );
     }
 
@@ -110,12 +112,12 @@ public class MongoReportsDao implements ReportsDao {
 
     @Override
     public List<Report> getActiveReports() {
-        return getHandledReports(true);
+        return getHandledReports(false);
     }
 
     @Override
     public List<Report> getHandledReports() {
-        return getHandledReports(false);
+        return getHandledReports(true);
     }
 
     private List<Report> getHandledReports(final boolean handled) {
@@ -138,4 +140,63 @@ public class MongoReportsDao implements ReportsDao {
 
         return reports;
     }
+
+    @Override
+    public boolean reportExists(long id) {
+        return db().getCollection(format("{reports-table}")).find(Filters.eq("_id", id)).limit(1).iterator().hasNext();
+    }
+
+    @Override
+    public void handleReport(long id, boolean accepted) {
+        final MongoCollection<Document> collection = db().getCollection(format("{reports-table}"));
+        final Document document = collection.find(Filters.eq("_id", id)).limit(1).first();
+
+        document.put("handled", true);
+        document.put("accepted", accepted);
+
+        save(collection, document);
+    }
+
+    @Override
+    public List<Report> getAcceptedReports() {
+        return getAcceptedReports(true);
+    }
+
+    @Override
+    public List<Report> getDeniedReports() {
+        return getAcceptedReports(false);
+    }
+
+    @Override
+    public List<Report> getReportsHistory(final String name) {
+        final List<Report> reports = Lists.newArrayList();
+
+        db().getCollection(format("{reports-table}"))
+                .find(Filters.eq("reported_by", name))
+                .forEach((Consumer<? super Document>) doc ->
+                        reports.add(getReport(doc))
+                );
+
+        return reports;
+    }
+
+    private List<Report> getAcceptedReports(final boolean accepted) {
+        final List<Report> reports = Lists.newArrayList();
+
+        db().getCollection(format("{reports-table}")).find(Filters.eq("accepted", accepted))
+                .forEach((Consumer<? super Document>) doc -> reports.add(getReport(doc)));
+
+        return reports;
+    }
+
+    private void save(final MongoCollection<Document> collection, final Document document) {
+        final Object id = document.get("_id");
+
+        if (id == null) {
+            collection.insertOne(document);
+        } else {
+            collection.replaceOne(Filters.eq("_id", id), document, new ReplaceOptions().upsert(true));
+        }
+    }
+
 }

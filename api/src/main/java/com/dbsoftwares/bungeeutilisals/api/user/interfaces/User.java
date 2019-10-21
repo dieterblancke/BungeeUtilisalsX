@@ -22,10 +22,12 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -38,6 +40,7 @@ public interface User extends ExperimentalUser {
 
     /**
      * Loads the user in RAM.
+     *
      * @param parent The parent player, null if console
      */
     void load(ProxiedPlayer parent);
@@ -147,12 +150,14 @@ public interface User extends ExperimentalUser {
 
     /**
      * Sends a BaseComponent message to the user, colors will be formatted.
+     *
      * @param component The component to be sent.
      */
     void sendMessage(BaseComponent component);
 
     /**
      * Sends a BaseComponent message to the user, colors will be formatted.
+     *
      * @param components The components to be sent.
      */
     void sendMessage(BaseComponent[] components);
@@ -244,15 +249,16 @@ public interface User extends ExperimentalUser {
     void setMute(PunishmentInfo info);
 
     /**
-     * Changes staffchat state.
-     * @param staffchat true if staffchat should be enabled, false if it should be disabled.
-     */
-    void setInStaffChat(boolean staffchat);
-
-    /**
      * @return true if staffchat is enabled, false if not.
      */
     boolean isInStaffChat();
+
+    /**
+     * Changes staffchat state.
+     *
+     * @param staffchat true if staffchat should be enabled, false if it should be disabled.
+     */
+    void setInStaffChat(boolean staffchat);
 
     /**
      * @return the version the user is playing on
@@ -291,4 +297,8 @@ public interface User extends ExperimentalUser {
     FriendSettings getFriendSettings();
 
     boolean hasPermission(String permission);
+
+    MessageQueue<QueuedMessage> getMessageQueue();
+
+    void executeMessageQueue();
 }

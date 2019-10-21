@@ -16,26 +16,11 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils.other;
+package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import java.util.Queue;
 
-import java.util.Date;
-import java.util.UUID;
+public interface MessageQueue<T> extends Queue<T> {
 
-@Data
-@AllArgsConstructor
-public class Report {
-
-    private final long id;
-    private final UUID uuid;
-    private final String userName;
-    private final String reportedBy;
-    private final Date date;
-    private final String server;
-    private final String reason;
-    private boolean handled;
-    private boolean accepted;
-
+    void refetch();
 }

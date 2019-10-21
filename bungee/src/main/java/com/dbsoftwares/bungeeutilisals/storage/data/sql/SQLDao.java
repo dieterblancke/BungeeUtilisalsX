@@ -19,10 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.storage.data.sql;
 
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.*;
-import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLFriendsDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLPunishmentDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLReportsDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.SQLUserDao;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.*;
 import lombok.Getter;
 
 @Getter
@@ -38,5 +37,15 @@ public class SQLDao implements Dao {
         this.punishmentDao = new SQLPunishmentDao();
         this.friendsDao = new SQLFriendsDao();
         this.reportsDao = new SQLReportsDao();
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> createMessageQueue(User user) {
+        return new SQLMessageQueue(user.getUuid(), user.getName(), user.getIp());
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> createMessageQueue() {
+        return new SQLMessageQueue();
     }
 }

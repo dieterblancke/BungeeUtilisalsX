@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils;
+package com.dbsoftwares.bungeeutilisals.runnables;
 
 public class TPSRunnable implements Runnable {
 

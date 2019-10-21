@@ -16,26 +16,18 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.utils.other;
+package com.dbsoftwares.bungeeutilisals.runnables;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 
-import java.util.Date;
-import java.util.UUID;
+public class UserMessageQueueRunnable implements Runnable {
 
-@Data
-@AllArgsConstructor
-public class Report {
-
-    private final long id;
-    private final UUID uuid;
-    private final String userName;
-    private final String reportedBy;
-    private final Date date;
-    private final String server;
-    private final String reason;
-    private boolean handled;
-    private boolean accepted;
-
+    public void run() {
+        BUCore.getApi().getUsers().forEach(user -> {
+            if (user.getMessageQueue() != null) {
+                user.getMessageQueue().refetch();
+                user.executeMessageQueue();
+            }
+        });
+    }
 }

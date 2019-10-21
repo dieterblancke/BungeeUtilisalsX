@@ -98,7 +98,7 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
     }
 

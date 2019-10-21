@@ -177,7 +177,10 @@ general-commands:
     help:
       - '&eSubcommands of &b/report&e:'
       - '&f- &b/report create (user) (reason)'
-      - '&f- &b/report list [all/active] [page]'
+      - '&f- &b/report list [all/active/accepted/denied] [page]'
+      - '&f- &b/report accept (id)'
+      - '&f- &b/report deny (id)'
+      - '&f- &b/report history'
 
     create:
       usage: '&ePlease use &b/report create (target) (reason)&e!'
@@ -190,6 +193,7 @@ general-commands:
     list:
       wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
       header: '&eReport list (page &b{page}&e)'
+      no-reports: '&eThere are no reports matching this criteria.'
       item:
         text: '&b#{id}&e: &b{reported} &efor &b{reason} &eby &b{reporter} &7&o(Hover Me!)'
         hover:
@@ -201,6 +205,34 @@ general-commands:
           - '&eDate: &b{date}'
           - '&eHandled: &b{handled}'
           - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+    history:
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+      header: '&eReport list (page &b{page}&e)'
+      no-reports: '&eYou don''t have any reports yet.'
+      accepted: '&2\u2713'
+      denied: '&4\u2717'
+      item:
+        text: '{accepted_sign} &b#{id}&e: &b{reported} &efor &b{reason} &eby &b{reporter} &7&o(Hover Me!)'
+        hover:
+          - '&f⎯⎯⎯⎯⎯ &eReport &b#{id}: {reported} &f⎯⎯⎯⎯⎯&r'
+          - '&eReported User: &b{reported}'
+          - '&eReporter: &b{reporter}'
+          - '&eReason: &b{reason}'
+          - '&eServer: &b{server}'
+          - '&eDate: &b{date}'
+          - '&eHandled: &b{handled}'
+          - '&eAccepted: {accepted_sign}'
+          - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+    accept:
+      usage: '&ePlease use &b/report accept (id)&e!'
+      not-found: '&eCould not find a report with id &b{id}&e!'
+      updated: '&eThe report with id &b{id} &ehas been accepted.'
+      accepted: '&eYour report &b(#{id}) {reported} &ehas been accepted by &b{staff}&e!'
+    deny:
+      usage: '&ePlease use &b/report deny (id)&e!'
+      not-found: '&eCould not find a report with id &b{id}&e!'
+      updated: '&eThe report with id &b{id} &ehas been denied.'
+      accepted: '&eYour report &b(#{id}) {reported} &ehas been denied by &b{staff}&e!'
 
 friends:
   join:

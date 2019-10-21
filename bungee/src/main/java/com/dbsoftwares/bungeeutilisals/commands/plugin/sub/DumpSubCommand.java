@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisals.dump.PluginSchedulerInfo;
-import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
+import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -53,7 +53,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -92,7 +92,7 @@ public class DumpSubCommand extends SubCommand {
                 con.setDoOutput(true);
 
                 final OutputStream out = con.getOutputStream();
-                out.write(gson.toJson(dump).getBytes(Charset.forName("UTF-8")));
+                out.write(gson.toJson(dump).getBytes(StandardCharsets.UTF_8));
                 out.close();
 
                 if (con.getResponseCode() == 429) {

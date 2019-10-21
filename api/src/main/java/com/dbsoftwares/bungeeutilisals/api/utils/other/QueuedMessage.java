@@ -18,24 +18,31 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.other;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
-import java.util.UUID;
-
 @Data
-@AllArgsConstructor
-public class Report {
+public class QueuedMessage {
 
     private final long id;
-    private final UUID uuid;
-    private final String userName;
-    private final String reportedBy;
-    private final Date date;
-    private final String server;
-    private final String reason;
-    private boolean handled;
-    private boolean accepted;
+    private final String user;
+    private final Message message;
+    private final String type;
 
+    public QueuedMessage(long id, String user, Message message, String type) {
+        this.id = id;
+        this.user = user;
+        this.message = message;
+        this.type = type;
+    }
+
+    @Data
+    public static class Message {
+        private final String languagePath;
+        private final Object[] placeHolders;
+
+        public Message(final String languagePath, final Object... placeHolders) {
+            this.languagePath = languagePath;
+            this.placeHolders = placeHolders;
+        }
+    }
 }

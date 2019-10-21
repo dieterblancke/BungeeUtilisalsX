@@ -89,7 +89,11 @@ public class CommandBuilder {
         if (section.exists("name")) {
             this.name = section.getString("name");
         }
-        this.aliases = section.getString("aliases").split(", ");
+        if (!section.exists("aliases") || section.getString("aliases").isEmpty()) {
+            this.aliases = new String[0];
+        } else {
+            this.aliases = section.getString("aliases").split(", ");
+        }
         this.permission = section.getString("permission");
         this.cooldown = section.exists("cooldown") ? section.getInteger("cooldown") : -1;
 

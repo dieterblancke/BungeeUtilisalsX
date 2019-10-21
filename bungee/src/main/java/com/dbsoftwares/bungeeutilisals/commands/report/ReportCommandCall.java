@@ -22,7 +22,9 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportAcceptSubCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportCreateSubCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportHistorySubCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.report.sub.ReportListSubCommandCall;
 
 public class ReportCommandCall extends ParentCommand implements CommandCall {
@@ -42,6 +44,27 @@ public class ReportCommandCall extends ParentCommand implements CommandCall {
                         .name("list")
                         .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.list"))
                         .executable(new ReportListSubCommandCall())
+                        .build()
+        );
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name("accept")
+                        .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.accept"))
+                        .executable(new ReportAcceptSubCommandCall())
+                        .build()
+        );
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name("deny")
+                        .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.deny"))
+                        .executable(new ReportAcceptSubCommandCall())
+                        .build()
+        );
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name("history")
+                        .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection("report.subcommands.history"))
+                        .executable(new ReportHistorySubCommandCall())
                         .build()
         );
     }

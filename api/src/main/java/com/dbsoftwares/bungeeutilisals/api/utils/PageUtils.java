@@ -25,7 +25,7 @@ import java.util.List;
 public class PageUtils {
 
     public static <T> List<T> getPageFromList(final int page, final List<T> list, final int pageSize) throws PageNotFoundException {
-        final int maxPages = MathUtils.ceil(list.size() / pageSize);
+        final int maxPages = (int) Math.ceil(list.size() / (double) pageSize);
 
         if (page > maxPages) {
             throw new PageNotFoundException(page, maxPages);

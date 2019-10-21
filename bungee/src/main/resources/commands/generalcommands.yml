@@ -188,4 +188,19 @@ report:
       enabled: true
       name: list
       aliases: 'new, c'
-      permission: bungeeutilisals.commands.report.create
+      permission: bungeeutilisals.commands.report.list
+    accept:
+      enabled: true
+      name: accept
+      aliases: ''
+      permission: bungeeutilisals.commands.report.accept
+    deny:
+      enabled: true
+      name: deny
+      aliases: ''
+      permission: bungeeutilisals.commands.report.deny
+    history:
+      enabled: true
+      name: history
+      aliases: 'hist'
+      permission: bungeeutilisals.commands.report.history

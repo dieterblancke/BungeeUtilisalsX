@@ -144,7 +144,20 @@ CREATE TABLE IF NOT EXISTS `{reports-table}`
     handled     TINYINT(1)  NOT NULL,
     server      VARCHAR(64) NOT NULL,
     reason      TEXT        NOT NULL,
+    accepted    TINYINT(1),
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
 
 CREATE INDEX IF NOT EXISTS idx_reports ON `{reports-table}` (id, uuid, reported_by, handled);
+
+CREATE TABLE IF NOT EXISTS `{messagequeue-table}`
+(
+    id      INTEGER PRIMARY KEY AUTOINCREMENT,
+    user    VARCHAR(36)                         NOT NULL,
+    message TEXT                                NOT NULL,
+    date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    type    VARCHAR(16)                         NOT NULL,
+    active  TINYINT(1)                          NOT NULl
+);
+
+CREATE INDEX IF NOT EXISTS idx_messagequeue ON `{messagequeue-table}` (id, user, type, date);

@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
 import com.google.api.client.util.Lists;
@@ -44,11 +45,15 @@ public class CommandManager {
     }
 
     private void registerGeneralCommand(final String section, final CommandCall call) {
-        final Command command = CommandBuilder.builder()
+        final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name(section)
                 .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection(section))
-                .executable(call)
-                .build();
+                .executable(call);
+
+        if (call instanceof TabCall) {
+            commandBuilder.tab((TabCall) call);
+        }
+        final Command command = commandBuilder.build();
 
         if (command != null) {
             command.register();

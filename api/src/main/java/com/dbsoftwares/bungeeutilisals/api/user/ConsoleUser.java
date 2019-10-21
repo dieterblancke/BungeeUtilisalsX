@@ -24,9 +24,11 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -317,6 +319,16 @@ public class ConsoleUser implements User {
     @Override
     public boolean hasPermission(String permission) {
         return sender().hasPermission(permission);
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> getMessageQueue() {
+        return null;
+    }
+
+    @Override
+    public void executeMessageQueue() {
+        throw new UnsupportedOperationException(NOT_SUPPORTED);
     }
 
     private String replacePlaceHolders(String message, Object... placeholders) {

@@ -19,10 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.storage.data.mongo;
 
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.*;
-import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.MongoFriendsDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.MongoPunishmentDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.MongoReportsDao;
-import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.MongoUserDao;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
+import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.*;
 import lombok.Getter;
 
 @Getter
@@ -38,5 +37,15 @@ public class MongoDao implements Dao {
         this.punishmentDao = new MongoPunishmentDao();
         this.friendsDao = new MongoFriendsDao();
         this.reportsDao = new MongoReportsDao();
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> createMessageQueue(User user) {
+        return new MongoMessageQueue(user.getUuid(), user.getName(), user.getIp());
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> createMessageQueue() {
+        return new MongoMessageQueue();
     }
 }

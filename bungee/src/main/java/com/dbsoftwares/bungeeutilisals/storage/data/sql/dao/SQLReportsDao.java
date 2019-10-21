@@ -38,17 +38,18 @@ public class SQLReportsDao implements ReportsDao {
     public void addReport(Report report) {
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason) VALUES (?, ?, ?, ?, ?);")
+                     format("INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason, accepted) VALUES (?, ?, ?, ?, ?, ?);")
              )) {
             pstmt.setString(1, report.getUuid().toString());
             pstmt.setString(2, report.getReportedBy());
             pstmt.setBoolean(3, report.isHandled());
             pstmt.setString(4, report.getServer());
             pstmt.setString(5, report.getReason());
+            pstmt.setBoolean(6, report.isAccepted());
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
     }
 
@@ -62,7 +63,7 @@ public class SQLReportsDao implements ReportsDao {
 
             pstmt.execute();
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
     }
 
@@ -71,7 +72,7 @@ public class SQLReportsDao implements ReportsDao {
         Report report = null;
         try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
              PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE id = ? LIMIT 1;")
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;")
              )) {
             pstmt.setLong(1, id);
 
@@ -81,7 +82,7 @@ public class SQLReportsDao implements ReportsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
         return report;
     }
@@ -100,19 +101,19 @@ public class SQLReportsDao implements ReportsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
         }
         return reports;
     }
 
     @Override
     public List<Report> getActiveReports() {
-        return getHandledReports(true);
+        return getHandledReports(false);
     }
 
     @Override
     public List<Report> getHandledReports() {
-        return getHandledReports(false);
+        return getHandledReports(true);
     }
 
     private List<Report> getHandledReports(boolean handled) {
@@ -129,7 +130,26 @@ public class SQLReportsDao implements ReportsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
+        }
+        return reports;
+    }
+
+    private List<Report> getAcceptedReports(boolean accepted) {
+        final List<Report> reports = Lists.newArrayList();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE accepted = ?;")
+             )) {
+            pstmt.setBoolean(1, accepted);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    reports.add(getReport(rs));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
         }
         return reports;
     }
@@ -149,7 +169,70 @@ public class SQLReportsDao implements ReportsDao {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            BUCore.logException(e);
+        }
+        return reports;
+    }
+
+    @Override
+    public boolean reportExists(long id) {
+        boolean exists = false;
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT id FROM {reports-table} WHERE id = ? LIMIT 1;")
+             )) {
+            pstmt.setLong(1, id);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                exists = rs.next();
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+        return exists;
+    }
+
+    @Override
+    public void handleReport(long id, boolean accepted) {
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("UPDATE {reports-table} SET handled = ?, accepted = ? WHERE id = ?;")
+             )) {
+            pstmt.setBoolean(1, true);
+            pstmt.setBoolean(2, accepted);
+            pstmt.setLong(3, id);
+            pstmt.executeUpdate();
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+    }
+
+    @Override
+    public List<Report> getAcceptedReports() {
+        return getAcceptedReports(true);
+    }
+
+    @Override
+    public List<Report> getDeniedReports() {
+        return getAcceptedReports(false);
+    }
+
+    @Override
+    public List<Report> getReportsHistory(final String name) {
+        final List<Report> reports = Lists.newArrayList();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE reported_by = ?;")
+             )) {
+            pstmt.setString(1, name);
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    reports.add(getReport(rs));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
         }
         return reports;
     }
@@ -167,7 +250,8 @@ public class SQLReportsDao implements ReportsDao {
                 Dao.formatStringToDate(rs.getString("date")),
                 rs.getString("server"),
                 rs.getString("reason"),
-                rs.getBoolean("handled")
+                rs.getBoolean("handled"),
+                rs.getBoolean("accepted")
         );
     }
 }

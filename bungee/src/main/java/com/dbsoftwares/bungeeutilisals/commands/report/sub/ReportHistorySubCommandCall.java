@@ -27,42 +27,37 @@ import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils.PageNotFoundException;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
+import com.dbsoftwares.bungeeutilisals.api.utils.text.UnicodeTranslator;
 
 import java.util.List;
 
-public class ReportListSubCommandCall implements CommandCall {
+public class ReportHistorySubCommandCall implements CommandCall {
 
     @Override
     public void onExecute(User user, String[] args) {
         final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
-        final List<Report> reports;
+        final List<Report> reports = reportsDao.getReportsHistory(user.getName());
         final int page;
 
         if (args.length == 0) {
-            reports = reportsDao.getActiveReports();
             page = 1;
         } else {
-            final String action = args[0];
-
-            if (action.equalsIgnoreCase("all")) {
-                reports = reportsDao.getReports();
-            } else if (action.equalsIgnoreCase("accepted")) {
-                reports = reportsDao.getAcceptedReports();
-            } else if (action.equalsIgnoreCase("denied")) {
-                reports = reportsDao.getDeniedReports();
-            } else {
-                reports = reportsDao.getActiveReports();
-            }
-
-            if (args.length > 1 && MathUtils.isInteger(args[1])) {
+            if (args.length == 1 && MathUtils.isInteger(args[1])) {
                 page = Integer.parseInt(args[1]);
             } else {
                 page = 1;
             }
         }
 
+        final String accepted = UnicodeTranslator.translate(
+                user.getLanguageConfig().getString("general-commands.report.history.accepted")
+        );
+        final String denied = UnicodeTranslator.translate(
+                user.getLanguageConfig().getString("general-commands.report.history.denied")
+        );
+
         if (reports.isEmpty()) {
-            user.sendLangMessage("general-commands.report.list.no-reports");
+            user.sendLangMessage("general-commands.report.history.no-reports");
             return;
         }
 
@@ -71,26 +66,27 @@ public class ReportListSubCommandCall implements CommandCall {
             final int maxPages = MathUtils.ceil(reports.size() / 10);
 
             user.sendLangMessage(
-                    "general-commands.report.list.header",
+                    "general-commands.report.history.header",
                     "{page}", page,
                     "{maxPages}", maxPages
             );
 
             for (Report report : pageReports) {
                 user.sendLangMessage(
-                        "general-commands.report.list.item",
+                        "general-commands.report.history.item",
                         "{id}", report.getId(),
                         "{reported}", report.getUserName(),
                         "{reporter}", report.getReportedBy(),
                         "{reason}", report.getReason(),
                         "{server}", report.getServer(),
                         "{date}", Dao.formatDateToString(report.getDate()),
-                        "{handled}", report.isHandled()
+                        "{handled}", report.isHandled(),
+                        "{accepted_sign}", report.isHandled() ? report.isAccepted() ? accepted : denied : ""
                 );
             }
         } catch (PageNotFoundException e) {
             user.sendLangMessage(
-                    "general-commands.report.list.wrong-page",
+                    "general-commands.report.history.wrong-page",
                     "{page}", e.getPage(),
                     "{maxpages}", e.getMaxPages()
             );

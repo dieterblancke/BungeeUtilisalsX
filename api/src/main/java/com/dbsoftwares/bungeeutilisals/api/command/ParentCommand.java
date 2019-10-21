@@ -19,12 +19,14 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
-public class ParentCommand {
+public class ParentCommand implements TabCall {
 
     private final List<Command> subCommands = Lists.newArrayList();
     private final String helpPath;
@@ -51,5 +53,18 @@ public class ParentCommand {
             }
         }
         user.sendLangMessage(helpPath);
+    }
+
+    @Override
+    public List<String> onTabComplete(User user, String[] args) {
+        final List<String> subCommandNames = subCommands.stream().map(Command::getName).collect(Collectors.toList());
+
+        if (args.length == 0) {
+            return subCommandNames;
+        } else if (args.length == 1) {
+            return Utils.copyPartialMatches(args[0], subCommandNames, Lists.newArrayList());
+        } else {
+            return null;
+        }
     }
 }

@@ -153,8 +153,22 @@ CREATE TABLE IF NOT EXISTS `{reports-table}`
     handled     BOOLEAN                             NOT NULL,
     server      VARCHAR(64)                         NOT NULL,
     reason      TEXT                                NOT NULL,
+    accepted    BOOLEAN,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
     INDEX idx_reports (id, uuid, reported_by, handled)
 ) DEFAULT CHARSET = UTF8MB4;
 
 -- CREATE INDEX IF NOT EXISTS idx_reports ON `{reports-table}` (id, uuid, reported_by, handled);
+
+CREATE TABLE IF NOT EXISTS `{messagequeue-table}`
+(
+    id      BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user    VARCHAR(36)                         NOT NULL,
+    message TEXT                                NOT NULL,
+    date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    type    VARCHAR(16)                         NOT NULL,
+    active  BOOLEAN                             NOT NULL,
+    INDEX idx_messagequeue (id, user, type, date)
+) DEFAULT CHARSET = UTF8MB4;
+
+-- CREATE INDEX IF NOT EXISTS idx_messagequeue ON `{messagequeue-table}` (id, user, type, date);

@@ -38,4 +38,13 @@ public interface ReportsDao {
 
     List<Report> getRecentReports(int days);
 
+    boolean reportExists(long id);
+
+    void handleReport(long id, boolean accepted);
+
+    List<Report> getAcceptedReports();
+
+    List<Report> getDeniedReports();
+
+    List<Report> getReportsHistory(String name);
 }
