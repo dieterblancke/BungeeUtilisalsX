@@ -232,7 +232,7 @@ general-commands:
       usage: '&ePlease use &b/report deny (id)&e!'
       not-found: '&eCould not find a report with id &b{id}&e!'
       updated: '&eThe report with id &b{id} &ehas been denied.'
-      accepted: '&eYour report &b(#{id}) {reported} &ehas been denied by &b{staff}&e!'
+      denied: '&eYour report &b(#{id}) {reported} &ehas been denied by &b{staff}&e!'
 
 friends:
   join:
