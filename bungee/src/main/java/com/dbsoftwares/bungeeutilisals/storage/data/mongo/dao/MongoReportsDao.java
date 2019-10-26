@@ -111,6 +111,16 @@ public class MongoReportsDao implements ReportsDao {
     }
 
     @Override
+    public List<Report> getReports(UUID uuid) {
+        final List<Report> reports = Lists.newArrayList();
+
+        db().getCollection(format("{reports-table}")).find(Filters.eq("uuid", uuid.toString()))
+                .forEach((Consumer<? super Document>) doc -> reports.add(getReport(doc)));
+
+        return reports;
+    }
+
+    @Override
     public List<Report> getActiveReports() {
         return getHandledReports(false);
     }

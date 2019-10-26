@@ -18,10 +18,14 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.other;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -38,4 +42,27 @@ public class Report {
     private boolean handled;
     private boolean accepted;
 
+    public void accept(final String accepter) {
+        BUCore.getApi().getStorageManager().getDao().getReportsDao().handleReport(id, true);
+
+        final Optional<User> optionalUser = BUCore.getApi().getUser(reportedBy);
+        final MessageQueue<QueuedMessage> queue;
+
+        if (optionalUser.isPresent()) {
+            queue = optionalUser.get().getMessageQueue();
+        } else {
+            queue = BUCore.getApi().getStorageManager().getDao().createMessageQueue();
+        }
+        queue.add(new QueuedMessage(
+                -1,
+                reportedBy,
+                new QueuedMessage.Message(
+                        "general-commands.report.accept.accepted",
+                        "{id}", id,
+                        "{reported}", userName,
+                        "{staff}", accepter
+                ),
+                "NAME"
+        ));
+    }
 }

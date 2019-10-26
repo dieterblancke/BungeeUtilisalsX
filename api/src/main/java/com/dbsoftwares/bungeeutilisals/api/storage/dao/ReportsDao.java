@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface ReportsDao {
 
@@ -31,6 +32,8 @@ public interface ReportsDao {
     Report getReport(long id);
 
     List<Report> getReports();
+
+    List<Report> getReports(UUID uuid);
 
     List<Report> getActiveReports();
 

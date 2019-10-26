@@ -25,12 +25,20 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEve
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.utils.ReportUtils;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.util.Date;
 import java.util.List;
 
 public class UserPunishExecutor implements EventExecutor {
+
+    @Event
+    public void handleReports(UserPunishmentFinishEvent event) {
+        BUCore.getApi().getSimpleExecutor().asyncExecute(() ->
+                ReportUtils.handleReportsFor(event.getExecutor().getName(), event.getUuid(), event.getType())
+        );
+    }
 
     @Event
     public void updateMute(UserPunishmentFinishEvent event) {

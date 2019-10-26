@@ -56,30 +56,11 @@ public class ReportAcceptSubCommandCall implements CommandCall {
         }
         final Report report = reportsDao.getReport(id);
 
-        reportsDao.handleReport(id, true);
+        report.accept(user.getName());
+
         user.sendLangMessage(
                 "general-commands.report.accept.updated",
-                "{id}", report.getId()
+                "{id}", id
         );
-
-        final Optional<User> optionalUser = BUCore.getApi().getUser(report.getReportedBy());
-        final MessageQueue<QueuedMessage> queue;
-
-        if (optionalUser.isPresent()) {
-            queue = optionalUser.get().getMessageQueue();
-        } else {
-            queue = BUCore.getApi().getStorageManager().getDao().createMessageQueue();
-        }
-        queue.add(new QueuedMessage(
-                -1,
-                report.getReportedBy(),
-                new QueuedMessage.Message(
-                        "general-commands.report.accept.accepted",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
-                ),
-                "NAME"
-        ));
     }
 }

@@ -107,6 +107,26 @@ public class SQLReportsDao implements ReportsDao {
     }
 
     @Override
+    public List<Report> getReports(UUID uuid) {
+        final List<Report> reports = Lists.newArrayList();
+        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
+             PreparedStatement pstmt = connection.prepareStatement(
+                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.uuid = ?;")
+             )) {
+            pstmt.setString(1, uuid.toString());
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                while (rs.next()) {
+                    reports.add(getReport(rs));
+                }
+            }
+        } catch (SQLException e) {
+            BUCore.logException(e);
+        }
+        return reports;
+    }
+
+    @Override
     public List<Report> getActiveReports() {
         return getHandledReports(false);
     }
