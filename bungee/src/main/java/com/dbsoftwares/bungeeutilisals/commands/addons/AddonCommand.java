@@ -26,41 +26,49 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class AddonCommand extends BUCommand {
+public class AddonCommand extends BUCommand
+{
 
-    public AddonCommand() {
-        super("addon", Lists.newArrayList("addons"), "bungeeutilisals.admin.addons");
+    public AddonCommand()
+    {
+        super( "addon", Lists.newArrayList( "addons" ), "bungeeutilisals.admin.addons" );
 
-        subCommands.add(new AddonListSubCommand());
-        subCommands.add(new AddonInfoSubCommand());
-        subCommands.add(new AddonReloadSubCommand());
-        subCommands.add(new AddonInstallSubCommand());
-        subCommands.add(new AddonUninstallSubCommand());
-        subCommands.add(new AddonDisableSubCommand());
-        subCommands.add(new AddonEnableSubCommand());
+        subCommands.add( new AddonListSubCommand() );
+        subCommands.add( new AddonInfoSubCommand() );
+        subCommands.add( new AddonReloadSubCommand() );
+        subCommands.add( new AddonInstallSubCommand() );
+        subCommands.add( new AddonUninstallSubCommand() );
+        subCommands.add( new AddonDisableSubCommand() );
+        subCommands.add( new AddonEnableSubCommand() );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return getSubcommandCompletions(user, args);
+    public List<String> onTabComplete( User user, String[] args )
+    {
+        return getSubcommandCompletions( user, args );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 0) {
-            sendHelpList(user);
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 0 )
+        {
+            sendHelpList( user );
             return;
         }
-        for (SubCommand subCommand : subCommands) {
-            if (subCommand.execute(user, args)) {
+        for ( SubCommand subCommand : subCommands )
+        {
+            if ( subCommand.execute( user, args ) )
+            {
                 return;
             }
         }
-        sendHelpList(user);
+        sendHelpList( user );
     }
 
-    private void sendHelpList(User user) {
-        user.sendMessage("&aAddon Commands help:");
-        subCommands.forEach(cmd -> user.sendMessage("&b- &e" + cmd.getUsage()));
+    private void sendHelpList( User user )
+    {
+        user.sendMessage( "&aAddon Commands help:" );
+        subCommands.forEach( cmd -> user.sendMessage( "&b- &e" + cmd.getUsage() ) );
     }
 }

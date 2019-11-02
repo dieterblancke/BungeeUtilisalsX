@@ -35,94 +35,107 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StaffCommand extends BUCommand {
+public class StaffCommand extends BUCommand
+{
 
-    public StaffCommand() {
+    public StaffCommand()
+    {
         super(
                 "staff",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("staff.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("staff.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staff.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staff.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final List<StaffUser> staffUsers = BungeeUtilisals.getInstance().getStaffMembers();
-        if (staffUsers.isEmpty()) {
-            user.sendLangMessage("general-commands.staff.no_staff");
+        if ( staffUsers.isEmpty() )
+        {
+            user.sendLangMessage( "general-commands.staff.no_staff" );
             return;
         }
 
         final Map<StaffRankData, List<StaffUser>> staffMembers = staffUsers
                 .stream()
-                .collect(Collectors.groupingBy(StaffUser::getRank));
+                .collect( Collectors.groupingBy( StaffUser::getRank ) );
 
         final LinkedList<StaffRankData> onlineStaffRanks = staffMembers
                 .keySet()
                 .stream()
-                .sorted(Comparator.comparingInt(StaffRankData::getPriority))
-                .collect(Collectors.toCollection(Lists::newLinkedList));
+                .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
+                .collect( Collectors.toCollection( Lists::newLinkedList ) );
 
-        user.sendLangMessage("general-commands.staff.head", "{total}", staffUsers.size());
+        user.sendLangMessage( "general-commands.staff.head", "{total}", staffUsers.size() );
 
-        onlineStaffRanks.forEach(rank -> {
-            final List<StaffUser> users = staffMembers.get(rank);
+        onlineStaffRanks.forEach( rank ->
+        {
+            final List<StaffUser> users = staffMembers.get( rank );
 
             final TextComponent component = MessageBuilder.buildMessage(
                     user,
-                    user.getLanguageConfig().getSection("general-commands.staff.rank"),
-                    "{rank_displayname}", Utils.c(rank.getDisplay()),
+                    user.getLanguageConfig().getSection( "general-commands.staff.rank" ),
+                    "{rank_displayname}", Utils.c( rank.getDisplay() ),
                     "{amount_online}", users.size(),
                     "{total}", staffUsers.size()
             );
 
-            findUsersComponents(component).forEach(c -> {
-                c.setText("");
+            findUsersComponents( component ).forEach( c ->
+            {
+                c.setText( "" );
 
-                users.sort(Comparator.comparing(StaffUser::getName));
+                users.sort( Comparator.comparing( StaffUser::getName ) );
                 final Iterator<StaffUser> userIt = users.iterator();
 
-                while (userIt.hasNext()) {
+                while ( userIt.hasNext() )
+                {
                     final StaffUser u = userIt.next();
-                    final ServerInfo info = BUCore.getApi().getPlayerUtils().findPlayer(u.getName());
+                    final ServerInfo info = BUCore.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    component.addExtra(MessageBuilder.buildMessage(
+                    component.addExtra( MessageBuilder.buildMessage(
                             user,
-                            user.getLanguageConfig().getSection("general-commands.staff.users.user"),
+                            user.getLanguageConfig().getSection( "general-commands.staff.users.user" ),
                             "{username}", u.getName(),
                             "{server}", info == null ? "Unknown" : info.getName()
-                    ));
+                    ) );
 
-                    if (userIt.hasNext()) {
-                        c.addExtra(user.buildLangMessage("general-commands.staff.users.separator"));
+                    if ( userIt.hasNext() )
+                    {
+                        c.addExtra( user.buildLangMessage( "general-commands.staff.users.separator" ) );
                     }
                 }
-            });
+            } );
 
-            user.sendMessage(component);
-        });
+            user.sendMessage( component );
+        } );
 
-        user.sendLangMessage("general-commands.staff.foot", "{total}", staffUsers.size());
+        user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
     }
 
-    private List<TextComponent> findUsersComponents(final TextComponent component) {
+    private List<TextComponent> findUsersComponents( final TextComponent component )
+    {
         final List<TextComponent> components = component.getExtra().stream()
-                .filter(c -> c instanceof TextComponent)
-                .map(c -> (TextComponent) c)
-                .collect(Collectors.toList());
+                .filter( c -> c instanceof TextComponent )
+                .map( c -> (TextComponent) c )
+                .collect( Collectors.toList() );
         final List<TextComponent> finalComponents = Lists.newArrayList();
 
-        for (TextComponent c : components) {
-            if (c.getExtra() != null && !c.getExtra().isEmpty()) {
-                finalComponents.addAll(findUsersComponents(c));
+        for ( TextComponent c : components )
+        {
+            if ( c.getExtra() != null && !c.getExtra().isEmpty() )
+            {
+                finalComponents.addAll( findUsersComponents( c ) );
             }
-            if (c.getText().contains("{users}")) {
-                finalComponents.add(c);
+            if ( c.getText().contains( "{users}" ) )
+            {
+                finalComponents.add( c );
             }
         }
         return finalComponents;

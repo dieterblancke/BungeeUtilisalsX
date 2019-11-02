@@ -21,21 +21,25 @@ package com.dbsoftwares.bungeeutilisals.api.friends;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
-public enum FriendSettingType {
+public enum FriendSettingType
+{
 
     REQUESTS, MESSAGES;
 
-    public String getName() {
-        return toString().charAt(0) + toString().substring(1).toLowerCase();
+    public String getName()
+    {
+        return toString().charAt( 0 ) + toString().substring( 1 ).toLowerCase();
     }
 
-    public String getName(final IConfiguration language) {
-        return language.exists("friends.settings.type." + toString().toLowerCase())
-                ? language.getString("friends.settings.type." + toString().toLowerCase())
+    public String getName( final IConfiguration language )
+    {
+        return language.exists( "friends.settings.type." + toString().toLowerCase() )
+                ? language.getString( "friends.settings.type." + toString().toLowerCase() )
                 : getName();
     }
 
-    public boolean getDefault() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("settings." + toString().toLowerCase());
+    public boolean getDefault()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "settings." + toString().toLowerCase() );
     }
 }

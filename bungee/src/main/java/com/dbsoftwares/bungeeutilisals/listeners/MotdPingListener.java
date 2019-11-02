@@ -38,60 +38,71 @@ import java.lang.reflect.Field;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class MotdPingListener implements Listener {
+public class MotdPingListener implements Listener
+{
 
     @EventHandler
-    public void onPing(ProxyPingEvent event) {
+    public void onPing( ProxyPingEvent event )
+    {
         final List<MotdData> dataList = FileLocation.MOTD.getDataList();
 
-        insertName(event.getConnection());
+        insertName( event.getConnection() );
 
-        if (!loadConditionalMotd(event, dataList)) {
-            loadDefaultMotd(event, dataList);
+        if ( !loadConditionalMotd( event, dataList ) )
+        {
+            loadDefaultMotd( event, dataList );
         }
     }
 
-    private void loadMotd(final ProxyPingEvent event, final MotdData motd) {
-        if (motd == null) {
+    private void loadMotd( final ProxyPingEvent event, final MotdData motd )
+    {
+        if ( motd == null )
+        {
             return;
         }
-        final Version version = Version.getVersion(event.getConnection().getVersion());
+        final Version version = Version.getVersion( event.getConnection().getVersion() );
         String message = motd.getMotd();
 
-        message = message.replace("{user}", event.getConnection().getName() == null ? "Unknown" : event.getConnection().getName());
-        message = message.replace("{version}", version == null ? "Unknown" : version.toString());
+        message = message.replace( "{user}", event.getConnection().getName() == null ? "Unknown" : event.getConnection().getName() );
+        message = message.replace( "{version}", version == null ? "Unknown" : version.toString() );
 
-        if (event.getConnection().getVirtualHost() == null || event.getConnection().getVirtualHost().getHostName() == null) {
-            message = message.replace("{domain}", "Unknown");
-        } else {
-            message = message.replace("{domain}", event.getConnection().getVirtualHost().getHostName());
+        if ( event.getConnection().getVirtualHost() == null || event.getConnection().getVirtualHost().getHostName() == null )
+        {
+            message = message.replace( "{domain}", "Unknown" );
+        } else
+        {
+            message = message.replace( "{domain}", event.getConnection().getVirtualHost().getHostName() );
         }
-        message = PlaceHolderAPI.formatMessage(message);
-        final BaseComponent component = new TextComponent(Utils.format(message));
+        message = PlaceHolderAPI.formatMessage( message );
+        final BaseComponent component = new TextComponent( Utils.format( message ) );
 
-        event.getResponse().setDescriptionComponent(component);
+        event.getResponse().setDescriptionComponent( component );
     }
 
-    private void loadDefaultMotd(final ProxyPingEvent event, final List<MotdData> motds) {
-        final List<MotdData> defMotds = motds.stream().filter(MotdData::isDef).collect(Collectors.toList());
-        final MotdData motd = MathUtils.getRandomFromList(defMotds);
+    private void loadDefaultMotd( final ProxyPingEvent event, final List<MotdData> motds )
+    {
+        final List<MotdData> defMotds = motds.stream().filter( MotdData::isDef ).collect( Collectors.toList() );
+        final MotdData motd = MathUtils.getRandomFromList( defMotds );
 
-        loadMotd(event, motd);
+        loadMotd( event, motd );
     }
 
-    private boolean loadConditionalMotd(final ProxyPingEvent event, final List<MotdData> motds) {
-        final List<MotdData> conditions = motds.stream().filter(data -> !data.isDef()).collect(Collectors.toList());
+    private boolean loadConditionalMotd( final ProxyPingEvent event, final List<MotdData> motds )
+    {
+        final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).collect( Collectors.toList() );
 
-        for (final MotdData condition : conditions) {
+        for ( final MotdData condition : conditions )
+        {
             final ConditionHandler handler = condition.getConditionHandler();
 
-            if (handler.checkCondition(event.getConnection())) {
+            if ( handler.checkCondition( event.getConnection() ) )
+            {
                 final List<MotdData> conditionalMotds = conditions.stream().filter(
-                        data -> data.getConditionHandler().getCondition().equalsIgnoreCase(handler.getCondition())
-                ).collect(Collectors.toList());
-                final MotdData motd = MathUtils.getRandomFromList(conditionalMotds);
+                        data -> data.getConditionHandler().getCondition().equalsIgnoreCase( handler.getCondition() )
+                ).collect( Collectors.toList() );
+                final MotdData motd = MathUtils.getRandomFromList( conditionalMotds );
 
-                loadMotd(event, motd);
+                loadMotd( event, motd );
                 return true;
             }
         }
@@ -99,20 +110,25 @@ public class MotdPingListener implements Listener {
     }
 
     // Name not known on serverlist ping, so we're loading the last seen name on the IP as the initial connection name.
-    private void insertName(PendingConnection connection) {
-        try {
+    private void insertName( PendingConnection connection )
+    {
+        try
+        {
             final String name = BUCore.getApi().getStorageManager().getDao().getUserDao()
-                    .getUsersOnIP(Utils.getIP(connection.getAddress())).stream().findFirst().orElse(null);
+                    .getUsersOnIP( Utils.getIP( connection.getAddress() ) ).stream().findFirst().orElse( null );
 
-            if (name == null) {
+            if ( name == null )
+            {
                 return;
             }
-            final Field nameField = ReflectionUtils.getField(connection.getClass(), "name");
+            final Field nameField = ReflectionUtils.getField( connection.getClass(), "name" );
 
-            if (nameField != null) {
-                nameField.set(connection, name);
+            if ( nameField != null )
+            {
+                nameField.set( connection, name );
             }
-        } catch (Exception e) {
+        } catch ( Exception e )
+        {
             // do nothing
         }
     }

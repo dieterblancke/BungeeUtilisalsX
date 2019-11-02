@@ -34,74 +34,93 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 
-public class ConvertSubCommand extends SubCommand {
+public class ConvertSubCommand extends SubCommand
+{
 
-    public ConvertSubCommand() {
-        super("convert");
+    public ConvertSubCommand()
+    {
+        super( "convert" );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/bungeeutilisals convert (oldtype) [properties]";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.convert";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 1 || args.length == 2) {
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 1 || args.length == 2 )
+        {
             final String oldtype = args[0];
             final Map<String, String> properties = Maps.newHashMap();
 
-            if (args.length == 2) {
-                for (String property : args[1].split(",")) {
-                    properties.put(property.split(":")[0], property.split(":")[1]);
+            if ( args.length == 2 )
+            {
+                for ( String property : args[1].split( "," ) )
+                {
+                    properties.put( property.split( ":" )[0], property.split( ":" )[1] );
                 }
             }
 
             final Converter converter;
-            if (oldtype.toLowerCase().contains("sql")) {
-                if (BUCore.getApi().getStorageManager().getType().toString().contains("SQL")) {
+            if ( oldtype.toLowerCase().contains( "sql" ) )
+            {
+                if ( BUCore.getApi().getStorageManager().getType().toString().contains( "SQL" ) )
+                {
                     converter = new SQLtoSQLConverter();
-                } else {
+                } else
+                {
                     converter = new SQLtoMongoConverter();
                 }
-            } else {
-                if (BUCore.getApi().getStorageManager().getType().toString().contains("SQL")) {
+            } else
+            {
+                if ( BUCore.getApi().getStorageManager().getType().toString().contains( "SQL" ) )
+                {
                     converter = new MongoToSQLConverter();
-                } else {
+                } else
+                {
                     converter = new MongoToMongoConverter();
                 }
             }
 
-            converter.startImport(new ImporterCallback<Converter.ConverterStatus>() {
+            converter.startImport( new ImporterCallback<Converter.ConverterStatus>()
+            {
                 @Override
-                public void onStatusUpdate(Converter.ConverterStatus status) {
-                    if (status.getConvertedEntries() % 100 == 0) {
+                public void onStatusUpdate( Converter.ConverterStatus status )
+                {
+                    if ( status.getConvertedEntries() % 100 == 0 )
+                    {
                         BUCore.getLogger().info(
                                 "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
-                                        + " entries (" + MathUtils.formatNumber(status.getProgressionPercent(), 2) + " %)"
+                                        + " entries (" + MathUtils.formatNumber( status.getProgressionPercent(), 2 ) + " %)"
                         );
                     }
                 }
 
                 @Override
-                public void done(Converter.ConverterStatus status, Throwable throwable) {
+                public void done( Converter.ConverterStatus status, Throwable throwable )
+                {
                     BUCore.getLogger().info(
                             "Finished converting " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                     + ". " + status.getRemainingEntries() + " could not be converted ("
                                     + status.getProgressionPercent() + " %)"
                     );
                 }
-            }, properties);
+            }, properties );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

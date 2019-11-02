@@ -25,7 +25,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class MessageData {
+public class MessageData
+{
 
     private String type;
     private UUID sender;

@@ -25,14 +25,16 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class NetworkStaffConnectData {
+public class NetworkStaffConnectData
+{
 
     private StaffNetworkAction action;
     private UUID uuid;
     private String name;
     private String rank;
 
-    public enum StaffNetworkAction {
+    public enum StaffNetworkAction
+    {
         STAFF_JOIN, STAFF_LEAVE
     }
 }

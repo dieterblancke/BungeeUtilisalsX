@@ -27,111 +27,142 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class LanguageUtils {
+public class LanguageUtils
+{
 
-    public static void sendLangMessage(final ProxiedPlayer player, final String path) {
-        sendLangMessage((CommandSender) player, path);
+    public static void sendLangMessage( final ProxiedPlayer player, final String path )
+    {
+        sendLangMessage( (CommandSender) player, path );
     }
 
-    public static void sendLangMessage(final ProxiedPlayer player, final String path, final Object... placeholders) {
-        sendLangMessage((CommandSender) player, path, placeholders);
+    public static void sendLangMessage( final ProxiedPlayer player, final String path, final Object... placeholders )
+    {
+        sendLangMessage( (CommandSender) player, path, placeholders );
     }
 
-    public static void sendLangMessage(final CommandSender sender, final String path) {
-        sendLangMessage(BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path);
+    public static void sendLangMessage( final CommandSender sender, final String path )
+    {
+        sendLangMessage( BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path );
     }
 
-    public static void sendLangMessage(final CommandSender sender, final String path, final Object... placeholders) {
-        sendLangMessage(BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path, placeholders);
+    public static void sendLangMessage( final CommandSender sender, final String path, final Object... placeholders )
+    {
+        sendLangMessage( BUCore.getApi().getLanguageManager(), BUCore.getApi().getPlugin().getDescription().getName(), sender, path, placeholders );
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
+    public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path )
+    {
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender );
 
-        if (!config.exists(path)) {
+        if ( !config.exists( path ) )
+        {
             return;
         }
 
-        if (config.isList(path)) {
-            for (String message : config.getStringList(path)) {
-                sender.sendMessage(Utils.format(message));
+        if ( config.isList( path ) )
+        {
+            for ( String message : config.getStringList( path ) )
+            {
+                sender.sendMessage( Utils.format( message ) );
             }
-        } else {
-            if (config.getString(path).isEmpty()) {
+        } else
+        {
+            if ( config.getString( path ).isEmpty() )
+            {
                 return;
             }
-            sender.sendMessage(Utils.format(config.getString(path)));
+            sender.sendMessage( Utils.format( config.getString( path ) ) );
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path, final Object... placeholders) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, sender);
+    public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path, final Object... placeholders )
+    {
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender );
 
-        if (!config.exists(path)) {
+        if ( !config.exists( path ) )
+        {
             return;
         }
 
-        if (config.isList(path)) {
-            for (String message : config.getStringList(path)) {
-                message = replacePlaceHolders(null, message, placeholders);
+        if ( config.isList( path ) )
+        {
+            for ( String message : config.getStringList( path ) )
+            {
+                message = replacePlaceHolders( null, message, placeholders );
 
-                sender.sendMessage(Utils.format(message));
+                sender.sendMessage( Utils.format( message ) );
             }
-        } else {
-            if (config.getString(path).isEmpty()) {
+        } else
+        {
+            if ( config.getString( path ).isEmpty() )
+            {
                 return;
             }
-            String message = replacePlaceHolders(null, config.getString(path), placeholders);
+            String message = replacePlaceHolders( null, config.getString( path ), placeholders );
 
-            sender.sendMessage(Utils.format(message));
+            sender.sendMessage( Utils.format( message ) );
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
+    public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final User user, final String path )
+    {
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
 
-        if (!config.exists(path)) {
+        if ( !config.exists( path ) )
+        {
             return;
         }
 
-        if (config.isList(path)) {
-            for (String message : config.getStringList(path)) {
-                user.sendMessage(Utils.format(message));
+        if ( config.isList( path ) )
+        {
+            for ( String message : config.getStringList( path ) )
+            {
+                user.sendMessage( Utils.format( message ) );
             }
-        } else {
-            if (config.getString(path).isEmpty()) {
+        } else
+        {
+            if ( config.getString( path ).isEmpty() )
+            {
                 return;
             }
-            user.sendMessage(Utils.format(config.getString(path)));
+            user.sendMessage( Utils.format( config.getString( path ) ) );
         }
     }
 
-    public static void sendLangMessage(final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders) {
-        final IConfiguration config = languageManager.getLanguageConfiguration(plugin, user);
+    public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders )
+    {
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
 
-        if (!config.exists(path)) {
+        if ( !config.exists( path ) )
+        {
             return;
         }
 
-        if (config.isList(path)) {
-            for (String message : config.getStringList(path)) {
-                message = replacePlaceHolders(user, message, placeholders);
-                user.sendMessage(Utils.format(message));
+        if ( config.isList( path ) )
+        {
+            for ( String message : config.getStringList( path ) )
+            {
+                message = replacePlaceHolders( user, message, placeholders );
+                user.sendMessage( Utils.format( message ) );
             }
-        } else {
-            if (config.getString(path).isEmpty()) {
+        } else
+        {
+            if ( config.getString( path ).isEmpty() )
+            {
                 return;
             }
-            String message = replacePlaceHolders(user, config.getString(path), placeholders);
-            user.sendMessage(Utils.format(message));
+            String message = replacePlaceHolders( user, config.getString( path ), placeholders );
+            user.sendMessage( Utils.format( message ) );
         }
     }
 
-    private static String replacePlaceHolders(User user, String message, Object... placeholders) {
-        for (int i = 0; i < placeholders.length - 1; i += 2) {
-            message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+    private static String replacePlaceHolders( User user, String message, Object... placeholders )
+    {
+        for ( int i = 0; i < placeholders.length - 1; i += 2 )
+        {
+            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
-        message = PlaceHolderAPI.formatMessage(user, message);
+        message = PlaceHolderAPI.formatMessage( user, message );
         return message;
     }
 }

@@ -20,48 +20,56 @@ package com.dbsoftwares.bungeeutilisals.api.utils;
 
 import lombok.Getter;
 
-public enum Version {
+public enum Version
+{
 
-    MINECRAFT_1_8(47),
-    MINECRAFT_1_9(107),
-    MINECRAFT_1_9_1(108),
-    MINECRAFT_1_9_2(109),
-    MINECRAFT_1_9_3(110),
-    MINECRAFT_1_10(210),
-    MINECRAFT_1_11(315),
-    MINECRAFT_1_11_2(316),
-    MINECRAFT_1_12(335),
-    MINECRAFT_1_12_1(338),
-    MINECRAFT_1_12_2(340),
-    MINECRAFT_1_13(393),
-    MINECRAFT_1_13_1(401),
-    MINECRAFT_1_13_2(404),
-    MINECRAFT_1_14(477),
-    MINECRAFT_1_14_1(480),
-    MINECRAFT_1_14_2(485),
-    MINECRAFT_1_14_3(490),
-    MINECRAFT_1_14_4(498);
+    MINECRAFT_1_8( 47 ),
+    MINECRAFT_1_9( 107 ),
+    MINECRAFT_1_9_1( 108 ),
+    MINECRAFT_1_9_2( 109 ),
+    MINECRAFT_1_9_3( 110 ),
+    MINECRAFT_1_10( 210 ),
+    MINECRAFT_1_11( 315 ),
+    MINECRAFT_1_11_2( 316 ),
+    MINECRAFT_1_12( 335 ),
+    MINECRAFT_1_12_1( 338 ),
+    MINECRAFT_1_12_2( 340 ),
+    MINECRAFT_1_13( 393 ),
+    MINECRAFT_1_13_1( 401 ),
+    MINECRAFT_1_13_2( 404 ),
+    MINECRAFT_1_14( 477 ),
+    MINECRAFT_1_14_1( 480 ),
+    MINECRAFT_1_14_2( 485 ),
+    MINECRAFT_1_14_3( 490 ),
+    MINECRAFT_1_14_4( 498 );
 
     @Getter
     private int versionId;
 
-    Version(final int version) {
+    Version( final int version )
+    {
         this.versionId = version;
     }
 
-    public static Version getVersion(int version) {
-        for (Version v : values()) {
-            if (v.getVersionId() == version) {
+    public static Version getVersion( int version )
+    {
+        for ( Version v : values() )
+        {
+            if ( v.getVersionId() == version )
+            {
                 return v;
             }
         }
         return MINECRAFT_1_8;
     }
 
-    public static Version latest() {
+    public static Version latest()
+    {
         Version version = null;
-        for (Version v : values()) {
-            if (version == null || version.getVersionId() < v.getVersionId()) {
+        for ( Version v : values() )
+        {
+            if ( version == null || version.getVersionId() < v.getVersionId() )
+            {
                 version = v;
             }
         }
@@ -69,7 +77,8 @@ public enum Version {
     }
 
     @Override
-    public String toString() {
-        return super.toString().replace("MINECRAFT_", "").replace("_", ".");
+    public String toString()
+    {
+        return super.toString().replace( "MINECRAFT_", "" ).replace( "_", "." );
     }
 }

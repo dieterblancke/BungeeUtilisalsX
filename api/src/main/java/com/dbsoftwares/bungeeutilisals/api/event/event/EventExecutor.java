@@ -18,5 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisals.api.event.event;
 
-public interface EventExecutor {
+public interface EventExecutor
+{
 }

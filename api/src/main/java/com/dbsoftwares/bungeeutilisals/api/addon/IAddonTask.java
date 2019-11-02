@@ -18,7 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.api.addon;
 
-public interface IAddonTask {
+public interface IAddonTask
+{
 
     int getId();
 

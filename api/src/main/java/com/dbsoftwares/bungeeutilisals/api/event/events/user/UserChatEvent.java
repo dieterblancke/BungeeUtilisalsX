@@ -29,14 +29,21 @@ import lombok.Setter;
  * This event will be executed upon User Chat. UserChatPreExecuteEvent is being executed AFTER this event.
  */
 @EqualsAndHashCode(callSuper = true)
-public class UserChatEvent extends AbstractEvent implements Cancellable {
+public class UserChatEvent extends AbstractEvent implements Cancellable
+{
 
-    @Getter @Setter User user;
-    @Getter @Setter String message;
-    @Getter @Setter
+    @Getter
+    @Setter
+    User user;
+    @Getter
+    @Setter
+    String message;
+    @Getter
+    @Setter
     private boolean cancelled = false;
 
-    public UserChatEvent(User user, String message) {
+    public UserChatEvent( User user, String message )
+    {
         this.user = user;
         this.message = message;
     }

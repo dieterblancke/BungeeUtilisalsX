@@ -26,42 +26,52 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddonUninstallSubCommand extends SubCommand {
+public class AddonUninstallSubCommand extends SubCommand
+{
 
-    public AddonUninstallSubCommand() {
-        super("uninstall", 1);
+    public AddonUninstallSubCommand()
+    {
+        super( "uninstall", 1 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/addons uninstall (name)";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.addons.uninstall";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String addonName = args[0];
-        if (BUCore.getApi().getAddonManager().isRegistered(addonName)) {
-            final Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
+        if ( BUCore.getApi().getAddonManager().isRegistered( addonName ) )
+        {
+            final Addon addon = BUCore.getApi().getAddonManager().getAddon( addonName );
 
-            BUCore.getApi().getAddonManager().disableAddon(addonName);
+            BUCore.getApi().getAddonManager().disableAddon( addonName );
 
-            if (addon.getDescription().getFile().delete()) {
-                user.sendLangMessage("general-commands.addon.uninstall.success", "{name}", addonName);
-            } else {
-                user.sendLangMessage("general-commands.addon.uninstall.failed", "{path}", addon.getDescription().getFile().getPath());
+            if ( addon.getDescription().getFile().delete() )
+            {
+                user.sendLangMessage( "general-commands.addon.uninstall.success", "{name}", addonName );
+            } else
+            {
+                user.sendLangMessage( "general-commands.addon.uninstall.failed", "{path}", addon.getDescription().getFile().getPath() );
             }
-        } else {
-            user.sendLangMessage("general-commands.addon.notfound", "{name}", addonName);
+        } else
+        {
+            user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
-        return BUCore.getApi().getAddonManager().getAddons().stream().map(addon -> addon.getDescription().getName()).collect(Collectors.toList());
+    public List<String> getCompletions( User user, String[] args )
+    {
+        return BUCore.getApi().getAddonManager().getAddons().stream().map( addon -> addon.getDescription().getName() ).collect( Collectors.toList() );
     }
 }

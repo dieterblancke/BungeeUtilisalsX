@@ -18,31 +18,37 @@
 
 package com.dbsoftwares.bungeeutilisals.runnables;
 
-public class TPSRunnable implements Runnable {
+public class TPSRunnable implements Runnable
+{
 
     private static final long[] TICKS = new long[600];
     private static int tickCount = 0;
 
-    public static double getTPS() {
-        return getTPS(100);
+    public static double getTPS()
+    {
+        return getTPS( 100 );
     }
 
-    public static double getTPS(int ticks) {
-        if (tickCount < ticks) {
+    public static double getTPS( int ticks )
+    {
+        if ( tickCount < ticks )
+        {
             return 20.0D;
         }
-        int target = (tickCount - 1 - ticks) % TICKS.length;
+        int target = ( tickCount - 1 - ticks ) % TICKS.length;
         long elapsed = System.currentTimeMillis() - TICKS[target];
 
-        return ticks / (elapsed / 1000.0D);
+        return ticks / ( elapsed / 1000.0D );
     }
 
-    private static synchronized void updateTicks() {
-        TICKS[(tickCount % TICKS.length)] = System.currentTimeMillis();
+    private static synchronized void updateTicks()
+    {
+        TICKS[( tickCount % TICKS.length )] =System.currentTimeMillis();
         tickCount++;
     }
 
-    public void run() {
+    public void run()
+    {
         updateTicks();
     }
 }

@@ -26,44 +26,56 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class ParentCommand implements TabCall {
+public class ParentCommand implements TabCall
+{
 
     private final List<Command> subCommands = Lists.newArrayList();
     private final String helpPath;
 
-    public ParentCommand(final String helpPath) {
+    public ParentCommand( final String helpPath )
+    {
         this.helpPath = helpPath;
     }
 
-    protected void registerSubCommand(final Command cmd) {
-        if (cmd == null) {
+    protected void registerSubCommand( final Command cmd )
+    {
+        if ( cmd == null )
+        {
             return;
         }
-        subCommands.add(cmd);
+        subCommands.add( cmd );
     }
 
-    public void onExecute(final User user, final String[] args) {
+    public void onExecute( final User user, final String[] args )
+    {
         // handle sub commands ...
-        if (!subCommands.isEmpty()) {
-            for (Command subCommand : subCommands) {
-                if (subCommand.check(args)) {
-                    subCommand.execute(user, Arrays.copyOfRange(args, 1, args.length));
+        if ( !subCommands.isEmpty() )
+        {
+            for ( Command subCommand : subCommands )
+            {
+                if ( subCommand.check( args ) )
+                {
+                    subCommand.execute( user, Arrays.copyOfRange( args, 1, args.length ) );
                     return;
                 }
             }
         }
-        user.sendLangMessage(helpPath);
+        user.sendLangMessage( helpPath );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        final List<String> subCommandNames = subCommands.stream().map(Command::getName).collect(Collectors.toList());
+    public List<String> onTabComplete( User user, String[] args )
+    {
+        final List<String> subCommandNames = subCommands.stream().map( Command::getName ).collect( Collectors.toList() );
 
-        if (args.length == 0) {
+        if ( args.length == 0 )
+        {
             return subCommandNames;
-        } else if (args.length == 1) {
-            return Utils.copyPartialMatches(args[0], subCommandNames, Lists.newArrayList());
-        } else {
+        } else if ( args.length == 1 )
+        {
+            return Utils.copyPartialMatches( args[0], subCommandNames, Lists.newArrayList() );
+        } else
+        {
             return null;
         }
     }

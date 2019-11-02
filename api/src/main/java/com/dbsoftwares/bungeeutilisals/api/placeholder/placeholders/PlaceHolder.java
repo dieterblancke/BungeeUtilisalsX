@@ -28,22 +28,25 @@ import lombok.experimental.Accessors;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class PlaceHolder {
+public abstract class PlaceHolder
+{
 
     protected String placeHolderName;
     @Accessors(fluent = true)
     protected boolean requiresUser;
     protected PlaceHolderEventHandler eventHandler;
 
-    public PlaceHolder(String placeHolderName, boolean requiresUser, PlaceHolderEventHandler eventHandler) {
+    public PlaceHolder( String placeHolderName, boolean requiresUser, PlaceHolderEventHandler eventHandler )
+    {
         this.placeHolderName = placeHolderName;
         this.requiresUser = requiresUser;
         this.eventHandler = eventHandler;
     }
 
-    public boolean requiresUser() {
+    public boolean requiresUser()
+    {
         return requiresUser;
     }
 
-    public abstract String format(User user, String message);
+    public abstract String format( User user, String message );
 }

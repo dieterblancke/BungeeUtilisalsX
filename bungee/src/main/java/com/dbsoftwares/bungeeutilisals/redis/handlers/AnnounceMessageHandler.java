@@ -22,14 +22,17 @@ import com.dbsoftwares.bungeeutilisals.commands.general.AnnounceCommand;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.AnnounceMessage;
 
-public class AnnounceMessageHandler extends RedisMessageHandler<AnnounceMessage> {
+public class AnnounceMessageHandler extends RedisMessageHandler<AnnounceMessage>
+{
 
-    public AnnounceMessageHandler() {
-        super(AnnounceMessage.class);
+    public AnnounceMessageHandler()
+    {
+        super( AnnounceMessage.class );
     }
 
     @Override
-    public void handle(final AnnounceMessage announcement) {
-        AnnounceCommand.sendAnnounce(announcement);
+    public void handle( final AnnounceMessage announcement )
+    {
+        AnnounceCommand.sendAnnounce( announcement );
     }
 }

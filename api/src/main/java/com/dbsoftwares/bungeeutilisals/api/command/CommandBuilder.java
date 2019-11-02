@@ -25,18 +25,24 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class CommandBuilder {
+public class CommandBuilder
+{
 
-    private static final TabCall DEFAULT_TAB_CALL = (user, args) -> {
-        if (args.length == 0) {
+    private static final TabCall DEFAULT_TAB_CALL = ( user, args ) ->
+    {
+        if ( args.length == 0 )
+        {
             return BUCore.getApi().getPlayerUtils().getPlayers();
-        } else {
+        } else
+        {
             final String lastWord = args[args.length - 1];
             final List<String> list = Lists.newArrayList();
 
-            for (String p : BUCore.getApi().getPlayerUtils().getPlayers()) {
-                if (p.toLowerCase().startsWith(lastWord.toLowerCase())) {
-                    list.add(p);
+            for ( String p : BUCore.getApi().getPlayerUtils().getPlayers() )
+            {
+                if ( p.toLowerCase().startsWith( lastWord.toLowerCase() ) )
+                {
+                    list.add( p );
                 }
             }
 
@@ -51,89 +57,108 @@ public class CommandBuilder {
     private CommandCall call;
     private TabCall tab;
 
-    public static CommandBuilder builder() {
+    public static CommandBuilder builder()
+    {
         return new CommandBuilder();
     }
 
-    public CommandBuilder enabled(final boolean enabled) {
+    public CommandBuilder enabled( final boolean enabled )
+    {
         this.enabled = enabled;
         return this;
     }
 
-    public CommandBuilder name(final String name) {
+    public CommandBuilder name( final String name )
+    {
         this.name = name;
         return this;
     }
 
-    public CommandBuilder aliases(final String... aliases) {
+    public CommandBuilder aliases( final String... aliases )
+    {
         this.aliases = aliases;
         return this;
     }
 
-    public CommandBuilder cooldown(final int cooldown) {
+    public CommandBuilder cooldown( final int cooldown )
+    {
         this.cooldown = cooldown;
         return this;
     }
 
-    public CommandBuilder aliases(final List<String> aliases) {
-        return this.aliases(aliases.toArray(new String[0]));
+    public CommandBuilder aliases( final List<String> aliases )
+    {
+        return this.aliases( aliases.toArray( new String[0] ) );
     }
 
-    public CommandBuilder permission(final String permission) {
+    public CommandBuilder permission( final String permission )
+    {
         this.permission = permission;
         return this;
     }
 
-    public CommandBuilder fromSection(final ISection section) {
-        this.enabled = section.exists("enabled") ? section.getBoolean("enabled") : true;
-        if (section.exists("name")) {
-            this.name = section.getString("name");
+    public CommandBuilder fromSection( final ISection section )
+    {
+        this.enabled = section.exists( "enabled" ) ? section.getBoolean( "enabled" ) : true;
+        if ( section.exists( "name" ) )
+        {
+            this.name = section.getString( "name" );
         }
-        if (!section.exists("aliases") || section.getString("aliases").isEmpty()) {
+        if ( !section.exists( "aliases" ) || section.getString( "aliases" ).isEmpty() )
+        {
             this.aliases = new String[0];
-        } else {
-            this.aliases = section.getString("aliases").split(", ");
+        } else
+        {
+            this.aliases = section.getString( "aliases" ).split( ", " );
         }
-        this.permission = section.getString("permission");
-        this.cooldown = section.exists("cooldown") ? section.getInteger("cooldown") : -1;
+        this.permission = section.getString( "permission" );
+        this.cooldown = section.exists( "cooldown" ) ? section.getInteger( "cooldown" ) : -1;
 
         return this;
     }
 
-    public CommandBuilder executable(final CommandCall call) {
+    public CommandBuilder executable( final CommandCall call )
+    {
         this.call = call;
 
-        if (call instanceof TabCall) {
-            tab((TabCall) call);
+        if ( call instanceof TabCall )
+        {
+            tab( (TabCall) call );
         }
 
         return this;
     }
 
-    public CommandBuilder tab(final TabCall tab) {
+    public CommandBuilder tab( final TabCall tab )
+    {
         this.tab = tab;
         return this;
     }
 
-    public Command build(final Consumer<Command> consumer) {
+    public Command build( final Consumer<Command> consumer )
+    {
         final Command command = build();
 
-        consumer.accept(command);
+        consumer.accept( command );
 
         return command;
     }
 
-    public Command build() {
-        if (!enabled) {
+    public Command build()
+    {
+        if ( !enabled )
+        {
             return null;
         }
-        if (call == null) {
-            throw new NullPointerException("Command call cannot be null!");
+        if ( call == null )
+        {
+            throw new NullPointerException( "Command call cannot be null!" );
         }
-        if (tab == null) {
+        if ( tab == null )
+        {
             tab = DEFAULT_TAB_CALL;
         }
 
-        return new Command(name, permission, aliases, cooldown, call, tab);
+        return new Command( name, permission, aliases, cooldown, call, tab );
     }
 }

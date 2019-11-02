@@ -58,7 +58,8 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class BUtilisalsAPI implements BUAPI {
+public class BUtilisalsAPI implements BUAPI
+{
 
     private static final String REDIS_CONFIG_KEY = "redis";
     private final BungeeUtilisals instance;
@@ -72,233 +73,274 @@ public class BUtilisalsAPI implements BUAPI {
     private IPlayerUtils playerUtils;
     private IAddonManager addonManager;
 
-    public BUtilisalsAPI(BungeeUtilisals instance) {
-        APIHandler.registerProvider(this);
+    public BUtilisalsAPI( BungeeUtilisals instance )
+    {
+        APIHandler.registerProvider( this );
 
         this.instance = instance;
         this.console = new ConsoleUser();
-        this.users = Collections.synchronizedList(Lists.newArrayList());
+        this.users = Collections.synchronizedList( Lists.newArrayList() );
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
-        this.languageManager = new PluginLanguageManager(instance);
+        this.languageManager = new PluginLanguageManager( instance );
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
-        this.playerUtils = getConfig(FileLocation.CONFIG).getBoolean(REDIS_CONFIG_KEY) ? new RedisPlayerUtils() : new BungeePlayerUtils();
+        this.playerUtils = getConfig( FileLocation.CONFIG ).getBoolean( REDIS_CONFIG_KEY ) ? new RedisPlayerUtils() : new BungeePlayerUtils();
 
-        if (getConfig(FileLocation.CONFIG).getBoolean("addons")) {
+        if ( getConfig( FileLocation.CONFIG ).getBoolean( "addons" ) )
+        {
             this.addonManager = new AddonManager();
         }
     }
 
     @Override
-    public Collection<Announcer> getAnnouncers() {
+    public Collection<Announcer> getAnnouncers()
+    {
         return Announcer.getAnnouncers().values();
     }
 
     @Override
-    public IPlayerUtils getPlayerUtils() {
+    public IPlayerUtils getPlayerUtils()
+    {
         return playerUtils;
     }
 
     @Override
-    public AbstractStorageManager getStorageManager() {
+    public AbstractStorageManager getStorageManager()
+    {
         return BungeeUtilisals.getInstance().getDatabaseManagement();
     }
 
     @Override
-    public IAddonManager getAddonManager() {
+    public IAddonManager getAddonManager()
+    {
         return addonManager;
     }
 
     @Override
-    public Plugin getPlugin() {
+    public Plugin getPlugin()
+    {
         return instance;
     }
 
     @Override
-    public ILanguageManager getLanguageManager() {
+    public ILanguageManager getLanguageManager()
+    {
         return languageManager;
     }
 
     @Override
-    public IEventLoader getEventLoader() {
+    public IEventLoader getEventLoader()
+    {
         return eventLoader;
     }
 
     @Override
-    public Optional<User> getUser(String name) {
-        return users.stream().filter(user -> user.getName().equalsIgnoreCase(name)).findFirst();
+    public Optional<User> getUser( String name )
+    {
+        return users.stream().filter( user -> user.getName().equalsIgnoreCase( name ) ).findFirst();
     }
 
     @Override
-    public Optional<User> getUser(UUID uuid) {
-        return users.stream().filter(user -> user.getUuid().equals(uuid)).findFirst();
+    public Optional<User> getUser( UUID uuid )
+    {
+        return users.stream().filter( user -> user.getUuid().equals( uuid ) ).findFirst();
     }
 
     @Override
-    public Optional<User> getUser(ProxiedPlayer player) {
-        return getUser(player.getName());
+    public Optional<User> getUser( ProxiedPlayer player )
+    {
+        return getUser( player.getName() );
     }
 
     @Override
-    public List<User> getUsers() {
+    public List<User> getUsers()
+    {
         return users;
     }
 
     @Override
-    public List<User> getUsers(String permission) {
-        return users.stream().filter(user -> user.getParent().hasPermission(permission)).collect(Collectors.toList());
+    public List<User> getUsers( String permission )
+    {
+        return users.stream().filter( user -> user.getParent().hasPermission( permission ) ).collect( Collectors.toList() );
     }
 
     @Override
-    public IChatManager getChatManager() {
+    public IChatManager getChatManager()
+    {
         return chatManager;
     }
 
     @Override
-    public SimpleExecutor getSimpleExecutor() {
+    public SimpleExecutor getSimpleExecutor()
+    {
         return simpleExecutor;
     }
 
     @Override
-    public IConfiguration getConfig(FileLocation location) {
+    public IConfiguration getConfig( FileLocation location )
+    {
         return location.getConfiguration();
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException
+    {
         instance.getDatabaseManagement().getConnection();
         return instance.getDatabaseManagement().getConnection();
     }
 
     @Override
-    public IPunishmentExecutor getPunishmentExecutor() {
+    public IPunishmentExecutor getPunishmentExecutor()
+    {
         return punishmentExecutor;
     }
 
     @Override
-    public ConsoleUser getConsole() {
+    public ConsoleUser getConsole()
+    {
         return console;
     }
 
     @Override
-    public void broadcast(String message) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void broadcast( String message )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(true, null, null, message, null, false));
+            handler.send( new APIAnnouncement( true, null, null, message, null, false ) );
             return;
         }
-        users.forEach(user -> user.sendMessage(message));
-        getConsole().sendMessage(message);
+        users.forEach( user -> user.sendMessage( message ) );
+        getConsole().sendMessage( message );
     }
 
     @Override
-    public void broadcast(String message, String permission) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void broadcast( String message, String permission )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(true, null, null, message, permission, false));
+            handler.send( new APIAnnouncement( true, null, null, message, permission, false ) );
             return;
         }
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(message));
-        getConsole().sendMessage(message);
+        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( message ) );
+        getConsole().sendMessage( message );
     }
 
     @Override
-    public void announce(String prefix, String message) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void announce( String prefix, String message )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(true, null, prefix, message, null, false));
+            handler.send( new APIAnnouncement( true, null, prefix, message, null, false ) );
             return;
         }
-        users.forEach(user -> user.sendMessage(prefix, message));
-        getConsole().sendMessage(prefix, message);
+        users.forEach( user -> user.sendMessage( prefix, message ) );
+        getConsole().sendMessage( prefix, message );
     }
 
     @Override
-    public void announce(String prefix, String message, String permission) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void announce( String prefix, String message, String permission )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(true, null, prefix, message, permission, false));
+            handler.send( new APIAnnouncement( true, null, prefix, message, permission, false ) );
             return;
         }
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> user.sendMessage(prefix, message));
-        getConsole().sendMessage(prefix, message);
+        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( prefix, message ) );
+        getConsole().sendMessage( prefix, message );
     }
 
     @Override
-    public void langBroadcast(String message, Object... placeholders) {
-        langBroadcast(languageManager, message, placeholders);
+    public void langBroadcast( String message, Object... placeholders )
+    {
+        langBroadcast( languageManager, message, placeholders );
     }
 
     @Override
-    public void langPermissionBroadcast(String message, String permission, Object... placeholders) {
-        langPermissionBroadcast(languageManager, message, permission, placeholders);
+    public void langPermissionBroadcast( String message, String permission, Object... placeholders )
+    {
+        langPermissionBroadcast( languageManager, message, permission, placeholders );
     }
 
     @Override
-    public void langBroadcast(ILanguageManager manager, String message, Object... placeholders) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void langBroadcast( ILanguageManager manager, String message, Object... placeholders )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, null, true, placeholders));
+            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, null, true, placeholders ) );
             return;
         }
-        users.forEach(user -> LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), user, message, placeholders));
-        LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), getConsole(), message, placeholders);
+        users.forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
+        LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
 
     @Override
-    public void langPermissionBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, permission, true, placeholders));
+            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, permission, true, placeholders ) );
             return;
         }
-        users.stream().filter(user -> user.getParent().hasPermission(permission) || user.getParent().hasPermission("bungeeutilisals.*")).forEach(user -> LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), user, message, placeholders));
-        LanguageUtils.sendLangMessage(manager, instance.getDescription().getName(), getConsole(), message, placeholders);
+        users.stream().filter( user -> user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
+        LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
 
     @Override
-    public void pluginLangBroadcast(ILanguageManager manager, String plugin, String message, Object... placeholders) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(manager instanceof PluginLanguageManager, plugin, null, message, null, true, placeholders));
+            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, plugin, null, message, null, true, placeholders ) );
             return;
         }
-        users.forEach(user -> LanguageUtils.sendLangMessage(manager, plugin, user, message, placeholders));
-        LanguageUtils.sendLangMessage(manager, plugin, getConsole(), message, placeholders);
+        users.forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
+        LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
     }
 
     @Override
-    public void pluginLangPermissionBroadcast(ILanguageManager manager, String plugin, String message, String permission, Object... placeholders) {
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean(REDIS_CONFIG_KEY)) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(BroadcastMessageHandler.class);
+    public void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders )
+    {
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
 
-            handler.send(new APIAnnouncement(manager instanceof PluginLanguageManager, plugin, null, message, permission, true, placeholders));
+            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, plugin, null, message, permission, true, placeholders ) );
             return;
         }
-        users.stream().filter(user -> user.getParent().hasPermission(permission)).forEach(user -> LanguageUtils.sendLangMessage(manager, plugin, user, message, placeholders));
-        LanguageUtils.sendLangMessage(manager, plugin, getConsole(), message, placeholders);
+        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
+        LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
     }
 
     @Override
-    public IBossBar createBossBar() {
+    public IBossBar createBossBar()
+    {
         return new BossBar();
     }
 
     @Override
-    public IBossBar createBossBar(BarColor color, BarStyle style, float progress, BaseComponent[] message) {
-        return createBossBar(UUID.randomUUID(), color, style, progress, message);
+    public IBossBar createBossBar( BarColor color, BarStyle style, float progress, BaseComponent[] message )
+    {
+        return createBossBar( UUID.randomUUID(), color, style, progress, message );
     }
 
     @Override
-    public IBossBar createBossBar(UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message) {
-        return new BossBar(uuid, color, style, progress, message);
+    public IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message )
+    {
+        return new BossBar( uuid, color, style, progress, message );
     }
 }

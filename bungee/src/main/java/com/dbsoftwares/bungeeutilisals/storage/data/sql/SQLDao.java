@@ -25,14 +25,16 @@ import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.*;
 import lombok.Getter;
 
 @Getter
-public class SQLDao implements Dao {
+public class SQLDao implements Dao
+{
 
     private UserDao userDao;
     private PunishmentDao punishmentDao;
     private FriendsDao friendsDao;
     private ReportsDao reportsDao;
 
-    public SQLDao() {
+    public SQLDao()
+    {
         this.userDao = new SQLUserDao();
         this.punishmentDao = new SQLPunishmentDao();
         this.friendsDao = new SQLFriendsDao();
@@ -40,12 +42,14 @@ public class SQLDao implements Dao {
     }
 
     @Override
-    public MessageQueue<QueuedMessage> createMessageQueue(User user) {
-        return new SQLMessageQueue(user.getUuid(), user.getName(), user.getIp());
+    public MessageQueue<QueuedMessage> createMessageQueue( User user )
+    {
+        return new SQLMessageQueue( user.getUuid(), user.getName(), user.getIp() );
     }
 
     @Override
-    public MessageQueue<QueuedMessage> createMessageQueue() {
+    public MessageQueue<QueuedMessage> createMessageQueue()
+    {
         return new SQLMessageQueue();
     }
 }

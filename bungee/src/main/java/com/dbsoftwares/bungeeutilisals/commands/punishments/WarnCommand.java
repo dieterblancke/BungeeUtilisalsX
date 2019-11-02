@@ -34,41 +34,48 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class WarnCommand extends BUCommand {
+public class WarnCommand extends BUCommand
+{
 
-    public WarnCommand() {
-        super("warn", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.warn.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.permission"));
+    public WarnCommand()
+    {
+        super( "warn", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.warn.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.warn.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 2) {
-            user.sendLangMessage("punishments.warn.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 2 )
+        {
+            user.sendLangMessage( "punishments.warn.usage" );
             return;
         }
-        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final String reason = Utils.formatList( Arrays.copyOfRange( args, 1, args.length ), " " );
 
-        final Optional<User> optionalUser = BUCore.getApi().getUser(args[0]);
-        if (!optionalUser.isPresent()) {
-            user.sendLangMessage("offline");
+        final Optional<User> optionalUser = BUCore.getApi().getUser( args[0] );
+        if ( !optionalUser.isPresent() )
+        {
+            user.sendLangMessage( "offline" );
             return;
         }
         final User target = optionalUser.get();
         final UserStorage storage = target.getStorage();
 
-        final UserPunishEvent event = new UserPunishEvent(PunishmentType.WARN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        final UserPunishEvent event = new UserPunishEvent( PunishmentType.WARN, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
@@ -78,26 +85,28 @@ public class WarnCommand extends BUCommand {
         );
 
         List<String> warn = null;
-        if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+        if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+        {
             warn = BUCore.getApi().getPunishmentExecutor().searchTemplate(
                     target.getLanguageConfig(), PunishmentType.WARN, reason
             );
         }
-        if (warn == null) {
-            warn = target.getLanguageConfig().getStringList("punishments.warn.onwarn");
+        if ( warn == null )
+        {
+            warn = target.getLanguageConfig().getStringList( "punishments.warn.onwarn" );
         }
 
-        warn.forEach(str -> target.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
+        warn.forEach( str -> target.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
 
-        user.sendLangMessage("punishments.warn.executed", executor.getPlaceHolders(info).toArray(new Object[]{}));
+        user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        BUCore.getApi().langPermissionBroadcast("punishments.warn.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.warn.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        BUCore.getApi().langPermissionBroadcast( "punishments.warn.broadcast",
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.warn.broadcast" ),
+                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        BUCore.getApi().getEventLoader().launchEvent(new UserPunishmentFinishEvent(
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.WARN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
-        ));
+        ) );
     }
 }

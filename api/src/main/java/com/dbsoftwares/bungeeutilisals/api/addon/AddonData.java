@@ -27,7 +27,8 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class AddonData {
+public class AddonData
+{
 
     private int id;
     private int pluginid;

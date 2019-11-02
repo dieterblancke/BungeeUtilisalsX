@@ -34,51 +34,60 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPTempBanCommand extends BUCommand {
+public class IPTempBanCommand extends BUCommand
+{
 
-    public IPTempBanCommand() {
-        super("iptempban", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.iptempban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.permission"));
+    public IPTempBanCommand()
+    {
+        super( "iptempban", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.iptempban.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempban.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 3) {
-            user.sendLangMessage("punishments.iptempban.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 3 )
+        {
+            user.sendLangMessage( "punishments.iptempban.usage" );
             return;
         }
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final String timeFormat = args[1];
-        final String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        final long time = Utils.parseDateDiff(timeFormat);
+        final String reason = Utils.formatList( Arrays.copyOfRange( args, 2, args.length ), " " );
+        final long time = Utils.parseDateDiff( timeFormat );
 
-        if (time == 0L) {
-            user.sendLangMessage("punishments.iptempban.non-valid");
+        if ( time == 0L )
+        {
+            user.sendLangMessage( "punishments.iptempban.non-valid" );
             return;
         }
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !dao.getUserDao().exists( args[0] ) )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().getBansDao().isIPBanned(storage.getIp())) {
-            user.sendLangMessage("punishments.iptempban.already-banned");
+        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
+        if ( dao.getPunishmentDao().getBansDao().isIPBanned( storage.getIp() ) )
+        {
+            user.sendLangMessage( "punishments.iptempban.already-banned" );
             return;
         }
         final UserPunishEvent event = new UserPunishEvent(
                 PunishmentType.IPTEMPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
         );
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
@@ -87,29 +96,32 @@ public class IPTempBanCommand extends BUCommand {
                 reason, user.getServerName(), true, user.getName(), time
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(banned -> {
+        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
+        {
             String kick = null;
-            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
-                kick = Utils.formatList(BUCore.getApi().getPunishmentExecutor().searchTemplate(
+            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+            {
+                kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
                         banned.getLanguageConfig(), PunishmentType.IPTEMPBAN, reason
-                ), "\n");
+                ), "\n" );
             }
-            if (kick == null) {
-                kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.iptempban.kick"), "\n");
+            if ( kick == null )
+            {
+                kick = Utils.formatList( banned.getLanguageConfig().getStringList( "punishments.iptempban.kick" ), "\n" );
             }
-            kick = executor.setPlaceHolders(kick, info);
+            kick = executor.setPlaceHolders( kick, info );
 
-            banned.kick(kick);
-        });
+            banned.kick( kick );
+        } );
 
-        user.sendLangMessage("punishments.iptempban.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
-        BUCore.getApi().langPermissionBroadcast("punishments.iptempban.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempban.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+        BUCore.getApi().langPermissionBroadcast( "punishments.iptempban.broadcast",
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempban.broadcast" ),
+                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        BUCore.getApi().getEventLoader().launchEvent(new UserPunishmentFinishEvent(
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.IPTEMPBAN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
-        ));
+        ) );
     }
 }

@@ -25,7 +25,8 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-public class PluginInfo {
+public class PluginInfo
+{
 
     private String name;
     private String version;

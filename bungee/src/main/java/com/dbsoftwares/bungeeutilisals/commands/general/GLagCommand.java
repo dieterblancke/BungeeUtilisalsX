@@ -31,46 +31,55 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-public class GLagCommand extends BUCommand {
+public class GLagCommand extends BUCommand
+{
 
-    public GLagCommand() {
+    public GLagCommand()
+    {
         super(
                 "glag",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("glag.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("glag.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glag.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glag.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         Long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
-        SimpleDateFormat df2 = new SimpleDateFormat("kk:mm dd-MM-yyyy");
-        String date = df2.format(new Date(uptime));
+        SimpleDateFormat df2 = new SimpleDateFormat( "kk:mm dd-MM-yyyy" );
+        String date = df2.format( new Date( uptime ) );
 
         double TPS = TPSRunnable.getTPS();
 
-        user.sendLangMessage("general-commands.glag",
-                "{tps}", getColor(TPS) + String.valueOf(TPS),
-                "{maxmemory}", (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB",
-                "{freememory}", (Runtime.getRuntime().freeMemory() / 1024 / 1024) + " MB",
-                "{totalmemory}", (Runtime.getRuntime().totalMemory() / 1024 / 1024) + " MB",
+        user.sendLangMessage( "general-commands.glag",
+                "{tps}", getColor( TPS ) + String.valueOf( TPS ),
+                "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
+                "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
+                "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
                 "{onlinesince}", date
         );
     }
 
-    private ChatColor getColor(double tps) {
-        if (tps >= 18.0) {
+    private ChatColor getColor( double tps )
+    {
+        if ( tps >= 18.0 )
+        {
             return ChatColor.GREEN;
-        } else if (tps >= 14.0) {
+        } else if ( tps >= 14.0 )
+        {
             return ChatColor.YELLOW;
-        } else if (tps >= 8.0) {
+        } else if ( tps >= 8.0 )
+        {
             return ChatColor.RED;
-        } else {
+        } else
+        {
             return ChatColor.DARK_RED;
         }
     }

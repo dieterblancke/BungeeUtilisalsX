@@ -24,7 +24,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class StaffChatData {
+public class StaffChatData
+{
 
     private String server;
     private String player;

@@ -35,42 +35,49 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class PunishmentHistoryCommand extends BUCommand {
+public class PunishmentHistoryCommand extends BUCommand
+{
 
-    public PunishmentHistoryCommand() {
-        super("punishmenthistory", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.punishmenthistory.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.punishmenthistory.permission")
+    public PunishmentHistoryCommand()
+    {
+        super( "punishmenthistory", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.punishmenthistory.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.punishmenthistory.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 0) {
-            user.sendLangMessage("punishments.punishmenthistory.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 0 )
+        {
+            user.sendLangMessage( "punishments.punishmenthistory.usage" );
             return;
         }
 
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final String username = args[0];
 
-        if (!dao.getUserDao().exists(username)) {
-            user.sendLangMessage("never-joined");
+        if ( !dao.getUserDao().exists( username ) )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(username);
+        final UserStorage storage = dao.getUserDao().getUserData( username );
         final String action = args.length > 1 ? args[1] : "all";
         int page = args.length > 2
-                ? (MathUtils.isInteger(args[2]) ? Integer.parseInt(args[2]) : 1)
+                ? ( MathUtils.isInteger( args[2] ) ? Integer.parseInt( args[2] ) : 1 )
                 : 1;
 
-        final List<PunishmentInfo> allPunishments = listPunishments(storage, action);
-        if (allPunishments.isEmpty()) {
+        final List<PunishmentInfo> allPunishments = listPunishments( storage, action );
+        if ( allPunishments.isEmpty() )
+        {
             user.sendLangMessage(
                     "punishments.punishmenthistory.no-punishments",
                     "{user}", username,
@@ -78,9 +85,10 @@ public class PunishmentHistoryCommand extends BUCommand {
             );
             return;
         }
-        final int pages = (int) Math.ceil((double) allPunishments.size() / 15);
+        final int pages = (int) Math.ceil( (double) allPunishments.size() / 15 );
 
-        if (page > pages) {
+        if ( page > pages )
+        {
             page = pages;
         }
 
@@ -90,11 +98,12 @@ public class PunishmentHistoryCommand extends BUCommand {
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
 
-        if (maxNumber > allPunishments.size()) {
+        if ( maxNumber > allPunishments.size() )
+        {
             maxNumber = allPunishments.size();
         }
 
-        final List<PunishmentInfo> punishments = allPunishments.subList(minNumber, maxNumber);
+        final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
         user.sendLangMessage(
                 "punishments.punishmenthistory.head",
                 "{previousPage}", previous,
@@ -104,10 +113,10 @@ public class PunishmentHistoryCommand extends BUCommand {
                 "{type}", action
         );
 
-        punishments.forEach(punishment ->
+        punishments.forEach( punishment ->
                 user.sendLangMessage(
                         "punishments.punishmenthistory.format",
-                        BUCore.getApi().getPunishmentExecutor().getPlaceHolders(punishment).toArray(new Object[0])
+                        BUCore.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
                 )
         );
         user.sendLangMessage(
@@ -118,59 +127,66 @@ public class PunishmentHistoryCommand extends BUCommand {
         );
     }
 
-    private List<PunishmentInfo> listPunishments(final UserStorage storage, final String action) {
+    private List<PunishmentInfo> listPunishments( final UserStorage storage, final String action )
+    {
         final List<PunishmentInfo> list = Lists.newArrayList();
 
-        if (action.equalsIgnoreCase("all")) {
-            for (PunishmentType type : PunishmentType.values()) {
-                list.addAll(listPunishments(storage, type));
+        if ( action.equalsIgnoreCase( "all" ) )
+        {
+            for ( PunishmentType type : PunishmentType.values() )
+            {
+                list.addAll( listPunishments( storage, type ) );
             }
-        } else {
-            for (String typeStr : action.split(",")) {
-                final PunishmentType type = Utils.valueOfOr(typeStr.toUpperCase(), PunishmentType.BAN);
+        } else
+        {
+            for ( String typeStr : action.split( "," ) )
+            {
+                final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
 
-                list.addAll(listPunishments(storage, type));
+                list.addAll( listPunishments( storage, type ) );
             }
         }
         return list;
     }
 
-    private List<PunishmentInfo> listPunishments(final UserStorage storage, final PunishmentType type) {
+    private List<PunishmentInfo> listPunishments( final UserStorage storage, final PunishmentType type )
+    {
         final Predicate<PunishmentInfo> permanentFilter = punishment ->
                 punishment.getExpireTime() == null || punishment.getExpireTime() == -1;
         final Predicate<PunishmentInfo> temporaryFilter = punishment ->
                 punishment.getExpireTime() != null || punishment.getExpireTime() > 0;
 
-        switch (type) {
+        switch ( type )
+        {
             default:
             case BAN:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans(storage.getUuid())
-                        .stream().filter(permanentFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
+                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
             case TEMPBAN:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans(storage.getUuid())
-                        .stream().filter(temporaryFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
+                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
             case IPBAN:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans(storage.getIp())
-                        .stream().filter(permanentFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
+                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
             case IPTEMPBAN:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans(storage.getIp())
-                        .stream().filter(temporaryFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
+                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
             case MUTE:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes(storage.getUuid())
-                        .stream().filter(permanentFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
+                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
             case TEMPMUTE:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes(storage.getUuid())
-                        .stream().filter(temporaryFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
+                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
             case IPMUTE:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes(storage.getIp())
-                        .stream().filter(permanentFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
+                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
             case IPTEMPMUTE:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes(storage.getIp())
-                        .stream().filter(temporaryFilter).collect(Collectors.toList());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
+                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
             case KICK:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks(storage.getUuid());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( storage.getUuid() );
             case WARN:
-                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns(storage.getUuid());
+                return BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns( storage.getUuid() );
         }
     }
 }

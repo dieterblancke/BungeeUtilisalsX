@@ -27,53 +27,62 @@ import com.dbsoftwares.bungeeutilisals.commands.friends.sub.*;
 import java.util.Arrays;
 import java.util.List;
 
-public class FriendsCommand extends BUCommand {
+public class FriendsCommand extends BUCommand
+{
 
-    public FriendsCommand() {
+    public FriendsCommand()
+    {
         super(
                 "friends",
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.aliases").split(", ")),
-                FileLocation.FRIENDS_CONFIG.getConfiguration().getString("command.permission")
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "command.aliases" ).split( ", " ) ),
+                FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "command.permission" )
         );
 
-        subCommands.add(new FriendAddSubCommand());
-        subCommands.add(new FriendAcceptSubCommand());
-        subCommands.add(new FriendDenySubCommand());
-        subCommands.add(new FriendRemoveRequestSubCommand());
-        subCommands.add(new FriendRemoveSubCommand());
-        subCommands.add(new FriendListSubCommand());
-        subCommands.add(new FriendRequestsSubCommand());
-        subCommands.add(new FriendMsgSubCommand());
-        subCommands.add(new FriendReplySubCommand());
-        subCommands.add(new FriendSettingsSubCommand());
+        subCommands.add( new FriendAddSubCommand() );
+        subCommands.add( new FriendAcceptSubCommand() );
+        subCommands.add( new FriendDenySubCommand() );
+        subCommands.add( new FriendRemoveRequestSubCommand() );
+        subCommands.add( new FriendRemoveSubCommand() );
+        subCommands.add( new FriendListSubCommand() );
+        subCommands.add( new FriendRequestsSubCommand() );
+        subCommands.add( new FriendMsgSubCommand() );
+        subCommands.add( new FriendReplySubCommand() );
+        subCommands.add( new FriendSettingsSubCommand() );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return getSubcommandCompletions(user, args);
+    public List<String> onTabComplete( User user, String[] args )
+    {
+        return getSubcommandCompletions( user, args );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 0) {
-            sendHelpList(user);
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 0 )
+        {
+            sendHelpList( user );
             return;
         }
-        for (SubCommand subCommand : subCommands) {
-            if (subCommand.execute(user, args)) {
+        for ( SubCommand subCommand : subCommands )
+        {
+            if ( subCommand.execute( user, args ) )
+            {
                 return;
             }
         }
-        sendHelpList(user);
+        sendHelpList( user );
     }
 
-    private void sendHelpList(User user) {
-        user.sendLangMessage("friends.help.header");
-        subCommands.forEach(cmd -> {
-            final boolean exists = user.getLanguageConfig().exists("friends.help.usage." + cmd.getName());
-            final String usage = exists ? user.getLanguageConfig().getString("friends.help.usage." + cmd.getName()) : cmd.getUsage();
+    private void sendHelpList( User user )
+    {
+        user.sendLangMessage( "friends.help.header" );
+        subCommands.forEach( cmd ->
+        {
+            final boolean exists = user.getLanguageConfig().exists( "friends.help.usage." + cmd.getName() );
+            final String usage = exists ? user.getLanguageConfig().getString( "friends.help.usage." + cmd.getName() ) : cmd.getUsage();
 
-            user.sendLangMessage("friends.help.format", "%usage%", usage);
-        });
+            user.sendLangMessage( "friends.help.format", "%usage%", usage );
+        } );
     }
 }

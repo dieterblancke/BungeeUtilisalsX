@@ -32,40 +32,48 @@ import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
 import com.dbsoftwares.bungeeutilisals.packet.packets.in.PacketPlayInPlayerPosition;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class PacketUpdateExecutor implements EventExecutor {
+public class PacketUpdateExecutor implements EventExecutor
+{
 
-    private static final Class<?> ServerConnection = ReflectionUtils.getClass("net.md_5.bungee.ServerConnection");
+    private static final Class<?> ServerConnection = ReflectionUtils.getClass( "net.md_5.bungee.ServerConnection" );
 
     @Event
-    public void onPacketUpdate(PacketUpdateEvent event) {
-        if (ServerConnection.isInstance(event.getSender()) && event.getReceiver() instanceof BungeeConnection) {
-            final PacketSendEvent packetEvent = new PacketSendEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver());
-            BUCore.getApi().getEventLoader().launchEvent(packetEvent);
+    public void onPacketUpdate( PacketUpdateEvent event )
+    {
+        if ( ServerConnection.isInstance( event.getSender() ) && event.getReceiver() instanceof BungeeConnection )
+        {
+            final PacketSendEvent packetEvent = new PacketSendEvent( event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver() );
+            BUCore.getApi().getEventLoader().launchEvent( packetEvent );
 
-            if (packetEvent.isCancelled()) {
-                event.setCancelled(true);
+            if ( packetEvent.isCancelled() )
+            {
+                event.setCancelled( true );
             }
-        } else if (event.getSender() instanceof ProxiedPlayer && event.getReceiver() instanceof BungeeConnection) {
-            final PacketReceiveEvent packetEvent = new PacketReceiveEvent(event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver());
-            BUCore.getApi().getEventLoader().launchEvent(packetEvent);
+        } else if ( event.getSender() instanceof ProxiedPlayer && event.getReceiver() instanceof BungeeConnection )
+        {
+            final PacketReceiveEvent packetEvent = new PacketReceiveEvent( event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver() );
+            BUCore.getApi().getEventLoader().launchEvent( packetEvent );
 
-            if (packetEvent.isCancelled()) {
-                event.setCancelled(true);
+            if ( packetEvent.isCancelled() )
+            {
+                event.setCancelled( true );
             }
         }
     }
 
     @Event
-    public void onPacketReceive(PacketReceiveEvent event) {
-        if (event.getPacket() instanceof PacketPlayInPlayerPosition) {
+    public void onPacketReceive( PacketReceiveEvent event )
+    {
+        if ( event.getPacket() instanceof PacketPlayInPlayerPosition )
+        {
             final User user = event.getUser();
             final PacketPlayInPlayerPosition packet = (PacketPlayInPlayerPosition) event.getPacket();
-            final Location location = new Location(packet.getX(), packet.getY(), packet.getZ(), packet.isGround());
+            final Location location = new Location( packet.getX(), packet.getY(), packet.getZ(), packet.isGround() );
 
-            final UserMoveEvent userMoveEvent = new UserMoveEvent(user, user.getLocation() == null ? location : user.getLocation(), location);
-            BUCore.getApi().getEventLoader().launchEvent(userMoveEvent);
+            final UserMoveEvent userMoveEvent = new UserMoveEvent( user, user.getLocation() == null ? location : user.getLocation(), location );
+            BUCore.getApi().getEventLoader().launchEvent( userMoveEvent );
 
-            user.setLocation(location);
+            user.setLocation( location );
         }
     }
 }

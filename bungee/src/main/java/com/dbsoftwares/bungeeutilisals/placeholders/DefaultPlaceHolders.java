@@ -22,37 +22,39 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
 
-public class DefaultPlaceHolders implements PlaceHolderPack {
+public class DefaultPlaceHolders implements PlaceHolderPack
+{
 
     @Override
-    public void loadPack() {
-        PlaceHolderAPI.addPlaceHolder("{users-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.users"));
-        PlaceHolderAPI.addPlaceHolder("{ignoredusers-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.ignoredusers"));
-        PlaceHolderAPI.addPlaceHolder("{friends-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friends"));
-        PlaceHolderAPI.addPlaceHolder("{friendrequests-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendrequests"));
-        PlaceHolderAPI.addPlaceHolder("{friendsettings-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendsettings"));
-        PlaceHolderAPI.addPlaceHolder("{bans-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.bans"));
-        PlaceHolderAPI.addPlaceHolder("{mutes-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.mutes"));
-        PlaceHolderAPI.addPlaceHolder("{kicks-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.kicks"));
-        PlaceHolderAPI.addPlaceHolder("{warns-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.warns"));
-        PlaceHolderAPI.addPlaceHolder("{punishmentactions-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.punishmentactions"));
-        PlaceHolderAPI.addPlaceHolder("{reports-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.reports"));
-        PlaceHolderAPI.addPlaceHolder("{messagequeue-table}", false,
-                event -> BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.messagequeue"));
-        PlaceHolderAPI.addPlaceHolder("{user}", true,
-                event -> event.getUser().getName());
-        PlaceHolderAPI.addPlaceHolder("{ping}", true,
-                event -> String.valueOf(event.getUser().getParent().getPing()));
+    public void loadPack()
+    {
+        PlaceHolderAPI.addPlaceHolder( "{users-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.users" ) );
+        PlaceHolderAPI.addPlaceHolder( "{ignoredusers-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.ignoredusers" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friends-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friends" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friendrequests-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friendrequests" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friendsettings-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friendsettings" ) );
+        PlaceHolderAPI.addPlaceHolder( "{bans-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.bans" ) );
+        PlaceHolderAPI.addPlaceHolder( "{mutes-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.mutes" ) );
+        PlaceHolderAPI.addPlaceHolder( "{kicks-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.kicks" ) );
+        PlaceHolderAPI.addPlaceHolder( "{warns-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.warns" ) );
+        PlaceHolderAPI.addPlaceHolder( "{punishmentactions-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.punishmentactions" ) );
+        PlaceHolderAPI.addPlaceHolder( "{reports-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.reports" ) );
+        PlaceHolderAPI.addPlaceHolder( "{messagequeue-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.messagequeue" ) );
+        PlaceHolderAPI.addPlaceHolder( "{user}", true,
+                event -> event.getUser().getName() );
+        PlaceHolderAPI.addPlaceHolder( "{ping}", true,
+                event -> String.valueOf( event.getUser().getParent().getPing() ) );
     }
 }

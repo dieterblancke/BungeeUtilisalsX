@@ -25,14 +25,16 @@ import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.*;
 import lombok.Getter;
 
 @Getter
-public class MongoDao implements Dao {
+public class MongoDao implements Dao
+{
 
     private UserDao userDao;
     private PunishmentDao punishmentDao;
     private FriendsDao friendsDao;
     private ReportsDao reportsDao;
 
-    public MongoDao() {
+    public MongoDao()
+    {
         this.userDao = new MongoUserDao();
         this.punishmentDao = new MongoPunishmentDao();
         this.friendsDao = new MongoFriendsDao();
@@ -40,12 +42,14 @@ public class MongoDao implements Dao {
     }
 
     @Override
-    public MessageQueue<QueuedMessage> createMessageQueue(User user) {
-        return new MongoMessageQueue(user.getUuid(), user.getName(), user.getIp());
+    public MessageQueue<QueuedMessage> createMessageQueue( User user )
+    {
+        return new MongoMessageQueue( user.getUuid(), user.getName(), user.getIp() );
     }
 
     @Override
-    public MessageQueue<QueuedMessage> createMessageQueue() {
+    public MessageQueue<QueuedMessage> createMessageQueue()
+    {
         return new MongoMessageQueue();
     }
 }

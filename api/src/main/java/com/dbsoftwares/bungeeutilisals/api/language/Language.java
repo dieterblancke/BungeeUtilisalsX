@@ -23,7 +23,8 @@ import lombok.RequiredArgsConstructor;
 
 @EqualsAndHashCode
 @RequiredArgsConstructor
-public class Language {
+public class Language
+{
 
     public final String name;
     public final Boolean defaultLanguage;
@@ -31,19 +32,22 @@ public class Language {
     /**
      * @return The language name in lowercase.
      */
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     /**
      * @return True if default language, false if not.
      */
-    public Boolean isDefault() {
+    public Boolean isDefault()
+    {
         return defaultLanguage;
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 }

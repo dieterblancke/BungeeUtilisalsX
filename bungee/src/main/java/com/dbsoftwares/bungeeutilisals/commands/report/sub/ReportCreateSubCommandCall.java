@@ -28,29 +28,33 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.UUID;
 
-public class ReportCreateSubCommandCall implements CommandCall {
+public class ReportCreateSubCommandCall implements CommandCall
+{
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 2) {
-            user.sendLangMessage("general-commands.report.create.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 2 )
+        {
+            user.sendLangMessage( "general-commands.report.create.usage" );
             return;
         }
 
         final String targetName = args[0];
-        final String reason = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        final String reason = String.join( " ", Arrays.copyOfRange( args, 1, args.length ) );
 
-        if (!BUCore.getApi().getPlayerUtils().isOnline(targetName)) {
-            user.sendLangMessage("offline");
+        if ( !BUCore.getApi().getPlayerUtils().isOnline( targetName ) )
+        {
+            user.sendLangMessage( "offline" );
             return;
         }
-        final UUID targetUuid = BUCore.getApi().getPlayerUtils().getUuid(targetName);
+        final UUID targetUuid = BUCore.getApi().getPlayerUtils().getUuid( targetName );
 
-        final Report report = new Report(-1, targetUuid, targetName, user.getName(), new Date(), user.getServerName(), reason, false, false);
+        final Report report = new Report( -1, targetUuid, targetName, user.getName(), new Date(), user.getServerName(), reason, false, false );
         final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
 
-        reportsDao.addReport(report);
-        user.sendLangMessage("general-commands.report.create.created", "{target}", targetName);
+        reportsDao.addReport( report );
+        user.sendLangMessage( "general-commands.report.create.created", "{target}", targetName );
 
         BUCore.getApi().langPermissionBroadcast(
                 "general-commands.report.create.broadcast",

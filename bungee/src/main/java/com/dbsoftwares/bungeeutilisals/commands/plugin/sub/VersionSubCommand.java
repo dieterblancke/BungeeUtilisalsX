@@ -25,29 +25,35 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.List;
 
-public class VersionSubCommand extends SubCommand {
+public class VersionSubCommand extends SubCommand
+{
 
-    public VersionSubCommand() {
-        super("version", 0);
+    public VersionSubCommand()
+    {
+        super( "version", 0 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/bungeeutilisals version";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        user.sendMessage("&fYou are running BungeeUtilisalsX &cv" + BungeeUtilisals.getInstance().getDescription().getVersion() + "&f!");
+    public void onExecute( User user, String[] args )
+    {
+        user.sendMessage( "&fYou are running BungeeUtilisalsX &cv" + BungeeUtilisals.getInstance().getDescription().getVersion() + "&f!" );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

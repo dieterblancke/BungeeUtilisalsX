@@ -33,11 +33,14 @@ import java.net.InetAddress;
  */
 @RequiredArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserPreLoadEvent extends AbstractEvent implements Cancellable {
+public class UserPreLoadEvent extends AbstractEvent implements Cancellable
+{
 
+    @Getter
+    private final ProxiedPlayer player;
+    @Getter
+    private final InetAddress address;
     @Getter
     @Setter
     private boolean cancelled = false;
-    @Getter private final ProxiedPlayer player;
-    @Getter private final InetAddress address;
 }

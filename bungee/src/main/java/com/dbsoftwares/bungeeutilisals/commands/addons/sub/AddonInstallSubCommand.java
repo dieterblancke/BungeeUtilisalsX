@@ -41,87 +41,106 @@ import java.util.Optional;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
-public class AddonInstallSubCommand extends SubCommand {
+public class AddonInstallSubCommand extends SubCommand
+{
 
-    public AddonInstallSubCommand() {
-        super("install", 1);
+    public AddonInstallSubCommand()
+    {
+        super( "install", 1 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/addons install (name)";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.addons.install";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String addonName = args[0];
-        final Optional<AddonData> optional = BUCore.getApi().getAddonManager().getAllAddons().stream().filter(data -> data.getName().equalsIgnoreCase(addonName)).findFirst();
+        final Optional<AddonData> optional = BUCore.getApi().getAddonManager().getAllAddons().stream().filter( data -> data.getName().equalsIgnoreCase( addonName ) ).findFirst();
 
-        if (optional.isPresent()) {
+        if ( optional.isPresent() )
+        {
             final AddonData addonData = optional.get();
 
-            if (addonData.getRequiredDependencies() != null) {
-                for (String depend : addonData.getRequiredDependencies()) {
-                    if (!BUCore.getApi().getAddonManager().isRegistered(depend)) {
-                        user.sendLangMessage("general-commands.addon.install.error.nodepend", "{dependencies}", Utils.formatList(addonData.getRequiredDependencies(), ", "));
+            if ( addonData.getRequiredDependencies() != null )
+            {
+                for ( String depend : addonData.getRequiredDependencies() )
+                {
+                    if ( !BUCore.getApi().getAddonManager().isRegistered( depend ) )
+                    {
+                        user.sendLangMessage( "general-commands.addon.install.error.nodepend", "{dependencies}", Utils.formatList( addonData.getRequiredDependencies(), ", " ) );
                         return;
                     }
                 }
             }
 
-            try {
-                File result = downloadAddon(addonData);
+            try
+            {
+                File result = downloadAddon( addonData );
 
-                BUCore.getApi().getAddonManager().loadSingleAddon(result);
+                BUCore.getApi().getAddonManager().loadSingleAddon( result );
 
-                enableAddon(user, addonData.getName());
-            } catch (Exception e) {
-                user.sendLangMessage("general-commands.addon.install.error.download", "{name}", addonName);
-                BUCore.getLogger().error("An error occured: ", e);
+                enableAddon( user, addonData.getName() );
+            } catch ( Exception e )
+            {
+                user.sendLangMessage( "general-commands.addon.install.error.download", "{name}", addonName );
+                BUCore.getLogger().error( "An error occured: ", e );
             }
-        } else {
-            user.sendLangMessage("general-commands.addon.notfound", "{name}", addonName);
+        } else
+        {
+            user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
-        return BUCore.getApi().getAddonManager().getAllAddons().stream().map(AddonData::getName).collect(Collectors.toList());
+    public List<String> getCompletions( User user, String[] args )
+    {
+        return BUCore.getApi().getAddonManager().getAllAddons().stream().map( AddonData::getName ).collect( Collectors.toList() );
     }
 
-    private void enableAddon(User user, String addonName) {
-        Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
-        try {
+    private void enableAddon( User user, String addonName )
+    {
+        Addon addon = BUCore.getApi().getAddonManager().getAddon( addonName );
+        try
+        {
             addon.onEnable();
             BUCore.getLogger().info(
                     "Enabled addon " + addon.getDescription().getName() + " version "
                             + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
             );
-            user.sendLangMessage("general-commands.addon.install.installed", "{name}", addonName);
-        } catch (final Throwable t) {
-            user.sendLangMessage("general-commands.addon.install.error.enable", "{name}", addonName);
-            throw new AddonException("Exception encountered when loading addon: " + addonName, t);
+            user.sendLangMessage( "general-commands.addon.install.installed", "{name}", addonName );
+        } catch ( final Throwable t )
+        {
+            user.sendLangMessage( "general-commands.addon.install.error.enable", "{name}", addonName );
+            throw new AddonException( "Exception encountered when loading addon: " + addonName, t );
         }
     }
 
-    private File downloadAddon(final AddonData data) throws Exception {
-        final File target = new File(BUCore.getApi().getAddonManager().getAddonsFolder(), data.getName() + ".jar");
+    private File downloadAddon( final AddonData data ) throws Exception
+    {
+        final File target = new File( BUCore.getApi().getAddonManager().getAddonsFolder(), data.getName() + ".jar" );
 
         final HttpRequestFactory factory = new NetHttpTransport().createRequestFactory();
         final Gson gson = new Gson();
-        final GenericUrl url = new GenericUrl(data.getDownloadURL());
-        final HttpRequest request = factory.buildGetRequest(url);
+        final GenericUrl url = new GenericUrl( data.getDownloadURL() );
+        final HttpRequest request = factory.buildGetRequest( url );
         final Future<HttpResponse> futureResponse = request.executeAsync();
 
         final HttpResponse response = futureResponse.get();
-        if (response.isSuccessStatusCode()) {
-            try (final InputStream input = response.getContent()) {
-                Files.copy(input, Paths.get(target.toURI()));
+        if ( response.isSuccessStatusCode() )
+        {
+            try ( final InputStream input = response.getContent() )
+            {
+                Files.copy( input, Paths.get( target.toURI() ) );
             }
         }
         return target;

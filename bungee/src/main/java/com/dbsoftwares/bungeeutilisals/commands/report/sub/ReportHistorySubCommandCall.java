@@ -31,39 +31,47 @@ import com.dbsoftwares.bungeeutilisals.api.utils.text.UnicodeTranslator;
 
 import java.util.List;
 
-public class ReportHistorySubCommandCall implements CommandCall {
+public class ReportHistorySubCommandCall implements CommandCall
+{
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
-        final List<Report> reports = reportsDao.getReportsHistory(user.getName());
+        final List<Report> reports = reportsDao.getReportsHistory( user.getName() );
         final int page;
 
-        if (args.length == 0) {
+        if ( args.length == 0 )
+        {
             page = 1;
-        } else {
-            if (args.length == 1 && MathUtils.isInteger(args[1])) {
-                page = Integer.parseInt(args[1]);
-            } else {
+        } else
+        {
+            if ( args.length == 1 && MathUtils.isInteger( args[1] ) )
+            {
+                page = Integer.parseInt( args[1] );
+            } else
+            {
                 page = 1;
             }
         }
 
         final String accepted = UnicodeTranslator.translate(
-                user.getLanguageConfig().getString("general-commands.report.history.accepted")
+                user.getLanguageConfig().getString( "general-commands.report.history.accepted" )
         );
         final String denied = UnicodeTranslator.translate(
-                user.getLanguageConfig().getString("general-commands.report.history.denied")
+                user.getLanguageConfig().getString( "general-commands.report.history.denied" )
         );
 
-        if (reports.isEmpty()) {
-            user.sendLangMessage("general-commands.report.history.no-reports");
+        if ( reports.isEmpty() )
+        {
+            user.sendLangMessage( "general-commands.report.history.no-reports" );
             return;
         }
 
-        try {
-            final List<Report> pageReports = PageUtils.getPageFromList(page, reports, 10);
-            final int maxPages = MathUtils.ceil(reports.size() / 10);
+        try
+        {
+            final List<Report> pageReports = PageUtils.getPageFromList( page, reports, 10 );
+            final int maxPages = MathUtils.ceil( reports.size() / 10 );
 
             user.sendLangMessage(
                     "general-commands.report.history.header",
@@ -71,7 +79,8 @@ public class ReportHistorySubCommandCall implements CommandCall {
                     "{maxPages}", maxPages
             );
 
-            for (Report report : pageReports) {
+            for ( Report report : pageReports )
+            {
                 user.sendLangMessage(
                         "general-commands.report.history.item",
                         "{id}", report.getId(),
@@ -79,12 +88,13 @@ public class ReportHistorySubCommandCall implements CommandCall {
                         "{reporter}", report.getReportedBy(),
                         "{reason}", report.getReason(),
                         "{server}", report.getServer(),
-                        "{date}", Dao.formatDateToString(report.getDate()),
+                        "{date}", Dao.formatDateToString( report.getDate() ),
                         "{handled}", report.isHandled(),
                         "{accepted_sign}", report.isHandled() ? report.isAccepted() ? accepted : denied : ""
                 );
             }
-        } catch (PageNotFoundException e) {
+        } catch ( PageNotFoundException e )
+        {
             user.sendLangMessage(
                     "general-commands.report.history.wrong-page",
                     "{page}", e.getPage(),

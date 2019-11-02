@@ -41,7 +41,8 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = true)
-public class BossBarAnnouncement extends Announcement {
+public class BossBarAnnouncement extends Announcement
+{
 
     private TimeUnit stayUnit;
     private int stayTime;
@@ -51,56 +52,67 @@ public class BossBarAnnouncement extends Announcement {
 
     private ScheduledTask task;
 
-    public BossBarAnnouncement(final List<BossBarMessage> messages, final TimeUnit stayUnit, final int stayTime,
-                               final ServerGroup serverGroup, final String receivePermission) {
-        super(serverGroup, receivePermission);
+    public BossBarAnnouncement( final List<BossBarMessage> messages, final TimeUnit stayUnit, final int stayTime,
+                                final ServerGroup serverGroup, final String receivePermission )
+    {
+        super( serverGroup, receivePermission );
 
         this.messages = messages;
         this.stayUnit = stayUnit;
         this.stayTime = stayTime;
     }
 
-    public void send() {
-        if (serverGroup.isGlobal()) {
-            send(filter(ProxyServer.getInstance().getPlayers().stream()));
-        } else {
-            serverGroup.getServerInfos().forEach(server -> send(filter(server.getPlayers().stream())));
+    public void send()
+    {
+        if ( serverGroup.isGlobal() )
+        {
+            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+        } else
+        {
+            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
         }
     }
 
-    private void send(Stream<ProxiedPlayer> stream) {
-        stream.forEach(player -> BUCore.getApi().getUser(player).ifPresent(user -> {
+    private void send( Stream<ProxiedPlayer> stream )
+    {
+        stream.forEach( player -> BUCore.getApi().getUser( player ).ifPresent( user ->
+        {
             final IConfiguration config = user.getLanguageConfig();
 
-            messages.forEach(message -> {
+            messages.forEach( message ->
+            {
                 final IBossBar bar = BUCore.getApi().createBossBar();
                 bar.setMessage(
-                        Utils.format(user, message.isLanguage()
-                                ? config.getString(message.getText())
-                                : message.getText())
+                        Utils.format( user, message.isLanguage()
+                                ? config.getString( message.getText() )
+                                : message.getText() )
                 );
-                bar.setColor(message.getColor());
-                bar.setProgress(message.getProgress());
-                bar.setStyle(message.getStyle());
+                bar.setColor( message.getColor() );
+                bar.setProgress( message.getProgress() );
+                bar.setStyle( message.getStyle() );
 
-                bar.addUser(user);
+                bar.addUser( user );
 
-                bars.add(bar);
-            });
-        }));
-        if (stayTime > 0) {
-            task = ProxyServer.getInstance().getScheduler().schedule(BungeeUtilisals.getInstance(),
-                    this::clear, stayTime, stayUnit.toJavaTimeUnit());
+                bars.add( bar );
+            } );
+        } ) );
+        if ( stayTime > 0 )
+        {
+            task = ProxyServer.getInstance().getScheduler().schedule( BungeeUtilisals.getInstance(),
+                    this::clear, stayTime, stayUnit.toJavaTimeUnit() );
         }
     }
 
     @Override
-    public void clear() {
-        bars.forEach(bar -> {
+    public void clear()
+    {
+        bars.forEach( bar ->
+        {
             bar.clearUsers();
             bar.unregister();
-        });
-        if (task != null) { // for if stay > the announcement rotation delay (avoiding useless method calling)
+        } );
+        if ( task != null )
+        { // for if stay > the announcement rotation delay (avoiding useless method calling)
             task.cancel();
             task = null;
         }

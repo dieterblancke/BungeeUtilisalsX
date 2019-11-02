@@ -31,7 +31,8 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.UUID;
 
-public class SQLMessageQueue extends LinkedList<QueuedMessage> implements MessageQueue<QueuedMessage> {
+public class SQLMessageQueue extends LinkedList<QueuedMessage> implements MessageQueue<QueuedMessage>
+{
 
     private static final Gson GSON = new Gson();
 
@@ -39,13 +40,15 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     private final String name;
     private final String ip;
 
-    public SQLMessageQueue() {
+    public SQLMessageQueue()
+    {
         this.uuid = null;
         this.name = null;
         this.ip = null;
     }
 
-    public SQLMessageQueue(final UUID uuid, final String name, final String ip) {
+    public SQLMessageQueue( final UUID uuid, final String name, final String ip )
+    {
         this.uuid = uuid;
         this.name = name;
         this.ip = ip;
@@ -54,104 +57,123 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     }
 
     @Override
-    public boolean offer(final QueuedMessage message) {
-        throw new UnsupportedOperationException("Not supported.");
+    public boolean offer( final QueuedMessage message )
+    {
+        throw new UnsupportedOperationException( "Not supported." );
     }
 
     @Override
-    public boolean add(final QueuedMessage message) {
-        try {
-            addMessage(message);
-        } catch (SQLException e) {
+    public boolean add( final QueuedMessage message )
+    {
+        try
+        {
+            addMessage( message );
+        } catch ( SQLException e )
+        {
             e.printStackTrace();
             return false;
         }
 
-        return super.add(message);
+        return super.add( message );
     }
 
     @Override
-    public QueuedMessage poll() {
+    public QueuedMessage poll()
+    {
         final QueuedMessage message = super.poll();
 
-        if (message != null) {
-            handle(message);
+        if ( message != null )
+        {
+            handle( message );
         }
 
         return message;
     }
 
     @Override
-    public QueuedMessage remove() {
+    public QueuedMessage remove()
+    {
         final QueuedMessage message = super.remove();
 
-        handle(message);
+        handle( message );
 
         return message;
     }
 
-    private void addMessage(final QueuedMessage message) throws SQLException {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(format(
-                     "INSERT INTO {messagequeue-table}(user, message, type, active) VALUES(?, ?, ?, ?);"
-             ))) {
-            pstmt.setString(1, message.getUser());
-            pstmt.setString(2, GSON.toJson(message.getMessage()));
-            pstmt.setString(3, message.getType());
-            pstmt.setBoolean(4, true);
+    private void addMessage( final QueuedMessage message ) throws SQLException
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement( format(
+                      "INSERT INTO {messagequeue-table}(user, message, type, active) VALUES(?, ?, ?, ?);"
+              ) ) )
+        {
+            pstmt.setString( 1, message.getUser() );
+            pstmt.setString( 2, GSON.toJson( message.getMessage() ) );
+            pstmt.setString( 3, message.getType() );
+            pstmt.setBoolean( 4, true );
 
             pstmt.executeUpdate();
         }
     }
 
-    private void handle(final QueuedMessage message) {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(format(
-                     "UPDATE {messagequeue-table} SET active = ? WHERE id = ?;"
-             ))) {
-            pstmt.setBoolean(1, false);
-            pstmt.setLong(2, message.getId());
+    private void handle( final QueuedMessage message )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement( format(
+                      "UPDATE {messagequeue-table} SET active = ? WHERE id = ?;"
+              ) ) )
+        {
+            pstmt.setBoolean( 1, false );
+            pstmt.setLong( 2, message.getId() );
 
             pstmt.executeUpdate();
-        } catch (SQLException e) {
+        } catch ( SQLException e )
+        {
             e.printStackTrace();
         }
     }
 
-    public void refetch() {
+    public void refetch()
+    {
         clear();
         fetchMessages();
     }
 
-    private void fetchMessages() {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(format(
-                     "SELECT * FROM {messagequeue-table} WHERE active = ? AND ((user = ? AND type = ?) OR (user = ? AND type = ?) OR (user = ? AND type = ?));"
-             ))) {
-            pstmt.setBoolean(1, true);
-            pstmt.setString(2, uuid.toString());
-            pstmt.setString(3, "UUID");
-            pstmt.setString(4, name);
-            pstmt.setString(5, "NAME");
-            pstmt.setString(6, ip);
-            pstmt.setString(7, "IP");
+    private void fetchMessages()
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement( format(
+                      "SELECT * FROM {messagequeue-table} WHERE active = ? AND ((user = ? AND type = ?) OR (user = ? AND type = ?) OR (user = ? AND type = ?));"
+              ) ) )
+        {
+            pstmt.setBoolean( 1, true );
+            pstmt.setString( 2, uuid.toString() );
+            pstmt.setString( 3, "UUID" );
+            pstmt.setString( 4, name );
+            pstmt.setString( 5, "NAME" );
+            pstmt.setString( 6, ip );
+            pstmt.setString( 7, "IP" );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    super.add(new QueuedMessage(
-                            rs.getLong("id"),
-                            rs.getString("user"),
-                            GSON.fromJson(rs.getString("message"), QueuedMessage.Message.class),
-                            rs.getString("type")
-                    ));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    super.add( new QueuedMessage(
+                            rs.getLong( "id" ),
+                            rs.getString( "user" ),
+                            GSON.fromJson( rs.getString( "message" ), QueuedMessage.Message.class ),
+                            rs.getString( "type" )
+                    ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
     }
 
-    private String format(final String str) {
-        return PlaceHolderAPI.formatMessage(str);
+    private String format( final String str )
+    {
+        return PlaceHolderAPI.formatMessage( str );
     }
 }

@@ -21,14 +21,16 @@ package com.dbsoftwares.bungeeutilisals.api.utils.other;
 import lombok.Data;
 
 @Data
-public class QueuedMessage {
+public class QueuedMessage
+{
 
     private final long id;
     private final String user;
     private final Message message;
     private final String type;
 
-    public QueuedMessage(long id, String user, Message message, String type) {
+    public QueuedMessage( long id, String user, Message message, String type )
+    {
         this.id = id;
         this.user = user;
         this.message = message;
@@ -36,11 +38,13 @@ public class QueuedMessage {
     }
 
     @Data
-    public static class Message {
+    public static class Message
+    {
         private final String languagePath;
         private final Object[] placeHolders;
 
-        public Message(final String languagePath, final Object... placeHolders) {
+        public Message( final String languagePath, final Object... placeHolders )
+        {
             this.languagePath = languagePath;
             this.placeHolders = placeHolders;
         }

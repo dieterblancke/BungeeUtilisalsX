@@ -25,12 +25,14 @@ import lombok.Getter;
 
 @Getter
 @EqualsAndHashCode(callSuper = true)
-public class InputPlaceHolderEvent extends PlaceHolderEvent {
+public class InputPlaceHolderEvent extends PlaceHolderEvent
+{
 
     private String argument;
 
-    public InputPlaceHolderEvent(User user, PlaceHolder placeHolder, String message, String argument) {
-        super(user, placeHolder, message);
+    public InputPlaceHolderEvent( User user, PlaceHolder placeHolder, String message, String argument )
+    {
+        super( user, placeHolder, message );
 
         this.argument = argument;
     }

@@ -28,79 +28,99 @@ import com.google.common.io.ByteStreams;
 
 import java.io.*;
 
-public class AddonLanguageManager extends AbstractLanguageManager {
+public class AddonLanguageManager extends AbstractLanguageManager
+{
 
-    public AddonLanguageManager(BungeeUtilisals plugin) {
-        super(plugin);
+    public AddonLanguageManager( BungeeUtilisals plugin )
+    {
+        super( plugin );
     }
 
     @Override
-    public void loadLanguages(String addonName) {
-        Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
-        if (addon == null) {
+    public void loadLanguages( String addonName )
+    {
+        Addon addon = BUCore.getApi().getAddonManager().getAddon( addonName );
+        if ( addon == null )
+        {
             return;
         }
-        File folder = plugins.get(addonName);
+        File folder = plugins.get( addonName );
 
-        for (Language language : languages) {
+        for ( Language language : languages )
+        {
             String name = language.getName();
             File lang;
 
-            if (fileTypes.get(addonName).equals(FileStorageType.JSON)) {
-                lang = loadResource(addonName, "languages/" + name + ".json", new File(folder, name + ".json"));
-            } else {
-                lang = loadResource(addonName, "languages/" + name + ".yml", new File(folder, name + ".yml"));
+            if ( fileTypes.get( addonName ).equals( FileStorageType.JSON ) )
+            {
+                lang = loadResource( addonName, "languages/" + name + ".json", new File( folder, name + ".json" ) );
+            } else
+            {
+                lang = loadResource( addonName, "languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
 
-            if (!lang.exists()) {
+            if ( !lang.exists() )
+            {
                 continue;
             }
-            try {
+            try
+            {
                 IConfiguration configuration;
 
-                if (fileTypes.get(addonName).equals(FileStorageType.JSON)) {
-                    configuration = IConfiguration.loadJsonConfiguration(lang);
-                    configuration.copyDefaults(IConfiguration.loadJsonConfiguration(addon.getResource("languages/" + name + ".json")));
-                } else {
-                    configuration = IConfiguration.loadYamlConfiguration(lang);
-                    configuration.copyDefaults(IConfiguration.loadYamlConfiguration(addon.getResource("languages/" + name + ".yml")));
+                if ( fileTypes.get( addonName ).equals( FileStorageType.JSON ) )
+                {
+                    configuration = IConfiguration.loadJsonConfiguration( lang );
+                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( addon.getResource( "languages/" + name + ".json" ) ) );
+                } else
+                {
+                    configuration = IConfiguration.loadYamlConfiguration( lang );
+                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration( addon.getResource( "languages/" + name + ".yml" ) ) );
                 }
 
-                configurations.put(lang, configuration);
-                saveLanguage(addonName, language);
-            } catch (IOException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                configurations.put( lang, configuration );
+                saveLanguage( addonName, language );
+            } catch ( IOException e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
             }
         }
     }
 
     @Override
-    protected File loadResource(String addonName, String source, File target) {
-        Addon addon = BUCore.getApi().getAddonManager().getAddon(addonName);
-        if (addon == null) {
+    protected File loadResource( String addonName, String source, File target )
+    {
+        Addon addon = BUCore.getApi().getAddonManager().getAddon( addonName );
+        if ( addon == null )
+        {
             return target;
         }
-        File folder = plugins.get(addonName);
-        if (!folder.exists()) {
+        File folder = plugins.get( addonName );
+        if ( !folder.exists() )
+        {
             folder.mkdir();
         }
-        try {
-            if (!target.exists() && target.createNewFile()) {
-                try (InputStream in = addon.getResource(source); OutputStream out = new FileOutputStream(target)) {
-                    if (in == null) {
-                        BUCore.getLogger().info("Could not find default language configuration configuration for " +
-                                source.replace("languages/", "").replace(".json", "") +
-                                " for addon " + addonName);
+        try
+        {
+            if ( !target.exists() && target.createNewFile() )
+            {
+                try ( InputStream in = addon.getResource( source ); OutputStream out = new FileOutputStream( target ) )
+                {
+                    if ( in == null )
+                    {
+                        BUCore.getLogger().info( "Could not find default language configuration configuration for " +
+                                source.replace( "languages/", "" ).replace( ".json", "" ) +
+                                " for addon " + addonName );
                         return null;
                     }
-                    ByteStreams.copy(in, out);
-                    BUCore.getLogger().info("Loading default language configuration for "
-                            + source.replace("languages/", "").replace(".json", "") + " for addon "
-                            + addonName);
+                    ByteStreams.copy( in, out );
+                    BUCore.getLogger().info( "Loading default language configuration for "
+                            + source.replace( "languages/", "" ).replace( ".json", "" ) + " for addon "
+                            + addonName );
                 }
             }
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
         return target;
     }

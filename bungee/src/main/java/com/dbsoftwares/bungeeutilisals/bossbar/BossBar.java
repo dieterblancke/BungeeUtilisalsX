@@ -41,7 +41,8 @@ import java.util.Set;
 import java.util.UUID;
 
 @Getter
-public class BossBar implements IBossBar {
+public class BossBar implements IBossBar
+{
 
     private UUID uuid;
     private BarColor color;
@@ -53,179 +54,207 @@ public class BossBar implements IBossBar {
     private List<User> users;
     private Set<EventHandler<UserUnloadEvent>> eventHandlers; // Should only contain ONE EventHandler
 
-    public BossBar() {
-        this(UUID.randomUUID(), BarColor.PINK, BarStyle.SOLID, 1F, "");
+    public BossBar()
+    {
+        this( UUID.randomUUID(), BarColor.PINK, BarStyle.SOLID, 1F, "" );
     }
 
-    public BossBar(final BarColor color, final BarStyle style, final float progress, final String message) {
-        this(UUID.randomUUID(), color, style, progress, message);
+    public BossBar( final BarColor color, final BarStyle style, final float progress, final String message )
+    {
+        this( UUID.randomUUID(), color, style, progress, message );
     }
 
-    public BossBar(final UUID uuid, final BarColor color, final BarStyle style, final float progress, final String message) {
-        this(uuid, color, style, progress, TextComponent.fromLegacyText(message));
+    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final String message )
+    {
+        this( uuid, color, style, progress, TextComponent.fromLegacyText( message ) );
     }
 
-    public BossBar(final UUID uuid, final BarColor color, final BarStyle style, final float progress, final BaseComponent[] message) {
+    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final BaseComponent[] message )
+    {
         this.uuid = uuid;
         this.color = color;
         this.style = style;
         this.progress = progress;
         this.message = message;
         this.visible = true;
-        this.users = Collections.synchronizedList(Lists.newArrayList());
-        this.eventHandlers = BUCore.getApi().getEventLoader().register(UserUnloadEvent.class, new BossBarListener());
+        this.users = Collections.synchronizedList( Lists.newArrayList() );
+        this.eventHandlers = BUCore.getApi().getEventLoader().register( UserUnloadEvent.class, new BossBarListener() );
     }
 
     @Override
-    public void setVisible(boolean visible) {
+    public void setVisible( boolean visible )
+    {
         this.visible = visible;
 
         final PacketPlayOutBossBar packet;
 
-        if (visible) {
+        if ( visible )
+        {
             packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.ADD.getId());
-            packet.setTitle(message);
-            packet.setPercent(progress);
-            packet.setColor(color.getId());
-            packet.setOverlay(style.getId());
-        } else {
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.ADD.getId() );
+            packet.setTitle( message );
+            packet.setPercent( progress );
+            packet.setColor( color.getId() );
+            packet.setOverlay( style.getId() );
+        } else
+        {
             packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.REMOVE.getId());
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.REMOVE.getId() );
         }
 
-        users.forEach(user -> user.sendPacket(packet));
+        users.forEach( user -> user.sendPacket( packet ) );
     }
 
     @Override
-    public void setColor(BarColor color) {
+    public void setColor( BarColor color )
+    {
         this.color = color;
 
-        if (visible) {
+        if ( visible )
+        {
             final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.UPDATE_STYLE.getId());
-            packet.setColor(color.getId());
-            packet.setOverlay(style.getId());
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.UPDATE_STYLE.getId() );
+            packet.setColor( color.getId() );
+            packet.setOverlay( style.getId() );
 
-            users.forEach(user -> user.sendPacket(packet));
+            users.forEach( user -> user.sendPacket( packet ) );
         }
     }
 
     @Override
-    public void setStyle(BarStyle style) {
+    public void setStyle( BarStyle style )
+    {
         this.style = style;
-        if (visible) {
+        if ( visible )
+        {
             final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.UPDATE_STYLE.getId());
-            packet.setColor(color.getId());
-            packet.setOverlay(style.getId());
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.UPDATE_STYLE.getId() );
+            packet.setColor( color.getId() );
+            packet.setOverlay( style.getId() );
 
-            users.forEach(user -> user.sendPacket(packet));
+            users.forEach( user -> user.sendPacket( packet ) );
         }
     }
 
     @Override
-    public void setProgress(float progress) {
+    public void setProgress( float progress )
+    {
         this.progress = progress;
-        if (visible) {
+        if ( visible )
+        {
             final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.UPDATE_HEALTH.getId());
-            packet.setPercent(progress);
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.UPDATE_HEALTH.getId() );
+            packet.setPercent( progress );
 
-            users.forEach(user -> user.sendPacket(packet));
+            users.forEach( user -> user.sendPacket( packet ) );
         }
     }
 
     @Override
-    public BaseComponent[] getBaseComponent() {
+    public BaseComponent[] getBaseComponent()
+    {
         return message;
     }
 
     @Override
-    public void addUser(User user) {
-        if (!users.contains(user)) {
-            if (user.getVersion() == null || user.getVersion().getVersionId() < Version.MINECRAFT_1_9.getVersionId()) {
+    public void addUser( User user )
+    {
+        if ( !users.contains( user ) )
+        {
+            if ( user.getVersion() == null || user.getVersion().getVersionId() < Version.MINECRAFT_1_9.getVersionId() )
+            {
                 return;
             }
-            users.add(user);
+            users.add( user );
 
             final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.ADD.getId());
-            packet.setTitle(message);
-            packet.setPercent(progress);
-            packet.setColor(color.getId());
-            packet.setOverlay(style.getId());
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.ADD.getId() );
+            packet.setTitle( message );
+            packet.setPercent( progress );
+            packet.setColor( color.getId() );
+            packet.setOverlay( style.getId() );
 
-            user.sendPacket(packet);
+            user.sendPacket( packet );
         }
     }
 
     @Override
-    public String getMessage() {
-        return new TextComponent(message).toLegacyText();
+    public String getMessage()
+    {
+        return new TextComponent( message ).toLegacyText();
     }
 
     @Override
     @Deprecated
-    public void setMessage(final String message) {
-        setMessage(TextComponent.fromLegacyText(message));
+    public void setMessage( final String message )
+    {
+        setMessage( TextComponent.fromLegacyText( message ) );
     }
 
     @Override
-    public void removeUser(User user) {
-        if (users.contains(user)) {
-            users.remove(user);
-
+    public void setMessage( BaseComponent[] title )
+    {
+        this.message = title;
+        if ( visible )
+        {
             final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.REMOVE.getId());
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
+            packet.setTitle( message );
+
+            users.forEach( user -> user.sendPacket( packet ) );
         }
     }
 
     @Override
-    public boolean hasUser(User user) {
-        return users.contains(user);
+    public void removeUser( User user )
+    {
+        if ( users.contains( user ) )
+        {
+            users.remove( user );
+
+            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            packet.setUuid( uuid );
+            packet.setAction( BossBarAction.REMOVE.getId() );
+        }
     }
 
     @Override
-    public void clearUsers() {
-        final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-        packet.setUuid(uuid);
-        packet.setAction(BossBarAction.REMOVE.getId());
+    public boolean hasUser( User user )
+    {
+        return users.contains( user );
+    }
 
-        users.forEach(user -> user.sendPacket(packet));
+    @Override
+    public void clearUsers()
+    {
+        final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+        packet.setUuid( uuid );
+        packet.setAction( BossBarAction.REMOVE.getId() );
+
+        users.forEach( user -> user.sendPacket( packet ) );
         users.clear();
     }
 
     @Override
-    public void unregister() {
-        eventHandlers.forEach(EventHandler::unregister);
+    public void unregister()
+    {
+        eventHandlers.forEach( EventHandler::unregister );
     }
 
-    @Override
-    public void setMessage(BaseComponent[] title) {
-        this.message = title;
-        if (visible) {
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
-            packet.setUuid(uuid);
-            packet.setAction(BossBarAction.UPDATE_TITLE.getId());
-            packet.setTitle(message);
-
-            users.forEach(user -> user.sendPacket(packet));
-        }
-    }
-
-    private class BossBarListener implements EventExecutor {
+    private class BossBarListener implements EventExecutor
+    {
 
         @Event
-        public void onUnload(UserUnloadEvent event) {
-            removeUser(event.getUser());
+        public void onUnload( UserUnloadEvent event )
+        {
+            removeUser( event.getUser() );
         }
 
     }

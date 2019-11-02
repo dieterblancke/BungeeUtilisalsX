@@ -30,29 +30,34 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.Optional;
 
-public class UserConnectionListener implements Listener {
+public class UserConnectionListener implements Listener
+{
 
     @EventHandler
-    public void onConnect(PostLoginEvent event) {
+    public void onConnect( PostLoginEvent event )
+    {
         final ProxiedPlayer player = event.getPlayer();
 
-        final UserPreLoadEvent userPreLoadEvent = new UserPreLoadEvent(player, player.getAddress().getAddress());
-        BungeeUtilisals.getApi().getEventLoader().launchEvent(userPreLoadEvent);
+        final UserPreLoadEvent userPreLoadEvent = new UserPreLoadEvent( player, player.getAddress().getAddress() );
+        BungeeUtilisals.getApi().getEventLoader().launchEvent( userPreLoadEvent );
 
-        if (userPreLoadEvent.isCancelled()) {
+        if ( userPreLoadEvent.isCancelled() )
+        {
             return;
         }
 
         final BUser user = new BUser();
-        user.load(player);
+        user.load( player );
     }
 
     @EventHandler
-    public void onDisconnect(PlayerDisconnectEvent event) {
+    public void onDisconnect( PlayerDisconnectEvent event )
+    {
         final ProxiedPlayer player = event.getPlayer();
-        final Optional<User> optional = BungeeUtilisals.getApi().getUser(player);
+        final Optional<User> optional = BungeeUtilisals.getApi().getUser( player );
 
-        if (!optional.isPresent()) {
+        if ( !optional.isPresent() )
+        {
             return;
         }
         final User user = optional.get();

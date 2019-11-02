@@ -22,7 +22,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Event {
+public @interface Event
+{
 
     int priority() default 0;
 

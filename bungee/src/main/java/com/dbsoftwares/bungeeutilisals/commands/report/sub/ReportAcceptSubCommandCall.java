@@ -21,42 +21,43 @@ package com.dbsoftwares.bungeeutilisals.commands.report.sub;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
-import java.util.Optional;
-
-public class ReportAcceptSubCommandCall implements CommandCall {
+public class ReportAcceptSubCommandCall implements CommandCall
+{
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length != 1) {
-            user.sendLangMessage("general-commands.report.accept.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length != 1 )
+        {
+            user.sendLangMessage( "general-commands.report.accept.usage" );
             return;
         }
 
-        if (!MathUtils.isLong(args[0])) {
-            user.sendLangMessage("no-number");
+        if ( !MathUtils.isLong( args[0] ) )
+        {
+            user.sendLangMessage( "no-number" );
             return;
         }
 
-        final long id = Long.parseLong(args[0]);
+        final long id = Long.parseLong( args[0] );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final ReportsDao reportsDao = dao.getReportsDao();
         final UserDao userDao = dao.getUserDao();
 
-        if (!reportsDao.reportExists(id)) {
-            user.sendLangMessage("general-commands.report.accept.not-found");
+        if ( !reportsDao.reportExists( id ) )
+        {
+            user.sendLangMessage( "general-commands.report.accept.not-found" );
             return;
         }
-        final Report report = reportsDao.getReport(id);
+        final Report report = reportsDao.getReport( id );
 
-        report.accept(user.getName());
+        report.accept( user.getName() );
 
         user.sendLangMessage(
                 "general-commands.report.accept.updated",

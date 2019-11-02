@@ -29,20 +29,27 @@ import lombok.Setter;
  * This event is being executed upon User Command execute.
  */
 @EqualsAndHashCode(callSuper = true)
-public class UserCommandEvent extends AbstractEvent implements Cancellable {
+public class UserCommandEvent extends AbstractEvent implements Cancellable
+{
 
-    @Getter @Setter User user;
-    @Getter @Setter String command;
+    @Getter
+    @Setter
+    User user;
+    @Getter
+    @Setter
+    String command;
     @Getter
     @Setter
     private boolean cancelled = false;
 
-    public UserCommandEvent(User user, String command) {
+    public UserCommandEvent( User user, String command )
+    {
         this.user = user;
         this.command = command;
     }
 
-    public String getActualCommand() {
-        return command.split(" ")[0].toLowerCase();
+    public String getActualCommand()
+    {
+        return command.split( " " )[0].toLowerCase();
     }
 }

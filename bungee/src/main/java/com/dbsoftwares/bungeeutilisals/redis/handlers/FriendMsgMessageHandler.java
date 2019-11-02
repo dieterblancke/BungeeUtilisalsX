@@ -26,35 +26,41 @@ import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 
 import java.util.Optional;
 
-public class FriendMsgMessageHandler extends RedisMessageHandler<MessageData> {
+public class FriendMsgMessageHandler extends RedisMessageHandler<MessageData>
+{
 
-    public FriendMsgMessageHandler() {
-        super(MessageData.class);
+    public FriendMsgMessageHandler()
+    {
+        super( MessageData.class );
     }
 
     @Override
-    public void handle(MessageData data) {
-        final Optional<User> optional = BUCore.getApi().getUser(data.getReceiver());
+    public void handle( MessageData data )
+    {
+        final Optional<User> optional = BUCore.getApi().getUser( data.getReceiver() );
 
-        if (optional.isPresent()) {
+        if ( optional.isPresent() )
+        {
             final User user = optional.get();
 
-            user.getStorage().setData("FRIEND_MSG_LAST_USER", data.getSenderName());
+            user.getStorage().setData( "FRIEND_MSG_LAST_USER", data.getSenderName() );
 
-            if (data.getType().equals("reply")) {
-                String msgMessage = user.buildLangMessage("friends.reply.format.receive");
-                msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{sender}", data.getSenderName());
-                msgMessage = msgMessage.replace("{message}", data.getMessage());
+            if ( data.getType().equals( "reply" ) )
+            {
+                String msgMessage = user.buildLangMessage( "friends.reply.format.receive" );
+                msgMessage = Utils.c( msgMessage );
+                msgMessage = msgMessage.replace( "{sender}", data.getSenderName() );
+                msgMessage = msgMessage.replace( "{message}", data.getMessage() );
 
-                user.sendRawMessage(msgMessage);
-            } else {
-                String msgMessage = user.buildLangMessage("friends.msg.format.receive");
-                msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{sender}", data.getSenderName());
-                msgMessage = msgMessage.replace("{message}", data.getMessage());
+                user.sendRawMessage( msgMessage );
+            } else
+            {
+                String msgMessage = user.buildLangMessage( "friends.msg.format.receive" );
+                msgMessage = Utils.c( msgMessage );
+                msgMessage = msgMessage.replace( "{sender}", data.getSenderName() );
+                msgMessage = msgMessage.replace( "{message}", data.getMessage() );
 
-                user.sendRawMessage(msgMessage);
+                user.sendRawMessage( msgMessage );
             }
         }
     }

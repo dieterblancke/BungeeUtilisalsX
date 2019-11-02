@@ -47,197 +47,235 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
-public class AnnounceCommand extends BUCommand {
+public class AnnounceCommand extends BUCommand
+{
 
-    public AnnounceCommand() {
+    public AnnounceCommand()
+    {
         super(
                 "announce",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("announce.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("announce.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "announce.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "announce.permission" )
         );
     }
 
-    public static void sendAnnounce(AnnounceMessage message) {
-        for (AnnouncementType type : message.getTypes()) {
-            sendAnnounce(type, message.getMessage());
+    public static void sendAnnounce( AnnounceMessage message )
+    {
+        for ( AnnouncementType type : message.getTypes() )
+        {
+            sendAnnounce( type, message.getMessage() );
         }
     }
 
-    private static void sendAnnounce(AnnouncementType type, String message) {
+    private static void sendAnnounce( AnnouncementType type, String message )
+    {
         final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
 
-        switch (type) {
+        switch ( type )
+        {
             case PRECONFIGURED:
-                final String preconfiguredPath = config.getString("announce.pre_configured");
+                final String preconfiguredPath = config.getString( "announce.pre_configured" );
 
-                for (User user : BUCore.getApi().getUsers()) {
-                    if (!user.getLanguageConfig().exists(preconfiguredPath + "." + message)) {
+                for ( User user : BUCore.getApi().getUsers() )
+                {
+                    if ( !user.getLanguageConfig().exists( preconfiguredPath + "." + message ) )
+                    {
                         continue;
                     }
-                    final ISection section = user.getLanguageConfig().getSection(preconfiguredPath + "." + message);
+                    final ISection section = user.getLanguageConfig().getSection( preconfiguredPath + "." + message );
 
-                    if (section.exists("chat")) {
-                        if (section.isSection("chat")) {
+                    if ( section.exists( "chat" ) )
+                    {
+                        if ( section.isSection( "chat" ) )
+                        {
                             user.sendMessage(
                                     MessageBuilder.buildMessage(
-                                            user, section.getSection("chat"),
-                                            "{prefix}", config.getString("announce.types.chat.prefix")
+                                            user, section.getSection( "chat" ),
+                                            "{prefix}", config.getString( "announce.types.chat.prefix" )
                                     )
                             );
-                        } else {
-                            for (String line : section.getString("chat").split("%nl%")) {
+                        } else
+                        {
+                            for ( String line : section.getString( "chat" ).split( "%nl%" ) )
+                            {
                                 user.sendRawColorMessage(
-                                        config.getString("announce.types.chat.prefix") + line.replace("%sub%", "")
+                                        config.getString( "announce.types.chat.prefix" ) + line.replace( "%sub%", "" )
                                 );
                             }
                         }
                     }
-                    if (section.exists("actionbar")) {
-                        sendActionBar(section.getString("actionbar"));
+                    if ( section.exists( "actionbar" ) )
+                    {
+                        sendActionBar( section.getString( "actionbar" ) );
                     }
-                    if (section.exists("title")) {
-                        sendTitle(section.getSection("title"));
+                    if ( section.exists( "title" ) )
+                    {
+                        sendTitle( section.getSection( "title" ) );
                     }
-                    if (section.exists("bossbar")) {
-                        sendBossBar(section.getString("bossbar"));
+                    if ( section.exists( "bossbar" ) )
+                    {
+                        sendBossBar( section.getString( "bossbar" ) );
                     }
                 }
                 break;
             case CHAT:
-                if (config.getBoolean("announce.types.chat.enabled")) {
-                    for (String line : message.split("%nl%")) {
+                if ( config.getBoolean( "announce.types.chat.enabled" ) )
+                {
+                    for ( String line : message.split( "%nl%" ) )
+                    {
                         BUCore.getApi().announce(
-                                config.getString("announce.types.chat.prefix"),
-                                line.replace("%sub%", "")
+                                config.getString( "announce.types.chat.prefix" ),
+                                line.replace( "%sub%", "" )
                         );
                     }
                 }
                 break;
             case ACTIONBAR:
-                sendActionBar(message);
+                sendActionBar( message );
                 break;
             case TITLE:
-                final String[] splitten = message.replace("%nl%", "").split("%sub%");
+                final String[] splitten = message.replace( "%nl%", "" ).split( "%sub%" );
 
                 final String title = splitten[0];
                 final String subtitle = splitten.length > 1 ? splitten[1] : "";
-                sendTitle(title, subtitle);
+                sendTitle( title, subtitle );
                 break;
             case BOSSBAR:
-                sendBossBar(message);
+                sendBossBar( message );
                 break;
         }
     }
 
-    private static void sendBossBar(final String message) {
+    private static void sendBossBar( final String message )
+    {
         final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
         final List<IBossBar> bossBars = Lists.newArrayList();
 
-        final BarColor color = BarColor.valueOf(config.getString("announce.types.bossbar.color"));
-        final BarStyle style = BarStyle.valueOf(config.getString("announce.types.bossbar.style"));
-        float progress = config.getFloat("announce.types.bossbar.progress");
-        long stay = config.getInteger("announce.types.bossbar.stay");
+        final BarColor color = BarColor.valueOf( config.getString( "announce.types.bossbar.color" ) );
+        final BarStyle style = BarStyle.valueOf( config.getString( "announce.types.bossbar.style" ) );
+        float progress = config.getFloat( "announce.types.bossbar.progress" );
+        long stay = config.getInteger( "announce.types.bossbar.stay" );
 
-        BUCore.getApi().getUsers().forEach(user -> {
+        BUCore.getApi().getUsers().forEach( user ->
+        {
             IBossBar bossBar = BUCore.getApi().createBossBar(
                     color, style, progress,
-                    Utils.format(user, message.replace("%sub%", "").replace("%nl%", ""))
+                    Utils.format( user, message.replace( "%sub%", "" ).replace( "%nl%", "" ) )
             );
 
-            bossBar.addUser(user);
-            bossBars.add(bossBar);
-        });
+            bossBar.addUser( user );
+            bossBars.add( bossBar );
+        } );
 
         ProxyServer.getInstance().getScheduler().schedule(
                 BungeeUtilisals.getInstance(), () ->
-                        bossBars.forEach(bossBar -> {
+                        bossBars.forEach( bossBar ->
+                        {
                             bossBar.clearUsers();
 
                             bossBar.unregister();
-                        }),
+                        } ),
                 stay, TimeUnit.SECONDS.toJavaTimeUnit()
         );
 
     }
 
-    private static void sendActionBar(final String message) {
-        if (FileLocation.GENERALCOMMANDS.getConfiguration().getBoolean("announce.types.actionbar.enabled")) {
-            ProxyServer.getInstance().getPlayers().forEach(p -> p.sendMessage(
+    private static void sendActionBar( final String message )
+    {
+        if ( FileLocation.GENERALCOMMANDS.getConfiguration().getBoolean( "announce.types.actionbar.enabled" ) )
+        {
+            ProxyServer.getInstance().getPlayers().forEach( p -> p.sendMessage(
                     ChatMessageType.ACTION_BAR,
-                    Utils.format(p, message.replace("%nl%", "").replace("%sub%", ""))
-            ));
+                    Utils.format( p, message.replace( "%nl%", "" ).replace( "%sub%", "" ) )
+            ) );
         }
     }
 
-    private static void sendTitle(final ISection section) {
-        sendTitle(section.getString("main"), section.getString("sub"));
+    private static void sendTitle( final ISection section )
+    {
+        sendTitle( section.getString( "main" ), section.getString( "sub" ) );
     }
 
-    private static void sendTitle(final String title, final String subtitle) {
+    private static void sendTitle( final String title, final String subtitle )
+    {
         final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
 
-        if (config.getBoolean("announce.types.title.enabled")) {
-            final int fadein = config.getInteger("announce.types.title.fadein");
-            final int stay = config.getInteger("announce.types.title.stay");
-            final int fadeout = config.getInteger("announce.types.title.fadeout");
+        if ( config.getBoolean( "announce.types.title.enabled" ) )
+        {
+            final int fadein = config.getInteger( "announce.types.title.fadein" );
+            final int stay = config.getInteger( "announce.types.title.stay" );
+            final int fadeout = config.getInteger( "announce.types.title.fadeout" );
 
-            ProxyServer.getInstance().getPlayers().forEach(p -> {
+            ProxyServer.getInstance().getPlayers().forEach( p ->
+            {
                 Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
-                bungeeTitle.title(Utils.format(p, title));
-                bungeeTitle.subTitle(Utils.format(p, subtitle));
-                bungeeTitle.fadeIn(fadein * 20);
-                bungeeTitle.stay(stay * 20);
-                bungeeTitle.fadeOut(fadeout * 20);
+                bungeeTitle.title( Utils.format( p, title ) );
+                bungeeTitle.subTitle( Utils.format( p, subtitle ) );
+                bungeeTitle.fadeIn( fadein * 20 );
+                bungeeTitle.stay( stay * 20 );
+                bungeeTitle.fadeOut( fadeout * 20 );
 
-                p.sendTitle(bungeeTitle);
-            });
+                p.sendTitle( bungeeTitle );
+            } );
         }
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length >= 2) {
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length >= 2 )
+        {
             final String types = args[0];
-            final String message = Joiner.on(" ").join(Arrays.copyOfRange(args, 1, args.length));
+            final String message = Joiner.on( " " ).join( Arrays.copyOfRange( args, 1, args.length ) );
 
-            final AnnounceMessage announceMessage = new AnnounceMessage(getTypes(types), message);
+            final AnnounceMessage announceMessage = new AnnounceMessage( getTypes( types ), message );
 
-            if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-                final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(AnnounceMessageHandler.class);
+            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
+            {
+                final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( AnnounceMessageHandler.class );
 
-                handler.send(announceMessage);
-            } else {
-                sendAnnounce(announceMessage);
+                handler.send( announceMessage );
+            } else
+            {
+                sendAnnounce( announceMessage );
             }
-        } else {
-            user.sendLangMessage("general-commands.announce.usage");
+        } else
+        {
+            user.sendLangMessage( "general-commands.announce.usage" );
         }
     }
 
-    private Set<AnnouncementType> getTypes(String types) {
+    private Set<AnnouncementType> getTypes( String types )
+    {
         final Set<AnnouncementType> announcementTypes = Sets.newHashSet();
 
-        if (types.contains("p")) {
-            announcementTypes.add(AnnouncementType.PRECONFIGURED);
+        if ( types.contains( "p" ) )
+        {
+            announcementTypes.add( AnnouncementType.PRECONFIGURED );
             return announcementTypes;
         }
-        if (types.contains("a")) {
-            announcementTypes.add(AnnouncementType.ACTIONBAR);
+        if ( types.contains( "a" ) )
+        {
+            announcementTypes.add( AnnouncementType.ACTIONBAR );
         }
-        if (types.contains("c")) {
-            announcementTypes.add(AnnouncementType.CHAT);
+        if ( types.contains( "c" ) )
+        {
+            announcementTypes.add( AnnouncementType.CHAT );
         }
-        if (types.contains("t")) {
-            announcementTypes.add(AnnouncementType.TITLE);
+        if ( types.contains( "t" ) )
+        {
+            announcementTypes.add( AnnouncementType.TITLE );
         }
-        if (types.contains("b")) {
-            announcementTypes.add(AnnouncementType.BOSSBAR);
+        if ( types.contains( "b" ) )
+        {
+            announcementTypes.add( AnnouncementType.BOSSBAR );
         }
 
         return announcementTypes;

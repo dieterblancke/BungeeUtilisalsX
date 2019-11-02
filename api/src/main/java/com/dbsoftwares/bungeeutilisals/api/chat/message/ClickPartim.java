@@ -24,7 +24,8 @@ import net.md_5.bungee.api.chat.ClickEvent;
 
 @Data
 @AllArgsConstructor
-public class ClickPartim {
+public class ClickPartim
+{
 
     private ClickEvent.Action action;
     private String value;

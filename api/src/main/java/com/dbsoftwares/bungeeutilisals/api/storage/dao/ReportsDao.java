@@ -23,31 +23,32 @@ import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 import java.util.List;
 import java.util.UUID;
 
-public interface ReportsDao {
+public interface ReportsDao
+{
 
-    void addReport(Report report);
+    void addReport( Report report );
 
-    void removeReport(long id);
+    void removeReport( long id );
 
-    Report getReport(long id);
+    Report getReport( long id );
 
     List<Report> getReports();
 
-    List<Report> getReports(UUID uuid);
+    List<Report> getReports( UUID uuid );
 
     List<Report> getActiveReports();
 
     List<Report> getHandledReports();
 
-    List<Report> getRecentReports(int days);
+    List<Report> getRecentReports( int days );
 
-    boolean reportExists(long id);
+    boolean reportExists( long id );
 
-    void handleReport(long id, boolean accepted);
+    void handleReport( long id, boolean accepted );
 
     List<Report> getAcceptedReports();
 
     List<Report> getDeniedReports();
 
-    List<Report> getReportsHistory(String name);
+    List<Report> getReportsHistory( String name );
 }

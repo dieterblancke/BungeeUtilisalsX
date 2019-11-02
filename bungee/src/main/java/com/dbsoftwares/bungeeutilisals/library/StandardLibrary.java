@@ -21,37 +21,38 @@ package com.dbsoftwares.bungeeutilisals.library;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import lombok.Getter;
 
-public enum StandardLibrary {
+public enum StandardLibrary
+{
 
     SQLITE(
             "org.sqlite.JDBC",
             "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
             "3.28.0",
-            checkType("SQLITE")
+            checkType( "SQLITE" )
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
             "2.4.2",
-            checkType("MARIADB")
+            checkType( "MARIADB" )
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "http://central.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
             "42.2.6",
-            checkType("POSTGRESQL")
+            checkType( "POSTGRESQL" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "http://central.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
             "3.10.2",
-            checkType("MONGODB")
+            checkType( "MONGODB" )
     ),
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.3.1",
-            checkType("MYSQL", "MARIADB", "POSTGRESQL")
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     GOOGLE_HTTP_CLIENT(
             "com.google.api.client.http.HttpRequest",
@@ -63,13 +64,17 @@ public enum StandardLibrary {
     @Getter
     private final Library library;
 
-    StandardLibrary(String className, String downloadURL, String version, boolean load) {
-        this.library = new Library(toString(), className, downloadURL, version, load);
+    StandardLibrary( String className, String downloadURL, String version, boolean load )
+    {
+        this.library = new Library( toString(), className, downloadURL, version, load );
     }
 
-    private static boolean checkType(String... types) {
-        for (String type : types) {
-            if (BungeeUtilisals.getInstance().getConfig().getString("storage.type").equalsIgnoreCase(type)) {
+    private static boolean checkType( String... types )
+    {
+        for ( String type : types )
+        {
+            if ( BungeeUtilisals.getInstance().getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
+            {
                 return true;
             }
         }

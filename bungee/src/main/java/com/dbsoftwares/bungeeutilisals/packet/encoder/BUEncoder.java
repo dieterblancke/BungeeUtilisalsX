@@ -28,28 +28,34 @@ import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.util.List;
 
-public class BUEncoder extends MessageToMessageEncoder<DefinedPacket> {
+public class BUEncoder extends MessageToMessageEncoder<DefinedPacket>
+{
 
     private boolean server;
     private ProxiedPlayer p;
 
-    public BUEncoder(boolean server, ProxiedPlayer p) {
+    public BUEncoder( boolean server, ProxiedPlayer p )
+    {
         this.server = server;
         this.p = p;
     }
 
     @Override
-    protected void encode(ChannelHandlerContext context, DefinedPacket packet, List<Object> output) {
+    protected void encode( ChannelHandlerContext context, DefinedPacket packet, List<Object> output )
+    {
         PacketUpdateEvent event;
-        if (server) {
-            event = new PacketUpdateEvent(packet, p, new BungeeConnection(), p);
-        } else {
-            event = new PacketUpdateEvent(packet, p, new BungeeConnection(), p.getServer());
+        if ( server )
+        {
+            event = new PacketUpdateEvent( packet, p, new BungeeConnection(), p );
+        } else
+        {
+            event = new PacketUpdateEvent( packet, p, new BungeeConnection(), p.getServer() );
         }
 
-        BUCore.getApi().getEventLoader().launchEvent(event);
-        if (!event.isCancelled()) {
-            output.add(packet);
+        BUCore.getApi().getEventLoader().launchEvent( event );
+        if ( !event.isCancelled() )
+        {
+            output.add( packet );
         }
     }
 }

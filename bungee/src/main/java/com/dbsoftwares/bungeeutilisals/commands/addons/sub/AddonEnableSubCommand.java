@@ -27,51 +27,65 @@ import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddonEnableSubCommand extends SubCommand {
+public class AddonEnableSubCommand extends SubCommand
+{
 
-    public AddonEnableSubCommand() {
-        super("enable", 1);
+    public AddonEnableSubCommand()
+    {
+        super( "enable", 1 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/addons enable (name)";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.addons.enable";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String addonName = args[0];
-        if (BUCore.getApi().getAddonManager().isRegistered(addonName)) {
-            user.sendLangMessage("general-commands.addon.enable.alreadyloaded", "{name}", addonName);
-        } else {
-            final File addonFile = searchAddon(addonName);
+        if ( BUCore.getApi().getAddonManager().isRegistered( addonName ) )
+        {
+            user.sendLangMessage( "general-commands.addon.enable.alreadyloaded", "{name}", addonName );
+        } else
+        {
+            final File addonFile = searchAddon( addonName );
 
-            if (addonFile == null) {
-                user.sendLangMessage("general-commands.addon.notfound", "{name}", addonName);
-            } else {
-                try {
-                    BUCore.getApi().getAddonManager().loadSingleAddon(addonFile);
-                    BUCore.getApi().getAddonManager().enableAddon(addonName);
+            if ( addonFile == null )
+            {
+                user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
+            } else
+            {
+                try
+                {
+                    BUCore.getApi().getAddonManager().loadSingleAddon( addonFile );
+                    BUCore.getApi().getAddonManager().enableAddon( addonName );
 
-                    user.sendLangMessage("general-commands.addon.enable.success", "{name}", addonName);
-                } catch (AddonException e) {
-                    user.sendLangMessage("general-commands.addon.enable.failed", "{name}", addonName);
-                    BUCore.getLogger().error("An error occured: ", e);
+                    user.sendLangMessage( "general-commands.addon.enable.success", "{name}", addonName );
+                } catch ( AddonException e )
+                {
+                    user.sendLangMessage( "general-commands.addon.enable.failed", "{name}", addonName );
+                    BUCore.getLogger().error( "An error occured: ", e );
                 }
             }
         }
     }
 
-    private File searchAddon(final String name) {
+    private File searchAddon( final String name )
+    {
         final File addonsFolder = BUCore.getApi().getAddonManager().getAddonsFolder();
 
-        for (File file : addonsFolder.listFiles()) {
-            if (file.getName().toLowerCase().startsWith(name.toLowerCase() + ".")) {
+        for ( File file : addonsFolder.listFiles() )
+        {
+            if ( file.getName().toLowerCase().startsWith( name.toLowerCase() + "." ) )
+            {
                 return file;
             }
         }
@@ -79,7 +93,8 @@ public class AddonEnableSubCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
-        return BUCore.getApi().getAddonManager().getAddons().stream().map(addon -> addon.getDescription().getName()).collect(Collectors.toList());
+    public List<String> getCompletions( User user, String[] args )
+    {
+        return BUCore.getApi().getAddonManager().getAddons().stream().map( addon -> addon.getDescription().getName() ).collect( Collectors.toList() );
     }
 }

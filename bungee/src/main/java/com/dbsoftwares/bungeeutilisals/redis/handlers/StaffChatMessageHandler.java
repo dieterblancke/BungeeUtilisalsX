@@ -22,14 +22,17 @@ import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommand;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.StaffChatData;
 
-public class StaffChatMessageHandler extends RedisMessageHandler<StaffChatData> {
+public class StaffChatMessageHandler extends RedisMessageHandler<StaffChatData>
+{
 
-    public StaffChatMessageHandler() {
-        super(StaffChatData.class);
+    public StaffChatMessageHandler()
+    {
+        super( StaffChatData.class );
     }
 
     @Override
-    public void handle(StaffChatData data) {
-        StaffChatCommand.sendStaffChatMessage(data.getServer(), data.getPlayer(), data.getMessage());
+    public void handle( StaffChatData data )
+    {
+        StaffChatCommand.sendStaffChatMessage( data.getServer(), data.getPlayer(), data.getMessage() );
     }
 }

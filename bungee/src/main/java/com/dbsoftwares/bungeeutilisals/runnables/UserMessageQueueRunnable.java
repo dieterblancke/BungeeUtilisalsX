@@ -20,14 +20,18 @@ package com.dbsoftwares.bungeeutilisals.runnables;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 
-public class UserMessageQueueRunnable implements Runnable {
+public class UserMessageQueueRunnable implements Runnable
+{
 
-    public void run() {
-        BUCore.getApi().getUsers().forEach(user -> {
-            if (user.getMessageQueue() != null) {
+    public void run()
+    {
+        BUCore.getApi().getUsers().forEach( user ->
+        {
+            if ( user.getMessageQueue() != null )
+            {
                 user.getMessageQueue().refetch();
                 user.executeMessageQueue();
             }
-        });
+        } );
     }
 }

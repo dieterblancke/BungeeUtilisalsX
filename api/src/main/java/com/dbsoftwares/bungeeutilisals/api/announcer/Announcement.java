@@ -25,21 +25,26 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.stream.Stream;
 
 @Data
-public abstract class Announcement {
+public abstract class Announcement
+{
 
     protected ServerGroup serverGroup;
     protected String receivePermission;
 
-    protected Announcement(ServerGroup serverGroup, String receivePermission) {
+    protected Announcement( ServerGroup serverGroup, String receivePermission )
+    {
         this.serverGroup = serverGroup;
         this.receivePermission = receivePermission;
     }
 
     public abstract void send();
 
-    protected Stream<ProxiedPlayer> filter(Stream<ProxiedPlayer> stream) {
-        return receivePermission.isEmpty() ? stream : stream.filter(player -> player.hasPermission(receivePermission) || player.hasPermission("bungeeutilisals.*"));
+    protected Stream<ProxiedPlayer> filter( Stream<ProxiedPlayer> stream )
+    {
+        return receivePermission.isEmpty() ? stream : stream.filter( player -> player.hasPermission( receivePermission ) || player.hasPermission( "bungeeutilisals.*" ) );
     }
 
-    public void clear() {}
+    public void clear()
+    {
+    }
 }

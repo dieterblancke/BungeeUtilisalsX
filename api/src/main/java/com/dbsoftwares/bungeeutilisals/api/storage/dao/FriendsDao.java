@@ -26,31 +26,32 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import java.util.List;
 import java.util.UUID;
 
-public interface FriendsDao {
+public interface FriendsDao
+{
 
-    void addFriend(UUID user, UUID uuid);
+    void addFriend( UUID user, UUID uuid );
 
-    void removeFriend(UUID user, UUID uuid);
+    void removeFriend( UUID user, UUID uuid );
 
-    List<FriendData> getFriends(UUID uuid);
+    List<FriendData> getFriends( UUID uuid );
 
-    long getAmountOfFriends(UUID uuid);
+    long getAmountOfFriends( UUID uuid );
 
-    void addFriendRequest(UUID user, UUID uuid);
+    void addFriendRequest( UUID user, UUID uuid );
 
-    void removeFriendRequest(UUID user, UUID uuid);
+    void removeFriendRequest( UUID user, UUID uuid );
 
-    List<FriendRequest> getIncomingFriendRequests(UUID uuid);
+    List<FriendRequest> getIncomingFriendRequests( UUID uuid );
 
-    List<FriendRequest> getOutgoingFriendRequests(UUID uuid);
+    List<FriendRequest> getOutgoingFriendRequests( UUID uuid );
 
-    boolean hasIncomingFriendRequest(UUID user, UUID uuid);
+    boolean hasIncomingFriendRequest( UUID user, UUID uuid );
 
-    boolean hasOutgoingFriendRequest(UUID user, UUID uuid);
+    boolean hasOutgoingFriendRequest( UUID user, UUID uuid );
 
-    void setSetting(UUID uuid, FriendSettingType type, boolean value);
+    void setSetting( UUID uuid, FriendSettingType type, boolean value );
 
-    boolean getSetting(UUID uuid, FriendSettingType type);
+    boolean getSetting( UUID uuid, FriendSettingType type );
 
-    FriendSettings getSettings(UUID uuid);
+    FriendSettings getSettings( UUID uuid );
 }

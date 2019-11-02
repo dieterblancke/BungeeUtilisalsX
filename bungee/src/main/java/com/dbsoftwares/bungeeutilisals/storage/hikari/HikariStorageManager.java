@@ -26,7 +26,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
-public abstract class HikariStorageManager extends AbstractStorageManager {
+public abstract class HikariStorageManager extends AbstractStorageManager
+{
 
     @Getter
     protected HikariConfig config;
@@ -34,38 +35,41 @@ public abstract class HikariStorageManager extends AbstractStorageManager {
     @Getter
     protected HikariDataSource dataSource;
 
-    HikariStorageManager(Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg) {
-        super(plugin, type, new SQLDao());
+    HikariStorageManager( Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg )
+    {
+        super( plugin, type, new SQLDao() );
         config = cfg == null ? new HikariConfig() : cfg;
-        config.setDataSourceClassName(getDataSourceClass());
-        config.addDataSourceProperty("serverName", configuration.getString("storage.hostname"));
-        config.addDataSourceProperty("port" + (type.equals(StorageType.POSTGRESQL) ? "Number" : ""),
-                configuration.getInteger("storage.port"));
-        config.addDataSourceProperty("databaseName", configuration.getString("storage.database"));
-        config.addDataSourceProperty("user", configuration.getString("storage.username"));
-        config.addDataSourceProperty("password", configuration.getString("storage.password"));
+        config.setDataSourceClassName( getDataSourceClass() );
+        config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
+        config.addDataSourceProperty( "port" + ( type.equals( StorageType.POSTGRESQL ) ? "Number" : "" ),
+                configuration.getInteger( "storage.port" ) );
+        config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
+        config.addDataSourceProperty( "user", configuration.getString( "storage.username" ) );
+        config.addDataSourceProperty( "password", configuration.getString( "storage.password" ) );
 
-        if (!type.equals(StorageType.MARIADB)) {
-            config.addDataSourceProperty("useSSL", configuration.getBoolean("storage.useSSL"));
+        if ( !type.equals( StorageType.MARIADB ) )
+        {
+            config.addDataSourceProperty( "useSSL", configuration.getBoolean( "storage.useSSL" ) );
         }
 
-        config.setMaximumPoolSize(configuration.getInteger("storage.pool.max-pool-size"));
-        config.setMinimumIdle(configuration.getInteger("storage.pool.min-idle"));
-        config.setMaxLifetime(configuration.getInteger("storage.pool.max-lifetime") * 1000);
-        config.setConnectionTimeout(configuration.getInteger("storage.pool.connection-timeout") * 1000);
+        config.setMaximumPoolSize( configuration.getInteger( "storage.pool.max-pool-size" ) );
+        config.setMinimumIdle( configuration.getInteger( "storage.pool.min-idle" ) );
+        config.setMaxLifetime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 );
+        config.setConnectionTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 );
 
-        config.setPoolName("BungeeUtilisalsX");
-        config.setLeakDetectionThreshold(10000);
-        config.setConnectionTestQuery("/* BungeeUtilisalsX ping */ SELECT 1;");
-        config.setInitializationFailTimeout(-1);
+        config.setPoolName( "BungeeUtilisalsX" );
+        config.setLeakDetectionThreshold( 10000 );
+        config.setConnectionTestQuery( "/* BungeeUtilisalsX ping */ SELECT 1;" );
+        config.setInitializationFailTimeout( -1 );
 
-        dataSource = new HikariDataSource(config);
+        dataSource = new HikariDataSource( config );
     }
 
     protected abstract String getDataSourceClass();
 
     @Override
-    public void close() {
+    public void close()
+    {
         dataSource.close();
     }
 }

@@ -25,8 +25,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 @EqualsAndHashCode
-public class AbstractEvent implements BUEvent {
+public class AbstractEvent implements BUEvent
+{
 
-    @Getter @Setter BUAPI api;
+    @Getter
+    @Setter
+    BUAPI api;
 
 }

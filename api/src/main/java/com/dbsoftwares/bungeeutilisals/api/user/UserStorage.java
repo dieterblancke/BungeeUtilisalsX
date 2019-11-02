@@ -33,7 +33,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStorage {
+public class UserStorage
+{
 
     private UUID uuid;
     private String userName;
@@ -45,19 +46,23 @@ public class UserStorage {
 
     private Map<String, Object> data = Maps.newHashMap();
 
-    public <T> T getData(final String key) {
-        return !data.containsKey(key) ? null : (T) data.get(key);
+    public <T> T getData( final String key )
+    {
+        return !data.containsKey( key ) ? null : (T) data.get( key );
     }
 
-    public void setData(final String key, final Object value) {
-        data.put(key, value);
+    public void setData( final String key, final Object value )
+    {
+        data.put( key, value );
     }
 
-    public boolean hasData(final String key) {
-        return data.containsKey(key);
+    public boolean hasData( final String key )
+    {
+        return data.containsKey( key );
     }
 
-    public void removeData(final String key) {
-        this.data.remove(key);
+    public void removeData( final String key )
+    {
+        this.data.remove( key );
     }
 }

@@ -20,7 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
-public interface CommandCall {
+public interface CommandCall
+{
 
-    void onExecute(final User user, final String[] args);
+    void onExecute( final User user, final String[] args );
 }

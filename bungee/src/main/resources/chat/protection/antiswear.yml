@@ -11,8 +11,8 @@ bypass: 'bungeeutilisals.bypass.antiswear'
 
 # The words you want to be blocked by antiswear.
 words:
-- word1
-- word2
+  - word1
+  - word2
 
 # Commands that have to be executed when someone advertises (will be executed by console)
 commands: []

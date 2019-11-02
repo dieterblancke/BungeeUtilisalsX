@@ -21,7 +21,8 @@ package com.dbsoftwares.bungeeutilisals.utils.redisdata;
 import lombok.Data;
 
 @Data
-public class APIAnnouncement {
+public class APIAnnouncement
+{
 
     private boolean pluginLanguageManager; // true if plugin, false if addon
     private String plugin;
@@ -31,7 +32,8 @@ public class APIAnnouncement {
     private boolean language;
     private Object[] placeHolders;
 
-    public APIAnnouncement(boolean pluginLanguageManager, String plugin, String prefix, String message, String permission, boolean language, Object... placeholders) {
+    public APIAnnouncement( boolean pluginLanguageManager, String plugin, String prefix, String message, String permission, boolean language, Object... placeholders )
+    {
         this.pluginLanguageManager = pluginLanguageManager;
         this.plugin = plugin;
         this.prefix = prefix;

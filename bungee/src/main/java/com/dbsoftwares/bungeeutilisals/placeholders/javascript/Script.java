@@ -36,14 +36,17 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 
 @Data
-public class Script {
+public class Script
+{
 
     private static final File cacheFolder;
 
-    static {
-        cacheFolder = new File(BungeeUtilisals.getInstance().getDataFolder(), "scripts" + File.separator + "cache");
+    static
+    {
+        cacheFolder = new File( BungeeUtilisals.getInstance().getDataFolder(), "scripts" + File.separator + "cache" );
 
-        if (!cacheFolder.exists()) {
+        if ( !cacheFolder.exists() )
+        {
             cacheFolder.mkdirs();
         }
     }
@@ -53,57 +56,68 @@ public class Script {
     private IConfiguration storage;
     private ScriptEngine engine;
 
-    public Script(String file, String script) throws ScriptException, IOException {
+    public Script( String file, String script ) throws ScriptException, IOException
+    {
         this.file = file;
         this.script = script;
 
-        final File storage = new File(cacheFolder, hash(file));
+        final File storage = new File( cacheFolder, hash( file ) );
 
-        if (!storage.exists() && !storage.createNewFile()) {
+        if ( !storage.exists() && !storage.createNewFile() )
+        {
             return;
         }
 
-        this.storage = IConfiguration.loadYamlConfiguration(storage);
+        this.storage = IConfiguration.loadYamlConfiguration( storage );
         this.engine = loadEngine();
     }
 
-    private static String hash(String str) {
-        return Hashing.sha256().hashString(str, StandardCharsets.UTF_8).toString();
+    private static String hash( String str )
+    {
+        return Hashing.sha256().hashString( str, StandardCharsets.UTF_8 ).toString();
     }
 
-    private ScriptEngine loadEngine() throws ScriptException {
-        final ScriptEngine engine = new ScriptEngineManager().getEngineByName("nashorn");
+    private ScriptEngine loadEngine() throws ScriptException
+    {
+        final ScriptEngine engine = new ScriptEngineManager().getEngineByName( "nashorn" );
 
-        engine.put("storage", storage);
-        engine.put("proxy", ProxyServer.getInstance());
-        engine.put("api", BUCore.getApi());
+        engine.put( "storage", storage );
+        engine.put( "proxy", ProxyServer.getInstance() );
+        engine.put( "api", BUCore.getApi() );
 
-        engine.eval("function isConsole() { return user === null || user.getClass().getSimpleName() !== 'BUser'; }");
+        engine.eval( "function isConsole() { return user === null || user.getClass().getSimpleName() !== 'BUser'; }" );
 
         return engine;
     }
 
-    public String getReplacement(User user) {
-        final String script = PlaceHolderAPI.formatMessage(user, this.script);
+    public String getReplacement( User user )
+    {
+        final String script = PlaceHolderAPI.formatMessage( user, this.script );
 
-        engine.put("user", user);
+        engine.put( "user", user );
 
-        try {
-            return String.valueOf(engine.eval(script));
-        } catch (ScriptException e) {
-            BUCore.logException(e);
+        try
+        {
+            return String.valueOf( engine.eval( script ) );
+        } catch ( ScriptException e )
+        {
+            BUCore.logException( e );
             return "SCRIPT ERROR";
         }
     }
 
-    public void unload() {
-        final File storage = new File(cacheFolder, hash(file));
+    public void unload()
+    {
+        final File storage = new File( cacheFolder, hash( file ) );
 
-        if (storage.length() == 0) {
-            try {
-                Files.delete(storage.toPath());
-            } catch (IOException e) {
-                BUCore.getLogger().info("Could not remove empty script storage.", e);
+        if ( storage.length() == 0 )
+        {
+            try
+            {
+                Files.delete( storage.toPath() );
+            } catch ( IOException e )
+            {
+                BUCore.getLogger().info( "Could not remove empty script storage.", e );
             }
         }
     }

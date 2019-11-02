@@ -22,14 +22,17 @@ import com.dbsoftwares.bungeeutilisals.commands.general.ClearChatCommand;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.ChatActionData;
 
-public class ClearChatMessageHandler extends RedisMessageHandler<ChatActionData> {
+public class ClearChatMessageHandler extends RedisMessageHandler<ChatActionData>
+{
 
-    public ClearChatMessageHandler() {
-        super(ChatActionData.class);
+    public ClearChatMessageHandler()
+    {
+        super( ChatActionData.class );
     }
 
     @Override
-    public void handle(final ChatActionData data) {
-        ClearChatCommand.clearChat(data.getServer(), data.getBy());
+    public void handle( final ChatActionData data )
+    {
+        ClearChatCommand.clearChat( data.getServer(), data.getBy() );
     }
 }

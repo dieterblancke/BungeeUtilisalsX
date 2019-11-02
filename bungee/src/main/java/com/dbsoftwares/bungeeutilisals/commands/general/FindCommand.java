@@ -28,33 +28,39 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.Arrays;
 import java.util.List;
 
-public class FindCommand extends BUCommand {
+public class FindCommand extends BUCommand
+{
 
-    public FindCommand() {
+    public FindCommand()
+    {
         super(
                 "find",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("find.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("find.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "find.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "find.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length != 1) {
-            user.sendLangMessage("general-commands.find.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length != 1 )
+        {
+            user.sendLangMessage( "general-commands.find.usage" );
             return;
         }
-        ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer(args[0]);
+        ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer( args[0] );
 
-        if (server == null) {
-            user.sendLangMessage("offline");
+        if ( server == null )
+        {
+            user.sendLangMessage( "offline" );
             return;
         }
-        user.sendLangMessage("general-commands.find.message", "{user}", args[0], "{server}", server.getName());
+        user.sendLangMessage( "general-commands.find.message", "{user}", args[0], "{server}", server.getName() );
     }
 }

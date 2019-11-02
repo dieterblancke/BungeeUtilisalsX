@@ -29,48 +29,56 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class LanguageCommand extends BUCommand {
+public class LanguageCommand extends BUCommand
+{
 
-    public LanguageCommand() {
+    public LanguageCommand()
+    {
         super(
                 "language",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("language.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("language.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "language.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "language.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return BUCore.getApi().getLanguageManager().getLanguages().stream().map(Language::getName).collect(Collectors.toList());
+    public List<String> onTabComplete( User user, String[] args )
+    {
+        return BUCore.getApi().getLanguageManager().getLanguages().stream().map( Language::getName ).collect( Collectors.toList() );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String languages = BUCore.getApi().getLanguageManager().getLanguages().stream()
-                .map(Language::getName)
-                .collect(Collectors.joining(", "));
+                .map( Language::getName )
+                .collect( Collectors.joining( ", " ) );
 
-        if (args.length != 1) {
-            user.sendLangMessage("general-commands.language.usage", "{languages}", languages);
+        if ( args.length != 1 )
+        {
+            user.sendLangMessage( "general-commands.language.usage", "{languages}", languages );
             return;
         }
         final String langName = args[0];
 
-        if (user.getLanguage().getName().equalsIgnoreCase(langName)) {
-            user.sendLangMessage("general-commands.language.already", "{language}", langName);
+        if ( user.getLanguage().getName().equalsIgnoreCase( langName ) )
+        {
+            user.sendLangMessage( "general-commands.language.already", "{language}", langName );
             return;
         }
 
-        final Optional<Language> optional = BUCore.getApi().getLanguageManager().getLanguage(langName);
+        final Optional<Language> optional = BUCore.getApi().getLanguageManager().getLanguage( langName );
 
-        if (optional.isPresent()) {
+        if ( optional.isPresent() )
+        {
             final Language language = optional.get();
 
-            user.setLanguage(language);
-            BUCore.getApi().getStorageManager().getDao().getUserDao().setLanguage(user.getUuid(), language);
+            user.setLanguage( language );
+            BUCore.getApi().getStorageManager().getDao().getUserDao().setLanguage( user.getUuid(), language );
 
-            user.sendLangMessage("general-commands.language.changed", "{language}", language.getName());
-        } else {
+            user.sendLangMessage( "general-commands.language.changed", "{language}", language.getName() );
+        } else
+        {
             user.sendLangMessage(
                     "general-commands.language.notfound",
                     "{language}", langName, "{languages}", languages

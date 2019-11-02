@@ -27,35 +27,43 @@ import net.md_5.bungee.api.CommandSender;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class FriendUtils {
+public class FriendUtils
+{
 
-    private FriendUtils() {
+    private FriendUtils()
+    {
     }
 
-    public static int getFriendsLimit(final User user) {
-        return getFriendsLimit(user.sender());
+    public static int getFriendsLimit( final User user )
+    {
+        return getFriendsLimit( user.sender() );
     }
 
-    public static int getFriendsLimit(final CommandSender sender) {
-        final ISection limits = FileLocation.FRIENDS_CONFIG.getConfiguration().getSection("friendlimits");
+    public static int getFriendsLimit( final CommandSender sender )
+    {
+        final ISection limits = FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "friendlimits" );
         final List<String> permissions = sender.getPermissions().stream()
-                .filter(perm -> perm.startsWith(limits.getString("permission")))
-                .collect(Collectors.toList());
+                .filter( perm -> perm.startsWith( limits.getString( "permission" ) ) )
+                .collect( Collectors.toList() );
 
-        int highestLimit = limits.getInteger("limits.default", 10);
+        int highestLimit = limits.getInteger( "limits.default", 10 );
 
-        for (String permission : permissions) {
-            final String[] parts = permission.split("\\.");
+        for ( String permission : permissions )
+        {
+            final String[] parts = permission.split( "\\." );
             final String lastPart = parts[parts.length - 1];
 
             int limit = 0;
-            if (limits.exists("limits." + lastPart)) {
-                limit = limits.getInteger("limits." + lastPart);
-            } else if (MathUtils.isInteger(lastPart)) {
-                limit = Integer.parseInt(lastPart);
+            if ( limits.exists( "limits." + lastPart ) )
+            {
+                limit = limits.getInteger( "limits." + lastPart );
+            } else if ( MathUtils.isInteger( lastPart ) )
+            {
+                limit = Integer.parseInt( lastPart );
             }
 
-            if (limit > highestLimit) {
+            if ( limit > highestLimit )
+            {
                 highestLimit = limit;
             }
         }

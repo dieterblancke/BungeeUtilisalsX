@@ -29,44 +29,54 @@ import com.google.api.client.util.Lists;
 
 import java.util.List;
 
-public class CommandManager {
+public class CommandManager
+{
 
     private final List<Command> commands = Lists.newArrayList();
 
-    public void load() {
-        if (!commands.isEmpty()) {
+    public void load()
+    {
+        if ( !commands.isEmpty() )
+        {
             unregisterAll();
         }
         loadGeneralCommands();
     }
 
-    public void loadGeneralCommands() {
-        registerGeneralCommand("report", new ReportCommandCall());
+    public void loadGeneralCommands()
+    {
+        registerGeneralCommand( "report", new ReportCommandCall() );
     }
 
-    private void registerGeneralCommand(final String section, final CommandCall call) {
+    private void registerGeneralCommand( final String section, final CommandCall call )
+    {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
-                .name(section)
-                .fromSection(FileLocation.GENERALCOMMANDS.getConfiguration().getSection(section))
-                .executable(call);
+                .name( section )
+                .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( section ) )
+                .executable( call );
 
-        if (call instanceof TabCall) {
-            commandBuilder.tab((TabCall) call);
+        if ( call instanceof TabCall )
+        {
+            commandBuilder.tab( (TabCall) call );
         }
         final Command command = commandBuilder.build();
 
-        if (command != null) {
+        if ( command != null )
+        {
             command.register();
 
-            commands.add(command);
-            BUCore.getLogger().debug("Registered a command named " + section + ".");
-        } else {
-            BUCore.getLogger().debug("Skipping registration of a command named " + section + ".");
+            commands.add( command );
+            BUCore.getLogger().debug( "Registered a command named " + section + "." );
+        } else
+        {
+            BUCore.getLogger().debug( "Skipping registration of a command named " + section + "." );
         }
     }
 
-    public void unregisterAll() {
-        for (Command command : commands) {
+    public void unregisterAll()
+    {
+        for ( Command command : commands )
+        {
             command.unload();
         }
         commands.clear();

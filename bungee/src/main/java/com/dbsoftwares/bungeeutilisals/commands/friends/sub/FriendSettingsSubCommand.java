@@ -32,62 +32,73 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class FriendSettingsSubCommand extends SubCommand {
+public class FriendSettingsSubCommand extends SubCommand
+{
 
-    public FriendSettingsSubCommand() {
+    public FriendSettingsSubCommand()
+    {
         super(
                 "settings", 0, 2,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.settings.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.settings.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends settings (setting) (enable / disable)";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.settings.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.settings.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 0) {
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 0 )
+        {
             final FriendSettings settings = user.getFriendSettings();
-            user.sendLangMessage("friends.settings.noargs.header");
+            user.sendLangMessage( "friends.settings.noargs.header" );
 
-            for (FriendSettingType setting : FriendSettingType.values()) {
+            for ( FriendSettingType setting : FriendSettingType.values() )
+            {
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
-                        "{type}", setting.getName(user.getLanguageConfig()),
-                        "{status}", user.getLanguageConfig().getString("friends.settings.noargs." + (settings.check(setting) ? "enabled" : "disabled"))
+                        "{type}", setting.getName( user.getLanguageConfig() ),
+                        "{status}", user.getLanguageConfig().getString( "friends.settings.noargs." + ( settings.check( setting ) ? "enabled" : "disabled" ) )
                 );
             }
-        } else if (args.length == 2) {
-            final FriendSettingType type = Utils.valueOfOr(FriendSettingType.class, args[0].toUpperCase(), null);
-            final boolean value = !args[1].toLowerCase().contains("d");
+        } else if ( args.length == 2 )
+        {
+            final FriendSettingType type = Utils.valueOfOr( FriendSettingType.class, args[0].toUpperCase(), null );
+            final boolean value = !args[1].toLowerCase().contains( "d" );
 
-            if (type == null) {
-                final String settings = Stream.of(FriendSettingType.values())
-                        .map(t -> t.getName(user.getLanguageConfig()))
-                        .collect(Collectors.joining());
+            if ( type == null )
+            {
+                final String settings = Stream.of( FriendSettingType.values() )
+                        .map( t -> t.getName( user.getLanguageConfig() ) )
+                        .collect( Collectors.joining() );
 
-                user.sendLangMessage("friends.settings.invalid", "{settings}", settings);
+                user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );
                 return;
             }
 
-            user.getFriendSettings().set(type, value);
-            BUCore.getApi().getStorageManager().getDao().getFriendsDao().setSetting(user.getUuid(), type, value);
+            user.getFriendSettings().set( type, value );
+            BUCore.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
 
-            user.sendLangMessage("friends.settings.updated", "{type}", type.toString().toLowerCase());
-        } else {
-            user.sendLangMessage("friends.settings.usage");
+            user.sendLangMessage( "friends.settings.updated", "{type}", type.toString().toLowerCase() );
+        } else
+        {
+            user.sendLangMessage( "friends.settings.usage" );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

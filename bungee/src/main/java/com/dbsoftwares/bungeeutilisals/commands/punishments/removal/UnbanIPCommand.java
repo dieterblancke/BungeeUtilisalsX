@@ -32,60 +32,68 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class UnbanIPCommand extends BUCommand {
+public class UnbanIPCommand extends BUCommand
+{
 
-    public UnbanIPCommand() {
-        super("unbanip", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.unbanip.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unbanip.permission"));
+    public UnbanIPCommand()
+    {
+        super( "unbanip", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.unbanip.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unbanip.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 1) {
-            user.sendLangMessage("punishments.unbanip.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 1 )
+        {
+            user.sendLangMessage( "punishments.unbanip.usage" );
             return;
         }
         final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !dao.getUserDao().exists( args[0] ) )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
+        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
 
-        if (!dao.getPunishmentDao().getBansDao().isIPBanned(storage.getIp())) {
-            user.sendLangMessage("punishments.unbanip.not-banned");
+        if ( !dao.getPunishmentDao().getBansDao().isIPBanned( storage.getIp() ) )
+        {
+            user.sendLangMessage( "punishments.unbanip.not-banned" );
             return;
         }
 
-        final UserPunishRemoveEvent event = new UserPunishRemoveEvent(UserPunishRemoveEvent.PunishmentRemovalAction.UNBANIP, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), user.getServerName());
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        final UserPunishRemoveEvent event = new UserPunishRemoveEvent( UserPunishRemoveEvent.PunishmentRemovalAction.UNBANIP, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), user.getServerName() );
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        dao.getPunishmentDao().getBansDao().removeCurrentIPBan(storage.getIp(), user.getName());
+        dao.getPunishmentDao().getBansDao().removeCurrentIPBan( storage.getIp(), user.getName() );
 
         final PunishmentInfo info = new PunishmentInfo();
-        info.setUser(args[0]);
-        info.setId("-1");
-        info.setExecutedBy(user.getName());
-        info.setRemovedBy(user.getName());
-        info.setServer(user.getServerName());
+        info.setUser( args[0] );
+        info.setId( "-1" );
+        info.setExecutedBy( user.getName() );
+        info.setRemovedBy( user.getName() );
+        info.setServer( user.getServerName() );
 
-        user.sendLangMessage("punishments.unbanip.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
+        user.sendLangMessage( "punishments.unbanip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast("punishments.unbanip.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unbanip.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        BUCore.getApi().langPermissionBroadcast( "punishments.unbanip.broadcast",
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unbanip.broadcast" ),
+                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
     }
 }

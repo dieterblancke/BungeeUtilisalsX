@@ -28,48 +28,56 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class AddonInfoSubCommand extends SubCommand {
+public class AddonInfoSubCommand extends SubCommand
+{
 
-    public AddonInfoSubCommand() {
-        super("info", 1);
+    public AddonInfoSubCommand()
+    {
+        super( "info", 1 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/addons info (name)";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.addons.info";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final List<AddonData> addons = BUCore.getApi().getAddonManager().getAllAddons();
 
-        final Optional<AddonData> dataOptional = addons.stream().filter(addon -> addon.getName().equalsIgnoreCase(args[0])).findFirst();
-        if (dataOptional.isPresent()) {
+        final Optional<AddonData> dataOptional = addons.stream().filter( addon -> addon.getName().equalsIgnoreCase( args[0] ) ).findFirst();
+        if ( dataOptional.isPresent() )
+        {
             final AddonData data = dataOptional.get();
-            final boolean installed = BUCore.getApi().getAddonManager().isRegistered(data.getName());
+            final boolean installed = BUCore.getApi().getAddonManager().isRegistered( data.getName() );
 
-            user.sendLangMessage("general-commands.addon.info",
+            user.sendLangMessage( "general-commands.addon.info",
                     "{installed}", installed ? "Yes" : "No",
                     "{name}", data.getName(),
-                    "{version}", data.getVersion() + (installed ? " (local version: " + BUCore.getApi().getAddonManager().getAddon(data.getName()).getDescription().getVersion() + ")" : ""),
+                    "{version}", data.getVersion() + ( installed ? " (local version: " + BUCore.getApi().getAddonManager().getAddon( data.getName() ).getDescription().getVersion() + ")" : "" ),
                     "{author}", data.getAuthor(),
-                    "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList(data.getRequiredDependencies(), ", "),
-                    "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList(data.getOptionalDependencies(), ", "),
+                    "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList( data.getRequiredDependencies(), ", " ),
+                    "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList( data.getOptionalDependencies(), ", " ),
                     "{description}", data.getDescription()
             );
-        } else {
-            user.sendLangMessage("general-commands.addon.notfound", "{name}", args[0]);
+        } else
+        {
+            user.sendLangMessage( "general-commands.addon.notfound", "{name}", args[0] );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
-        return BUCore.getApi().getAddonManager().getAllAddons().stream().map(AddonData::getName).collect(Collectors.toList());
+    public List<String> getCompletions( User user, String[] args )
+    {
+        return BUCore.getApi().getAddonManager().getAllAddons().stream().map( AddonData::getName ).collect( Collectors.toList() );
     }
 
 }

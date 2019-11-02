@@ -14,7 +14,7 @@
         <directory>src/main/resources</directory>
       </resource>
     </resources>
-    <finalName>BungeeUtilisalsX</finalName>
+    <finalName>BungeeUtilisalsX v${project.version}</finalName>
     <plugins>
       <plugin>
         <artifactId>maven-shade-plugin</artifactId>

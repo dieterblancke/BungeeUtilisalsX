@@ -28,50 +28,62 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class FriendListSubCommand extends SubCommand {
+public class FriendListSubCommand extends SubCommand
+{
 
-    public FriendListSubCommand() {
+    public FriendListSubCommand()
+    {
         super(
                 "list", 0, 1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.list.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends list [page]";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.list.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.list.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final List<FriendData> allFriends = user.getFriends();
 
-        if (allFriends.isEmpty()) {
-            user.sendLangMessage("friends.list.no-friends");
+        if ( allFriends.isEmpty() )
+        {
+            user.sendLangMessage( "friends.list.no-friends" );
             return;
         }
 
-        final int pages = (int) Math.ceil((double) allFriends.size() / 15);
+        final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
         final int page;
 
-        if (args.length >= 1) {
-            if (MathUtils.isInteger(args[0])) {
-                final int tempPage = Integer.parseInt(args[0]);
+        if ( args.length >= 1 )
+        {
+            if ( MathUtils.isInteger( args[0] ) )
+            {
+                final int tempPage = Integer.parseInt( args[0] );
 
-                if (tempPage > pages) {
+                if ( tempPage > pages )
+                {
                     page = pages;
-                } else {
+                } else
+                {
                     page = tempPage;
                 }
-            } else {
+            } else
+            {
                 page = 1;
             }
-        } else {
+        } else
+        {
             page = 1;
         }
 
@@ -81,11 +93,12 @@ public class FriendListSubCommand extends SubCommand {
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
 
-        if (maxNumber > allFriends.size()) {
+        if ( maxNumber > allFriends.size() )
+        {
             maxNumber = allFriends.size();
         }
 
-        final List<FriendData> friends = allFriends.subList(minNumber, maxNumber);
+        final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
         user.sendLangMessage(
                 "friends.list.head",
                 "{previousPage}", previous,
@@ -94,20 +107,21 @@ public class FriendListSubCommand extends SubCommand {
                 "{maxPages}", pages
         );
 
-        friends.forEach(friend ->
+        friends.forEach( friend ->
                 user.sendLangMessage(
                         "friends.list.format",
                         "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate(friend.getLastOnline()),
+                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate( friend.getLastOnline() ),
                         "{online}", friend.isOnline(),
-                        "{friendSince}", Utils.formatDate(friend.getFriendSince())
+                        "{friendSince}", Utils.formatDate( friend.getFriendSince() )
                 )
         );
-        user.sendLangMessage("friends.list.foot", "{friendAmount}", allFriends.size());
+        user.sendLangMessage( "friends.list.foot", "{friendAmount}", allFriends.size() );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return null;
     }
 }

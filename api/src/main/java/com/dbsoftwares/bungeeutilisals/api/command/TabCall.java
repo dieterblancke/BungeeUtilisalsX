@@ -22,7 +22,8 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.List;
 
-public interface TabCall {
+public interface TabCall
+{
 
-    List<String> onTabComplete(final User user, final String[] args);
+    List<String> onTabComplete( final User user, final String[] args );
 }

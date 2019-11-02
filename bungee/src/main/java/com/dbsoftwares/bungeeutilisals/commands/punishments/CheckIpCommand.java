@@ -37,47 +37,57 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-public class CheckIpCommand extends BUCommand {
+public class CheckIpCommand extends BUCommand
+{
 
-    private static final Pattern IP_PATTERN = Pattern.compile("^(?:(?:^|\\.)(?:2(?:5[0-5]|[0-4]\\d)|1?\\d?\\d)){4}$");
+    private static final Pattern IP_PATTERN = Pattern.compile( "^(?:(?:^|\\.)(?:2(?:5[0-5]|[0-4]\\d)|1?\\d?\\d)){4}$" );
 
-    public CheckIpCommand() {
-        super("checkip", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.checkip.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.checkip.permission"));
+    public CheckIpCommand()
+    {
+        super( "checkip", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.checkip.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.checkip.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 0) {
-            user.sendLangMessage("punishments.checkip.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 0 )
+        {
+            user.sendLangMessage( "punishments.checkip.usage" );
             return;
         }
 
         // Running it async ...
-        ProxyServer.getInstance().getScheduler().runAsync(BungeeUtilisals.getInstance(), () -> {
+        ProxyServer.getInstance().getScheduler().runAsync( BungeeUtilisals.getInstance(), () ->
+        {
             final Dao dao = BUCore.getApi().getStorageManager().getDao();
             final UserDao userDao = dao.getUserDao();
             final PunishmentDao punishmentDao = dao.getPunishmentDao();
             final UserStorage storage;
 
-            if (IP_PATTERN.matcher(args[0]).find()) {
-                if (!userDao.ipExists(args[0])) {
-                    user.sendLangMessage("never-joined");
+            if ( IP_PATTERN.matcher( args[0] ).find() )
+            {
+                if ( !userDao.ipExists( args[0] ) )
+                {
+                    user.sendLangMessage( "never-joined" );
                     return;
                 }
-                storage = userDao.getUserData(args[0]);
-            } else {
-                if (!userDao.exists(args[0])) {
-                    user.sendLangMessage("never-joined");
+                storage = userDao.getUserData( args[0] );
+            } else
+            {
+                if ( !userDao.exists( args[0] ) )
+                {
+                    user.sendLangMessage( "never-joined" );
                     return;
                 }
-                storage = userDao.getUserData(args[0]);
+                storage = userDao.getUserData( args[0] );
             }
 
             user.sendLangMessage(
@@ -85,35 +95,40 @@ public class CheckIpCommand extends BUCommand {
                     "{user}", storage.getUserName(), "{ip}", storage.getIp()
             );
 
-            final List<String> users = userDao.getUsersOnIP(storage.getIp());
+            final List<String> users = userDao.getUsersOnIP( storage.getIp() );
             final List<String> formattedUsers = Lists.newArrayList();
             final Map<String, CheckIpStatus> statusMap = Maps.newHashMap();
 
-            users.forEach(u -> {
-                final boolean banned = punishmentDao.getBansDao().isBanned(storage.getUuid());
-                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned(storage.getIp());
+            users.forEach( u ->
+            {
+                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid() );
+                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp() );
 
                 String colorPath = "punishments.checkip.colors.";
-                if (banned || ipbanned) {
+                if ( banned || ipbanned )
+                {
                     colorPath += "banned";
-                } else {
-                    if (BUCore.getApi().getPlayerUtils().isOnline(u)) {
+                } else
+                {
+                    if ( BUCore.getApi().getPlayerUtils().isOnline( u ) )
+                    {
                         colorPath += "online";
-                    } else {
+                    } else
+                    {
                         colorPath += "offline";
                     }
                 }
 
                 formattedUsers.add(
-                        Utils.c(user.getLanguageConfig().getString(colorPath))
+                        Utils.c( user.getLanguageConfig().getString( colorPath ) )
                                 + u
                 );
-            });
+            } );
 
             user.sendLangMessage(
                     "punishments.checkip.format.message",
                     "{players}", Utils.formatList(
-                            formattedUsers, user.getLanguageConfig().getString("punishments.checkip.format.separator")
+                            formattedUsers, user.getLanguageConfig().getString( "punishments.checkip.format.separator" )
                     )
             );
 
@@ -121,10 +136,11 @@ public class CheckIpCommand extends BUCommand {
                     "punishments.checkip.foot",
                     "{user}", storage.getUserName(), "{ip}", storage.getIp()
             );
-        });
+        } );
     }
 
-    private enum CheckIpStatus {
+    private enum CheckIpStatus
+    {
         ONLINE, OFFLINE, BANNED
     }
 }

@@ -26,7 +26,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class FriendRequest {
+public class FriendRequest
+{
 
     private UUID user;
     private String userName;

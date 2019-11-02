@@ -28,13 +28,14 @@ import java.io.File;
 import java.util.List;
 import java.util.Optional;
 
-public interface ILanguageManager {
+public interface ILanguageManager
+{
 
     /**
      * @param language The name of the language to be searched.
      * @return The language found with the given name, if not found: default language.
      */
-    Language getLangOrDefault(String language);
+    Language getLangOrDefault( String language );
 
     /**
      * @return The registered language integration.
@@ -47,7 +48,7 @@ public interface ILanguageManager {
      *
      * @param integration LanguageIntegration instance
      */
-    void setLanguageIntegration(LanguageIntegration integration);
+    void setLanguageIntegration( LanguageIntegration integration );
 
     /**
      * @return The default language, if not found, it will return the first available language, if still not present, null will be returned.
@@ -60,7 +61,7 @@ public interface ILanguageManager {
      * @param language The name of the language.
      * @return An optional containing the language IF present.
      */
-    Optional<Language> getLanguage(String language);
+    Optional<Language> getLanguage( String language );
 
     /**
      * Registers a plugin into the ILanguageManager
@@ -69,70 +70,70 @@ public interface ILanguageManager {
      * @param folder The folder in which the languages will be located.
      * @param type   The FileStorageType which will be used, Json or Yaml.
      */
-    void addPlugin(String plugin, File folder, FileStorageType type);
+    void addPlugin( String plugin, File folder, FileStorageType type );
 
     /**
      * Loads default language files of a plugin.
      *
      * @param plugin The plugin of which the languages should be loaded.
      */
-    void loadLanguages(String plugin);
+    void loadLanguages( String plugin );
 
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param user   The user of which you want to get the config.
      * @return The JsonConfiguration bound to the User's language.
      */
-    IConfiguration getLanguageConfiguration(String plugin, User user);
+    IConfiguration getLanguageConfiguration( String plugin, User user );
 
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param player The player of which you want to get the config.
      * @return The JsonConfiguration bound to the Player's language.
      */
-    IConfiguration getLanguageConfiguration(String plugin, ProxiedPlayer player);
+    IConfiguration getLanguageConfiguration( String plugin, ProxiedPlayer player );
 
     /**
      * @param plugin The plugin of which you want to get the language config.
      * @param sender The CommandSender of which you want to get the config.
      * @return The JsonConfiguration bound to the CommandSender's language, default language config if language isn't set.
      */
-    IConfiguration getLanguageConfiguration(String plugin, CommandSender sender);
+    IConfiguration getLanguageConfiguration( String plugin, CommandSender sender );
 
     /**
      * @param plugin   The plugin of which you want to get the File.
      * @param language The language of which you want to get the file.
      * @return The file containing language settings for a certain plugin.
      */
-    File getFile(String plugin, Language language);
+    File getFile( String plugin, Language language );
 
     /**
      * @param plugin   The plugin of which you want to get the JsonConfiguration
      * @param language The language of which you want to get the JsonConfiguration.
      * @return The JsonConfiguration bound to the certain plugin and language.
      */
-    IConfiguration getConfig(String plugin, Language language);
+    IConfiguration getConfig( String plugin, Language language );
 
     /**
      * @param plugin   The plugin you want to check.
      * @param language The language you want to check.
      * @return True if the certain plugin and language is registered, false if not.
      */
-    Boolean isRegistered(String plugin, Language language);
+    Boolean isRegistered( String plugin, Language language );
 
     /**
      * @param plugin   The plugin of which you want to save the language.
      * @param language The language you want to save.
      * @return True if successful, false if not.
      */
-    Boolean saveLanguage(String plugin, Language language);
+    Boolean saveLanguage( String plugin, Language language );
 
     /**
      * @param plugin   The plugin of which you want to reload the language config.
      * @param language The language config you want to reload.
      * @return True if successful, false if not.
      */
-    Boolean reloadConfig(String plugin, Language language);
+    Boolean reloadConfig( String plugin, Language language );
 
     /**
      * @return A list of registered languages.

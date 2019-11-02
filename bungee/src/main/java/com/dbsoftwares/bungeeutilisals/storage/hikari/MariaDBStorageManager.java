@@ -26,24 +26,29 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public class MariaDBStorageManager extends HikariStorageManager {
+public class MariaDBStorageManager extends HikariStorageManager
+{
 
-    public MariaDBStorageManager(Plugin plugin) {
-        super(plugin, StorageType.MARIADB, BungeeUtilisals.getInstance().getConfig(), getProperties());
+    public MariaDBStorageManager( Plugin plugin )
+    {
+        super( plugin, StorageType.MARIADB, BungeeUtilisals.getInstance().getConfig(), getProperties() );
     }
 
-    private static HikariConfig getProperties() {
+    private static HikariConfig getProperties()
+    {
         return new HikariConfig();
     }
 
     @Override
-    protected String getDataSourceClass() {
-        return Utils.classFound("org.mariadb.jdbc.MariaDbDataSource") ? "org.mariadb.jdbc.MariaDbDataSource"
+    protected String getDataSourceClass()
+    {
+        return Utils.classFound( "org.mariadb.jdbc.MariaDbDataSource" ) ? "org.mariadb.jdbc.MariaDbDataSource"
                 : "org.mariadb.jdbc.MySQLDataSource";
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() throws SQLException
+    {
         return dataSource.getConnection();
     }
 }

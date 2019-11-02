@@ -30,63 +30,78 @@ import com.google.common.collect.ImmutableList;
 import java.util.Arrays;
 import java.util.List;
 
-public class FriendRequestsSubCommand extends SubCommand {
+public class FriendRequestsSubCommand extends SubCommand
+{
 
-    public FriendRequestsSubCommand() {
+    public FriendRequestsSubCommand()
+    {
         super(
                 "requests", 1, 2,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.requests.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.requests.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends requests (in/out) [page]";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.requests.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.requests.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String type = args[0];
         final List<FriendRequest> allRequests;
         final String requestType;
 
-        if (type.contains("out")) {
-            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests(user.getUuid());
+        if ( type.contains( "out" ) )
+        {
+            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( user.getUuid() );
             requestType = "outgoing";
-        } else if (type.contains("in")) {
-            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests(user.getUuid());
+        } else if ( type.contains( "in" ) )
+        {
+            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() );
             requestType = "incoming";
-        } else {
-            user.sendLangMessage("friends.requests.usage");
+        } else
+        {
+            user.sendLangMessage( "friends.requests.usage" );
             return;
         }
 
-        if (allRequests.isEmpty()) {
-            user.sendLangMessage("friends.requests.no-requests");
+        if ( allRequests.isEmpty() )
+        {
+            user.sendLangMessage( "friends.requests.no-requests" );
             return;
         }
 
-        final int pages = (int) Math.ceil((double) allRequests.size() / 15);
+        final int pages = (int) Math.ceil( (double) allRequests.size() / 15 );
         final int page;
 
-        if (args.length >= 1) {
-            if (MathUtils.isInteger(args[0])) {
-                final int tempPage = Integer.parseInt(args[0]);
+        if ( args.length >= 1 )
+        {
+            if ( MathUtils.isInteger( args[0] ) )
+            {
+                final int tempPage = Integer.parseInt( args[0] );
 
-                if (tempPage > pages) {
+                if ( tempPage > pages )
+                {
                     page = pages;
-                } else {
+                } else
+                {
                     page = tempPage;
                 }
-            } else {
+            } else
+            {
                 page = 1;
             }
-        } else {
+        } else
+        {
             page = 1;
         }
 
@@ -96,30 +111,32 @@ public class FriendRequestsSubCommand extends SubCommand {
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
 
-        if (maxNumber > allRequests.size()) {
+        if ( maxNumber > allRequests.size() )
+        {
             maxNumber = allRequests.size();
         }
 
-        final List<FriendRequest> requests = allRequests.subList(minNumber, maxNumber);
+        final List<FriendRequest> requests = allRequests.subList( minNumber, maxNumber );
         user.sendLangMessage(
                 "friends.requests.head",
                 "{previousPage}", previous,
                 "{currentPage}", page,
                 "{nextPage}", next,
                 "{maxPages}", pages,
-                "{type}", user.getLanguageConfig().getString("friends.requests." + requestType)
+                "{type}", user.getLanguageConfig().getString( "friends.requests." + requestType )
         );
 
-        requests.forEach(request -> {
-            final String targetName = requestType.equalsIgnoreCase("outgoing")
+        requests.forEach( request ->
+        {
+            final String targetName = requestType.equalsIgnoreCase( "outgoing" )
                     ? request.getFriendName() : request.getUserName();
 
             user.sendLangMessage(
                     "friends.requests.format." + requestType,
                     "{target}", targetName,
-                    "{requestDate}", Utils.formatDate(request.getRequestedAt())
+                    "{requestDate}", Utils.formatDate( request.getRequestedAt() )
             );
-        });
+        } );
         user.sendLangMessage(
                 "friends.requests.foot",
                 "{requestAmount}", allRequests.size(), "{type}", requestType, "{type_lowercase}", requestType.toLowerCase()
@@ -127,7 +144,8 @@ public class FriendRequestsSubCommand extends SubCommand {
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

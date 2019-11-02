@@ -31,46 +31,53 @@ import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
 import java.util.Optional;
 
-public class ReportDenySubCommandCall implements CommandCall {
+public class ReportDenySubCommandCall implements CommandCall
+{
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length != 1) {
-            user.sendLangMessage("general-commands.report.deny.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length != 1 )
+        {
+            user.sendLangMessage( "general-commands.report.deny.usage" );
             return;
         }
 
-        if (!MathUtils.isLong(args[0])) {
-            user.sendLangMessage("no-number");
+        if ( !MathUtils.isLong( args[0] ) )
+        {
+            user.sendLangMessage( "no-number" );
             return;
         }
 
-        final long id = Long.parseLong(args[0]);
+        final long id = Long.parseLong( args[0] );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final ReportsDao reportsDao = dao.getReportsDao();
         final UserDao userDao = dao.getUserDao();
 
-        if (!reportsDao.reportExists(id)) {
-            user.sendLangMessage("general-commands.report.deny.not-found");
+        if ( !reportsDao.reportExists( id ) )
+        {
+            user.sendLangMessage( "general-commands.report.deny.not-found" );
             return;
         }
-        final Report report = reportsDao.getReport(id);
+        final Report report = reportsDao.getReport( id );
 
-        reportsDao.handleReport(id, false);
+        reportsDao.handleReport( id, false );
         user.sendLangMessage(
                 "general-commands.report.deny.updated",
                 "{id}", report.getId()
         );
 
-        final Optional<User> optionalUser = BUCore.getApi().getUser(report.getReportedBy());
+        final Optional<User> optionalUser = BUCore.getApi().getUser( report.getReportedBy() );
         final MessageQueue<QueuedMessage> queue;
 
-        if (optionalUser.isPresent()) {
+        if ( optionalUser.isPresent() )
+        {
             queue = optionalUser.get().getMessageQueue();
-        } else {
+        } else
+        {
             queue = BUCore.getApi().getStorageManager().getDao().createMessageQueue();
         }
-        queue.add(new QueuedMessage(
+        queue.add( new QueuedMessage(
                 -1,
                 report.getReportedBy(),
                 new QueuedMessage.Message(
@@ -80,6 +87,6 @@ public class ReportDenySubCommandCall implements CommandCall {
                         "{staff}", user.getName()
                 ),
                 "NAME"
-        ));
+        ) );
     }
 }

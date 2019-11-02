@@ -32,68 +32,84 @@ import com.google.common.collect.Maps;
 import java.util.List;
 import java.util.Map;
 
-public class ImportSubCommand extends SubCommand {
+public class ImportSubCommand extends SubCommand
+{
 
-    public ImportSubCommand() {
-        super("import");
+    public ImportSubCommand()
+    {
+        super( "import" );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/bungeeutilisals import (plugin) [properties]";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.import";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length == 1 || args.length == 2) {
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length == 1 || args.length == 2 )
+        {
             final String plugin = args[0];
             final Map<String, String> properties = Maps.newHashMap();
 
-            if (args.length == 2) {
-                for (String property : args[1].split(",")) {
-                    properties.put(property.split(":")[0], property.split(":")[1]);
+            if ( args.length == 2 )
+            {
+                for ( String property : args[1].split( "," ) )
+                {
+                    properties.put( property.split( ":" )[0], property.split( ":" )[1] );
                 }
             }
 
             Importer importer = null;
-            if (plugin.equalsIgnoreCase("BungeeUtilisals")) {
+            if ( plugin.equalsIgnoreCase( "BungeeUtilisals" ) )
+            {
                 importer = new BungeeUtilisalsImporter();
-            } else if (plugin.equalsIgnoreCase("BungeeAdminTools") || plugin.equalsIgnoreCase("BAT")) {
+            } else if ( plugin.equalsIgnoreCase( "BungeeAdminTools" ) || plugin.equalsIgnoreCase( "BAT" ) )
+            {
                 importer = new BungeeAdminToolsImporter();
             }
 
-            if (importer != null) {
-                importer.startImport(new ImporterCallback<Importer.ImporterStatus>() {
+            if ( importer != null )
+            {
+                importer.startImport( new ImporterCallback<Importer.ImporterStatus>()
+                {
                     @Override
-                    public void onStatusUpdate(Importer.ImporterStatus status) {
-                        if (status.getConvertedEntries() % 100 == 0) {
+                    public void onStatusUpdate( Importer.ImporterStatus status )
+                    {
+                        if ( status.getConvertedEntries() % 100 == 0 )
+                        {
                             BUCore.getLogger().info(
                                     "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
-                                            + " entries (" + MathUtils.formatNumber(status.getProgressionPercent(), 2) + " %)"
+                                            + " entries (" + MathUtils.formatNumber( status.getProgressionPercent(), 2 ) + " %)"
                             );
                         }
                     }
 
                     @Override
-                    public void done(Importer.ImporterStatus status, Throwable throwable) {
+                    public void done( Importer.ImporterStatus status, Throwable throwable )
+                    {
                         BUCore.getLogger().info(
                                 "Finished converting " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                         + ". " + status.getRemainingEntries() + " could not be converted ("
                                         + status.getProgressionPercent() + " %)"
                         );
                     }
-                }, properties);
+                }, properties );
             }
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

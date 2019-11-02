@@ -180,7 +180,7 @@ general-commands:
       - '&f- &b/report list [all/active/accepted/denied] [page]'
       - '&f- &b/report accept (id)'
       - '&f- &b/report deny (id)'
-      - '&f- &b/report history'
+      - '&f- &b/report history [page]'
 
     create:
       usage: '&ePlease use &b/report create (target) (reason)&e!'

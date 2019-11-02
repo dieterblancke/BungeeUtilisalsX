@@ -34,50 +34,59 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class IPTempMuteCommand extends BUCommand {
+public class IPTempMuteCommand extends BUCommand
+{
 
-    public IPTempMuteCommand() {
-        super("iptempmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.iptempmute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.permission"));
+    public IPTempMuteCommand()
+    {
+        super( "iptempmute", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.iptempmute.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 3) {
-            user.sendLangMessage("punishments.iptempmute.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 3 )
+        {
+            user.sendLangMessage( "punishments.iptempmute.usage" );
             return;
         }
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final String timeFormat = args[1];
-        final String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        final long time = Utils.parseDateDiff(timeFormat);
+        final String reason = Utils.formatList( Arrays.copyOfRange( args, 2, args.length ), " " );
+        final long time = Utils.parseDateDiff( timeFormat );
 
-        if (time <= 0L) {
-            user.sendLangMessage("punishments.iptempmute.non-valid");
+        if ( time <= 0L )
+        {
+            user.sendLangMessage( "punishments.iptempmute.non-valid" );
             return;
         }
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !dao.getUserDao().exists( args[0] ) )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().getMutesDao().isIPMuted(storage.getIp())) {
-            user.sendLangMessage("punishments.iptempmute.already-muted");
+        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
+        if ( dao.getPunishmentDao().getMutesDao().isIPMuted( storage.getIp() ) )
+        {
+            user.sendLangMessage( "punishments.iptempmute.already-muted" );
             return;
         }
 
-        final UserPunishEvent event = new UserPunishEvent(PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        final UserPunishEvent event = new UserPunishEvent( PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time );
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
@@ -87,29 +96,32 @@ public class IPTempMuteCommand extends BUCommand {
                 reason, user.getServerName(), true, user.getName(), time
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> {
+        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
+        {
             List<String> mute = null;
-            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+            {
                 mute = BUCore.getApi().getPunishmentExecutor().searchTemplate(
                         muted.getLanguageConfig(), PunishmentType.IPTEMPMUTE, reason
                 );
             }
-            if (mute == null) {
-                mute = muted.getLanguageConfig().getStringList("punishments.iptempmute.onmute");
+            if ( mute == null )
+            {
+                mute = muted.getLanguageConfig().getStringList( "punishments.iptempmute.onmute" );
             }
 
-            mute.forEach(str -> muted.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
-        });
+            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+        } );
 
-        user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
+        user.sendLangMessage( "punishments.iptempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast("punishments.iptempmute.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        BUCore.getApi().langPermissionBroadcast( "punishments.iptempmute.broadcast",
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.broadcast" ),
+                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        BUCore.getApi().getEventLoader().launchEvent(new UserPunishmentFinishEvent(
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
-        ));
+        ) );
     }
 }

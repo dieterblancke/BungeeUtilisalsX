@@ -18,7 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.api.announcer;
 
-public enum AnnouncementType {
+public enum AnnouncementType
+{
     // preconfigured is mainly for /announce
     CHAT, ACTIONBAR, TITLE, BOSSBAR, PRECONFIGURED
 }

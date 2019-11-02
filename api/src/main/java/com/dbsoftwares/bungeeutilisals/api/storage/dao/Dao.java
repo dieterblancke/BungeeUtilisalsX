@@ -25,18 +25,23 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public interface Dao {
+public interface Dao
+{
 
-    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
 
-    static String formatDateToString(final Date date) {
-        return format.format(date);
+    static String formatDateToString( final Date date )
+    {
+        return format.format( date );
     }
 
-    static Date formatStringToDate(final String date) {
-        try {
-            return format.parse(date);
-        } catch (ParseException e) {
+    static Date formatStringToDate( final String date )
+    {
+        try
+        {
+            return format.parse( date );
+        } catch ( ParseException e )
+        {
             return new Date();
         }
     }
@@ -49,7 +54,7 @@ public interface Dao {
 
     ReportsDao getReportsDao();
 
-    MessageQueue<QueuedMessage> createMessageQueue(final User user);
+    MessageQueue<QueuedMessage> createMessageQueue( final User user );
 
     MessageQueue<QueuedMessage> createMessageQueue();
 }

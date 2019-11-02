@@ -27,16 +27,19 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.List;
 
-public class FriendsExecutor implements EventExecutor {
+public class FriendsExecutor implements EventExecutor
+{
 
     @Event
-    public void onLoad(final UserLoadEvent event) {
+    public void onLoad( final UserLoadEvent event )
+    {
         final User user = event.getUser();
         final List<FriendRequest> requests = BUCore.getApi().getStorageManager().getDao()
-                .getFriendsDao().getIncomingFriendRequests(user.getUuid());
+                .getFriendsDao().getIncomingFriendRequests( user.getUuid() );
 
-        if (!requests.isEmpty()) {
-            user.sendLangMessage("friends.join.requests", "{amount}", requests.size());
+        if ( !requests.isEmpty() )
+        {
+            user.sendLangMessage( "friends.join.requests", "{amount}", requests.size() );
         }
     }
 }

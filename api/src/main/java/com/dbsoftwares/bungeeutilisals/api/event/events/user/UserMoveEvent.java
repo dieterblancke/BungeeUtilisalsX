@@ -30,7 +30,8 @@ import lombok.ToString;
 @ToString
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserMoveEvent extends AbstractEvent {
+public class UserMoveEvent extends AbstractEvent
+{
 
     private User user;
     private Location from;

@@ -26,14 +26,16 @@ import java.io.File;
 
 @Data
 @AllArgsConstructor
-public class UpdatableData {
+public class UpdatableData
+{
 
     private String name;
     private String currentVersion;
     private GenericUrl url;
     private File file;
 
-    public UpdatableData(final String name, final String currentVersion, final String url, final File file) {
-        this(name, currentVersion, new GenericUrl(url), file);
+    public UpdatableData( final String name, final String currentVersion, final String url, final File file )
+    {
+        this( name, currentVersion, new GenericUrl( url ), file );
     }
 }

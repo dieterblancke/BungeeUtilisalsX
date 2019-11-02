@@ -30,48 +30,59 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteStorageManager extends AbstractStorageManager {
+public class SQLiteStorageManager extends AbstractStorageManager
+{
 
     private Connection connection;
     private File database;
 
-    public SQLiteStorageManager(Plugin plugin) throws SQLException {
-        super(plugin, StorageType.SQLITE, new SQLDao());
+    public SQLiteStorageManager( Plugin plugin ) throws SQLException
+    {
+        super( plugin, StorageType.SQLITE, new SQLDao() );
 
-        database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
+        database = new File( BungeeUtilisals.getInstance().getDataFolder(), "data.db" );
 
-        try {
-            if (!database.exists() && !database.createNewFile()) {
+        try
+        {
+            if ( !database.exists() && !database.createNewFile() )
+            {
                 return;
             }
-        } catch (IOException e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( IOException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
 
         initializeConnection();
     }
 
-    private void initializeConnection() throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
+    private void initializeConnection() throws SQLException
+    {
+        try
+        {
+            Class.forName( "org.sqlite.JDBC" );
 
-            connection = DriverManager.getConnection("jdbc:sqlite:" + database.getPath());
-        } catch (ClassNotFoundException e) {
+            connection = DriverManager.getConnection( "jdbc:sqlite:" + database.getPath() );
+        } catch ( ClassNotFoundException e )
+        {
             // should never occur | library loaded before
-            BUCore.getLogger().error("An error occured: ", e);
+            BUCore.getLogger().error( "An error occured: ", e );
         }
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        if (connection.isClosed()) {
+    public Connection getConnection() throws SQLException
+    {
+        if ( connection.isClosed() )
+        {
             initializeConnection();
         }
         return connection;
     }
 
     @Override
-    public void close() throws SQLException {
+    public void close() throws SQLException
+    {
         connection.close();
     }
 }

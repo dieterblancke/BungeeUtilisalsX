@@ -25,44 +25,54 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-public abstract class Converter {
+public abstract class Converter
+{
 
     private final ImportUtils importUtils = new ImportUtils();
     protected ConverterStatus status;
 
-    protected abstract void importData(final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties) throws Exception;
+    protected abstract void importData( final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties ) throws Exception;
 
-    public void startImport(final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties) {
-        try {
-            importData(importerCallback, properties);
-        } catch (final Throwable t) {
-            importerCallback.done(null, t);
+    public void startImport( final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties )
+    {
+        try
+        {
+            importData( importerCallback, properties );
+        } catch ( final Throwable t )
+        {
+            importerCallback.done( null, t );
         }
     }
 
     @Data
-    public class ConverterStatus {
+    public class ConverterStatus
+    {
 
         private final long totalEntries;
         private long convertedEntries;
 
-        public ConverterStatus(final long totalEntries) {
-            if (totalEntries < 1) {
-                throw new IllegalArgumentException("There is no entry to convert.");
+        public ConverterStatus( final long totalEntries )
+        {
+            if ( totalEntries < 1 )
+            {
+                throw new IllegalArgumentException( "There is no entry to convert." );
             }
             this.totalEntries = totalEntries;
             convertedEntries = 0;
         }
 
-        public long incrementConvertedEntries(final long incrementValue) {
+        public long incrementConvertedEntries( final long incrementValue )
+        {
             return convertedEntries = convertedEntries + incrementValue;
         }
 
-        public double getProgressionPercent() {
-            return (((double) convertedEntries / (double) totalEntries) * 100);
+        public double getProgressionPercent()
+        {
+            return ( ( (double) convertedEntries / (double) totalEntries ) * 100 );
         }
 
-        public long getRemainingEntries() {
+        public long getRemainingEntries()
+        {
             return totalEntries - convertedEntries;
         }
     }

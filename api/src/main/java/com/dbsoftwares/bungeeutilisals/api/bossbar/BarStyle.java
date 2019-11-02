@@ -23,7 +23,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class BarStyle {
+public class BarStyle
+{
 
     public static final BarStyle SOLID;
     public static final BarStyle SIX_SEGMENTS;
@@ -33,36 +34,43 @@ public class BarStyle {
 
     public static final List<BarStyle> values;
 
-    static {
-        SOLID = new BarStyle(0);
-        SIX_SEGMENTS = new BarStyle(1);
-        TEN_SEGMENTS = new BarStyle(2);
-        TWELVE_SEGMENTS = new BarStyle(3);
-        TWENTY_SEGMENTS = new BarStyle(4);
+    static
+    {
+        SOLID = new BarStyle( 0 );
+        SIX_SEGMENTS = new BarStyle( 1 );
+        TEN_SEGMENTS = new BarStyle( 2 );
+        TWELVE_SEGMENTS = new BarStyle( 3 );
+        TWENTY_SEGMENTS = new BarStyle( 4 );
 
-        values = Lists.newArrayList(SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS);
+        values = Lists.newArrayList( SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS );
     }
 
     @Getter
     private int id;
 
-    public BarStyle(int id) {
+    public BarStyle( int id )
+    {
         this.id = id;
     }
 
-    public static BarStyle[] values() {
-        return values.toArray(new BarStyle[0]);
+    public static BarStyle[] values()
+    {
+        return values.toArray( new BarStyle[0] );
     }
 
-    public static BarStyle fromId(int action) {
-        return values.stream().filter(a -> a.id == action).findFirst().orElse(SOLID);
+    public static BarStyle fromId( int action )
+    {
+        return values.stream().filter( a -> a.id == action ).findFirst().orElse( SOLID );
     }
 
-    public static BarStyle valueOf(String style) {
-        if (style == null) {
+    public static BarStyle valueOf( String style )
+    {
+        if ( style == null )
+        {
             return SOLID;
         }
-        switch (style) {
+        switch ( style )
+        {
             default:
             case "SOLID":
                 return SOLID;
@@ -78,7 +86,8 @@ public class BarStyle {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj == this || (obj instanceof BarStyle && ((BarStyle) obj).getId() == id);
+    public boolean equals( Object obj )
+    {
+        return obj == this || ( obj instanceof BarStyle && ( (BarStyle) obj ).getId() == id );
     }
 }

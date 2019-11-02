@@ -30,57 +30,67 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FriendRemoveRequestSubCommand extends SubCommand {
+public class FriendRemoveRequestSubCommand extends SubCommand
+{
 
-    public FriendRemoveRequestSubCommand() {
+    public FriendRemoveRequestSubCommand()
+    {
         super(
                 "removerequest", 1, 1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.removerequest.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.removerequest.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends removerequest (name)";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.removerequest.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.removerequest.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String name = args[0];
-        final int friendLimit = FriendUtils.getFriendsLimit(user);
+        final int friendLimit = FriendUtils.getFriendsLimit( user );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( name );
         final UserStorage storage;
 
-        if (optionalTarget.isPresent()) {
+        if ( optionalTarget.isPresent() )
+        {
             storage = optionalTarget.get().getStorage();
-        } else {
-            if (!dao.getUserDao().exists(args[0])) {
-                user.sendLangMessage("never-joined");
+        } else
+        {
+            if ( !dao.getUserDao().exists( args[0] ) )
+            {
+                user.sendLangMessage( "never-joined" );
                 return;
             }
 
-            storage = dao.getUserDao().getUserData(name);
+            storage = dao.getUserDao().getUserData( name );
         }
 
-        if (!dao.getFriendsDao().hasOutgoingFriendRequest(user.getUuid(), storage.getUuid())) {
-            user.sendLangMessage("friends.removerequest.no-request", "{user}", name);
+        if ( !dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        {
+            user.sendLangMessage( "friends.removerequest.no-request", "{user}", name );
             return;
         }
 
-        dao.getFriendsDao().removeFriendRequest(storage.getUuid(), user.getUuid());
-        user.sendLangMessage("friends.removerequest.removed", "{user}", name);
+        dao.getFriendsDao().removeFriendRequest( storage.getUuid(), user.getUuid() );
+        user.sendLangMessage( "friends.removerequest.removed", "{user}", name );
 
-        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.removerequest.request-removed", "{user}", user.getName()));
+        optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.removerequest.request-removed", "{user}", user.getName() ) );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return null;
     }
 }

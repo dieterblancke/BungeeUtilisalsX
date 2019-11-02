@@ -34,186 +34,223 @@ import java.sql.*;
 import java.util.Collection;
 import java.util.Map;
 
-public class SQLtoSQLConverter extends Converter {
+public class SQLtoSQLConverter extends Converter
+{
 
     @Override
-    protected void importData(final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties) {
+    protected void importData( final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties )
+    {
         AbstractStorageManager storageManager;
-        try {
-            storageManager = createStorageManager(properties);
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        try
+        {
+            storageManager = createStorageManager( properties );
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
             return;
         }
 
         final StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append("SELECT (SELECT COUNT(*) FROM {users-table}) users, ");
+        queryBuilder.append( "SELECT (SELECT COUNT(*) FROM {users-table}) users, " );
 
-        for (PunishmentType type : PunishmentType.values()) {
-            queryBuilder.append("(SELECT COUNT(*) FROM ").append(type.getTablePlaceHolder()).append(") ").append(type.toString().toLowerCase()).append(", ");
+        for ( PunishmentType type : PunishmentType.values() )
+        {
+            queryBuilder.append( "(SELECT COUNT(*) FROM " ).append( type.getTablePlaceHolder() ).append( ") " ).append( type.toString().toLowerCase() ).append( ", " );
         }
 
-        queryBuilder.substring(0, queryBuilder.length() - 2);
-        queryBuilder.append(";");
+        queryBuilder.substring( 0, queryBuilder.length() - 2 );
+        queryBuilder.append( ";" );
 
-        String countQuery = PlaceHolderAPI.formatMessage(queryBuilder.toString());
+        String countQuery = PlaceHolderAPI.formatMessage( queryBuilder.toString() );
 
-        try (final Connection connection = storageManager.getConnection();
-             final PreparedStatement pstmt = connection.prepareStatement(countQuery);
-             final ResultSet rs = pstmt.executeQuery()) {
-            if (rs.next()) {
-                int count = rs.getInt("users");
+        try ( final Connection connection = storageManager.getConnection();
+              final PreparedStatement pstmt = connection.prepareStatement( countQuery );
+              final ResultSet rs = pstmt.executeQuery() )
+        {
+            if ( rs.next() )
+            {
+                int count = rs.getInt( "users" );
 
-                for (PunishmentType type : PunishmentType.values()) {
-                    count += rs.getInt(type.toString().toLowerCase());
+                for ( PunishmentType type : PunishmentType.values() )
+                {
+                    count += rs.getInt( type.toString().toLowerCase() );
                 }
 
-                status = new ConverterStatus(count);
+                status = new ConverterStatus( count );
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
 
-        try (final Connection connection = storageManager.getConnection();
-             final PreparedStatement preparedStatement = connection.prepareStatement(PlaceHolderAPI.formatMessage("SELECT * FROM {users-table} ORDER BY id ASC;"));
-             final ResultSet rs = preparedStatement.executeQuery()) {
+        try ( final Connection connection = storageManager.getConnection();
+              final PreparedStatement preparedStatement = connection.prepareStatement( PlaceHolderAPI.formatMessage( "SELECT * FROM {users-table} ORDER BY id ASC;" ) );
+              final ResultSet rs = preparedStatement.executeQuery() )
+        {
 
-            try (final Connection newConnection = BUCore.getApi().getStorageManager().getConnection()) {
-                newConnection.setAutoCommit(false);
-                while (rs.next()) {
-                    createUser(newConnection, rs);
-                    status.incrementConvertedEntries(1);
-                    importerCallback.onStatusUpdate(status);
+            try ( final Connection newConnection = BUCore.getApi().getStorageManager().getConnection() )
+            {
+                newConnection.setAutoCommit( false );
+                while ( rs.next() )
+                {
+                    createUser( newConnection, rs );
+                    status.incrementConvertedEntries( 1 );
+                    importerCallback.onStatusUpdate( status );
 
-                    if (status.getConvertedEntries() % 100 == 0) {
+                    if ( status.getConvertedEntries() % 100 == 0 )
+                    {
                         newConnection.commit();
                     }
                 }
                 newConnection.commit();
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
 
-        for (PunishmentType type : PunishmentType.values()) {
-            try (final Connection connection = storageManager.getConnection();
-                 final PreparedStatement preparedStatement = connection.prepareStatement(PlaceHolderAPI.formatMessage("SELECT * FROM " + type.getTablePlaceHolder() + " ORDER BY id ASC;"));
-                 final ResultSet rs = preparedStatement.executeQuery()) {
+        for ( PunishmentType type : PunishmentType.values() )
+        {
+            try ( final Connection connection = storageManager.getConnection();
+                  final PreparedStatement preparedStatement = connection.prepareStatement( PlaceHolderAPI.formatMessage( "SELECT * FROM " + type.getTablePlaceHolder() + " ORDER BY id ASC;" ) );
+                  final ResultSet rs = preparedStatement.executeQuery() )
+            {
 
-                try (final Connection newConnection = BUCore.getApi().getStorageManager().getConnection()) {
-                    newConnection.setAutoCommit(false);
-                    while (rs.next()) {
-                        createPunishment(type, newConnection, rs);
-                        status.incrementConvertedEntries(1);
-                        importerCallback.onStatusUpdate(status);
+                try ( final Connection newConnection = BUCore.getApi().getStorageManager().getConnection() )
+                {
+                    newConnection.setAutoCommit( false );
+                    while ( rs.next() )
+                    {
+                        createPunishment( type, newConnection, rs );
+                        status.incrementConvertedEntries( 1 );
+                        importerCallback.onStatusUpdate( status );
 
-                        if (status.getConvertedEntries() % 100 == 0) {
+                        if ( status.getConvertedEntries() % 100 == 0 )
+                        {
                             newConnection.commit();
                         }
                     }
                     newConnection.commit();
                 }
-            } catch (SQLException e) {
-                BUCore.logException(e);
+            } catch ( SQLException e )
+            {
+                BUCore.logException( e );
             }
         }
     }
 
-    private void createUser(Connection connection, ResultSet rs) throws SQLException {
-        try (PreparedStatement preparedStatement = connection.prepareStatement(
-                PlaceHolderAPI.formatMessage("INSERT INTO {users-table}(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);")
-        )) {
-            preparedStatement.setString(1, rs.getString("uuid"));
-            preparedStatement.setString(2, rs.getString("username"));
-            preparedStatement.setString(3, rs.getString("ip"));
-            preparedStatement.setString(4, rs.getString("language"));
-            preparedStatement.setString(5, rs.getString("firstlogin"));
-            preparedStatement.setString(6, rs.getString("lastlogout"));
+    private void createUser( Connection connection, ResultSet rs ) throws SQLException
+    {
+        try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                PlaceHolderAPI.formatMessage( "INSERT INTO {users-table}(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);" )
+        ) )
+        {
+            preparedStatement.setString( 1, rs.getString( "uuid" ) );
+            preparedStatement.setString( 2, rs.getString( "username" ) );
+            preparedStatement.setString( 3, rs.getString( "ip" ) );
+            preparedStatement.setString( 4, rs.getString( "language" ) );
+            preparedStatement.setString( 5, rs.getString( "firstlogin" ) );
+            preparedStatement.setString( 6, rs.getString( "lastlogout" ) );
 
             preparedStatement.executeUpdate();
         }
     }
 
-    private void createPunishment(PunishmentType type, Connection connection, ResultSet rs) throws SQLException {
-        if (!type.isActivatable()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, executed_by) VALUES (?, ?, ?, ?, ?, ?, ?);")
-            )) {
-                preparedStatement.setString(1, rs.getString("uuid"));
-                preparedStatement.setString(2, rs.getString("user"));
-                preparedStatement.setString(3, rs.getString("ip"));
-                preparedStatement.setString(4, rs.getString("reason"));
-                preparedStatement.setString(5, rs.getString("server"));
-                preparedStatement.setString(6, rs.getString("date"));
-                preparedStatement.setString(7, rs.getString("executed_by"));
+    private void createPunishment( PunishmentType type, Connection connection, ResultSet rs ) throws SQLException
+    {
+        if ( !type.isActivatable() )
+        {
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, executed_by) VALUES (?, ?, ?, ?, ?, ?, ?);" )
+            ) )
+            {
+                preparedStatement.setString( 1, rs.getString( "uuid" ) );
+                preparedStatement.setString( 2, rs.getString( "user" ) );
+                preparedStatement.setString( 3, rs.getString( "ip" ) );
+                preparedStatement.setString( 4, rs.getString( "reason" ) );
+                preparedStatement.setString( 5, rs.getString( "server" ) );
+                preparedStatement.setString( 6, rs.getString( "date" ) );
+                preparedStatement.setString( 7, rs.getString( "executed_by" ) );
 
                 preparedStatement.executeUpdate();
             }
-        } else if (type.isTemporary()) {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);")
-            )) {
-                preparedStatement.setString(1, rs.getString("uuid"));
-                preparedStatement.setString(2, rs.getString("user"));
-                preparedStatement.setString(3, rs.getString("ip"));
-                preparedStatement.setLong(4, rs.getLong("time"));
-                preparedStatement.setString(5, rs.getString("reason"));
-                preparedStatement.setString(6, rs.getString("server"));
-                preparedStatement.setString(7, rs.getString("date"));
-                preparedStatement.setBoolean(8, rs.getBoolean("active"));
-                preparedStatement.setString(9, rs.getString("executed_by"));
-                preparedStatement.setString(10, rs.getString("removed_by"));
+        } else if ( type.isTemporary() )
+        {
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+            ) )
+            {
+                preparedStatement.setString( 1, rs.getString( "uuid" ) );
+                preparedStatement.setString( 2, rs.getString( "user" ) );
+                preparedStatement.setString( 3, rs.getString( "ip" ) );
+                preparedStatement.setLong( 4, rs.getLong( "time" ) );
+                preparedStatement.setString( 5, rs.getString( "reason" ) );
+                preparedStatement.setString( 6, rs.getString( "server" ) );
+                preparedStatement.setString( 7, rs.getString( "date" ) );
+                preparedStatement.setBoolean( 8, rs.getBoolean( "active" ) );
+                preparedStatement.setString( 9, rs.getString( "executed_by" ) );
+                preparedStatement.setString( 10, rs.getString( "removed_by" ) );
 
                 preparedStatement.executeUpdate();
             }
-        } else {
-            try (PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);")
-            )) {
-                preparedStatement.setString(1, rs.getString("uuid"));
-                preparedStatement.setString(2, rs.getString("user"));
-                preparedStatement.setString(3, rs.getString("ip"));
-                preparedStatement.setString(4, rs.getString("reason"));
-                preparedStatement.setString(5, rs.getString("server"));
-                preparedStatement.setString(6, rs.getString("date"));
-                preparedStatement.setBoolean(7, rs.getBoolean("active"));
-                preparedStatement.setString(8, rs.getString("executed_by"));
-                preparedStatement.setString(9, rs.getString("removed_by"));
+        } else
+        {
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+            ) )
+            {
+                preparedStatement.setString( 1, rs.getString( "uuid" ) );
+                preparedStatement.setString( 2, rs.getString( "user" ) );
+                preparedStatement.setString( 3, rs.getString( "ip" ) );
+                preparedStatement.setString( 4, rs.getString( "reason" ) );
+                preparedStatement.setString( 5, rs.getString( "server" ) );
+                preparedStatement.setString( 6, rs.getString( "date" ) );
+                preparedStatement.setBoolean( 7, rs.getBoolean( "active" ) );
+                preparedStatement.setString( 8, rs.getString( "executed_by" ) );
+                preparedStatement.setString( 9, rs.getString( "removed_by" ) );
 
                 preparedStatement.executeUpdate();
             }
         }
     }
 
-    private AbstractStorageManager createStorageManager(final Map<String, String> properties) throws SQLException {
-        if (properties.isEmpty()) {
-            throw new IllegalArgumentException("Invalid properties supplied.");
+    private AbstractStorageManager createStorageManager( final Map<String, String> properties ) throws SQLException
+    {
+        if ( properties.isEmpty() )
+        {
+            throw new IllegalArgumentException( "Invalid properties supplied." );
         }
-        final StorageType type = StorageType.valueOf(properties.get("type").toUpperCase());
+        final StorageType type = StorageType.valueOf( properties.get( "type" ).toUpperCase() );
 
-        if (type.equals(StorageType.SQLITE)) { // sqlite
-            return new SQLiteStorageManager(BungeeUtilisals.getInstance());
-        } else { // mysql, mariadb or postgresql
-            return new AbstractStorageManager(BungeeUtilisals.getInstance(), type, new SQLDao()) {
+        if ( type.equals( StorageType.SQLITE ) )
+        { // sqlite
+            return new SQLiteStorageManager( BungeeUtilisals.getInstance() );
+        } else
+        { // mysql, mariadb or postgresql
+            return new AbstractStorageManager( BungeeUtilisals.getInstance(), type, new SQLDao() )
+            {
 
                 private Collection<Connection> connections = Lists.newArrayList();
 
                 @Override
-                public Connection getConnection() throws SQLException {
+                public Connection getConnection() throws SQLException
+                {
                     final Connection connection = DriverManager.getConnection(
-                            "jdbc:" + (type.equals(StorageType.POSTGRESQL) ? "postgresql" : "mysql") + "://" + properties.get("host") + ":"
-                                    + properties.get("port")
-                                    + "/" + properties.get("database"),
-                            properties.get("username"),
-                            properties.get("password")
+                            "jdbc:" + ( type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql" ) + "://" + properties.get( "host" ) + ":"
+                                    + properties.get( "port" )
+                                    + "/" + properties.get( "database" ),
+                            properties.get( "username" ),
+                            properties.get( "password" )
                     );
-                    connections.add(connection);
+                    connections.add( connection );
                     return connection;
                 }
 
                 @Override
-                public void close() throws SQLException {
-                    for (Connection connection : connections) {
+                public void close() throws SQLException
+                {
+                    for ( Connection connection : connections )
+                    {
                         connection.close();
                     }
                     connections.clear();

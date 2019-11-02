@@ -32,246 +32,301 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
-public class SQLReportsDao implements ReportsDao {
+public class SQLReportsDao implements ReportsDao
+{
 
     @Override
-    public void addReport(Report report) {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason, accepted) VALUES (?, ?, ?, ?, ?, ?);")
-             )) {
-            pstmt.setString(1, report.getUuid().toString());
-            pstmt.setString(2, report.getReportedBy());
-            pstmt.setBoolean(3, report.isHandled());
-            pstmt.setString(4, report.getServer());
-            pstmt.setString(5, report.getReason());
-            pstmt.setBoolean(6, report.isAccepted());
+    public void addReport( Report report )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason, accepted) VALUES (?, ?, ?, ?, ?, ?);" )
+              ) )
+        {
+            pstmt.setString( 1, report.getUuid().toString() );
+            pstmt.setString( 2, report.getReportedBy() );
+            pstmt.setBoolean( 3, report.isHandled() );
+            pstmt.setString( 4, report.getServer() );
+            pstmt.setString( 5, report.getReason() );
+            pstmt.setBoolean( 6, report.isAccepted() );
 
             pstmt.execute();
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
     }
 
     @Override
-    public void removeReport(long id) {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("DELETE FROM {reports-table} WHERE id = ?;")
-             )) {
-            pstmt.setLong(1, id);
+    public void removeReport( long id )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "DELETE FROM {reports-table} WHERE id = ?;" )
+              ) )
+        {
+            pstmt.setLong( 1, id );
 
             pstmt.execute();
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
     }
 
     @Override
-    public Report getReport(long id) {
+    public Report getReport( long id )
+    {
         Report report = null;
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;")
-             )) {
-            pstmt.setLong(1, id);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;" )
+              ) )
+        {
+            pstmt.setLong( 1, id );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    report = getReport(rs);
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    report = getReport( rs );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return report;
     }
 
     @Override
-    public List<Report> getReports() {
+    public List<Report> getReports()
+    {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid;")
-             )) {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid;" )
+              ) )
+        {
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return reports;
     }
 
     @Override
-    public List<Report> getReports(UUID uuid) {
+    public List<Report> getReports( UUID uuid )
+    {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.uuid = ?;")
-             )) {
-            pstmt.setString(1, uuid.toString());
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE r.uuid = ?;" )
+              ) )
+        {
+            pstmt.setString( 1, uuid.toString() );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return reports;
     }
 
     @Override
-    public List<Report> getActiveReports() {
-        return getHandledReports(false);
+    public List<Report> getActiveReports()
+    {
+        return getHandledReports( false );
     }
 
     @Override
-    public List<Report> getHandledReports() {
-        return getHandledReports(true);
+    public List<Report> getHandledReports()
+    {
+        return getHandledReports( true );
     }
 
-    private List<Report> getHandledReports(boolean handled) {
+    private List<Report> getHandledReports( boolean handled )
+    {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE handled = ?;")
-             )) {
-            pstmt.setBoolean(1, handled);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE handled = ?;" )
+              ) )
+        {
+            pstmt.setBoolean( 1, handled );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return reports;
     }
 
-    private List<Report> getAcceptedReports(boolean accepted) {
+    private List<Report> getAcceptedReports( boolean accepted )
+    {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE accepted = ?;")
-             )) {
-            pstmt.setBoolean(1, accepted);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE accepted = ?;" )
+              ) )
+        {
+            pstmt.setBoolean( 1, accepted );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
-        }
-        return reports;
-    }
-
-    @Override
-    public List<Report> getRecentReports(int days) {
-        final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());")
-             )) {
-            pstmt.setInt(1, -days);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
-                }
-            }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return reports;
     }
 
     @Override
-    public boolean reportExists(long id) {
+    public List<Report> getRecentReports( int days )
+    {
+        final List<Report> reports = Lists.newArrayList();
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());" )
+              ) )
+        {
+            pstmt.setInt( 1, -days );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
+                }
+            }
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+        return reports;
+    }
+
+    @Override
+    public boolean reportExists( long id )
+    {
         boolean exists = false;
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT id FROM {reports-table} WHERE id = ? LIMIT 1;")
-             )) {
-            pstmt.setLong(1, id);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT id FROM {reports-table} WHERE id = ? LIMIT 1;" )
+              ) )
+        {
+            pstmt.setLong( 1, id );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
                 exists = rs.next();
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return exists;
     }
 
     @Override
-    public void handleReport(long id, boolean accepted) {
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("UPDATE {reports-table} SET handled = ?, accepted = ? WHERE id = ?;")
-             )) {
-            pstmt.setBoolean(1, true);
-            pstmt.setBoolean(2, accepted);
-            pstmt.setLong(3, id);
+    public void handleReport( long id, boolean accepted )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "UPDATE {reports-table} SET handled = ?, accepted = ? WHERE id = ?;" )
+              ) )
+        {
+            pstmt.setBoolean( 1, true );
+            pstmt.setBoolean( 2, accepted );
+            pstmt.setLong( 3, id );
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
     }
 
     @Override
-    public List<Report> getAcceptedReports() {
-        return getAcceptedReports(true);
+    public List<Report> getAcceptedReports()
+    {
+        return getAcceptedReports( true );
     }
 
     @Override
-    public List<Report> getDeniedReports() {
-        return getAcceptedReports(false);
+    public List<Report> getDeniedReports()
+    {
+        return getAcceptedReports( false );
     }
 
     @Override
-    public List<Report> getReportsHistory(final String name) {
+    public List<Report> getReportsHistory( final String name )
+    {
         final List<Report> reports = Lists.newArrayList();
-        try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(
-                     format("SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE reported_by = ?;")
-             )) {
-            pstmt.setString(1, name);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT r.*, u.username reported FROM {reports-table} r JOIN {users-table} u ON u.uuid = r.uuid WHERE reported_by = ?;" )
+              ) )
+        {
+            pstmt.setString( 1, name );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                while (rs.next()) {
-                    reports.add(getReport(rs));
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    reports.add( getReport( rs ) );
                 }
             }
-        } catch (SQLException e) {
-            BUCore.logException(e);
+        } catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
         return reports;
     }
 
-    private String format(String line) {
-        return PlaceHolderAPI.formatMessage(line);
+    private String format( String line )
+    {
+        return PlaceHolderAPI.formatMessage( line );
     }
 
-    private Report getReport(final ResultSet rs) throws SQLException {
+    private Report getReport( final ResultSet rs ) throws SQLException
+    {
         return new Report(
-                rs.getLong("id"),
-                UUID.fromString(rs.getString("uuid")),
-                rs.getString("reported"),
-                rs.getString("reported_by"),
-                Dao.formatStringToDate(rs.getString("date")),
-                rs.getString("server"),
-                rs.getString("reason"),
-                rs.getBoolean("handled"),
-                rs.getBoolean("accepted")
+                rs.getLong( "id" ),
+                UUID.fromString( rs.getString( "uuid" ) ),
+                rs.getString( "reported" ),
+                rs.getString( "reported_by" ),
+                Dao.formatStringToDate( rs.getString( "date" ) ),
+                rs.getString( "server" ),
+                rs.getString( "reason" ),
+                rs.getBoolean( "handled" ),
+                rs.getBoolean( "accepted" )
         );
     }
 }

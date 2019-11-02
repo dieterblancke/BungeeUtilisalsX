@@ -20,7 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api.event.event;
 
 import java.lang.reflect.Method;
 
-public interface EventHandler<T extends BUEvent> {
+public interface EventHandler<T extends BUEvent>
+{
 
     /**
      * @return the event clas this handler listens to.

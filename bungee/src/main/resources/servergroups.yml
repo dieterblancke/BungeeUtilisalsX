@@ -1,17 +1,17 @@
 groups:
-- name: 'Global'
-  servers: '*'
-- name: 'Minigames'
-  servers:
-  - 'SkyWars'
-  - 'Arcade'
-  - 'SurvivalGames'
-- name: 'Lobbies'
-  servers:
-  - 'Lobby1'
-  - 'Lobby2'
-- name: 'SkyWars'
-  # If a servername ends with "*", every servername starting with the text before the "*" will be added to the ServerGroup.
-  # For example you have 10 SW servers, SW1 - 10, then "SW*" will add all these servers to the group.
-  servers:
-  - 'SW*'
+  - name: 'Global'
+    servers: '*'
+  - name: 'Minigames'
+    servers:
+      - 'SkyWars'
+      - 'Arcade'
+      - 'SurvivalGames'
+  - name: 'Lobbies'
+    servers:
+      - 'Lobby1'
+      - 'Lobby2'
+  - name: 'SkyWars'
+    # If a servername ends with "*", every servername starting with the text before the "*" will be added to the ServerGroup.
+    # For example you have 10 SW servers, SW1 - 10, then "SW*" will add all these servers to the group.
+    servers:
+      - 'SW*'

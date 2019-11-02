@@ -40,15 +40,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Data
-public abstract class Addon {
+public abstract class Addon
+{
 
     protected BUAPI api;
     private ProxyServer proxy;
     private AddonDescription description;
     private ExecutorService executorService;
 
-    public void initialize(final ProxyServer proxy, final BUAPI api, final AddonDescription description) {
-        if (this.proxy == null && this.api == null && this.description == null) {
+    public void initialize( final ProxyServer proxy, final BUAPI api, final AddonDescription description )
+    {
+        if ( this.proxy == null && this.api == null && this.description == null )
+        {
             this.proxy = proxy;
             this.api = api;
             this.description = description;
@@ -61,90 +64,113 @@ public abstract class Addon {
 
     public abstract void onReload();
 
-    public ExecutorService getExecutorService() {
-        if (this.executorService == null) {
+    public ExecutorService getExecutorService()
+    {
+        if ( this.executorService == null )
+        {
             final String name = description == null ? "UNKNOWN" : description.getName();
             this.executorService = Executors.newCachedThreadPool(
-                    new ThreadFactoryBuilder().setNameFormat(name + " Pool Thread #%1$d").build()
+                    new ThreadFactoryBuilder().setNameFormat( name + " Pool Thread #%1$d" ).build()
             );
         }
 
         return this.executorService;
     }
 
-    public InputStream getResource(final String resourceName) {
-        return getClass().getClassLoader().getResourceAsStream(resourceName);
+    public InputStream getResource( final String resourceName )
+    {
+        return getClass().getClassLoader().getResourceAsStream( resourceName );
     }
 
-    public File getDataFolder() {
-        return new File(api.getAddonManager().getAddonsFolder(), getDescription().getName());
+    public File getDataFolder()
+    {
+        return new File( api.getAddonManager().getAddonsFolder(), getDescription().getName() );
     }
 
-    public IScheduler getScheduler() {
+    public IScheduler getScheduler()
+    {
         return api.getAddonManager().getScheduler();
     }
 
-    public void registerListener(final Listener listener) {
-        ProxyServer.getInstance().getPluginManager().registerListener(BUCore.getApi().getPlugin(), listener);
-        api.getAddonManager().registerListener(this, listener);
+    public void registerListener( final Listener listener )
+    {
+        ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), listener );
+        api.getAddonManager().registerListener( this, listener );
     }
 
-    public void registerListeners(final Listener... listeners) {
-        for (Listener listener : listeners) {
-            registerListener(listener);
+    public void registerListeners( final Listener... listeners )
+    {
+        for ( Listener listener : listeners )
+        {
+            registerListener( listener );
         }
     }
 
-    public void registerListeners(final Collection<Listener> listeners) {
-        for (Listener listener : listeners) {
-            registerListener(listener);
+    public void registerListeners( final Collection<Listener> listeners )
+    {
+        for ( Listener listener : listeners )
+        {
+            registerListener( listener );
         }
     }
 
-    public <T extends BUEvent> void registerEventExecutor(Class<T> event, final EventExecutor executor) {
-        Set<EventHandler<T>> handlers = BUCore.getApi().getEventLoader().register(event, executor);
-        registerEventHandlers(handlers);
+    public <T extends BUEvent> void registerEventExecutor( Class<T> event, final EventExecutor executor )
+    {
+        Set<EventHandler<T>> handlers = BUCore.getApi().getEventLoader().register( event, executor );
+        registerEventHandlers( handlers );
     }
 
-    public <T extends BUEvent> void registerEventHandler(final EventHandler<T> handler) {
-        api.getAddonManager().registerEventHandler(this, handler);
+    public <T extends BUEvent> void registerEventHandler( final EventHandler<T> handler )
+    {
+        api.getAddonManager().registerEventHandler( this, handler );
     }
 
-    public <T extends BUEvent> void registerEventHandlers(final Collection<EventHandler<T>> handlers) {
-        for (EventHandler<T> handler : handlers) {
-            registerEventHandler(handler);
+    public <T extends BUEvent> void registerEventHandlers( final Collection<EventHandler<T>> handlers )
+    {
+        for ( EventHandler<T> handler : handlers )
+        {
+            registerEventHandler( handler );
         }
     }
 
-    public void registerCommand(final Command command) {
-        api.getAddonManager().registerCommand(this, command);
+    public void registerCommand( final Command command )
+    {
+        api.getAddonManager().registerCommand( this, command );
     }
 
-    public void registerCommands(final Command... commands) {
-        for (Command command : commands) {
-            registerCommand(command);
+    public void registerCommands( final Command... commands )
+    {
+        for ( Command command : commands )
+        {
+            registerCommand( command );
         }
     }
 
-    public void registerCommands(final Collection<Command> commands) {
-        for (Command command : commands) {
-            registerCommand(command);
+    public void registerCommands( final Collection<Command> commands )
+    {
+        for ( Command command : commands )
+        {
+            registerCommand( command );
         }
     }
 
-    public void sendLangMessage(final CommandSender sender, final String path) {
-        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), description.getName(), sender, path);
+    public void sendLangMessage( final CommandSender sender, final String path )
+    {
+        LanguageUtils.sendLangMessage( api.getAddonManager().getLanguageManager(), description.getName(), sender, path );
     }
 
-    public void sendLangMessage(final CommandSender sender, final String path, final Object... placeholders) {
-        LanguageUtils.sendLangMessage(api.getAddonManager().getLanguageManager(), description.getName(), sender, path, placeholders);
+    public void sendLangMessage( final CommandSender sender, final String path, final Object... placeholders )
+    {
+        LanguageUtils.sendLangMessage( api.getAddonManager().getLanguageManager(), description.getName(), sender, path, placeholders );
     }
 
-    public void sendLangMessage(final User user, final String path) {
-        sendLangMessage(user.getParent(), path);
+    public void sendLangMessage( final User user, final String path )
+    {
+        sendLangMessage( user.getParent(), path );
     }
 
-    public void sendLangMessage(final User user, final String path, final Object... placeholders) {
-        sendLangMessage(user.getParent(), path, placeholders);
+    public void sendLangMessage( final User user, final String path, final Object... placeholders )
+    {
+        sendLangMessage( user.getParent(), path, placeholders );
     }
 }

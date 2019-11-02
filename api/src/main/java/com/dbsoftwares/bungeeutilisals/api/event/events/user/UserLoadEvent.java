@@ -29,8 +29,10 @@ import lombok.Getter;
  */
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = true)
-public class UserLoadEvent extends AbstractEvent {
+public class UserLoadEvent extends AbstractEvent
+{
 
-    @Getter private User user;
+    @Getter
+    private User user;
 
 }

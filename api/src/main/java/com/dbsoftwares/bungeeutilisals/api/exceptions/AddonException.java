@@ -18,13 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisals.api.exceptions;
 
-public class AddonException extends RuntimeException {
+public class AddonException extends RuntimeException
+{
 
-    public AddonException(final String message) {
-        super(message);
+    public AddonException( final String message )
+    {
+        super( message );
     }
 
-    public AddonException(final String message, final Throwable t) {
-        super(message, t);
+    public AddonException( final String message, final Throwable t )
+    {
+        super( message, t );
     }
 }

@@ -35,96 +35,110 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FriendMsgSubCommand extends SubCommand {
+public class FriendMsgSubCommand extends SubCommand
+{
 
-    public FriendMsgSubCommand() {
+    public FriendMsgSubCommand()
+    {
         super(
                 "msg", 2, -1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.msg.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.msg.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends msg (name) (message)";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.msg.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.msg.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String name = args[0];
 
-        if (user.getFriends().stream().noneMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
-            user.sendLangMessage("friends.msg.not-friend", "{user}", name);
+        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        {
+            user.sendLangMessage( "friends.msg.not-friend", "{user}", name );
             return;
         }
 
-        if (BUCore.getApi().getPlayerUtils().isOnline(name)) {
-            final Optional<User> optional = BUCore.getApi().getUser(name);
-            final String message = String.join(" ", Arrays.copyOfRange(args, 1, args.length));
+        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
+        {
+            final Optional<User> optional = BUCore.getApi().getUser( name );
+            final String message = String.join( " ", Arrays.copyOfRange( args, 1, args.length ) );
 
-            if (optional.isPresent()) {
+            if ( optional.isPresent() )
+            {
                 final User target = optional.get();
 
-                if (!target.getFriendSettings().isMessages()) {
-                    user.sendLangMessage("friends.msg.disallowed");
+                if ( !target.getFriendSettings().isMessages() )
+                {
+                    user.sendLangMessage( "friends.msg.disallowed" );
                     return;
                 }
 
-                user.getStorage().setData("FRIEND_MSG_LAST_USER", target.getName());
-                target.getStorage().setData("FRIEND_MSG_LAST_USER", user.getName());
+                user.getStorage().setData( "FRIEND_MSG_LAST_USER", target.getName() );
+                target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
 
                 {
-                    String msgMessage = target.buildLangMessage("friends.msg.format.receive");
-                    msgMessage = Utils.c(msgMessage);
-                    msgMessage = msgMessage.replace("{sender}", user.getName());
-                    msgMessage = msgMessage.replace("{message}", message);
+                    String msgMessage = target.buildLangMessage( "friends.msg.format.receive" );
+                    msgMessage = Utils.c( msgMessage );
+                    msgMessage = msgMessage.replace( "{sender}", user.getName() );
+                    msgMessage = msgMessage.replace( "{message}", message );
 
-                    target.sendRawMessage(msgMessage);
+                    target.sendRawMessage( msgMessage );
                 }
                 {
-                    String msgMessage = user.buildLangMessage("friends.msg.format.send");
-                    msgMessage = Utils.c(msgMessage);
-                    msgMessage = msgMessage.replace("{receiver}", target.getName());
-                    msgMessage = msgMessage.replace("{message}", message);
+                    String msgMessage = user.buildLangMessage( "friends.msg.format.send" );
+                    msgMessage = Utils.c( msgMessage );
+                    msgMessage = msgMessage.replace( "{receiver}", target.getName() );
+                    msgMessage = msgMessage.replace( "{message}", message );
 
-                    user.sendRawMessage(msgMessage);
+                    user.sendRawMessage( msgMessage );
                 }
-            } else if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
+            } else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
+            {
                 final Dao dao = BUCore.getApi().getStorageManager().getDao();
-                final UserStorage storage = dao.getUserDao().getUserData(name);
-                final boolean allowed = dao.getFriendsDao().getSetting(storage.getUuid(), FriendSettingType.MESSAGES);
+                final UserStorage storage = dao.getUserDao().getUserData( name );
+                final boolean allowed = dao.getFriendsDao().getSetting( storage.getUuid(), FriendSettingType.MESSAGES );
 
-                if (!allowed) {
-                    user.sendLangMessage("friends.msg.disallowed");
+                if ( !allowed )
+                {
+                    user.sendLangMessage( "friends.msg.disallowed" );
                     return;
                 }
 
                 final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
-                        .getRedisMessenger().getHandler(FriendMsgMessageHandler.class);
+                        .getRedisMessenger().getHandler( FriendMsgMessageHandler.class );
 
-                handler.send(new MessageData("msg", user.getUuid(), user.getName(), name, message));
+                handler.send( new MessageData( "msg", user.getUuid(), user.getName(), name, message ) );
 
-                String msgMessage = user.buildLangMessage("friends.msg.format.send");
-                msgMessage = Utils.c(msgMessage);
-                msgMessage = msgMessage.replace("{receiver}", name);
-                msgMessage = msgMessage.replace("{message}", message);
+                String msgMessage = user.buildLangMessage( "friends.msg.format.send" );
+                msgMessage = Utils.c( msgMessage );
+                msgMessage = msgMessage.replace( "{receiver}", name );
+                msgMessage = msgMessage.replace( "{message}", message );
 
-                user.sendRawMessage(msgMessage);
-            } else {
-                user.sendLangMessage("offline");
+                user.sendRawMessage( msgMessage );
+            } else
+            {
+                user.sendLangMessage( "offline" );
             }
-        } else {
-            user.sendLangMessage("offline");
+        } else
+        {
+            user.sendLangMessage( "offline" );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return null;
     }
 }

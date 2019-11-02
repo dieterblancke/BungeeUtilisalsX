@@ -21,33 +21,40 @@ package com.dbsoftwares.bungeeutilisals.api.friends;
 import lombok.Data;
 
 @Data
-public class FriendSettings {
+public class FriendSettings
+{
 
     private boolean requests;
     private boolean messages;
 
-    public FriendSettings() {
-        this(FriendSettingType.REQUESTS.getDefault(), FriendSettingType.MESSAGES.getDefault());
+    public FriendSettings()
+    {
+        this( FriendSettingType.REQUESTS.getDefault(), FriendSettingType.MESSAGES.getDefault() );
     }
 
-    public FriendSettings(final boolean requests, final boolean messages) {
+    public FriendSettings( final boolean requests, final boolean messages )
+    {
         this.requests = requests;
         this.messages = messages;
     }
 
-    public void set(final FriendSettingType type, final boolean value) {
-        switch (type) {
+    public void set( final FriendSettingType type, final boolean value )
+    {
+        switch ( type )
+        {
             case REQUESTS:
-                setRequests(value);
+                setRequests( value );
                 break;
             case MESSAGES:
-                setMessages(value);
+                setMessages( value );
                 break;
         }
     }
 
-    public boolean check(final FriendSettingType type) {
-        switch (type) {
+    public boolean check( final FriendSettingType type )
+    {
+        switch ( type )
+        {
             case REQUESTS:
                 return isRequests();
             case MESSAGES:

@@ -30,37 +30,44 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.Optional;
 
-public class UserChatListener implements Listener {
+public class UserChatListener implements Listener
+{
 
     @EventHandler
-    public void onChat(ChatEvent event) {
+    public void onChat( ChatEvent event )
+    {
         BUAPI api = BungeeUtilisals.getApi();
-        Optional<User> optional = api.getUser(((CommandSender) event.getSender()).getName());
+        Optional<User> optional = api.getUser( ( (CommandSender) event.getSender() ).getName() );
 
-        if (!optional.isPresent()) {
+        if ( !optional.isPresent() )
+        {
             return;
         }
         User user = optional.get();
 
-        if (event.isCommand()) {
-            UserCommandEvent commandEvent = new UserCommandEvent(user, event.getMessage());
-            api.getEventLoader().launchEvent(commandEvent);
+        if ( event.isCommand() )
+        {
+            UserCommandEvent commandEvent = new UserCommandEvent( user, event.getMessage() );
+            api.getEventLoader().launchEvent( commandEvent );
 
-            if (commandEvent.isCancelled()) {
-                event.setCancelled(true);
+            if ( commandEvent.isCancelled() )
+            {
+                event.setCancelled( true );
                 return;
             }
-            event.setMessage(commandEvent.getCommand());
-        } else {
-            UserChatEvent chatEvent = new UserChatEvent(user, event.getMessage());
-            api.getEventLoader().launchEvent(chatEvent);
+            event.setMessage( commandEvent.getCommand() );
+        } else
+        {
+            UserChatEvent chatEvent = new UserChatEvent( user, event.getMessage() );
+            api.getEventLoader().launchEvent( chatEvent );
 
-            if (chatEvent.isCancelled()) {
-                event.setCancelled(true);
+            if ( chatEvent.isCancelled() )
+            {
+                event.setCancelled( true );
                 return;
             }
 
-            event.setMessage(chatEvent.getMessage());
+            event.setMessage( chatEvent.getMessage() );
         }
     }
 }

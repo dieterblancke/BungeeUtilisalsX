@@ -23,7 +23,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ChatMessagePartim {
+public class ChatMessagePartim
+{
 
     private String message;
     private HoverPartim hoverPartim;

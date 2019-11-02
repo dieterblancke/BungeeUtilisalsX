@@ -25,39 +25,49 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AddonDisableSubCommand extends SubCommand {
+public class AddonDisableSubCommand extends SubCommand
+{
 
-    public AddonDisableSubCommand() {
-        super("disable", 1);
+    public AddonDisableSubCommand()
+    {
+        super( "disable", 1 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/addons disable (name)";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.addons.disable";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String addonName = args[0];
-        if (BUCore.getApi().getAddonManager().isRegistered(addonName)) {
-            try {
-                BUCore.getApi().getAddonManager().disableAddon(addonName);
-                user.sendLangMessage("general-commands.addon.disable.success", "{name}", addonName);
-            } catch (Exception e) {
-                user.sendLangMessage("general-commands.addon.disable.error", "{name}", addonName);
+        if ( BUCore.getApi().getAddonManager().isRegistered( addonName ) )
+        {
+            try
+            {
+                BUCore.getApi().getAddonManager().disableAddon( addonName );
+                user.sendLangMessage( "general-commands.addon.disable.success", "{name}", addonName );
+            } catch ( Exception e )
+            {
+                user.sendLangMessage( "general-commands.addon.disable.error", "{name}", addonName );
             }
-        } else {
-            user.sendLangMessage("general-commands.addon.notfound", "{name}", addonName);
+        } else
+        {
+            user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
-        return BUCore.getApi().getAddonManager().getAddons().stream().map(addon -> addon.getDescription().getName()).collect(Collectors.toList());
+    public List<String> getCompletions( User user, String[] args )
+    {
+        return BUCore.getApi().getAddonManager().getAddons().stream().map( addon -> addon.getDescription().getName() ).collect( Collectors.toList() );
     }
 }

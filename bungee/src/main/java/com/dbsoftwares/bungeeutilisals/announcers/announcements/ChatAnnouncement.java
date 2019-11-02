@@ -38,52 +38,64 @@ import java.util.stream.Stream;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class ChatAnnouncement extends Announcement {
+public class ChatAnnouncement extends Announcement
+{
 
     private boolean prefix;
     private String languagePath;
     private List<String> messages;
 
-    public ChatAnnouncement(boolean prefix, String languagePath, ServerGroup serverGroup, String receivePermission) {
-        super(serverGroup, receivePermission);
+    public ChatAnnouncement( boolean prefix, String languagePath, ServerGroup serverGroup, String receivePermission )
+    {
+        super( serverGroup, receivePermission );
 
         this.prefix = prefix;
         this.languagePath = languagePath;
     }
 
-    public ChatAnnouncement(boolean prefix, List<String> messages, ServerGroup serverGroup, String receivePermission) {
-        super(serverGroup, receivePermission);
+    public ChatAnnouncement( boolean prefix, List<String> messages, ServerGroup serverGroup, String receivePermission )
+    {
+        super( serverGroup, receivePermission );
 
         this.prefix = prefix;
         this.messages = messages;
     }
 
     @Override
-    public void send() {
-        if (serverGroup.isGlobal()) {
-            send(filter(ProxyServer.getInstance().getPlayers().stream()));
-        } else {
-            serverGroup.getServerInfos().forEach(server -> send(filter(server.getPlayers().stream())));
+    public void send()
+    {
+        if ( serverGroup.isGlobal() )
+        {
+            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+        } else
+        {
+            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
         }
     }
 
-    private void send(Stream<ProxiedPlayer> stream) {
-        stream.forEach(player -> {
+    private void send( Stream<ProxiedPlayer> stream )
+    {
+        stream.forEach( player ->
+        {
             IConfiguration config = BUCore.getApi().getLanguageManager()
-                    .getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
+                    .getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), player );
 
             final List<String> messageList;
-            if (languagePath != null) {
-                messageList = config.getStringList(languagePath);
-            } else {
+            if ( languagePath != null )
+            {
+                messageList = config.getStringList( languagePath );
+            } else
+            {
                 messageList = messages;
             }
-            for (String message : messageList) {
-                if (prefix) {
-                    message = config.getString("prefix") + message;
+            for ( String message : messageList )
+            {
+                if ( prefix )
+                {
+                    message = config.getString( "prefix" ) + message;
                 }
-                player.sendMessage(Utils.format(player, message));
+                player.sendMessage( Utils.format( player, message ) );
             }
-        });
+        } );
     }
 }

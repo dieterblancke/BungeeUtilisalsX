@@ -29,58 +29,76 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class PlaceHolderAPI {
+public class PlaceHolderAPI
+{
 
     private static List<PlaceHolder> placeholders = Lists.newArrayList();
 
-    private PlaceHolderAPI() {
+    private PlaceHolderAPI()
+    {
     }
 
-    public static String formatMessage(User user, String message) {
-        if (user == null) {
-            return formatMessage(message);
+    public static String formatMessage( User user, String message )
+    {
+        if ( user == null )
+        {
+            return formatMessage( message );
         }
-        try {
-            for (PlaceHolder placeholder : placeholders) {
-                message = placeholder.format(user, message);
+        try
+        {
+            for ( PlaceHolder placeholder : placeholders )
+            {
+                message = placeholder.format( user, message );
             }
             return message;
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
             return message;
         }
     }
 
-    public static String formatMessage(String message) {
-        try {
-            for (PlaceHolder placeholder : placeholders) {
-                if (placeholder.requiresUser()) {
+    public static String formatMessage( String message )
+    {
+        try
+        {
+            for ( PlaceHolder placeholder : placeholders )
+            {
+                if ( placeholder.requiresUser() )
+                {
                     continue;
                 }
-                message = placeholder.format(null, message);
+                message = placeholder.format( null, message );
             }
             return message;
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
             return message;
         }
     }
 
-    public static void loadPlaceHolderPack(PlaceHolderPack pack) {
+    public static void loadPlaceHolderPack( PlaceHolderPack pack )
+    {
         pack.loadPack();
     }
 
-    public static void addPlaceHolder(String placeholder, boolean requiresUser, PlaceHolderEventHandler handler) {
-        placeholders.add(new DefaultPlaceHolder(placeholder, requiresUser, handler));
+    public static void addPlaceHolder( String placeholder, boolean requiresUser, PlaceHolderEventHandler handler )
+    {
+        placeholders.add( new DefaultPlaceHolder( placeholder, requiresUser, handler ) );
     }
 
-    public static void addPlaceHolder(boolean requiresUser, String prefix, InputPlaceHolderEventHandler handler) {
-        placeholders.add(new InputPlaceHolder(requiresUser, prefix, handler));
+    public static void addPlaceHolder( boolean requiresUser, String prefix, InputPlaceHolderEventHandler handler )
+    {
+        placeholders.add( new InputPlaceHolder( requiresUser, prefix, handler ) );
     }
 
-    public static PlaceHolder getPlaceHolder(String placeholder) {
-        for (PlaceHolder ph : placeholders) {
-            if (ph.getPlaceHolderName().equalsIgnoreCase(placeholder)) {
+    public static PlaceHolder getPlaceHolder( String placeholder )
+    {
+        for ( PlaceHolder ph : placeholders )
+        {
+            if ( ph.getPlaceHolderName().equalsIgnoreCase( placeholder ) )
+            {
                 return ph;
             }
         }

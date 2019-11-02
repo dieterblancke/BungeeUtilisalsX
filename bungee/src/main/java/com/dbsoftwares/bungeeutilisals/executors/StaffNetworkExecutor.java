@@ -29,31 +29,35 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
 
-public class StaffNetworkExecutor implements EventExecutor {
+public class StaffNetworkExecutor implements EventExecutor
+{
 
     @Event
-    public void onJoin(final NetworkStaffJoinEvent event) {
+    public void onJoin( final NetworkStaffJoinEvent event )
+    {
         BungeeUtilisals.getInstance().getStaffMembers().add(
-                new StaffUser(event.getUserName(), event.getUuid(), findStaffRank(event.getStaffRank()))
+                new StaffUser( event.getUserName(), event.getUuid(), findStaffRank( event.getStaffRank() ) )
         );
     }
 
     @Event
-    public void onLeave(final NetworkStaffLeaveEvent event) {
+    public void onLeave( final NetworkStaffLeaveEvent event )
+    {
         BungeeUtilisals.getInstance().getStaffMembers().removeIf(
-                staffUser -> staffUser.getName().equals(event.getUserName())
+                staffUser -> staffUser.getName().equals( event.getUserName() )
         );
     }
 
-    private StaffRankData findStaffRank(final String rankName) {
+    private StaffRankData findStaffRank( final String rankName )
+    {
         final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
 
         return ranks.stream()
-                .filter(rank -> rank.getName().equals(rankName))
+                .filter( rank -> rank.getName().equals( rankName ) )
                 .findFirst()
-                .orElseThrow(() -> new RuntimeException(
+                .orElseThrow( () -> new RuntimeException(
                         "Could not find a staff rank called \"" + rankName + "\"."
                                 + " If you are using redis, make sure the configs are synchronized."
-                ));
+                ) );
     }
 }

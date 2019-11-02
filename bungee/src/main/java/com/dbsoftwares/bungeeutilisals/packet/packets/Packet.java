@@ -28,25 +28,28 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 
 import java.util.Optional;
 
-public abstract class Packet extends DefinedPacket {
+public abstract class Packet extends DefinedPacket
+{
 
     @Override
-    public abstract void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion);
+    public abstract void read( ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion );
 
     @Override
-    public abstract void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion);
+    public abstract void write( ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion );
 
-    public abstract void handle(User user) throws Exception;
+    public abstract void handle( User user ) throws Exception;
 
     @Override
-    public void handle(AbstractPacketHandler handler) throws Exception {
-        final String name = Utils.getName(handler);
-        final Optional<User> optionalUser = BUCore.getApi().getUser(name);
+    public void handle( AbstractPacketHandler handler ) throws Exception
+    {
+        final String name = Utils.getName( handler );
+        final Optional<User> optionalUser = BUCore.getApi().getUser( name );
 
-        if (optionalUser.isPresent()) {
+        if ( optionalUser.isPresent() )
+        {
             User user = optionalUser.get();
 
-            handle(user);
+            handle( user );
         }
     }
 }

@@ -24,7 +24,8 @@ import net.md_5.bungee.api.chat.HoverEvent;
 
 @Data
 @AllArgsConstructor
-public class HoverPartim {
+public class HoverPartim
+{
 
     private HoverEvent.Action action;
     private String text;

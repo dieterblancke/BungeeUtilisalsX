@@ -36,58 +36,67 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.Arrays;
 import java.util.List;
 
-public class GListCommand extends BUCommand {
+public class GListCommand extends BUCommand
+{
 
-    public GListCommand() {
+    public GListCommand()
+    {
         super(
                 "glist",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("glist.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("glist.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glist.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glist.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
-        String color = config.getString("glist.playerlist.color");
-        String separator = config.getString("glist.playerlist.separator");
+        String color = config.getString( "glist.playerlist.color" );
+        String separator = config.getString( "glist.playerlist.separator" );
         List<TextComponent> messages = Lists.newArrayList();
 
-        if (config.getBoolean("glist.servers.enabled")) {
-            for (String server : config.getStringList("glist.servers.list")) {
-                ServerGroup group = FileLocation.SERVERGROUPS.getData(server);
+        if ( config.getBoolean( "glist.servers.enabled" ) )
+        {
+            for ( String server : config.getStringList( "glist.servers.list" ) )
+            {
+                ServerGroup group = FileLocation.SERVERGROUPS.getData( server );
 
-                if (group == null) {
-                    BUCore.getLogger().warn("Could not find a servergroup or -name for " + server + "!");
+                if ( group == null )
+                {
+                    BUCore.getLogger().warn( "Could not find a servergroup or -name for " + server + "!" );
                     return;
                 }
 
-                messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.format"),
+                messages.add( MessageBuilder.buildMessage( user, config.getSection( "glist.format" ),
                         "%server%", group.getName(),
-                        "%players%", String.valueOf(group.getPlayers()),
-                        "%playerlist%", Utils.c(color + Joiner.on(separator).join(group.getPlayerList()))
-                ));
+                        "%players%", String.valueOf( group.getPlayers() ),
+                        "%playerlist%", Utils.c( color + Joiner.on( separator ).join( group.getPlayerList() ) )
+                ) );
             }
-        } else {
-            for (ServerInfo info : ProxyServer.getInstance().getServers().values()) {
-                messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.format"),
+        } else
+        {
+            for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
+            {
+                messages.add( MessageBuilder.buildMessage( user, config.getSection( "glist.format" ),
                         "%server%", info.getName(),
-                        "%players%", String.valueOf(info.getPlayers().size()),
-                        "%playerlist%", Utils.c(color + Joiner.on(separator).join(info.getPlayers()))
-                ));
+                        "%players%", String.valueOf( info.getPlayers().size() ),
+                        "%playerlist%", Utils.c( color + Joiner.on( separator ).join( info.getPlayers() ) )
+                ) );
             }
         }
-        messages.add(MessageBuilder.buildMessage(user, config.getSection("glist.total"),
+        messages.add( MessageBuilder.buildMessage( user, config.getSection( "glist.total" ),
                 "%total%", BUCore.getApi().getPlayerUtils().getTotalCount(),
-                "%playerlist%", Utils.c(color + Joiner.on(separator)
-                        .join(BUCore.getApi().getPlayerUtils().getPlayers()))
-        ));
+                "%playerlist%", Utils.c( color + Joiner.on( separator )
+                        .join( BUCore.getApi().getPlayerUtils().getPlayers() ) )
+        ) );
 
-        messages.forEach(user::sendMessage);
+        messages.forEach( user::sendMessage );
     }
 }

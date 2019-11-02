@@ -42,146 +42,167 @@ import java.util.LinkedHashMap;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class MongoPunishmentDao implements PunishmentDao {
+public class MongoPunishmentDao implements PunishmentDao
+{
 
     private final BansDao bansDao;
     private final MutesDao mutesDao;
     private final KickAndWarnDao kickAndWarnDao;
 
-    public MongoPunishmentDao() {
+    public MongoPunishmentDao()
+    {
         this.bansDao = new MongoBansDao();
         this.mutesDao = new MongoMutesDao();
         this.kickAndWarnDao = new MongoKickAndWarnDao();
     }
 
     @Override
-    public BansDao getBansDao() {
+    public BansDao getBansDao()
+    {
         return bansDao;
     }
 
     @Override
-    public MutesDao getMutesDao() {
+    public MutesDao getMutesDao()
+    {
         return mutesDao;
     }
 
     @Override
-    public KickAndWarnDao getKickAndWarnDao() {
+    public KickAndWarnDao getKickAndWarnDao()
+    {
         return kickAndWarnDao;
     }
 
     @Override
-    public long getPunishmentsSince(PunishmentType type, UUID uuid, Date date) {
-        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+    public long getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
-        if (type.isActivatable()) {
-            return collection.countDocuments(Filters.and(
-                    Filters.eq("uuid", uuid.toString()),
-                    Filters.gte("date", date),
-                    Filters.eq("type", type.toString()),
-                    Filters.eq("punishmentaction_status", false)
-            ));
-        } else {
-            return collection.countDocuments(Filters.and(
-                    Filters.eq("uuid", uuid),
-                    Filters.gte("date", date),
-                    Filters.eq("punishmentaction_status", false)
-            ));
+        if ( type.isActivatable() )
+        {
+            return collection.countDocuments( Filters.and(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "type", type.toString() ),
+                    Filters.eq( "punishmentaction_status", false )
+            ) );
+        } else
+        {
+            return collection.countDocuments( Filters.and(
+                    Filters.eq( "uuid", uuid ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "punishmentaction_status", false )
+            ) );
         }
     }
 
     @Override
-    public long getIPPunishmentsSince(PunishmentType type, String ip, Date date) {
-        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+    public long getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
-        return collection.countDocuments(Filters.and(
-                Filters.eq("ip", ip),
-                Filters.gte("date", date),
-                Filters.eq("type", type.toString()),
-                Filters.eq("punishmentaction_status", false)
-        ));
+        return collection.countDocuments( Filters.and(
+                Filters.eq( "ip", ip ),
+                Filters.gte( "date", date ),
+                Filters.eq( "type", type.toString() ),
+                Filters.eq( "punishmentaction_status", false )
+        ) );
     }
 
     @Override
-    public void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date) {
-        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+    public void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
-        if (type.isActivatable()) {
+        if ( type.isActivatable() )
+        {
             collection.find(
                     Filters.and(
-                            Filters.eq("uuid", uuid.toString()),
-                            Filters.gte("date", date),
-                            Filters.eq("type", type.toString()),
-                            Filters.eq("punishmentaction_status", false)
-                    ))
-                    .sort(Sorts.ascending("date"))
-                    .limit(limit)
-                    .forEach((Consumer<? super Document>) doc -> {
-                        doc.put("punishmentaction_status", true);
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "type", type.toString() ),
+                            Filters.eq( "punishmentaction_status", false )
+                    ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
 
-                        save(collection, doc);
-                    });
-        } else {
+                        save( collection, doc );
+                    } );
+        } else
+        {
             collection.find(
                     Filters.and(
-                            Filters.eq("uuid", uuid.toString()),
-                            Filters.gte("date", date),
-                            Filters.eq("punishmentaction_status", false)
-                    ))
-                    .sort(Sorts.ascending("date"))
-                    .limit(limit)
-                    .forEach((Consumer<? super Document>) doc -> {
-                        doc.put("punishmentaction_status", true);
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "punishmentaction_status", false )
+                    ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
 
-                        save(collection, doc);
-                    });
+                        save( collection, doc );
+                    } );
         }
     }
 
     @Override
-    public void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date) {
-        final MongoCollection<Document> collection = db().getCollection(type.getTable());
+    public void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
         collection.find(
                 Filters.and(
-                        Filters.eq("ip", ip),
-                        Filters.gte("date", date),
-                        Filters.eq("type", type.toString()),
-                        Filters.eq("punishmentaction_status", false)
-                ))
-                .sort(Sorts.ascending("date"))
-                .limit(limit)
-                .forEach((Consumer<? super Document>) doc -> {
-                    doc.put("punishmentaction_status", true);
+                        Filters.eq( "ip", ip ),
+                        Filters.gte( "date", date ),
+                        Filters.eq( "type", type.toString() ),
+                        Filters.eq( "punishmentaction_status", false )
+                ) )
+                .sort( Sorts.ascending( "date" ) )
+                .limit( limit )
+                .forEach( (Consumer<? super Document>) doc ->
+                {
+                    doc.put( "punishmentaction_status", true );
 
-                    save(collection, doc);
-                });
+                    save( collection, doc );
+                } );
     }
 
     @Override
-    public void savePunishmentAction(UUID uuid, String username, String ip, String uid) {
+    public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put("uuid", uuid.toString());
-        data.put("user", username);
-        data.put("ip", ip);
-        data.put("actionid", uid);
-        data.put("date", new Date());
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", username );
+        data.put( "ip", ip );
+        data.put( "actionid", uid );
+        data.put( "date", new Date() );
 
-        db().getCollection(PlaceHolderAPI.formatMessage("{punishmentactions-table}")).insertOne(new Document(data));
+        db().getCollection( PlaceHolderAPI.formatMessage( "{punishmentactions-table}" ) ).insertOne( new Document( data ) );
     }
 
     // Recreating save api ...
-    private void save(final MongoCollection<Document> collection, final Document document) {
-        final Object id = document.get("_id");
+    private void save( final MongoCollection<Document> collection, final Document document )
+    {
+        final Object id = document.get( "_id" );
 
-        if (id == null) {
-            collection.insertOne(document);
-        } else {
-            collection.replaceOne(Filters.eq("_id", id), document, new ReplaceOptions().upsert(true));
+        if ( id == null )
+        {
+            collection.insertOne( document );
+        } else
+        {
+            collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }
     }
 
-    private MongoDatabase db() {
-        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
+    private MongoDatabase db()
+    {
+        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
     }
 }

@@ -22,33 +22,39 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class PageUtils {
+public class PageUtils
+{
 
-    public static <T> List<T> getPageFromList(final int page, final List<T> list, final int pageSize) throws PageNotFoundException {
-        final int maxPages = (int) Math.ceil(list.size() / (double) pageSize);
+    public static <T> List<T> getPageFromList( final int page, final List<T> list, final int pageSize ) throws PageNotFoundException
+    {
+        final int maxPages = (int) Math.ceil( list.size() / (double) pageSize );
 
-        if (page > maxPages) {
-            throw new PageNotFoundException(page, maxPages);
+        if ( page > maxPages )
+        {
+            throw new PageNotFoundException( page, maxPages );
         }
 
-        final int begin = ((page - 1) * 10);
+        final int begin = ( ( page - 1 ) * 10 );
         int end = begin + 10;
 
-        if (end > list.size()) {
+        if ( end > list.size() )
+        {
             end = list.size();
         }
 
-        return list.subList(begin, end);
+        return list.subList( begin, end );
     }
 
-    public static class PageNotFoundException extends Exception {
+    public static class PageNotFoundException extends Exception
+    {
 
         @Getter
         private int page;
         @Getter
         private int maxPages;
 
-        public PageNotFoundException(int page, int maxPages) {
+        public PageNotFoundException( int page, int maxPages )
+        {
             this.page = page;
             this.maxPages = maxPages;
         }

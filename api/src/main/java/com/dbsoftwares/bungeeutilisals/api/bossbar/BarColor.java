@@ -23,7 +23,8 @@ import lombok.Getter;
 
 import java.util.List;
 
-public class BarColor {
+public class BarColor
+{
 
     public static final BarColor PINK;
     public static final BarColor BLUE;
@@ -35,38 +36,45 @@ public class BarColor {
 
     public static final List<BarColor> values;
 
-    static {
-        PINK = new BarColor(0);
-        BLUE = new BarColor(1);
-        RED = new BarColor(2);
-        GREEN = new BarColor(3);
-        YELLOW = new BarColor(4);
-        PURPLE = new BarColor(5);
-        WHITE = new BarColor(6);
+    static
+    {
+        PINK = new BarColor( 0 );
+        BLUE = new BarColor( 1 );
+        RED = new BarColor( 2 );
+        GREEN = new BarColor( 3 );
+        YELLOW = new BarColor( 4 );
+        PURPLE = new BarColor( 5 );
+        WHITE = new BarColor( 6 );
 
-        values = Lists.newArrayList(PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE);
+        values = Lists.newArrayList( PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE );
     }
 
     @Getter
     private int id;
 
-    public BarColor(int id) {
+    public BarColor( int id )
+    {
         this.id = id;
     }
 
-    public static BarColor[] values() {
-        return values.toArray(new BarColor[0]);
+    public static BarColor[] values()
+    {
+        return values.toArray( new BarColor[0] );
     }
 
-    public static BarColor fromId(int action) {
-        return values.stream().filter(a -> a.id == action).findFirst().orElse(PINK);
+    public static BarColor fromId( int action )
+    {
+        return values.stream().filter( a -> a.id == action ).findFirst().orElse( PINK );
     }
 
-    public static BarColor valueOf(String color) {
-        if (color == null) {
+    public static BarColor valueOf( String color )
+    {
+        if ( color == null )
+        {
             return PINK;
         }
-        switch (color) {
+        switch ( color )
+        {
             default:
             case "PINK":
                 return PINK;
@@ -86,7 +94,8 @@ public class BarColor {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj == this || (obj instanceof BarColor && ((BarColor) obj).getId() == id);
+    public boolean equals( Object obj )
+    {
+        return obj == this || ( obj instanceof BarColor && ( (BarColor) obj ).getId() == id );
     }
 }

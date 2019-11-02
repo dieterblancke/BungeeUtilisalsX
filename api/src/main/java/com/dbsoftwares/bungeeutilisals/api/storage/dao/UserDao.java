@@ -25,37 +25,38 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-public interface UserDao {
+public interface UserDao
+{
 
-    void createUser(UUID uuid, String username, String ip, Language language);
+    void createUser( UUID uuid, String username, String ip, Language language );
 
-    void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout);
+    void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout );
 
-    void updateUser(UUID uuid, String name, String ip, Language language, Date logout);
+    void updateUser( UUID uuid, String name, String ip, Language language, Date logout );
 
-    boolean exists(String name);
+    boolean exists( String name );
 
-    boolean exists(UUID uuid);
+    boolean exists( UUID uuid );
 
-    boolean ipExists(String ip);
+    boolean ipExists( String ip );
 
-    UserStorage getUserData(UUID uuid);
+    UserStorage getUserData( UUID uuid );
 
-    UserStorage getUserData(String name);
+    UserStorage getUserData( String name );
 
-    List<String> getUsersOnIP(String ip);
+    List<String> getUsersOnIP( String ip );
 
-    Language getLanguage(UUID uuid);
+    Language getLanguage( UUID uuid );
 
-    void setName(UUID uuid, String name);
+    void setName( UUID uuid, String name );
 
-    void setIP(UUID uuid, String ip);
+    void setIP( UUID uuid, String ip );
 
-    void setLanguage(UUID uuid, Language language);
+    void setLanguage( UUID uuid, Language language );
 
-    void setLogout(UUID uuid, Date logout);
+    void setLogout( UUID uuid, Date logout );
 
-    void ignoreUser(UUID user, UUID ignore);
+    void ignoreUser( UUID user, UUID ignore );
 
-    void unignoreUser(UUID user, UUID unignore);
+    void unignoreUser( UUID user, UUID unignore );
 }

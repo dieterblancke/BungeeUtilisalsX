@@ -24,7 +24,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class FriendChannelData {
+public class FriendChannelData
+{
 
     private String type;
     private String player;

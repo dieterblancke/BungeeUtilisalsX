@@ -25,7 +25,8 @@ import lombok.*;
 @EqualsAndHashCode
 @NoArgsConstructor
 @AllArgsConstructor
-public class Location {
+public class Location
+{
 
     private double x;
     private double y;

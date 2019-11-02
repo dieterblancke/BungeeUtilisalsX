@@ -30,31 +30,37 @@ import com.dbsoftwares.bungeeutilisals.redis.handlers.StaffChatMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.StaffChatData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
-public class StaffCharChatExecutor implements EventExecutor {
+public class StaffCharChatExecutor implements EventExecutor
+{
 
     @Event
-    public void onChat(final UserChatEvent event) {
+    public void onChat( final UserChatEvent event )
+    {
         final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
-        final String detect = config.getString("staffchat.charchat.detect");
-        if (!config.getBoolean("staffchat.enabled")
-                || !config.getBoolean("staffchat.charchat.enabled")
-                || !event.getMessage().startsWith(detect)) {
+        final String detect = config.getString( "staffchat.charchat.detect" );
+        if ( !config.getBoolean( "staffchat.enabled" )
+                || !config.getBoolean( "staffchat.charchat.enabled" )
+                || !event.getMessage().startsWith( detect ) )
+        {
             return;
         }
         final User user = event.getUser();
-        final String permission = config.getString("staffchat.permission");
-        if (!user.getParent().hasPermission(permission) || user.isInStaffChat()) {
+        final String permission = config.getString( "staffchat.permission" );
+        if ( !user.getParent().hasPermission( permission ) || user.isInStaffChat() )
+        {
             return;
         }
-        final String message = event.getMessage().substring(detect.length());
-        if (BungeeUtilisals.getInstance().getConfig().getBoolean("redis")) {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler(StaffChatMessageHandler.class);
+        final String message = event.getMessage().substring( detect.length() );
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
+        {
+            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( StaffChatMessageHandler.class );
 
-            handler.send(new StaffChatData(user.getServerName(), user.getName(), event.getMessage()));
-        } else {
-            StaffChatCommand.sendStaffChatMessage(user.getServerName(), user.getName(), message);
+            handler.send( new StaffChatData( user.getServerName(), user.getName(), event.getMessage() ) );
+        } else
+        {
+            StaffChatCommand.sendStaffChatMessage( user.getServerName(), user.getName(), message );
         }
 
-        event.setCancelled(true);
+        event.setCancelled( true );
     }
 }

@@ -33,7 +33,8 @@ import java.util.List;
 import java.util.Optional;
 
 @Data
-public class Command {
+public class Command
+{
 
     private final String name;
     private final String[] aliases;
@@ -44,7 +45,8 @@ public class Command {
 
     private CommandHolder commandHolder;
 
-    public Command(final String name, final String permission, final String[] aliases, final int cooldown, final CommandCall command, final TabCall tab) {
+    public Command( final String name, final String permission, final String[] aliases, final int cooldown, final CommandCall command, final TabCall tab )
+    {
         this.name = name;
         this.aliases = aliases;
         this.permission = permission;
@@ -53,59 +55,74 @@ public class Command {
         this.tab = tab;
     }
 
-    public void execute(User user, String[] args) {
-        if (permission != null
+    public void execute( User user, String[] args )
+    {
+        if ( permission != null
                 && !permission.isEmpty()
-                && !user.hasPermission(permission)
-                && !user.hasPermission("bungeeutilisals.commands.*")
-                && !user.hasPermission("bungeeutilisals.*")
-                && !user.hasPermission("*")) {
-            user.sendLangMessage("no-permission", "%permission%", permission);
+                && !user.hasPermission( permission )
+                && !user.hasPermission( "bungeeutilisals.commands.*" )
+                && !user.hasPermission( "bungeeutilisals.*" )
+                && !user.hasPermission( "*" ) )
+        {
+            user.sendLangMessage( "no-permission", "%permission%", permission );
             return;
         }
 
-        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> {
-            try {
-                if (cooldown > 0 && !user.getCooldowns().canUse("COMMAND_COOLDOWNS_" + name)) {
+        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        {
+            try
+            {
+                if ( cooldown > 0 && !user.getCooldowns().canUse( "COMMAND_COOLDOWNS_" + name ) )
+                {
                     user.sendLangMessage(
                             "general-commands.cooldown",
                             "{time}",
-                            user.getCooldowns().getLeftTime("COMMAND_COOLDOWNS_" + name) / 1000
+                            user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000
                     );
                     return;
                 }
 
-                command.onExecute(user, args);
+                command.onExecute( user, args );
 
-                if (cooldown > 0) {
-                    user.getCooldowns().updateTime("COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown);
+                if ( cooldown > 0 )
+                {
+                    user.getCooldowns().updateTime( "COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown );
                 }
-            } catch (Exception e) {
-                BUCore.getLogger().error("An error occured: ", e);
+            } catch ( Exception e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
             }
-        });
+        } );
     }
 
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        if (!(sender instanceof ProxiedPlayer)) {
+    public Iterable<String> onTabComplete( CommandSender sender, String[] args )
+    {
+        if ( !( sender instanceof ProxiedPlayer ) )
+        {
             return ImmutableList.of();
         }
 
-        final Optional<User> optional = BUCore.getApi().getUser(sender.getName());
-        if (optional.isPresent()) {
+        final Optional<User> optional = BUCore.getApi().getUser( sender.getName() );
+        if ( optional.isPresent() )
+        {
             final User user = optional.get();
-            final List<String> tabCompletion = tab.onTabComplete(user, args);
+            final List<String> tabCompletion = tab.onTabComplete( user, args );
 
-            if (tabCompletion == null) {
-                if (args.length == 0) {
+            if ( tabCompletion == null )
+            {
+                if ( args.length == 0 )
+                {
                     return BUCore.getApi().getPlayerUtils().getPlayers();
-                } else {
+                } else
+                {
                     final String lastWord = args[args.length - 1];
                     final List<String> list = Lists.newArrayList();
 
-                    for (String p : BUCore.getApi().getPlayerUtils().getPlayers()) {
-                        if (p.toLowerCase().startsWith(lastWord.toLowerCase())) {
-                            list.add(p);
+                    for ( String p : BUCore.getApi().getPlayerUtils().getPlayers() )
+                    {
+                        if ( p.toLowerCase().startsWith( lastWord.toLowerCase() ) )
+                        {
+                            list.add( p );
                         }
                     }
 
@@ -113,59 +130,74 @@ public class Command {
                 }
             }
             return tabCompletion;
-        } else {
+        } else
+        {
             return ImmutableList.of();
         }
     }
 
-    public void unload() {
-        ProxyServer.getInstance().getPluginManager().unregisterCommand(commandHolder);
+    public void unload()
+    {
+        ProxyServer.getInstance().getPluginManager().unregisterCommand( commandHolder );
         commandHolder = null;
     }
 
-    public Command register() {
-        if (commandHolder != null) {
-            throw new RuntimeException("This command is already registered");
+    public Command register()
+    {
+        if ( commandHolder != null )
+        {
+            throw new RuntimeException( "This command is already registered" );
         }
-        commandHolder = new CommandHolder(name, aliases);
+        commandHolder = new CommandHolder( name, aliases );
 
-        ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), commandHolder);
+        ProxyServer.getInstance().getPluginManager().registerCommand( BUCore.getApi().getPlugin(), commandHolder );
         return this;
     }
 
-    boolean check(final String[] args) {
-        if (args.length == 0) {
+    boolean check( final String[] args )
+    {
+        if ( args.length == 0 )
+        {
             return false;
         }
-        if (name.equalsIgnoreCase(args[0])) {
+        if ( name.equalsIgnoreCase( args[0] ) )
+        {
             return true;
         }
-        for (String alias : aliases) {
-            if (alias.equalsIgnoreCase(args[0])) {
+        for ( String alias : aliases )
+        {
+            if ( alias.equalsIgnoreCase( args[0] ) )
+            {
                 return true;
             }
         }
         return false;
     }
 
-    private class CommandHolder extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
+    private class CommandHolder extends net.md_5.bungee.api.plugin.Command implements TabExecutor
+    {
 
-        public CommandHolder(final String name, final String[] aliases) {
-            super(name, "", aliases);
+        public CommandHolder( final String name, final String[] aliases )
+        {
+            super( name, "", aliases );
         }
 
         @Override
-        public void execute(CommandSender sender, String[] args) {
-            if (sender instanceof ProxiedPlayer) {
-                BUCore.getApi().getUser(sender.getName()).ifPresent(user -> Command.this.execute(user, args));
-            } else {
-                Command.this.execute(BUCore.getApi().getConsole(), args);
+        public void execute( CommandSender sender, String[] args )
+        {
+            if ( sender instanceof ProxiedPlayer )
+            {
+                BUCore.getApi().getUser( sender.getName() ).ifPresent( user -> Command.this.execute( user, args ) );
+            } else
+            {
+                Command.this.execute( BUCore.getApi().getConsole(), args );
             }
         }
 
         @Override
-        public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-            return Command.this.onTabComplete(sender, args);
+        public Iterable<String> onTabComplete( CommandSender sender, String[] args )
+        {
+            return Command.this.onTabComplete( sender, args );
         }
     }
 }

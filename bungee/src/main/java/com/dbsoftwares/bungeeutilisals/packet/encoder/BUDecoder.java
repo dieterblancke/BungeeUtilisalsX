@@ -28,33 +28,40 @@ import net.md_5.bungee.protocol.PacketWrapper;
 
 import java.util.List;
 
-public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {
+public class BUDecoder extends MessageToMessageDecoder<PacketWrapper>
+{
 
     private boolean server;
     private ProxiedPlayer p;
 
-    public BUDecoder(boolean server, ProxiedPlayer player) {
+    public BUDecoder( boolean server, ProxiedPlayer player )
+    {
         this.server = server;
         this.p = player;
     }
 
     @Override
-    protected void decode(ChannelHandlerContext context, PacketWrapper wrapper, List<Object> output) {
-        if (wrapper.packet == null) {
-            output.add(wrapper);
+    protected void decode( ChannelHandlerContext context, PacketWrapper wrapper, List<Object> output )
+    {
+        if ( wrapper.packet == null )
+        {
+            output.add( wrapper );
             return;
         }
 
         PacketUpdateEvent event;
-        if (server) {
-            event = new PacketUpdateEvent(wrapper.packet, p, p.getServer(), new BungeeConnection());
-        } else {
-            event = new PacketUpdateEvent(wrapper.packet, p, p, new BungeeConnection());
+        if ( server )
+        {
+            event = new PacketUpdateEvent( wrapper.packet, p, p.getServer(), new BungeeConnection() );
+        } else
+        {
+            event = new PacketUpdateEvent( wrapper.packet, p, p, new BungeeConnection() );
         }
 
-        BUCore.getApi().getEventLoader().launchEvent(event);
-        if (!event.isCancelled()) {
-            output.add(wrapper);
+        BUCore.getApi().getEventLoader().launchEvent( event );
+        if ( !event.isCancelled() )
+        {
+            output.add( wrapper );
         }
     }
 }

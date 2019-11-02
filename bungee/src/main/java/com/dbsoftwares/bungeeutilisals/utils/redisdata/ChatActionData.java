@@ -23,7 +23,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class ChatActionData {
+public class ChatActionData
+{
 
     private String server;
     private String by;

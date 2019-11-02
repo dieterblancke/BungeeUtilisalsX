@@ -37,13 +37,15 @@ import java.io.InputStreamReader;
 import java.util.concurrent.ExecutionException;
 
 @RequiredArgsConstructor
-public class UpdateRunner implements Runnable {
+public class UpdateRunner implements Runnable
+{
 
     private static final Gson gson;
     private static final HttpRequestFactory requestFactory;
     private static final String ERROR_STRING = "An error occured: ";
 
-    static {
+    static
+    {
         gson = new Gson();
         requestFactory = new NetHttpTransport().createRequestFactory();
     }
@@ -54,30 +56,36 @@ public class UpdateRunner implements Runnable {
     private GenericUrl url;
 
     @Override
-    public void run() {
+    public void run()
+    {
         final UpdatableData data = updater.getUpdatable();
 
-        try {
-            final HttpRequest request = requestFactory.buildGetRequest(data.getUrl());
+        try
+        {
+            final HttpRequest request = requestFactory.buildGetRequest( data.getUrl() );
             final HttpResponse response = request.executeAsync().get();
 
-            if (response.isSuccessStatusCode()) {
-                try (InputStream input = response.getContent();
-                     InputStreamReader reader = new InputStreamReader(input)) {
-                    final JsonObject object = gson.fromJson(reader, JsonObject.class);
+            if ( response.isSuccessStatusCode() )
+            {
+                try ( InputStream input = response.getContent();
+                      InputStreamReader reader = new InputStreamReader( input ) )
+                {
+                    final JsonObject object = gson.fromJson( reader, JsonObject.class );
 
-                    final String status = object.get("status").getAsString();
-                    if (status.equalsIgnoreCase("success")) {
-                        final String version = object.get("version").getAsString();
+                    final String status = object.get( "status" ).getAsString();
+                    if ( status.equalsIgnoreCase( "success" ) )
+                    {
+                        final String version = object.get( "version" ).getAsString();
 
-                        if (checkForUpdate(data.getCurrentVersion(), version)) {
+                        if ( checkForUpdate( data.getCurrentVersion(), version ) )
+                        {
                             // update found
                             updateFound = true;
-                            url = new GenericUrl(object.get("downloadurl").getAsString());
+                            url = new GenericUrl( object.get( "downloadurl" ).getAsString() );
 
                             BUCore.getApi().langPermissionBroadcast(
                                     "updater.update-found",
-                                    BUCore.getApi().getConfig(FileLocation.CONFIG).getString("updater.permission"),
+                                    BUCore.getApi().getConfig( FileLocation.CONFIG ).getString( "updater.permission" ),
                                     "{name}", data.getName(),
                                     "{version}", data.getCurrentVersion(),
                                     "{newVersion}", version
@@ -86,50 +94,64 @@ public class UpdateRunner implements Runnable {
                     }
                 }
             }
-        } catch (IOException | ExecutionException e) {
-            BUCore.getLogger().error(ERROR_STRING +  e.getMessage());
-        } catch (InterruptedException e) {
-            BUCore.getLogger().error(ERROR_STRING + e.getMessage());
+        } catch ( IOException | ExecutionException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
+        } catch ( InterruptedException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
             Thread.currentThread().interrupt();
         }
     }
 
-    protected void shutdown() {
-        if (updateFound && url != null) {
-            try {
-                final HttpRequest request = requestFactory.buildGetRequest(url);
+    protected void shutdown()
+    {
+        if ( updateFound && url != null )
+        {
+            try
+            {
+                final HttpRequest request = requestFactory.buildGetRequest( url );
                 final HttpResponse response = request.executeAsync().get();
 
-                if (response.isSuccessStatusCode()) {
-                    try (FileOutputStream fos = new FileOutputStream(updater.getUpdatable().getFile())) {
-                        response.download(fos);
+                if ( response.isSuccessStatusCode() )
+                {
+                    try ( FileOutputStream fos = new FileOutputStream( updater.getUpdatable().getFile() ) )
+                    {
+                        response.download( fos );
                     }
                 }
-            } catch (IOException | ExecutionException e) {
-                BUCore.getLogger().error(ERROR_STRING + e.getMessage());
-            } catch (InterruptedException e) {
-                BUCore.getLogger().error(ERROR_STRING + e.getMessage());
+            } catch ( IOException | ExecutionException e )
+            {
+                BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
+            } catch ( InterruptedException e )
+            {
+                BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
                 Thread.currentThread().interrupt();
             }
         }
     }
 
-    private boolean checkForUpdate(final String version, final String newVersion) {
-        if (MathUtils.isInteger(version) && MathUtils.isInteger(newVersion)) {
-            return Integer.parseInt(version) < Integer.parseInt(newVersion);
+    private boolean checkForUpdate( final String version, final String newVersion )
+    {
+        if ( MathUtils.isInteger( version ) && MathUtils.isInteger( newVersion ) )
+        {
+            return Integer.parseInt( version ) < Integer.parseInt( newVersion );
         }
-        try {
-            return checkStringVersion(version, newVersion);
-        } catch (Exception e) {
+        try
+        {
+            return checkStringVersion( version, newVersion );
+        } catch ( Exception e )
+        {
             // if for some reason an exception pops up, it will default back to a simple equals check
-            return !newVersion.equals(version);
+            return !newVersion.equals( version );
         }
     }
 
-    private boolean checkStringVersion(String version, String newVersion) {
-        version = version.replaceAll("[^\\d]", "");
-        newVersion = newVersion.replaceAll("[^\\d]", "");
+    private boolean checkStringVersion( String version, String newVersion )
+    {
+        version = version.replaceAll( "[^\\d]", "" );
+        newVersion = newVersion.replaceAll( "[^\\d]", "" );
 
-        return Integer.parseInt(newVersion) > Integer.parseInt(version);
+        return Integer.parseInt( newVersion ) > Integer.parseInt( version );
     }
 }

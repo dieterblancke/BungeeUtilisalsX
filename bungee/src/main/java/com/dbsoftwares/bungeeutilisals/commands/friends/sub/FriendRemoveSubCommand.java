@@ -30,64 +30,75 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FriendRemoveSubCommand extends SubCommand {
+public class FriendRemoveSubCommand extends SubCommand
+{
 
-    public FriendRemoveSubCommand() {
+    public FriendRemoveSubCommand()
+    {
         super(
                 "remove", 1, 1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.remove.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.remove.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends remove (name)";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.remove.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.remove.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
+    public void onExecute( User user, String[] args )
+    {
         final String name = args[0];
-        final int friendLimit = FriendUtils.getFriendsLimit(user);
+        final int friendLimit = FriendUtils.getFriendsLimit( user );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
 
-        if (user.getFriends().stream().noneMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
-            user.sendLangMessage("friends.remove.no-friend", "{user}", name);
+        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        {
+            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
             return;
         }
 
-        final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( name );
         final UserStorage storage;
 
-        if (optionalTarget.isPresent()) {
+        if ( optionalTarget.isPresent() )
+        {
             storage = optionalTarget.get().getStorage();
-        } else {
-            if (!dao.getUserDao().exists(args[0])) {
-                user.sendLangMessage("never-joined");
+        } else
+        {
+            if ( !dao.getUserDao().exists( args[0] ) )
+            {
+                user.sendLangMessage( "never-joined" );
                 return;
             }
 
-            storage = dao.getUserDao().getUserData(name);
+            storage = dao.getUserDao().getUserData( name );
         }
 
-        dao.getFriendsDao().removeFriend(user.getUuid(), storage.getUuid());
-        dao.getFriendsDao().removeFriend(storage.getUuid(), user.getUuid());
+        dao.getFriendsDao().removeFriend( user.getUuid(), storage.getUuid() );
+        dao.getFriendsDao().removeFriend( storage.getUuid(), user.getUuid() );
 
-        user.getFriends().removeIf(data -> data.getFriend().equalsIgnoreCase(name));
+        user.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( name ) );
 
-        user.sendLangMessage("friends.remove.removed", "{user}", name);
-        optionalTarget.ifPresent(target -> {
-            target.getFriends().removeIf(data -> data.getFriend().equalsIgnoreCase(user.getName()));
-            target.sendLangMessage("friends.remove.friend-removed");
-        });
+        user.sendLangMessage( "friends.remove.removed", "{user}", name );
+        optionalTarget.ifPresent( target ->
+        {
+            target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
+            target.sendLangMessage( "friends.remove.friend-removed" );
+        } );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return null;
     }
 

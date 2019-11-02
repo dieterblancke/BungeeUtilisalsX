@@ -34,44 +34,52 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
-public class MuteCommand extends BUCommand {
+public class MuteCommand extends BUCommand
+{
 
-    public MuteCommand() {
-        super("mute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.mute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.permission"));
+    public MuteCommand()
+    {
+        super( "mute", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+                        .getString( "commands.mute.aliases" ).split( ", " ) ),
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.mute.permission" ) );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
+    public List<String> onTabComplete( User user, String[] args )
+    {
         return null;
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 2) {
-            user.sendLangMessage("punishments.mute.usage");
+    public void onExecute( User user, String[] args )
+    {
+        if ( args.length < 2 )
+        {
+            user.sendLangMessage( "punishments.mute.usage" );
             return;
         }
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final String reason = Utils.formatList( Arrays.copyOfRange( args, 1, args.length ), " " );
 
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !dao.getUserDao().exists( args[0] ) )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().getMutesDao().isMuted(storage.getUuid())) {
-            user.sendLangMessage("punishments.mute.already-muted");
+        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
+        if ( dao.getPunishmentDao().getMutesDao().isMuted( storage.getUuid() ) )
+        {
+            user.sendLangMessage( "punishments.mute.already-muted" );
             return;
         }
 
-        final UserPunishEvent event = new UserPunishEvent(PunishmentType.MUTE, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        final UserPunishEvent event = new UserPunishEvent( PunishmentType.MUTE, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
@@ -81,29 +89,32 @@ public class MuteCommand extends BUCommand {
                 reason, user.getServerName(), true, user.getName()
         );
 
-        BUCore.getApi().getUser(storage.getUserName()).ifPresent(muted -> {
+        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
+        {
             List<String> mute = null;
-            if (BUCore.getApi().getPunishmentExecutor().isTemplateReason(reason)) {
+            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+            {
                 mute = BUCore.getApi().getPunishmentExecutor().searchTemplate(
                         muted.getLanguageConfig(), PunishmentType.MUTE, reason
                 );
             }
-            if (mute == null) {
-                mute = muted.getLanguageConfig().getStringList("punishments.mute.onmute");
+            if ( mute == null )
+            {
+                mute = muted.getLanguageConfig().getStringList( "punishments.mute.onmute" );
             }
 
-            mute.forEach(str -> muted.sendMessage(BUCore.getApi().getPunishmentExecutor().setPlaceHolders(str, info)));
-        });
+            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+        } );
 
-        user.sendLangMessage("punishments.mute.executed", executor.getPlaceHolders(info).toArray(new Object[0]));
+        user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast("punishments.mute.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.mute.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        BUCore.getApi().langPermissionBroadcast( "punishments.mute.broadcast",
+                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.mute.broadcast" ),
+                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        BUCore.getApi().getEventLoader().launchEvent(new UserPunishmentFinishEvent(
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.MUTE, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
-        ));
+        ) );
     }
 }

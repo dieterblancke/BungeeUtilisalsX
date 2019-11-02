@@ -27,33 +27,41 @@ import com.dbsoftwares.bungeeutilisals.utils.redisdata.APIAnnouncement;
 
 import java.util.stream.Stream;
 
-public class BroadcastMessageHandler extends RedisMessageHandler<APIAnnouncement> {
+public class BroadcastMessageHandler extends RedisMessageHandler<APIAnnouncement>
+{
 
-    public BroadcastMessageHandler() {
-        super(APIAnnouncement.class);
+    public BroadcastMessageHandler()
+    {
+        super( APIAnnouncement.class );
     }
 
     @Override
-    public void handle(final APIAnnouncement announcement) {
+    public void handle( final APIAnnouncement announcement )
+    {
         Stream<User> users = BUCore.getApi().getUsers().stream();
 
-        if (announcement.getPermission() != null) {
-            users = users.filter(user -> user.getParent().hasPermission(announcement.getPermission()));
+        if ( announcement.getPermission() != null )
+        {
+            users = users.filter( user -> user.getParent().hasPermission( announcement.getPermission() ) );
         }
 
-        if (announcement.isLanguage()) {
+        if ( announcement.isLanguage() )
+        {
             final ILanguageManager languageManager = announcement.isPluginLanguageManager()
                     ? BUCore.getApi().getLanguageManager()
                     : BUCore.getApi().getAddonManager().getLanguageManager();
 
-            users.forEach(user -> LanguageUtils.sendLangMessage(
+            users.forEach( user -> LanguageUtils.sendLangMessage(
                     languageManager, announcement.getPlugin(), user, announcement.getMessage(), announcement.getPlaceHolders()
-            ));
-        } else {
-            if (announcement.getPrefix() == null) {
-                users.forEach(user -> user.sendMessage(announcement.getMessage()));
-            } else {
-                users.forEach(user -> user.sendMessage(announcement.getPrefix(), announcement.getMessage()));
+            ) );
+        } else
+        {
+            if ( announcement.getPrefix() == null )
+            {
+                users.forEach( user -> user.sendMessage( announcement.getMessage() ) );
+            } else
+            {
+                users.forEach( user -> user.sendMessage( announcement.getPrefix(), announcement.getMessage() ) );
             }
         }
     }

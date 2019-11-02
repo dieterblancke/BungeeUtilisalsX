@@ -28,42 +28,51 @@ import com.google.common.collect.ImmutableList;
 import java.io.IOException;
 import java.util.List;
 
-public class ReloadSubCommand extends SubCommand {
+public class ReloadSubCommand extends SubCommand
+{
 
-    public ReloadSubCommand() {
-        super("reload", 0);
+    public ReloadSubCommand()
+    {
+        super( "reload", 0 );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/bungeeutilisals reload";
     }
 
     @Override
-    public String getPermission() {
+    public String getPermission()
+    {
         return "bungeeutilisals.admin.reload";
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        for (FileLocation location : FileLocation.values()) {
-            try {
+    public void onExecute( User user, String[] args )
+    {
+        for ( FileLocation location : FileLocation.values() )
+        {
+            try
+            {
                 location.getConfiguration().reload();
 
                 location.getData().clear();
                 location.getDataList().clear();
                 location.loadData();
-            } catch (IOException e) {
-                BUCore.getLogger().error("An error occured: ", e);
-                user.sendMessage("&fCould not reload " + location.toString().toLowerCase().replace("_", " ") + "!");
+            } catch ( IOException e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
+                user.sendMessage( "&fCould not reload " + location.toString().toLowerCase().replace( "_", " " ) + "!" );
             }
         }
         BungeeUtilisals.getInstance().reload();
-        user.sendMessage("&fAll configuration files have been reloaded!");
+        user.sendMessage( "&fAll configuration files have been reloaded!" );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return ImmutableList.of();
     }
 }

@@ -31,14 +31,16 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 @ToString
 @NoArgsConstructor
 @EqualsAndHashCode(callSuper = false)
-public class PacketPlayInPlayerPosition extends Packet {
+public class PacketPlayInPlayerPosition extends Packet
+{
 
     private double x;
     private double y;
     private double z;
     private boolean ground;
 
-    public PacketPlayInPlayerPosition(double x, double y, double z, boolean ground) {
+    public PacketPlayInPlayerPosition( double x, double y, double z, boolean ground )
+    {
         this.x = x;
         this.y = y;
         this.z = z;
@@ -46,7 +48,8 @@ public class PacketPlayInPlayerPosition extends Packet {
     }
 
     @Override
-    public void read(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
+    public void read( ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion )
+    {
         this.x = buf.readDouble();
         this.y = buf.readDouble();
         this.z = buf.readDouble();
@@ -54,14 +57,16 @@ public class PacketPlayInPlayerPosition extends Packet {
     }
 
     @Override
-    public void write(ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion) {
-        buf.writeDouble(x);
-        buf.writeDouble(y);
-        buf.writeDouble(z);
-        buf.writeBoolean(ground);
+    public void write( ByteBuf buf, ProtocolConstants.Direction direction, int protocolVersion )
+    {
+        buf.writeDouble( x );
+        buf.writeDouble( y );
+        buf.writeDouble( z );
+        buf.writeBoolean( ground );
     }
 
     @Override
-    public void handle(User user) {
+    public void handle( User user )
+    {
     }
 }

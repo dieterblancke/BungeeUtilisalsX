@@ -30,7 +30,8 @@ import java.util.UUID;
  * This event will be executed upon network join
  */
 @EqualsAndHashCode(callSuper = true)
-public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable {
+public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable
+{
 
     @Getter
     @Setter
@@ -45,7 +46,8 @@ public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable
     @Getter
     private String staffRank;
 
-    public NetworkStaffLeaveEvent(final String userName, final UUID uuid, final String staffRank) {
+    public NetworkStaffLeaveEvent( final String userName, final UUID uuid, final String staffRank )
+    {
         this.userName = userName;
         this.uuid = uuid;
         this.staffRank = staffRank;

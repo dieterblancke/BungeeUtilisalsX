@@ -22,12 +22,14 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import lombok.Data;
 
 @Data
-public class ProtocolMapping {
+public class ProtocolMapping
+{
 
     private final Version version;
     private final int packet;
 
-    public static ProtocolMapping map(final Version version, final int packet) {
-        return new ProtocolMapping(version, packet);
+    public static ProtocolMapping map( final Version version, final int packet )
+    {
+        return new ProtocolMapping( version, packet );
     }
 }

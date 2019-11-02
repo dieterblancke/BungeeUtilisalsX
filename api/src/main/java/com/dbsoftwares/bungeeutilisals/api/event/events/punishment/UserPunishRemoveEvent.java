@@ -30,7 +30,8 @@ import java.util.UUID;
 
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class UserPunishRemoveEvent extends AbstractEvent implements Cancellable {
+public class UserPunishRemoveEvent extends AbstractEvent implements Cancellable
+{
 
     private PunishmentRemovalAction action;
     private User executor;
@@ -38,10 +39,11 @@ public class UserPunishRemoveEvent extends AbstractEvent implements Cancellable 
     private String name;
     private String ip;
     private String executionServer;
-    private Date date = new Date(System.currentTimeMillis());
+    private Date date = new Date( System.currentTimeMillis() );
     private boolean cancelled = false;
 
-    public UserPunishRemoveEvent(PunishmentRemovalAction action, User executor, UUID uuid, String name, String ip, String executionServer) {
+    public UserPunishRemoveEvent( PunishmentRemovalAction action, User executor, UUID uuid, String name, String ip, String executionServer )
+    {
         this.action = action;
         this.executor = executor;
         this.uuid = uuid;
@@ -50,11 +52,13 @@ public class UserPunishRemoveEvent extends AbstractEvent implements Cancellable 
         this.executionServer = executionServer;
     }
 
-    public Optional<User> getUser() {
-        return getApi().getUser(name);
+    public Optional<User> getUser()
+    {
+        return getApi().getUser( name );
     }
 
-    public enum PunishmentRemovalAction {
+    public enum PunishmentRemovalAction
+    {
         UNBAN, UNBANIP, UNMUTE, UNMUTEIP
     }
 }

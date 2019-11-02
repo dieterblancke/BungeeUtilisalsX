@@ -20,7 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
 import java.util.Queue;
 
-public interface MessageQueue<T> extends Queue<T> {
+public interface MessageQueue<T> extends Queue<T>
+{
 
     void refetch();
 }

@@ -31,41 +31,50 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.lang.reflect.Method;
 
-public class SimplePacketListener implements Listener {
+public class SimplePacketListener implements Listener
+{
 
     @EventHandler
-    public void onServerConnected(ServerConnectedEvent event) {
+    public void onServerConnected( ServerConnectedEvent event )
+    {
         ProxiedPlayer p = event.getPlayer();
         Server server = event.getServer();
 
-        if (p != null && server != null) {
+        if ( p != null && server != null )
+        {
 
-            try {
-                final Object ch = ReflectionUtils.getField(server.getClass(), "ch").get(server);
+            try
+            {
+                final Object ch = ReflectionUtils.getField( server.getClass(), "ch" ).get( server );
 
-                if (ch != null) {
-                    final Method handle = ReflectionUtils.getMethod(ch.getClass(), "getHandle");
+                if ( ch != null )
+                {
+                    final Method handle = ReflectionUtils.getMethod( ch.getClass(), "getHandle" );
 
-                    final Channel channel = (Channel) handle.invoke(ch);
-                    channel.pipeline().addAfter("packet-decoder", "bungeeutilisals-decoder", new BUDecoder(true, p));
-                    channel.pipeline().addAfter("packet-encoder", "bungeeutilisals-encoder", new BUEncoder(true, p));
+                    final Channel channel = (Channel) handle.invoke( ch );
+                    channel.pipeline().addAfter( "packet-decoder", "bungeeutilisals-decoder", new BUDecoder( true, p ) );
+                    channel.pipeline().addAfter( "packet-encoder", "bungeeutilisals-encoder", new BUEncoder( true, p ) );
                 }
-            } catch (Exception ignore) {
+            } catch ( Exception ignore )
+            {
             }
         }
     }
 
     @EventHandler
-    public void onPostLogin(PostLoginEvent event) {
-        try {
+    public void onPostLogin( PostLoginEvent event )
+    {
+        try
+        {
             ProxiedPlayer p = event.getPlayer();
-            Object ch = ReflectionUtils.getField(p.getClass(), "ch").get(p);
-            Method method = ReflectionUtils.getMethod(ch.getClass(), "getHandle");
-            Channel channel = (Channel) method.invoke(ch, new Object[0]);
+            Object ch = ReflectionUtils.getField( p.getClass(), "ch" ).get( p );
+            Method method = ReflectionUtils.getMethod( ch.getClass(), "getHandle" );
+            Channel channel = (Channel) method.invoke( ch, new Object[0] );
 
-            channel.pipeline().addAfter("packet-decoder", "bungeeutilisals-decoder", new BUDecoder(false, p));
-            channel.pipeline().addAfter("packet-encoder", "bungeeutilisals-encoder", new BUEncoder(false, p));
-        } catch (Exception ignore) {
+            channel.pipeline().addAfter( "packet-decoder", "bungeeutilisals-decoder", new BUDecoder( false, p ) );
+            channel.pipeline().addAfter( "packet-encoder", "bungeeutilisals-encoder", new BUEncoder( false, p ) );
+        } catch ( Exception ignore )
+        {
         }
     }
 }

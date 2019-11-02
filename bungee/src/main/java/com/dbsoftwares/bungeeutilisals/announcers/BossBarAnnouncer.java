@@ -34,52 +34,61 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-public class BossBarAnnouncer extends Announcer {
+public class BossBarAnnouncer extends Announcer
+{
 
-    public BossBarAnnouncer() {
-        super(AnnouncementType.BOSSBAR);
+    public BossBarAnnouncer()
+    {
+        super( AnnouncementType.BOSSBAR );
     }
 
     @Override
-    public void loadAnnouncements() {
-        for (ISection section : configuration.getSectionList("announcements")) {
-            final ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
+    public void loadAnnouncements()
+    {
+        for ( ISection section : configuration.getSectionList( "announcements" ) )
+        {
+            final ServerGroup group = FileLocation.SERVERGROUPS.getData( section.getString( "server" ) );
 
-            if (group == null) {
-                BUCore.getLogger().info("Could not find a servergroup or -name for " + section.getString("server") + "!");
+            if ( group == null )
+            {
+                BUCore.getLogger().info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
             final List<BossBarMessage> messages = Lists.newArrayList();
 
             final int time;
             final TimeUnit unit;
-            if (section.isInteger("stay")) {
+            if ( section.isInteger( "stay" ) )
+            {
                 unit = TimeUnit.SECONDS;
-                time = section.getInteger("stay");
-            } else {
-                unit = TimeUnit.valueOfOrElse(section.getString("stay.unit"), TimeUnit.SECONDS);
-                time = section.getInteger("stay.time");
+                time = section.getInteger( "stay" );
+            } else
+            {
+                unit = TimeUnit.valueOfOrElse( section.getString( "stay.unit" ), TimeUnit.SECONDS );
+                time = section.getInteger( "stay.time" );
             }
-            final String permission = section.getString("permission");
+            final String permission = section.getString( "permission" );
 
-            for (ISection message : section.getSectionList("messages")) {
+            for ( ISection message : section.getSectionList( "messages" ) )
+            {
                 messages.add(
                         new BossBarMessage(
-                                BarColor.valueOf(message.getString("color")),
-                                BarStyle.valueOf(message.getString("style")),
-                                message.getFloat("progress"),
-                                message.getBoolean("language"),
-                                message.getString("text")
+                                BarColor.valueOf( message.getString( "color" ) ),
+                                BarStyle.valueOf( message.getString( "style" ) ),
+                                message.getFloat( "progress" ),
+                                message.getBoolean( "language" ),
+                                message.getString( "text" )
                         )
                 );
             }
-            addAnnouncement(new BossBarAnnouncement(messages, unit, time, group, permission));
+            addAnnouncement( new BossBarAnnouncement( messages, unit, time, group, permission ) );
         }
     }
 
     @Override
-    public void stop() {
+    public void stop()
+    {
         super.stop();
-        super.getAnnouncements().keySet().forEach(Announcement::clear);
+        super.getAnnouncements().keySet().forEach( Announcement::clear );
     }
 }

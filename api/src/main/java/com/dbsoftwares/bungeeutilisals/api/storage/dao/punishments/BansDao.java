@@ -24,35 +24,36 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import java.util.List;
 import java.util.UUID;
 
-public interface BansDao {
+public interface BansDao
+{
 
-    boolean isBanned(UUID uuid);
+    boolean isBanned( UUID uuid );
 
-    boolean isIPBanned(String ip);
+    boolean isIPBanned( String ip );
 
-    boolean isBanned(PunishmentType type, UUID uuid);
+    boolean isBanned( PunishmentType type, UUID uuid );
 
-    boolean isIPBanned(PunishmentType type, String ip);
+    boolean isIPBanned( PunishmentType type, String ip );
 
-    PunishmentInfo insertBan(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby);
+    PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    PunishmentInfo insertIPBan(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby);
+    PunishmentInfo insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    PunishmentInfo insertTempBan(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration);
+    PunishmentInfo insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo insertTempIPBan(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration);
+    PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo getCurrentBan(UUID uuid);
+    PunishmentInfo getCurrentBan( UUID uuid );
 
-    PunishmentInfo getCurrentIPBan(String ip);
+    PunishmentInfo getCurrentIPBan( String ip );
 
-    void removeCurrentBan(UUID uuid, String removedBy);
+    void removeCurrentBan( UUID uuid, String removedBy );
 
-    void removeCurrentIPBan(String ip, String removedBy);
+    void removeCurrentIPBan( String ip, String removedBy );
 
-    List<PunishmentInfo> getBans(final UUID uuid);
+    List<PunishmentInfo> getBans( final UUID uuid );
 
-    List<PunishmentInfo> getIPBans(final String ip);
+    List<PunishmentInfo> getIPBans( final String ip );
 
-    PunishmentInfo getById(final String id);
+    PunishmentInfo getById( final String id );
 }

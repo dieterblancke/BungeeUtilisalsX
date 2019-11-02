@@ -28,177 +28,216 @@ import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
-public class BungeeUtilisalsImporter extends Importer {
+public class BungeeUtilisalsImporter extends Importer
+{
 
     private static final String ERROR_STRING = "An error occured: ";
 
-    private Connection createConnection(final Map<String, String> properties) throws SQLException {
-        if (properties.isEmpty()) {
+    private Connection createConnection( final Map<String, String> properties ) throws SQLException
+    {
+        if ( properties.isEmpty() )
+        {
             return BUCore.getApi().getStorageManager().getConnection();
         }
         return DriverManager.getConnection(
-                "jdbc:mysql://" + properties.get("host") + ":"
-                        + properties.get("port")
-                        + "/" + properties.get("database"),
-                properties.get("username"),
-                properties.get("password")
+                "jdbc:mysql://" + properties.get( "host" ) + ":"
+                        + properties.get( "port" )
+                        + "/" + properties.get( "database" ),
+                properties.get( "username" ),
+                properties.get( "password" )
         );
     }
 
     @Override
-    protected void importData(final ImporterCallback<ImporterStatus> importerCallback, final Map<String, String> properties) {
-        try (Connection connection = createConnection(properties); Statement stmt = connection.createStatement()) {
+    protected void importData( final ImporterCallback<ImporterStatus> importerCallback, final Map<String, String> properties )
+    {
+        try ( Connection connection = createConnection( properties ); Statement stmt = connection.createStatement() )
+        {
             final DatabaseMetaData databaseMetaData = connection.getMetaData();
-            for (final String table : Lists.newArrayList("PlayerInfo", "Bans", "IPBans", "Mutes")) {
-                final ResultSet tables = databaseMetaData.getTables(null, null, table, null);
-                if (!tables.next()) {
-                    throw new IllegalArgumentException("Could not find table " + table + ", stopping importer ...");
+            for ( final String table : Lists.newArrayList( "PlayerInfo", "Bans", "IPBans", "Mutes" ) )
+            {
+                final ResultSet tables = databaseMetaData.getTables( null, null, table, null );
+                if ( !tables.next() )
+                {
+                    throw new IllegalArgumentException( "Could not find table " + table + ", stopping importer ..." );
                 }
             }
 
-            try (ResultSet counter = stmt.executeQuery(
+            try ( ResultSet counter = stmt.executeQuery(
                     "SELECT (SELECT COUNT(*) FROM Bans) bans," +
                             " (SELECT COUNT(*) FROM IPBans) ipbans," +
                             " (SELECT COUNT(*) FROM Mutes) mutes," +
                             " (SELECT COUNT(*) FROM PlayerInfo) players;"
-            )) {
-                if (counter.next()) {
+            ) )
+            {
+                if ( counter.next() )
+                {
                     status = new ImporterStatus(
-                            counter.getInt("bans") + counter.getInt("ipbans") + counter.getInt("mutes") + counter.getInt("players")
+                            counter.getInt( "bans" ) + counter.getInt( "ipbans" ) + counter.getInt( "mutes" ) + counter.getInt( "players" )
                     );
                 }
             }
 
-            try (final ResultSet rs = stmt.executeQuery(
+            try ( final ResultSet rs = stmt.executeQuery(
                     "SELECT BannedBy executed_by, Banned user, BanTime time, Reason reason FROM Bans;"
-            )) {
-                while (rs.next()) {
-                    try {
-                        importPunishment(PunishmentType.BAN, connection, rs);
-                    } catch (Exception e) {
-                        BUCore.getLogger().error(ERROR_STRING, e);
+            ) )
+            {
+                while ( rs.next() )
+                {
+                    try
+                    {
+                        importPunishment( PunishmentType.BAN, connection, rs );
+                    } catch ( Exception e )
+                    {
+                        BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
                     }
 
-                    status.incrementConvertedEntries(1);
-                    importerCallback.onStatusUpdate(status);
+                    status.incrementConvertedEntries( 1 );
+                    importerCallback.onStatusUpdate( status );
                 }
             }
-            try (final ResultSet rs = stmt.executeQuery(
+            try ( final ResultSet rs = stmt.executeQuery(
                     "SELECT MutedBy executed_by, Muted user, MuteTime time, Reason reason FROM Mutes;"
-            )) {
-                while (rs.next()) {
-                    try {
-                        importPunishment(PunishmentType.MUTE, connection, rs);
-                    } catch (Exception e) {
-                        BUCore.getLogger().error(ERROR_STRING, e);
+            ) )
+            {
+                while ( rs.next() )
+                {
+                    try
+                    {
+                        importPunishment( PunishmentType.MUTE, connection, rs );
+                    } catch ( Exception e )
+                    {
+                        BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
                     }
 
-                    status.incrementConvertedEntries(1);
-                    importerCallback.onStatusUpdate(status);
+                    status.incrementConvertedEntries( 1 );
+                    importerCallback.onStatusUpdate( status );
                 }
             }
-            try (final ResultSet rs = stmt.executeQuery(
+            try ( final ResultSet rs = stmt.executeQuery(
                     "SELECT BannedBy executed_by, Banned user, '-1' time, Reason reason FROM IPBans;"
-            )) {
-                while (rs.next()) {
-                    try {
-                        importPunishment(PunishmentType.IPBAN, connection, rs);
-                    } catch (Exception e) {
-                        BUCore.getLogger().error(ERROR_STRING, e);
+            ) )
+            {
+                while ( rs.next() )
+                {
+                    try
+                    {
+                        importPunishment( PunishmentType.IPBAN, connection, rs );
+                    } catch ( Exception e )
+                    {
+                        BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
                     }
 
-                    status.incrementConvertedEntries(1);
-                    importerCallback.onStatusUpdate(status);
+                    status.incrementConvertedEntries( 1 );
+                    importerCallback.onStatusUpdate( status );
                 }
             }
 
-            try (final ResultSet rs = stmt.executeQuery(
+            try ( final ResultSet rs = stmt.executeQuery(
                     "SELECT Player, IP FROM PlayerInfo;"
-            )) {
-                while (rs.next()) {
-                    String user = rs.getString("Player");
-                    String IP = rs.getString("IP");
+            ) )
+            {
+                while ( rs.next() )
+                {
+                    String user = rs.getString( "Player" );
+                    String IP = rs.getString( "IP" );
 
-                    boolean usingUUID = user.contains("-");
+                    boolean usingUUID = user.contains( "-" );
 
                     String uuid = usingUUID ? user : null;
                     String name = usingUUID ? null : user;
 
-                    try {
-                        if (uuid == null) {
-                            uuid = uuidCache.get(name);
-                        } else {
-                            name = nameCache.get(uuid);
+                    try
+                    {
+                        if ( uuid == null )
+                        {
+                            uuid = uuidCache.get( name );
+                        } else
+                        {
+                            name = nameCache.get( uuid );
                         }
-                    } catch (Exception e) {
-                        BUCore.getLogger().error(ERROR_STRING, e);
+                    } catch ( Exception e )
+                    {
+                        BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
                     }
 
                     BUCore.getApi().getStorageManager().getDao().getUserDao().createUser(
-                            readUUIDFromString(uuid),
+                            readUUIDFromString( uuid ),
                             name,
                             IP,
                             BUCore.getApi().getLanguageManager().getDefaultLanguage()
                     );
 
-                    status.incrementConvertedEntries(1);
-                    importerCallback.onStatusUpdate(status);
+                    status.incrementConvertedEntries( 1 );
+                    importerCallback.onStatusUpdate( status );
                 }
             }
 
-            importerCallback.done(status, null);
-        } catch (SQLException e) {
-            BUCore.getLogger().error(ERROR_STRING, e);
+            importerCallback.done( status, null );
+        } catch ( SQLException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
         }
     }
 
-    private void importPunishment(final PunishmentType type, final Connection connection, final ResultSet rs) throws ExecutionException, SQLException {
-        final String executedBy = rs.getString("executed_by");
-        final String user = rs.getString("user");
-        final long time = rs.getLong("time");
-        final String reason = rs.getString("reason");
+    private void importPunishment( final PunishmentType type, final Connection connection, final ResultSet rs ) throws ExecutionException, SQLException
+    {
+        final String executedBy = rs.getString( "executed_by" );
+        final String user = rs.getString( "user" );
+        final long time = rs.getLong( "time" );
+        final String reason = rs.getString( "reason" );
 
-        final String id = user.contains(".") ? getIdOnIP(connection, user) : user;
+        final String id = user.contains( "." ) ? getIdOnIP( connection, user ) : user;
 
-        if (id == null) {
+        if ( id == null )
+        {
             return;
         }
 
-        final boolean usingUUID = id.contains("-");
+        final boolean usingUUID = id.contains( "-" );
         String uuid = usingUUID ? id : null;
         String name = usingUUID ? null : id;
 
-        if (uuid == null) {
-            uuid = uuidCache.get(name);
-        } else {
-            name = nameCache.get(uuid);
+        if ( uuid == null )
+        {
+            uuid = uuidCache.get( name );
+        } else
+        {
+            name = nameCache.get( uuid );
         }
-        final String IP = user.contains(".") ? user : getIP(connection, user);
+        final String IP = user.contains( "." ) ? user : getIP( connection, user );
 
         final PunishmentType punishmentType;
-        if (type.equals(PunishmentType.BAN)) {
+        if ( type.equals( PunishmentType.BAN ) )
+        {
             punishmentType = time == -1 ? PunishmentType.BAN : PunishmentType.TEMPBAN;
-        } else if (type.equals(PunishmentType.MUTE)) {
+        } else if ( type.equals( PunishmentType.MUTE ) )
+        {
             punishmentType = time == -1 ? PunishmentType.MUTE : PunishmentType.TEMPMUTE;
-        } else {
+        } else
+        {
             punishmentType = type;
         }
 
-        getImportUtils().insertPunishment(punishmentType, readUUIDFromString(uuid), name, IP, reason, time, "UNKNOWN", true, executedBy);
+        getImportUtils().insertPunishment( punishmentType, readUUIDFromString( uuid ), name, IP, reason, time, "UNKNOWN", true, executedBy );
     }
 
-    private String getIP(final Connection connection, final String id) throws SQLException {
+    private String getIP( final Connection connection, final String id ) throws SQLException
+    {
         String IP = null;
-        try (PreparedStatement pstmt = connection.prepareStatement("SELECT IP FROM PlayerInfo WHERE Player = ?")) {
-            pstmt.setString(1, id);
+        try ( PreparedStatement pstmt = connection.prepareStatement( "SELECT IP FROM PlayerInfo WHERE Player = ?" ) )
+        {
+            pstmt.setString( 1, id );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    IP = rs.getString("IP");
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    IP = rs.getString( "IP" );
                 }
             }
         }
@@ -206,14 +245,18 @@ public class BungeeUtilisalsImporter extends Importer {
         return IP;
     }
 
-    private String getIdOnIP(final Connection connection, final String ip) throws SQLException {
+    private String getIdOnIP( final Connection connection, final String ip ) throws SQLException
+    {
         String id = null;
-        try (PreparedStatement pstmt = connection.prepareStatement("SELECT Player FROM PlayerInfo WHERE IP = ?")) {
-            pstmt.setString(1, ip);
+        try ( PreparedStatement pstmt = connection.prepareStatement( "SELECT Player FROM PlayerInfo WHERE IP = ?" ) )
+        {
+            pstmt.setString( 1, ip );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    id = rs.getString("Player");
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    id = rs.getString( "Player" );
                 }
             }
         }

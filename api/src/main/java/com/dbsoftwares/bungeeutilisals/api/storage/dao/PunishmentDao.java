@@ -28,43 +28,47 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import java.util.Date;
 import java.util.UUID;
 
-public interface PunishmentDao {
+public interface PunishmentDao
+{
 
-    static PunishmentInfo buildPunishmentInfo(final String id, final PunishmentType type, final UUID uuid, final String user,
-                                              final String ip, final String reason, final String server,
-                                              final String executedby, final Date date, final long time,
-                                              final boolean active, final String removedby) {
+    static PunishmentInfo buildPunishmentInfo( final String id, final PunishmentType type, final UUID uuid, final String user,
+                                               final String ip, final String reason, final String server,
+                                               final String executedby, final Date date, final long time,
+                                               final boolean active, final String removedby )
+    {
         final PunishmentInfo info = new PunishmentInfo();
 
-        info.setId(id);
-        info.setUuid(uuid);
-        info.setUser(user);
-        info.setIp(ip);
-        info.setReason(reason);
-        info.setServer(server);
-        info.setExecutedBy(executedby);
-        info.setDate(date);
-        info.setType(type);
+        info.setId( id );
+        info.setUuid( uuid );
+        info.setUser( user );
+        info.setIp( ip );
+        info.setReason( reason );
+        info.setServer( server );
+        info.setExecutedBy( executedby );
+        info.setDate( date );
+        info.setType( type );
 
-        info.setExpireTime(time);
-        info.setActive(active);
-        Validate.ifNotNull(removedby, info::setRemovedBy);
+        info.setExpireTime( time );
+        info.setActive( active );
+        Validate.ifNotNull( removedby, info::setRemovedBy );
 
         return info;
     }
 
-    static PunishmentInfo buildPunishmentInfo(final int id, final PunishmentType type, final UUID uuid, final String user,
-                                              final String ip, final String reason, final String server,
-                                              final String executedby, final Date date, final long time,
-                                              final boolean active, final String removedby) {
-        return buildPunishmentInfo(String.valueOf(id), type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+    static PunishmentInfo buildPunishmentInfo( final int id, final PunishmentType type, final UUID uuid, final String user,
+                                               final String ip, final String reason, final String server,
+                                               final String executedby, final Date date, final long time,
+                                               final boolean active, final String removedby )
+    {
+        return buildPunishmentInfo( String.valueOf( id ), type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
     }
 
-    static PunishmentInfo buildPunishmentInfo(final PunishmentType type, final UUID uuid, final String user,
-                                              final String ip, final String reason, final String server,
-                                              final String executedby, final Date date, final long time,
-                                              final boolean active, final String removedby) {
-        return buildPunishmentInfo(-1, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+    static PunishmentInfo buildPunishmentInfo( final PunishmentType type, final UUID uuid, final String user,
+                                               final String ip, final String reason, final String server,
+                                               final String executedby, final Date date, final long time,
+                                               final boolean active, final String removedby )
+    {
+        return buildPunishmentInfo( -1, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
     }
 
     BansDao getBansDao();
@@ -73,13 +77,13 @@ public interface PunishmentDao {
 
     KickAndWarnDao getKickAndWarnDao();
 
-    long getPunishmentsSince(PunishmentType type, UUID uuid, Date date);
+    long getPunishmentsSince( PunishmentType type, UUID uuid, Date date );
 
-    long getIPPunishmentsSince(PunishmentType type, String ip, Date date);
+    long getIPPunishmentsSince( PunishmentType type, String ip, Date date );
 
-    void updateActionStatus(int limit, PunishmentType type, UUID uuid, Date date);
+    void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date );
 
-    void updateIPActionStatus(int limit, PunishmentType type, String ip, Date date);
+    void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date );
 
-    void savePunishmentAction(final UUID uuid, final String username, final String ip, final String uid);
+    void savePunishmentAction( final UUID uuid, final String username, final String ip, final String uid );
 }

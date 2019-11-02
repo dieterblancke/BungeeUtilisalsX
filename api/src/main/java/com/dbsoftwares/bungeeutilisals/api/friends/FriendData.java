@@ -25,7 +25,8 @@ import java.util.Date;
 import java.util.UUID;
 
 @Data
-public class FriendData {
+public class FriendData
+{
 
     private UUID uuid;
     private String friend;
@@ -33,14 +34,16 @@ public class FriendData {
     private boolean online;
     private Date lastOnline;
 
-    public FriendData() {
+    public FriendData()
+    {
     }
 
-    public FriendData(final UUID uuid, final String friend, final Date friendSince, final Date lastSeen) {
+    public FriendData( final UUID uuid, final String friend, final Date friendSince, final Date lastSeen )
+    {
         this.uuid = uuid;
         this.friend = friend;
         this.friendSince = friendSince;
-        this.online = BUCore.getApi().getPlayerUtils().isOnline(friend);
+        this.online = BUCore.getApi().getPlayerUtils().isOnline( friend );
         this.lastOnline = lastSeen;
     }
 }

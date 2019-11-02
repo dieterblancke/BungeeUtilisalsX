@@ -18,7 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.api.placeholder;
 
-public interface PlaceHolderPack {
+public interface PlaceHolderPack
+{
 
     void loadPack();
 

@@ -23,7 +23,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class MotdData {
+public class MotdData
+{
 
     private ConditionHandler conditionHandler;
     private boolean def;

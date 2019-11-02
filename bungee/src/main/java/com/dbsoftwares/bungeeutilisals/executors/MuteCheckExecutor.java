@@ -30,55 +30,67 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-public class MuteCheckExecutor implements EventExecutor {
+public class MuteCheckExecutor implements EventExecutor
+{
 
     @Event
-    public void onCommand(UserCommandEvent event) {
+    public void onCommand( UserCommandEvent event )
+    {
         final User user = event.getUser();
 
-        if (!user.isMuted()) {
+        if ( !user.isMuted() )
+        {
             return;
         }
         final PunishmentInfo info = user.getMuteInfo();
-        if (checkTemporaryMute(user, info)) {
+        if ( checkTemporaryMute( user, info ) )
+        {
             return;
         }
 
-        if (FileLocation.PUNISHMENTS.getConfiguration().getStringList("blocked-mute-commands")
-                .contains(event.getActualCommand().replaceFirst("/", ""))) {
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getStringList( "blocked-mute-commands" )
+                .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
+        {
 
-            user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                    event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
-            event.setCancelled(true);
+            user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                    event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+            event.setCancelled( true );
         }
     }
 
     // high priority
     @Event(priority = Priority.HIGHEST)
-    public void onChat(UserChatEvent event) {
+    public void onChat( UserChatEvent event )
+    {
         User user = event.getUser();
 
-        if (!user.isMuted()) {
+        if ( !user.isMuted() )
+        {
             return;
         }
         final PunishmentInfo info = user.getMuteInfo();
-        if (checkTemporaryMute(user, info)) {
+        if ( checkTemporaryMute( user, info ) )
+        {
             return;
         }
 
-        user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
-        event.setCancelled(true);
+        user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+        event.setCancelled( true );
     }
 
-    private boolean checkTemporaryMute(User user, PunishmentInfo info) {
-        if (info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis()) {
+    private boolean checkTemporaryMute( User user, PunishmentInfo info )
+    {
+        if ( info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis() )
+        {
             final MutesDao mutesDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
 
-            if (info.getType().equals(PunishmentType.TEMPMUTE)) {
-                mutesDao.removeCurrentMute(user.getParent().getUniqueId(), "CONSOLE");
-            } else {
-                mutesDao.removeCurrentIPMute(user.getIp(), "CONSOLE");
+            if ( info.getType().equals( PunishmentType.TEMPMUTE ) )
+            {
+                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE" );
+            } else
+            {
+                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE" );
             }
             return true;
         }

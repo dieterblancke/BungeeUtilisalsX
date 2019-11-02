@@ -28,7 +28,8 @@ import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
-public class PacketReceiveEvent extends AbstractEvent implements Cancellable {
+public class PacketReceiveEvent extends AbstractEvent implements Cancellable
+{
 
     @Getter
     @Setter
@@ -38,7 +39,8 @@ public class PacketReceiveEvent extends AbstractEvent implements Cancellable {
     private Connection receiver;
     private ProxiedPlayer player;
 
-    public PacketReceiveEvent(DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection receiver) {
+    public PacketReceiveEvent( DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection receiver )
+    {
         this.cancelled = false;
         this.player = p;
         this.packet = packet;
@@ -46,23 +48,28 @@ public class PacketReceiveEvent extends AbstractEvent implements Cancellable {
         this.receiver = receiver;
     }
 
-    public ProxiedPlayer getPlayer() {
+    public ProxiedPlayer getPlayer()
+    {
         return player;
     }
 
-    public User getUser() {
-        return BUCore.getApi().getUser(player).orElse(null);
+    public User getUser()
+    {
+        return BUCore.getApi().getUser( player ).orElse( null );
     }
 
-    public DefinedPacket getPacket() {
+    public DefinedPacket getPacket()
+    {
         return packet;
     }
 
-    public Connection getSender() {
+    public Connection getSender()
+    {
         return sender;
     }
 
-    public Connection getReceiver() {
+    public Connection getReceiver()
+    {
         return receiver;
     }
 }

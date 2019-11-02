@@ -30,7 +30,8 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class Report {
+public class Report
+{
 
     private final long id;
     private final UUID uuid;
@@ -42,18 +43,21 @@ public class Report {
     private boolean handled;
     private boolean accepted;
 
-    public void accept(final String accepter) {
-        BUCore.getApi().getStorageManager().getDao().getReportsDao().handleReport(id, true);
+    public void accept( final String accepter )
+    {
+        BUCore.getApi().getStorageManager().getDao().getReportsDao().handleReport( id, true );
 
-        final Optional<User> optionalUser = BUCore.getApi().getUser(reportedBy);
+        final Optional<User> optionalUser = BUCore.getApi().getUser( reportedBy );
         final MessageQueue<QueuedMessage> queue;
 
-        if (optionalUser.isPresent()) {
+        if ( optionalUser.isPresent() )
+        {
             queue = optionalUser.get().getMessageQueue();
-        } else {
+        } else
+        {
             queue = BUCore.getApi().getStorageManager().getDao().createMessageQueue();
         }
-        queue.add(new QueuedMessage(
+        queue.add( new QueuedMessage(
                 -1,
                 reportedBy,
                 new QueuedMessage.Message(
@@ -63,6 +67,6 @@ public class Report {
                         "{staff}", accepter
                 ),
                 "NAME"
-        ));
+        ) );
     }
 }

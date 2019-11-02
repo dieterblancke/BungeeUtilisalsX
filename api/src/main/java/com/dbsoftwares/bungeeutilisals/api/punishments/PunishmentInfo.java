@@ -28,7 +28,8 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PunishmentInfo {
+public class PunishmentInfo
+{
 
     private PunishmentType type;
 
@@ -46,11 +47,13 @@ public class PunishmentInfo {
     private boolean active;
     private String removedBy;
 
-    public boolean isActivatable() {
+    public boolean isActivatable()
+    {
         return type == null || type.isActivatable();
     }
 
-    public boolean isTemporary() {
+    public boolean isTemporary()
+    {
         return type != null && type.isTemporary();
     }
 }

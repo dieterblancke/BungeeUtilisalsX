@@ -23,19 +23,20 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.List;
 import java.util.UUID;
 
-public interface IPlayerUtils {
+public interface IPlayerUtils
+{
 
-    int getPlayerCount(String server);
+    int getPlayerCount( String server );
 
-    List<String> getPlayers(String server);
+    List<String> getPlayers( String server );
 
     int getTotalCount();
 
     List<String> getPlayers();
 
-    ServerInfo findPlayer(String name);
+    ServerInfo findPlayer( String name );
 
-    boolean isOnline(String name);
+    boolean isOnline( String name );
 
-    UUID getUuid(String targetName);
+    UUID getUuid( String targetName );
 }

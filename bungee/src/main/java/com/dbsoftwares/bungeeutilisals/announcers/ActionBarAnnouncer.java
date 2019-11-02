@@ -26,29 +26,34 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 
-public class ActionBarAnnouncer extends Announcer {
+public class ActionBarAnnouncer extends Announcer
+{
 
-    public ActionBarAnnouncer() {
-        super(AnnouncementType.ACTIONBAR);
+    public ActionBarAnnouncer()
+    {
+        super( AnnouncementType.ACTIONBAR );
     }
 
     @Override
-    public void loadAnnouncements() {
-        for (ISection section : configuration.getSectionList("announcements")) {
-            final ServerGroup group = FileLocation.SERVERGROUPS.getData(section.getString("server"));
+    public void loadAnnouncements()
+    {
+        for ( ISection section : configuration.getSectionList( "announcements" ) )
+        {
+            final ServerGroup group = FileLocation.SERVERGROUPS.getData( section.getString( "server" ) );
 
-            if (group == null) {
-                BUCore.getLogger().warn("Could not find a servergroup or -name for {}!", section.getString("server"));
+            if ( group == null )
+            {
+                BUCore.getLogger().warn( "Could not find a servergroup or -name for {}!", section.getString( "server" ) );
                 return;
             }
 
-            final boolean useLanguage = section.getBoolean("use-language");
-            final int time = section.getInteger("time");
-            final String permission = section.getString("permission");
+            final boolean useLanguage = section.getBoolean( "use-language" );
+            final int time = section.getInteger( "time" );
+            final String permission = section.getString( "permission" );
 
-            final String message = section.getString("message");
+            final String message = section.getString( "message" );
 
-            addAnnouncement(new ActionBarAnnouncement(useLanguage, time, message, group, permission));
+            addAnnouncement( new ActionBarAnnouncement( useLanguage, time, message, group, permission ) );
         }
     }
 }

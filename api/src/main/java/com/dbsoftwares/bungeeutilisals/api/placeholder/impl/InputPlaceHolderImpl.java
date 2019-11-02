@@ -23,12 +23,14 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceH
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
-public abstract class InputPlaceHolderImpl extends InputPlaceHolderEventHandler {
+public abstract class InputPlaceHolderImpl extends InputPlaceHolderEventHandler
+{
 
     private final boolean requiresUser;
     private final String prefix;
 
-    public void register() {
-        PlaceHolderAPI.addPlaceHolder(requiresUser, prefix, this);
+    public void register()
+    {
+        PlaceHolderAPI.addPlaceHolder( requiresUser, prefix, this );
     }
 }

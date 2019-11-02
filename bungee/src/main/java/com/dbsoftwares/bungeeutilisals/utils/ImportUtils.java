@@ -24,41 +24,44 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 
 import java.util.UUID;
 
-public class ImportUtils {
+public class ImportUtils
+{
 
-    public void insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, long duration,
-                                 String server, boolean active, String executedBy) {
+    public void insertPunishment( PunishmentType type, UUID uuid, String user, String ip, String reason, long duration,
+                                  String server, boolean active, String executedBy )
+    {
         final PunishmentDao punishmentDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao();
 
-        switch (type) {
+        switch ( type )
+        {
             case BAN:
-                punishmentDao.getBansDao().insertBan(uuid, user, ip, reason, server, active, executedBy);
+                punishmentDao.getBansDao().insertBan( uuid, user, ip, reason, server, active, executedBy );
                 break;
             case TEMPBAN:
-                punishmentDao.getBansDao().insertTempBan(uuid, user, ip, reason, server, active, executedBy, duration);
+                punishmentDao.getBansDao().insertTempBan( uuid, user, ip, reason, server, active, executedBy, duration );
                 break;
             case IPBAN:
-                punishmentDao.getBansDao().insertIPBan(uuid, user, ip, reason, server, active, executedBy);
+                punishmentDao.getBansDao().insertIPBan( uuid, user, ip, reason, server, active, executedBy );
                 break;
             case IPTEMPBAN:
-                punishmentDao.getBansDao().insertTempIPBan(uuid, user, ip, reason, server, active, executedBy, duration);
+                punishmentDao.getBansDao().insertTempIPBan( uuid, user, ip, reason, server, active, executedBy, duration );
                 break;
             case MUTE:
-                punishmentDao.getMutesDao().insertMute(uuid, user, ip, reason, server, active, executedBy);
+                punishmentDao.getMutesDao().insertMute( uuid, user, ip, reason, server, active, executedBy );
                 break;
             case TEMPMUTE:
-                punishmentDao.getMutesDao().insertTempMute(uuid, user, ip, reason, server, active, executedBy, duration);
+                punishmentDao.getMutesDao().insertTempMute( uuid, user, ip, reason, server, active, executedBy, duration );
                 break;
             case IPMUTE:
-                punishmentDao.getMutesDao().insertIPMute(uuid, user, ip, reason, server, active, executedBy);
+                punishmentDao.getMutesDao().insertIPMute( uuid, user, ip, reason, server, active, executedBy );
                 break;
             case IPTEMPMUTE:
-                punishmentDao.getMutesDao().insertTempIPMute(uuid, user, ip, reason, server, active, executedBy, duration);
+                punishmentDao.getMutesDao().insertTempIPMute( uuid, user, ip, reason, server, active, executedBy, duration );
             case KICK:
-                punishmentDao.getKickAndWarnDao().insertKick(uuid, user, ip, reason, server, executedBy);
+                punishmentDao.getKickAndWarnDao().insertKick( uuid, user, ip, reason, server, executedBy );
                 break;
             case WARN:
-                punishmentDao.getKickAndWarnDao().insertWarn(uuid, user, ip, reason, server, executedBy);
+                punishmentDao.getKickAndWarnDao().insertWarn( uuid, user, ip, reason, server, executedBy );
                 break;
         }
     }

@@ -38,7 +38,8 @@ import java.util.stream.Stream;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
-public class TitleAnnouncement extends Announcement {
+public class TitleAnnouncement extends Announcement
+{
 
     private boolean language;
     private String title;
@@ -47,10 +48,11 @@ public class TitleAnnouncement extends Announcement {
     private int stay;
     private int fadeOut;
 
-    public TitleAnnouncement(boolean language, String title, String subtitle,
-                             int fadeIn, int stay, int fadeOut, ServerGroup serverGroup,
-                             String receivePermission) {
-        super(serverGroup, receivePermission);
+    public TitleAnnouncement( boolean language, String title, String subtitle,
+                              int fadeIn, int stay, int fadeOut, ServerGroup serverGroup,
+                              String receivePermission )
+    {
+        super( serverGroup, receivePermission );
 
         this.language = language;
         this.title = title;
@@ -60,26 +62,31 @@ public class TitleAnnouncement extends Announcement {
         this.fadeOut = fadeOut;
     }
 
-    public void send() {
-        if (serverGroup.isGlobal()) {
-            send(filter(ProxyServer.getInstance().getPlayers().stream()));
-        } else {
-            serverGroup.getServerInfos().forEach(server -> send(filter(server.getPlayers().stream())));
+    public void send()
+    {
+        if ( serverGroup.isGlobal() )
+        {
+            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+        } else
+        {
+            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
         }
     }
 
-    private void send(Stream<ProxiedPlayer> stream) {
-        stream.forEach(player -> {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
+    private void send( Stream<ProxiedPlayer> stream )
+    {
+        stream.forEach( player ->
+        {
+            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), player );
             Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
-            bungeeTitle.title(Utils.format(player, language && config.exists(title) ? config.getString(title) : title));
-            bungeeTitle.subTitle(Utils.format(player, language && config.exists(subtitle) ? config.getString(subtitle) : subtitle));
-            bungeeTitle.fadeIn(fadeIn * 20);
-            bungeeTitle.stay(stay * 20);
-            bungeeTitle.fadeOut(fadeOut * 20);
+            bungeeTitle.title( Utils.format( player, language && config.exists( title ) ? config.getString( title ) : title ) );
+            bungeeTitle.subTitle( Utils.format( player, language && config.exists( subtitle ) ? config.getString( subtitle ) : subtitle ) );
+            bungeeTitle.fadeIn( fadeIn * 20 );
+            bungeeTitle.stay( stay * 20 );
+            bungeeTitle.fadeOut( fadeOut * 20 );
 
-            player.sendTitle(bungeeTitle);
-        });
+            player.sendTitle( bungeeTitle );
+        } );
     }
 }

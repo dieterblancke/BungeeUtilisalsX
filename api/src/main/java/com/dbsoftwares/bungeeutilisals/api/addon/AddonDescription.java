@@ -33,7 +33,8 @@ import java.util.Set;
 @Data
 @ToString
 @EqualsAndHashCode
-public class AddonDescription {
+public class AddonDescription
+{
 
     private final String name;
     private final String version;
@@ -46,21 +47,22 @@ public class AddonDescription {
     private final String source;
     private final File file;
 
-    public AddonDescription(IConfiguration configuration, File file) {
-        this.name = configuration.getString("name");
-        this.version = configuration.getString("version");
-        this.main = configuration.getString("main");
-        this.author = configuration.getString("author");
-        this.description = configuration.getString("description");
-        this.source = configuration.exists("source") ? configuration.getString("source") : null;
-        this.apiVersion = configuration.exists("api-version")
-                ? configuration.getString("api-version")
+    public AddonDescription( IConfiguration configuration, File file )
+    {
+        this.name = configuration.getString( "name" );
+        this.version = configuration.getString( "version" );
+        this.main = configuration.getString( "main" );
+        this.author = configuration.getString( "author" );
+        this.description = configuration.getString( "description" );
+        this.source = configuration.exists( "source" ) ? configuration.getString( "source" ) : null;
+        this.apiVersion = configuration.exists( "api-version" )
+                ? configuration.getString( "api-version" )
                 : BUCore.getApi().getPlugin().getDescription().getVersion();
 
-        final List<String> required = configuration.getStringList("dependencies.required");
-        final List<String> optional = configuration.getStringList("dependencies.optional");
-        this.requiredDependencies = Sets.newHashSet(required == null ? Lists.newArrayList() : required);
-        this.optionalDependencies = Sets.newHashSet(optional == null ? Lists.newArrayList() : optional);
+        final List<String> required = configuration.getStringList( "dependencies.required" );
+        final List<String> optional = configuration.getStringList( "dependencies.optional" );
+        this.requiredDependencies = Sets.newHashSet( required == null ? Lists.newArrayList() : required );
+        this.optionalDependencies = Sets.newHashSet( optional == null ? Lists.newArrayList() : optional );
 
         this.file = file;
     }

@@ -29,79 +29,99 @@ import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.*;
 
-public class PluginLanguageManager extends AbstractLanguageManager {
+public class PluginLanguageManager extends AbstractLanguageManager
+{
 
-    public PluginLanguageManager(BungeeUtilisals plugin) {
-        super(plugin);
+    public PluginLanguageManager( BungeeUtilisals plugin )
+    {
+        super( plugin );
     }
 
     @Override
-    public void loadLanguages(String pluginName) {
-        Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin(pluginName);
-        if (plugin == null) {
+    public void loadLanguages( String pluginName )
+    {
+        Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin( pluginName );
+        if ( plugin == null )
+        {
             return;
         }
-        File folder = plugins.get(pluginName);
+        File folder = plugins.get( pluginName );
 
-        for (Language language : languages) {
+        for ( Language language : languages )
+        {
             final String name = language.getName();
             final File lang;
 
-            if (fileTypes.get(pluginName).equals(FileStorageType.JSON)) {
-                lang = loadResource(pluginName, "languages/" + name + ".json", new File(folder, name + ".json"));
-            } else {
-                lang = loadResource(pluginName, "languages/" + name + ".yml", new File(folder, name + ".yml"));
+            if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
+            {
+                lang = loadResource( pluginName, "languages/" + name + ".json", new File( folder, name + ".json" ) );
+            } else
+            {
+                lang = loadResource( pluginName, "languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
 
-            if (!lang.exists()) {
+            if ( !lang.exists() )
+            {
                 continue;
             }
-            try {
+            try
+            {
                 final IConfiguration configuration;
 
-                if (fileTypes.get(pluginName).equals(FileStorageType.JSON)) {
-                    configuration = IConfiguration.loadJsonConfiguration(lang);
-                    configuration.copyDefaults(IConfiguration.loadJsonConfiguration(plugin.getResourceAsStream("languages/" + name + ".json")));
-                } else {
-                    configuration = IConfiguration.loadYamlConfiguration(lang);
-                    configuration.copyDefaults(IConfiguration.loadYamlConfiguration(plugin.getResourceAsStream("languages/" + name + ".yml")));
+                if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
+                {
+                    configuration = IConfiguration.loadJsonConfiguration( lang );
+                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( plugin.getResourceAsStream( "languages/" + name + ".json" ) ) );
+                } else
+                {
+                    configuration = IConfiguration.loadYamlConfiguration( lang );
+                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration( plugin.getResourceAsStream( "languages/" + name + ".yml" ) ) );
                 }
 
-                configurations.put(lang, configuration);
-                saveLanguage(pluginName, language);
-            } catch (IOException e) {
-                BUCore.getLogger().error("An error occured: ", e);
+                configurations.put( lang, configuration );
+                saveLanguage( pluginName, language );
+            } catch ( IOException e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
             }
         }
     }
 
     @Override
-    protected File loadResource(String pluginName, String source, File target) {
-        Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin(pluginName);
-        if (plugin == null) {
+    protected File loadResource( String pluginName, String source, File target )
+    {
+        Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin( pluginName );
+        if ( plugin == null )
+        {
             return target;
         }
-        File folder = plugins.get(pluginName);
-        if (!folder.exists()) {
+        File folder = plugins.get( pluginName );
+        if ( !folder.exists() )
+        {
             folder.mkdir();
         }
-        try {
-            if (!target.exists() && target.createNewFile()) {
-                try (InputStream in = plugin.getResourceAsStream(source); OutputStream out = new FileOutputStream(target)) {
-                    if (in == null) {
-                        BUCore.getLogger().info("Could not find default language configuration configuration for " +
-                                source.replace("languages/", "").replace(".json", "") +
-                                " for plugin " + pluginName);
+        try
+        {
+            if ( !target.exists() && target.createNewFile() )
+            {
+                try ( InputStream in = plugin.getResourceAsStream( source ); OutputStream out = new FileOutputStream( target ) )
+                {
+                    if ( in == null )
+                    {
+                        BUCore.getLogger().info( "Could not find default language configuration configuration for " +
+                                source.replace( "languages/", "" ).replace( ".json", "" ) +
+                                " for plugin " + pluginName );
                         return null;
                     }
-                    ByteStreams.copy(in, out);
-                    BUCore.getLogger().info("Loading default language configuration for "
-                            + source.replace("languages/", "").replace(".json", "") + " for plugin "
-                            + pluginName);
+                    ByteStreams.copy( in, out );
+                    BUCore.getLogger().info( "Loading default language configuration for "
+                            + source.replace( "languages/", "" ).replace( ".json", "" ) + " for plugin "
+                            + pluginName );
                 }
             }
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
         return target;
     }

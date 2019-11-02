@@ -29,30 +29,32 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class PacketRegistry {
+public class PacketRegistry
+{
 
     private static List<ProtocolConstants> versions = Lists.newArrayList();
     private static List<PacketData> registry = Lists.newArrayList();
 
-    static {
+    static
+    {
         // when version not supported, -1 will be provided | ids are in order of Version (enum) versions
 
         // https://wiki.vg/Protocol#Player_Position
-        registry.add(new PacketData(
+        registry.add( new PacketData(
                 PacketPlayInPlayerPosition.class,
-                getServerDirection(Protocol.GAME),
-                ProtocolMapping.map(Version.MINECRAFT_1_8, 0x04),
-                ProtocolMapping.map(Version.MINECRAFT_1_9, 0x0C),
-                ProtocolMapping.map(Version.MINECRAFT_1_12, 0x0E),
-                ProtocolMapping.map(Version.MINECRAFT_1_12_1, 0x0D),
-                ProtocolMapping.map(Version.MINECRAFT_1_13, 0x10)
-        ));
+                getServerDirection( Protocol.GAME ),
+                ProtocolMapping.map( Version.MINECRAFT_1_8, 0x04 ),
+                ProtocolMapping.map( Version.MINECRAFT_1_9, 0x0C ),
+                ProtocolMapping.map( Version.MINECRAFT_1_12, 0x0E ),
+                ProtocolMapping.map( Version.MINECRAFT_1_12_1, 0x0D ),
+                ProtocolMapping.map( Version.MINECRAFT_1_13, 0x10 )
+        ) );
         // https://wiki.vg/Protocol#Boss_Bar
-        registry.add(new PacketData(
+        registry.add( new PacketData(
                 PacketPlayOutBossBar.class,
-                getClientDirection(Protocol.GAME),
-                ProtocolMapping.map(Version.MINECRAFT_1_9, 0x0C)
-        ));
+                getClientDirection( Protocol.GAME ),
+                ProtocolMapping.map( Version.MINECRAFT_1_9, 0x0C )
+        ) );
 
         /* For if we ever (try to) add back the inventory packets
         registry.add(new PacketData(PacketPlayInCloseWindow.class, Protocol.GAME.TO_SERVER, 0x0D, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x09, 0x08, 0x08, 0x09, 0x09, 0x09));
@@ -63,48 +65,59 @@ public class PacketRegistry {
         */
     }
 
-    private static Object getServerDirection(final Protocol protocol) {
-        try {
-            final Field field = protocol.getClass().getSuperclass().getDeclaredField("TO_SERVER");
+    private static Object getServerDirection( final Protocol protocol )
+    {
+        try
+        {
+            final Field field = protocol.getClass().getSuperclass().getDeclaredField( "TO_SERVER" );
 
-            field.setAccessible(true);
+            field.setAccessible( true );
 
-            return field.get(protocol);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            return field.get( protocol );
+        } catch ( NoSuchFieldException | IllegalAccessException e )
+        {
+            throw new RuntimeException( e );
         }
     }
 
-    private static Object getClientDirection(final Protocol protocol) {
-        try {
-            final Field field = protocol.getClass().getSuperclass().getDeclaredField("TO_CLIENT");
+    private static Object getClientDirection( final Protocol protocol )
+    {
+        try
+        {
+            final Field field = protocol.getClass().getSuperclass().getDeclaredField( "TO_CLIENT" );
 
-            field.setAccessible(true);
+            field.setAccessible( true );
 
-            return field.get(protocol);
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            throw new RuntimeException(e);
+            return field.get( protocol );
+        } catch ( NoSuchFieldException | IllegalAccessException e )
+        {
+            throw new RuntimeException( e );
         }
     }
 
-    public static void registerPacket(final PacketData data) {
-        if (!registry.contains(data)) {
-            registry.add(data);
+    public static void registerPacket( final PacketData data )
+    {
+        if ( !registry.contains( data ) )
+        {
+            registry.add( data );
         }
         final Object[] mappings = new Object[data.getMappings().length];
 
-        for (int i = 0; i < data.getMappings().length; i++) {
+        for ( int i = 0; i < data.getMappings().length; i++ )
+        {
             final ProtocolMapping mapping = data.getMappings()[i];
 
-            mappings[i] = PacketUtils.createProtocolMapping(mapping.getVersion().getVersionId(), mapping.getPacket());
+            mappings[i] =PacketUtils.createProtocolMapping( mapping.getVersion().getVersionId(), mapping.getPacket() );
         }
 
-        PacketUtils.registerPacket(data.getDirection(), data.getPacketClass(), mappings);
+        PacketUtils.registerPacket( data.getDirection(), data.getPacketClass(), mappings );
     }
 
-    public static void registerPackets() {
-        for (final PacketData data : registry) {
-            registerPacket(data);
+    public static void registerPackets()
+    {
+        for ( final PacketData data : registry )
+        {
+            registerPacket( data );
         }
     }
 }

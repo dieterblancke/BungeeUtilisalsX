@@ -25,7 +25,8 @@ import java.util.UUID;
 
 @Data
 @RequiredArgsConstructor
-public class StaffUser {
+public class StaffUser
+{
 
     private final String name;
     private final UUID uuid;

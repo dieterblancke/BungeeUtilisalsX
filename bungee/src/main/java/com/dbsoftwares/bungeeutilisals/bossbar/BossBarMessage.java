@@ -25,7 +25,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class BossBarMessage {
+public class BossBarMessage
+{
 
     private BarColor color;
     private BarStyle style;

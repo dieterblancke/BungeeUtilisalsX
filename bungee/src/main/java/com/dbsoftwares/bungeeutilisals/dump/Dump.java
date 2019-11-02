@@ -26,7 +26,8 @@ import java.util.Map;
 
 @Data
 @AllArgsConstructor
-public class Dump {
+public class Dump
+{
 
     private String plugin;
     private Map<String, Object> systemInfo;

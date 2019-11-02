@@ -25,13 +25,15 @@ import lombok.ToString;
 @Getter
 @ToString
 @EqualsAndHashCode
-public class PacketData {
+public class PacketData
+{
 
     private Class<? extends Packet> packetClass;
     private Object direction;
     private ProtocolMapping[] mappings;
 
-    public PacketData(Class<? extends Packet> packetClass, Object direction, ProtocolMapping... mappings) {
+    public PacketData( Class<? extends Packet> packetClass, Object direction, ProtocolMapping... mappings )
+    {
         this.packetClass = packetClass;
         this.direction = direction;
         this.mappings = mappings;

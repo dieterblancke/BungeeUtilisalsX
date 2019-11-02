@@ -29,44 +29,53 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class PingCommand extends BUCommand {
+public class PingCommand extends BUCommand
+{
 
-    public PingCommand() {
+    public PingCommand()
+    {
         super(
                 "ping",
-                Arrays.asList(FileLocation.GENERALCOMMANDS.getConfiguration().getString("ping.aliases").split(", ")),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString("ping.permission")
+                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.aliases" ).split( ", " ) ),
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.permission" )
         );
     }
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return Lists.newArrayList("on", "off");
+    public List<String> onTabComplete( User user, String[] args )
+    {
+        return Lists.newArrayList( "on", "off" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        if (user instanceof ConsoleUser) {
+    public void onExecute( User user, String[] args )
+    {
+        if ( user instanceof ConsoleUser )
+        {
             return;
         }
-        if (args.length == 0) {
-            user.sendLangMessage("general-commands.ping.message");
-        } else {
-            final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString("ping.permission-other");
-            if (permission != null
+        if ( args.length == 0 )
+        {
+            user.sendLangMessage( "general-commands.ping.message" );
+        } else
+        {
+            final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.permission-other" );
+            if ( permission != null
                     && !permission.isEmpty()
-                    && !user.getParent().hasPermission(permission)
-                    && !user.getParent().hasPermission("bungeeutilisals.commands.*")
-                    && !user.getParent().hasPermission("bungeeutilisals.*")
-                    && !user.getParent().hasPermission("*")) {
-                user.sendLangMessage("no-permission", "%permission%", permission);
+                    && !user.getParent().hasPermission( permission )
+                    && !user.getParent().hasPermission( "bungeeutilisals.commands.*" )
+                    && !user.getParent().hasPermission( "bungeeutilisals.*" )
+                    && !user.getParent().hasPermission( "*" ) )
+            {
+                user.sendLangMessage( "no-permission", "%permission%", permission );
                 return;
             }
 
-            final Optional<User> optionalUser = BUCore.getApi().getUser(args[0]);
+            final Optional<User> optionalUser = BUCore.getApi().getUser( args[0] );
 
-            if (!optionalUser.isPresent()) {
-                user.sendLangMessage("offline");
+            if ( !optionalUser.isPresent() )
+            {
+                user.sendLangMessage( "offline" );
                 return;
             }
             final User target = optionalUser.get();

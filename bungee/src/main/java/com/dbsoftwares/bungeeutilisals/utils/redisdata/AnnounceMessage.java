@@ -26,7 +26,8 @@ import java.util.Set;
 
 @Data
 @AllArgsConstructor
-public class AnnounceMessage {
+public class AnnounceMessage
+{
 
     private Set<AnnouncementType> types;
     private String message;

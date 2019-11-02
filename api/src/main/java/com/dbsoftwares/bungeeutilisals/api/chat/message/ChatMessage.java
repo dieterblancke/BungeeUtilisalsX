@@ -32,65 +32,80 @@ import java.util.LinkedList;
 
 @Data
 @ToString
-public class ChatMessage {
+public class ChatMessage
+{
 
     private final LinkedList<ChatMessagePartim> partims = Lists.newLinkedList();
 
-    public ChatMessage() {
+    public ChatMessage()
+    {
     }
 
-    public ChatMessage(String message) {
-        this.addPartim(message);
+    public ChatMessage( String message )
+    {
+        this.addPartim( message );
     }
 
-    public void addPartim(final String message) {
-        this.addPartim(message, null, null);
+    public void addPartim( final String message )
+    {
+        this.addPartim( message, null, null );
     }
 
-    public void addPartim(final String message, final HoverPartim hoverPartim) {
-        this.addPartim(message, hoverPartim, null);
+    public void addPartim( final String message, final HoverPartim hoverPartim )
+    {
+        this.addPartim( message, hoverPartim, null );
     }
 
-    public void addPartim(final String message, final ClickPartim clickPartim) {
-        this.addPartim(message, null, clickPartim);
+    public void addPartim( final String message, final ClickPartim clickPartim )
+    {
+        this.addPartim( message, null, clickPartim );
     }
 
-    public void addPartim(final String message, final HoverPartim hoverPartim, final ClickPartim clickPartim) {
-        this.partims.add(new ChatMessagePartim(message, hoverPartim, clickPartim));
+    public void addPartim( final String message, final HoverPartim hoverPartim, final ClickPartim clickPartim )
+    {
+        this.partims.add( new ChatMessagePartim( message, hoverPartim, clickPartim ) );
     }
 
-    public void newLine() {
-        this.addPartim("\n");
+    public void newLine()
+    {
+        this.addPartim( "\n" );
     }
 
-    public void sendTo(User user) {
+    public void sendTo( User user )
+    {
         final TextComponent component = new TextComponent();
 
-        for (ChatMessagePartim partim : partims) {
-            final String message = Utils.c(PlaceHolderAPI.formatMessage(user, partim.getMessage()));
+        for ( ChatMessagePartim partim : partims )
+        {
+            final String message = Utils.c( PlaceHolderAPI.formatMessage( user, partim.getMessage() ) );
             final HoverPartim hoverPartim = partim.getHoverPartim();
             final ClickPartim clickPartim = partim.getClickPartim();
 
-            final TextComponent extra = new TextComponent(message);
-            if (hoverPartim != null) {
-                extra.setHoverEvent(new HoverEvent(hoverPartim.getAction(), Utils.format(user, hoverPartim.getText())));
+            final TextComponent extra = new TextComponent( message );
+            if ( hoverPartim != null )
+            {
+                extra.setHoverEvent( new HoverEvent( hoverPartim.getAction(), Utils.format( user, hoverPartim.getText() ) ) );
             }
-            if (clickPartim != null) {
-                extra.setClickEvent(new ClickEvent(clickPartim.getAction(), PlaceHolderAPI.formatMessage(user, clickPartim.getValue())));
+            if ( clickPartim != null )
+            {
+                extra.setClickEvent( new ClickEvent( clickPartim.getAction(), PlaceHolderAPI.formatMessage( user, clickPartim.getValue() ) ) );
             }
-            component.addExtra(extra);
+            component.addExtra( extra );
         }
-        user.sendMessage(component);
+        user.sendMessage( component );
     }
 
-    public void sendTo(User[] users) {
-        for (User user : users) {
-            sendTo(user);
+    public void sendTo( User[] users )
+    {
+        for ( User user : users )
+        {
+            sendTo( user );
         }
     }
 
-    public void sendTo(Iterable<User> users) {
-        users.forEach(this::sendTo);
+    public void sendTo( Iterable<User> users )
+    {
+        users.forEach( this::sendTo );
     }
 
 }

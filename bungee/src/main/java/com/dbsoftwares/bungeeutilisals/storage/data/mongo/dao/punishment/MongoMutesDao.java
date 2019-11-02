@@ -39,330 +39,354 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
-public class MongoMutesDao implements MutesDao {
+public class MongoMutesDao implements MutesDao
+{
 
     @Override
-    public boolean isMuted(UUID uuid) {
+    public boolean isMuted( UUID uuid )
+    {
         return db()
-                .getCollection(PunishmentType.MUTE.getTable())
-                .find(Filters.and(
-                        Filters.eq("uuid", uuid.toString()),
-                        Filters.eq("active", true),
-                        Filters.regex("type", "^(?!IP.*$).*")
-                ))
-                .limit(1)
+                .getCollection( PunishmentType.MUTE.getTable() )
+                .find( Filters.and(
+                        Filters.eq( "uuid", uuid.toString() ),
+                        Filters.eq( "active", true ),
+                        Filters.regex( "type", "^(?!IP.*$).*" )
+                ) )
+                .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isIPMuted(String ip) {
+    public boolean isIPMuted( String ip )
+    {
         return db()
-                .getCollection(PunishmentType.MUTE.getTable())
-                .find(Filters.and(
-                        Filters.eq("ip", ip),
-                        Filters.eq("active", true),
-                        Filters.regex("type", "IP*")
-                ))
-                .limit(1)
+                .getCollection( PunishmentType.MUTE.getTable() )
+                .find( Filters.and(
+                        Filters.eq( "ip", ip ),
+                        Filters.eq( "active", true ),
+                        Filters.regex( "type", "IP*" )
+                ) )
+                .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isMuted(PunishmentType type, UUID uuid) {
-        if (type.isIP() || !type.isMute()) {
+    public boolean isMuted( PunishmentType type, UUID uuid )
+    {
+        if ( type.isIP() || !type.isMute() )
+        {
             return false;
         }
         return db()
-                .getCollection(type.getTable())
-                .find(Filters.and(
-                        Filters.eq("uuid", uuid.toString()),
-                        Filters.eq("active", true),
-                        Filters.eq("type", type.toString())
-                ))
-                .limit(1)
+                .getCollection( type.getTable() )
+                .find( Filters.and(
+                        Filters.eq( "uuid", uuid.toString() ),
+                        Filters.eq( "active", true ),
+                        Filters.eq( "type", type.toString() )
+                ) )
+                .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isIPMuted(PunishmentType type, String ip) {
-        if (!type.isMute() || !type.isIP()) {
+    public boolean isIPMuted( PunishmentType type, String ip )
+    {
+        if ( !type.isMute() || !type.isIP() )
+        {
             return false;
         }
         return db()
-                .getCollection(type.getTable())
-                .find(Filters.and(
-                        Filters.eq("ip", ip),
-                        Filters.eq("active", true),
-                        Filters.eq("type", type.toString())
-                ))
-                .limit(1)
+                .getCollection( type.getTable() )
+                .find( Filters.and(
+                        Filters.eq( "ip", ip ),
+                        Filters.eq( "active", true ),
+                        Filters.eq( "type", type.toString() )
+                ) )
+                .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public PunishmentInfo insertMute(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby) {
+    public PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put("type", PunishmentType.MUTE.toString());
-        data.put("uuid", uuid.toString());
-        data.put("user", user);
-        data.put("ip", ip);
-        data.put("reason", reason);
-        data.put("server", server);
-        data.put("date", new Date());
-        data.put("duration", -1);
-        data.put("active", active);
-        data.put("executed_by", executedby);
-        data.put("removed", false);
-        data.put("removed_by", null);
-        data.put("punishmentaction_status", false);
+        data.put( "type", PunishmentType.MUTE.toString() );
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", user );
+        data.put( "ip", ip );
+        data.put( "reason", reason );
+        data.put( "server", server );
+        data.put( "date", new Date() );
+        data.put( "duration", -1 );
+        data.put( "active", active );
+        data.put( "executed_by", executedby );
+        data.put( "removed", false );
+        data.put( "removed_by", null );
+        data.put( "punishmentaction_status", false );
 
-        db().getCollection(PunishmentType.MUTE.getTable()).insertOne(new Document(data));
-        return PunishmentDao.buildPunishmentInfo(PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
+        db().getCollection( PunishmentType.MUTE.getTable() ).insertOne( new Document( data ) );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
     }
 
     @Override
-    public PunishmentInfo insertIPMute(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby) {
+    public PunishmentInfo insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put("type", PunishmentType.IPMUTE.toString());
-        data.put("uuid", uuid.toString());
-        data.put("user", user);
-        data.put("ip", ip);
-        data.put("reason", reason);
-        data.put("server", server);
-        data.put("date", new Date());
-        data.put("duration", -1);
-        data.put("active", active);
-        data.put("executed_by", executedby);
-        data.put("removed", false);
-        data.put("removed_by", null);
-        data.put("punishmentaction_status", false);
+        data.put( "type", PunishmentType.IPMUTE.toString() );
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", user );
+        data.put( "ip", ip );
+        data.put( "reason", reason );
+        data.put( "server", server );
+        data.put( "date", new Date() );
+        data.put( "duration", -1 );
+        data.put( "active", active );
+        data.put( "executed_by", executedby );
+        data.put( "removed", false );
+        data.put( "removed_by", null );
+        data.put( "punishmentaction_status", false );
 
-        db().getCollection(PunishmentType.IPMUTE.getTable()).insertOne(new Document(data));
-        return PunishmentDao.buildPunishmentInfo(PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null);
+        db().getCollection( PunishmentType.IPMUTE.getTable() ).insertOne( new Document( data ) );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
     }
 
     @Override
-    public PunishmentInfo insertTempMute(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration) {
+    public PunishmentInfo insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put("type", PunishmentType.TEMPMUTE.toString());
-        data.put("uuid", uuid.toString());
-        data.put("user", user);
-        data.put("ip", ip);
-        data.put("reason", reason);
-        data.put("server", server);
-        data.put("date", new Date());
-        data.put("duration", duration);
-        data.put("active", active);
-        data.put("executed_by", executedby);
-        data.put("removed", false);
-        data.put("removed_by", null);
-        data.put("punishmentaction_status", false);
+        data.put( "type", PunishmentType.TEMPMUTE.toString() );
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", user );
+        data.put( "ip", ip );
+        data.put( "reason", reason );
+        data.put( "server", server );
+        data.put( "date", new Date() );
+        data.put( "duration", duration );
+        data.put( "active", active );
+        data.put( "executed_by", executedby );
+        data.put( "removed", false );
+        data.put( "removed_by", null );
+        data.put( "punishmentaction_status", false );
 
-        db().getCollection(PunishmentType.TEMPMUTE.getTable()).insertOne(new Document(data));
-        return PunishmentDao.buildPunishmentInfo(PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);
+        db().getCollection( PunishmentType.TEMPMUTE.getTable() ).insertOne( new Document( data ) );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
     }
 
     @Override
-    public PunishmentInfo insertTempIPMute(UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration) {
+    public PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put("type", PunishmentType.IPTEMPMUTE.toString());
-        data.put("uuid", uuid.toString());
-        data.put("user", user);
-        data.put("ip", ip);
-        data.put("reason", reason);
-        data.put("server", server);
-        data.put("date", new Date());
-        data.put("duration", duration);
-        data.put("active", active);
-        data.put("executed_by", executedby);
-        data.put("removed", false);
-        data.put("removed_by", null);
-        data.put("punishmentaction_status", false);
+        data.put( "type", PunishmentType.IPTEMPMUTE.toString() );
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", user );
+        data.put( "ip", ip );
+        data.put( "reason", reason );
+        data.put( "server", server );
+        data.put( "date", new Date() );
+        data.put( "duration", duration );
+        data.put( "active", active );
+        data.put( "executed_by", executedby );
+        data.put( "removed", false );
+        data.put( "removed_by", null );
+        data.put( "punishmentaction_status", false );
 
-        db().getCollection(PunishmentType.IPTEMPMUTE.getTable()).insertOne(new Document(data));
-        return PunishmentDao.buildPunishmentInfo(PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null);
+        db().getCollection( PunishmentType.IPTEMPMUTE.getTable() ).insertOne( new Document( data ) );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
     }
 
     @Override
-    public PunishmentInfo getCurrentMute(UUID uuid) {
-        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
-        final Document document = collection.find(Filters.and(
-                Filters.eq("uuid", uuid.toString()),
-                Filters.eq("active", true),
-                Filters.regex("type", "^(?!IP.*$).*")
-        )).first();
+    public PunishmentInfo getCurrentMute( UUID uuid )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final Document document = collection.find( Filters.and(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
+        ) ).first();
 
-        if (document != null) {
-            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.MUTE);
+        if ( document != null )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
 
-            final String user = document.getString("user");
-            final String ip = document.getString("ip");
-            final String reason = document.getString("reason");
-            final String server = document.getString("server");
-            final String executedby = document.getString("executed_by");
-            final Date date = document.getDate("date");
-            final Long time = document.getLong("duration");
-            final boolean active = document.getBoolean("active");
-            final String removedby = document.getString("removed_by");
+            final String user = document.getString( "user" );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
 
-            return PunishmentDao.buildPunishmentInfo(type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
         }
 
         return new PunishmentInfo();
     }
 
     @Override
-    public PunishmentInfo getCurrentIPMute(String ip) {
-        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
-        final Document document = collection.find(Filters.and(
-                Filters.eq("ip", ip),
-                Filters.eq("active", true),
-                Filters.regex("type", "IP*")
-        )).first();
+    public PunishmentInfo getCurrentIPMute( String ip )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final Document document = collection.find( Filters.and(
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
+        ) ).first();
 
-        if (document != null) {
-            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.IPMUTE);
+        if ( document != null )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
 
-            final UUID uuid = UUID.fromString(document.getString("uuid"));
-            final String user = document.getString("user");
-            final String reason = document.getString("reason");
-            final String server = document.getString("server");
-            final String executedby = document.getString("executed_by");
-            final Date date = document.getDate("date");
-            final Long time = document.getLong("duration");
-            final boolean active = document.getBoolean("active");
-            final String removedby = document.getString("removed_by");
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String user = document.getString( "user" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
 
-            return PunishmentDao.buildPunishmentInfo(type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
         }
 
         return new PunishmentInfo();
     }
 
     @Override
-    public void removeCurrentMute(UUID uuid, String removedBy) {
-        final MongoCollection<Document> coll = db().getCollection(PunishmentType.MUTE.getTable());
+    public void removeCurrentMute( UUID uuid, String removedBy )
+    {
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
         // updateMany, this if for some reason multiple mutes would be active at the same time.
         coll.updateMany(
                 Filters.and(
-                        Filters.eq("uuid", uuid.toString()),
-                        Filters.eq("active", true),
-                        Filters.regex("type", "^(?!IP.*$).*")
+                        Filters.eq( "uuid", uuid.toString() ),
+                        Filters.eq( "active", true ),
+                        Filters.regex( "type", "^(?!IP.*$).*" )
                 ),
                 Updates.combine(
-                        Updates.set("active", false),
-                        Updates.set("removed", true),
-                        Updates.set("removed_by", removedBy)
+                        Updates.set( "active", false ),
+                        Updates.set( "removed", true ),
+                        Updates.set( "removed_by", removedBy )
                 )
         );
     }
 
     @Override
-    public void removeCurrentIPMute(String ip, String removedBy) {
-        final MongoCollection<Document> coll = db().getCollection(PunishmentType.MUTE.getTable());
+    public void removeCurrentIPMute( String ip, String removedBy )
+    {
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
         // updateMany, this if for some reason multiple mutes would be active at the same time.
         coll.updateMany(
                 Filters.and(
-                        Filters.eq("ip", ip),
-                        Filters.eq("active", true),
-                        Filters.regex("type", "IP*")
+                        Filters.eq( "ip", ip ),
+                        Filters.eq( "active", true ),
+                        Filters.regex( "type", "IP*" )
                 ),
                 Updates.combine(
-                        Updates.set("active", false),
-                        Updates.set("removed", true),
-                        Updates.set("removed_by", removedBy)
+                        Updates.set( "active", false ),
+                        Updates.set( "removed", true ),
+                        Updates.set( "removed_by", removedBy )
                 )
         );
     }
 
     @Override
-    public List<PunishmentInfo> getMutes(UUID uuid) {
+    public List<PunishmentInfo> getMutes( UUID uuid )
+    {
         final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
-        final FindIterable<Document> documents = collection.find(Filters.and(
-                Filters.eq("uuid", uuid.toString()),
-                Filters.regex("type", "^(?!IP.*$).*")
-        ));
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.and(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
+        ) );
 
-        for (Document document : documents) {
-            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.MUTE);
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
 
-            final String id = document.getObjectId("_id").toString();
-            final String user = document.getString("user");
-            final String ip = document.getString("ip");
-            final String reason = document.getString("reason");
-            final String server = document.getString("server");
-            final String executedby = document.getString("executed_by");
-            final Date date = document.getDate("date");
-            final Long time = document.getLong("duration");
-            final boolean active = document.getBoolean("active");
-            final String removedby = document.getString("removed_by");
+            final String id = document.getObjectId( "_id" ).toString();
+            final String user = document.getString( "user" );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
 
-            punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
         }
         return punishments;
     }
 
     @Override
-    public List<PunishmentInfo> getIPMutes(String ip) {
+    public List<PunishmentInfo> getIPMutes( String ip )
+    {
         final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection(PunishmentType.IPMUTE.getTable());
-        final FindIterable<Document> documents = collection.find(Filters.and(
-                Filters.eq("ip", ip),
-                Filters.regex("type", "IP*")
-        ));
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.and(
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" )
+        ) );
 
-        for (Document document : documents) {
-            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.IPMUTE);
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
 
-            final String id = document.getObjectId("_id").toString();
-            final UUID uuid = UUID.fromString(document.getString("uuid"));
-            final String user = document.getString("user");
-            final String reason = document.getString("reason");
-            final String server = document.getString("server");
-            final String executedby = document.getString("executed_by");
-            final Date date = document.getDate("date");
-            final Long time = document.getLong("duration");
-            final boolean active = document.getBoolean("active");
-            final String removedby = document.getString("removed_by");
+            final String id = document.getObjectId( "_id" ).toString();
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String user = document.getString( "user" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
 
-            punishments.add(PunishmentDao.buildPunishmentInfo(id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby));
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
         }
         return punishments;
     }
 
     @Override
-    public PunishmentInfo getById(String id) {
-        final MongoCollection<Document> collection = db().getCollection(PunishmentType.MUTE.getTable());
-        final Document document = collection.find(Filters.eq("_id", id)).first();
+    public PunishmentInfo getById( String id )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final Document document = collection.find( Filters.eq( "_id", id ) ).first();
 
-        if (document != null) {
-            final PunishmentType type = Utils.valueOfOr(document.getString("type"), PunishmentType.MUTE);
+        if ( document != null )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
 
-            final UUID uuid = UUID.fromString(document.getString("uuid"));
-            final String user = document.getString("user");
-            final String ip = document.getString("ip");
-            final String reason = document.getString("reason");
-            final String server = document.getString("server");
-            final String executedby = document.getString("executed_by");
-            final Date date = document.getDate("date");
-            final Long time = document.getLong("duration");
-            final boolean active = document.getBoolean("active");
-            final String removedby = document.getString("removed_by");
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String user = document.getString( "user" );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
 
-            return PunishmentDao.buildPunishmentInfo(type, uuid, user, ip, reason, server, executedby, date, time, active, removedby);
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
         }
 
         return null;
     }
 
-    private MongoDatabase db() {
-        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
+    private MongoDatabase db()
+    {
+        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
     }
 }

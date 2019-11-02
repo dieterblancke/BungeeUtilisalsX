@@ -26,21 +26,26 @@ import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData.StaffNetworkAction;
 
-public class StaffRedisMessageHandler extends RedisMessageHandler<NetworkStaffConnectData> {
+public class StaffRedisMessageHandler extends RedisMessageHandler<NetworkStaffConnectData>
+{
 
-    public StaffRedisMessageHandler() {
-        super(NetworkStaffConnectData.class);
+    public StaffRedisMessageHandler()
+    {
+        super( NetworkStaffConnectData.class );
     }
 
     @Override
-    public void handle(NetworkStaffConnectData data) {
+    public void handle( NetworkStaffConnectData data )
+    {
         final AbstractEvent event;
-        if (data.getAction().equals(StaffNetworkAction.STAFF_JOIN)) {
-            event = new NetworkStaffJoinEvent(data.getName(), data.getUuid(), data.getRank());
-        } else {
-            event = new NetworkStaffLeaveEvent(data.getName(), data.getUuid(), data.getRank());
+        if ( data.getAction().equals( StaffNetworkAction.STAFF_JOIN ) )
+        {
+            event = new NetworkStaffJoinEvent( data.getName(), data.getUuid(), data.getRank() );
+        } else
+        {
+            event = new NetworkStaffLeaveEvent( data.getName(), data.getUuid(), data.getRank() );
         }
 
-        BUCore.getApi().getEventLoader().launchEvent(event);
+        BUCore.getApi().getEventLoader().launchEvent( event );
     }
 }

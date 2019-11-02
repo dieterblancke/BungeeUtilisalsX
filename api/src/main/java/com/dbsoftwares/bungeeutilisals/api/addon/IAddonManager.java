@@ -27,45 +27,46 @@ import java.io.File;
 import java.util.Collection;
 import java.util.List;
 
-public interface IAddonManager {
+public interface IAddonManager
+{
 
     File getAddonsFolder();
 
-    void findAddons(final File folder);
+    void findAddons( final File folder );
 
     void loadAddons();
 
-    void loadSingleAddon(final File addonFile);
+    void loadSingleAddon( final File addonFile );
 
     void enableAddons();
 
-    void enableAddon(final String addonName);
+    void enableAddon( final String addonName );
 
     void disableAddons();
 
-    void disableAddon(final String addonName);
+    void disableAddon( final String addonName );
 
-    void reloadAddon(final String addonName);
+    void reloadAddon( final String addonName );
 
-    Addon getAddon(final String addonName);
+    Addon getAddon( final String addonName );
 
-    boolean isRegistered(final String addonName);
+    boolean isRegistered( final String addonName );
 
     Collection<Addon> getAddons();
 
     IScheduler getScheduler();
 
-    void registerListener(final Addon addon, final Listener listener);
+    void registerListener( final Addon addon, final Listener listener );
 
-    void registerEventHandler(final Addon addon, final EventHandler handler);
+    void registerEventHandler( final Addon addon, final EventHandler handler );
 
-    void registerCommand(final Addon addon, final Command command);
+    void registerCommand( final Addon addon, final Command command );
 
-    Collection<Listener> getListeners(final String addonName);
+    Collection<Listener> getListeners( final String addonName );
 
-    Collection<EventHandler> getEventHandlers(final String addonName);
+    Collection<EventHandler> getEventHandlers( final String addonName );
 
-    Collection<Command> getCommands(final String addonName);
+    Collection<Command> getCommands( final String addonName );
 
     ILanguageManager getLanguageManager();
 

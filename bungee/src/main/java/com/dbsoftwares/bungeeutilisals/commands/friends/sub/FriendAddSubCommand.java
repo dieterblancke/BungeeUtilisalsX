@@ -31,87 +31,102 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class FriendAddSubCommand extends SubCommand {
+public class FriendAddSubCommand extends SubCommand
+{
 
-    public FriendAddSubCommand() {
+    public FriendAddSubCommand()
+    {
         super(
                 "add", 1, 1,
-                Arrays.asList(FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.add.aliases").split(", "))
+                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.add.aliases" ).split( ", " ) )
         );
     }
 
     @Override
-    public String getUsage() {
+    public String getUsage()
+    {
         return "/friends add (name)";
     }
 
     @Override
-    public String getPermission() {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString("subcommands.add.permission");
+    public String getPermission()
+    {
+        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.add.permission" );
     }
 
     @Override
-    public void onExecute(User user, String[] args) {
-        final int friendLimit = FriendUtils.getFriendsLimit(user);
+    public void onExecute( User user, String[] args )
+    {
+        final int friendLimit = FriendUtils.getFriendsLimit( user );
 
-        if (user.getFriends().size() >= friendLimit) {
-            user.sendLangMessage("friends.add.limited", "{limit}", friendLimit);
+        if ( user.getFriends().size() >= friendLimit )
+        {
+            user.sendLangMessage( "friends.add.limited", "{limit}", friendLimit );
             return;
         }
         final String name = args[0];
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
 
-        if (user.getName().equalsIgnoreCase(name)) {
-            user.sendLangMessage("friends.add.selfadd");
+        if ( user.getName().equalsIgnoreCase( name ) )
+        {
+            user.sendLangMessage( "friends.add.selfadd" );
             return;
         }
 
-        if (user.getFriends().stream().anyMatch(data -> data.getFriend().equalsIgnoreCase(name))) {
-            user.sendLangMessage("friends.add.already-friend", "{friend}", name);
+        if ( user.getFriends().stream().anyMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        {
+            user.sendLangMessage( "friends.add.already-friend", "{friend}", name );
             return;
         }
 
-        final Optional<User> optionalTarget = BUCore.getApi().getUser(name);
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( name );
         final UserStorage storage;
         final boolean accepts;
 
-        if (optionalTarget.isPresent()) {
+        if ( optionalTarget.isPresent() )
+        {
             final User target = optionalTarget.get();
 
             storage = target.getStorage();
             accepts = target.getFriendSettings().isRequests();
-        } else {
-            if (!dao.getUserDao().exists(args[0])) {
-                user.sendLangMessage("never-joined");
+        } else
+        {
+            if ( !dao.getUserDao().exists( args[0] ) )
+            {
+                user.sendLangMessage( "never-joined" );
                 return;
             }
 
-            storage = dao.getUserDao().getUserData(name);
-            accepts = dao.getFriendsDao().getSetting(storage.getUuid(), FriendSettingType.REQUESTS);
+            storage = dao.getUserDao().getUserData( name );
+            accepts = dao.getFriendsDao().getSetting( storage.getUuid(), FriendSettingType.REQUESTS );
         }
 
-        if (!accepts) {
-            user.sendLangMessage("friends.add.disallowed");
+        if ( !accepts )
+        {
+            user.sendLangMessage( "friends.add.disallowed" );
             return;
         }
 
-        if (dao.getFriendsDao().hasOutgoingFriendRequest(user.getUuid(), storage.getUuid())) {
-            user.sendLangMessage("friends.add.already-requested", "{name}", name);
+        if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        {
+            user.sendLangMessage( "friends.add.already-requested", "{name}", name );
             return;
         }
-        if (dao.getFriendsDao().hasIncomingFriendRequest(user.getUuid(), storage.getUuid())) {
-            user.sendLangMessage("friends.add.use-accept-instead", "{name}", name);
+        if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        {
+            user.sendLangMessage( "friends.add.use-accept-instead", "{name}", name );
             return;
         }
 
-        dao.getFriendsDao().addFriendRequest(user.getUuid(), storage.getUuid());
-        user.sendLangMessage("friends.add.request-sent", "{user}", name);
+        dao.getFriendsDao().addFriendRequest( user.getUuid(), storage.getUuid() );
+        user.sendLangMessage( "friends.add.request-sent", "{user}", name );
 
-        optionalTarget.ifPresent(target -> target.sendLangMessage("friends.request-received", "{name}", user.getName()));
+        optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.request-received", "{name}", user.getName() ) );
     }
 
     @Override
-    public List<String> getCompletions(User user, String[] args) {
+    public List<String> getCompletions( User user, String[] args )
+    {
         return null;
     }
 }

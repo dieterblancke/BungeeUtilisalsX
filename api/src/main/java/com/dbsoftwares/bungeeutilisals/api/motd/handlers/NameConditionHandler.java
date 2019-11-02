@@ -21,28 +21,35 @@ package com.dbsoftwares.bungeeutilisals.api.motd.handlers;
 import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
 
-public class NameConditionHandler extends ConditionHandler {
+public class NameConditionHandler extends ConditionHandler
+{
 
-    public NameConditionHandler(String condition) {
-        super(condition.replaceFirst("name ", ""));
+    public NameConditionHandler( String condition )
+    {
+        super( condition.replaceFirst( "name ", "" ) );
     }
 
     @Override
-    public boolean checkCondition(PendingConnection connection) {
-        final String[] args = condition.split(" ");
+    public boolean checkCondition( PendingConnection connection )
+    {
+        final String[] args = condition.split( " " );
         final String operator = args[0];
         final String value = args[1];
 
-        if (operator.equalsIgnoreCase("==")) {
-            if (connection.getName() == null) {
-                return value.equalsIgnoreCase("null");
+        if ( operator.equalsIgnoreCase( "==" ) )
+        {
+            if ( connection.getName() == null )
+            {
+                return value.equalsIgnoreCase( "null" );
             }
-            return connection.getName().equalsIgnoreCase(value);
-        } else if (operator.equalsIgnoreCase("!=")) {
-            if (connection.getName() == null) {
-                return !value.equalsIgnoreCase("null");
+            return connection.getName().equalsIgnoreCase( value );
+        } else if ( operator.equalsIgnoreCase( "!=" ) )
+        {
+            if ( connection.getName() == null )
+            {
+                return !value.equalsIgnoreCase( "null" );
             }
-            return !connection.getName().equalsIgnoreCase(value);
+            return !connection.getName().equalsIgnoreCase( value );
         }
 
         return false;

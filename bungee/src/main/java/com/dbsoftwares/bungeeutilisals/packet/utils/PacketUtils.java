@@ -26,41 +26,50 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
-public class PacketUtils {
+public class PacketUtils
+{
 
-    public static boolean registerPacket(Object direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings) {
-        try {
-            Class<?> protocolMap = Class.forName("net.md_5.bungee.protocol.Protocol$ProtocolMapping");
-            Object map = Array.newInstance(protocolMap, protocolMappings.length);
+    public static boolean registerPacket( Object direction, Class<? extends DefinedPacket> packetClass, Object... protocolMappings )
+    {
+        try
+        {
+            Class<?> protocolMap = Class.forName( "net.md_5.bungee.protocol.Protocol$ProtocolMapping" );
+            Object map = Array.newInstance( protocolMap, protocolMappings.length );
 
-            for (int i = 0; i < protocolMappings.length; i++) {
-                Array.set(map, i, protocolMappings[i]);
+            for ( int i = 0; i < protocolMappings.length; i++ )
+            {
+                Array.set( map, i, protocolMappings[i] );
             }
 
-            Method register = direction.getClass().getDeclaredMethod("registerPacket", Class.class, map.getClass());
-            register.setAccessible(true);
+            Method register = direction.getClass().getDeclaredMethod( "registerPacket", Class.class, map.getClass() );
+            register.setAccessible( true );
 
-            register.invoke(direction, packetClass, map);
+            register.invoke( direction, packetClass, map );
             return true;
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
             return false;
         }
     }
 
-    public static Object createProtocolMapping(int protocol, int id) {
-        try {
-            Method map = Protocol.class.getDeclaredMethod("map", int.class, int.class);
-            map.setAccessible(true);
+    public static Object createProtocolMapping( int protocol, int id )
+    {
+        try
+        {
+            Method map = Protocol.class.getDeclaredMethod( "map", int.class, int.class );
+            map.setAccessible( true );
 
-            return map.invoke(null, protocol, id);
-        } catch (Exception e) {
-            BUCore.getLogger().error("An error occured: ", e);
+            return map.invoke( null, protocol, id );
+        } catch ( Exception e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
         return null;
     }
 
-    public static int getProxyProtocol() {
-        return ProtocolConstants.SUPPORTED_VERSION_IDS.get(ProtocolConstants.SUPPORTED_VERSION_IDS.size() - 1);
+    public static int getProxyProtocol()
+    {
+        return ProtocolConstants.SUPPORTED_VERSION_IDS.get( ProtocolConstants.SUPPORTED_VERSION_IDS.size() - 1 );
     }
 }

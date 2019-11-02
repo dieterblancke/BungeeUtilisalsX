@@ -26,46 +26,59 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
 
-public class AddonClassLoader extends URLClassLoader {
+public class AddonClassLoader extends URLClassLoader
+{
 
     @Getter
     private static final List<AddonClassLoader> classLoaders = Lists.newCopyOnWriteArrayList();
 
-    static {
+    static
+    {
         ClassLoader.registerAsParallelCapable();
     }
 
-    public AddonClassLoader(URL[] urls) {
-        super(urls, BUCore.class.getClassLoader());
-        classLoaders.add(this);
+    public AddonClassLoader( URL[] urls )
+    {
+        super( urls, BUCore.class.getClassLoader() );
+        classLoaders.add( this );
     }
 
     @Override
-    public URL getResource(String name) {
-        return findResource(name);
+    public URL getResource( String name )
+    {
+        return findResource( name );
     }
 
     @Override
-    protected Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {
-        return loadClass(name, resolve, true);
+    protected Class<?> loadClass( String name, boolean resolve ) throws ClassNotFoundException
+    {
+        return loadClass( name, resolve, true );
     }
 
-    private Class<?> loadClass(String name, boolean resolve, boolean checkOther) throws ClassNotFoundException {
-        try {
-            return super.loadClass(name, resolve);
-        } catch (ClassNotFoundException ignored) {
-            if (checkOther) {
-                for (AddonClassLoader loader : classLoaders) {
-                    if (loader != this) {
-                        try {
-                            return loader.loadClass(name, resolve, false);
-                        } catch (ClassNotFoundException ignore) {
+    private Class<?> loadClass( String name, boolean resolve, boolean checkOther ) throws ClassNotFoundException
+    {
+        try
+        {
+            return super.loadClass( name, resolve );
+        } catch ( ClassNotFoundException ignored )
+        {
+            if ( checkOther )
+            {
+                for ( AddonClassLoader loader : classLoaders )
+                {
+                    if ( loader != this )
+                    {
+                        try
+                        {
+                            return loader.loadClass( name, resolve, false );
+                        } catch ( ClassNotFoundException ignore )
+                        {
                             // ignored
                         }
                     }
                 }
             }
         }
-        throw new ClassNotFoundException(name);
+        throw new ClassNotFoundException( name );
     }
 }

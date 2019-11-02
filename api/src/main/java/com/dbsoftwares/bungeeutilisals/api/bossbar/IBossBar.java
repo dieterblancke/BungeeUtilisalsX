@@ -23,7 +23,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.UUID;
 
-public interface IBossBar {
+public interface IBossBar
+{
 
     /**
      * @return Unique Identifier of the Bossbar.
@@ -35,42 +36,42 @@ public interface IBossBar {
      */
     BarColor getColor();
 
-    void setColor(BarColor color);
+    void setColor( BarColor color );
 
     /**
      * @return Bossbar style.
      */
     BarStyle getStyle();
 
-    void setStyle(BarStyle style);
+    void setStyle( BarStyle style );
 
     /**
      * @return Bossbar progress.
      */
     float getProgress();
 
-    void setProgress(float progress);
+    void setProgress( float progress );
 
     /**
      * @return Bossbar visibility.
      */
     boolean isVisible();
 
-    void setVisible(boolean visible);
+    void setVisible( boolean visible );
 
     @Deprecated
     String getMessage();
 
     @Deprecated
-    void setMessage(String title);
+    void setMessage( String title );
 
-    void setMessage(BaseComponent[] title);
+    void setMessage( BaseComponent[] title );
 
     BaseComponent[] getBaseComponent();
 
-    void addUser(User user);
+    void addUser( User user );
 
-    void removeUser(User user);
+    void removeUser( User user );
 
     /**
      * Check whether an user has the bossbar or not.
@@ -78,7 +79,7 @@ public interface IBossBar {
      * @param user The user to check.
      * @return true if user receives bossbar, false if not.
      */
-    boolean hasUser(User user);
+    boolean hasUser( User user );
 
     void clearUsers();
 

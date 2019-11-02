@@ -196,7 +196,7 @@ report:
     list:
       enabled: true
       name: list
-      aliases: 'new, c'
+      aliases: 'list, l'
       permission: bungeeutilisals.commands.report.list
     accept:
       enabled: true
