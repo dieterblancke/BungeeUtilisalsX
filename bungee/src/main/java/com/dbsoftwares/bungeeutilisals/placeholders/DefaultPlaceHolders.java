@@ -19,8 +19,10 @@
 package com.dbsoftwares.bungeeutilisals.placeholders;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
+import net.md_5.bungee.api.ProxyServer;
 
 public class DefaultPlaceHolders implements PlaceHolderPack
 {
@@ -56,5 +58,9 @@ public class DefaultPlaceHolders implements PlaceHolderPack
                 event -> event.getUser().getName() );
         PlaceHolderAPI.addPlaceHolder( "{ping}", true,
                 event -> String.valueOf( event.getUser().getParent().getPing() ) );
+        PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
+                event -> String.valueOf( BUCore.getApi().getPlayerUtils().getTotalCount() ) );
+        PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
+                event -> String.valueOf( ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers() ) );
     }
 }

@@ -27,6 +27,8 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
+import com.google.api.client.util.Lists;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -36,10 +38,13 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 public class MotdPingListener implements Listener
 {
+
+    private static final UUID EMPTY_UUID = new UUID( 0, 0 );
 
     @EventHandler
     public void onPing( ProxyPingEvent event )
@@ -60,8 +65,25 @@ public class MotdPingListener implements Listener
         {
             return;
         }
+        final String message = formatMessage( motd.getMotd(), event );
+        final BaseComponent component = new TextComponent( Utils.format( message ) );
+
+        event.getResponse().setDescriptionComponent( component );
+
+        final List<ServerPing.PlayerInfo> hoverMessages = Lists.newArrayList();
+        for ( String hoverMessage : motd.getHoverMessages() )
+        {
+            hoverMessages.add( new ServerPing.PlayerInfo(
+                    Utils.c( formatMessage( hoverMessage, event ) ),
+                    EMPTY_UUID
+            ) );
+        }
+        event.getResponse().getPlayers().setSample( hoverMessages.toArray( new ServerPing.PlayerInfo[0] ) );
+    }
+
+    private String formatMessage( String message, final ProxyPingEvent event )
+    {
         final Version version = Version.getVersion( event.getConnection().getVersion() );
-        String message = motd.getMotd();
 
         message = message.replace( "{user}", event.getConnection().getName() == null ? "Unknown" : event.getConnection().getName() );
         message = message.replace( "{version}", version == null ? "Unknown" : version.toString() );
@@ -69,14 +91,14 @@ public class MotdPingListener implements Listener
         if ( event.getConnection().getVirtualHost() == null || event.getConnection().getVirtualHost().getHostName() == null )
         {
             message = message.replace( "{domain}", "Unknown" );
-        } else
+        }
+        else
         {
             message = message.replace( "{domain}", event.getConnection().getVirtualHost().getHostName() );
         }
         message = PlaceHolderAPI.formatMessage( message );
-        final BaseComponent component = new TextComponent( Utils.format( message ) );
 
-        event.getResponse().setDescriptionComponent( component );
+        return message;
     }
 
     private void loadDefaultMotd( final ProxyPingEvent event, final List<MotdData> motds )
@@ -127,7 +149,8 @@ public class MotdPingListener implements Listener
             {
                 nameField.set( connection, name );
             }
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             // do nothing
         }

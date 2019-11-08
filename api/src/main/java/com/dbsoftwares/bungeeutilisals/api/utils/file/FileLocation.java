@@ -87,20 +87,27 @@ public enum FileLocation
                     {
                         final String condition = section.getString( "condition" );
                         final String motd = section.getString( "motd" );
+                        final List<String> hoverMessages = section.exists( "player-hover" )
+                                ? section.getStringList( "player-hover" )
+                                : Lists.newArrayList();
 
                         if ( condition.equalsIgnoreCase( "default" ) )
                         {
-                            getDataList().add( new MotdData( null, true, motd ) );
-                        } else if ( condition.toLowerCase().startsWith( "domain" ) )
+                            getDataList().add( new MotdData( null, true, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "domain" ) )
                         {
-                            getDataList().add( new MotdData( new DomainConditionHandler( condition ), false, motd ) );
-                        } else if ( condition.toLowerCase().startsWith( "version" ) )
+                            getDataList().add( new MotdData( new DomainConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "version" ) )
                         {
-                            getDataList().add( new MotdData( new VersionConditionHandler( condition ), false, motd ) );
-                        } else if ( condition.toLowerCase().startsWith( "name" ) )
+                            getDataList().add( new MotdData( new VersionConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "name" ) )
                         {
-                            getDataList().add( new MotdData( new NameConditionHandler( condition ), false, motd ) );
-                        } else
+                            getDataList().add( new MotdData( new NameConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else
                         {
                             BUCore.getLogger().warn( "An invalid MOTD condition has been entered." );
                             BUCore.getLogger().warn( "For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions" );
