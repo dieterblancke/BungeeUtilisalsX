@@ -29,11 +29,11 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.packet.packets.out.PacketPlayOutBossBar;
 import com.google.api.client.util.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -86,20 +86,19 @@ public class BossBar implements IBossBar
     {
         this.visible = visible;
 
-        final PacketPlayOutBossBar packet;
+        final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
 
         if ( visible )
         {
-            packet = new PacketPlayOutBossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( message );
-            packet.setPercent( progress );
+            packet.setTitle( ComponentSerializer.toString( message ) );
+            packet.setHealth( progress );
             packet.setColor( color.getId() );
-            packet.setOverlay( style.getId() );
-        } else
+            packet.setDivision( style.getId() );
+        }
+        else
         {
-            packet = new PacketPlayOutBossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
         }
@@ -114,11 +113,11 @@ public class BossBar implements IBossBar
 
         if ( visible )
         {
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_STYLE.getId() );
             packet.setColor( color.getId() );
-            packet.setOverlay( style.getId() );
+            packet.setDivision( style.getId() );
 
             users.forEach( user -> user.sendPacket( packet ) );
         }
@@ -130,11 +129,12 @@ public class BossBar implements IBossBar
         this.style = style;
         if ( visible )
         {
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
+
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_STYLE.getId() );
             packet.setColor( color.getId() );
-            packet.setOverlay( style.getId() );
+            packet.setDivision( style.getId() );
 
             users.forEach( user -> user.sendPacket( packet ) );
         }
@@ -146,10 +146,11 @@ public class BossBar implements IBossBar
         this.progress = progress;
         if ( visible )
         {
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
+
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_HEALTH.getId() );
-            packet.setPercent( progress );
+            packet.setHealth( progress );
 
             users.forEach( user -> user.sendPacket( packet ) );
         }
@@ -172,13 +173,13 @@ public class BossBar implements IBossBar
             }
             users.add( user );
 
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( message );
-            packet.setPercent( progress );
+            packet.setTitle( ComponentSerializer.toString( message ) );
+            packet.setHealth( progress );
             packet.setColor( color.getId() );
-            packet.setOverlay( style.getId() );
+            packet.setDivision( style.getId() );
 
             user.sendPacket( packet );
         }
@@ -203,10 +204,10 @@ public class BossBar implements IBossBar
         this.message = title;
         if ( visible )
         {
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
-            packet.setTitle( message );
+            packet.setTitle( ComponentSerializer.toString( message ) );
 
             users.forEach( user -> user.sendPacket( packet ) );
         }
@@ -219,7 +220,7 @@ public class BossBar implements IBossBar
         {
             users.remove( user );
 
-            final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+            final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
         }
@@ -234,7 +235,7 @@ public class BossBar implements IBossBar
     @Override
     public void clearUsers()
     {
-        final PacketPlayOutBossBar packet = new PacketPlayOutBossBar();
+        final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
         packet.setUuid( uuid );
         packet.setAction( BossBarAction.REMOVE.getId() );
 
