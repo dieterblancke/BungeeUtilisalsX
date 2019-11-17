@@ -20,7 +20,6 @@ package com.dbsoftwares.bungeeutilisals.packet;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.packet.packets.in.PacketPlayInPlayerPosition;
-import com.dbsoftwares.bungeeutilisals.packet.packets.out.PacketPlayOutBossBar;
 import com.dbsoftwares.bungeeutilisals.packet.utils.PacketUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.protocol.Protocol;
@@ -50,11 +49,11 @@ public class PacketRegistry
                 ProtocolMapping.map( Version.MINECRAFT_1_13, 0x10 )
         ) );
         // https://wiki.vg/Protocol#Boss_Bar
-        registry.add( new PacketData(
-                PacketPlayOutBossBar.class,
-                getClientDirection( Protocol.GAME ),
-                ProtocolMapping.map( Version.MINECRAFT_1_9, 0x0C )
-        ) );
+//        registry.add( new PacketData(
+//                PacketPlayOutBossBar.class,
+//                getClientDirection( Protocol.GAME ),
+//                ProtocolMapping.map( Version.MINECRAFT_1_9, 0x0C )
+//        ) );
 
         /* For if we ever (try to) add back the inventory packets
         registry.add(new PacketData(PacketPlayInCloseWindow.class, Protocol.GAME.TO_SERVER, 0x0D, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x09, 0x08, 0x08, 0x09, 0x09, 0x09));
@@ -74,7 +73,8 @@ public class PacketRegistry
             field.setAccessible( true );
 
             return field.get( protocol );
-        } catch ( NoSuchFieldException | IllegalAccessException e )
+        }
+        catch ( NoSuchFieldException | IllegalAccessException e )
         {
             throw new RuntimeException( e );
         }
@@ -89,7 +89,8 @@ public class PacketRegistry
             field.setAccessible( true );
 
             return field.get( protocol );
-        } catch ( NoSuchFieldException | IllegalAccessException e )
+        }
+        catch ( NoSuchFieldException | IllegalAccessException e )
         {
             throw new RuntimeException( e );
         }

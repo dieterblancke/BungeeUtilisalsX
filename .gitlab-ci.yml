@@ -29,4 +29,4 @@ deploy:
     name: "BungeeUtilisalsX"
     expire_in: 2 weeks
     paths:
-      - bungee/target/BungeeUtilisalsX.jar
+      - bungee/target/BungeeUtilisalsX*.jar

@@ -30,6 +30,8 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.UUID;
 
+@Deprecated
+// TODO: Remove, keeping it in temporarily though.
 public class PacketPlayOutBossBar extends Packet
 {
 
@@ -142,23 +144,29 @@ public class PacketPlayOutBossBar extends Packet
             this.color = readVarInt( buf );
             this.overlay = readVarInt( buf );
             this.flags = buf.readUnsignedByte();
-        } else if ( action == BossBarAction.REMOVE.getId() )
+        }
+        else if ( action == BossBarAction.REMOVE.getId() )
         {
 
-        } else if ( action == BossBarAction.UPDATE_HEALTH.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_HEALTH.getId() )
         {
             this.percent = buf.readFloat();
-        } else if ( action == BossBarAction.UPDATE_TITLE.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_TITLE.getId() )
         {
             this.title = ComponentSerializer.parse( readString( buf ) );
-        } else if ( action == BossBarAction.UPDATE_STYLE.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_STYLE.getId() )
         {
             this.color = readVarInt( buf );
             this.overlay = readVarInt( buf );
-        } else if ( action == BossBarAction.UPDATE_FLAGS.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_FLAGS.getId() )
         {
             this.flags = buf.readUnsignedByte();
-        } else
+        }
+        else
         {
             throw new UnsupportedOperationException( "Unknown action " + action );
         }
@@ -185,27 +193,33 @@ public class PacketPlayOutBossBar extends Packet
             writeVarInt( color, buf );
             writeVarInt( overlay, buf );
             buf.writeByte( flags );
-        } else if ( action == BossBarAction.REMOVE.getId() )
+        }
+        else if ( action == BossBarAction.REMOVE.getId() )
         {
 
-        } else if ( action == BossBarAction.UPDATE_HEALTH.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_HEALTH.getId() )
         {
             buf.writeFloat( percent );
-        } else if ( action == BossBarAction.UPDATE_TITLE.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_TITLE.getId() )
         {
             if ( title == null )
             {
                 throw new IllegalStateException( "No title specified!" );
             }
             writeString( ComponentSerializer.toString( title ), buf );
-        } else if ( action == BossBarAction.UPDATE_STYLE.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_STYLE.getId() )
         {
             writeVarInt( color, buf );
             writeVarInt( overlay, buf );
-        } else if ( action == BossBarAction.UPDATE_FLAGS.getId() )
+        }
+        else if ( action == BossBarAction.UPDATE_FLAGS.getId() )
         {
             buf.writeByte( flags );
-        } else
+        }
+        else
         {
             throw new UnsupportedOperationException( "Unknown action " + action );
         }

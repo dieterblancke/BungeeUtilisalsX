@@ -54,7 +54,7 @@ public class ServerGroup
 
                 if ( server.startsWith( "*" ) )
                 {
-                    if ( name.endsWith( server.substring( 1, server.length() ).toLowerCase() ) )
+                    if ( name.endsWith( server.substring( 1 ).toLowerCase() ) )
                     {
                         foundServers.add( info.getName() );
                     }
