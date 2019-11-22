@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.util.List;
 
@@ -108,7 +109,7 @@ public class PacketRegistry
         {
             final ProtocolMapping mapping = data.getMappings()[i];
 
-            mappings[i] =PacketUtils.createProtocolMapping( mapping.getVersion().getVersionId(), mapping.getPacket() );
+            Array.set( mappings, i, PacketUtils.createProtocolMapping( mapping.getVersion().getVersionId(), mapping.getPacket() ) );
         }
 
         PacketUtils.registerPacket( data.getDirection(), data.getPacketClass(), mappings );

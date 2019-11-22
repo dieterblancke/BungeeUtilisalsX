@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.packet.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import manifold.strings.api.DisableStringLiteralTemplates;
 import net.md_5.bungee.protocol.DefinedPacket;
 import net.md_5.bungee.protocol.Protocol;
 import net.md_5.bungee.protocol.ProtocolConstants;
@@ -26,6 +27,7 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
 
+@DisableStringLiteralTemplates
 public class PacketUtils
 {
 

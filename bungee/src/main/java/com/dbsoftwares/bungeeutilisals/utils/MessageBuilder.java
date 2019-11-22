@@ -84,7 +84,8 @@ public class MessageBuilder
             if ( config.isString( str ) )
             {
                 text = config.getString( str );
-            } else if ( config.isList( str ) )
+            }
+            else if ( config.isList( str ) )
             {
                 text = Utils.formatList( config.getStringList( str ), System.lineSeparator() );
             }
