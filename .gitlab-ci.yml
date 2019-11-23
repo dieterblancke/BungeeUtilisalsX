@@ -1,4 +1,4 @@
-image: maven:latest
+image: maven:3.6.2-jdk-8
 
 variables:
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
@@ -21,7 +21,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - mvn clean package install $MAVEN_OPTS
+    - mvn install $MAVEN_OPTS
   only:
     - master
   artifacts:
