@@ -21,7 +21,7 @@ test:
 deploy:
   stage: deploy
   script:
-    - mvn install $MAVEN_OPTS
+    - mvn clean package install $MAVEN_OPTS
   only:
     - master
   artifacts:
