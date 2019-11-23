@@ -1,7 +1,6 @@
 image: maven:latest
 
 variables:
-  MAVEN_CLI_OPTS: "--batch-mode"
   MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
 
 cache:
@@ -12,17 +11,17 @@ cache:
 build:
   stage: build
   script:
-    - mvn $MAVEN_CLI_OPTS compile
+    - mvn compile $MAVEN_OPTS
 
 test:
   stage: test
   script:
-    - mvn $MAVEN_CLI_OPTS test
+    - mvn test $MAVEN_OPTS
 
 deploy:
   stage: deploy
   script:
-    - mvn $MAVEN_CLI_OPTS install
+    - mvn install $MAVEN_OPTS
   only:
     - master
   artifacts:
