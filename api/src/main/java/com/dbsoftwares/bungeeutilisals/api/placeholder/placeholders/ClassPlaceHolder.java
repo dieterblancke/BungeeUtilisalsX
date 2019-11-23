@@ -19,36 +19,13 @@
 package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
-import lombok.experimental.Accessors;
 
-@Getter
-@ToString
-@EqualsAndHashCode
-public abstract class PlaceHolder
+public abstract class ClassPlaceHolder extends PlaceHolder implements PlaceHolderEventHandler
 {
 
-    protected String placeHolderName;
-    @Accessors(fluent = true)
-    protected boolean requiresUser;
-    @Setter
-    protected PlaceHolderEventHandler eventHandler;
-
-    public PlaceHolder( String placeHolderName, boolean requiresUser, PlaceHolderEventHandler eventHandler )
+    public ClassPlaceHolder( String placeHolder, boolean requiresUser )
     {
-        this.placeHolderName = placeHolderName;
-        this.requiresUser = requiresUser;
-        this.eventHandler = eventHandler;
+        super( placeHolder, requiresUser, null );
+        super.setEventHandler( this );
     }
-
-    public boolean requiresUser()
-    {
-        return requiresUser;
-    }
-
-    public abstract String format( User user, String message );
 }

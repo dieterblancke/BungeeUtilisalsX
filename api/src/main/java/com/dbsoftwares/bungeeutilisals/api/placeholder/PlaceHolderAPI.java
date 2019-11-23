@@ -21,18 +21,19 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.ClassPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.DefaultPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.InputPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.Lists;
 
-import java.util.List;
+import java.util.LinkedList;
 
 public class PlaceHolderAPI
 {
 
-    private static List<PlaceHolder> placeholders = Lists.newArrayList();
+    private static LinkedList<PlaceHolder> placeholders = Lists.newLinkedList();
 
     private PlaceHolderAPI()
     {
@@ -83,6 +84,11 @@ public class PlaceHolderAPI
     public static void loadPlaceHolderPack( PlaceHolderPack pack )
     {
         pack.loadPack();
+    }
+
+    public static void addPlaceHolder( ClassPlaceHolder placeholder )
+    {
+        placeholders.add( placeholder );
     }
 
     public static void addPlaceHolder( String placeholder, boolean requiresUser, PlaceHolderEventHandler handler )
