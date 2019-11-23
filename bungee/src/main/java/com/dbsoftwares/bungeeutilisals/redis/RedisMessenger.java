@@ -33,7 +33,8 @@ public class RedisMessenger implements Listener
             try
             {
                 registerMessageHandler( clazz.newInstance() );
-            } catch ( InstantiationException | IllegalAccessException e )
+            }
+            catch ( InstantiationException | IllegalAccessException e )
             {
                 BUCore.logException( e );
             }

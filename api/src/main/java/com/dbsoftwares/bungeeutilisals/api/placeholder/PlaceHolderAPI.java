@@ -51,7 +51,8 @@ public class PlaceHolderAPI
                 message = placeholder.format( user, message );
             }
             return message;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             return message;
@@ -71,7 +72,8 @@ public class PlaceHolderAPI
                 message = placeholder.format( null, message );
             }
             return message;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             return message;

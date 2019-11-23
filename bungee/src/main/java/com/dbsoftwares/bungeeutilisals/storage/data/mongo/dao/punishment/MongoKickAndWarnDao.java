@@ -175,6 +175,6 @@ public class MongoKickAndWarnDao implements KickAndWarnDao
 
     private MongoDatabase db()
     {
-        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
+        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

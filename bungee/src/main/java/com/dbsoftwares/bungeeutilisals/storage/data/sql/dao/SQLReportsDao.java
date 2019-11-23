@@ -51,7 +51,8 @@ public class SQLReportsDao implements ReportsDao
             pstmt.setBoolean( 6, report.isAccepted() );
 
             pstmt.execute();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -68,7 +69,8 @@ public class SQLReportsDao implements ReportsDao
             pstmt.setLong( 1, id );
 
             pstmt.execute();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -92,7 +94,8 @@ public class SQLReportsDao implements ReportsDao
                     report = getReport( rs );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -116,7 +119,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -141,7 +145,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -177,7 +182,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -201,7 +207,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -226,7 +233,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -248,7 +256,8 @@ public class SQLReportsDao implements ReportsDao
             {
                 exists = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -267,7 +276,8 @@ public class SQLReportsDao implements ReportsDao
             pstmt.setBoolean( 2, accepted );
             pstmt.setLong( 3, id );
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -303,7 +313,8 @@ public class SQLReportsDao implements ReportsDao
                     reports.add( getReport( rs ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }

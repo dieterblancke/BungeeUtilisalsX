@@ -57,7 +57,8 @@ public class FriendUtils
             if ( limits.exists( "limits." + lastPart ) )
             {
                 limit = limits.getInteger( "limits." + lastPart );
-            } else if ( MathUtils.isInteger( lastPart ) )
+            }
+            else if ( MathUtils.isInteger( lastPart ) )
             {
                 limit = Integer.parseInt( lastPart );
             }

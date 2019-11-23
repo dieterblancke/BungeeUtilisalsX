@@ -67,7 +67,8 @@ public class TitleAnnouncement extends Announcement
         if ( serverGroup.isGlobal() )
         {
             send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
-        } else
+        }
+        else
         {
             serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
         }

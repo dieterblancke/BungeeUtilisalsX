@@ -156,7 +156,8 @@ public class ConsoleUser implements User
         if ( prefix )
         {
             sendMessage( message );
-        } else
+        }
+        else
         {
             sendRawColorMessage( message );
         }
@@ -181,7 +182,8 @@ public class ConsoleUser implements User
         if ( prefix )
         {
             sendMessage( message );
-        } else
+        }
+        else
         {
             sendRawColorMessage( message );
         }
@@ -353,7 +355,8 @@ public class ConsoleUser implements User
                     builder.append( "\n" );
                 }
             }
-        } else
+        }
+        else
         {
             final String message = replacePlaceHolders( getLanguageConfig().getString( path ), placeholders );
 

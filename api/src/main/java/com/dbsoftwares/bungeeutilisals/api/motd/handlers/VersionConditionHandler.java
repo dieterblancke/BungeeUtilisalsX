@@ -67,7 +67,8 @@ public class VersionConditionHandler extends ConditionHandler
         try
         {
             return Version.valueOf( "MINECRAFT_" + mcVersion.replace( ".", "_" ) );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             BUCore.getLogger().warn( "Found an invalid version in condition 'version {}'!", condition );
             BUCore.getLogger().warn( "Available versions:" );

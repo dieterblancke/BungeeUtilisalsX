@@ -38,7 +38,8 @@ public abstract class Converter
         try
         {
             importData( importerCallback, properties );
-        } catch ( final Throwable t )
+        }
+        catch ( final Throwable t )
         {
             importerCallback.done( null, t );
         }
@@ -68,7 +69,7 @@ public abstract class Converter
 
         public double getProgressionPercent()
         {
-            return ( ( (double) convertedEntries / (double) totalEntries ) * 100 );
+            return (((double) convertedEntries / (double) totalEntries) * 100);
         }
 
         public long getRemainingEntries()

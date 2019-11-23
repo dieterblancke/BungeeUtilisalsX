@@ -48,7 +48,8 @@ public class PacketUtils
 
             register.invoke( direction, packetClass, map );
             return true;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             return false;
@@ -63,7 +64,8 @@ public class PacketUtils
             map.setAccessible( true );
 
             return map.invoke( null, protocol, id );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

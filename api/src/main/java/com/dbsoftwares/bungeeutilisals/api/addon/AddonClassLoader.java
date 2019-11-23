@@ -60,7 +60,8 @@ public class AddonClassLoader extends URLClassLoader
         try
         {
             return super.loadClass( name, resolve );
-        } catch ( ClassNotFoundException ignored )
+        }
+        catch ( ClassNotFoundException ignored )
         {
             if ( checkOther )
             {
@@ -71,7 +72,8 @@ public class AddonClassLoader extends URLClassLoader
                         try
                         {
                             return loader.loadClass( name, resolve, false );
-                        } catch ( ClassNotFoundException ignore )
+                        }
+                        catch ( ClassNotFoundException ignore )
                         {
                             // ignored
                         }

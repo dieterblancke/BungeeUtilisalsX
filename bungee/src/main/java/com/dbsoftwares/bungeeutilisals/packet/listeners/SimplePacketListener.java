@@ -55,7 +55,8 @@ public class SimplePacketListener implements Listener
                     channel.pipeline().addAfter( "packet-decoder", "bungeeutilisals-decoder", new BUDecoder( true, p ) );
                     channel.pipeline().addAfter( "packet-encoder", "bungeeutilisals-encoder", new BUEncoder( true, p ) );
                 }
-            } catch ( Exception ignore )
+            }
+            catch ( Exception ignore )
             {
             }
         }
@@ -73,7 +74,8 @@ public class SimplePacketListener implements Listener
 
             channel.pipeline().addAfter( "packet-decoder", "bungeeutilisals-decoder", new BUDecoder( false, p ) );
             channel.pipeline().addAfter( "packet-encoder", "bungeeutilisals-encoder", new BUEncoder( false, p ) );
-        } catch ( Exception ignore )
+        }
+        catch ( Exception ignore )
         {
         }
     }

@@ -44,7 +44,8 @@ public class SQLtoSQLConverter extends Converter
         try
         {
             storageManager = createStorageManager( properties );
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
             return;
@@ -78,7 +79,8 @@ public class SQLtoSQLConverter extends Converter
 
                 status = new ConverterStatus( count );
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -104,7 +106,8 @@ public class SQLtoSQLConverter extends Converter
                 }
                 newConnection.commit();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -132,7 +135,8 @@ public class SQLtoSQLConverter extends Converter
                     }
                     newConnection.commit();
                 }
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
@@ -174,7 +178,8 @@ public class SQLtoSQLConverter extends Converter
 
                 preparedStatement.executeUpdate();
             }
-        } else if ( type.isTemporary() )
+        }
+        else if ( type.isTemporary() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
                     PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" )
@@ -193,7 +198,8 @@ public class SQLtoSQLConverter extends Converter
 
                 preparedStatement.executeUpdate();
             }
-        } else
+        }
+        else
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
                     PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);" )
@@ -225,7 +231,8 @@ public class SQLtoSQLConverter extends Converter
         if ( type.equals( StorageType.SQLITE ) )
         { // sqlite
             return new SQLiteStorageManager( BungeeUtilisals.getInstance() );
-        } else
+        }
+        else
         { // mysql, mariadb or postgresql
             return new AbstractStorageManager( BungeeUtilisals.getInstance(), type, new SQLDao() )
             {
@@ -236,7 +243,7 @@ public class SQLtoSQLConverter extends Converter
                 public Connection getConnection() throws SQLException
                 {
                     final Connection connection = DriverManager.getConnection(
-                            "jdbc:" + ( type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql" ) + "://" + properties.get( "host" ) + ":"
+                            "jdbc:" + (type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql") + "://" + properties.get( "host" ) + ":"
                                     + properties.get( "port" )
                                     + "/" + properties.get( "database" ),
                             properties.get( "username" ),

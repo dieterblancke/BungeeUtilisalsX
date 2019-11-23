@@ -71,10 +71,12 @@ public class ParentCommand implements TabCall
         if ( args.length == 0 )
         {
             return subCommandNames;
-        } else if ( args.length == 1 )
+        }
+        else if ( args.length == 1 )
         {
             return Utils.copyPartialMatches( args[0], subCommandNames, Lists.newArrayList() );
-        } else
+        }
+        else
         {
             return null;
         }

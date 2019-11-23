@@ -129,14 +129,16 @@ public class PunishmentExecutor implements IPunishmentExecutor
         if ( info.getExpireTime() == null )
         {
             line = line.replace( "{expire}", "Never" );
-        } else
+        }
+        else
         {
             line = line.replace( "{expire}", Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
         }
         if ( info.getRemovedBy() == null )
         {
             line = line.replace( "{expire}", "Unknown" );
-        } else
+        }
+        else
         {
             line = line.replace( "{removedBy}", info.getRemovedBy() );
         }
@@ -204,7 +206,8 @@ public class PunishmentExecutor implements IPunishmentExecutor
         if ( info.getExpireTime() != null )
         {
             placeholders.add( Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
-        } else
+        }
+        else
         {
             placeholders.add( "Never" );
         }
@@ -213,7 +216,8 @@ public class PunishmentExecutor implements IPunishmentExecutor
         if ( info.getRemovedBy() != null )
         {
             placeholders.add( info.getRemovedBy() );
-        } else
+        }
+        else
         {
             placeholders.add( "Unknown" );
         }

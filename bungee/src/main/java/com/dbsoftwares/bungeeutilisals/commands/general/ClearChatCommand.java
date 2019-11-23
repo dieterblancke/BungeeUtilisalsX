@@ -51,7 +51,8 @@ public class ClearChatCommand extends BUCommand
         if ( server.equalsIgnoreCase( "ALL" ) )
         {
             BUCore.getApi().getUsers().forEach( u -> clearChat( u, by ) );
-        } else
+        }
+        else
         {
             final ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
 
@@ -94,7 +95,8 @@ public class ClearChatCommand extends BUCommand
             final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( ClearChatMessageHandler.class );
 
             handler.send( new ChatActionData( server, user.getName() ) );
-        } else
+        }
+        else
         {
             clearChat( server, user.getName() );
         }

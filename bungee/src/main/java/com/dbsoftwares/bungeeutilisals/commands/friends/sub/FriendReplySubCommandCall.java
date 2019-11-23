@@ -20,59 +20,45 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
 import com.dbsoftwares.bungeeutilisals.redis.handlers.FriendMsgMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-public class FriendMsgSubCommand extends SubCommand
+public class FriendReplySubCommandCall implements CommandCall
 {
-
-    public FriendMsgSubCommand()
-    {
-        super(
-                "msg", 2, -1,
-                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.msg.aliases" ).split( ", " ) )
-        );
-    }
-
-    @Override
-    public String getUsage()
-    {
-        return "/friends msg (name) (message)";
-    }
-
-    @Override
-    public String getPermission()
-    {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.msg.permission" );
-    }
 
     @Override
     public void onExecute( User user, String[] args )
     {
-        final String name = args[0];
-
-        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        if ( args.length < 1 )
         {
-            user.sendLangMessage( "friends.msg.not-friend", "{user}", name );
+            user.sendLangMessage( "friends.reply.usage" );
+            return;
+        }
+        if ( !user.getStorage().hasData( "FRIEND_MSG_LAST_USER" ) )
+        {
+            user.sendLangMessage( "friends.reply.no-target" );
             return;
         }
 
+        final String name = user.getStorage().getData( "FRIEND_MSG_LAST_USER" );
+        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        {
+            user.sendLangMessage( "friends.reply.not-friend", "{user}", name );
+            return;
+        }
         if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
         {
             final Optional<User> optional = BUCore.getApi().getUser( name );
-            final String message = String.join( " ", Arrays.copyOfRange( args, 1, args.length ) );
+            final String message = String.join( " ", args );
 
             if ( optional.isPresent() )
             {
@@ -80,15 +66,15 @@ public class FriendMsgSubCommand extends SubCommand
 
                 if ( !target.getFriendSettings().isMessages() )
                 {
-                    user.sendLangMessage( "friends.msg.disallowed" );
+                    user.sendLangMessage( "friends.reply.disallowed" );
                     return;
                 }
 
-                user.getStorage().setData( "FRIEND_MSG_LAST_USER", target.getName() );
+                // only needs to be set for target, as the current user (sender) still has this target as last user
                 target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
 
                 {
-                    String msgMessage = target.buildLangMessage( "friends.msg.format.receive" );
+                    String msgMessage = target.buildLangMessage( "friends.reply.format.receive" );
                     msgMessage = Utils.c( msgMessage );
                     msgMessage = msgMessage.replace( "{sender}", user.getName() );
                     msgMessage = msgMessage.replace( "{message}", message );
@@ -96,14 +82,15 @@ public class FriendMsgSubCommand extends SubCommand
                     target.sendRawMessage( msgMessage );
                 }
                 {
-                    String msgMessage = user.buildLangMessage( "friends.msg.format.send" );
+                    String msgMessage = user.buildLangMessage( "friends.reply.format.send" );
                     msgMessage = Utils.c( msgMessage );
                     msgMessage = msgMessage.replace( "{receiver}", target.getName() );
                     msgMessage = msgMessage.replace( "{message}", message );
 
                     user.sendRawMessage( msgMessage );
                 }
-            } else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
+            }
+            else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
             {
                 final Dao dao = BUCore.getApi().getStorageManager().getDao();
                 final UserStorage storage = dao.getUserDao().getUserData( name );
@@ -118,27 +105,23 @@ public class FriendMsgSubCommand extends SubCommand
                 final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
                         .getRedisMessenger().getHandler( FriendMsgMessageHandler.class );
 
-                handler.send( new MessageData( "msg", user.getUuid(), user.getName(), name, message ) );
+                handler.send( new MessageData( "reply", user.getUuid(), user.getName(), name, message ) );
 
-                String msgMessage = user.buildLangMessage( "friends.msg.format.send" );
+                String msgMessage = user.buildLangMessage( "friends.reply.format.send" );
                 msgMessage = Utils.c( msgMessage );
                 msgMessage = msgMessage.replace( "{receiver}", name );
                 msgMessage = msgMessage.replace( "{message}", message );
 
                 user.sendRawMessage( msgMessage );
-            } else
+            }
+            else
             {
                 user.sendLangMessage( "offline" );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "offline" );
         }
-    }
-
-    @Override
-    public List<String> getCompletions( User user, String[] args )
-    {
-        return null;
     }
 }

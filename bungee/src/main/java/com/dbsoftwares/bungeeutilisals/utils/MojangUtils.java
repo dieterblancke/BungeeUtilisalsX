@@ -53,7 +53,8 @@ public class MojangUtils
                     return profile.getUuid();
                 }
             }
-        } catch ( final IOException e )
+        }
+        catch ( final IOException e )
         {
             BUCore.getLogger().warn( "Could not retrieve uuid of " + name );
             BUCore.getLogger().error( "An error occured: ", e );
@@ -80,7 +81,8 @@ public class MojangUtils
                     return profile.getName();
                 }
             }
-        } catch ( final IOException e )
+        }
+        catch ( final IOException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             BUCore.getLogger().warn( "Could not retrieve name of " + uuid.toString() );

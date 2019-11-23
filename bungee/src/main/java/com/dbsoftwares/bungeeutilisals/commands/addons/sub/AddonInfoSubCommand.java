@@ -62,13 +62,14 @@ public class AddonInfoSubCommand extends SubCommand
             user.sendLangMessage( "general-commands.addon.info",
                     "{installed}", installed ? "Yes" : "No",
                     "{name}", data.getName(),
-                    "{version}", data.getVersion() + ( installed ? " (local version: " + BUCore.getApi().getAddonManager().getAddon( data.getName() ).getDescription().getVersion() + ")" : "" ),
+                    "{version}", data.getVersion() + (installed ? " (local version: " + BUCore.getApi().getAddonManager().getAddon( data.getName() ).getDescription().getVersion() + ")" : ""),
                     "{author}", data.getAuthor(),
                     "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList( data.getRequiredDependencies(), ", " ),
                     "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList( data.getOptionalDependencies(), ", " ),
                     "{description}", data.getDescription()
             );
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.addon.notfound", "{name}", args[0] );
         }

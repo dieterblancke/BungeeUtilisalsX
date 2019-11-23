@@ -47,13 +47,15 @@ public abstract class Importer
                         if ( uuid != null )
                         {
                             return uuid;
-                        } else
+                        }
+                        else
                         {
                             throw new IllegalStateException( "Could not retrieve uuid of " + name );
                         }
-                    } else
+                    }
+                    else
                     {
-                        return UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + name ).getBytes( Charsets.UTF_8 ) )
+                        return UUID.nameUUIDFromBytes( ("OfflinePlayer:" + name).getBytes( Charsets.UTF_8 ) )
                                 .toString().replaceAll( "-", "" );
                     }
                 }
@@ -67,7 +69,8 @@ public abstract class Importer
                     if ( name != null )
                     {
                         return name;
-                    } else
+                    }
+                    else
                     {
                         throw new IllegalStateException( "Could not retrieve name of " + uuid );
                     }
@@ -83,7 +86,8 @@ public abstract class Importer
         try
         {
             importData( importerCallback, properties );
-        } catch ( final Throwable t )
+        }
+        catch ( final Throwable t )
         {
             importerCallback.done( null, t );
         }
@@ -94,7 +98,8 @@ public abstract class Importer
         try
         {
             return UUID.fromString( str );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             return UUID.fromString(
                     str.replaceFirst(
@@ -129,7 +134,7 @@ public abstract class Importer
 
         public double getProgressionPercent()
         {
-            return ( ( (double) convertedEntries / (double) totalEntries ) * 100 );
+            return (((double) convertedEntries / (double) totalEntries) * 100);
         }
 
         public int getRemainingEntries()

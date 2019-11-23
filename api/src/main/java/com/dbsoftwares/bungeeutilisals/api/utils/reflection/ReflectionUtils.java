@@ -36,7 +36,8 @@ public class ReflectionUtils
         try
         {
             return clazz.getMethod( "getHandle" ).invoke( o );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return null;
         }
@@ -51,11 +52,13 @@ public class ReflectionUtils
             if ( getHandle == null )
             {
                 return null;
-            } else
+            }
+            else
             {
                 return getHandle.invoke( o );
             }
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return null;
         }
@@ -66,7 +69,8 @@ public class ReflectionUtils
         try
         {
             return Class.forName( name );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -79,7 +83,8 @@ public class ReflectionUtils
         {
             Class.forName( clazz );
             return true;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return false;
         }
@@ -102,7 +107,7 @@ public class ReflectionUtils
     {
         for ( Method m : clazz.getDeclaredMethods() )
         {
-            if ( m.getName().equals( name ) && ( args.length == 0 || classList( args, m.getParameterTypes() ) ) )
+            if ( m.getName().equals( name ) && (args.length == 0 || classList( args, m.getParameterTypes() )) )
             {
                 m.setAccessible( true );
                 return m;
@@ -110,7 +115,7 @@ public class ReflectionUtils
         }
         for ( Method m : clazz.getMethods() )
         {
-            if ( m.getName().equals( name ) && ( args.length == 0 || classList( args, m.getParameterTypes() ) ) )
+            if ( m.getName().equals( name ) && (args.length == 0 || classList( args, m.getParameterTypes() )) )
             {
                 m.setAccessible( true );
                 return m;
@@ -127,7 +132,8 @@ public class ReflectionUtils
             field.setAccessible( true );
 
             return field;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -141,7 +147,8 @@ public class ReflectionUtils
         if ( field == null )
         {
             return null;
-        } else
+        }
+        else
         {
             return field.get( instance );
         }

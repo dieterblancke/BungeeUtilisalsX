@@ -35,15 +35,15 @@ public class TPSRunnable implements Runnable
         {
             return 20.0D;
         }
-        int target = ( tickCount - 1 - ticks ) % TICKS.length;
+        int target = (tickCount - 1 - ticks) % TICKS.length;
         long elapsed = System.currentTimeMillis() - TICKS[target];
 
-        return ticks / ( elapsed / 1000.0D );
+        return ticks / (elapsed / 1000.0D);
     }
 
     private static synchronized void updateTicks()
     {
-        TICKS[( tickCount % TICKS.length )] =System.currentTimeMillis();
+        TICKS[(tickCount % TICKS.length)] = System.currentTimeMillis();
         tickCount++;
     }
 

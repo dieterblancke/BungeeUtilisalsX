@@ -96,6 +96,6 @@ public class BarColor
     @Override
     public boolean equals( Object obj )
     {
-        return obj == this || ( obj instanceof BarColor && ( (BarColor) obj ).getId() == id );
+        return obj == this || (obj instanceof BarColor && ((BarColor) obj).getId() == id);
     }
 }

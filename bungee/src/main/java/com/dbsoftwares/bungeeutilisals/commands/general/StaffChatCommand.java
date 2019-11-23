@@ -78,7 +78,7 @@ public class StaffChatCommand extends BUCommand implements Listener
         user.setInStaffChat( !user.isInStaffChat() );
 
         user.sendLangMessage( "general-commands.staffchat."
-                + ( user.isInStaffChat() ? "enabled" : "disabled" ) );
+                + (user.isInStaffChat() ? "enabled" : "disabled") );
     }
 
     @Override
@@ -112,11 +112,13 @@ public class StaffChatCommand extends BUCommand implements Listener
                         final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( StaffChatMessageHandler.class );
 
                         handler.send( new StaffChatData( user.getServerName(), user.getName(), event.getMessage() ) );
-                    } else
+                    }
+                    else
                     {
                         sendStaffChatMessage( user.getServerName(), user.getName(), event.getMessage() );
                     }
-                } else
+                }
+                else
                 {
                     user.setInStaffChat( false );
                 }

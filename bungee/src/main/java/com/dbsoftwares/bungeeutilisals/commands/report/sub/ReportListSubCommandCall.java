@@ -44,20 +44,24 @@ public class ReportListSubCommandCall implements CommandCall
         {
             reports = reportsDao.getActiveReports();
             page = 1;
-        } else
+        }
+        else
         {
             final String action = args[0];
 
             if ( action.equalsIgnoreCase( "all" ) )
             {
                 reports = reportsDao.getReports();
-            } else if ( action.equalsIgnoreCase( "accepted" ) )
+            }
+            else if ( action.equalsIgnoreCase( "accepted" ) )
             {
                 reports = reportsDao.getAcceptedReports();
-            } else if ( action.equalsIgnoreCase( "denied" ) )
+            }
+            else if ( action.equalsIgnoreCase( "denied" ) )
             {
                 reports = reportsDao.getDeniedReports();
-            } else
+            }
+            else
             {
                 reports = reportsDao.getActiveReports();
             }
@@ -65,7 +69,8 @@ public class ReportListSubCommandCall implements CommandCall
             if ( args.length > 1 && MathUtils.isInteger( args[1] ) )
             {
                 page = Integer.parseInt( args[1] );
-            } else
+            }
+            else
             {
                 page = 1;
             }
@@ -101,7 +106,8 @@ public class ReportListSubCommandCall implements CommandCall
                         "{handled}", report.isHandled()
                 );
             }
-        } catch ( PageNotFoundException e )
+        }
+        catch ( PageNotFoundException e )
         {
             user.sendLangMessage(
                     "general-commands.report.list.wrong-page",

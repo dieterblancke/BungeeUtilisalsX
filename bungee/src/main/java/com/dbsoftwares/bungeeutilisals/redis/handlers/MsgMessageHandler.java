@@ -53,7 +53,8 @@ public class MsgMessageHandler extends RedisMessageHandler<MessageData>
                 msgMessage = msgMessage.replace( "{message}", data.getMessage() );
 
                 user.sendRawMessage( msgMessage );
-            } else
+            }
+            else
             {
                 String msgMessage = user.buildLangMessage( "general-commands.msg.format.receive" );
                 msgMessage = Utils.c( msgMessage );

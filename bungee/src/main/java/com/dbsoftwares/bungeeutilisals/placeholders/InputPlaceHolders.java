@@ -57,7 +57,8 @@ public class InputPlaceHolders implements PlaceHolderPack
                             .replace( "%hours%", String.valueOf( getHours( time ) ) )
                             .replace( "%minutes%", String.valueOf( getMinutes( time ) ) )
                             .replace( "%seconds%", String.valueOf( getSeconds( time ) ) );
-                } catch ( ParseException e )
+                }
+                catch ( ParseException e )
                 {
                     return "";
                 }

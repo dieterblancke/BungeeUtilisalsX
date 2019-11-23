@@ -80,7 +80,8 @@ public class CheckIpCommand extends BUCommand
                     return;
                 }
                 storage = userDao.getUserData( args[0] );
-            } else
+            }
+            else
             {
                 if ( !userDao.exists( args[0] ) )
                 {
@@ -108,12 +109,14 @@ public class CheckIpCommand extends BUCommand
                 if ( banned || ipbanned )
                 {
                     colorPath += "banned";
-                } else
+                }
+                else
                 {
                     if ( BUCore.getApi().getPlayerUtils().isOnline( u ) )
                     {
                         colorPath += "online";
-                    } else
+                    }
+                    else
                     {
                         colorPath += "offline";
                     }

@@ -120,7 +120,8 @@ public class DumpSubCommand extends SubCommand
 
                 user.sendMessage( "&eSuccessfully created a dump at: "
                         + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get( "key" ).getAsString() + ".dump" );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 user.sendMessage( "Could not create dump. Please check the console for errors." );
                 BUCore.getLogger().warn( "Could not create dump request" );
@@ -131,7 +132,7 @@ public class DumpSubCommand extends SubCommand
 
     private Dump getDump()
     {
-        final OperatingSystemMXBean operatingSystemMXBean = ( (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() );
+        final OperatingSystemMXBean operatingSystemMXBean = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
         final long totalMemory = bytesToMegaBytes( operatingSystemMXBean.getTotalPhysicalMemorySize() );
         final long freeMemory = bytesToMegaBytes( operatingSystemMXBean.getFreePhysicalMemorySize() );
         final long usedMemory = totalMemory - freeMemory;
@@ -199,29 +200,33 @@ public class DumpSubCommand extends SubCommand
                 {
                     if ( item instanceof ISection )
                     {
-                        sectionList.add( readValues( ( (ISection) item ).getValues() ) );
+                        sectionList.add( readValues( ((ISection) item).getValues() ) );
                     }
                 }
                 if ( !sectionList.isEmpty() )
                 {
                     values.put( key, sectionList );
-                } else
+                }
+                else
                 {
                     values.put( key, value );
                 }
-            } else if ( value instanceof ISection )
+            }
+            else if ( value instanceof ISection )
             {
-                values.put( key, readValues( ( (ISection) value ).getValues() ) );
-            } else
+                values.put( key, readValues( ((ISection) value).getValues() ) );
+            }
+            else
             {
                 if ( key.endsWith( "password" ) )
                 {
                     values.put( key, "***********" );
-                } else
+                }
+                else
                 {
                     if ( value instanceof String )
                     {
-                        value = ( (String) value ).replace( "\r\n", " " ).replace( "\n", " " );
+                        value = ((String) value).replace( "\r\n", " " ).replace( "\n", " " );
                     }
                     values.put( key, value );
                 }
@@ -256,7 +261,8 @@ public class DumpSubCommand extends SubCommand
                 if ( optional.isPresent() )
                 {
                     info = optional.get();
-                } else
+                }
+                else
                 {
                     info = new PluginSchedulerInfo( task.getOwner().getDescription().getName(), 0, 0 );
 
@@ -279,7 +285,8 @@ public class DumpSubCommand extends SubCommand
             schedulerInfoList.add( 0, new PluginSchedulerInfo( "All Plugins", running, total ) );
 
             return schedulerInfoList;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             return Lists.newArrayList();

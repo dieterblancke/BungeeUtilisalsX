@@ -88,7 +88,8 @@ public class MuteCheckExecutor implements EventExecutor
             if ( info.getType().equals( PunishmentType.TEMPMUTE ) )
             {
                 mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE" );
-            } else
+            }
+            else
             {
                 mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE" );
             }

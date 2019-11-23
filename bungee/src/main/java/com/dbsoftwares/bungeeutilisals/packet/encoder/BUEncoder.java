@@ -47,7 +47,8 @@ public class BUEncoder extends MessageToMessageEncoder<DefinedPacket>
         if ( server )
         {
             event = new PacketUpdateEvent( packet, p, new BungeeConnection(), p );
-        } else
+        }
+        else
         {
             event = new PacketUpdateEvent( packet, p, new BungeeConnection(), p.getServer() );
         }

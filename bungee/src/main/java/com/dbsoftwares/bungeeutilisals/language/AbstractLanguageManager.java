@@ -192,7 +192,8 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         try
         {
             config.save();
-        } catch ( IOException e )
+        }
+        catch ( IOException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -211,7 +212,8 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         try
         {
             config.reload();
-        } catch ( IOException e )
+        }
+        catch ( IOException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

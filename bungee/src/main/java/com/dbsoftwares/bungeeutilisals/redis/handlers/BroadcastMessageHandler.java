@@ -54,12 +54,14 @@ public class BroadcastMessageHandler extends RedisMessageHandler<APIAnnouncement
             users.forEach( user -> LanguageUtils.sendLangMessage(
                     languageManager, announcement.getPlugin(), user, announcement.getMessage(), announcement.getPlaceHolders()
             ) );
-        } else
+        }
+        else
         {
             if ( announcement.getPrefix() == null )
             {
                 users.forEach( user -> user.sendMessage( announcement.getMessage() ) );
-            } else
+            }
+            else
             {
                 users.forEach( user -> user.sendMessage( announcement.getPrefix(), announcement.getMessage() ) );
             }

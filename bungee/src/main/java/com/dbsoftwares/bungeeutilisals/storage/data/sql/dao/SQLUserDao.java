@@ -80,7 +80,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 7, username );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -99,7 +100,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 5, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -120,7 +122,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -143,7 +146,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -166,7 +170,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -203,7 +208,8 @@ public class SQLUserDao implements UserDao
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -239,7 +245,8 @@ public class SQLUserDao implements UserDao
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -284,7 +291,8 @@ public class SQLUserDao implements UserDao
                     users.add( rs.getString( "username" ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -309,7 +317,8 @@ public class SQLUserDao implements UserDao
                     language = BUCore.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -326,7 +335,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -342,7 +352,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -358,7 +369,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -374,7 +386,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -392,7 +405,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, ignore.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -410,7 +424,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, unignore.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }

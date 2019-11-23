@@ -77,7 +77,8 @@ public class LanguageCommand extends BUCommand
             BUCore.getApi().getStorageManager().getDao().getUserDao().setLanguage( user.getUuid(), language );
 
             user.sendLangMessage( "general-commands.language.changed", "{language}", language.getName() );
-        } else
+        }
+        else
         {
             user.sendLangMessage(
                     "general-commands.language.notfound",

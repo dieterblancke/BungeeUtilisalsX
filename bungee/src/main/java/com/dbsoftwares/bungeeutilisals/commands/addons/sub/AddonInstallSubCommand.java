@@ -90,12 +90,14 @@ public class AddonInstallSubCommand extends SubCommand
                 BUCore.getApi().getAddonManager().loadSingleAddon( result );
 
                 enableAddon( user, addonData.getName() );
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 user.sendLangMessage( "general-commands.addon.install.error.download", "{name}", addonName );
                 BUCore.getLogger().error( "An error occured: ", e );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }
@@ -118,7 +120,8 @@ public class AddonInstallSubCommand extends SubCommand
                             + addon.getDescription().getVersion() + " by " + addon.getDescription().getAuthor()
             );
             user.sendLangMessage( "general-commands.addon.install.installed", "{name}", addonName );
-        } catch ( final Throwable t )
+        }
+        catch ( final Throwable t )
         {
             user.sendLangMessage( "general-commands.addon.install.error.enable", "{name}", addonName );
             throw new AddonException( "Exception encountered when loading addon: " + addonName, t );

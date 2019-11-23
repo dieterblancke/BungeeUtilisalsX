@@ -88,7 +88,8 @@ public class IgnoreCommand extends BUCommand
                 user.getStorage().getIgnoredUsers().removeIf( ignored -> ignored.equalsIgnoreCase( name ) );
 
                 user.sendLangMessage( "general-commands.ignore.remove.unignored", "{user}", name );
-            } else
+            }
+            else
             {
                 if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
                 {
@@ -101,7 +102,8 @@ public class IgnoreCommand extends BUCommand
 
                 user.sendLangMessage( "general-commands.ignore.add.ignored", "{user}", name );
             }
-        } else if ( action.equalsIgnoreCase( "list" ) )
+        }
+        else if ( action.equalsIgnoreCase( "list" ) )
         {
             user.sendLangMessage(
                     "general-commands.ignore.list.message",
@@ -111,7 +113,8 @@ public class IgnoreCommand extends BUCommand
                             user.getStorage().getIgnoredUsers()
                     )
             );
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.ignore.usage" );
         }

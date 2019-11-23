@@ -73,7 +73,8 @@ public class ReportDenySubCommandCall implements CommandCall
         if ( optionalUser.isPresent() )
         {
             queue = optionalUser.get().getMessageQueue();
-        } else
+        }
+        else
         {
             queue = BUCore.getApi().getStorageManager().getDao().createMessageQueue();
         }

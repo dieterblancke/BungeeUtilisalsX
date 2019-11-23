@@ -97,7 +97,8 @@ public class KickCommand extends BUCommand
         if ( kick == null )
         {
             target.langKick( "punishments.kick.onkick", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
-        } else
+        }
+        else
         {
             target.kick( kick );
         }

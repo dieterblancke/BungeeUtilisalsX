@@ -42,10 +42,12 @@ public enum PunishmentType
         if ( toString.contains( "BAN" ) )
         {
             type = "ban";
-        } else if ( toString.contains( "MUTE" ) )
+        }
+        else if ( toString.contains( "MUTE" ) )
         {
             type = "mute";
-        } else
+        }
+        else
         {
             type = toString.toLowerCase();
         }

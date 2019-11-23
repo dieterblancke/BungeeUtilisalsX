@@ -22,9 +22,10 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
+import com.dbsoftwares.configuration.api.ISection;
 import com.google.api.client.util.Lists;
 
 import java.util.List;
@@ -46,6 +47,13 @@ public class CommandManager
     public void loadGeneralCommands()
     {
         registerGeneralCommand( "report", new ReportCommandCall() );
+
+        registerCommand(
+                "friends",
+                FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ),
+                FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "command" ),
+                new FriendsCommandCall()
+        );
     }
 
     private void registerGeneralCommand( final String section, final CommandCall call )
@@ -55,21 +63,34 @@ public class CommandManager
                 .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( section ) )
                 .executable( call );
 
-        if ( call instanceof TabCall )
-        {
-            commandBuilder.tab( (TabCall) call );
-        }
-        final Command command = commandBuilder.build();
+        buildCommand( commandBuilder );
+    }
+
+    private void registerCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
+    {
+        final CommandBuilder commandBuilder = CommandBuilder.builder()
+                .name( name )
+                .fromSection( section )
+                .enabled( enabled )
+                .executable( call );
+
+        buildCommand( commandBuilder );
+    }
+
+    private void buildCommand( final CommandBuilder builder )
+    {
+        final Command command = builder.build();
 
         if ( command != null )
         {
             command.register();
 
             commands.add( command );
-            BUCore.getLogger().debug( "Registered a command named " + section + "." );
-        } else
+            BUCore.getLogger().debug( "Registered a command named " + command.getName() + "." );
+        }
+        else
         {
-            BUCore.getLogger().debug( "Skipping registration of a command named " + section + "." );
+            BUCore.getLogger().debug( "Skipping registration of a command named " + command.getName() + "." );
         }
     }
 

@@ -71,6 +71,6 @@ public class BossBarAction
     @Override
     public boolean equals( Object obj )
     {
-        return obj == this || ( obj instanceof BossBarAction && ( (BossBarAction) obj ).getId() == id );
+        return obj == this || (obj instanceof BossBarAction && ((BossBarAction) obj).getId() == id);
     }
 }

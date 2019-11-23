@@ -71,7 +71,7 @@ public abstract class SubCommand implements CommandCall
         }
         final int length = args.length - 1;
 
-        if ( ( minimumArgs >= 0 && length < minimumArgs ) || ( maximumArgs >= 0 && length > maximumArgs ) )
+        if ( (minimumArgs >= 0 && length < minimumArgs) || (maximumArgs >= 0 && length > maximumArgs) )
         {
             return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
         }
@@ -94,11 +94,13 @@ public abstract class SubCommand implements CommandCall
         {
             user.sendLangMessage( "subcommands.usage", "{usage}", getUsage() );
             return true;
-        } else if ( result == ConditionResult.FAILURE_PERMISSION )
+        }
+        else if ( result == ConditionResult.FAILURE_PERMISSION )
         {
             user.sendLangMessage( "no-permission" );
             return true;
-        } else if ( result == ConditionResult.SUCCESS )
+        }
+        else if ( result == ConditionResult.SUCCESS )
         {
             onExecute( user, Arrays.copyOfRange( args, 1, args.length ) );
             return true;

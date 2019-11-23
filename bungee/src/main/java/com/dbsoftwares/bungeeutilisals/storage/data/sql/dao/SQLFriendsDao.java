@@ -52,7 +52,8 @@ public class SQLFriendsDao implements FriendsDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -70,7 +71,8 @@ public class SQLFriendsDao implements FriendsDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -102,7 +104,8 @@ public class SQLFriendsDao implements FriendsDao
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -129,7 +132,8 @@ public class SQLFriendsDao implements FriendsDao
                     count = rs.getInt( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -149,7 +153,8 @@ public class SQLFriendsDao implements FriendsDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -167,7 +172,8 @@ public class SQLFriendsDao implements FriendsDao
             pstmt.setString( 2, user.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -200,7 +206,8 @@ public class SQLFriendsDao implements FriendsDao
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -235,7 +242,8 @@ public class SQLFriendsDao implements FriendsDao
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -263,7 +271,8 @@ public class SQLFriendsDao implements FriendsDao
                     found = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -291,7 +300,8 @@ public class SQLFriendsDao implements FriendsDao
                     found = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -330,7 +340,8 @@ public class SQLFriendsDao implements FriendsDao
 
                     updatePstmt.executeUpdate();
                 }
-            } else
+            }
+            else
             {
                 try ( PreparedStatement insertPstmt = connection.prepareStatement(
                         format( "INSERT INTO {friendsettings-table} (user, requests, messages) VALUES (?, ?, ?);" )
@@ -343,7 +354,8 @@ public class SQLFriendsDao implements FriendsDao
                     insertPstmt.executeUpdate();
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -373,7 +385,8 @@ public class SQLFriendsDao implements FriendsDao
                     setting = rs.getBoolean( type.toString().toLowerCase() );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -403,7 +416,8 @@ public class SQLFriendsDao implements FriendsDao
                     );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }

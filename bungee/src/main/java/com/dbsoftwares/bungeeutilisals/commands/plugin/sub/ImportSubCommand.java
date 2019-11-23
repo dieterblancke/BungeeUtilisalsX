@@ -72,7 +72,8 @@ public class ImportSubCommand extends SubCommand
             if ( plugin.equalsIgnoreCase( "BungeeUtilisals" ) )
             {
                 importer = new BungeeUtilisalsImporter();
-            } else if ( plugin.equalsIgnoreCase( "BungeeAdminTools" ) || plugin.equalsIgnoreCase( "BAT" ) )
+            }
+            else if ( plugin.equalsIgnoreCase( "BungeeAdminTools" ) || plugin.equalsIgnoreCase( "BAT" ) )
             {
                 importer = new BungeeAdminToolsImporter();
             }

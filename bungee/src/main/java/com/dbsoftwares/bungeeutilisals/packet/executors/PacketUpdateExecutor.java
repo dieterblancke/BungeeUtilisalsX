@@ -49,7 +49,8 @@ public class PacketUpdateExecutor implements EventExecutor
             {
                 event.setCancelled( true );
             }
-        } else if ( event.getSender() instanceof ProxiedPlayer && event.getReceiver() instanceof BungeeConnection )
+        }
+        else if ( event.getSender() instanceof ProxiedPlayer && event.getReceiver() instanceof BungeeConnection )
         {
             final PacketReceiveEvent packetEvent = new PacketReceiveEvent( event.getPacket(), event.getPlayer(), event.getSender(), event.getReceiver() );
             BUCore.getApi().getEventLoader().launchEvent( packetEvent );

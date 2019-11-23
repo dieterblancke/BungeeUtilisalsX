@@ -54,6 +54,9 @@ general-commands:
           - '&eOptional Dependencies: &b{optDepends}'
           - '&eDescription: &b{description}'
           - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+        click:
+          type: 'RUN_COMMAND'
+          action: '/addon info {name}'
     info:
       - '&f⎯⎯⎯⎯⎯ &eAddon &b{name} &eInfo &f⎯⎯⎯⎯⎯&r'
       - '&eInstalled: &b{installed}'
@@ -251,21 +254,20 @@ friends:
           action: '/friend accept {name}'
       - text: '&e to accept this friend request.'
   help:
-    header: '&aFriends Commands Help:'
-    format: '&b- &e%usage%'
-
-    usage:
-      add: '/friends add (name)'
-      accept: '/friends accept (name)'
-      deny: '/friends deny (name)'
-      list: '/friends list [page]'
-      msg: '/friends msg (name) (message)'
-      removerequest: '/friends removerequest (name)'
-      remove: '/friends remove (name)'
-      reply: '/friends reply (message)'
-      requests: '/friends requests (in/out) [page]'
-      settings: '/friends settings (setting) (enable / disable)'
+    message:
+      - '&aFriends Commands Help:'
+      - '&b- /friends add (name)'
+      - '&b- /friends accept (name)'
+      - '&b- /friends deny (name)'
+      - '&b- /friends list [page]'
+      - '&b- /friends msg (name) (message)'
+      - '&b- /friends removerequest (name)'
+      - '&b- /friends remove (name)'
+      - '&b- /friends reply (message)'
+      - '&b- /friends requests (in/out) [page]'
+      - '&b- /friends settings (setting) (enable / disable)'
   add:
+    usage: '&ePlease use &b/friends add (name)&e!'
     selfadd: '&eYou cannot add yourself as a friend!'
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
@@ -285,20 +287,24 @@ friends:
     request-sent: '&eA friend request has been sent to &b{user}&e!'
     disallowed: '&eThis user does not want to receive friend requests.'
   accept:
+    usage: '&ePlease use &b/friends accept (name)&e!'
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
     no-request: '&eCould not find a friend request from &b{user}&e!'
     accepted: '&eYou are now friends with &b{user}&e!'
     request-accepted: '&b{user} &ehas accepted your friend request!'
   deny:
+    usage: '&ePlease use &b/friends deny (name)&e!'
     no-request: '&eCould not find a friend request from &b{user}&e!'
     denied: '&eYou have denied the friend request from &b{user}&e!'
     request-denied: '&b{user} &ehas denied your friend request!'
   removerequest:
+    usage: '&ePlease use &b/friends removerequest (name)&e!'
     no-request: '&eYou have no outgoing friend request towards &b{user}&e!'
     removed: '&eYou have removed the friend request towards &b{user}&e!'
     request-removed: '&b{user} &eremoved his friend request towards you!'
   remove:
+    usage: '&ePlease use &b/friends remove (name)&e!'
     no-friend: '&b{user} &eis not in your friends list!'
     removed: '&eYou have removed &b{user} &efrom your friends list!'
     friend-removed: '&b{user} &ehas removed you from his friends list!'
@@ -348,6 +354,7 @@ friends:
       outgoing: '&c-> &e{target} - &b{requestDate}'
     foot: '&eYou currently have a total of &b{requestAmount} &e{type_lowercase} friend requests!'
   msg:
+    usage: '&ePlease use &b/friends msg (name) (message)&e!'
     not-friend: '&b{user} &eis not in your friend list!'
     disallowed: '&eThis user does not want to receive any messages!'
 
@@ -355,6 +362,7 @@ friends:
       send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
       receive: '&7(&b{sender} &e-> Me&7) &f{message}'
   reply:
+    usage: '&ePlease use &b/friends reply (message)&e!'
     no-target: '&eThere is currently nobody to reply to!'
     not-friend: '&b{user} &eis not in your friend list anymore!'
     disallowed: '&eThis user does not want to receive any messages!'

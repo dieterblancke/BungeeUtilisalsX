@@ -88,7 +88,8 @@ public class Command
                 {
                     user.getCooldowns().updateTime( "COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown );
                 }
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -97,7 +98,7 @@ public class Command
 
     public Iterable<String> onTabComplete( CommandSender sender, String[] args )
     {
-        if ( !( sender instanceof ProxiedPlayer ) )
+        if ( !(sender instanceof ProxiedPlayer) )
         {
             return ImmutableList.of();
         }
@@ -113,7 +114,8 @@ public class Command
                 if ( args.length == 0 )
                 {
                     return BUCore.getApi().getPlayerUtils().getPlayers();
-                } else
+                }
+                else
                 {
                     final String lastWord = args[args.length - 1];
                     final List<String> list = Lists.newArrayList();
@@ -130,7 +132,8 @@ public class Command
                 }
             }
             return tabCompletion;
-        } else
+        }
+        else
         {
             return ImmutableList.of();
         }
@@ -188,7 +191,8 @@ public class Command
             if ( sender instanceof ProxiedPlayer )
             {
                 BUCore.getApi().getUser( sender.getName() ).ifPresent( user -> Command.this.execute( user, args ) );
-            } else
+            }
+            else
             {
                 Command.this.execute( BUCore.getApi().getConsole(), args );
             }

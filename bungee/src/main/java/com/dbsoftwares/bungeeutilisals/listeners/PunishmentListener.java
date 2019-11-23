@@ -63,7 +63,8 @@ public class PunishmentListener implements Listener
         if ( bansDao.isBanned( uuid ) )
         {
             info = bansDao.getCurrentBan( uuid );
-        } else if ( bansDao.isIPBanned( ip ) )
+        }
+        else if ( bansDao.isIPBanned( ip ) )
         {
             info = bansDao.getCurrentIPBan( ip );
         }
@@ -76,7 +77,8 @@ public class PunishmentListener implements Listener
                     if ( info.getType().equals( PunishmentType.TEMPBAN ) )
                     {
                         bansDao.removeCurrentBan( uuid, "CONSOLE" );
-                    } else
+                    }
+                    else
                     {
                         bansDao.removeCurrentIPBan( ip, "CONSOLE" );
                     }

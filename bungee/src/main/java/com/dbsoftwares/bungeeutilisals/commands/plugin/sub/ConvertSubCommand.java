@@ -76,16 +76,19 @@ public class ConvertSubCommand extends SubCommand
                 if ( BUCore.getApi().getStorageManager().getType().toString().contains( "SQL" ) )
                 {
                     converter = new SQLtoSQLConverter();
-                } else
+                }
+                else
                 {
                     converter = new SQLtoMongoConverter();
                 }
-            } else
+            }
+            else
             {
                 if ( BUCore.getApi().getStorageManager().getType().toString().contains( "SQL" ) )
                 {
                     converter = new MongoToSQLConverter();
-                } else
+                }
+                else
                 {
                     converter = new MongoToMongoConverter();
                 }

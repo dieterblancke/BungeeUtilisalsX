@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
@@ -33,7 +34,8 @@ public class CommandBuilder
         if ( args.length == 0 )
         {
             return BUCore.getApi().getPlayerUtils().getPlayers();
-        } else
+        }
+        else
         {
             final String lastWord = args[args.length - 1];
             final List<String> list = Lists.newArrayList();
@@ -97,6 +99,11 @@ public class CommandBuilder
         return this;
     }
 
+    public CommandBuilder fromSection( final IConfiguration config, final String section )
+    {
+        return this.fromSection( config.getSection( section ) );
+    }
+
     public CommandBuilder fromSection( final ISection section )
     {
         this.enabled = section.exists( "enabled" ) ? section.getBoolean( "enabled" ) : true;
@@ -107,7 +114,8 @@ public class CommandBuilder
         if ( !section.exists( "aliases" ) || section.getString( "aliases" ).isEmpty() )
         {
             this.aliases = new String[0];
-        } else
+        }
+        else
         {
             this.aliases = section.getString( "aliases" ).split( ", " );
         }

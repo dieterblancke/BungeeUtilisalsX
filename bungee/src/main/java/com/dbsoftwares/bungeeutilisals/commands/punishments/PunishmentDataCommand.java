@@ -95,7 +95,8 @@ public class PunishmentDataCommand extends BUCommand
                     "{type}", type.toString().toLowerCase(),
                     "{id}", id
             );
-        } else
+        }
+        else
         {
             user.sendLangMessage(
                     "punishments.punishmentdata.found",

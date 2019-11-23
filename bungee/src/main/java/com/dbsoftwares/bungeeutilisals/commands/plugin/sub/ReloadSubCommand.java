@@ -60,7 +60,8 @@ public class ReloadSubCommand extends SubCommand
                 location.getData().clear();
                 location.getDataList().clear();
                 location.loadData();
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
                 user.sendMessage( "&fCould not reload " + location.toString().toLowerCase().replace( "_", " " ) + "!" );

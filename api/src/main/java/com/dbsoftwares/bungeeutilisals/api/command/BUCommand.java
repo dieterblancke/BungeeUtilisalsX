@@ -93,7 +93,8 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                     try
                     {
                         onExecute( user, args );
-                    } catch ( Exception e )
+                    }
+                    catch ( Exception e )
                     {
                         BUCore.getLogger().error( "An error occured: ", e );
                     }
@@ -108,12 +109,14 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                 try
                 {
                     onExecute( BUCore.getApi().getConsole(), args );
-                } catch ( Exception e )
+                }
+                catch ( Exception e )
                 {
                     BUCore.getLogger().error( "An error occured: ", e );
                 }
             } );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.logException( e );
         }
@@ -122,7 +125,7 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
     @Override
     public Iterable<String> onTabComplete( CommandSender sender, String[] args )
     {
-        if ( !( sender instanceof ProxiedPlayer ) )
+        if ( !(sender instanceof ProxiedPlayer) )
         {
             return ImmutableList.of();
         }
@@ -137,7 +140,8 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                 if ( args.length == 0 )
                 {
                     return BUCore.getApi().getPlayerUtils().getPlayers();
-                } else
+                }
+                else
                 {
                     final String lastWord = args[args.length - 1];
                     final List<String> list = Lists.newArrayList();
@@ -154,7 +158,8 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                 }
             }
             return tabCompletion;
-        } else
+        }
+        else
         {
             return ImmutableList.of();
         }
@@ -183,11 +188,13 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
         if ( args.length == 0 )
         {
             subCommands.forEach( subCommand -> completions.add( subCommand.getName() ) );
-        } else if ( args.length == 1 )
+        }
+        else if ( args.length == 1 )
         {
             subCommands.stream().filter( subCommand -> subCommand.getName().toLowerCase().startsWith( args[0].toLowerCase() ) )
                     .forEach( subCommand -> completions.add( subCommand.getName() ) );
-        } else
+        }
+        else
         {
             SubCommand command = findSubCommand( args[0] );
 

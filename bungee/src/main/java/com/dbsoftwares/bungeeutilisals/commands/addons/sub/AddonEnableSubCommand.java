@@ -54,14 +54,16 @@ public class AddonEnableSubCommand extends SubCommand
         if ( BUCore.getApi().getAddonManager().isRegistered( addonName ) )
         {
             user.sendLangMessage( "general-commands.addon.enable.alreadyloaded", "{name}", addonName );
-        } else
+        }
+        else
         {
             final File addonFile = searchAddon( addonName );
 
             if ( addonFile == null )
             {
                 user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
-            } else
+            }
+            else
             {
                 try
                 {
@@ -69,7 +71,8 @@ public class AddonEnableSubCommand extends SubCommand
                     BUCore.getApi().getAddonManager().enableAddon( addonName );
 
                     user.sendLangMessage( "general-commands.addon.enable.success", "{name}", addonName );
-                } catch ( AddonException e )
+                }
+                catch ( AddonException e )
                 {
                     user.sendLangMessage( "general-commands.addon.enable.failed", "{name}", addonName );
                     BUCore.getLogger().error( "An error occured: ", e );

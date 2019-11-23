@@ -94,10 +94,12 @@ public class UpdateRunner implements Runnable
                     }
                 }
             }
-        } catch ( IOException | ExecutionException e )
+        }
+        catch ( IOException | ExecutionException e )
         {
             BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
-        } catch ( InterruptedException e )
+        }
+        catch ( InterruptedException e )
         {
             BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
             Thread.currentThread().interrupt();
@@ -120,10 +122,12 @@ public class UpdateRunner implements Runnable
                         response.download( fos );
                     }
                 }
-            } catch ( IOException | ExecutionException e )
+            }
+            catch ( IOException | ExecutionException e )
             {
                 BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
-            } catch ( InterruptedException e )
+            }
+            catch ( InterruptedException e )
             {
                 BUCore.getLogger().error( ERROR_STRING + e.getMessage() );
                 Thread.currentThread().interrupt();
@@ -140,7 +144,8 @@ public class UpdateRunner implements Runnable
         try
         {
             return checkStringVersion( version, newVersion );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             // if for some reason an exception pops up, it will default back to a simple equals check
             return !newVersion.equals( version );

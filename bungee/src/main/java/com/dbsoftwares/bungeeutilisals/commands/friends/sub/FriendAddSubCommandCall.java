@@ -19,44 +19,26 @@
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-public class FriendAddSubCommand extends SubCommand
+public class FriendAddSubCommandCall implements CommandCall
 {
-
-    public FriendAddSubCommand()
-    {
-        super(
-                "add", 1, 1,
-                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.add.aliases" ).split( ", " ) )
-        );
-    }
-
-    @Override
-    public String getUsage()
-    {
-        return "/friends add (name)";
-    }
-
-    @Override
-    public String getPermission()
-    {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.add.permission" );
-    }
 
     @Override
     public void onExecute( User user, String[] args )
     {
+        if ( args.length < 1 )
+        {
+            user.sendLangMessage( "friends.add.usage" );
+            return;
+        }
         final int friendLimit = FriendUtils.getFriendsLimit( user );
 
         if ( user.getFriends().size() >= friendLimit )
@@ -89,7 +71,8 @@ public class FriendAddSubCommand extends SubCommand
 
             storage = target.getStorage();
             accepts = target.getFriendSettings().isRequests();
-        } else
+        }
+        else
         {
             if ( !dao.getUserDao().exists( args[0] ) )
             {
@@ -122,11 +105,5 @@ public class FriendAddSubCommand extends SubCommand
         user.sendLangMessage( "friends.add.request-sent", "{user}", name );
 
         optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.request-received", "{name}", user.getName() ) );
-    }
-
-    @Override
-    public List<String> getCompletions( User user, String[] args )
-    {
-        return null;
     }
 }

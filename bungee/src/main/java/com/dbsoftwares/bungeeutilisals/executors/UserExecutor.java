@@ -75,7 +75,8 @@ public class UserExecutor implements EventExecutor
                     StaffNetworkAction.STAFF_JOIN, user.getUuid(), user.getName(), rank.getName()
             );
             handler.send( data );
-        } else
+        }
+        else
         {
             BUCore.getApi().getEventLoader().launchEvent(
                     new NetworkStaffJoinEvent( user.getName(), user.getUuid(), rank.getName() )
@@ -103,7 +104,8 @@ public class UserExecutor implements EventExecutor
                     StaffNetworkAction.STAFF_LEAVE, user.getUuid(), user.getName(), rank.getName()
             );
             handler.send( data );
-        } else
+        }
+        else
         {
             BUCore.getApi().getEventLoader().launchEvent(
                     new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )

@@ -54,7 +54,8 @@ public class AddonLanguageManager extends AbstractLanguageManager
             if ( fileTypes.get( addonName ).equals( FileStorageType.JSON ) )
             {
                 lang = loadResource( addonName, "languages/" + name + ".json", new File( folder, name + ".json" ) );
-            } else
+            }
+            else
             {
                 lang = loadResource( addonName, "languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
@@ -71,7 +72,8 @@ public class AddonLanguageManager extends AbstractLanguageManager
                 {
                     configuration = IConfiguration.loadJsonConfiguration( lang );
                     configuration.copyDefaults( IConfiguration.loadJsonConfiguration( addon.getResource( "languages/" + name + ".json" ) ) );
-                } else
+                }
+                else
                 {
                     configuration = IConfiguration.loadYamlConfiguration( lang );
                     configuration.copyDefaults( IConfiguration.loadYamlConfiguration( addon.getResource( "languages/" + name + ".yml" ) ) );
@@ -79,7 +81,8 @@ public class AddonLanguageManager extends AbstractLanguageManager
 
                 configurations.put( lang, configuration );
                 saveLanguage( addonName, language );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -118,7 +121,8 @@ public class AddonLanguageManager extends AbstractLanguageManager
                             + addonName );
                 }
             }
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

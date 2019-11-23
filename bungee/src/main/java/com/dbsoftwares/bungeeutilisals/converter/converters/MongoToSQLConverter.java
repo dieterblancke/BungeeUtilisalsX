@@ -78,7 +78,8 @@ public class MongoToSQLConverter extends Converter
                 }
             }
             connection.commit();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -100,7 +101,8 @@ public class MongoToSQLConverter extends Converter
                     }
                 }
                 connection.commit();
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.getLogger().error( ERROR_STRING, e );
             }
@@ -142,7 +144,8 @@ public class MongoToSQLConverter extends Converter
 
                 preparedStatement.executeUpdate();
             }
-        } else if ( type.isTemporary() )
+        }
+        else if ( type.isTemporary() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
                     PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" )
@@ -161,7 +164,8 @@ public class MongoToSQLConverter extends Converter
 
                 preparedStatement.executeUpdate();
             }
-        } else
+        }
+        else
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
                     PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);" )
@@ -199,14 +203,15 @@ public class MongoToSQLConverter extends Converter
             if ( user != null && !user.isEmpty() )
             {
                 credential = MongoCredential.createCredential( user, database,
-                        ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
+                        (password == null || password.isEmpty() ? null : password.toCharArray()) );
             }
             MongoClientOptions options = MongoClientOptions.builder().applicationName( "BungeeUtilisals" ).build();
 
             if ( credential == null )
             {
                 client = new MongoClient( new ServerAddress( properties.get( "host" ), Integer.parseInt( properties.get( "port" ) ) ), options );
-            } else
+            }
+            else
             {
                 client = new MongoClient( new ServerAddress( properties.get( "host" ), Integer.parseInt( properties.get( "port" ) ) ), credential, options );
             }
