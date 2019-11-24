@@ -16,18 +16,16 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.chat.message;
+package com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import net.md_5.bungee.api.chat.ClickEvent;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
 
-@Data
-@AllArgsConstructor
-public class ClickPartim
+public abstract class ClassPlaceHolder extends PlaceHolder implements PlaceHolderEventHandler
 {
 
-    private ClickEvent.Action action;
-    private String value;
-
+    public ClassPlaceHolder( String placeHolder, boolean requiresUser )
+    {
+        super( placeHolder, requiresUser, null );
+        super.setEventHandler( this );
+    }
 }

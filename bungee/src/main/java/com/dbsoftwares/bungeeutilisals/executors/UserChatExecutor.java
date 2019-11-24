@@ -69,7 +69,8 @@ public class UserChatExecutor implements EventExecutor
             if ( config.getBoolean( "cancel" ) )
             {
                 event.setCancelled( true );
-            } else
+            }
+            else
             {
                 event.setMessage( BUCore.getApi().getChatManager().replaceSwearWords( user, message, config.getString( "replace" ) ) );
             }
@@ -102,7 +103,8 @@ public class UserChatExecutor implements EventExecutor
             if ( config.getBoolean( "cancel" ) )
             {
                 event.setCancelled( true );
-            } else
+            }
+            else
             {
                 event.setMessage( event.getMessage().toLowerCase() );
             }

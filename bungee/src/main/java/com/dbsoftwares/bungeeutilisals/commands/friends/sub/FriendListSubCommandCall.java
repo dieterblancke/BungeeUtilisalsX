@@ -18,38 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class FriendListSubCommand extends SubCommand
+public class FriendListSubCommandCall implements CommandCall
 {
-
-    public FriendListSubCommand()
-    {
-        super(
-                "list", 0, 1,
-                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.list.aliases" ).split( ", " ) )
-        );
-    }
-
-    @Override
-    public String getUsage()
-    {
-        return "/friends list [page]";
-    }
-
-    @Override
-    public String getPermission()
-    {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.list.permission" );
-    }
 
     @Override
     public void onExecute( User user, String[] args )
@@ -71,24 +49,20 @@ public class FriendListSubCommand extends SubCommand
             {
                 final int tempPage = Integer.parseInt( args[0] );
 
-                if ( tempPage > pages )
-                {
-                    page = pages;
-                } else
-                {
-                    page = tempPage;
-                }
-            } else
+                page = Math.min( tempPage, pages );
+            }
+            else
             {
                 page = 1;
             }
-        } else
+        }
+        else
         {
             page = 1;
         }
 
         final int previous = page > 1 ? page - 1 : 1;
-        final int next = page + 1 > pages ? pages : page + 1;
+        final int next = Math.min( page + 1, pages );
 
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
@@ -117,11 +91,5 @@ public class FriendListSubCommand extends SubCommand
                 )
         );
         user.sendLangMessage( "friends.list.foot", "{friendAmount}", allFriends.size() );
-    }
-
-    @Override
-    public List<String> getCompletions( User user, String[] args )
-    {
-        return null;
     }
 }

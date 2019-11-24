@@ -53,7 +53,8 @@ public class BUDecoder extends MessageToMessageDecoder<PacketWrapper>
         if ( server )
         {
             event = new PacketUpdateEvent( wrapper.packet, p, p.getServer(), new BungeeConnection() );
-        } else
+        }
+        else
         {
             event = new PacketUpdateEvent( wrapper.packet, p, p, new BungeeConnection() );
         }

@@ -96,7 +96,8 @@ public class ReplyCommand extends BUCommand
 
                     user.sendRawMessage( msgMessage );
                 }
-            } else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
+            }
+            else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
             {
                 final Dao dao = BUCore.getApi().getStorageManager().getDao();
                 final UserStorage storage = dao.getUserDao().getUserData( name );
@@ -118,11 +119,13 @@ public class ReplyCommand extends BUCommand
                 msgMessage = msgMessage.replace( "{message}", message );
 
                 user.sendRawMessage( msgMessage );
-            } else
+            }
+            else
             {
                 user.sendLangMessage( "offline" );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "offline" );
         }

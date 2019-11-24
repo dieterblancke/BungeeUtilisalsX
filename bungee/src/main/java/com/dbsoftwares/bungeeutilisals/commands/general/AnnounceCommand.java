@@ -94,7 +94,8 @@ public class AnnounceCommand extends BUCommand
                                             "{prefix}", config.getString( "announce.types.chat.prefix" )
                                     )
                             );
-                        } else
+                        }
+                        else
                         {
                             for ( String line : section.getString( "chat" ).split( "%nl%" ) )
                             {
@@ -242,11 +243,13 @@ public class AnnounceCommand extends BUCommand
                 final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( AnnounceMessageHandler.class );
 
                 handler.send( announceMessage );
-            } else
+            }
+            else
             {
                 sendAnnounce( announceMessage );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.announce.usage" );
         }

@@ -84,7 +84,8 @@ public class MongoReportsDao implements ReportsDao
         if ( document == null || document.isEmpty() )
         {
             report = null;
-        } else
+        }
+        else
         {
             report = getReport( document );
         }
@@ -228,7 +229,8 @@ public class MongoReportsDao implements ReportsDao
         if ( id == null )
         {
             collection.insertOne( document );
-        } else
+        }
+        else
         {
             collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }

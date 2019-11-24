@@ -48,7 +48,8 @@ public class SQLiteStorageManager extends AbstractStorageManager
             {
                 return;
             }
-        } catch ( IOException e )
+        }
+        catch ( IOException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -63,7 +64,8 @@ public class SQLiteStorageManager extends AbstractStorageManager
             Class.forName( "org.sqlite.JDBC" );
 
             connection = DriverManager.getConnection( "jdbc:sqlite:" + database.getPath() );
-        } catch ( ClassNotFoundException e )
+        }
+        catch ( ClassNotFoundException e )
         {
             // should never occur | library loaded before
             BUCore.getLogger().error( "An error occured: ", e );

@@ -74,7 +74,8 @@ public class EventLoader implements IEventLoader
         if ( handlers == null )
         {
             return ImmutableSet.of();
-        } else
+        }
+        else
         {
             ImmutableSet.Builder<EventHandler<T>> builder = ImmutableSet.builder();
 
@@ -96,7 +97,7 @@ public class EventLoader implements IEventLoader
     public void unregister( EventHandler<?> handler )
     {
         Set<EventHandler<?>> handlers = handlerMap.get( handler.getEventClass() );
-        if ( handlers != null && handlers.contains( handler ) )
+        if ( handlers != null )
         {
             handlers.remove( handler );
         }
@@ -107,7 +108,7 @@ public class EventLoader implements IEventLoader
     {
         if ( event instanceof AbstractEvent )
         {
-            ( (AbstractEvent) event ).setApi( BUCore.getApi() );
+            ((AbstractEvent) event).setApi( BUCore.getApi() );
         }
 
         for ( Map.Entry<Class<? extends BUEvent>, Set<EventHandler<?>>> ent : handlerMap.entrySet() )
@@ -126,7 +127,7 @@ public class EventLoader implements IEventLoader
                 {
                     BEventHandler handler = (BEventHandler) h;
 
-                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ( (Cancellable) event ).isCancelled() )
+                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ((Cancellable) event).isCancelled() )
                     {
                         continue;
                     }

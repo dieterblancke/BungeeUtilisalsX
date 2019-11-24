@@ -20,17 +20,12 @@ package com.dbsoftwares.bungeeutilisals.commands.addons.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.addon.AddonData;
-import com.dbsoftwares.bungeeutilisals.api.chat.message.ChatMessage;
-import com.dbsoftwares.bungeeutilisals.api.chat.message.ClickPartim;
-import com.dbsoftwares.bungeeutilisals.api.chat.message.HoverPartim;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ChatColor;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
 
 import java.util.List;
 
@@ -76,7 +71,7 @@ public class AddonListSubCommand extends SubCommand
             return;
         }
 
-        final int begin = ( ( page - 1 ) * 10 );
+        final int begin = ((page - 1) * 10);
         int end = begin + 10;
 
         if ( end > addons.size() )
@@ -85,7 +80,6 @@ public class AddonListSubCommand extends SubCommand
         }
 
         user.sendLangMessage( "general-commands.addon.list.header", "{page}", page );
-        final ChatMessage chatMessage = new ChatMessage();
 
         for ( int i = begin; i < end; i++ )
         {
@@ -93,31 +87,17 @@ public class AddonListSubCommand extends SubCommand
             final ChatColor color = BUCore.getApi().getAddonManager().isRegistered( data.getName() ) ? ChatColor.GREEN : ChatColor.RED;
             final String message = user.buildLangMessage( "general-commands.addon.list.item.text", "{id}", i + 1, "{addon}", color + data.getName() );
 
-            chatMessage.addPartim(
-                    message,
-                    new HoverPartim(
-                            HoverEvent.Action.SHOW_TEXT,
-                            user.buildLangMessage( "general-commands.addon.list.item.hover",
-                                    "{id}", i + 1,
-                                    "{name}", data.getName(),
-                                    "{version}", data.getVersion(),
-                                    "{author}", data.getAuthor(),
-                                    "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList( data.getRequiredDependencies(), ", " ),
-                                    "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList( data.getOptionalDependencies(), ", " ),
-                                    "{description}", data.getDescription()
-                            )
-                    ),
-                    new ClickPartim(
-                            ClickEvent.Action.RUN_COMMAND,
-                            "/addon info " + data.getName()
-                    )
+            user.sendLangMessage( "general-commands.addon.list.item",
+                    "{id}", i + 1,
+                    "{addon}", color + data.getName(),
+                    "{name}", data.getName(),
+                    "{version}", data.getVersion(),
+                    "{author}", data.getAuthor(),
+                    "{reqDepends}", data.getRequiredDependencies() == null ? "None" : Utils.formatList( data.getRequiredDependencies(), ", " ),
+                    "{optDepends}", data.getOptionalDependencies() == null ? "None" : Utils.formatList( data.getOptionalDependencies(), ", " ),
+                    "{description}", data.getDescription()
             );
-            if ( i < end - 1 )
-            {
-                chatMessage.newLine();
-            }
         }
-        chatMessage.sendTo( user );
     }
 
     @Override

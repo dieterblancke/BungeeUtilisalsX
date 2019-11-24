@@ -62,7 +62,8 @@ public class BossBarAnnouncer extends Announcer
             {
                 unit = TimeUnit.SECONDS;
                 time = section.getInteger( "stay" );
-            } else
+            }
+            else
             {
                 unit = TimeUnit.valueOfOrElse( section.getString( "stay.unit" ), TimeUnit.SECONDS );
                 time = section.getInteger( "stay.time" );

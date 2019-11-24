@@ -57,7 +57,8 @@ public class PingCommand extends BUCommand
         if ( args.length == 0 )
         {
             user.sendLangMessage( "general-commands.ping.message" );
-        } else
+        }
+        else
         {
             final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.permission-other" );
             if ( permission != null

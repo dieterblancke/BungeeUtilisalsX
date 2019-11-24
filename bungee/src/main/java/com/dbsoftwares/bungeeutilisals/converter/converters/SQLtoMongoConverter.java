@@ -46,7 +46,8 @@ public class SQLtoMongoConverter extends Converter
         try
         {
             storageManager = createStorageManager( properties );
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
             return;
@@ -80,7 +81,8 @@ public class SQLtoMongoConverter extends Converter
 
                 status = new ConverterStatus( count );
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -96,7 +98,8 @@ public class SQLtoMongoConverter extends Converter
                 status.incrementConvertedEntries( 1 );
                 importerCallback.onStatusUpdate( status );
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -114,7 +117,8 @@ public class SQLtoMongoConverter extends Converter
                     status.incrementConvertedEntries( 1 );
                     importerCallback.onStatusUpdate( status );
                 }
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
@@ -148,7 +152,8 @@ public class SQLtoMongoConverter extends Converter
                     false,
                     rs.getString( "executed_by" )
             );
-        } else if ( type.isTemporary() )
+        }
+        else if ( type.isTemporary() )
         {
             getImportUtils().insertPunishment(
                     type,
@@ -161,7 +166,8 @@ public class SQLtoMongoConverter extends Converter
                     rs.getBoolean( "active" ),
                     rs.getString( "executed_by" )
             );
-        } else
+        }
+        else
         {
             getImportUtils().insertPunishment(
                     type,
@@ -189,7 +195,8 @@ public class SQLtoMongoConverter extends Converter
         {
             // sqlite
             return new SQLiteStorageManager( BungeeUtilisals.getInstance() );
-        } else
+        }
+        else
         {
             // mysql, mariadb or postgresql
             return new AbstractStorageManager( BungeeUtilisals.getInstance(), type, new SQLDao() )
@@ -201,7 +208,7 @@ public class SQLtoMongoConverter extends Converter
                 public Connection getConnection() throws SQLException
                 {
                     final Connection connection = DriverManager.getConnection(
-                            "jdbc:" + ( type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql" ) + "://" + properties.get( "host" ) + ":"
+                            "jdbc:" + (type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql") + "://" + properties.get( "host" ) + ":"
                                     + properties.get( "port" )
                                     + "/" + properties.get( "database" ),
                             properties.get( "username" ),

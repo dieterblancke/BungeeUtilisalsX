@@ -44,12 +44,14 @@ public class ReportHistorySubCommandCall implements CommandCall
         if ( args.length == 0 )
         {
             page = 1;
-        } else
+        }
+        else
         {
             if ( args.length == 1 && MathUtils.isInteger( args[0] ) )
             {
                 page = Integer.parseInt( args[0] );
-            } else
+            }
+            else
             {
                 page = 1;
             }
@@ -93,7 +95,8 @@ public class ReportHistorySubCommandCall implements CommandCall
                         "{accepted_sign}", report.isHandled() ? report.isAccepted() ? accepted : denied : ""
                 );
             }
-        } catch ( PageNotFoundException e )
+        }
+        catch ( PageNotFoundException e )
         {
             user.sendLangMessage(
                     "general-commands.report.history.wrong-page",

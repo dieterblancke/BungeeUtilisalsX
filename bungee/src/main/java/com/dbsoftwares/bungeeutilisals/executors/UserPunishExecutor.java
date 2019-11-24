@@ -71,7 +71,8 @@ public class UserPunishExecutor implements EventExecutor
                         event.getUuid(),
                         new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                 );
-            } else
+            }
+            else
             {
                 // ip involved
                 amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
@@ -98,7 +99,8 @@ public class UserPunishExecutor implements EventExecutor
                             event.getUuid(),
                             new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                     );
-                } else
+                }
+                else
                 {
                     BUCore.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
                             action.getLimit(),

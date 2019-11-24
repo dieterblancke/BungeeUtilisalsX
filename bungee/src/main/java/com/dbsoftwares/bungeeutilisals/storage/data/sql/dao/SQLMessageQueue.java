@@ -68,7 +68,8 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
         try
         {
             addMessage( message );
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             e.printStackTrace();
             return false;
@@ -127,7 +128,8 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
             pstmt.setLong( 2, message.getId() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             e.printStackTrace();
         }
@@ -166,7 +168,8 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }

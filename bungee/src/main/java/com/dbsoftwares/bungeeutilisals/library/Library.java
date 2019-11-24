@@ -96,7 +96,8 @@ public class Library
                 BUCore.getLogger().info( "Removing older versions of " + toString() );
                 getOutdatedFiles( folder ).forEach( File::delete );
                 BUCore.getLogger().info( "Successfully removed older versions of " + toString() );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 throw new RuntimeException( "Failed downloading library for " + toString().toLowerCase(), e );
             }

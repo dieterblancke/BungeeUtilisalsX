@@ -59,7 +59,8 @@ public class SQLMutesDao implements MutesDao
                     exists = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -88,7 +89,8 @@ public class SQLMutesDao implements MutesDao
                     exists = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -122,7 +124,8 @@ public class SQLMutesDao implements MutesDao
                     exists = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -156,7 +159,8 @@ public class SQLMutesDao implements MutesDao
                     exists = rs.getBoolean( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -185,7 +189,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -213,7 +218,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -241,7 +247,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -269,7 +276,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -308,7 +316,8 @@ public class SQLMutesDao implements MutesDao
                     info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -348,7 +357,8 @@ public class SQLMutesDao implements MutesDao
                     info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -372,7 +382,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setBoolean( 5, true );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -394,7 +405,8 @@ public class SQLMutesDao implements MutesDao
             pstmt.setBoolean( 5, true );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -432,7 +444,8 @@ public class SQLMutesDao implements MutesDao
                     punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -472,7 +485,8 @@ public class SQLMutesDao implements MutesDao
                     punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -512,7 +526,8 @@ public class SQLMutesDao implements MutesDao
                     info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }

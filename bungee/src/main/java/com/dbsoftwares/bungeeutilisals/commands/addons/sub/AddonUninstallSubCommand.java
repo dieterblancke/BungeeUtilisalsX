@@ -59,11 +59,13 @@ public class AddonUninstallSubCommand extends SubCommand
             if ( addon.getDescription().getFile().delete() )
             {
                 user.sendLangMessage( "general-commands.addon.uninstall.success", "{name}", addonName );
-            } else
+            }
+            else
             {
                 user.sendLangMessage( "general-commands.addon.uninstall.failed", "{path}", addon.getDescription().getFile().getPath() );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }

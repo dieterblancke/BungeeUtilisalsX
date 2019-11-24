@@ -55,11 +55,13 @@ public class AddonDisableSubCommand extends SubCommand
             {
                 BUCore.getApi().getAddonManager().disableAddon( addonName );
                 user.sendLangMessage( "general-commands.addon.disable.success", "{name}", addonName );
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 user.sendLangMessage( "general-commands.addon.disable.error", "{name}", addonName );
             }
-        } else
+        }
+        else
         {
             user.sendLangMessage( "general-commands.addon.notfound", "{name}", addonName );
         }

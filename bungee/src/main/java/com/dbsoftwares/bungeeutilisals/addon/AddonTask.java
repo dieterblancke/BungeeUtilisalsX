@@ -70,7 +70,8 @@ public class AddonTask implements Runnable, IAddonTask
             try
             {
                 Thread.sleep( delay );
-            } catch ( InterruptedException ex )
+            }
+            catch ( InterruptedException ex )
             {
                 Thread.currentThread().interrupt();
             }
@@ -81,7 +82,8 @@ public class AddonTask implements Runnable, IAddonTask
             try
             {
                 task.run();
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 BUCore.getLogger().error( String.format( "Task %s encountered an exception", id ), e );
             }
@@ -94,7 +96,8 @@ public class AddonTask implements Runnable, IAddonTask
             try
             {
                 Thread.sleep( period );
-            } catch ( InterruptedException ex )
+            }
+            catch ( InterruptedException ex )
             {
                 Thread.currentThread().interrupt();
             }

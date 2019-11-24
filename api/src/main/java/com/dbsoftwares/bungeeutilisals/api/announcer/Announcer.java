@@ -103,7 +103,8 @@ public abstract class Announcer
                 }
 
                 announcers.put( announcer.getType(), announcer );
-            } catch ( InstantiationException | IllegalAccessException e )
+            }
+            catch ( InstantiationException | IllegalAccessException e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -131,7 +132,7 @@ public abstract class Announcer
                         {
                             previous.clear();
                         }
-                        Announcement next = ( random ? getRandomAnnouncement() : getNextAnnouncement() );
+                        Announcement next = (random ? getRandomAnnouncement() : getNextAnnouncement());
                         next.send();
                         previous = next;
                     }
@@ -194,7 +195,8 @@ public abstract class Announcer
         try
         {
             configuration.reload();
-        } catch ( IOException e )
+        }
+        catch ( IOException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
             return;

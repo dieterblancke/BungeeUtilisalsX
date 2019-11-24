@@ -77,7 +77,8 @@ public class Updater
             final UpdatableData data = new UpdatableData( name, version, url, file );
 
             return new Updater( data );
-        } catch ( IllegalAccessException | InvocationTargetException e )
+        }
+        catch ( IllegalAccessException | InvocationTargetException e )
         {
             throw new RuntimeException( "Could not initialize Updatable for " + clazz.getSimpleName() + "." );
         }
@@ -96,7 +97,8 @@ public class Updater
         if ( delay <= 0 )
         {
             task = ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), new UpdateRunner( this ) );
-        } else
+        }
+        else
         {
             task = ProxyServer.getInstance().getScheduler().schedule( BUCore.getApi().getPlugin(), new UpdateRunner( this ), 0, delay, TimeUnit.MINUTES );
         }
@@ -109,7 +111,7 @@ public class Updater
             return;
         }
 
-        ( (UpdateRunner) task.getTask() ).shutdown();
+        ((UpdateRunner) task.getTask()).shutdown();
         task.cancel();
     }
 

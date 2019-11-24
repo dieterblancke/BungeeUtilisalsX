@@ -40,7 +40,8 @@ public interface Dao
         try
         {
             return format.parse( date );
-        } catch ( ParseException e )
+        }
+        catch ( ParseException e )
         {
             return new Date();
         }

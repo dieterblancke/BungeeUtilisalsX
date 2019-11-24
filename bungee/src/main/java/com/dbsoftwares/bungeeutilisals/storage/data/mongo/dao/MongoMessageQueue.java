@@ -73,7 +73,8 @@ public class MongoMessageQueue extends LinkedList<QueuedMessage> implements Mess
         try
         {
             addMessage( message );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             e.printStackTrace();
             return false;
@@ -168,7 +169,8 @@ public class MongoMessageQueue extends LinkedList<QueuedMessage> implements Mess
         if ( id == null )
         {
             collection.insertOne( document );
-        } else
+        }
+        else
         {
             collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }

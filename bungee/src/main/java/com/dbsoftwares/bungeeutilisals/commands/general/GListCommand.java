@@ -80,7 +80,8 @@ public class GListCommand extends BUCommand
                         "%playerlist%", Utils.c( color + Joiner.on( separator ).join( group.getPlayerList() ) )
                 ) );
             }
-        } else
+        }
+        else
         {
             for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
             {

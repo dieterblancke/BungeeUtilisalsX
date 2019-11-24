@@ -48,7 +48,8 @@ public class UnicodeTranslator
                 {
                     final int value = Integer.parseInt( unicode.toString(), 16 );
                     out.write( (char) value );
-                } catch ( final NumberFormatException nfe )
+                }
+                catch ( final NumberFormatException nfe )
                 {
                     throw new IllegalArgumentException( "Unable to parse unicode value: " + unicode, nfe );
                 }
@@ -72,7 +73,8 @@ public class UnicodeTranslator
             final StringWriter writer = new StringWriter( input.length() * 2 );
             translate( input, writer );
             return writer.toString();
-        } catch ( final IOException ioe )
+        }
+        catch ( final IOException ioe )
         {
             throw new RuntimeException( ioe );
         }

@@ -104,7 +104,8 @@ public class BUser implements User
             }
 
             storage.setLanguage( BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
-        } else
+        }
+        else
         {
             final Language defLanguage = BUCore.getApi().getLanguageManager().getDefaultLanguage();
             final Date date = new Date( System.currentTimeMillis() );
@@ -132,7 +133,8 @@ public class BUser implements User
             if ( mutesDao.isMuted( uuid ) )
             {
                 this.mute = mutesDao.getCurrentMute( uuid );
-            } else if ( mutesDao.isIPMuted( ip ) )
+            }
+            else if ( mutesDao.isIPMuted( ip ) )
             {
                 this.mute = mutesDao.getCurrentIPMute( ip );
             }
@@ -142,7 +144,8 @@ public class BUser implements User
         {
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
-        } else
+        }
+        else
         {
             friendSettings = new FriendSettings();
         }
@@ -276,7 +279,8 @@ public class BUser implements User
         if ( prefix )
         {
             sendMessage( message );
-        } else
+        }
+        else
         {
             sendRawColorMessage( message );
         }
@@ -323,7 +327,8 @@ public class BUser implements User
                 builder.append( message ).append( "\n" );
             }
             kick( builder.toString() );
-        } else
+        }
+        else
         {
             String message = getLanguageConfig().getString( path );
             for ( int i = 0; i < placeholders.length - 1; i += 2 )
@@ -413,7 +418,8 @@ public class BUser implements User
         try
         {
             return Version.getVersion( parent.getPendingConnection().getVersion() );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return Version.MINECRAFT_1_8;
         }
@@ -459,7 +465,8 @@ public class BUser implements User
                     builder.append( "\n" );
                 }
             }
-        } else
+        }
+        else
         {
             final String message = replacePlaceHolders( getLanguageConfig().getString( path ), placeholders );
 

@@ -55,7 +55,8 @@ public class PluginLanguageManager extends AbstractLanguageManager
             if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
             {
                 lang = loadResource( pluginName, "languages/" + name + ".json", new File( folder, name + ".json" ) );
-            } else
+            }
+            else
             {
                 lang = loadResource( pluginName, "languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
@@ -72,7 +73,8 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 {
                     configuration = IConfiguration.loadJsonConfiguration( lang );
                     configuration.copyDefaults( IConfiguration.loadJsonConfiguration( plugin.getResourceAsStream( "languages/" + name + ".json" ) ) );
-                } else
+                }
+                else
                 {
                     configuration = IConfiguration.loadYamlConfiguration( lang );
                     configuration.copyDefaults( IConfiguration.loadYamlConfiguration( plugin.getResourceAsStream( "languages/" + name + ".yml" ) ) );
@@ -80,7 +82,8 @@ public class PluginLanguageManager extends AbstractLanguageManager
 
                 configurations.put( lang, configuration );
                 saveLanguage( pluginName, language );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -119,7 +122,8 @@ public class PluginLanguageManager extends AbstractLanguageManager
                             + pluginName );
                 }
             }
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

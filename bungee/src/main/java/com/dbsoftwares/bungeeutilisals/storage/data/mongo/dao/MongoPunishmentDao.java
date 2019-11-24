@@ -87,7 +87,8 @@ public class MongoPunishmentDao implements PunishmentDao
                     Filters.eq( "type", type.toString() ),
                     Filters.eq( "punishmentaction_status", false )
             ) );
-        } else
+        }
+        else
         {
             return collection.countDocuments( Filters.and(
                     Filters.eq( "uuid", uuid ),
@@ -132,7 +133,8 @@ public class MongoPunishmentDao implements PunishmentDao
 
                         save( collection, doc );
                     } );
-        } else
+        }
+        else
         {
             collection.find(
                     Filters.and(
@@ -195,7 +197,8 @@ public class MongoPunishmentDao implements PunishmentDao
         if ( id == null )
         {
             collection.insertOne( document );
-        } else
+        }
+        else
         {
             collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }
@@ -203,6 +206,6 @@ public class MongoPunishmentDao implements PunishmentDao
 
     private MongoDatabase db()
     {
-        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
+        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

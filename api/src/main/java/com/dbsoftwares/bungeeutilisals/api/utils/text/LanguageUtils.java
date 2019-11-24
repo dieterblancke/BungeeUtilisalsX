@@ -65,7 +65,8 @@ public class LanguageUtils
             {
                 sender.sendMessage( Utils.format( message ) );
             }
-        } else
+        }
+        else
         {
             if ( config.getString( path ).isEmpty() )
             {
@@ -92,7 +93,8 @@ public class LanguageUtils
 
                 sender.sendMessage( Utils.format( message ) );
             }
-        } else
+        }
+        else
         {
             if ( config.getString( path ).isEmpty() )
             {
@@ -119,7 +121,8 @@ public class LanguageUtils
             {
                 user.sendMessage( Utils.format( message ) );
             }
-        } else
+        }
+        else
         {
             if ( config.getString( path ).isEmpty() )
             {
@@ -145,7 +148,8 @@ public class LanguageUtils
                 message = replacePlaceHolders( user, message, placeholders );
                 user.sendMessage( Utils.format( message ) );
             }
-        } else
+        }
+        else
         {
             if ( config.getString( path ).isEmpty() )
             {

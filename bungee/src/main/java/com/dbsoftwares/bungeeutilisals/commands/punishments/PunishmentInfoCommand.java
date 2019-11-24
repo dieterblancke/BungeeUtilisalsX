@@ -79,7 +79,8 @@ public class PunishmentInfoCommand extends BUCommand
                 }
                 sendTypeInfo( user, storage, type );
             }
-        } else
+        }
+        else
         {
             for ( String typeStr : action.split( "," ) )
             {
@@ -104,7 +105,8 @@ public class PunishmentInfoCommand extends BUCommand
                 if ( dao.getBansDao().isBanned( storage.getUuid() ) )
                 {
                     sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentBan( storage.getUuid() ) );
-                } else
+                }
+                else
                 {
                     sendInfoMessage( user, storage, type, false, null );
                 }
@@ -114,7 +116,8 @@ public class PunishmentInfoCommand extends BUCommand
                 if ( dao.getBansDao().isIPBanned( storage.getIp() ) )
                 {
                     sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentIPBan( storage.getIp() ) );
-                } else
+                }
+                else
                 {
                     sendInfoMessage( user, storage, type, false, null );
                 }
@@ -124,7 +127,8 @@ public class PunishmentInfoCommand extends BUCommand
                 if ( dao.getMutesDao().isMuted( storage.getUuid() ) )
                 {
                     sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentMute( storage.getUuid() ) );
-                } else
+                }
+                else
                 {
                     sendInfoMessage( user, storage, type, false, null );
                 }
@@ -134,7 +138,8 @@ public class PunishmentInfoCommand extends BUCommand
                 if ( dao.getMutesDao().isIPMuted( storage.getIp() ) )
                 {
                     sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentIPMute( storage.getIp() ) );
-                } else
+                }
+                else
                 {
                     sendInfoMessage( user, storage, type, false, null );
                 }
@@ -154,7 +159,8 @@ public class PunishmentInfoCommand extends BUCommand
                     "punishments.punishmentinfo.typeinfo.found",
                     BUCore.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[0] )
             );
-        } else
+        }
+        else
         {
             user.sendLangMessage(
                     "punishments.punishmentinfo.typeinfo.notfound",

@@ -24,11 +24,13 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MessageBuilder
 {
@@ -37,24 +39,19 @@ public class MessageBuilder
     {
         if ( section.isList( "text" ) )
         {
-            TextComponent component = new TextComponent();
+            final TextComponent component = new TextComponent();
 
             section.getSectionList( "text" ).forEach( text -> component.addExtra( buildMessage( user, text, placeholders ) ) );
             return component;
         }
-        String text = searchAndFormat( user.getLanguageConfig(), section.getString( "text" ), placeholders );
-        TextComponent component = new TextComponent( Utils.format( user, text ) );
+        final BaseComponent[] text = searchAndFormat( user, user.getLanguageConfig(), section.getString( "text" ), placeholders );
+        final TextComponent component = new TextComponent( text );
 
         if ( section.exists( "hover" ) )
         {
-            String hover = section.isList( "hover" )
-                    ? Utils.formatList( section.getStringList( "hover" ), "\n" )
-                    : searchAndFormat( user.getLanguageConfig(), section.getString( "hover" ), placeholders );
+            final BaseComponent[] components = searchHoverMessageAndFormat( user, section, placeholders );
 
-            component.setHoverEvent( new HoverEvent(
-                    HoverEvent.Action.SHOW_TEXT,
-                    Utils.format( user, format( hover, placeholders ) )
-            ) );
+            component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, components ) );
         }
         if ( section.exists( "click" ) )
         {
@@ -84,27 +81,80 @@ public class MessageBuilder
             if ( config.isString( str ) )
             {
                 text = config.getString( str );
-            } else if ( config.isList( str ) )
+            }
+            else if ( config.isList( str ) )
             {
                 text = Utils.formatList( config.getStringList( str ), System.lineSeparator() );
             }
         }
-        text = text.replace( "%nl%", "\n" )
-                .replace( "%newline%", "\n" )
-                .replace( "{nl}", "\n" )
-                .replace( "{newline}", "\n" )
-                .replace( "\r\n", "\n" )
-                .replace( "\n", "\n" );
-
         return format( text, placeholders );
     }
 
-    private static String format( String str, Object... placeholders )
+    private static BaseComponent[] searchAndFormat( final User user, IConfiguration config, String str, Object... placeholders )
     {
+        if ( config.exists( str ) )
+        {
+            if ( config.isString( str ) )
+            {
+                return Utils.format(
+                        user,
+                        format( config.getString( str ), placeholders )
+                );
+            }
+            else if ( config.isList( str ) )
+            {
+                final List<String> list = format( config.getStringList( str ), placeholders );
+
+                return Utils.format( user, list );
+            }
+        }
+
+        return Utils.format(
+                user,
+                format( str, placeholders )
+        );
+    }
+
+    private static String formatLine( final String line )
+    {
+        final String newLine = System.lineSeparator();
+
+        return line.replace( "%nl%", newLine )
+                .replace( "%newline%", newLine )
+                .replace( "{nl}", newLine )
+                .replace( "{newline}", newLine )
+                .replace( "\r\n", newLine )
+                .replace( "\n", newLine );
+    }
+
+    private static List<String> format( final List<String> list, Object... placeholders )
+    {
+        return list.stream().map( str -> format( str, placeholders ) ).collect( Collectors.toList() );
+    }
+
+    private static String format( String str, final Object... placeholders )
+    {
+        str = formatLine( str );
+
         for ( int i = 0; i < placeholders.length - 1; i += 2 )
         {
             str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
         return str;
+    }
+
+    private static BaseComponent[] searchHoverMessageAndFormat( final User user, final ISection section, final Object... placeholders )
+    {
+        if ( section.isList( "hover" ) )
+        {
+            return Utils.format(
+                    user,
+                    format( section.getStringList( "hover" ), placeholders )
+            );
+        }
+        else
+        {
+            return searchAndFormat( user, user.getLanguageConfig(), section.getString( "hover" ), placeholders );
+        }
     }
 }

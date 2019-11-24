@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolder
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
@@ -34,6 +35,7 @@ public abstract class PlaceHolder
     protected String placeHolderName;
     @Accessors(fluent = true)
     protected boolean requiresUser;
+    @Setter
     protected PlaceHolderEventHandler eventHandler;
 
     public PlaceHolder( String placeHolderName, boolean requiresUser, PlaceHolderEventHandler eventHandler )

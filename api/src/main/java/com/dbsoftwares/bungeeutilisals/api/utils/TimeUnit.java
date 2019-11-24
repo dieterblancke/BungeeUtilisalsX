@@ -32,49 +32,49 @@ public enum TimeUnit
                 @Override
                 public long toMicros( long d )
                 {
-                    return d / ( MICROS / NANOS );
+                    return d / (MICROS / NANOS);
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return d / ( MILLIS / NANOS );
+                    return d / (MILLIS / NANOS);
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return d / ( TICK / NANOS );
+                    return d / (TICK / NANOS);
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return d / ( SECOND / NANOS );
+                    return d / (SECOND / NANOS);
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return d / ( MINUTE / NANOS );
+                    return d / (MINUTE / NANOS);
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / NANOS );
+                    return d / (HOUR / NANOS);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / NANOS );
+                    return d / (DAY / NANOS);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / NANOS );
+                    return d / (WEEK / NANOS);
                 }
 
                 @Override
@@ -90,7 +90,7 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, MICROS / NANOS, MAX / ( MICROS / NANOS ) );
+                    return x( d, MICROS / NANOS, MAX / (MICROS / NANOS) );
                 }
 
                 @Override
@@ -102,43 +102,43 @@ public enum TimeUnit
                 @Override
                 public long toMillis( long d )
                 {
-                    return d / ( MILLIS / MICROS );
+                    return d / (MILLIS / MICROS);
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return d / ( TICK / MICROS );
+                    return d / (TICK / MICROS);
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return d / ( SECOND / MICROS );
+                    return d / (SECOND / MICROS);
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return d / ( MINUTE / MICROS );
+                    return d / (MINUTE / MICROS);
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / MICROS );
+                    return d / (HOUR / MICROS);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / MICROS );
+                    return d / (DAY / MICROS);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / MICROS );
+                    return d / (WEEK / MICROS);
                 }
 
                 @Override
@@ -154,13 +154,13 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, MILLIS / NANOS, MAX / ( MILLIS / NANOS ) );
+                    return x( d, MILLIS / NANOS, MAX / (MILLIS / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, MILLIS / MICROS, MAX / ( MILLIS / MICROS ) );
+                    return x( d, MILLIS / MICROS, MAX / (MILLIS / MICROS) );
                 }
 
                 @Override
@@ -172,37 +172,37 @@ public enum TimeUnit
                 @Override
                 public long toTicks( long d )
                 {
-                    return d / ( TICK / MILLIS );
+                    return d / (TICK / MILLIS);
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return d / ( SECOND / MILLIS );
+                    return d / (SECOND / MILLIS);
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return d / ( MINUTE / MILLIS );
+                    return d / (MINUTE / MILLIS);
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / MILLIS );
+                    return d / (HOUR / MILLIS);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / MILLIS );
+                    return d / (DAY / MILLIS);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / MILLIS );
+                    return d / (WEEK / MILLIS);
                 }
 
                 @Override
@@ -218,19 +218,19 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, TICK / NANOS, MAX / ( TICK / NANOS ) );
+                    return x( d, TICK / NANOS, MAX / (TICK / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, TICK / MICROS, MAX / ( TICK / MICROS ) );
+                    return x( d, TICK / MICROS, MAX / (TICK / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, TICK / MILLIS, MAX / ( TICK / MILLIS ) );
+                    return x( d, TICK / MILLIS, MAX / (TICK / MILLIS) );
                 }
 
                 @Override
@@ -242,31 +242,31 @@ public enum TimeUnit
                 @Override
                 public long toSeconds( long d )
                 {
-                    return d / ( SECOND / TICK );
+                    return d / (SECOND / TICK);
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return d / ( MINUTE / TICK );
+                    return d / (MINUTE / TICK);
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / TICK );
+                    return d / (HOUR / TICK);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / TICK );
+                    return d / (DAY / TICK);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / TICK );
+                    return d / (WEEK / TICK);
                 }
 
                 @Override
@@ -282,25 +282,25 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, SECOND / NANOS, MAX / ( SECOND / NANOS ) );
+                    return x( d, SECOND / NANOS, MAX / (SECOND / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, SECOND / MICROS, MAX / ( SECOND / MICROS ) );
+                    return x( d, SECOND / MICROS, MAX / (SECOND / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, SECOND / MILLIS, MAX / ( SECOND / MILLIS ) );
+                    return x( d, SECOND / MILLIS, MAX / (SECOND / MILLIS) );
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return x( d, SECOND / TICK, MAX / ( SECOND / TICK ) );
+                    return x( d, SECOND / TICK, MAX / (SECOND / TICK) );
                 }
 
                 @Override
@@ -312,25 +312,25 @@ public enum TimeUnit
                 @Override
                 public long toMinutes( long d )
                 {
-                    return d / ( MINUTE / SECOND );
+                    return d / (MINUTE / SECOND);
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / SECOND );
+                    return d / (HOUR / SECOND);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / SECOND );
+                    return d / (DAY / SECOND);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / SECOND );
+                    return d / (WEEK / SECOND);
                 }
 
                 @Override
@@ -346,31 +346,31 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, MINUTE / NANOS, MAX / ( MINUTE / NANOS ) );
+                    return x( d, MINUTE / NANOS, MAX / (MINUTE / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, MINUTE / MICROS, MAX / ( MINUTE / MICROS ) );
+                    return x( d, MINUTE / MICROS, MAX / (MINUTE / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, MINUTE / MILLIS, MAX / ( MINUTE / MILLIS ) );
+                    return x( d, MINUTE / MILLIS, MAX / (MINUTE / MILLIS) );
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return x( d, MINUTE / TICK, MAX / ( MINUTE / TICK ) );
+                    return x( d, MINUTE / TICK, MAX / (MINUTE / TICK) );
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return x( d, MINUTE / SECOND, MAX / ( MINUTE / SECOND ) );
+                    return x( d, MINUTE / SECOND, MAX / (MINUTE / SECOND) );
                 }
 
                 @Override
@@ -382,19 +382,19 @@ public enum TimeUnit
                 @Override
                 public long toHours( long d )
                 {
-                    return d / ( HOUR / MINUTE );
+                    return d / (HOUR / MINUTE);
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / MINUTE );
+                    return d / (DAY / MINUTE);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / MINUTE );
+                    return d / (WEEK / MINUTE);
                 }
 
                 @Override
@@ -411,37 +411,37 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, HOUR / NANOS, MAX / ( HOUR / NANOS ) );
+                    return x( d, HOUR / NANOS, MAX / (HOUR / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, HOUR / MICROS, MAX / ( HOUR / MICROS ) );
+                    return x( d, HOUR / MICROS, MAX / (HOUR / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, HOUR / MILLIS, MAX / ( HOUR / MILLIS ) );
+                    return x( d, HOUR / MILLIS, MAX / (HOUR / MILLIS) );
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return x( d, HOUR / TICK, MAX / ( HOUR / TICK ) );
+                    return x( d, HOUR / TICK, MAX / (HOUR / TICK) );
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return x( d, HOUR / SECOND, MAX / ( HOUR / SECOND ) );
+                    return x( d, HOUR / SECOND, MAX / (HOUR / SECOND) );
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return x( d, HOUR / MINUTE, MAX / ( HOUR / MINUTE ) );
+                    return x( d, HOUR / MINUTE, MAX / (HOUR / MINUTE) );
                 }
 
                 @Override
@@ -453,13 +453,13 @@ public enum TimeUnit
                 @Override
                 public long toDays( long d )
                 {
-                    return d / ( DAY / HOUR );
+                    return d / (DAY / HOUR);
                 }
 
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / HOUR );
+                    return d / (WEEK / HOUR);
                 }
 
                 @Override
@@ -475,43 +475,43 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, DAY / NANOS, MAX / ( DAY / NANOS ) );
+                    return x( d, DAY / NANOS, MAX / (DAY / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, DAY / MICROS, MAX / ( DAY / MICROS ) );
+                    return x( d, DAY / MICROS, MAX / (DAY / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, DAY / MILLIS, MAX / ( DAY / MILLIS ) );
+                    return x( d, DAY / MILLIS, MAX / (DAY / MILLIS) );
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return x( d, DAY / TICK, MAX / ( DAY / TICK ) );
+                    return x( d, DAY / TICK, MAX / (DAY / TICK) );
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return x( d, DAY / SECOND, MAX / ( DAY / SECOND ) );
+                    return x( d, DAY / SECOND, MAX / (DAY / SECOND) );
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return x( d, DAY / MINUTE, MAX / ( DAY / MINUTE ) );
+                    return x( d, DAY / MINUTE, MAX / (DAY / MINUTE) );
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return x( d, DAY / HOUR, MAX / ( DAY / HOUR ) );
+                    return x( d, DAY / HOUR, MAX / (DAY / HOUR) );
                 }
 
                 @Override
@@ -523,7 +523,7 @@ public enum TimeUnit
                 @Override
                 public long toWeeks( long d )
                 {
-                    return d / ( WEEK / DAY );
+                    return d / (WEEK / DAY);
                 }
 
                 @Override
@@ -539,49 +539,49 @@ public enum TimeUnit
                 @Override
                 public long toNanos( long d )
                 {
-                    return x( d, WEEK / NANOS, MAX / ( WEEK / NANOS ) );
+                    return x( d, WEEK / NANOS, MAX / (WEEK / NANOS) );
                 }
 
                 @Override
                 public long toMicros( long d )
                 {
-                    return x( d, WEEK / MICROS, MAX / ( WEEK / MICROS ) );
+                    return x( d, WEEK / MICROS, MAX / (WEEK / MICROS) );
                 }
 
                 @Override
                 public long toMillis( long d )
                 {
-                    return x( d, WEEK / MILLIS, MAX / ( WEEK / MILLIS ) );
+                    return x( d, WEEK / MILLIS, MAX / (WEEK / MILLIS) );
                 }
 
                 @Override
                 public long toTicks( long d )
                 {
-                    return x( d, WEEK / TICK, MAX / ( WEEK / TICK ) );
+                    return x( d, WEEK / TICK, MAX / (WEEK / TICK) );
                 }
 
                 @Override
                 public long toSeconds( long d )
                 {
-                    return x( d, WEEK / SECOND, MAX / ( WEEK / SECOND ) );
+                    return x( d, WEEK / SECOND, MAX / (WEEK / SECOND) );
                 }
 
                 @Override
                 public long toMinutes( long d )
                 {
-                    return x( d, WEEK / MINUTE, MAX / ( WEEK / MINUTE ) );
+                    return x( d, WEEK / MINUTE, MAX / (WEEK / MINUTE) );
                 }
 
                 @Override
                 public long toHours( long d )
                 {
-                    return x( d, WEEK / HOUR, MAX / ( WEEK / HOUR ) );
+                    return x( d, WEEK / HOUR, MAX / (WEEK / HOUR) );
                 }
 
                 @Override
                 public long toDays( long d )
                 {
-                    return x( d, WEEK / DAY, MAX / ( WEEK / DAY ) );
+                    return x( d, WEEK / DAY, MAX / (WEEK / DAY) );
                 }
 
                 @Override
@@ -698,7 +698,8 @@ public enum TimeUnit
         try
         {
             return java.util.concurrent.TimeUnit.valueOf( toString() );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             return null;
         }

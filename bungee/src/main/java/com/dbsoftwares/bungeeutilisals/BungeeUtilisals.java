@@ -44,7 +44,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
-import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
@@ -272,7 +271,8 @@ public class BungeeUtilisals extends Plugin
         try
         {
             databaseManagement.close();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -303,13 +303,14 @@ public class BungeeUtilisals extends Plugin
 
                     String line;
                     final StringBuilder builder = new StringBuilder();
-                    while ( ( line = br.readLine() ) != null )
+                    while ( (line = br.readLine()) != null )
                     {
                         builder.append( line );
                     }
                     username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
                 }
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 // do nothing
             }
@@ -379,7 +380,8 @@ public class BungeeUtilisals extends Plugin
                 final Script script = new Script( file.getName(), code );
 
                 this.scripts.add( script );
-            } catch ( IOException | ScriptException e )
+            }
+            catch ( IOException | ScriptException e )
             {
                 BUCore.getLogger().error( "Could not load script " + file.getName(), e );
             }
@@ -392,7 +394,8 @@ public class BungeeUtilisals extends Plugin
         try
         {
             type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             type = StorageType.MYSQL;
         }
@@ -400,7 +403,8 @@ public class BungeeUtilisals extends Plugin
         {
             databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -439,7 +443,8 @@ public class BungeeUtilisals extends Plugin
                 IConfiguration.createDefaultFile( getResourceAsStream( location.getPath() ), file );
 
                 location.loadConfiguration( file );
-            } else
+            }
+            else
             {
                 // update configurations ...
 
@@ -449,7 +454,8 @@ public class BungeeUtilisals extends Plugin
                     location.getConfiguration().copyDefaults(
                             IConfiguration.loadYamlConfiguration( getResourceAsStream( location.getPath() ) )
                     );
-                } catch ( IOException e )
+                }
+                catch ( IOException e )
                 {
                     BUCore.getLogger().error( "Could not update configurations: ", e );
                 }
@@ -494,11 +500,6 @@ public class BungeeUtilisals extends Plugin
         loadGeneralCommand( "reply", ReplyCommand.class );
         loadGeneralCommand( "ignore", IgnoreCommand.class );
         loadGeneralCommand( "ping", PingCommand.class );
-
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
-        {
-            generalCommands.add( new FriendsCommand() );
-        }
     }
 
     private void loadPunishmentCommands()
@@ -552,7 +553,8 @@ public class BungeeUtilisals extends Plugin
                     if ( section.isList( messagesKey ) )
                     {
                         components = MessageBuilder.buildMessage( user, section.getSectionList( messagesKey ) );
-                    } else
+                    }
+                    else
                     {
                         components = Lists.newArrayList( MessageBuilder.buildMessage( user, section.getSection( messagesKey ) ) );
                     }
@@ -594,7 +596,8 @@ public class BungeeUtilisals extends Plugin
                 BUCommand command = clazz.newInstance();
 
                 generalCommands.add( command );
-            } catch ( InstantiationException | IllegalAccessException e )
+            }
+            catch ( InstantiationException | IllegalAccessException e )
             {
                 BUCore.getLogger().error( ERROR_STRING, e );
             }

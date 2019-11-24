@@ -60,9 +60,9 @@ public class GLagCommand extends BUCommand
 
         user.sendLangMessage( "general-commands.glag",
                 "{tps}", getColor( TPS ) + String.valueOf( TPS ),
-                "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
-                "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
-                "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
+                "{maxmemory}", (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB",
+                "{freememory}", (Runtime.getRuntime().freeMemory() / 1024 / 1024) + " MB",
+                "{totalmemory}", (Runtime.getRuntime().totalMemory() / 1024 / 1024) + " MB",
                 "{onlinesince}", date
         );
     }
@@ -72,13 +72,16 @@ public class GLagCommand extends BUCommand
         if ( tps >= 18.0 )
         {
             return ChatColor.GREEN;
-        } else if ( tps >= 14.0 )
+        }
+        else if ( tps >= 14.0 )
         {
             return ChatColor.YELLOW;
-        } else if ( tps >= 8.0 )
+        }
+        else if ( tps >= 8.0 )
         {
             return ChatColor.RED;
-        } else
+        }
+        else
         {
             return ChatColor.DARK_RED;
         }

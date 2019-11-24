@@ -41,7 +41,8 @@ public class StaffRedisMessageHandler extends RedisMessageHandler<NetworkStaffCo
         if ( data.getAction().equals( StaffNetworkAction.STAFF_JOIN ) )
         {
             event = new NetworkStaffJoinEvent( data.getName(), data.getUuid(), data.getRank() );
-        } else
+        }
+        else
         {
             event = new NetworkStaffLeaveEvent( data.getName(), data.getUuid(), data.getRank() );
         }

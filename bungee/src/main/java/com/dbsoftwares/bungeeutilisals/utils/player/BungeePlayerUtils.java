@@ -109,7 +109,8 @@ public class BungeePlayerUtils implements IPlayerUtils
         try
         {
             return Utils.readUUIDFromString( MojangUtils.getUuid( targetName ) );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return null;
         }

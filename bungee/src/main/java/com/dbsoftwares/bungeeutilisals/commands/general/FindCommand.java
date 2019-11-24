@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.ImmutableList;
+import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.Arrays;
@@ -54,13 +55,22 @@ public class FindCommand extends BUCommand
             user.sendLangMessage( "general-commands.find.usage" );
             return;
         }
-        ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer( args[0] );
+        final ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer( args[0] );
 
         if ( server == null )
         {
             user.sendLangMessage( "offline" );
             return;
         }
-        user.sendLangMessage( "general-commands.find.message", "{user}", args[0], "{server}", server.getName() );
+        // This is because some people apparently can't handle that the name shown isn't in correct capitalisation ...
+        // This doesn't support redis, not planning to do it either (as this is quite useless in comparison to the load it takes)
+        final String playerName = server.getPlayers()
+                .stream()
+                .filter( p -> p.getName().equalsIgnoreCase( args[0] ) )
+                .map( CommandSender::getName )
+                .findFirst()
+                .orElse( args[0] );
+
+        user.sendLangMessage( "general-commands.find.message", "{user}", playerName, "{server}", server.getName() );
     }
 }

@@ -387,6 +387,6 @@ public class MongoMutesDao implements MutesDao
 
     private MongoDatabase db()
     {
-        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
+        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

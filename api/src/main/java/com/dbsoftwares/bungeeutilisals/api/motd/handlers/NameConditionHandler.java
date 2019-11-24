@@ -43,7 +43,8 @@ public class NameConditionHandler extends ConditionHandler
                 return value.equalsIgnoreCase( "null" );
             }
             return connection.getName().equalsIgnoreCase( value );
-        } else if ( operator.equalsIgnoreCase( "!=" ) )
+        }
+        else if ( operator.equalsIgnoreCase( "!=" ) )
         {
             if ( connection.getName() == null )
             {

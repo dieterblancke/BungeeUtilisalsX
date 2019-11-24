@@ -47,7 +47,8 @@ public class JarClassLoader
         if ( loader instanceof URLClassLoader )
         {
             this.classLoader = (URLClassLoader) loader;
-        } else
+        }
+        else
         {
             throw new IllegalStateException( "Plugin ClassLoader is not instance of URLClassLoader" );
         }
@@ -58,7 +59,8 @@ public class JarClassLoader
         try
         {
             ADD_URL.invoke( this.classLoader, url );
-        } catch ( IllegalAccessException | InvocationTargetException e )
+        }
+        catch ( IllegalAccessException | InvocationTargetException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -69,7 +71,8 @@ public class JarClassLoader
         try
         {
             loadJar( file.toURI().toURL() );
-        } catch ( MalformedURLException e )
+        }
+        catch ( MalformedURLException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

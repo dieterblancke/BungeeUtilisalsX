@@ -56,7 +56,8 @@ public class StaffCharChatExecutor implements EventExecutor
             final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( StaffChatMessageHandler.class );
 
             handler.send( new StaffChatData( user.getServerName(), user.getName(), event.getMessage() ) );
-        } else
+        }
+        else
         {
             StaffChatCommand.sendStaffChatMessage( user.getServerName(), user.getName(), message );
         }

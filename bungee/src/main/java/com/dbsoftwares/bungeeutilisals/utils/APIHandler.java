@@ -35,7 +35,8 @@ public class APIHandler
         {
             register = BUCore.class.getDeclaredMethod( "initAPI", BUAPI.class );
             register.setAccessible( true );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }
@@ -48,7 +49,8 @@ public class APIHandler
         try
         {
             REGISTER.invoke( null, api );
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

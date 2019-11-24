@@ -63,7 +63,8 @@ public enum FileLocation
                         if ( group.isList( "servers" ) )
                         {
                             setData( name, new ServerGroup( name, false, group.getStringList( "servers" ) ) );
-                        } else
+                        }
+                        else
                         {
                             setData( name, new ServerGroup( name, true, Lists.newArrayList() ) );
                         }
@@ -220,19 +221,22 @@ public enum FileLocation
 
                                     actions.add( action );
                                     setData( type.toString(), actions );
-                                } else
+                                }
+                                else
                                 {
                                     BUCore.getApi().getPlugin().getLogger().warning(
                                             "An invalid number has been entered (" + section.getString( "time.amount" ) + ")."
                                     );
                                 }
-                            } catch ( IllegalArgumentException e )
+                            }
+                            catch ( IllegalArgumentException e )
                             {
                                 BUCore.getApi().getPlugin().getLogger().warning(
                                         "An invalid time unit has been entered (" + section.getString( "time.unit" ) + ")."
                                 );
                             }
-                        } catch ( IllegalArgumentException e )
+                        }
+                        catch ( IllegalArgumentException e )
                         {
                             BUCore.getApi().getPlugin().getLogger().warning(
                                     "An invalid punishment type has been entered (" + section.getString( "type" ) + ")."

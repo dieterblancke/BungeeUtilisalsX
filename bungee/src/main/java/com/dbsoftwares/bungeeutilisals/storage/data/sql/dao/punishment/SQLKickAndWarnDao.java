@@ -55,7 +55,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
             pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -80,7 +81,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
             pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -117,7 +119,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -155,7 +158,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
                     ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -193,7 +197,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
                     );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -231,7 +236,8 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
                     );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }

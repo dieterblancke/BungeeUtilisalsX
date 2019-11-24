@@ -66,7 +66,8 @@ public class ChatLockCommand extends BUCommand implements Listener
             lockedChatServers.remove( server );
 
             users.forEach( u -> u.sendLangMessage( "general-commands.chatlock.unlocked", "{user}", by ) );
-        } else
+        }
+        else
         {
             lockedChatServers.add( server );
 
@@ -95,7 +96,8 @@ public class ChatLockCommand extends BUCommand implements Listener
             final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( ChatLockMessageHandler.class );
 
             handler.send( new ChatActionData( server, user.getName() ) );
-        } else
+        }
+        else
         {
             lockChat( server, user.getName() );
         }

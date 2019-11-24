@@ -99,7 +99,8 @@ public class Script
         try
         {
             return String.valueOf( engine.eval( script ) );
-        } catch ( ScriptException e )
+        }
+        catch ( ScriptException e )
         {
             BUCore.logException( e );
             return "SCRIPT ERROR";
@@ -115,7 +116,8 @@ public class Script
             try
             {
                 Files.delete( storage.toPath() );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 BUCore.getLogger().info( "Could not remove empty script storage.", e );
             }

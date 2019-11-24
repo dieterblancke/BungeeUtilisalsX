@@ -19,43 +19,25 @@
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.google.common.collect.ImmutableList;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class FriendRequestsSubCommand extends SubCommand
+public class FriendRequestsSubCommandCall implements CommandCall
 {
-
-    public FriendRequestsSubCommand()
-    {
-        super(
-                "requests", 1, 2,
-                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.requests.aliases" ).split( ", " ) )
-        );
-    }
-
-    @Override
-    public String getUsage()
-    {
-        return "/friends requests (in/out) [page]";
-    }
-
-    @Override
-    public String getPermission()
-    {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.requests.permission" );
-    }
 
     @Override
     public void onExecute( User user, String[] args )
     {
+        if ( args.length < 1 )
+        {
+            user.sendLangMessage( "friends.requests.usage" );
+            return;
+        }
         final String type = args[0];
         final List<FriendRequest> allRequests;
         final String requestType;
@@ -64,11 +46,13 @@ public class FriendRequestsSubCommand extends SubCommand
         {
             allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( user.getUuid() );
             requestType = "outgoing";
-        } else if ( type.contains( "in" ) )
+        }
+        else if ( type.contains( "in" ) )
         {
             allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() );
             requestType = "incoming";
-        } else
+        }
+        else
         {
             user.sendLangMessage( "friends.requests.usage" );
             return;
@@ -83,30 +67,26 @@ public class FriendRequestsSubCommand extends SubCommand
         final int pages = (int) Math.ceil( (double) allRequests.size() / 15 );
         final int page;
 
-        if ( args.length >= 1 )
+        if ( args.length > 1 )
         {
-            if ( MathUtils.isInteger( args[0] ) )
+            if ( MathUtils.isInteger( args[1] ) )
             {
-                final int tempPage = Integer.parseInt( args[0] );
+                final int tempPage = Integer.parseInt( args[1] );
 
-                if ( tempPage > pages )
-                {
-                    page = pages;
-                } else
-                {
-                    page = tempPage;
-                }
-            } else
+                page = Math.min( tempPage, pages );
+            }
+            else
             {
                 page = 1;
             }
-        } else
+        }
+        else
         {
             page = 1;
         }
 
         final int previous = page > 1 ? page - 1 : 1;
-        final int next = page + 1 > pages ? pages : page + 1;
+        final int next = Math.min( page + 1, pages );
 
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
@@ -141,11 +121,5 @@ public class FriendRequestsSubCommand extends SubCommand
                 "friends.requests.foot",
                 "{requestAmount}", allRequests.size(), "{type}", requestType, "{type_lowercase}", requestType.toLowerCase()
         );
-    }
-
-    @Override
-    public List<String> getCompletions( User user, String[] args )
-    {
-        return ImmutableList.of();
     }
 }

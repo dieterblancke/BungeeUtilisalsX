@@ -106,7 +106,8 @@ public class AddonManager implements IAddonManager
                         }
                     }
                 }
-            } catch ( Exception e )
+            }
+            catch ( Exception e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -135,7 +136,8 @@ public class AddonManager implements IAddonManager
 
                         toBeLoaded.put( description.getName(), description );
                     }
-                } catch ( final Exception ex )
+                }
+                catch ( final Exception ex )
                 {
                     throw new AddonException( "Could not load addon from file " + file.getName(), ex );
                 }
@@ -156,7 +158,8 @@ public class AddonManager implements IAddonManager
                 {
                     BUCore.getLogger().warn( "Could not enable addon {}", entry.getKey() );
                 }
-            } catch ( AddonException e )
+            }
+            catch ( AddonException e )
             {
                 BUCore.getLogger().error( "An error occured: ", e );
             }
@@ -184,7 +187,8 @@ public class AddonManager implements IAddonManager
                         BUCore.getLogger().warn( "Could not enable addon {}", addonFile.getName().replace( ".jar", "" ) );
                     }
                 }
-            } catch ( final Exception ex )
+            }
+            catch ( final Exception ex )
             {
                 throw new AddonException( "Could not load addon from file " + addonFile.getName(), ex );
             }
@@ -214,7 +218,8 @@ public class AddonManager implements IAddonManager
                         "Enabled addon {} version {} by {}",
                         addon.getDescription().getName(), addon.getDescription().getVersion(), addon.getDescription().getAuthor()
                 );
-            } catch ( final Exception t )
+            }
+            catch ( final Exception t )
             {
                 throw new AddonException( "Exception encountered when loading addon: " + addon.getDescription().getName(), t );
             }
@@ -229,7 +234,8 @@ public class AddonManager implements IAddonManager
             try
             {
                 disableAddon( addon );
-            } catch ( final Exception t )
+            }
+            catch ( final Exception t )
             {
                 throw new AddonException( "Exception encountered when unloading addon: " + addon, t );
             }
@@ -376,7 +382,7 @@ public class AddonManager implements IAddonManager
         for ( String dependency : dependencies )
         {
             AddonDescription depend = toBeLoaded.get( dependency );
-            Boolean dependStatus = ( depend != null ) ? statuses.get( depend ) : Boolean.FALSE;
+            Boolean dependStatus = (depend != null) ? statuses.get( depend ) : Boolean.FALSE;
 
             if ( dependStatus == null )
             {
@@ -390,7 +396,8 @@ public class AddonManager implements IAddonManager
                     builder.append( description.getName() ).append( " -> " ).append( dependency );
                     BUCore.getLogger().warn( "Circular dependency detected: {}", builder );
                     status = false;
-                } else
+                }
+                else
                 {
                     dependStack.push( description );
                     dependStatus = this.loadAddon( statuses, dependStack, depend );
@@ -423,7 +430,8 @@ public class AddonManager implements IAddonManager
                 addons.put( description.getName(), addon );
 
                 BUCore.getLogger().info( "Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor() );
-            } catch ( final Exception e )
+            }
+            catch ( final Exception e )
             {
                 statuses.put( description, false );
                 throw new AddonException( "Error enabling addon " + description.getName(), e );

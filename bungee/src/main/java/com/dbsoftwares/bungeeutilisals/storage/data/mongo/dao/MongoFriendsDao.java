@@ -202,7 +202,8 @@ public class MongoFriendsDao implements FriendsDao
                     Filters.eq( "user", uuid.toString() ),
                     Updates.set( type.toString().toLowerCase(), value )
             );
-        } else
+        }
+        else
         {
             final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
@@ -264,6 +265,6 @@ public class MongoFriendsDao implements FriendsDao
 
     private MongoDatabase db()
     {
-        return ( (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement() ).getDatabase();
+        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

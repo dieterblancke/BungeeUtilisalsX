@@ -58,13 +58,15 @@ public class ServerGroup
                     {
                         foundServers.add( info.getName() );
                     }
-                } else if ( server.endsWith( "*" ) )
+                }
+                else if ( server.endsWith( "*" ) )
                 {
                     if ( name.startsWith( server.substring( 0, server.length() - 1 ).toLowerCase() ) )
                     {
                         foundServers.add( info.getName() );
                     }
-                } else
+                }
+                else
                 {
                     if ( name.equalsIgnoreCase( server ) )
                     {

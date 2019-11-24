@@ -58,7 +58,8 @@ public class ChatAnnouncer extends Announcer
                 List<String> messages = section.getStringList( messagesKey );
 
                 addAnnouncement( new ChatAnnouncement( usePrefix, messages, group, permission ) );
-            } else
+            }
+            else
             {
                 String messagePath = section.getString( messagesKey );
 

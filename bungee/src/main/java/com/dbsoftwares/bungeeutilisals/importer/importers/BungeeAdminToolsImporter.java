@@ -54,7 +54,8 @@ public class BungeeAdminToolsImporter extends Importer
                     properties.get( "username" ),
                     properties.get( "password" )
             );
-        } else
+        }
+        else
         {
             final Library sqlite = StandardLibrary.SQLITE.getLibrary();
             if ( !sqlite.isPresent() )
@@ -121,16 +122,19 @@ public class BungeeAdminToolsImporter extends Importer
                         if ( ip == null )
                         {
                             type = PunishmentType.BAN;
-                        } else
+                        }
+                        else
                         {
                             type = PunishmentType.IPBAN;
                         }
-                    } else
+                    }
+                    else
                     {
                         if ( ip == null )
                         {
                             type = PunishmentType.TEMPBAN;
-                        } else
+                        }
+                        else
                         {
                             type = PunishmentType.IPTEMPBAN;
                         }
@@ -183,16 +187,19 @@ public class BungeeAdminToolsImporter extends Importer
                         if ( ip == null )
                         {
                             type = PunishmentType.MUTE;
-                        } else
+                        }
+                        else
                         {
                             type = PunishmentType.IPMUTE;
                         }
-                    } else
+                    }
+                    else
                     {
                         if ( ip == null )
                         {
                             type = PunishmentType.TEMPMUTE;
-                        } else
+                        }
+                        else
                         {
                             type = PunishmentType.IPTEMPMUTE;
                         }
@@ -238,7 +245,8 @@ public class BungeeAdminToolsImporter extends Importer
                     {
                         login = formatter.parse( rs.getString( "firstlogin" ) );
                         logout = formatter.parse( rs.getString( "lastlogin" ) ); // not lastlogout but close
-                    } catch ( ParseException e )
+                    }
+                    catch ( ParseException e )
                     {
                         login = logout = new Date( System.currentTimeMillis() );
                     }
@@ -258,7 +266,8 @@ public class BungeeAdminToolsImporter extends Importer
             }
 
             importerCallback.done( status, null );
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( "An error occured: ", e );
         }

@@ -93,11 +93,13 @@ public class SQLPunishmentDao implements PunishmentDao
                         count = rs.getInt( 1 );
                     }
                 }
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
-        } else
+        }
+        else
         {
             try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
@@ -115,7 +117,8 @@ public class SQLPunishmentDao implements PunishmentDao
                         count = rs.getInt( 1 );
                     }
                 }
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
@@ -146,7 +149,8 @@ public class SQLPunishmentDao implements PunishmentDao
                     count = rs.getInt( 1 );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -171,11 +175,13 @@ public class SQLPunishmentDao implements PunishmentDao
                 pstmt.setInt( 6, limit );
 
                 pstmt.executeUpdate();
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
-        } else
+        }
+        else
         {
             try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
@@ -189,7 +195,8 @@ public class SQLPunishmentDao implements PunishmentDao
                 pstmt.setInt( 5, limit );
 
                 pstmt.executeUpdate();
-            } catch ( SQLException e )
+            }
+            catch ( SQLException e )
             {
                 BUCore.logException( e );
             }
@@ -212,7 +219,8 @@ public class SQLPunishmentDao implements PunishmentDao
             pstmt.setInt( 6, limit );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }
@@ -232,7 +240,8 @@ public class SQLPunishmentDao implements PunishmentDao
             pstmt.setString( 4, uid );
 
             pstmt.execute();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.logException( e );
         }

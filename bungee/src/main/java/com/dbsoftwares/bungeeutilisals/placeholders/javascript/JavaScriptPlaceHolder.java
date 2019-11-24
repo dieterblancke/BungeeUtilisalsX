@@ -42,7 +42,8 @@ public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
         if ( optional.isPresent() )
         {
             return optional.get().getReplacement( event.getUser() );
-        } else
+        }
+        else
         {
             return "script not found";
         }

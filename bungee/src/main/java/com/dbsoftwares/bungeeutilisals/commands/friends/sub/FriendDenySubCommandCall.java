@@ -19,43 +19,25 @@
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Optional;
 
-public class FriendDenySubCommand extends SubCommand
+public class FriendDenySubCommandCall implements CommandCall
 {
-
-    public FriendDenySubCommand()
-    {
-        super(
-                "deny", 1, 1,
-                Arrays.asList( FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.deny.aliases" ).split( ", " ) )
-        );
-    }
-
-    @Override
-    public String getUsage()
-    {
-        return "/friends deny (name)";
-    }
-
-    @Override
-    public String getPermission()
-    {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getString( "subcommands.deny.permission" );
-    }
 
     @Override
     public void onExecute( User user, String[] args )
     {
+        if ( args.length < 1 )
+        {
+            user.sendLangMessage( "friends.deny.usage" );
+            return;
+        }
         final String name = args[0];
         final int friendLimit = FriendUtils.getFriendsLimit( user );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
@@ -65,7 +47,8 @@ public class FriendDenySubCommand extends SubCommand
         if ( optionalTarget.isPresent() )
         {
             storage = optionalTarget.get().getStorage();
-        } else
+        }
+        else
         {
             if ( !dao.getUserDao().exists( args[0] ) )
             {
@@ -86,11 +69,5 @@ public class FriendDenySubCommand extends SubCommand
         user.sendLangMessage( "friends.deny.denied", "{user}", name );
 
         optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.deny.request-denied", "{user}", user.getName() ) );
-    }
-
-    @Override
-    public List<String> getCompletions( User user, String[] args )
-    {
-        return null;
     }
 }

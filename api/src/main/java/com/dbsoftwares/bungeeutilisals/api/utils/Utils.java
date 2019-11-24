@@ -78,16 +78,18 @@ public class Utils
      */
     public static BaseComponent[] format( String message )
     {
-        return TextComponent.fromLegacyText(
-                ChatColor.translateAlternateColorCodes(
-                        '&',
-                        UnicodeTranslator.translate(
-                                PlaceHolderAPI.formatMessage(
-                                        message
-                                )
-                        )
-                )
-        );
+        return TextComponent.fromLegacyText( c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) ) );
+    }
+
+    /**
+     * Formats a message to TextComponent, translates color codes and replaces placeholders.
+     *
+     * @param messages The messages to be formatted.
+     * @return The formatted message.
+     */
+    public static BaseComponent[] format( List<String> messages )
+    {
+        return format( (User) null, messages );
     }
 
     /**
@@ -105,13 +107,42 @@ public class Utils
     /**
      * Formats a message to TextComponent, translates color codes and replaces placeholders.
      *
+     * @param player   The player for which the placeholders should be formatted.
+     * @param messages The messages to be formatted.
+     * @return The formatted message.
+     */
+    public static BaseComponent[] format( ProxiedPlayer player, List<String> messages )
+    {
+        return format( BUCore.getApi().getUser( player ).orElse( null ), messages );
+    }
+
+    /**
+     * Formats a message to TextComponent, translates color codes and replaces placeholders.
+     *
      * @param user    The user for which the placeholders should be formatted.
      * @param message The message to be formatted.
      * @return The formatted message.
      */
     public static BaseComponent[] format( User user, String message )
     {
-        return TextComponent.fromLegacyText( ChatColor.translateAlternateColorCodes( '&', PlaceHolderAPI.formatMessage( user, message ) ) );
+        return TextComponent.fromLegacyText( c( PlaceHolderAPI.formatMessage( user, message ) ) );
+    }
+
+    /**
+     * Formats a message to TextComponent, translates color codes and replaces placeholders.
+     *
+     * @param user     The user for which the placeholders should be formatted.
+     * @param messages The messages to be formatted.
+     * @return The formatted message.
+     */
+    public static BaseComponent[] format( User user, List<String> messages )
+    {
+        return messages
+                .stream()
+                .map( message -> c( PlaceHolderAPI.formatMessage( user, message + "\n" ) ) )
+                .map( message -> new BaseComponent[]{ new TextComponent( message ) } )
+                .flatMap( Arrays::stream )
+                .toArray( BaseComponent[]::new );
     }
 
     /**
@@ -178,7 +209,8 @@ public class Utils
               BufferedReader reader = new BufferedReader( inputStreamReader ) )
         {
             reader.lines().forEach( lines::add );
-        } catch ( IOException ignored )
+        }
+        catch ( IOException ignored )
         {
             // ignored
         }
@@ -290,7 +322,8 @@ public class Utils
                 c.add( Calendar.SECOND, seconds );
             }
             return c.getTimeInMillis();
-        } catch ( NumberFormatException e )
+        }
+        catch ( NumberFormatException e )
         {
             return 0;
         }
@@ -308,7 +341,8 @@ public class Utils
         {
             Boolean.parseBoolean( object.toString() );
             return true;
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             return false;
         }
@@ -334,15 +368,17 @@ public class Utils
 
                 if ( lastChar == ' ' )
                 {
-                    newCharacters[i] =Character.toUpperCase( character );
-                } else
+                    newCharacters[i] = Character.toUpperCase( character );
+                }
+                else
                 {
-                    newCharacters[i] =character;
+                    newCharacters[i] = character;
                 }
             }
 
             return new String( newCharacters );
-        } else
+        }
+        else
         {
             return words;
         }
@@ -366,7 +402,8 @@ public class Utils
 
                 return (String) getName.invoke( userConn );
             }
-        } catch ( InvocationTargetException | IllegalAccessException ignored )
+        }
+        catch ( InvocationTargetException | IllegalAccessException ignored )
         {
             // ignored
         }
@@ -439,7 +476,8 @@ public class Utils
         {
             Class.forName( clazz );
             return true;
-        } catch ( ClassNotFoundException e )
+        }
+        catch ( ClassNotFoundException e )
         {
             return false;
         }
@@ -522,7 +560,8 @@ public class Utils
             T value = Enum.valueOf( clazz, name );
 
             return value == null ? def : value;
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             return def;
         }
@@ -539,7 +578,8 @@ public class Utils
         try
         {
             return UUID.fromString( str );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             return UUID.fromString(
                     str.replaceFirst(

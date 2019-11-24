@@ -87,7 +87,8 @@ public class BungeeUtilisalsImporter extends Importer
                     try
                     {
                         importPunishment( PunishmentType.BAN, connection, rs );
-                    } catch ( Exception e )
+                    }
+                    catch ( Exception e )
                     {
                         BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
@@ -106,7 +107,8 @@ public class BungeeUtilisalsImporter extends Importer
                     try
                     {
                         importPunishment( PunishmentType.MUTE, connection, rs );
-                    } catch ( Exception e )
+                    }
+                    catch ( Exception e )
                     {
                         BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
@@ -125,7 +127,8 @@ public class BungeeUtilisalsImporter extends Importer
                     try
                     {
                         importPunishment( PunishmentType.IPBAN, connection, rs );
-                    } catch ( Exception e )
+                    }
+                    catch ( Exception e )
                     {
                         BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
@@ -155,11 +158,13 @@ public class BungeeUtilisalsImporter extends Importer
                         if ( uuid == null )
                         {
                             uuid = uuidCache.get( name );
-                        } else
+                        }
+                        else
                         {
                             name = nameCache.get( uuid );
                         }
-                    } catch ( Exception e )
+                    }
+                    catch ( Exception e )
                     {
                         BUCore.getLogger().error( ERROR_STRING, e );
                         continue;
@@ -178,7 +183,8 @@ public class BungeeUtilisalsImporter extends Importer
             }
 
             importerCallback.done( status, null );
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -205,7 +211,8 @@ public class BungeeUtilisalsImporter extends Importer
         if ( uuid == null )
         {
             uuid = uuidCache.get( name );
-        } else
+        }
+        else
         {
             name = nameCache.get( uuid );
         }
@@ -215,10 +222,12 @@ public class BungeeUtilisalsImporter extends Importer
         if ( type.equals( PunishmentType.BAN ) )
         {
             punishmentType = time == -1 ? PunishmentType.BAN : PunishmentType.TEMPBAN;
-        } else if ( type.equals( PunishmentType.MUTE ) )
+        }
+        else if ( type.equals( PunishmentType.MUTE ) )
         {
             punishmentType = time == -1 ? PunishmentType.MUTE : PunishmentType.TEMPMUTE;
-        } else
+        }
+        else
         {
             punishmentType = type;
         }
