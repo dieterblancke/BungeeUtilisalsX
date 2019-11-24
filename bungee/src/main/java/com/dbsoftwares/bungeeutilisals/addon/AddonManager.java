@@ -109,7 +109,7 @@ public class AddonManager implements IAddonManager
             }
             catch ( Exception e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                // do nothing, likely connection timed out
             }
         }, 0, 1, TimeUnit.MINUTES );
     }
