@@ -46,9 +46,9 @@ public class ReportHistorySubCommandCall implements CommandCall
             page = 1;
         } else
         {
-            if ( args.length == 1 && MathUtils.isInteger( args[1] ) )
+            if ( args.length == 1 && MathUtils.isInteger( args[0] ) )
             {
-                page = Integer.parseInt( args[1] );
+                page = Integer.parseInt( args[0] );
             } else
             {
                 page = 1;
