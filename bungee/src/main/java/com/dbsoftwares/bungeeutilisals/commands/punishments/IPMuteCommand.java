@@ -106,7 +106,7 @@ public class IPMuteCommand extends BUCommand
                 mute = muted.getLanguageConfig().getStringList( "punishments.ipmute.onmute" );
             }
 
-            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
         } );
 
         user.sendLangMessage( "punishments.ipmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

@@ -429,6 +429,8 @@ public class AddonManager implements IAddonManager
                 addon.initialize( ProxyServer.getInstance(), BUCore.getApi(), description );
                 addons.put( description.getName(), addon );
 
+                addon.onLoad();
+
                 BUCore.getLogger().info( "Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor() );
             }
             catch ( final Exception e )

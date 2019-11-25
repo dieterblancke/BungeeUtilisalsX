@@ -110,7 +110,7 @@ public class IPTempMuteCommand extends BUCommand
                 mute = muted.getLanguageConfig().getStringList( "punishments.iptempmute.onmute" );
             }
 
-            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
         } );
 
         user.sendLangMessage( "punishments.iptempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

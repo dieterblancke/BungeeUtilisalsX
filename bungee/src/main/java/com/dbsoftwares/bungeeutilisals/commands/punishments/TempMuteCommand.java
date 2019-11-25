@@ -111,7 +111,7 @@ public class TempMuteCommand extends BUCommand
                 mute = muted.getLanguageConfig().getStringList( "punishments.tempmute.onmute" );
             }
 
-            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
         } );
 
         user.sendLangMessage( "punishments.tempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

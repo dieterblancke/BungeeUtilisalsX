@@ -28,12 +28,12 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.Lists;
 
-import java.util.LinkedList;
+import java.util.List;
 
 public class PlaceHolderAPI
 {
 
-    private static LinkedList<PlaceHolder> placeholders = Lists.newLinkedList();
+    private static List<PlaceHolder> placeholders = Lists.newArrayList();
 
     private PlaceHolderAPI()
     {
@@ -88,6 +88,7 @@ public class PlaceHolderAPI
 
     public static void addPlaceHolder( ClassPlaceHolder placeholder )
     {
+        System.out.println( placeholder.getClass().getSimpleName() );
         placeholders.add( placeholder );
     }
 

@@ -96,7 +96,7 @@ public class WarnCommand extends BUCommand
             warn = target.getLanguageConfig().getStringList( "punishments.warn.onwarn" );
         }
 
-        warn.forEach( str -> target.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+        warn.forEach( str -> target.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
 
         user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 

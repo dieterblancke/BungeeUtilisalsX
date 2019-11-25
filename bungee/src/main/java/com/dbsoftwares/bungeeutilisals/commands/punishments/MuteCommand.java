@@ -103,7 +103,7 @@ public class MuteCommand extends BUCommand
                 mute = muted.getLanguageConfig().getStringList( "punishments.mute.onmute" );
             }
 
-            mute.forEach( str -> muted.sendMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
         } );
 
         user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

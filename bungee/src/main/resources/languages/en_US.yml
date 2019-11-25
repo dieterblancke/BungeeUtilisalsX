@@ -394,6 +394,7 @@ friends:
             click:
               type: 'RUN_COMMAND'
               action: '/friends settings {type} disable'
+      footer: ''
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

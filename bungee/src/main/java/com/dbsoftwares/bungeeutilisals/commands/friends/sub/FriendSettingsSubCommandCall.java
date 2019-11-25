@@ -47,6 +47,8 @@ public class FriendSettingsSubCommandCall implements CommandCall
                         "{status}", user.getLanguageConfig().getString( "friends.settings.noargs." + (settings.check( setting ) ? "enabled" : "disabled") )
                 );
             }
+
+            user.sendLangMessage( "friends.settings.noargs.footer" );
         }
         else if ( args.length == 2 )
         {

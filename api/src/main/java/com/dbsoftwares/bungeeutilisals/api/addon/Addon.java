@@ -66,6 +66,10 @@ public abstract class Addon
 
     public abstract void onReload();
 
+    public void onLoad()
+    {
+    }
+
     public ExecutorService getExecutorService()
     {
         if ( this.executorService == null )
