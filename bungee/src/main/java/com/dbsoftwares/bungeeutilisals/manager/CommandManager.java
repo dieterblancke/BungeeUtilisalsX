@@ -63,7 +63,7 @@ public class CommandManager
                 .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( section ) )
                 .executable( call );
 
-        buildCommand( commandBuilder );
+        buildCommand( section, commandBuilder );
     }
 
     private void registerCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
@@ -74,10 +74,10 @@ public class CommandManager
                 .enabled( enabled )
                 .executable( call );
 
-        buildCommand( commandBuilder );
+        buildCommand( name, commandBuilder );
     }
 
-    private void buildCommand( final CommandBuilder builder )
+    private void buildCommand( final String name, final CommandBuilder builder )
     {
         final Command command = builder.build();
 
@@ -90,7 +90,7 @@ public class CommandManager
         }
         else
         {
-            BUCore.getLogger().debug( "Skipping registration of a command named " + command.getName() + "." );
+            BUCore.getLogger().debug( "Skipping registration of a command named " + name + "." );
         }
     }
 
