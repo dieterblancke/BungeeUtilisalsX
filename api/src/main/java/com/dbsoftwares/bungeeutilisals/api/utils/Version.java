@@ -51,6 +51,16 @@ public enum Version
         this.versionId = version;
     }
 
+    public boolean isNewerThen( final Version version )
+    {
+        return this.versionId >= version.getVersionId();
+    }
+
+    public boolean isOlderThen( final Version version )
+    {
+        return this.versionId < version.getVersionId();
+    }
+
     public static Version getVersion( int version )
     {
         for ( Version v : values() )
