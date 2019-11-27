@@ -88,7 +88,6 @@ public class PlaceHolderAPI
 
     public static void addPlaceHolder( ClassPlaceHolder placeholder )
     {
-        System.out.println( placeholder.getClass().getSimpleName() );
         placeholders.add( placeholder );
     }
 

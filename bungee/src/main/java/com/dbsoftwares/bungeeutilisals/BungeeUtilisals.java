@@ -267,7 +267,7 @@ public class BungeeUtilisals extends Plugin
         {
             api.getAddonManager().disableAddons();
         }
-        BUCore.getApi().getUsers().forEach( User::unload );
+        Lists.newArrayList( BUCore.getApi().getUsers() ).forEach( User::unload );
         try
         {
             databaseManagement.close();
