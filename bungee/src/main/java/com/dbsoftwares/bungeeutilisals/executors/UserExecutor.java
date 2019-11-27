@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisals.executors;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
@@ -29,10 +28,6 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.StaffRedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.NetworkStaffConnectData.StaffNetworkAction;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.Comparator;
@@ -66,22 +61,9 @@ public class UserExecutor implements EventExecutor
             return;
         }
 
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-        {
-            final RedisMessageHandler<NetworkStaffConnectData> handler =
-                    BungeeUtilisals.getInstance().getRedisMessenger().getHandler( StaffRedisMessageHandler.class );
-
-            final NetworkStaffConnectData data = new NetworkStaffConnectData(
-                    StaffNetworkAction.STAFF_JOIN, user.getUuid(), user.getName(), rank.getName()
-            );
-            handler.send( data );
-        }
-        else
-        {
-            BUCore.getApi().getEventLoader().launchEvent(
-                    new NetworkStaffJoinEvent( user.getName(), user.getUuid(), rank.getName() )
-            );
-        }
+        BUCore.getApi().getEventLoader().launchEvent(
+                new NetworkStaffJoinEvent( user.getName(), user.getUuid(), rank.getName() )
+        );
     }
 
     @Event
@@ -95,22 +77,9 @@ public class UserExecutor implements EventExecutor
             return;
         }
 
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-        {
-            final RedisMessageHandler<NetworkStaffConnectData> handler =
-                    BungeeUtilisals.getInstance().getRedisMessenger().getHandler( StaffRedisMessageHandler.class );
-
-            final NetworkStaffConnectData data = new NetworkStaffConnectData(
-                    StaffNetworkAction.STAFF_LEAVE, user.getUuid(), user.getName(), rank.getName()
-            );
-            handler.send( data );
-        }
-        else
-        {
-            BUCore.getApi().getEventLoader().launchEvent(
-                    new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )
-            );
-        }
+        BUCore.getApi().getEventLoader().launchEvent(
+                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )
+        );
     }
 
     private StaffRankData findStaffRank( final User user )

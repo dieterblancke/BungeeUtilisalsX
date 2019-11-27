@@ -41,12 +41,8 @@ import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.BroadcastMessageHandler;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
-import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.APIAnnouncement;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -85,7 +81,7 @@ public class BUtilisalsAPI implements BUAPI
         this.languageManager = new PluginLanguageManager( instance );
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
-        this.playerUtils = getConfig( FileLocation.CONFIG ).getBoolean( REDIS_CONFIG_KEY ) ? new RedisPlayerUtils() : new BungeePlayerUtils();
+        this.playerUtils = new BungeePlayerUtils();
 
         if ( getConfig( FileLocation.CONFIG ).getBoolean( "addons" ) )
         {
@@ -205,13 +201,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void broadcast( String message )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( true, null, null, message, null, false ) );
-            return;
-        }
         users.forEach( user -> user.sendMessage( message ) );
         getConsole().sendMessage( message );
     }
@@ -219,13 +208,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void broadcast( String message, String permission )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( true, null, null, message, permission, false ) );
-            return;
-        }
         users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( message ) );
         getConsole().sendMessage( message );
     }
@@ -233,13 +215,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( true, null, prefix, message, null, false ) );
-            return;
-        }
         users.forEach( user -> user.sendMessage( prefix, message ) );
         getConsole().sendMessage( prefix, message );
     }
@@ -247,13 +222,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message, String permission )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( true, null, prefix, message, permission, false ) );
-            return;
-        }
         users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( prefix, message ) );
         getConsole().sendMessage( prefix, message );
     }
@@ -273,13 +241,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langBroadcast( ILanguageManager manager, String message, Object... placeholders )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, null, true, placeholders ) );
-            return;
-        }
         users.forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
         LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
@@ -287,13 +248,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, instance.getDescription().getName(), null, message, permission, true, placeholders ) );
-            return;
-        }
         users.stream().filter( user -> user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
         LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
@@ -301,13 +255,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, plugin, null, message, null, true, placeholders ) );
-            return;
-        }
         users.forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
         LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
     }
@@ -315,13 +262,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders )
     {
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( REDIS_CONFIG_KEY ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( BroadcastMessageHandler.class );
-
-            handler.send( new APIAnnouncement( manager instanceof PluginLanguageManager, plugin, null, message, permission, true, placeholders ) );
-            return;
-        }
         users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
         LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
     }

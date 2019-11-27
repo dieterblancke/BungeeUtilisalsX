@@ -50,17 +50,19 @@ public class ReportCreateSubCommandCall implements CommandCall
             user.sendLangMessage( "offline" );
             return;
         }
+        final String bypassPermission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "report.bypass" );
         final Optional<User> optionalUser = BUCore.getApi().getUser( targetName );
         if ( optionalUser.isPresent() )
         {
             final User target = optionalUser.get();
 
-            if ( target.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "report.bypass" ) ) )
+            if ( target.hasPermission( bypassPermission ) )
             {
                 user.sendLangMessage( "general-commands.report.create.bypassed" );
                 return;
             }
         }
+
         final UUID targetUuid = BUCore.getApi().getPlayerUtils().getUuid( targetName );
 
         final Report report = new Report( -1, targetUuid, targetName, user.getName(), new Date(), user.getServerName(), reason, false, false );

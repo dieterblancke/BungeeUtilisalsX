@@ -18,17 +18,11 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.MsgMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -96,29 +90,6 @@ public class ReplyCommand extends BUCommand
 
                     user.sendRawMessage( msgMessage );
                 }
-            }
-            else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-            {
-                final Dao dao = BUCore.getApi().getStorageManager().getDao();
-                final UserStorage storage = dao.getUserDao().getUserData( name );
-
-                if ( storage.getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
-                {
-                    user.sendLangMessage( "general-commands.reply.ignored" );
-                    return;
-                }
-
-                final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
-                        .getRedisMessenger().getHandler( MsgMessageHandler.class );
-
-                handler.send( new MessageData( "reply", user.getUuid(), user.getName(), name, message ) );
-
-                String msgMessage = user.buildLangMessage( "general-commands.reply.format.send" );
-                msgMessage = Utils.c( msgMessage );
-                msgMessage = msgMessage.replace( "{receiver}", name );
-                msgMessage = msgMessage.replace( "{message}", message );
-
-                user.sendRawMessage( msgMessage );
             }
             else
             {

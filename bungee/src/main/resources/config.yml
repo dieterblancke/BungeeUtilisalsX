@@ -1,9 +1,6 @@
 # Enable to get debug messages (where they are enabled)
 debug: false
 
-# Should BungeeUtilisals use RedisBungee?
-redis: false
-
 # Currently this should only be enabled for AntiAFKAddon.
 # This feature is highly experimental and might increase load on your server.
 # This might also cause errors when newer versions come out, and BungeeUtilisals isn't updated yet.

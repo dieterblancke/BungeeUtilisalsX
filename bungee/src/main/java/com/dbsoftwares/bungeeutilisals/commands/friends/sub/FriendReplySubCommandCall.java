@@ -18,17 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.FriendMsgMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.MessageData;
 
 import java.util.Optional;
 
@@ -89,30 +82,6 @@ public class FriendReplySubCommandCall implements CommandCall
 
                     user.sendRawMessage( msgMessage );
                 }
-            }
-            else if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-            {
-                final Dao dao = BUCore.getApi().getStorageManager().getDao();
-                final UserStorage storage = dao.getUserDao().getUserData( name );
-                final boolean allowed = dao.getFriendsDao().getSetting( storage.getUuid(), FriendSettingType.MESSAGES );
-
-                if ( !allowed )
-                {
-                    user.sendLangMessage( "friends.msg.disallowed" );
-                    return;
-                }
-
-                final RedisMessageHandler<MessageData> handler = BungeeUtilisals.getInstance()
-                        .getRedisMessenger().getHandler( FriendMsgMessageHandler.class );
-
-                handler.send( new MessageData( "reply", user.getUuid(), user.getName(), name, message ) );
-
-                String msgMessage = user.buildLangMessage( "friends.reply.format.send" );
-                msgMessage = Utils.c( msgMessage );
-                msgMessage = msgMessage.replace( "{receiver}", name );
-                msgMessage = msgMessage.replace( "{message}", message );
-
-                user.sendRawMessage( msgMessage );
             }
             else
             {

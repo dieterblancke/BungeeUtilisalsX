@@ -24,9 +24,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.ChatLockMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.ChatActionData;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
@@ -91,16 +88,7 @@ public class ChatLockCommand extends BUCommand implements Listener
         }
         final String server = args[0].toLowerCase().contains( "g" ) ? "ALL" : user.getServerName();
 
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( ChatLockMessageHandler.class );
-
-            handler.send( new ChatActionData( server, user.getName() ) );
-        }
-        else
-        {
-            lockChat( server, user.getName() );
-        }
+        lockChat( server, user.getName() );
     }
 
     @Override

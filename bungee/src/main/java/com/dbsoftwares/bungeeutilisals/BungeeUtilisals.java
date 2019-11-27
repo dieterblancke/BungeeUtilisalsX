@@ -71,8 +71,6 @@ import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessenger;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.*;
 import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
 import com.dbsoftwares.bungeeutilisals.updater.Updatable;
@@ -122,9 +120,6 @@ public class BungeeUtilisals extends Plugin
 
     @Getter
     private List<BUCommand> customCommands = Lists.newArrayList();
-
-    @Getter
-    private RedisMessenger redisMessenger;
 
     @Getter
     private CommandManager commandManager;
@@ -186,11 +181,6 @@ public class BungeeUtilisals extends Plugin
 
         // Initialize metric system
         new Metrics( this );
-
-        if ( getConfig().getBoolean( "redis" ) )
-        {
-            registerRedisMessenger();
-        }
 
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
@@ -335,19 +325,6 @@ public class BungeeUtilisals extends Plugin
 
         loadScripts();
         api.getChatManager().reload();
-    }
-
-    private void registerRedisMessenger()
-    {
-        redisMessenger = new RedisMessenger();
-        ProxyServer.getInstance().getPluginManager().registerListener( this, redisMessenger );
-
-        redisMessenger.registerMessageHandlers(
-                AnnounceMessageHandler.class, BroadcastMessageHandler.class,
-                ChatLockMessageHandler.class, ClearChatMessageHandler.class,
-                StaffChatMessageHandler.class, StaffRedisMessageHandler.class,
-                MsgMessageHandler.class
-        );
     }
 
     private void loadScripts()

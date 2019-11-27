@@ -18,15 +18,11 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.redis.RedisMessageHandler;
-import com.dbsoftwares.bungeeutilisals.redis.handlers.ClearChatMessageHandler;
-import com.dbsoftwares.bungeeutilisals.utils.redisdata.ChatActionData;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -89,16 +85,6 @@ public class ClearChatCommand extends BUCommand
             return;
         }
         String server = args[0].toLowerCase().contains( "g" ) ? "ALL" : user.getServerName();
-
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "redis" ) )
-        {
-            final RedisMessageHandler handler = BungeeUtilisals.getInstance().getRedisMessenger().getHandler( ClearChatMessageHandler.class );
-
-            handler.send( new ChatActionData( server, user.getName() ) );
-        }
-        else
-        {
-            clearChat( server, user.getName() );
-        }
+        clearChat( server, user.getName() );
     }
 }
