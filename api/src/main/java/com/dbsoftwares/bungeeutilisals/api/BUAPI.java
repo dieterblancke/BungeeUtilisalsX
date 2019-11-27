@@ -59,7 +59,7 @@ public interface BUAPI
     ILanguageManager getLanguageManager();
 
     /**
-     * @return The CentrixCore EventLoader allowing you to register EventHandlers.
+     * @return The BungeeUtilisalsX EventLoader allowing you to register EventHandlers.
      */
     IEventLoader getEventLoader();
 

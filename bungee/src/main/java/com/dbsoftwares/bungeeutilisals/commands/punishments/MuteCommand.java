@@ -100,10 +100,12 @@ public class MuteCommand extends BUCommand
             }
             if ( mute == null )
             {
-                mute = muted.getLanguageConfig().getStringList( "punishments.mute.onmute" );
+                muted.sendLangMessage( "punishments.mute.onmute", BUCore.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray() );
             }
-
-            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            else
+            {
+                mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+            }
         } );
 
         user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

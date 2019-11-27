@@ -89,23 +89,23 @@ public interface User extends ExperimentalUser
     CommandSender sender();
 
     /**
-     * Sends a raw message to the User, without CentrixCore prefix.
+     * Sends a raw message to the User, without BungeeUtilisalsX prefix.
      *
      * @param message The message which has to be sent.
      */
     void sendRawMessage( String message );
 
     /**
-     * Sends a raw message to the User, without CentrixCore prefix, but with colors replaced.
+     * Sends a raw message to the User, without BungeeUtilisalsX prefix, but with colors replaced.
      *
      * @param message The message which has to be sent, will be colored.
      */
     void sendRawColorMessage( String message );
 
     /**
-     * Sends a message to the User with the CentrixCore prefix + colors will be replaced.
+     * Sends a message to the User with the BungeeUtilisalsX prefix + colors will be replaced.
      *
-     * @param message The message which has to be sent. The CentrixCore prefix will appear before.
+     * @param message The message which has to be sent. The BungeeUtilisalsX prefix will appear before.
      */
     void sendMessage( String message );
 
