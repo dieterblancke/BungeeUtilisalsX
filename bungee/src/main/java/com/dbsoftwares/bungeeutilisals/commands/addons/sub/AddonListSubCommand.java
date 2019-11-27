@@ -98,6 +98,8 @@ public class AddonListSubCommand extends SubCommand
                     "{description}", data.getDescription()
             );
         }
+
+        user.sendLangMessage( "general-commands.addon.list.footer", "{page}", page );
     }
 
     @Override

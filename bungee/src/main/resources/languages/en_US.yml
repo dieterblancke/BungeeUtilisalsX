@@ -57,6 +57,7 @@ general-commands:
         click:
           type: 'RUN_COMMAND'
           action: '/addon info {name}'
+      footer: ''
     info:
       - '&f⎯⎯⎯⎯⎯ &eAddon &b{name} &eInfo &f⎯⎯⎯⎯⎯&r'
       - '&eInstalled: &b{installed}'
@@ -188,6 +189,7 @@ general-commands:
     create:
       usage: '&ePlease use &b/report create (target) (reason)&e!'
       created: '&eYou have successfully reported &b{target}&e!'
+      bypassed: '&eYou cannot report staff members!'
 
       broadcast:
         - '&b{target} &ehas been reported by &b{user}&e!'
@@ -482,7 +484,6 @@ punishments:
       - '&cMuted by: &f{by}'
       - '&cMuted at: &f{server}'
       - '&cUnmute at: &fNever'
-
   ipmute:
     usage: '&fPlease use &a/ipmute (user / IP) (reason)&f!'
     already-muted: '&fThis user is already ipmuted!'

@@ -22,10 +22,12 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
 import java.util.Arrays;
 import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 public class ReportCreateSubCommandCall implements CommandCall
@@ -47,6 +49,17 @@ public class ReportCreateSubCommandCall implements CommandCall
         {
             user.sendLangMessage( "offline" );
             return;
+        }
+        final Optional<User> optionalUser = BUCore.getApi().getUser( targetName );
+        if ( optionalUser.isPresent() )
+        {
+            final User target = optionalUser.get();
+
+            if ( target.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "report.bypass" ) ) )
+            {
+                user.sendLangMessage( "general-commands.report.create.bypassed" );
+                return;
+            }
         }
         final UUID targetUuid = BUCore.getApi().getPlayerUtils().getUuid( targetName );
 

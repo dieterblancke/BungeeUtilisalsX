@@ -75,7 +75,7 @@ public class FriendRemoveSubCommandCall implements CommandCall
         optionalTarget.ifPresent( target ->
         {
             target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
-            target.sendLangMessage( "friends.remove.friend-removed" );
+            target.sendLangMessage( "friends.remove.friend-removed", "{user}", user.getName() );
         } );
     }
 }

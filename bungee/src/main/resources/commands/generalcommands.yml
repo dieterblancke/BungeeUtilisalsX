@@ -175,6 +175,7 @@ report:
   name: report
   aliases: 'greport, breport'
   permission: bungeeutilisals.commands.report
+  bypass: bungeeutilisals.commands.report.bypass
 
   # If the reported user gets punished with one of the types below, it will automatically accept a report.
   # To disable this, use: '  accept_on_punishment: []'
