@@ -41,6 +41,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -137,9 +138,17 @@ public class Utils
      */
     public static BaseComponent[] format( User user, List<String> messages )
     {
+        final AtomicInteger count = new AtomicInteger();
         return messages
                 .stream()
-                .map( message -> c( PlaceHolderAPI.formatMessage( user, message + "\n" ) ) )
+                .map( message ->
+                {
+                    if ( count.incrementAndGet() >= messages.size() )
+                    {
+                        return c( PlaceHolderAPI.formatMessage( user, message ) );
+                    }
+                    return c( PlaceHolderAPI.formatMessage( user, message + "\n" ) );
+                } )
                 .map( message -> new BaseComponent[]{ new TextComponent( message ) } )
                 .flatMap( Arrays::stream )
                 .toArray( BaseComponent[]::new );
