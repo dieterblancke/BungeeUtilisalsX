@@ -85,7 +85,7 @@ public class FriendListSubCommandCall implements CommandCall
                 user.sendLangMessage(
                         "friends.list.format",
                         "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate( friend.getLastOnline() ),
+                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
                         "{online}", friend.isOnline(),
                         "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
                 )
