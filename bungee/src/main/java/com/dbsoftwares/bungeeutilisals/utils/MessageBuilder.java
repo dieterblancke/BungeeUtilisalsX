@@ -51,7 +51,10 @@ public class MessageBuilder
         {
             final BaseComponent[] components = searchHoverMessageAndFormat( user, section, placeholders );
 
-            component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, components ) );
+            if ( components != null )
+            {
+                component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, components ) );
+            }
         }
         if ( section.exists( "click" ) )
         {
@@ -154,6 +157,10 @@ public class MessageBuilder
         }
         else
         {
+            if ( section.getString( "hover" ).isEmpty() )
+            {
+                return null;
+            }
             return searchAndFormat( user, user.getLanguageConfig(), section.getString( "hover" ), placeholders );
         }
     }
