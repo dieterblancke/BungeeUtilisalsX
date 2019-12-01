@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.UnicodeTranslator;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
@@ -523,6 +524,18 @@ public class Utils
     {
         SimpleDateFormat sdf = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
         return sdf.format( date );
+    }
+
+    /**
+     * Formats the given date into the following format: "dd-MM-yyyy kk:mm:ss"
+     *
+     * @param date The date to be formatted.
+     * @param languageConfig The config to take the date format from
+     * @return a formatted date string.
+     */
+    public static String formatDate( Date date, IConfiguration languageConfig )
+    {
+        return formatDate( languageConfig.getString( "date-format" ), date );
     }
 
     /**

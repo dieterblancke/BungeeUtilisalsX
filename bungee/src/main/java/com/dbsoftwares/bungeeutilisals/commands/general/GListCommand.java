@@ -62,6 +62,22 @@ public class GListCommand extends BUCommand
         String separator = config.getString( "glist.playerlist.separator" );
         List<TextComponent> messages = Lists.newArrayList();
 
+        if (config.exists( "glist.header" ))
+        {
+            if ( config.isSection( "glist.header" ) )
+            {
+                messages.add( MessageBuilder.buildMessage( user, config.getSection( "glist.header" ),
+                        "%total%", BUCore.getApi().getPlayerUtils().getTotalCount(),
+                        "%playerlist%", Utils.c( color + Joiner.on( separator )
+                                .join( BUCore.getApi().getPlayerUtils().getPlayers() ) )
+                ) );
+            }
+            else
+            {
+                messages.add( new TextComponent( Utils.format( config.getString( "glist.header" ) ) ) );
+            }
+        }
+
         if ( config.getBoolean( "glist.servers.enabled" ) )
         {
             for ( String server : config.getStringList( "glist.servers.list" ) )

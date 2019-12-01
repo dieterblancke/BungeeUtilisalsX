@@ -4,6 +4,7 @@ glist:
   name: glist
   aliases: 'blist, globallist'
   permission: bungeeutilisals.commands.glist
+  header: ''
   format:
     text: '&c%server% &7(%players%) &f» %playerlist%'
     hover:
