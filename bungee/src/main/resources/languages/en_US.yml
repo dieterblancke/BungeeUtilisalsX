@@ -313,6 +313,7 @@ friends:
     friend-removed: '&b{user} &ehas removed you from his friends list!'
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
+    online: 'now'
     head:
       text:
         - text: '&6<- '

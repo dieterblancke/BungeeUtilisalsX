@@ -99,7 +99,7 @@ public class StaffCommand extends BUCommand
                     final StaffUser u = userIt.next();
                     final ServerInfo info = BUCore.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    component.addExtra( MessageBuilder.buildMessage(
+                    c.addExtra( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getSection( "general-commands.staff.users.user" ),
                             "{username}", u.getName(),

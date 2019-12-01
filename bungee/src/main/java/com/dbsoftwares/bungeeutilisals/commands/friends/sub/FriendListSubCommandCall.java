@@ -81,11 +81,13 @@ public class FriendListSubCommandCall implements CommandCall
                 "{maxPages}", pages
         );
 
+        final String now = user.getLanguageConfig().getString( "friends.list.online" );
+
         friends.forEach( friend ->
                 user.sendLangMessage(
                         "friends.list.format",
                         "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? "now" : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
+                        "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
                         "{online}", friend.isOnline(),
                         "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
                 )
