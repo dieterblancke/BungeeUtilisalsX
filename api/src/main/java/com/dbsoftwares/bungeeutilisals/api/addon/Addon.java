@@ -76,7 +76,9 @@ public abstract class Addon
         {
             final String name = description == null ? "UNKNOWN" : description.getName();
             this.executorService = Executors.newCachedThreadPool(
-                    new ThreadFactoryBuilder().setNameFormat( name + " Pool Thread #%1$d" ).build()
+                    new ThreadFactoryBuilder()
+                            .setNameFormat( name + " Pool Thread #%1$d" )
+                            .build()
             );
         }
 

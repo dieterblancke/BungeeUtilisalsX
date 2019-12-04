@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -88,7 +89,7 @@ public class FriendListSubCommandCall implements CommandCall
                         "friends.list.format",
                         "{friendName}", friend.getFriend(),
                         "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
-                        "{online}", friend.isOnline(),
+                        "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ),
                         "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
                 )
         );

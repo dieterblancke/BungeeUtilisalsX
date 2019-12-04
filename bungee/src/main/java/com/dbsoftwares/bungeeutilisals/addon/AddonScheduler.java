@@ -74,7 +74,6 @@ public class AddonScheduler implements IScheduler
     }
 
     @Override
-    @SuppressWarnings("deprecation")
     public IAddonTask schedule( final Addon addon, final Runnable runnable, final long delay, final long repeat, final TimeUnit unit )
     {
         Validate.checkNotNull( addon, "Addon cannot be null." );
