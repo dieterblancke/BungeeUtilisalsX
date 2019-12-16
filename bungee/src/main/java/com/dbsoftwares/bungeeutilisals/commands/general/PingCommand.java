@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.google.common.collect.Lists;
 
 import java.util.Arrays;
 import java.util.List;
@@ -44,7 +43,7 @@ public class PingCommand extends BUCommand
     @Override
     public List<String> onTabComplete( User user, String[] args )
     {
-        return Lists.newArrayList( "on", "off" );
+        return null;
     }
 
     @Override
