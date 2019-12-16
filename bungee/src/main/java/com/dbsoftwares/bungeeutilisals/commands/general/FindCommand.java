@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -44,7 +43,7 @@ public class FindCommand extends BUCommand
     @Override
     public List<String> onTabComplete( User user, String[] args )
     {
-        return ImmutableList.of();
+        return null;
     }
 
     @Override
