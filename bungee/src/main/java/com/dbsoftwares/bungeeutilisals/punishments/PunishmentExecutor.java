@@ -114,6 +114,10 @@ public class PunishmentExecutor implements IPunishmentExecutor
     @Override
     public String setPlaceHolders( String line, PunishmentInfo info )
     {
+        if ( line == null || info == null )
+        {
+            return null;
+        }
         line = line.replace( "{reason}", info.getReason() );
         line = line.replace( "{date}", Utils.formatDate( getDateFormat(), info.getDate() ) );
         line = line.replace( "{by}", info.getExecutedBy() );
