@@ -54,6 +54,7 @@ import java.sql.Date;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Setter
 public class BUser implements User
@@ -315,18 +316,16 @@ public class BUser implements User
     {
         if ( getLanguageConfig().isList( path ) )
         {
-            StringBuilder builder = new StringBuilder();
-
-            for ( String message : getLanguageConfig().getStringList( path ) )
+            final String reason = getLanguageConfig().getStringList( path ).stream().map( str ->
             {
                 for ( int i = 0; i < placeholders.length - 1; i += 2 )
                 {
-                    message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
+                    str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
                 }
+                return str;
+            } ).collect( Collectors.joining( "\n" ) );
 
-                builder.append( message ).append( "\n" );
-            }
-            kick( builder.toString() );
+            kick( reason );
         }
         else
         {
