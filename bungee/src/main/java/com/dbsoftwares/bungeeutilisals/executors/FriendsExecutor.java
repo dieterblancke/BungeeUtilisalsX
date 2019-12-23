@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
@@ -41,5 +42,35 @@ public class FriendsExecutor implements EventExecutor
         {
             user.sendLangMessage( "friends.join.requests", "{amount}", requests.size() );
         }
+    }
+
+    @Event
+    public void onFriendJoin( final UserLoadEvent event )
+    {
+        final User user = event.getUser();
+
+        user.getFriends().forEach( friendData ->
+        {
+            if ( friendData.isOnline() )
+            {
+                BUCore.getApi().getUser( friendData.getUuid() ).ifPresent( friend ->
+                        friend.sendLangMessage( "friends.join.join", "{user}", user.getName() ) );
+            }
+        } );
+    }
+
+    @Event
+    public void onFriendLeave( final UserUnloadEvent event )
+    {
+        final User user = event.getUser();
+
+        user.getFriends().forEach( friendData ->
+        {
+            if ( friendData.isOnline() )
+            {
+                BUCore.getApi().getUser( friendData.getUuid() ).ifPresent( friend ->
+                        friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) );
+            }
+        } );
     }
 }

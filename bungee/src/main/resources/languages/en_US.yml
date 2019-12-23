@@ -243,6 +243,8 @@ general-commands:
 friends:
   join:
     requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
+    join: '&eYour friend, &b{user}&e, has joined the network!'
+  leave: '&eYour friend, &b{user}&e, has left the network!'
   request-received:
     text:
       - text: '&eYou have received a friend request from &b{name}&e!{nl}'
