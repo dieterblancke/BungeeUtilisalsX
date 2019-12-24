@@ -51,6 +51,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -145,6 +146,12 @@ public class BUser implements User
         {
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
+
+            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", false ) )
+            {
+                BUCore.getLogger().debug( "Friend list of " + name );
+                BUCore.getLogger().debug( Arrays.toString( friends.toArray() ) );
+            }
         }
         else
         {
