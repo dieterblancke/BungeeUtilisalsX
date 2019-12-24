@@ -84,13 +84,13 @@ public class FriendAcceptSubCommandCall implements CommandCall
         dao.getFriendsDao().addFriend( user.getUuid(), storage.getUuid() );
         dao.getFriendsDao().addFriend( storage.getUuid(), user.getUuid() );
 
-        user.getFriends().add( new FriendData( user.getUuid(), name, new Date(), storage.getLastLogout() ) );
+        user.getFriends().add( new FriendData( storage.getUuid(), name, new Date(), storage.getLastLogout() ) );
 
         user.sendLangMessage( "friends.accept.accepted", "{user}", name );
         optionalTarget.ifPresent( target ->
         {
             target.sendLangMessage( "friends.accept.request-accepted", "{user}", user.getName() );
-            target.getFriends().add( new FriendData( target.getUuid(), user.getName(), new Date(), user.getStorage().getLastLogout() ) );
+            target.getFriends().add( new FriendData( user.getUuid(), user.getName(), new Date(), user.getStorage().getLastLogout() ) );
         } );
     }
 }
