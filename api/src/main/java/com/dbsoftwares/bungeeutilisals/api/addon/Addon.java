@@ -27,7 +27,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import lombok.Data;
-import manifold.strings.api.DisableStringLiteralTemplates;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
@@ -41,7 +40,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Data
-@DisableStringLiteralTemplates
 public abstract class Addon
 {
 

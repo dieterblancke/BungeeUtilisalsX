@@ -97,7 +97,7 @@ public class SQLFriendsDao implements FriendsDao
                 while ( rs.next() )
                 {
                     friends.add( new FriendData(
-                            uuid,
+                            UUID.fromString( rs.getString( "friend" ) ),
                             rs.getString( "friendname" ),
                             Dao.formatStringToDate( rs.getString( "created" ) ),
                             Dao.formatStringToDate( rs.getString( "lastlogout" ) )

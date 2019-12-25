@@ -43,19 +43,6 @@
           <source>8</source>
           <target>8</target>
           <encoding>UTF-8</encoding>
-          <compilerArgs>
-            <arg>-Xplugin:Manifold</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-jar-plugin</artifactId>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <Contains-Sources>java,class</Contains-Sources>
-            </manifestEntries>
-          </archive>
         </configuration>
       </plugin>
     </plugins>

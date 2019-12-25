@@ -80,7 +80,7 @@ public class MongoFriendsDao implements FriendsDao
             final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "friend" ) ) ).first();
 
             friends.add( new FriendData(
-                    uuid,
+                    UUID.fromString( doc.getString( "friend" ) ),
                     friend.getString( "username" ),
                     doc.getDate( "created" ),
                     friend.getDate( "lastlogout" )

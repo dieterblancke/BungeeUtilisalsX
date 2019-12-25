@@ -49,8 +49,8 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
-        user.getFriends().forEach( friendData ->
-                BUCore.getApi().getUser( friendData.getUuid() ).ifPresent( friend ->
+        user.getFriends().forEach( data ->
+                BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
                         friend.sendLangMessage( "friends.join.join", "{user}", user.getName() ) ) );
     }
 
@@ -59,8 +59,8 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
-        user.getFriends().forEach( friendData ->
-                BUCore.getApi().getUser( friendData.getUuid() ).ifPresent( friend ->
+        user.getFriends().forEach( data ->
+                BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
                         friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) ) );
     }
 }

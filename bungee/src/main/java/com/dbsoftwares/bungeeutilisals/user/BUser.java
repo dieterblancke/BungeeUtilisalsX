@@ -147,10 +147,10 @@ public class BUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", false ) )
+            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug" ) )
             {
-                BUCore.getLogger().debug( "Friend list of " + name );
-                BUCore.getLogger().debug( Arrays.toString( friends.toArray() ) );
+                System.out.println( "Friend list of " + name );
+                System.out.println( Arrays.toString( friends.toArray() ) );
             }
         }
         else

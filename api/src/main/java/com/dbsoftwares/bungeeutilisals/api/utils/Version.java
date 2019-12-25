@@ -23,6 +23,7 @@ import lombok.Getter;
 public enum Version
 {
 
+    LEGACY( -1 ),
     MINECRAFT_1_8( 47 ),
     MINECRAFT_1_9( 107 ),
     MINECRAFT_1_9_1( 108 ),

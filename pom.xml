@@ -26,7 +26,7 @@
     <groupId>com.dbsoftwares.bungeeutilisals</groupId>
     <artifactId>BungeeUtilisalsX</artifactId>
     <packaging>pom</packaging>
-    <version>1.0.4.5</version>
+    <version>1.0.4.6</version>
 
     <modules>
         <module>api</module>
@@ -115,16 +115,6 @@
             <version>1.30.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>systems.manifold</groupId>
-            <artifactId>manifold-ext</artifactId>
-            <version>2019.1.28</version>
-        </dependency>
-        <dependency>
-            <groupId>systems.manifold</groupId>
-            <artifactId>manifold-strings</artifactId>
-            <version>2019.1.28</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -139,22 +129,6 @@
                     <source>8</source>
                     <target>8</target>
                     <encoding>UTF-8</encoding>
-                    <compilerArgs>
-                        <!-- Configure manifold plugin-->
-                        <arg>-Xplugin:Manifold</arg>
-                    </compilerArgs>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version>
-                <configuration>
-                    <archive>
-                        <manifestEntries>
-                            <Contains-Sources>java,class</Contains-Sources>
-                        </manifestEntries>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>
