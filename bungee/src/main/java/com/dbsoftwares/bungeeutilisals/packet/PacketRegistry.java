@@ -38,6 +38,14 @@ public class PacketRegistry
     static
     {
         // when version not supported, -1 will be provided | ids are in order of Version (enum) versions
+        /*
+         * Version URLs:
+         * - 1.14: https://wiki.vg/index.php?title=Protocol&oldid=14963
+         * - 1.13.2: https://wiki.vg/index.php?title=Protocol&oldid=14889
+         * - 1.13.1: https://wiki.vg/index.php?title=Protocol&oldid=14301
+         * - 1.12.2: https://wiki.vg/index.php?title=Protocol&oldid=14204
+         */
+
 
         // https://wiki.vg/Protocol#Player_Position
         registry.add( new PacketData(
@@ -55,17 +63,9 @@ public class PacketRegistry
 //                getClientDirection( Protocol.GAME ),
 //                ProtocolMapping.map( Version.MINECRAFT_1_9, 0x0C )
 //        ) );
-
-        /* For if we ever (try to) add back the inventory packets
-        registry.add(new PacketData(PacketPlayInCloseWindow.class, Protocol.GAME.TO_SERVER, 0x0D, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x08, 0x09, 0x08, 0x08, 0x09, 0x09, 0x09));
-        registry.add(new PacketData(PacketPlayInWindowClick.class, Protocol.GAME.TO_SERVER, 0x0E, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x07, 0x08, 0x07, 0x07, 0x08, 0x08, 0x08));
-        registry.add(new PacketData(PacketPlayOutOpenWindow.class, Protocol.GAME.TO_CLIENT, 0x2D, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x13, 0x14, 0x14, 0x14));
-        registry.add(new PacketData(PacketPlayOutCloseWindow.class, Protocol.GAME.TO_CLIENT, 0x2E, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x12, 0x13, 0x13, 0x13));
-        registry.add(new PacketData(PacketPlayOutWindowItems.class, Protocol.GAME.TO_CLIENT, 0x30, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x14, 0x15, 0x15, 0x15));
-        */
     }
 
-    private static Object getServerDirection( final Protocol protocol )
+    public static Object getServerDirection( final Protocol protocol )
     {
         try
         {
@@ -81,7 +81,7 @@ public class PacketRegistry
         }
     }
 
-    private static Object getClientDirection( final Protocol protocol )
+    public static Object getClientDirection( final Protocol protocol )
     {
         try
         {

@@ -83,13 +83,15 @@ public class FriendListSubCommandCall implements CommandCall
         );
 
         final String now = user.getLanguageConfig().getString( "friends.list.online" );
+        final String onlineText = user.getLanguageConfig().getString( "friends.list.status.online" );
+        final String offlineText = user.getLanguageConfig().getString( "friends.list.status.offline" );
 
         friends.forEach( friend ->
                 user.sendLangMessage(
                         "friends.list.format",
                         "{friendName}", friend.getFriend(),
                         "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
-                        "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ),
+                        "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
                         "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
                 )
         );

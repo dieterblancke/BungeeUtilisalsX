@@ -229,6 +229,7 @@ general-commands:
           - '&eHandled: &b{handled}'
           - '&eAccepted: {accepted_sign}'
           - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+      footer: ''
     accept:
       usage: '&ePlease use &b/report accept (id)&e!'
       not-found: '&eCould not find a report with id &b{id}&e!'
@@ -245,6 +246,7 @@ friends:
     requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
     join: '&eYour friend, &b{user}&e, has joined the network!'
   leave: '&eYour friend, &b{user}&e, has left the network!'
+  switch: '&eYour friend, &b{user}&e, is switching from &b{previous} &eto &b{next}!'
   request-received:
     text:
       - text: '&eYou have received a friend request from &b{name}&e!{nl}'
@@ -316,6 +318,9 @@ friends:
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
     online: 'now'
+    status:
+      online: 'online'
+      offline: 'offline'
     head:
       text:
         - text: '&6<- '

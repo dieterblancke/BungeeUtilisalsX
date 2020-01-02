@@ -26,7 +26,6 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
@@ -218,9 +217,10 @@ public class BungeeUtilisals extends Plugin
 
         if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
         {
-            final EventExecutor executor = new FriendsExecutor();
+            final FriendsExecutor executor = new FriendsExecutor();
             loader.register( UserLoadEvent.class, executor );
             loader.register( UserUnloadEvent.class, executor );
+            ProxyServer.getInstance().getPluginManager().registerListener( this, executor );
         }
 
         // Loading Announcers

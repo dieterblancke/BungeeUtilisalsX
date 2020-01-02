@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.executors;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
@@ -25,10 +26,15 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.event.EventHandler;
 
 import java.util.List;
+import java.util.Optional;
 
-public class FriendsExecutor implements EventExecutor
+public class FriendsExecutor implements EventExecutor, Listener
 {
 
     @Event
@@ -62,5 +68,37 @@ public class FriendsExecutor implements EventExecutor
         user.getFriends().forEach( data ->
                 BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
                         friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) ) );
+    }
+
+    @Event
+    public void onUserServerSwitch( final UserServerSwitchEvent event )
+    {
+        final User user = event.getUser();
+
+        user.getFriends().forEach( data ->
+                BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
+                        friend.sendLangMessage( "friends.switch", "{user}", user.getName() ) ) );
+    }
+
+    @EventHandler
+    public void onSwitch( final ServerConnectEvent event )
+    {
+        final ProxiedPlayer player = event.getPlayer();
+        final Optional<User> optional = BungeeUtilisals.getApi().getUser( player );
+
+        if ( !optional.isPresent() || player.getServer() == null )
+        {
+            return;
+        }
+        final User user = optional.get();
+
+        user.getFriends().forEach( data ->
+                BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
+                        friend.sendLangMessage(
+                                "friends.switch",
+                                "{user}", user.getName(),
+                                "{from}", user.getServerName(),
+                                "{to}", event.getTarget().getName()
+                        ) ) );
     }
 }

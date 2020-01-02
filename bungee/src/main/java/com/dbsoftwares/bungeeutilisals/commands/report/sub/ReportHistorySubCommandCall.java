@@ -95,6 +95,12 @@ public class ReportHistorySubCommandCall implements CommandCall
                         "{accepted_sign}", report.isHandled() ? report.isAccepted() ? accepted : denied : ""
                 );
             }
+
+            user.sendLangMessage(
+                    "general-commands.report.history.footer",
+                    "{page}", page,
+                    "{maxPages}", maxPages
+            );
         }
         catch ( PageNotFoundException e )
         {
