@@ -70,16 +70,6 @@ public class FriendsExecutor implements EventExecutor, Listener
                         friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) ) );
     }
 
-    @Event
-    public void onUserServerSwitch( final UserServerSwitchEvent event )
-    {
-        final User user = event.getUser();
-
-        user.getFriends().forEach( data ->
-                BUCore.getApi().getUser( data.getUuid() ).ifPresent( friend ->
-                        friend.sendLangMessage( "friends.switch", "{user}", user.getName() ) ) );
-    }
-
     @EventHandler
     public void onSwitch( final ServerConnectEvent event )
     {
