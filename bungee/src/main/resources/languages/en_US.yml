@@ -246,7 +246,7 @@ friends:
     requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
     join: '&eYour friend, &b{user}&e, has joined the network!'
   leave: '&eYour friend, &b{user}&e, has left the network!'
-  switch: '&eYour friend, &b{user}&e, is switching from &b{previous} &eto &b{next}!'
+  switch: '&eYour friend, &b{user}&e, is switching from &b{from} &eto &b{to}!'
   request-received:
     text:
       - text: '&eYou have received a friend request from &b{name}&e!{nl}'
