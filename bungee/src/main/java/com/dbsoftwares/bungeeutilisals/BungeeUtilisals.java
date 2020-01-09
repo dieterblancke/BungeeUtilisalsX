@@ -71,7 +71,6 @@ import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
-import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
 import com.dbsoftwares.bungeeutilisals.updater.Updatable;
 import com.dbsoftwares.bungeeutilisals.updater.Updater;
@@ -241,7 +240,6 @@ public class BungeeUtilisals extends Plugin
             loader.register( PacketReceiveEvent.class, packetUpdateExecutor );
         }
 
-        ProxyServer.getInstance().getScheduler().schedule( this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS );
         ProxyServer.getInstance().getScheduler().schedule( this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES );
 
         if ( getConfig().getBoolean( "updater.enabled" ) )

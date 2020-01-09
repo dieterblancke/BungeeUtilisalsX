@@ -110,7 +110,6 @@ general-commands:
     onchat: '&eThe chat has been locked! &aYou cannot send messages at the moment.'
   glag:
     - '&eBungeeCord statistics:'
-    - '&eTPS: &b{tps}'
     - '&eMax Memory: &b{maxmemory}'
     - '&eFree Memory: &b{freememory}'
     - '&eTotal Memory: &b{totalmemory}'

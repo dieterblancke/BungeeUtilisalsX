@@ -27,7 +27,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisals.dump.PluginSchedulerInfo;
-import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -151,7 +150,6 @@ public class DumpSubCommand extends SubCommand
         systemInfo.put( "systemStorage", bytesToGigaBytes( root.getFreeSpace() ) + " GB / " + bytesToGigaBytes( root.getTotalSpace() ) + " GB" );
         systemInfo.put( "____________________", "____________________" );
         systemInfo.put( "bungeeVersion", ProxyServer.getInstance().getName() + " " + ProxyServer.getInstance().getVersion() );
-        systemInfo.put( "tps", TPSRunnable.getTPS() );
         systemInfo.put( "startup", new SimpleDateFormat( "kk:mm dd-MM-yyyy" ).format( new Date( ManagementFactory.getRuntimeMXBean().getStartTime() ) ) );
         systemInfo.put( "maxMemory", bytesToMegaBytes( Runtime.getRuntime().totalMemory() ) + " MB" );
         systemInfo.put( "usedMemory", bytesToMegaBytes( Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory() ) + " MB" );

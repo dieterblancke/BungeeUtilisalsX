@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.runnables.TPSRunnable;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ChatColor;
 
@@ -52,14 +51,11 @@ public class GLagCommand extends BUCommand
     @Override
     public void onExecute( User user, String[] args )
     {
-        Long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
-        SimpleDateFormat df2 = new SimpleDateFormat( "kk:mm dd-MM-yyyy" );
-        String date = df2.format( new Date( uptime ) );
-
-        double TPS = TPSRunnable.getTPS();
+        final long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
+        final SimpleDateFormat df2 = new SimpleDateFormat( "kk:mm dd-MM-yyyy" );
+        final String date = df2.format( new Date( uptime ) );
 
         user.sendLangMessage( "general-commands.glag",
-                "{tps}", getColor( TPS ) + String.valueOf( TPS ),
                 "{maxmemory}", (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB",
                 "{freememory}", (Runtime.getRuntime().freeMemory() / 1024 / 1024) + " MB",
                 "{totalmemory}", (Runtime.getRuntime().totalMemory() / 1024 / 1024) + " MB",
