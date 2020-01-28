@@ -72,21 +72,30 @@ public class CommandManager
         {
             return;
         }
+        final List<String> parameters = Lists.newArrayList();
 
-        registerPunishmentCommand( "ban", config.getSection( "commands.ban" ), new BanCommand() );
-        registerPunishmentCommand( "ipban", config.getSection( "commands.ipban" ), new IPBanCommand() );
-        registerPunishmentCommand( "tempban", config.getSection( "commands.tempban" ), new TempBanCommand() );
-        registerPunishmentCommand( "iptempban", config.getSection( "commands.iptempban" ), new IPTempBanCommand() );
-        registerPunishmentCommand( "mute", config.getSection( "commands.mute" ), new MuteCommand() );
-        registerPunishmentCommand( "ipmute", config.getSection( "commands.ipmute" ), new IPMuteCommand() );
-        registerPunishmentCommand( "tempmute", config.getSection( "commands.tempmute" ), new TempMuteCommand() );
-        registerPunishmentCommand( "iptempmute", config.getSection( "commands.iptempmute" ), new IPTempMuteCommand() );
-        registerPunishmentCommand( "kick", config.getSection( "commands.kick" ), new KickCommand() );
-        registerPunishmentCommand( "warn", config.getSection( "commands.warn" ), new WarnCommand() );
-        registerPunishmentCommand( "unban", config.getSection( "commands.unban" ), new UnbanCommand() );
-        registerPunishmentCommand( "unbanip", config.getSection( "commands.unbanip" ), new UnbanIPCommand() );
-        registerPunishmentCommand( "unmute", config.getSection( "commands.unmute" ), new UnmuteCommand() );
-        registerPunishmentCommand( "unmuteip", config.getSection( "commands.unmuteip" ), new UnmuteIPCommand() );
+        for ( String key : config.getKeys( "parameters" ) )
+        {
+            if ( config.getBoolean( "parameters." + key ) )
+            {
+                parameters.add( "-" + key );
+            }
+        }
+
+        registerPunishmentCommand( "ban", "commands.ban", new BanCommand(), parameters );
+        registerPunishmentCommand( "ipban", "commands.ipban", new IPBanCommand(), parameters );
+        registerPunishmentCommand( "tempban", "commands.tempban", new TempBanCommand(), parameters );
+        registerPunishmentCommand( "iptempban", "commands.iptempban", new IPTempBanCommand(), parameters );
+        registerPunishmentCommand( "mute", "commands.mute", new MuteCommand(), parameters );
+        registerPunishmentCommand( "ipmute", "commands.ipmute", new IPMuteCommand(), parameters );
+        registerPunishmentCommand( "tempmute", "commands.tempmute", new TempMuteCommand(), parameters );
+        registerPunishmentCommand( "iptempmute", "commands.iptempmute", new IPTempMuteCommand(), parameters );
+        registerPunishmentCommand( "kick", "commands.kick", new KickCommand(), parameters );
+        registerPunishmentCommand( "warn", "commands.warn", new WarnCommand(), parameters );
+        registerPunishmentCommand( "unban", "commands.unban", new UnbanCommand(), parameters );
+        registerPunishmentCommand( "unbanip", "commands.unbanip", new UnbanIPCommand(), parameters );
+        registerPunishmentCommand( "unmute", "commands.unmute", new UnmuteCommand(), parameters );
+        registerPunishmentCommand( "unmuteip", "commands.unmuteip", new UnmuteIPCommand(), parameters );
     }
 
     private void registerGeneralCommand( final String section, final CommandCall call )
@@ -99,11 +108,13 @@ public class CommandManager
         buildCommand( section, commandBuilder );
     }
 
-    private void registerPunishmentCommand( final String name, final ISection section, final CommandCall call )
+    private void registerPunishmentCommand( final String name, final String section, final CommandCall call, final List<String> parameters )
     {
+        final IConfiguration config = FileLocation.PUNISHMENTS.getConfiguration();
+
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )
-                .fromSection( section )
+                .fromSection( config.getSection( section ) )
                 .executable( call )
                 .parameters( Collections.singletonList( "-nbp" ) );
 

@@ -58,6 +58,12 @@ blocked-mute-commands:
   - tell
   - t
 
+# Here you can enable or disable parameters for punishment commands.
+# A parameter, for example nbp, is something you add to the end of the command prefixed by a -, for example -nbp
+parameters:
+  # nbp stands for no-broadcast-permission, if you use for example '/ban (user) (reason) -nbp', everyone will be able to see the broadcast message.
+  nbp: true
+
 commands:
   ban:
     # Enable this subcommand or not?
