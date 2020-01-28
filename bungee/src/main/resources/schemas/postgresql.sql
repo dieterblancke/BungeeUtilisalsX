@@ -1,12 +1,13 @@
 CREATE TABLE IF NOT EXISTS "{users-table}"
 (
-    id         BIGSERIAL PRIMARY KEY,
-    uuid       VARCHAR(48) UNIQUE NOT NULL,
-    username   VARCHAR(32)        NOT NULL,
-    ip         VARCHAR(32)        NOT NULL,
-    language   VARCHAR(24)        NOT NULL,
-    firstlogin TIMESTAMP          NOT NULL,
-    lastlogout TIMESTAMP          NOT NULL
+    id          BIGSERIAL PRIMARY KEY,
+    uuid        VARCHAR(48) UNIQUE NOT NULL,
+    username    VARCHAR(32)        NOT NULL,
+    ip          VARCHAR(32)        NOT NULL,
+    language    VARCHAR(24)        NOT NULL,
+    firstlogin  TIMESTAMP          NOT NULL,
+    lastlogout  TIMESTAMP          NOT NULL,
+    joined_host TEXT,
 );
 
 CREATE INDEX IF NOT EXISTS idx_users ON "{users-table}" (id, uuid, username, ip);

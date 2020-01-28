@@ -44,15 +44,15 @@ public class MongoUserDao implements UserDao
 {
 
     @Override
-    public void createUser( UUID uuid, String username, String ip, Language language )
+    public void createUser( UUID uuid, String username, String ip, Language language, String joinedHost )
     {
         final Date date = new Date( System.currentTimeMillis() );
 
-        createUser( uuid, username, ip, language, date, date );
+        createUser( uuid, username, ip, language, date, date, joinedHost );
     }
 
     @Override
-    public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout )
+    public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost )
     {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
@@ -62,6 +62,7 @@ public class MongoUserDao implements UserDao
         data.put( "language", language.getName() );
         data.put( "firstlogin", login );
         data.put( "lastlogout", logout );
+        data.put( "joined_host", joinedHost );
 
         db().getCollection( format( "{users-table}" ) ).insertOne( new Document( data ) );
     }
@@ -121,6 +122,7 @@ public class MongoUserDao implements UserDao
             );
             storage.setFirstLogin( document.getDate( "lastlogin" ) );
             storage.setLastLogout( document.getDate( "lastlogout" ) );
+            storage.setJoinedHost(document.getString( "joined_host" ));
 
             ignoredUsersColl.find(
                     Filters.eq( "user", storage.getUuid().toString() )
@@ -158,6 +160,7 @@ public class MongoUserDao implements UserDao
             );
             storage.setFirstLogin( document.getDate( "lastlogin" ) );
             storage.setLastLogout( document.getDate( "lastlogout" ) );
+            storage.setJoinedHost( document.getString( "joined_host" ) );
 
             ignoredUsersColl.find(
                     Filters.eq( "user", storage.getUuid().toString() )
@@ -230,6 +233,13 @@ public class MongoUserDao implements UserDao
     {
         db().getCollection( format( "{users-table}" ) )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "lastlogout", logout ) );
+    }
+
+    @Override
+    public void setJoinedHost( UUID uuid, String joinedHost )
+    {
+        db().getCollection( format( "{users-table}" ) )
+                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "joined_host", joinedHost ) );
     }
 
     @Override

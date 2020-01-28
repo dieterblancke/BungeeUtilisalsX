@@ -43,6 +43,7 @@ public class UserStorage
     private Date firstLogin;
     private Date lastLogout;
     private List<String> ignoredUsers = Lists.newArrayList();
+    private String joinedHost;
 
     private Map<String, Object> data = Maps.newHashMap();
 

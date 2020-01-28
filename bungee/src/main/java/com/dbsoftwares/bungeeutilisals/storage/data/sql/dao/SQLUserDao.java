@@ -40,10 +40,10 @@ public class SQLUserDao implements UserDao
 {
 
     private static final String INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
+            "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
 
     private static final String SQLITE_INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;";
+            "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;";
 
     private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
     private static final String UPDATE_USER = "UPDATE {users-table} " +
@@ -54,15 +54,15 @@ public class SQLUserDao implements UserDao
     private static final String ERROR_STRING = "An error occured: ";
 
     @Override
-    public void createUser( UUID uuid, String username, String ip, Language language )
+    public void createUser( UUID uuid, String username, String ip, Language language, String joinedHost )
     {
         Date date = new Date( System.currentTimeMillis() );
 
-        createUser( uuid, username, ip, language, date, date );
+        createUser( uuid, username, ip, language, date, date, joinedHost );
     }
 
     @Override
-    public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout )
+    public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost )
     {
         final String statement =
                 BungeeUtilisals.getInstance().getDatabaseManagement().getType().equals( AbstractStorageManager.StorageType.SQLITE )
@@ -78,10 +78,10 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 5, Dao.formatDateToString( login ) );
             pstmt.setString( 6, Dao.formatDateToString( logout ) );
             pstmt.setString( 7, username );
+            pstmt.setString( 8, joinedHost );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -100,8 +100,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 5, uuid.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -122,8 +121,7 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -146,8 +144,7 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -170,8 +167,7 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -204,12 +200,12 @@ public class SQLUserDao implements UserDao
                     storage.setLastLogout(
                             Dao.formatStringToDate( rs.getString( "lastlogout" ) )
                     );
+                    storage.setJoinedHost( rs.getString( "joined_host" ) );
 
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -241,12 +237,12 @@ public class SQLUserDao implements UserDao
                     storage.setLastLogout(
                             Dao.formatStringToDate( rs.getString( "lastlogout" ) )
                     );
+                    storage.setJoinedHost( rs.getString( "joined_host" ) );
 
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -291,8 +287,7 @@ public class SQLUserDao implements UserDao
                     users.add( rs.getString( "username" ) );
                 }
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -317,8 +312,7 @@ public class SQLUserDao implements UserDao
                     language = BUCore.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) );
                 }
             }
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -335,8 +329,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -352,8 +345,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -369,8 +361,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -386,8 +377,23 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
+        } catch ( SQLException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
         }
-        catch ( SQLException e )
+    }
+
+    @Override
+    public void setJoinedHost( UUID uuid, String joinedHost )
+    {
+        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "joined_host" ) ) )
+        {
+            pstmt.setString( 1, joinedHost );
+            pstmt.setString( 2, uuid.toString() );
+
+            pstmt.executeUpdate();
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -405,8 +411,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, ignore.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -424,8 +429,7 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, unignore.toString() );
 
             pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }

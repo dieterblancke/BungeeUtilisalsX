@@ -1,12 +1,13 @@
 CREATE TABLE IF NOT EXISTS `{users-table}`
 (
-    id         BIGINT PRIMARY KEY AUTO_INCREMENT,
-    uuid       VARCHAR(48) UNIQUE NOT NULL,
-    username   VARCHAR(32)        NOT NULL,
-    ip         VARCHAR(32)        NOT NULL,
-    language   VARCHAR(24)        NOT NULL,
-    firstlogin TIMESTAMP          NOT NULL,
-    lastlogout TIMESTAMP          NOT NULL,
+    id          BIGINT PRIMARY KEY AUTO_INCREMENT,
+    uuid        VARCHAR(48) UNIQUE NOT NULL,
+    username    VARCHAR(32)        NOT NULL,
+    ip          VARCHAR(32)        NOT NULL,
+    language    VARCHAR(24)        NOT NULL,
+    firstlogin  TIMESTAMP          NOT NULL,
+    lastlogout  TIMESTAMP          NOT NULL,
+    joined_host TEXT,
     INDEX idx_users (id, uuid, username, ip)
 ) DEFAULT CHARSET = UTF8MB4;
 

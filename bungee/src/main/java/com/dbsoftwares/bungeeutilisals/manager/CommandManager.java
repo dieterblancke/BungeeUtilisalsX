@@ -55,6 +55,7 @@ public class CommandManager
     private void loadGeneralCommands()
     {
         registerGeneralCommand( "report", new ReportCommandCall() );
+        registerGeneralCommand( "domains", new DomainsCommandCall() );
 
         registerPunishmentCommand(
                 "friends",
@@ -73,10 +74,11 @@ public class CommandManager
             return;
         }
         final List<String> parameters = Lists.newArrayList();
+        final ISection parameterSection = config.getSection( "parameters" );
 
-        for ( String key : config.getKeys( "parameters" ) )
+        for ( String key : parameterSection.getKeys() )
         {
-            if ( config.getBoolean( "parameters." + key ) )
+            if ( parameterSection.getBoolean( key ) )
             {
                 parameters.add( "-" + key );
             }
@@ -142,8 +144,7 @@ public class CommandManager
 
             commands.add( command );
             BUCore.getLogger().debug( "Registered a command named " + command.getName() + "." );
-        }
-        else
+        } else
         {
             BUCore.getLogger().debug( "Skipping registration of a command named " + name + "." );
         }

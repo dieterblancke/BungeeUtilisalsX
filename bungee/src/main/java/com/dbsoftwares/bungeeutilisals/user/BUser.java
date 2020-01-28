@@ -111,15 +111,27 @@ public class BUser implements User
         {
             final Language defLanguage = BUCore.getApi().getLanguageManager().getDefaultLanguage();
             final Date date = new Date( System.currentTimeMillis() );
+            final String joinedHost;
+
+            if (parent.getPendingConnection().getVirtualHost() == null) {
+                joinedHost = null;
+            } else {
+                if (parent.getPendingConnection().getVirtualHost().getHostName() == null) {
+                    joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
+                } else {
+                    joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
+                }
+            }
 
             dao.getUserDao().createUser(
                     uuid,
                     name,
                     ip,
-                    defLanguage
+                    defLanguage,
+                    joinedHost
             );
 
-            storage = new UserStorage( uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), Maps.newHashMap() );
+            storage = new UserStorage( uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), joinedHost, Maps.newHashMap() );
         }
 
         if ( !storage.getUserName().equals( name ) )

@@ -28,9 +28,9 @@ import java.util.UUID;
 public interface UserDao
 {
 
-    void createUser( UUID uuid, String username, String ip, Language language );
+    void createUser( UUID uuid, String username, String ip, Language language, String joinedHost );
 
-    void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout );
+    void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost );
 
     void updateUser( UUID uuid, String name, String ip, Language language, Date logout );
 
@@ -55,6 +55,8 @@ public interface UserDao
     void setLanguage( UUID uuid, Language language );
 
     void setLogout( UUID uuid, Date logout );
+
+    void setJoinedHost( UUID uuid, String joinedHost );
 
     void ignoreUser( UUID user, UUID ignore );
 

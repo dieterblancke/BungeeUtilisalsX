@@ -215,3 +215,8 @@ report:
       name: history
       aliases: 'hist'
       permission: bungeeutilisals.commands.report.history
+domains:
+  enabled: true
+  name: domains
+  aliases: 'domainlist'
+  permission: bungeeutilisals.commands.domains
