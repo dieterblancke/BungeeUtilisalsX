@@ -49,11 +49,10 @@ import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommand;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.CheckIpCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentDataCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentHistoryCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentInfoCommand;
 import com.dbsoftwares.bungeeutilisals.executors.*;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
@@ -482,23 +481,6 @@ public class BungeeUtilisals extends Plugin
 
     private void loadPunishmentCommands()
     {
-        loadPunishmentCommand( "ban", BanCommand.class );
-        loadPunishmentCommand( "ipban", IPBanCommand.class );
-        loadPunishmentCommand( "tempban", TempBanCommand.class );
-        loadPunishmentCommand( "iptempban", IPTempBanCommand.class );
-        loadPunishmentCommand( "mute", MuteCommand.class );
-        loadPunishmentCommand( "ipmute", IPMuteCommand.class );
-        loadPunishmentCommand( "tempmute", TempMuteCommand.class );
-        loadPunishmentCommand( "iptempmute", IPTempMuteCommand.class );
-
-        loadPunishmentCommand( "kick", KickCommand.class );
-        loadPunishmentCommand( "warn", WarnCommand.class );
-
-        loadPunishmentCommand( "unban", UnbanCommand.class );
-        loadPunishmentCommand( "unbanip", UnbanIPCommand.class );
-        loadPunishmentCommand( "unmute", UnmuteCommand.class );
-        loadPunishmentCommand( "unmuteip", UnmuteIPCommand.class );
-
         loadPunishmentCommand( "punishmentinfo", PunishmentInfoCommand.class );
         loadPunishmentCommand( "punishmenthistory", PunishmentHistoryCommand.class );
         loadPunishmentCommand( "punishmentdata", PunishmentDataCommand.class );

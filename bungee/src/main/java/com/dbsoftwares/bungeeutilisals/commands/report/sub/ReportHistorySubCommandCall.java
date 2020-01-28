@@ -35,21 +35,21 @@ public class ReportHistorySubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
         final List<Report> reports = reportsDao.getReportsHistory( user.getName() );
         final int page;
 
-        if ( args.length == 0 )
+        if ( args.size() == 0 )
         {
             page = 1;
         }
         else
         {
-            if ( args.length == 1 && MathUtils.isInteger( args[0] ) )
+            if ( args.size() == 1 && MathUtils.isInteger( args.get( 0 ) ) )
             {
-                page = Integer.parseInt( args[0] );
+                page = Integer.parseInt( args.get( 0 ) );
             }
             else
             {

@@ -16,13 +16,12 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.command;
+package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 
-import java.util.List;
-
-public interface CommandCall
+public abstract class PunishmentCommand implements CommandCall
 {
-    void onExecute( final User user, final List<String> args, final List<String> parameters );
+
+
 }

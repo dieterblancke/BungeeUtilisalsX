@@ -27,25 +27,27 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
+import java.util.List;
+
 public class ReportAcceptSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length != 1 )
+        if ( args.size() != 1 )
         {
             user.sendLangMessage( "general-commands.report.accept.usage" );
             return;
         }
 
-        if ( !MathUtils.isLong( args[0] ) )
+        if ( !MathUtils.isLong( args.get( 0 ) ) )
         {
             user.sendLangMessage( "no-number" );
             return;
         }
 
-        final long id = Long.parseLong( args[0] );
+        final long id = Long.parseLong( args.get( 0 ) );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final ReportsDao reportsDao = dao.getReportsDao();
         final UserDao userDao = dao.getUserDao();

@@ -25,8 +25,8 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
-import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -34,16 +34,16 @@ public class ReportCreateSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length < 2 )
+        if ( args.size() < 2 )
         {
             user.sendLangMessage( "general-commands.report.create.usage" );
             return;
         }
 
-        final String targetName = args[0];
-        final String reason = String.join( " ", Arrays.copyOfRange( args, 1, args.length ) );
+        final String targetName = args.get( 0 );
+        final String reason = String.join( " ", args.subList( 1, args.size() ) );
 
         if ( !BUCore.getApi().getPlayerUtils().isOnline( targetName ) )
         {

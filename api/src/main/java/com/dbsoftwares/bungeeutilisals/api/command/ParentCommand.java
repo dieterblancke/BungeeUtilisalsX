@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.Lists;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -46,7 +45,7 @@ public class ParentCommand implements TabCall
         subCommands.add( cmd );
     }
 
-    public void onExecute( final User user, final String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         // handle sub commands ...
         if ( !subCommands.isEmpty() )
@@ -55,7 +54,7 @@ public class ParentCommand implements TabCall
             {
                 if ( subCommand.check( args ) )
                 {
-                    subCommand.execute( user, Arrays.copyOfRange( args, 1, args.length ) );
+                    subCommand.execute( user, args.subList( 1, args.size() ), parameters );
                     return;
                 }
             }

@@ -23,21 +23,21 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
 public class FriendMsgSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length < 2 )
+        if ( args.size() < 2 )
         {
             user.sendLangMessage( "friends.msg.usage" );
             return;
         }
-        final String name = args[0];
+        final String name = args.get( 0 );
 
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
@@ -48,7 +48,7 @@ public class FriendMsgSubCommandCall implements CommandCall
         if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
         {
             final Optional<User> optional = BUCore.getApi().getUser( name );
-            final String message = String.join( " ", Arrays.copyOfRange( args, 1, args.length ) );
+            final String message = String.join( " ", args.subList( 1, args.size() ) );
 
             if ( optional.isPresent() )
             {

@@ -39,23 +39,45 @@ public class Command
     private final String name;
     private final String[] aliases;
     private final String permission;
+    private final List<String> parameters;
     private final int cooldown;
     private final CommandCall command;
     private final TabCall tab;
 
     private CommandHolder commandHolder;
 
-    public Command( final String name, final String permission, final String[] aliases, final int cooldown, final CommandCall command, final TabCall tab )
+    public Command( final String name, final String[] aliases, final String permission, final List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
     {
         this.name = name;
         this.aliases = aliases;
         this.permission = permission;
+        this.parameters = parameters;
         this.cooldown = cooldown;
         this.command = command;
         this.tab = tab;
     }
 
-    public void execute( User user, String[] args )
+    public void execute( final User user, final String[] argList )
+    {
+        final List<String> arguments = Lists.newArrayList();
+        final List<String> parameters = Lists.newArrayList();
+
+        for ( String argument : argList )
+        {
+            if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
+            {
+                parameters.add( argument );
+            }
+            else
+            {
+                arguments.add( argument );
+            }
+        }
+
+        execute( user, arguments, parameters );
+    }
+
+    public void execute( final User user, final List<String> arguments, final List<String> parameters )
     {
         if ( permission != null
                 && !permission.isEmpty()
@@ -82,7 +104,7 @@ public class Command
                     return;
                 }
 
-                command.onExecute( user, args );
+                command.onExecute( user, arguments, parameters );
 
                 if ( cooldown > 0 )
                 {
@@ -96,7 +118,7 @@ public class Command
         } );
     }
 
-    public Iterable<String> onTabComplete( CommandSender sender, String[] args )
+    public Iterable<String> onTabComplete( final CommandSender sender, final String[] args )
     {
         if ( !(sender instanceof ProxiedPlayer) )
         {
@@ -157,19 +179,19 @@ public class Command
         return this;
     }
 
-    boolean check( final String[] args )
+    boolean check( final List<String> args )
     {
-        if ( args.length == 0 )
+        if ( args.size() == 0 )
         {
             return false;
         }
-        if ( name.equalsIgnoreCase( args[0] ) )
+        if ( name.equalsIgnoreCase( args.get( 0 ) ) )
         {
             return true;
         }
         for ( String alias : aliases )
         {
-            if ( alias.equalsIgnoreCase( args[0] ) )
+            if ( alias.equalsIgnoreCase( args.get( 0 ) ) )
             {
                 return true;
             }

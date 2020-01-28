@@ -63,6 +63,11 @@ public abstract class SubCommand implements CommandCall
 
     public abstract void onExecute( User user, String[] args );
 
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        onExecute( user, args.toArray( new String[0] ) );
+    }
+
     private ConditionResult checkConditions( User user, String[] args )
     {
         if ( !args[0].equalsIgnoreCase( name ) && !aliases.contains( args[0] ) )

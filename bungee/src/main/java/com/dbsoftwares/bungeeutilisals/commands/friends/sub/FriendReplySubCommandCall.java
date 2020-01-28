@@ -23,15 +23,16 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
+import java.util.List;
 import java.util.Optional;
 
 public class FriendReplySubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length < 1 )
+        if ( args.size() < 1 )
         {
             user.sendLangMessage( "friends.reply.usage" );
             return;

@@ -31,7 +31,7 @@ public class FriendListSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final List<FriendData> allFriends = user.getFriends();
 
@@ -44,11 +44,11 @@ public class FriendListSubCommandCall implements CommandCall
         final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
         final int page;
 
-        if ( args.length >= 1 )
+        if ( args.size() >= 1 )
         {
-            if ( MathUtils.isInteger( args[0] ) )
+            if ( MathUtils.isInteger( args.get( 0 ) ) )
             {
-                final int tempPage = Integer.parseInt( args[0] );
+                final int tempPage = Integer.parseInt( args.get( 0 ) );
 
                 page = Math.min( tempPage, pages );
             }

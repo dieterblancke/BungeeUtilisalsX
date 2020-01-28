@@ -24,10 +24,17 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommand;
 import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.api.client.util.Lists;
 
+import java.util.Collections;
 import java.util.List;
 
 public class CommandManager
@@ -42,18 +49,44 @@ public class CommandManager
             unregisterAll();
         }
         loadGeneralCommands();
+        loadPunishmentCommands();
     }
 
-    public void loadGeneralCommands()
+    private void loadGeneralCommands()
     {
         registerGeneralCommand( "report", new ReportCommandCall() );
 
-        registerCommand(
+        registerPunishmentCommand(
                 "friends",
                 FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ),
                 FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "command" ),
                 new FriendsCommandCall()
         );
+    }
+
+    private void loadPunishmentCommands()
+    {
+        final IConfiguration config = FileLocation.PUNISHMENTS.getConfiguration();
+
+        if ( !config.getBoolean( "enabled" ) )
+        {
+            return;
+        }
+
+        registerPunishmentCommand( "ban", config.getSection( "commands.ban" ), new BanCommand() );
+        registerPunishmentCommand( "ipban", config.getSection( "commands.ipban" ), new IPBanCommand() );
+        registerPunishmentCommand( "tempban", config.getSection( "commands.tempban" ), new TempBanCommand() );
+        registerPunishmentCommand( "iptempban", config.getSection( "commands.iptempban" ), new IPTempBanCommand() );
+        registerPunishmentCommand( "mute", config.getSection( "commands.mute" ), new MuteCommand() );
+        registerPunishmentCommand( "ipmute", config.getSection( "commands.ipmute" ), new IPMuteCommand() );
+        registerPunishmentCommand( "tempmute", config.getSection( "commands.tempmute" ), new TempMuteCommand() );
+        registerPunishmentCommand( "iptempmute", config.getSection( "commands.iptempmute" ), new IPTempMuteCommand() );
+        registerPunishmentCommand( "kick", config.getSection( "commands.kick" ), new KickCommand() );
+        registerPunishmentCommand( "warn", config.getSection( "commands.warn" ), new WarnCommand() );
+        registerPunishmentCommand( "unban", config.getSection( "commands.unban" ), new UnbanCommand() );
+        registerPunishmentCommand( "unbanip", config.getSection( "commands.unbanip" ), new UnbanIPCommand() );
+        registerPunishmentCommand( "unmute", config.getSection( "commands.unmute" ), new UnmuteCommand() );
+        registerPunishmentCommand( "unmuteip", config.getSection( "commands.unmuteip" ), new UnmuteIPCommand() );
     }
 
     private void registerGeneralCommand( final String section, final CommandCall call )
@@ -66,7 +99,18 @@ public class CommandManager
         buildCommand( section, commandBuilder );
     }
 
-    private void registerCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
+    private void registerPunishmentCommand( final String name, final ISection section, final CommandCall call )
+    {
+        final CommandBuilder commandBuilder = CommandBuilder.builder()
+                .name( name )
+                .fromSection( section )
+                .executable( call )
+                .parameters( Collections.singletonList( "-nbp" ) );
+
+        buildCommand( name, commandBuilder );
+    }
+
+    private void registerPunishmentCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )

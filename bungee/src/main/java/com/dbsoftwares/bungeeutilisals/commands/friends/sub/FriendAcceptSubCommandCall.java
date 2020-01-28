@@ -27,15 +27,16 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 public class FriendAcceptSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length < 1 )
+        if ( args.size() < 1 )
         {
             user.sendLangMessage( "friends.accept.usage" );
             return;
@@ -47,7 +48,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
             user.sendLangMessage( "friends.accept.limited", "{limit}", friendLimit );
             return;
         }
-        final String name = args[0];
+        final String name = args.get( 0 );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
 
         if ( user.getFriends().stream().anyMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
@@ -65,7 +66,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
         }
         else
         {
-            if ( !dao.getUserDao().exists( args[0] ) )
+            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
             {
                 user.sendLangMessage( "never-joined" );
                 return;

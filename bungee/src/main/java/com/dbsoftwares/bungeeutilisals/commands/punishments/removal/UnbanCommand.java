@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -29,41 +29,27 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class UnbanCommand extends BUCommand
+public class UnbanCommand implements CommandCall
 {
 
-    public UnbanCommand()
-    {
-        super( "unban", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString( "commands.unban.aliases" ).split( ", " ) ),
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.permission" ) );
-    }
-
     @Override
-    public List<String> onTabComplete( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        return null;
-    }
-
-    @Override
-    public void onExecute( User user, String[] args )
-    {
-        if ( args.length < 1 )
+        if ( args.size() < 1 )
         {
             user.sendLangMessage( "punishments.unban.usage" );
             return;
         }
         final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
-        if ( !dao.getUserDao().exists( args[0] ) )
+        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
+        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
 
         if ( !dao.getPunishmentDao().getBansDao().isBanned( storage.getUuid() ) )
         {
@@ -87,7 +73,7 @@ public class UnbanCommand extends BUCommand
         dao.getPunishmentDao().getBansDao().removeCurrentBan( storage.getUuid(), user.getName() );
 
         final PunishmentInfo info = new PunishmentInfo();
-        info.setUser( args[0] );
+        info.setUser( args.get( 0 ) );
         info.setId( "-1" );
         info.setExecutedBy( user.getName() );
         info.setRemovedBy( user.getName() );
@@ -95,8 +81,20 @@ public class UnbanCommand extends BUCommand
 
         user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast( "punishments.unban.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
-                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
+        if ( parameters.contains( "-nbp" ) )
+        {
+            BUCore.getApi().langBroadcast(
+                    "punishments.unban.broadcast",
+                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
+            );
+        }
+        else
+        {
+            BUCore.getApi().langPermissionBroadcast(
+                    "punishments.unban.broadcast",
+                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
+                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
+            );
+        }
     }
 }

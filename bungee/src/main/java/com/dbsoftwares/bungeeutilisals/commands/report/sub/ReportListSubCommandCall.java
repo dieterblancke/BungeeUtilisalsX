@@ -34,20 +34,20 @@ public class ReportListSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
         final List<Report> reports;
         final int page;
 
-        if ( args.length == 0 )
+        if ( args.size() == 0 )
         {
             reports = reportsDao.getActiveReports();
             page = 1;
         }
         else
         {
-            final String action = args[0];
+            final String action = args.get( 0 );
 
             if ( action.equalsIgnoreCase( "all" ) )
             {
@@ -66,9 +66,9 @@ public class ReportListSubCommandCall implements CommandCall
                 reports = reportsDao.getActiveReports();
             }
 
-            if ( args.length > 1 && MathUtils.isInteger( args[1] ) )
+            if ( args.size() > 1 && MathUtils.isInteger( args.get( 1 ) ) )
             {
-                page = Integer.parseInt( args[1] );
+                page = Integer.parseInt( args.get( 1 ) );
             }
             else
             {

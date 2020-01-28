@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
+import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -32,9 +33,9 @@ public class FriendSettingsSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length == 0 )
+        if ( args.size() == 0 )
         {
             final FriendSettings settings = user.getFriendSettings();
             user.sendLangMessage( "friends.settings.noargs.header" );
@@ -50,10 +51,10 @@ public class FriendSettingsSubCommandCall implements CommandCall
 
             user.sendLangMessage( "friends.settings.noargs.footer" );
         }
-        else if ( args.length == 2 )
+        else if ( args.size() == 2 )
         {
-            final FriendSettingType type = Utils.valueOfOr( FriendSettingType.class, args[0].toUpperCase(), null );
-            final boolean value = !args[1].toLowerCase().contains( "d" );
+            final FriendSettingType type = Utils.valueOfOr( FriendSettingType.class, args.get( 0 ).toUpperCase(), null );
+            final boolean value = !args.get( 1 ).toLowerCase().contains( "d" );
 
             if ( type == null )
             {

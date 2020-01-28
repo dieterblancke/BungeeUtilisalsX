@@ -31,14 +31,14 @@ public class FriendRequestsSubCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.length < 1 )
+        if ( args.size() < 1 )
         {
             user.sendLangMessage( "friends.requests.usage" );
             return;
         }
-        final String type = args[0];
+        final String type = args.get( 0 );
         final List<FriendRequest> allRequests;
         final String requestType;
 
@@ -67,11 +67,11 @@ public class FriendRequestsSubCommandCall implements CommandCall
         final int pages = (int) Math.ceil( (double) allRequests.size() / 15 );
         final int page;
 
-        if ( args.length > 1 )
+        if ( args.size() > 1 )
         {
-            if ( MathUtils.isInteger( args[1] ) )
+            if ( MathUtils.isInteger( args.get( 1 ) ) )
             {
-                final int tempPage = Integer.parseInt( args[1] );
+                final int tempPage = Integer.parseInt( args.get( 1 ) );
 
                 page = Math.min( tempPage, pages );
             }

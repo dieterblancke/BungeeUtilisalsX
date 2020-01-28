@@ -23,6 +23,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -58,6 +59,7 @@ public class CommandBuilder
     private int cooldown;
     private CommandCall call;
     private TabCall tab;
+    private List<String> parameters;
 
     public static CommandBuilder builder()
     {
@@ -82,20 +84,31 @@ public class CommandBuilder
         return this;
     }
 
+    public CommandBuilder aliases( final List<String> aliases )
+    {
+        return this.aliases( aliases.toArray( new String[0] ) );
+    }
+
     public CommandBuilder cooldown( final int cooldown )
     {
         this.cooldown = cooldown;
         return this;
     }
 
-    public CommandBuilder aliases( final List<String> aliases )
-    {
-        return this.aliases( aliases.toArray( new String[0] ) );
-    }
-
     public CommandBuilder permission( final String permission )
     {
         this.permission = permission;
+        return this;
+    }
+
+    public CommandBuilder parameters( final String... parameters )
+    {
+        return parameters( Arrays.asList( parameters ) );
+    }
+
+    public CommandBuilder parameters( final List<String> parameters )
+    {
+        this.parameters = parameters;
         return this;
     }
 
@@ -167,6 +180,6 @@ public class CommandBuilder
             tab = DEFAULT_TAB_CALL;
         }
 
-        return new Command( name, permission, aliases, cooldown, call, tab );
+        return new Command( name, aliases, permission, parameters, cooldown, call, tab );
     }
 }

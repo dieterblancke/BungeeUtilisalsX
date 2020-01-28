@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
@@ -31,36 +31,22 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class IPTempMuteCommand extends BUCommand
+public class IPTempMuteCommand implements CommandCall
 {
 
-    public IPTempMuteCommand()
-    {
-        super( "iptempmute", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString( "commands.iptempmute.aliases" ).split( ", " ) ),
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.permission" ) );
-    }
-
     @Override
-    public List<String> onTabComplete( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        return null;
-    }
-
-    @Override
-    public void onExecute( User user, String[] args )
-    {
-        if ( args.length < 3 )
+        if ( args.size() < 3 )
         {
             user.sendLangMessage( "punishments.iptempmute.usage" );
             return;
         }
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final String timeFormat = args[1];
-        final String reason = Utils.formatList( Arrays.copyOfRange( args, 2, args.length ), " " );
+        final String timeFormat = args.get( 1 );
+        final String reason = Utils.formatList( args.subList( 2, args.size() ), " " );
         final long time = Utils.parseDateDiff( timeFormat );
 
         if ( time <= 0L )
@@ -68,12 +54,12 @@ public class IPTempMuteCommand extends BUCommand
             user.sendLangMessage( "punishments.iptempmute.non-valid" );
             return;
         }
-        if ( !dao.getUserDao().exists( args[0] ) )
+        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData( args[0] );
+        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
         if ( dao.getPunishmentDao().getMutesDao().isIPMuted( storage.getIp() ) )
         {
             user.sendLangMessage( "punishments.iptempmute.already-muted" );
@@ -115,9 +101,21 @@ public class IPTempMuteCommand extends BUCommand
 
         user.sendLangMessage( "punishments.iptempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast( "punishments.iptempmute.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.broadcast" ),
-                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
+        if ( parameters.contains( "-nbp" ) )
+        {
+            BUCore.getApi().langBroadcast(
+                    "punishments.iptempmute.broadcast",
+                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
+            );
+        }
+        else
+        {
+            BUCore.getApi().langPermissionBroadcast(
+                    "punishments.iptempmute.broadcast",
+                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.broadcast" ),
+                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
+            );
+        }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
