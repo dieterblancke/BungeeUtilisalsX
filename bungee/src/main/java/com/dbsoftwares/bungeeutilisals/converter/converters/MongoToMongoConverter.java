@@ -83,7 +83,8 @@ public class MongoToMongoConverter extends Converter
                 document.getString( "ip" ),
                 BUCore.getApi().getLanguageManager().getLangOrDefault( document.getString( "language" ) ),
                 document.getDate( "firstlogin" ),
-                document.getDate( "lastlogout" )
+                document.getDate( "lastlogout" ),
+                document.getString( "joined_host" )
         );
     }
 

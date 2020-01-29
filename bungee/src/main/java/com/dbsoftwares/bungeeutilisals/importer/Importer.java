@@ -27,7 +27,6 @@ import com.google.common.cache.LoadingCache;
 import lombok.Data;
 import net.md_5.bungee.api.ProxyServer;
 
-import javax.annotation.Nullable;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -39,7 +38,7 @@ public abstract class Importer
     protected final LoadingCache<String, String> uuidCache = CacheBuilder.newBuilder().maximumSize( 15000 )
             .expireAfterAccess( 30, TimeUnit.MINUTES ).build( new CacheLoader<String, String>()
             {
-                public String load( @Nullable final String name ) throws IllegalStateException
+                public String load( final String name ) throws IllegalStateException
                 {
                     if ( ProxyServer.getInstance().getConfig().isOnlineMode() )
                     {
@@ -63,7 +62,7 @@ public abstract class Importer
     protected final LoadingCache<String, String> nameCache = CacheBuilder.newBuilder().maximumSize( 15000 )
             .expireAfterAccess( 30, TimeUnit.MINUTES ).build( new CacheLoader<String, String>()
             {
-                public String load( @Nullable final String uuid ) throws IllegalStateException
+                public String load( final String uuid ) throws IllegalStateException
                 {
                     String name = MojangUtils.getName( UUID.fromString( uuid ) );
                     if ( name != null )

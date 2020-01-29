@@ -174,7 +174,8 @@ public class BungeeUtilisalsImporter extends Importer
                             readUUIDFromString( uuid ),
                             name,
                             IP,
-                            BUCore.getApi().getLanguageManager().getDefaultLanguage()
+                            BUCore.getApi().getLanguageManager().getDefaultLanguage(),
+                            null
                     );
 
                     status.incrementConvertedEntries( 1 );

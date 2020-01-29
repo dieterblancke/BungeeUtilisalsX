@@ -29,15 +29,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Accumulators;
+import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 
 public class MongoUserDao implements UserDao
@@ -122,7 +121,7 @@ public class MongoUserDao implements UserDao
             );
             storage.setFirstLogin( document.getDate( "lastlogin" ) );
             storage.setLastLogout( document.getDate( "lastlogout" ) );
-            storage.setJoinedHost(document.getString( "joined_host" ));
+            storage.setJoinedHost( document.getString( "joined_host" ) );
 
             ignoredUsersColl.find(
                     Filters.eq( "user", storage.getUuid().toString() )
@@ -240,6 +239,35 @@ public class MongoUserDao implements UserDao
     {
         db().getCollection( format( "{users-table}" ) )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "joined_host", joinedHost ) );
+    }
+
+    @Override
+    public Map<String, Integer> getJoinedHostList()
+    {
+        final Map<String, Integer> map = Maps.newHashMap();
+        final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
+
+        collection.aggregate( Collections.singletonList(
+                Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
+        ) ).forEach( (Consumer<? super Document>) doc
+                -> map.put( doc.getString( "_id" ), doc.getInteger( "count" ) ) );
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> searchJoinedHosts( String searchTag )
+    {
+        final Map<String, Integer> map = Maps.newHashMap();
+        final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
+
+        collection.aggregate( Arrays.asList(
+                Aggregates.match( Filters.regex( "joined_host", searchTag ) ),
+                Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
+        ) ).forEach( (Consumer<? super Document>) doc
+                -> map.put( doc.getString( "_id" ), doc.getInteger( "count" ) ) );
+
+        return map;
     }
 
     @Override

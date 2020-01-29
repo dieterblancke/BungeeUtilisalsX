@@ -257,7 +257,8 @@ public class BungeeAdminToolsImporter extends Importer
                             ip,
                             BUCore.getApi().getLanguageManager().getDefaultLanguage(),
                             login,
-                            logout
+                            logout,
+                            null
                     );
 
                     status.incrementConvertedEntries( 1 );

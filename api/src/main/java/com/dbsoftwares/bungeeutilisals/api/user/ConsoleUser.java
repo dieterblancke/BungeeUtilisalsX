@@ -26,6 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
@@ -140,6 +141,15 @@ public class ConsoleUser implements User
     @Override
     public void sendLangMessage( boolean prefix, String path )
     {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ) );
+
+            sendMessage( component );
+            return;
+        }
+
         String message = buildLangMessage( path );
 
         if ( message.isEmpty() )
@@ -166,6 +176,15 @@ public class ConsoleUser implements User
     @Override
     public void sendLangMessage( boolean prefix, String path, Object... placeholders )
     {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ), placeholders );
+
+            sendMessage( component );
+            return;
+        }
+
         String message = buildLangMessage( path, placeholders );
 
         if ( message.isEmpty() )

@@ -32,7 +32,7 @@ import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPComm
 import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.api.client.util.Lists;
+import com.google.common.collect.Lists;
 
 import java.util.Collections;
 import java.util.List;
@@ -144,7 +144,8 @@ public class CommandManager
 
             commands.add( command );
             BUCore.getLogger().debug( "Registered a command named " + command.getName() + "." );
-        } else
+        }
+        else
         {
             BUCore.getLogger().debug( "Skipping registration of a command named " + name + "." );
         }

@@ -85,7 +85,6 @@ public class AddonListSubCommand extends SubCommand
         {
             final AddonData data = addons.get( i );
             final ChatColor color = BUCore.getApi().getAddonManager().isRegistered( data.getName() ) ? ChatColor.GREEN : ChatColor.RED;
-            final String message = user.buildLangMessage( "general-commands.addon.list.item.text", "{id}", i + 1, "{addon}", color + data.getName() );
 
             user.sendLangMessage( "general-commands.addon.list.item",
                     "{id}", i + 1,

@@ -21,10 +21,10 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
@@ -62,7 +62,7 @@ public class GListCommand extends BUCommand
         String separator = config.getString( "glist.playerlist.separator" );
         List<TextComponent> messages = Lists.newArrayList();
 
-        if (config.exists( "glist.header" ))
+        if ( config.exists( "glist.header" ) )
         {
             if ( config.isSection( "glist.header" ) )
             {

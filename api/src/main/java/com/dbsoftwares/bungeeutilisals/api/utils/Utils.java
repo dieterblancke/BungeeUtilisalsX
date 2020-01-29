@@ -529,7 +529,7 @@ public class Utils
     /**
      * Formats the given date into the following format: "dd-MM-yyyy kk:mm:ss"
      *
-     * @param date The date to be formatted.
+     * @param date           The date to be formatted.
      * @param languageConfig The config to take the date format from
      * @return a formatted date string.
      */

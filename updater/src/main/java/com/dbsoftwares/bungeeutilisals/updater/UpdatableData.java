@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisals.updater;
 
-import com.google.api.client.http.GenericUrl;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -31,11 +30,6 @@ public class UpdatableData
 
     private String name;
     private String currentVersion;
-    private GenericUrl url;
+    private String url;
     private File file;
-
-    public UpdatableData( final String name, final String currentVersion, final String url, final File file )
-    {
-        this( name, currentVersion, new GenericUrl( url ), file );
-    }
 }

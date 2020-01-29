@@ -16,11 +16,10 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils;
+package com.dbsoftwares.bungeeutilisals.api.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;

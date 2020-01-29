@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,6 +35,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public class SQLUserDao implements UserDao
@@ -81,7 +83,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 8, joinedHost );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -100,7 +103,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 5, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -121,7 +125,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -144,7 +149,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -167,7 +173,8 @@ public class SQLUserDao implements UserDao
             {
                 present = rs.next();
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -205,7 +212,8 @@ public class SQLUserDao implements UserDao
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -242,7 +250,8 @@ public class SQLUserDao implements UserDao
                     storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -287,7 +296,8 @@ public class SQLUserDao implements UserDao
                     users.add( rs.getString( "username" ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -312,7 +322,8 @@ public class SQLUserDao implements UserDao
                     language = BUCore.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) );
                 }
             }
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -329,7 +340,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -345,7 +357,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -361,7 +374,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -377,7 +391,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -393,10 +408,64 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, uuid.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
+    }
+
+    @Override
+    public Map<String, Integer> getJoinedHostList()
+    {
+        final Map<String, Integer> map = Maps.newHashMap();
+
+        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT joined_host, COUNT(*) amount FROM bu_users GROUP BY joined_host;"
+              ) )
+        {
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    map.put( rs.getString( "joined_host" ), rs.getInt( "amount" ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
+        }
+
+        return map;
+    }
+
+    @Override
+    public Map<String, Integer> searchJoinedHosts( String searchTag )
+    {
+        final Map<String, Integer> map = Maps.newHashMap();
+
+        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT joined_host, COUNT(*) amount FROM bu_users WHERE joined_host LIKE ? GROUP BY joined_host;"
+              ) )
+        {
+            pstmt.setString( 1, "%" + searchTag + "%" );
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    map.put( rs.getString( "joined_host" ), rs.getInt( "amount" ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
+        }
+
+        return map;
     }
 
     @Override
@@ -411,7 +480,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, ignore.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }
@@ -429,7 +499,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, unignore.toString() );
 
             pstmt.executeUpdate();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().error( ERROR_STRING, e );
         }

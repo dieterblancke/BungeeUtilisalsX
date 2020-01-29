@@ -49,16 +49,16 @@
 
     <repositories>
         <repository>
+            <id>dbsoftwares</id>
+            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+        </repository>
+        <repository>
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
         </repository>
         <repository>
             <id>md_5-snapshots</id>
             <url>http://repo.md-5.net/content/repositories/snapshots/</url>
-        </repository>
-        <repository>
-            <id>dbsoftwares</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
         </repository>
     </repositories>
 
@@ -94,13 +94,13 @@
         <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
-            <version>3.10.2</version>
+            <version>3.12.1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>3.3.1</version>
+            <version>3.4.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -110,9 +110,10 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.google.http-client</groupId>
-            <artifactId>google-http-client</artifactId>
-            <version>1.30.2</version>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.4.01</version>
+            <classifier>standalone</classifier>
             <scope>provided</scope>
         </dependency>
     </dependencies>

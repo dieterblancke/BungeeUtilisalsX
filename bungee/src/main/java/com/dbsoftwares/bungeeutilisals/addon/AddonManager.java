@@ -27,13 +27,10 @@ import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
 import com.dbsoftwares.bungeeutilisals.language.AddonLanguageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.common.collect.*;
 import com.google.gson.Gson;
+import kong.unirest.HttpResponse;
+import kong.unirest.Unirest;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Command;
@@ -41,10 +38,8 @@ import net.md_5.bungee.api.plugin.Listener;
 
 import java.io.File;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.*;
-import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
@@ -81,29 +76,22 @@ public class AddonManager implements IAddonManager
 
     public void loadAllAddons()
     {
-        final HttpRequestFactory factory = new NetHttpTransport().createRequestFactory();
         final Gson gson = new Gson();
-
         ProxyServer.getInstance().getScheduler().schedule( BungeeUtilisals.getInstance(), () ->
         {
             try
             {
-                final GenericUrl url = new GenericUrl( "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/addons/" );
-                final HttpRequest request = factory.buildGetRequest( url );
-                final Future<HttpResponse> futureResponse = request.executeAsync();
+                final HttpResponse<String> response = Unirest.get(
+                        "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/addons/"
+                ).asString();
 
-                final HttpResponse response = futureResponse.get();
-                if ( response.isSuccessStatusCode() )
+                if ( response.isSuccess() )
                 {
-                    try ( final InputStream input = response.getContent();
-                          final InputStreamReader isr = new InputStreamReader( input ) )
-                    {
-                        final AddonData[] addonData = gson.fromJson( isr, AddonData[].class );
+                    final AddonData[] addonData = gson.fromJson( response.getBody(), AddonData[].class );
 
-                        if ( addonData.length > 0 )
-                        {
-                            allAddons = Lists.newLinkedList( Arrays.asList( addonData ) );
-                        }
+                    if ( addonData.length > 0 )
+                    {
+                        allAddons = Lists.newLinkedList( Arrays.asList( addonData ) );
                     }
                 }
             }

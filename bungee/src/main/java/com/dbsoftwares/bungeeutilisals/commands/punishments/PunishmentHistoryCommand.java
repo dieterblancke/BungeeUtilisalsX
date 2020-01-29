@@ -28,7 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.google.api.client.util.Lists;
+import com.google.common.collect.Lists;
 
 import java.util.Arrays;
 import java.util.List;

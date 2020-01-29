@@ -25,20 +25,11 @@ import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.exceptions.AddonException;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.google.api.client.http.GenericUrl;
-import com.google.api.client.http.HttpRequest;
-import com.google.api.client.http.HttpRequestFactory;
-import com.google.api.client.http.HttpResponse;
-import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.gson.Gson;
+import kong.unirest.Unirest;
 
 import java.io.File;
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 public class AddonInstallSubCommand extends SubCommand
@@ -128,24 +119,12 @@ public class AddonInstallSubCommand extends SubCommand
         }
     }
 
-    private File downloadAddon( final AddonData data ) throws Exception
+    private File downloadAddon( final AddonData data )
     {
         final File target = new File( BUCore.getApi().getAddonManager().getAddonsFolder(), data.getName() + ".jar" );
 
-        final HttpRequestFactory factory = new NetHttpTransport().createRequestFactory();
-        final Gson gson = new Gson();
-        final GenericUrl url = new GenericUrl( data.getDownloadURL() );
-        final HttpRequest request = factory.buildGetRequest( url );
-        final Future<HttpResponse> futureResponse = request.executeAsync();
+        Unirest.get( data.getDownloadURL() ).asFile( target.getAbsolutePath() );
 
-        final HttpResponse response = futureResponse.get();
-        if ( response.isSuccessStatusCode() )
-        {
-            try ( final InputStream input = response.getContent() )
-            {
-                Files.copy( input, Paths.get( target.toURI() ) );
-            }
-        }
         return target;
     }
 }

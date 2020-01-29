@@ -133,7 +133,8 @@ public class SQLtoMongoConverter extends Converter
                 rs.getString( "ip" ),
                 BUCore.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) ),
                 Dao.formatStringToDate( rs.getString( "firstlogin" ) ),
-                Dao.formatStringToDate( rs.getString( "lastlogout" ) )
+                Dao.formatStringToDate( rs.getString( "lastlogout" ) ),
+                rs.getString( "joined_host" )
         );
     }
 

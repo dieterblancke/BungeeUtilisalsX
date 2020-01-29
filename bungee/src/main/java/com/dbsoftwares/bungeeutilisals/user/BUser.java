@@ -34,11 +34,11 @@ import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
-import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -106,6 +106,30 @@ public class BUser implements User
             }
 
             storage.setLanguage( BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
+
+            if ( storage.getJoinedHost() == null )
+            {
+                final String joinedHost;
+
+                if ( parent.getPendingConnection().getVirtualHost() == null )
+                {
+                    joinedHost = null;
+                }
+                else
+                {
+                    if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
+                    {
+                        joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
+                    }
+                    else
+                    {
+                        joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
+                    }
+                }
+
+                storage.setJoinedHost( joinedHost );
+                dao.getUserDao().setJoinedHost( uuid, joinedHost );
+            }
         }
         else
         {
@@ -113,12 +137,18 @@ public class BUser implements User
             final Date date = new Date( System.currentTimeMillis() );
             final String joinedHost;
 
-            if (parent.getPendingConnection().getVirtualHost() == null) {
+            if ( parent.getPendingConnection().getVirtualHost() == null )
+            {
                 joinedHost = null;
-            } else {
-                if (parent.getPendingConnection().getVirtualHost().getHostName() == null) {
+            }
+            else
+            {
+                if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
+                {
                     joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
-                } else {
+                }
+                else
+                {
                     joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
                 }
             }

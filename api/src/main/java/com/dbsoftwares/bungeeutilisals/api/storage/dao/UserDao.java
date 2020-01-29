@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 public interface UserDao
@@ -57,6 +58,10 @@ public interface UserDao
     void setLogout( UUID uuid, Date logout );
 
     void setJoinedHost( UUID uuid, String joinedHost );
+
+    Map<String, Integer> getJoinedHostList();
+
+    Map<String, Integer> searchJoinedHosts( final String searchTag );
 
     void ignoreUser( UUID user, UUID ignore );
 
