@@ -220,3 +220,15 @@ domains:
   name: domains
   aliases: 'domainlist'
   permission: bungeeutilisals.commands.domains
+
+  subcommands:
+    list:
+      enabled: true
+      name: list
+      aliases: 'ls, all'
+      permission: bungeeutilisals.commands.domains.list
+    search:
+      enabled: true
+      name: search
+      aliases: 'find, select'
+      permission: bungeeutilisals.commands.domains.search

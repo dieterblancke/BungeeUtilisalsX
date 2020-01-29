@@ -1,4 +1,4 @@
-prefix: '&c&lBungeeUtilisalsX &8» '
+prefix: ''
 no-permission: '&cYou do not have the permission to do this!'
 never-joined: '&fThat user never joined before!'
 offline: '&fThat user is not online!'
@@ -239,6 +239,31 @@ general-commands:
       not-found: '&eCould not find a report with id &b{id}&e!'
       updated: '&eThe report with id &b{id} &ehas been denied.'
       denied: '&eYour report &b(#{id}) {reported} &ehas been denied by &b{staff}&e!'
+  domains:
+    help:
+      - '&aDomains Command Help:'
+      - '&b- /domains list'
+      - '&b- /domains search (pattern / domain)'
+    list:
+      usage: '&ePlease use &b/domains list [page]&e!'
+
+      header:
+        - ''
+        - '&b&lDOMAINS STATISTICS'
+        - ''
+      format: '- &e{domain} &f| &a&lONLINE&f: {online} | &e&lTOTAL&f: {total}'
+      footer:
+        - ''
+        - '&fIn total, &e{total} &fdomains have been used to connect to your server.'
+        - ''
+    search:
+      usage: '&ePlease use &b/domains search (pattern / domain)&e!'
+      header:
+        - ''
+        - '&b&lDOMAIN SEARCH'
+        - ''
+      format: '- &e{domain} &f| &a&lONLINE&f: {online} | &e&lTOTAL&f: {total}'
+      footer: ''
 
 friends:
   join:
@@ -684,11 +709,11 @@ punishments:
       offline: '&7'
       banned: '&c'
 
-    head: 'noprefix: &eLooking for other accounts playing with &b{user} ({ip})&e:'
+    head: '&eLooking for other accounts playing with &b{user} ({ip})&e:'
     format:
       separator: '&f, '
-      message: 'noprefix: &bPlayers Found: &f{players}'
-    foot: 'noprefix: &eLegenda: &aOnline  &7Offline  &cBanned'
+      message: '&bPlayers Found: &f{players}'
+    foot: '&eLegenda: &aOnline  &7Offline  &cBanned'
 
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")

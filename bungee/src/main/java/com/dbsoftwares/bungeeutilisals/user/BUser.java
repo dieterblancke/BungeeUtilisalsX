@@ -39,6 +39,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
+import com.dbsoftwares.bungeeutilisals.utils.UserUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -109,23 +110,7 @@ public class BUser implements User
 
             if ( storage.getJoinedHost() == null )
             {
-                final String joinedHost;
-
-                if ( parent.getPendingConnection().getVirtualHost() == null )
-                {
-                    joinedHost = null;
-                }
-                else
-                {
-                    if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
-                    {
-                        joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
-                    }
-                    else
-                    {
-                        joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
-                    }
-                }
+                final String joinedHost = UserUtils.getJoinedHost( parent );
 
                 storage.setJoinedHost( joinedHost );
                 dao.getUserDao().setJoinedHost( uuid, joinedHost );
@@ -135,23 +120,7 @@ public class BUser implements User
         {
             final Language defLanguage = BUCore.getApi().getLanguageManager().getDefaultLanguage();
             final Date date = new Date( System.currentTimeMillis() );
-            final String joinedHost;
-
-            if ( parent.getPendingConnection().getVirtualHost() == null )
-            {
-                joinedHost = null;
-            }
-            else
-            {
-                if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
-                {
-                    joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
-                }
-                else
-                {
-                    joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
-                }
-            }
+            final String joinedHost = UserUtils.getJoinedHost( parent );
 
             dao.getUserDao().createUser(
                     uuid,

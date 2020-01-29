@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;

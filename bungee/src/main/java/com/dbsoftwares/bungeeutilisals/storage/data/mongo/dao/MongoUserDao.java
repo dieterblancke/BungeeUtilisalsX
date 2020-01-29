@@ -247,10 +247,12 @@ public class MongoUserDao implements UserDao
         final Map<String, Integer> map = Maps.newHashMap();
         final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
 
-        collection.aggregate( Collections.singletonList(
+        for ( Document doc : collection.aggregate( Collections.singletonList(
                 Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
-        ) ).forEach( (Consumer<? super Document>) doc
-                -> map.put( doc.getString( "_id" ), doc.getInteger( "count" ) ) );
+        ) ) )
+        {
+            map.put( doc.getString( "_id" ), doc.getInteger( "count" ) );
+        }
 
         return map;
     }
@@ -261,11 +263,13 @@ public class MongoUserDao implements UserDao
         final Map<String, Integer> map = Maps.newHashMap();
         final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
 
-        collection.aggregate( Arrays.asList(
+        for ( Document doc : collection.aggregate( Arrays.asList(
                 Aggregates.match( Filters.regex( "joined_host", searchTag ) ),
                 Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
-        ) ).forEach( (Consumer<? super Document>) doc
-                -> map.put( doc.getString( "_id" ), doc.getInteger( "count" ) ) );
+        ) ) )
+        {
+            map.put( doc.getString( "_id" ), doc.getInteger( "count" ) );
+        }
 
         return map;
     }
