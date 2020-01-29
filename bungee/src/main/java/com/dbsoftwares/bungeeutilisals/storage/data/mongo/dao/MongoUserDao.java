@@ -251,7 +251,12 @@ public class MongoUserDao implements UserDao
                 Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
         ) ) )
         {
-            map.put( doc.getString( "_id" ), doc.getInteger( "count" ) );
+            final String joinedHost = doc.getString( "_id" );
+
+            if ( joinedHost != null )
+            {
+                map.put( joinedHost, doc.getInteger( "count" ) );
+            }
         }
 
         return map;
@@ -268,7 +273,12 @@ public class MongoUserDao implements UserDao
                 Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
         ) ) )
         {
-            map.put( doc.getString( "_id" ), doc.getInteger( "count" ) );
+            final String joinedHost = doc.getString( "_id" );
+
+            if ( joinedHost != null )
+            {
+                map.put( joinedHost, doc.getInteger( "count" ) );
+            }
         }
 
         return map;

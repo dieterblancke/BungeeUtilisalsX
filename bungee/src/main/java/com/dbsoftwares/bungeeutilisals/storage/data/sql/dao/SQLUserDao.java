@@ -429,7 +429,12 @@ public class SQLUserDao implements UserDao
             {
                 while ( rs.next() )
                 {
-                    map.put( rs.getString( "joined_host" ), rs.getInt( "amount" ) );
+                    final String joinedHost = rs.getString( "joined_host" );
+
+                    if ( joinedHost != null )
+                    {
+                        map.put( joinedHost, rs.getInt( "amount" ) );
+                    }
                 }
             }
         }
@@ -456,7 +461,12 @@ public class SQLUserDao implements UserDao
             {
                 while ( rs.next() )
                 {
-                    map.put( rs.getString( "joined_host" ), rs.getInt( "amount" ) );
+                    final String joinedHost = rs.getString( "joined_host" );
+
+                    if ( joinedHost != null )
+                    {
+                        map.put( joinedHost, rs.getInt( "amount" ) );
+                    }
                 }
             }
         }
