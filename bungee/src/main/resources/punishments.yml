@@ -63,6 +63,7 @@ blocked-mute-commands:
 parameters:
   # nbp stands for no-broadcast-permission, if you use for example '/ban (user) (reason) -nbp', everyone will be able to see the broadcast message.
   nbp: true
+  s: true
 
 commands:
   ban:
