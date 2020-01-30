@@ -35,7 +35,6 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
-import java.util.Collections;
 import java.util.List;
 
 public class CommandManager
@@ -119,7 +118,7 @@ public class CommandManager
                 .name( name )
                 .fromSection( config.getSection( section ) )
                 .executable( call )
-                .parameters( Collections.singletonList( "-nbp" ) );
+                .parameters( parameters );
 
         buildCommand( name, commandBuilder );
     }
