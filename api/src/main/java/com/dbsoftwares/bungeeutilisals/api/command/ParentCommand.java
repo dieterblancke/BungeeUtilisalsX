@@ -23,17 +23,23 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 public class ParentCommand implements TabCall
 {
 
     private final List<Command> subCommands = Lists.newArrayList();
-    private final String helpPath;
+    private final Consumer<User> helpConsumer;
 
     public ParentCommand( final String helpPath )
     {
-        this.helpPath = helpPath;
+        this( user -> user.sendLangMessage( helpPath ) );
+    }
+
+    public ParentCommand( final Consumer<User> helpConsumer )
+    {
+        this.helpConsumer = helpConsumer;
     }
 
     protected void registerSubCommand( final Command cmd )
@@ -59,7 +65,7 @@ public class ParentCommand implements TabCall
                 }
             }
         }
-        user.sendLangMessage( helpPath );
+        helpConsumer.accept( user );
     }
 
     @Override
