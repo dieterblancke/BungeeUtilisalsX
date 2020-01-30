@@ -102,20 +102,23 @@ public class TempBanCommand implements CommandCall
 
         user.sendLangMessage( "punishments.tempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.tempban.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.tempban.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.tempban.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.tempban.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.tempban.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.tempban.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(

@@ -96,9 +96,24 @@ public class MuteCommand implements CommandCall
 
         user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        BUCore.getApi().langPermissionBroadcast( "punishments.mute.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.mute.broadcast" ),
-                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.mute.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.mute.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.mute.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.MUTE, user, storage.getUuid(),

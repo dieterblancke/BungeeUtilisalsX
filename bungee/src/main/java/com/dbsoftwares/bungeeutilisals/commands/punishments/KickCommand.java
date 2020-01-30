@@ -89,10 +89,24 @@ public class KickCommand implements CommandCall
             target.kick( kick );
         }
 
-        BUCore.getApi().langPermissionBroadcast( "punishments.kick.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.kick.broadcast" ),
-                executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
-
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.kick.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.kick.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.kick.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
                 PunishmentType.KICK, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null

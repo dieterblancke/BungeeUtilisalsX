@@ -86,20 +86,23 @@ public class WarnCommand implements CommandCall
 
         user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.warn.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.warn.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.warn.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.warn.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.warn.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.warn.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(

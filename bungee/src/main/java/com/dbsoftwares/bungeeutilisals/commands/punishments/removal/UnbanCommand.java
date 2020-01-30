@@ -81,20 +81,23 @@ public class UnbanCommand implements CommandCall
 
         user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.unban.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.unban.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.unban.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.unban.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
     }
 }

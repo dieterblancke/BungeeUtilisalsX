@@ -78,20 +78,23 @@ public class UnbanIPCommand implements CommandCall
 
         user.sendLangMessage( "punishments.unbanip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.unbanip.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.unbanip.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unbanip.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.unbanip.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.unbanip.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unbanip.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
     }
 }

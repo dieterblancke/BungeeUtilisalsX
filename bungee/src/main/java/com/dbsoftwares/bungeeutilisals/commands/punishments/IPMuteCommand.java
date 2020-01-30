@@ -97,20 +97,23 @@ public class IPMuteCommand implements CommandCall
 
         user.sendLangMessage( "punishments.ipmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.ipmute.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.ipmute.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.ipmute.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.ipmute.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.ipmute.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.ipmute.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(

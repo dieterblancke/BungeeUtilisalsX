@@ -79,20 +79,23 @@ public class UnmuteIPCommand implements CommandCall
         BUCore.getApi().getUser( args.get( 0 ) ).ifPresent( target -> target.setMute( null ) );
         user.sendLangMessage( "punishments.unmuteip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        if ( parameters.contains( "-nbp" ) )
+        if ( !parameters.contains( "-s" ) )
         {
-            BUCore.getApi().langBroadcast(
-                    "punishments.unmuteip.broadcast",
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
-        }
-        else
-        {
-            BUCore.getApi().langPermissionBroadcast(
-                    "punishments.unmuteip.broadcast",
-                    FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unmuteip.broadcast" ),
-                    executor.getPlaceHolders( info ).toArray( new Object[]{} )
-            );
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.unmuteip.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.unmuteip.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unmuteip.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
         }
     }
 }
