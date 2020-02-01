@@ -20,5 +20,5 @@ jobs:
       - name: Create artifact
         uses: actions/upload-artifact@v1
         with:
-          name: HeroicScoreboard
+          name: BungeeUtilisalsX
           path: ${{ steps.getfilename.outputs.file }}
