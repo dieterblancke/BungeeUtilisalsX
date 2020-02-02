@@ -1,5 +1,5 @@
-# Table of content
-[[_TOC_]]
+# Table of contents
+{:toc}
 
 # Legenda
 - ( argument ) = a required argument
