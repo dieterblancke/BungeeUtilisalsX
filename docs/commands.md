@@ -1,5 +1,5 @@
 # Table of contents
-{:toc}
+{:.no_toc}
 
 # Legenda
 - ( argument ) = a required argument
