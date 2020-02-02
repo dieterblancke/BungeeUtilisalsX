@@ -1,5 +1,4 @@
-# Table of contents
-{:.no_toc}
+# Commands
 
 # Legenda
 - ( argument ) = a required argument
@@ -450,7 +449,7 @@ Changes user preference for certain settings.
 **Usage:** /friend settings (setting) (enable / disable) <br>
 **Default Permission:** bungeeutilisals.friends.settings <br>
 
-# ReportCommands
+# Report Commands
 ## /report create (user) (reason)
 Creates a report against a certain user.
 
