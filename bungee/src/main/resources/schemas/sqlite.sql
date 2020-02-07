@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
     language    VARCHAR(24)        NOT NULL,
     firstlogin  DATETIME           NOT NULL,
     lastlogout  DATETIME           NOT NULL,
-    joined_host TEXT,
+    joined_host TEXT
 );
 
 CREATE INDEX IF NOT EXISTS idx_users ON `{users-table}` (id, uuid, username, ip);
