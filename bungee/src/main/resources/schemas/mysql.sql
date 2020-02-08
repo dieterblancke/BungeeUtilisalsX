@@ -5,8 +5,8 @@ CREATE TABLE IF NOT EXISTS `{users-table}`
     username    VARCHAR(32)        NOT NULL,
     ip          VARCHAR(32)        NOT NULL,
     language    VARCHAR(24)        NOT NULL,
-    firstlogin  TIMESTAMP          NOT NULL,
-    lastlogout  TIMESTAMP          NOT NULL,
+    firstlogin  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    lastlogout  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     joined_host TEXT,
     INDEX idx_users (id, uuid, username, ip)
 ) DEFAULT CHARSET = UTF8MB4;

@@ -6,6 +6,13 @@ enabled: false
 # Example of default format: 31-01-2018 08:13:34
 date-format: 'dd-MM-yyyy kk:mm:ss'
 
+# By enabling this, all punishment commands will need an additional argument specifying the server.
+# For example:
+# - /ban didjee2 ALL Testing
+# - /tempban didjee2 1d Lobby1 Testing
+# If you disable this, punishment commands will work as they used to.
+per-server-punishments: true
+
 # Should punishment templates be enabled?
 # For example, if someone types /ban (user) @ADVERTISING (by default) it will not use the default ban message,
 # instead it will be using the template ban message (message if they get kicked / when they try to join)
