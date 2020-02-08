@@ -33,9 +33,11 @@ urls:
   name-to-uuid: 'https://api.minetools.eu/uuid/'
 
 storage:
-  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, MONGODB | MySQL recommended
-  # SQLite is local storage, but WILL slow down BungeeUtilisals for bigger networks.
-  type: 'MYSQL'
+  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, H2 & MONGODB | MySQL recommended
+  # SQLite and H2 are for local, file, storage, these could (and likely will) slow down BungeeUtilisals for bigger networks.
+  #
+  # It's recommended to use MYSQL, POSTGRESQL or MARIADB for storage.
+  type: 'H2'
 
   # The hostname (IP) to connect to
   hostname: '127.0.0.1'

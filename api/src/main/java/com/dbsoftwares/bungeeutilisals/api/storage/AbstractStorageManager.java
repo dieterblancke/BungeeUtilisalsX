@@ -115,6 +115,8 @@ public abstract class AbstractStorageManager
                 "MariaDB", "schemas/mysql.sql" ),
         SQLITE( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager" ),
                 "SQLite", "schemas/sqlite.sql" ),
+        H2( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.H2StorageManager" ),
+                "H2", "schemas/mysql.sql" ),
         MONGODB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager" ),
                 "MongoDB", null );
 

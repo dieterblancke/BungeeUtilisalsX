@@ -30,32 +30,31 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteStorageManager extends AbstractStorageManager
+public class H2StorageManager extends AbstractStorageManager
 {
 
     private UnclosableConnection connection;
     private File database;
 
-    public SQLiteStorageManager( Plugin plugin ) throws SQLException
+    public H2StorageManager( Plugin plugin ) throws SQLException
     {
-        super( plugin, StorageType.SQLITE, new SQLDao() );
-        database = new File( BungeeUtilisals.getInstance().getDataFolder(), "data.db" );
+        super( plugin, StorageType.H2, new SQLDao() );
+        database = new File( BungeeUtilisals.getInstance().getDataFolder(), "h2-storage.db" );
 
         try
         {
-            if ( !database.exists() && !database.createNewFile() )
+            if ( !database.exists() )
             {
-                return;
+                database.createNewFile();
             }
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.logException( e );
         }
-
         try
         {
-            Class.forName( "org.sqlite.JDBC" );
+            Class.forName( "org.h2.Driver" );
         }
         catch ( ClassNotFoundException e )
         {
@@ -66,7 +65,7 @@ public class SQLiteStorageManager extends AbstractStorageManager
 
     private UnclosableConnection initializeConnection() throws SQLException
     {
-        return UnclosableConnection.wrap( DriverManager.getConnection( "jdbc:sqlite:" + database.getPath() ) );
+        return UnclosableConnection.wrap( DriverManager.getConnection( "jdbc:h2:./" + database.getPath() + ";mode=MySQL" ) );
     }
 
     @Override

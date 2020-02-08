@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -44,7 +44,7 @@ public class SQLUserDao implements UserDao
     private static final String INSERT_USER = "INSERT INTO {users-table} " +
             "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
 
-    private static final String SQLITE_INSERT_USER = "INSERT INTO {users-table} " +
+    private static final String OTHER_INSERT_USER = "INSERT INTO {users-table} " +
             "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;";
 
     private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
@@ -66,9 +66,8 @@ public class SQLUserDao implements UserDao
     @Override
     public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost )
     {
-        final String statement =
-                BungeeUtilisals.getInstance().getDatabaseManagement().getType().equals( AbstractStorageManager.StorageType.SQLITE )
-                        ? SQLITE_INSERT_USER : INSERT_USER;
+        final StorageType type = BungeeUtilisals.getInstance().getDatabaseManagement().getType();
+        final String statement = type == StorageType.SQLITE || type == StorageType.POSTGRESQL ? OTHER_INSERT_USER : INSERT_USER;
 
         try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( statement ) ) )

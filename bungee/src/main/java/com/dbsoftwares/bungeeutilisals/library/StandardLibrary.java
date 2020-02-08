@@ -30,6 +30,12 @@ public enum StandardLibrary
             "3.30.1",
             checkType( "SQLITE" )
     ),
+    H2(
+            "org.h2.jdbcx.JdbcDataSource",
+            "https://repo1.maven.org/maven2/com/h2database/h2/{version}/h2-{version}.jar",
+            "1.4.200",
+            checkType( "H2" )
+    ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
