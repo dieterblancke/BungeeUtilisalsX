@@ -20,7 +20,11 @@ package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import lombok.Data;
@@ -41,7 +45,7 @@ public abstract class PunishmentCommand implements CommandCall
         return BUCore.getApi().getStorageManager().getDao();
     }
 
-    protected PunishmentArgs loadArguments( final List<String> args, final boolean withTime )
+    protected PunishmentArgs loadArguments( final User user, final List<String> args, final boolean withTime )
     {
         if ( withTime )
         {
@@ -73,6 +77,7 @@ public abstract class PunishmentCommand implements CommandCall
         }
         final PunishmentArgs punishmentArgs = new PunishmentArgs();
 
+        punishmentArgs.setExecutor( user );
         punishmentArgs.setPlayer( args.get( 0 ) );
 
         if ( withTime )
@@ -108,10 +113,14 @@ public abstract class PunishmentCommand implements CommandCall
     @Data
     public class PunishmentArgs
     {
+
+        private User executor;
         private String player;
         private long time;
         private String server;
         private String reason;
+
+        private UserStorage storage;
 
         public void setTime( final String time )
         {
@@ -121,6 +130,33 @@ public abstract class PunishmentCommand implements CommandCall
         public boolean hasJoined()
         {
             return dao().getUserDao().exists( player );
+        }
+
+        public UserStorage getUserData()
+        {
+            return storage = dao().getUserDao().getUserData( player );
+        }
+
+        public boolean launchEvent()
+        {
+            final UserPunishEvent event = new UserPunishEvent(
+                    PunishmentType.BAN,
+                    executor,
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    storage.getIp(),
+                    reason,
+                    useServerPunishments() ? server : executor.getServerName(),
+                    time
+            );
+            BUCore.getApi().getEventLoader().launchEvent( event );
+
+            if ( event.isCancelled() )
+            {
+                executor.sendLangMessage( "punishments.cancelled" );
+                return true;
+            }
+            return false;
         }
     }
 }

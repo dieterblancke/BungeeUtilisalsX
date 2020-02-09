@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -37,7 +36,7 @@ public class BanCommand extends PunishmentCommand
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final PunishmentArgs punishmentArgs = loadArguments( args, false );
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
 
         if ( punishmentArgs == null )
         {
@@ -45,35 +44,35 @@ public class BanCommand extends PunishmentCommand
             return;
         }
 
-        final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
+        final String reason = punishmentArgs.getReason();
 
-        if ( !dao().getUserDao().exists( args.get( 0 ) ) )
+        if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
 
-        final UserStorage storage = dao().getUserDao().getUserData( args.get( 0 ) );
+        final UserStorage storage = punishmentArgs.getUserData();
         if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid() ) )
         {
             user.sendLangMessage( "punishments.ban.already-banned" );
             return;
         }
 
-        final UserPunishEvent event = new UserPunishEvent( PunishmentType.BAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
-        BUCore.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
+        if ( punishmentArgs.launchEvent() )
         {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
         final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertBan(
-                storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, user.getServerName(), true, user.getName()
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                true,
+                user.getName()
         );
 
         BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
