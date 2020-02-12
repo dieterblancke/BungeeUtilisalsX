@@ -90,15 +90,7 @@ public class BanCommand extends PunishmentCommand
             }
             kick = executor.setPlaceHolders( kick, info );
 
-            if ( useServerPunishments() )
-            {
-                banned.sendMessage( kick );
-                banned.getParent().connect( banned.getParent().getReconnectServer() );
-            }
-            else
-            {
-                banned.kick( kick );
-            }
+            banned.kick( kick );
         } );
 
         user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );

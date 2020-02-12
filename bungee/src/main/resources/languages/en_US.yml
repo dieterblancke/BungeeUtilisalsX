@@ -436,6 +436,7 @@ punishments:
 
   ban:
     usage: '&fPlease use &a/ban (user) (reason)&f!'
+    usage-server: '&fPlease use &a/ban (user) (server) (reason)&f!'
     already-banned: '&fThis user is already banned!'
     executed: '&fYou have banned &e{user} for &e{reason}&f!'
     broadcast:
