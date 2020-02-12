@@ -273,7 +273,8 @@ public class MongoBansDao implements BansDao
                 Updates.combine(
                         Updates.set( "active", false ),
                         Updates.set( "removed", true ),
-                        Updates.set( "removed_by", removedBy )
+                        Updates.set( "removed_by", removedBy ),
+                        Updates.set( "removed_at", new Date() )
                 )
         );
     }
@@ -293,7 +294,8 @@ public class MongoBansDao implements BansDao
                 Updates.combine(
                         Updates.set( "active", false ),
                         Updates.set( "removed", true ),
-                        Updates.set( "removed_by", removedBy )
+                        Updates.set( "removed_by", removedBy ),
+                        Updates.set( "removed_at", new Date() )
                 )
         );
     }

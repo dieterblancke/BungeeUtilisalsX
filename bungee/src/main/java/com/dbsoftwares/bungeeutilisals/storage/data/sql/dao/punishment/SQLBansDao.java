@@ -371,15 +371,16 @@ public class SQLBansDao implements BansDao
     {
         try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?" +
+                      "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
                               " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';"
               ) )
         {
             pstmt.setBoolean( 1, false );
             pstmt.setBoolean( 2, true );
             pstmt.setString( 3, removedBy );
-            pstmt.setString( 4, uuid.toString() );
-            pstmt.setBoolean( 5, true );
+            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 5, uuid.toString() );
+            pstmt.setBoolean( 6, true );
 
             pstmt.executeUpdate();
         }
@@ -394,15 +395,16 @@ public class SQLBansDao implements BansDao
     {
         try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?" +
+                      "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
                               " WHERE ip = ? AND active = ? AND type LIKE 'IP%';"
               ) )
         {
             pstmt.setBoolean( 1, false );
             pstmt.setBoolean( 2, true );
             pstmt.setString( 3, removedBy );
-            pstmt.setString( 4, ip );
-            pstmt.setBoolean( 5, true );
+            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 5, ip );
+            pstmt.setBoolean( 6, true );
 
             pstmt.executeUpdate();
         }

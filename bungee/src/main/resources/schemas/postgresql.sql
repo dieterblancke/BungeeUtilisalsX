@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS "{bans-table}"
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT FALSE,
     removed_by              VARCHAR(32),
+    removed_at              TIMESTAMP   DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT FALSE,
     FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
 );
@@ -84,6 +85,7 @@ CREATE TABLE IF NOT EXISTS "{mutes-table}"
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT FALSE,
     removed_by              VARCHAR(32),
+    removed_at              TIMESTAMP   DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT FALSE,
     FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
 );

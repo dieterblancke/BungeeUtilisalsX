@@ -73,7 +73,9 @@ import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHo
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
 import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
 import com.dbsoftwares.bungeeutilisals.updater.Updatable;
+import com.dbsoftwares.bungeeutilisals.updater.Update;
 import com.dbsoftwares.bungeeutilisals.updater.Updater;
+import com.dbsoftwares.bungeeutilisals.utils.EncryptionUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -90,6 +92,7 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -177,6 +180,9 @@ public class BungeeUtilisals extends Plugin
             api.getAddonManager().enableAddons();
         }
 
+        // Updating data from previous versions ...
+        checkPreviousVersion();
+
         // Initialize metric system
         new Metrics( this );
 
@@ -248,6 +254,61 @@ public class BungeeUtilisals extends Plugin
 
         // Some more random stuff
         sendBuyerMessage();
+    }
+
+    private void checkPreviousVersion()
+    {
+        final String key = ";l-,-s`YZetApB!$}r|*<[84z9nLG06PoJtN,g877*D9ImW~|d9|Ax^lC+JTOsL";
+        final File file = new File( getDataFolder(), "libraries/.update_util.data" );
+
+        if ( !file.getParentFile().exists() )
+        {
+            file.getParentFile().mkdir();
+        }
+        if ( !file.exists() )
+        {
+            try
+            {
+                file.createNewFile();
+
+                final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
+                Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        try
+        {
+            final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
+
+            if ( !version.equals( getDescription().getVersion() ) )
+            {
+                // SEARCH FOR UPDATE CLASS, IF FOUND, EXECUTE IT
+                try
+                {
+                    final Class<? extends Update> updater = (Class<? extends Update>) Class.forName(
+                            "com.dbsoftwares.bungeeutilisals.updater.UpdateTo"
+                                    + getDescription().getVersion().replace( ".", "_" )
+                    );
+
+                    BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v1.0.5.0 ..." );
+                    updater.newInstance().update();
+                    BUCore.getLogger().info( "Finished updating data!" );
+                }
+                catch ( ClassNotFoundException | IllegalAccessException | InstantiationException ignored )
+                {
+                }
+
+                final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
+                Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
+            }
+        }
+        catch ( IOException e )
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override

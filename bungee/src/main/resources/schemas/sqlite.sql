@@ -63,6 +63,7 @@ CREATE TABLE IF NOT EXISTS `{bans-table}`
     type                    VARCHAR(16) NOT NULL,
     removed                 TINYINT(1)  NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
+    removed_at              DATETIME    DEFAULT NULL,
     punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
@@ -84,6 +85,7 @@ CREATE TABLE IF NOT EXISTS `{mutes-table}`
     type                    VARCHAR(16) NOT NULL,
     removed                 TINYINT(1)  NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
+    removed_at              DATETIME    DEFAULT NULL,
     punishmentaction_status TINYINT(1)  NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid)
 );
