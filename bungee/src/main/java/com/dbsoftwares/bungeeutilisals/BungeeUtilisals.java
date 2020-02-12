@@ -265,6 +265,7 @@ public class BungeeUtilisals extends Plugin
         {
             file.getParentFile().mkdir();
         }
+        boolean shouldUpdate = false;
         if ( !file.exists() )
         {
             try
@@ -273,41 +274,48 @@ public class BungeeUtilisals extends Plugin
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
+
+                shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
             }
             catch ( IOException e )
             {
                 e.printStackTrace();
             }
         }
-        try
+        if ( !shouldUpdate )
         {
-            final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
-
-            if ( !version.equals( getDescription().getVersion() ) )
+            try
             {
-                // SEARCH FOR UPDATE CLASS, IF FOUND, EXECUTE IT
-                try
-                {
-                    final Class<? extends Update> updater = (Class<? extends Update>) Class.forName(
-                            "com.dbsoftwares.bungeeutilisals.updater.UpdateTo"
-                                    + getDescription().getVersion().replace( ".", "_" )
-                    );
+                final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
 
-                    BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v1.0.5.0 ..." );
-                    updater.newInstance().update();
-                    BUCore.getLogger().info( "Finished updating data!" );
-                }
-                catch ( ClassNotFoundException | IllegalAccessException | InstantiationException ignored )
-                {
-                }
+                shouldUpdate = !version.equals( getDescription().getVersion() );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if ( shouldUpdate )
+        {
+            // SEARCH FOR UPDATE CLASS, IF FOUND, EXECUTE IT
+            try
+            {
+                final Class<? extends Update> updater = (Class<? extends Update>) Class.forName(
+                        "com.dbsoftwares.bungeeutilisals.updater.UpdateTo"
+                                + getDescription().getVersion().replace( ".", "_" )
+                );
+
+                BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v1.0.5.0 ..." );
+                updater.newInstance().update();
+                BUCore.getLogger().info( "Finished updating data!" );
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
             }
-        }
-        catch ( IOException e )
-        {
-            e.printStackTrace();
+            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            {
+            }
         }
     }
 

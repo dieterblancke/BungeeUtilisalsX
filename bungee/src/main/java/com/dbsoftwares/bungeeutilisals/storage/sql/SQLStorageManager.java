@@ -74,7 +74,7 @@ public abstract class SQLStorageManager extends AbstractStorageManager
         {
             if ( !rs.next() )
             {
-                try ( PreparedStatement pstmt = connection.prepareStatement( formatMessage( "ALTER TABLE {bans-table} ADD removed_at " + type + " DEFAULT NULL;" ) ) )
+                try ( PreparedStatement pstmt = connection.prepareStatement( formatMessage( "ALTER TABLE {bans-table} ADD removed_at " + type + " NULL DEFAULT NULL;" ) ) )
                 {
                     pstmt.execute();
                 }
@@ -84,7 +84,7 @@ public abstract class SQLStorageManager extends AbstractStorageManager
         {
             if ( !rs.next() )
             {
-                try ( PreparedStatement pstmt = connection.prepareStatement( formatMessage( "ALTER TABLE {mutes-table} ADD removed_at " + type + " DEFAULT NULL;" ) ) )
+                try ( PreparedStatement pstmt = connection.prepareStatement( formatMessage( "ALTER TABLE {mutes-table} ADD removed_at " + type + " NULL DEFAULT NULL;" ) ) )
                 {
                     pstmt.execute();
                 }
