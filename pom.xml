@@ -66,13 +66,13 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-protocol</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.15-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -84,12 +84,12 @@
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.30</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-simple</artifactId>
-            <version>1.7.25</version>
+            <version>1.7.30</version>
         </dependency>
         <dependency>
             <groupId>org.mongodb</groupId>
