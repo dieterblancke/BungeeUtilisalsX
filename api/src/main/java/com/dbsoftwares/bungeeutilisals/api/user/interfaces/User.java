@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
@@ -231,23 +230,6 @@ public interface User extends ExperimentalUser
      * @return the name of the server the user is in, returns BUNGEE in case of Console.
      */
     String getServerName();
-
-    /**
-     * @return true if user is muted, false if not.
-     */
-    boolean isMuted();
-
-    /**
-     * @return PunishmentInfo of current mute (if muted), null if not muted.
-     */
-    PunishmentInfo getMuteInfo();
-
-    /**
-     * Sets the user mute data in local cache.
-     *
-     * @param info The info to be stored.
-     */
-    void setMute( PunishmentInfo info );
 
     /**
      * @return true if staffchat is enabled, false if not.

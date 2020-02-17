@@ -30,6 +30,10 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
+import java.util.List;
+
+import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+
 public class MuteCheckExecutor implements EventExecutor
 {
 
@@ -38,11 +42,11 @@ public class MuteCheckExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
-        if ( !user.isMuted() )
+        if ( !isMuted( user, user.getServerName() ) )
         {
             return;
         }
-        final PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
         if ( checkTemporaryMute( user, info ) )
         {
             return;
@@ -64,11 +68,11 @@ public class MuteCheckExecutor implements EventExecutor
     {
         User user = event.getUser();
 
-        if ( !user.isMuted() )
+        if ( !isMuted( user, user.getServerName() ) )
         {
             return;
         }
-        final PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
         if ( checkTemporaryMute( user, info ) )
         {
             return;
@@ -79,7 +83,7 @@ public class MuteCheckExecutor implements EventExecutor
         event.setCancelled( true );
     }
 
-    private boolean checkTemporaryMute( User user, PunishmentInfo info )
+    private boolean checkTemporaryMute( final User user, final PunishmentInfo info )
     {
         if ( info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis() )
         {
@@ -87,14 +91,48 @@ public class MuteCheckExecutor implements EventExecutor
 
             if ( info.getType().equals( PunishmentType.TEMPMUTE ) )
             {
-                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE" );
+                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE", info.getServer() );
             }
             else
             {
-                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE" );
+                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE", info.getServer() );
             }
             return true;
         }
         return false;
+    }
+
+    private boolean isMuted( final User user, final String server )
+    {
+        return getCurrentMuteForUser( user, server ) == null;
+    }
+
+    private PunishmentInfo getCurrentMuteForUser( final User user, final String server )
+    {
+        if ( user.getStorage().hasData( "CURRENT_MUTES" ) )
+        {
+            final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+
+            if ( mutes.isEmpty() )
+            {
+                return null;
+            }
+
+            if ( useServerPunishments() )
+            {
+                return mutes.stream()
+                        .filter( mute -> mute.getServer().equals( "ALL" ) || mute.getServer().equals( server ) )
+                        .findAny()
+                        .orElse( null );
+            }
+            else
+            {
+                return mutes.get( 0 );
+            }
+        }
+        else
+        {
+            return null;
+        }
     }
 }

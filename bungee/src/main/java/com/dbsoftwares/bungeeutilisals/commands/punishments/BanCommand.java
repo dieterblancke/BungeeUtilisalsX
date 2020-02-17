@@ -43,17 +43,15 @@ public class BanCommand extends PunishmentCommand
             user.sendLangMessage( "punishments.ban.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-
-        final String reason = punishmentArgs.getReason();
-
         if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
 
-        final UserStorage storage = punishmentArgs.getUserData();
-        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid() ) )
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
         {
             user.sendLangMessage( "punishments.ban.already-banned" );
             return;
@@ -115,8 +113,14 @@ public class BanCommand extends PunishmentCommand
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.BAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
+                PunishmentType.BAN,
+                user,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                null
         ) );
     }
 }

@@ -27,13 +27,13 @@ import java.util.UUID;
 public interface MutesDao
 {
 
-    boolean isMuted( UUID uuid );
+    boolean isMuted( UUID uuid, String server );
 
-    boolean isIPMuted( String ip );
+    boolean isIPMuted( String ip, String server );
 
-    boolean isMuted( PunishmentType type, UUID uuid );
+    boolean isMuted( PunishmentType type, UUID uuid, String server );
 
-    boolean isIPMuted( PunishmentType type, String ip );
+    boolean isIPMuted( PunishmentType type, String ip, String server );
 
     PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
@@ -43,17 +43,21 @@ public interface MutesDao
 
     PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo getCurrentMute( UUID uuid );
+    PunishmentInfo getCurrentMute( UUID uuid, String server );
 
-    PunishmentInfo getCurrentIPMute( String ip );
+    PunishmentInfo getCurrentIPMute( String ip, String server );
 
-    void removeCurrentMute( UUID uuid, String removedBy );
+    void removeCurrentMute( UUID uuid, String removedBy, String server );
 
-    void removeCurrentIPMute( String ip, String removedBy );
+    void removeCurrentIPMute( String ip, String removedBy, String server );
 
-    List<PunishmentInfo> getMutes( final UUID uuid );
+    List<PunishmentInfo> getMutes( UUID uuid );
 
-    List<PunishmentInfo> getIPMutes( final String ip );
+    List<PunishmentInfo> getMutes( UUID uuid, String server );
+
+    List<PunishmentInfo> getIPMutes( String ip );
+
+    List<PunishmentInfo> getIPMutes( String ip, String server );
 
     PunishmentInfo getById( final String id );
 }

@@ -29,7 +29,6 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -70,7 +69,7 @@ public class BUser implements User
     private boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private PunishmentInfo mute;
+    private List<PunishmentInfo> mute;
     private Location location;
 
     @Getter
@@ -137,20 +136,6 @@ public class BUser implements User
         { // Stored name != user current name | Name changed?
             storage.setUserName( name );
             dao.getUserDao().setName( uuid, name );
-        }
-
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
-        {
-            final MutesDao mutesDao = dao.getPunishmentDao().getMutesDao();
-
-            if ( mutesDao.isMuted( uuid ) )
-            {
-                this.mute = mutesDao.getCurrentMute( uuid );
-            }
-            else if ( mutesDao.isIPMuted( ip ) )
-            {
-                this.mute = mutesDao.getCurrentIPMute( ip );
-            }
         }
 
         if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
@@ -415,18 +400,6 @@ public class BUser implements User
     public String getServerName()
     {
         return getParent().getServer().getInfo().getName();
-    }
-
-    @Override
-    public boolean isMuted()
-    {
-        return mute != null;
-    }
-
-    @Override
-    public PunishmentInfo getMuteInfo()
-    {
-        return mute;
     }
 
     @Override

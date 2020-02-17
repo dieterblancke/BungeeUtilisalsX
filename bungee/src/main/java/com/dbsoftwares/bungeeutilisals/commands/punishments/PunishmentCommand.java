@@ -132,9 +132,18 @@ public abstract class PunishmentCommand implements CommandCall
             return dao().getUserDao().exists( player );
         }
 
-        public UserStorage getUserData()
+        public UserStorage getStorage()
         {
-            return storage = dao().getUserDao().getUserData( player );
+            if ( storage == null )
+            {
+                return storage = dao().getUserDao().getUserData( player );
+            }
+            return storage;
+        }
+
+        public String getServerOrAll()
+        {
+            return server == null ? "ALL" : server;
         }
 
         public boolean launchEvent()

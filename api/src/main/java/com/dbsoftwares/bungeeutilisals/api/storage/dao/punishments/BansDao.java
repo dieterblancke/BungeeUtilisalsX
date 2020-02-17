@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
 import java.util.UUID;
@@ -27,13 +28,16 @@ import java.util.UUID;
 public interface BansDao
 {
 
-    boolean isBanned( UUID uuid );
+    static boolean useServerPunishments()
+    {
+        return FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "per-server-punishments" );
+    }
 
-    boolean isIPBanned( String ip );
+    boolean isBanned( UUID uuid, String server );
 
-    boolean isBanned( PunishmentType type, UUID uuid );
+    boolean isIPBanned( String ip, String server );
 
-    boolean isIPBanned( PunishmentType type, String ip );
+    boolean isBanned( PunishmentType type, UUID uuid, String server );
 
     PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
@@ -43,17 +47,23 @@ public interface BansDao
 
     PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo getCurrentBan( UUID uuid );
+    boolean isIPBanned( PunishmentType type, String ip, String server );
 
-    PunishmentInfo getCurrentIPBan( String ip );
+    PunishmentInfo getCurrentBan( UUID uuid, String server );
 
-    void removeCurrentBan( UUID uuid, String removedBy );
+    PunishmentInfo getCurrentIPBan( String ip, String server );
 
-    void removeCurrentIPBan( String ip, String removedBy );
+    void removeCurrentBan( UUID uuid, String removedBy, String server );
 
-    List<PunishmentInfo> getBans( final UUID uuid );
+    void removeCurrentIPBan( String ip, String removedBy, String server );
 
-    List<PunishmentInfo> getIPBans( final String ip );
+    List<PunishmentInfo> getBans( UUID uuid );
 
-    PunishmentInfo getById( final String id );
+    List<PunishmentInfo> getBans( UUID uuid, String server );
+
+    List<PunishmentInfo> getIPBans( String ip );
+
+    List<PunishmentInfo> getIPBans( String ip, String server );
+
+    PunishmentInfo getById( String id );
 }

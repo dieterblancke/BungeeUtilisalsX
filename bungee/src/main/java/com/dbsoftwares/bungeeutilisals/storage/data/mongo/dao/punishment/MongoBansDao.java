@@ -33,78 +33,105 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
 import org.bson.Document;
+import org.bson.conversions.Bson;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
 
+import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+
 public class MongoBansDao implements BansDao
 {
 
     @Override
-    public boolean isBanned( UUID uuid )
+    public boolean isBanned( final UUID uuid, final String server )
     {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", server ) );
+        }
+
         return db()
                 .getCollection( PunishmentType.BAN.getTable() )
-                .find( Filters.and(
-                        Filters.eq( "uuid", uuid.toString() ),
-                        Filters.eq( "active", true ),
-                        Filters.regex( "type", "^(?!IP.*$).*" )
-                ) )
+                .find( Filters.and( filters ) )
                 .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isIPBanned( String ip )
+    public boolean isIPBanned( final String ip, final String server )
     {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", server ) );
+        }
+
         return db()
                 .getCollection( PunishmentType.BAN.getTable() )
-                .find( Filters.and(
-                        Filters.eq( "ip", ip ),
-                        Filters.eq( "active", true ),
-                        Filters.regex( "type", "IP*" )
-                ) )
+                .find( Filters.and( filters ) )
                 .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isBanned( PunishmentType type, UUID uuid )
+    public boolean isBanned( final PunishmentType type, final UUID uuid, final String server )
     {
         if ( type.isIP() || !type.isBan() )
         {
             return false;
         }
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.eq( "type", type.toString() )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", server ) );
+        }
+
         return db()
                 .getCollection( type.getTable() )
-                .find( Filters.and(
-                        Filters.eq( "uuid", uuid.toString() ),
-                        Filters.eq( "active", true ),
-                        Filters.eq( "type", type.toString() )
-                ) )
+                .find( Filters.and( filters ) )
                 .limit( 1 )
                 .iterator()
                 .hasNext();
     }
 
     @Override
-    public boolean isIPBanned( PunishmentType type, String ip )
+    public boolean isIPBanned( final PunishmentType type, final String ip, final String server )
     {
         if ( !type.isBan() || !type.isIP() )
         {
             return false;
         }
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.eq( "type", type.toString() )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", server ) );
+        }
+
         return db()
                 .getCollection( type.getTable() )
-                .find( Filters.and(
-                        Filters.eq( "ip", ip ),
-                        Filters.eq( "active", true ),
-                        Filters.eq( "type", type.toString() )
-                ) )
+                .find( Filters.and( filters ) )
                 .limit( 1 )
                 .iterator()
                 .hasNext();
@@ -199,14 +226,19 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public PunishmentInfo getCurrentBan( UUID uuid )
+    public PunishmentInfo getCurrentBan( final UUID uuid, final String serverName )
     {
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
-        final Document document = collection.find( Filters.and(
+        final List<Bson> filters = Lists.newArrayList(
                 Filters.eq( "uuid", uuid.toString() ),
                 Filters.eq( "active", true ),
                 Filters.regex( "type", "^(?!IP.*$).*" )
-        ) ).first();
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", serverName ) );
+        }
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final Document document = collection.find( Filters.and( filters ) ).first();
 
         if ( document != null )
         {
@@ -229,14 +261,20 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public PunishmentInfo getCurrentIPBan( String ip )
+    public PunishmentInfo getCurrentIPBan( final String ip, final String serverName )
     {
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
-        final Document document = collection.find( Filters.and(
+        final List<Bson> filters = Lists.newArrayList(
                 Filters.eq( "ip", ip ),
                 Filters.eq( "active", true ),
                 Filters.regex( "type", "IP*" )
-        ) ).first();
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", serverName ) );
+        }
+
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final Document document = collection.find( Filters.and( filters ) ).first();
 
         if ( document != null )
         {
@@ -259,17 +297,22 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public void removeCurrentBan( UUID uuid, String removedBy )
+    public void removeCurrentBan( final UUID uuid, final String removedBy, final String serverName )
     {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", serverName ) );
+        }
         final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
 
         // updateMany, this if for some reason multiple bans would be active at the same time.
         coll.updateMany(
-                Filters.and(
-                        Filters.eq( "uuid", uuid.toString() ),
-                        Filters.eq( "active", true ),
-                        Filters.regex( "type", "^(?!IP.*$).*" )
-                ),
+                Filters.and( filters ),
                 Updates.combine(
                         Updates.set( "active", false ),
                         Updates.set( "removed", true ),
@@ -280,17 +323,22 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public void removeCurrentIPBan( String ip, String removedBy )
+    public void removeCurrentIPBan( final String ip, final String removedBy, final String serverName )
     {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
+        );
+        if ( useServerPunishments() )
+        {
+            filters.add( Filters.eq( "server", serverName ) );
+        }
         final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
 
         // updateMany, this if for some reason multiple bans would be active at the same time.
         coll.updateMany(
-                Filters.and(
-                        Filters.eq( "ip", ip ),
-                        Filters.eq( "active", true ),
-                        Filters.regex( "type", "IP*" )
-                ),
+                Filters.and( filters ),
                 Updates.combine(
                         Updates.set( "active", false ),
                         Updates.set( "removed", true ),
@@ -331,13 +379,75 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public List<PunishmentInfo> getIPBans( String ip )
+    public List<PunishmentInfo> getBans( final UUID uuid, final String serverName )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.and(
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" ),
+                Filters.eq( "server", serverName )
+        ) );
+
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.BAN );
+
+            final String id = document.getObjectId( "_id" ).toString();
+            final String user = document.getString( "user" );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
+
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+        }
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getIPBans( final String ip )
     {
         final List<PunishmentInfo> punishments = Lists.newArrayList();
         final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPBAN.getTable() );
         final FindIterable<Document> documents = collection.find( Filters.and(
                 Filters.eq( "ip", ip ),
                 Filters.regex( "type", "IP*" )
+        ) );
+
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPBAN );
+
+            final String id = document.getObjectId( "_id" ).toString();
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String user = document.getString( "user" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
+
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+        }
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getIPBans( final String ip, final String serverName )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPBAN.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.and(
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" ),
+                Filters.eq( "server", serverName )
         ) );
 
         for ( Document document : documents )
