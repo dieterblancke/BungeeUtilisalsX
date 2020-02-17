@@ -56,7 +56,7 @@ public class IPBanCommand extends PunishmentCommand
             return;
         }
 
-        if ( punishmentArgs.launchEvent() )
+        if ( punishmentArgs.launchEvent( PunishmentType.IPBAN ) )
         {
             return;
         }
@@ -67,7 +67,7 @@ public class IPBanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 true,
                 user.getName()
         );
@@ -118,7 +118,7 @@ public class IPBanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 null
         ) );
     }

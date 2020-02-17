@@ -70,26 +70,14 @@ public class CheckIpCommand extends BUCommand
             final Dao dao = BUCore.getApi().getStorageManager().getDao();
             final UserDao userDao = dao.getUserDao();
             final PunishmentDao punishmentDao = dao.getPunishmentDao();
-            final UserStorage storage;
 
-            if ( IP_PATTERN.matcher( args[0] ).find() )
+            final boolean exists = IP_PATTERN.matcher( args[0] ).find() ? userDao.ipExists( args[0] ) : userDao.exists( args[0] );
+            if ( !exists )
             {
-                if ( !userDao.ipExists( args[0] ) )
-                {
-                    user.sendLangMessage( "never-joined" );
-                    return;
-                }
-                storage = userDao.getUserData( args[0] );
+                user.sendLangMessage( "never-joined" );
+                return;
             }
-            else
-            {
-                if ( !userDao.exists( args[0] ) )
-                {
-                    user.sendLangMessage( "never-joined" );
-                    return;
-                }
-                storage = userDao.getUserData( args[0] );
-            }
+            final UserStorage storage = userDao.getUserData( args[0] );
 
             user.sendLangMessage(
                     "punishments.checkip.head",
@@ -102,8 +90,9 @@ public class CheckIpCommand extends BUCommand
 
             users.forEach( u ->
             {
-                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid() );
-                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp() );
+                final UserStorage userStorage = userDao.getUserData( u );
+                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" );
+                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" );
 
                 String colorPath = "punishments.checkip.colors.";
                 if ( banned || ipbanned )

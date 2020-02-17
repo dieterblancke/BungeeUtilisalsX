@@ -19,68 +19,63 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
 
-public class TempMuteCommand implements CommandCall
+public class TempMuteCommand extends PunishmentCommand
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() < 3 )
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, true );
+
+        if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.tempmute.usage" );
+            user.sendLangMessage( "punishments.tempmute.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final String timeFormat = args.get( 1 );
-        final String reason = Utils.formatList( args.subList( 2, args.size() ), " " );
-        final long time = Utils.parseDateDiff( timeFormat );
+        if ( !punishmentArgs.hasJoined() )
+        {
+            user.sendLangMessage( "never-joined" );
+            return;
+        }
+
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+        final long time = punishmentArgs.getTime();
 
         if ( time == 0L )
         {
             user.sendLangMessage( "punishments.tempmute.non-valid" );
             return;
         }
-        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
-        if ( dao.getPunishmentDao().getMutesDao().isMuted( storage.getUuid() ) )
+        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
         {
             user.sendLangMessage( "punishments.tempmute.already-muted" );
             return;
         }
-
-        final UserPunishEvent event = new UserPunishEvent(
-                PunishmentType.TEMPMUTE, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
-        );
-        BUCore.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
+        if ( punishmentArgs.launchEvent( PunishmentType.TEMPMUTE ) )
         {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao.getPunishmentDao().getMutesDao().insertTempMute(
-                storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, user.getServerName(), true, user.getName(), time
+        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertTempMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                true,
+                user.getName(),
+                time
         );
 
         BUCore.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
@@ -122,8 +117,14 @@ public class TempMuteCommand implements CommandCall
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.TEMPMUTE, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time
+                PunishmentType.TEMPMUTE,
+                user,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                time
         ) );
     }
 }

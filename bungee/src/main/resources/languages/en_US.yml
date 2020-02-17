@@ -453,6 +453,7 @@ punishments:
 
   ipban:
     usage: '&fPlease use &a/ipban (user / IP) (reason)&f!'
+    usage-server: '&fPlease use &a/ipban (user / IP) (server) (reason)&f!'
     already-banned: '&fThis user is already ipbanned!'
     executed: '&fYou have ipbanned &e{user} for &e{reason}&f!'
     broadcast:
@@ -469,6 +470,7 @@ punishments:
 
   tempban:
     usage: '&fPlease use &a/tempban (user) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/tempban (user) (timeformat) (server) (reason)&f!'
     already-banned: '&fThis user is already tempbanned!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempbanned &e{user} for &e{reason}&f!'
@@ -487,6 +489,7 @@ punishments:
 
   iptempban:
     usage: '&fPlease use &a/iptempban (user / IP) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/iptempban (user / IP) (timeformat) (server) (reason)&f!'
     already-banned: '&fThis user is already iptempbanned!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempbanned &e{user} for &e{reason}&f!'
@@ -505,6 +508,7 @@ punishments:
 
   mute:
     usage: '&fPlease use &a/mute (user) (reason)&f!'
+    usage-server: '&fPlease use &a/mute (user) (server) (reason)&f!'
     already-muted: '&fThis user is already muted!'
     executed: '&fYou have muted &e{user} for &e{reason}&f!'
     broadcast:
@@ -520,6 +524,7 @@ punishments:
       - '&cUnmute at: &fNever'
   ipmute:
     usage: '&fPlease use &a/ipmute (user / IP) (reason)&f!'
+    usage-server: '&fPlease use &a/ipmute (user / IP) (server) (reason)&f!'
     already-muted: '&fThis user is already ipmuted!'
     executed: '&fYou have ipmuted &e{user} for &e{reason}&f!'
     broadcast:
@@ -536,6 +541,7 @@ punishments:
 
   tempmute:
     usage: '&fPlease use &a/tempmute (user) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/tempmute (user) (timeformat) (server) (reason)&f!'
     already-muted: '&fThis user is already tempmuted!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempmuted &e{user} for &e{reason}&f!'
@@ -554,6 +560,7 @@ punishments:
 
   iptempmute:
     usage: '&fPlease use &a/iptempmute (user / IP) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/iptempmute (user / IP) (timeformat) (server) (reason)&f!'
     already-muted: '&fThis user is already iptempmuted!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempmuted &e{user} for &e{reason}&f!'
@@ -602,6 +609,7 @@ punishments:
 
   unban:
     usage: '&fPlease use &a/unban (user)&f!'
+    usage-server: '&fPlease use &a/unban (user) (server)&f!'
     not-banned: '&fThis user is not banned!'
     executed: '&fYou have unbanned &e{user}&f!'
     broadcast:
@@ -609,6 +617,7 @@ punishments:
 
   unbanip:
     usage: '&fPlease use &a/unbanip (user)&f!'
+    usage-server: '&fPlease use &a/unbanip (user) (server)&f!'
     not-banned: '&fThis user is not ipbanned!'
     executed: '&fYou have unbanned &e{user}&f''s IP&f!'
     broadcast:
@@ -616,6 +625,7 @@ punishments:
 
   unmute:
     usage: '&fPlease use &a/unmute (user)&f!'
+    usage-server: '&fPlease use &a/unmute (user) (server)&f!'
     not-muted: '&fThis user is not muted!'
     executed: '&fYou have unmuted &e{user}&f!'
     broadcast:
@@ -623,6 +633,7 @@ punishments:
 
   unmuteip:
     usage: '&fPlease use &a/unmuteip (user)&f!'
+    usage-server: '&fPlease use &a/unmuteip (user) (server)&f!'
     not-muted: '&fThis user is not ipmuted!'
     executed: '&fYou have unmuted &e{user}&f''s IP&f!'
     broadcast:
@@ -630,6 +641,7 @@ punishments:
 
   punishmentinfo:
     usage: '&ePlease use &b/punishmentinfo (user) [type / all]&e!'
+    usage-server: '&ePlease use &b/punishmentinfo (user) (server) [type / all]&e!'
 
     typeinfo:
       found:

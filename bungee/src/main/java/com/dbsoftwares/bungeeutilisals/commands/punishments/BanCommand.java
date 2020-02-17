@@ -57,7 +57,7 @@ public class BanCommand extends PunishmentCommand
             return;
         }
 
-        if ( punishmentArgs.launchEvent() )
+        if ( punishmentArgs.launchEvent( PunishmentType.BAN ) )
         {
             return;
         }
@@ -68,7 +68,7 @@ public class BanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 true,
                 user.getName()
         );
@@ -119,7 +119,7 @@ public class BanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 null
         ) );
     }

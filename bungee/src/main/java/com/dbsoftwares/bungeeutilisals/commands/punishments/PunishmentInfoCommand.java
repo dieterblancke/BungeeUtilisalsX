@@ -32,6 +32,8 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import java.util.Arrays;
 import java.util.List;
 
+import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+
 public class PunishmentInfoCommand extends BUCommand
 {
 
@@ -52,14 +54,26 @@ public class PunishmentInfoCommand extends BUCommand
     @Override
     public void onExecute( User user, String[] args )
     {
-        if ( args.length == 0 )
+        if ( useServerPunishments() )
         {
-            user.sendLangMessage( "punishments.punishmentinfo.usage" );
-            return;
+            if ( args.length < 2 )
+            {
+                user.sendLangMessage( "punishments.punishmentinfo.usage-server" );
+                return;
+            }
+        }
+        else
+        {
+            if ( args.length < 1 )
+            {
+                user.sendLangMessage( "punishments.punishmentinfo.usage" );
+                return;
+            }
         }
 
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final String username = args[0];
+        final String server = useServerPunishments() ? args[1] : null;
 
         if ( !dao.getUserDao().exists( username ) )
         {
@@ -67,7 +81,16 @@ public class PunishmentInfoCommand extends BUCommand
             return;
         }
         final UserStorage storage = dao.getUserDao().getUserData( username );
-        final String action = args.length > 1 ? args[1] : "all";
+        final String action;
+
+        if ( useServerPunishments() )
+        {
+            action = args.length > 2 ? args[2] : "all";
+        }
+        else
+        {
+            action = args.length > 1 ? args[1] : "all";
+        }
 
         if ( action.equalsIgnoreCase( "all" ) )
         {
@@ -77,7 +100,7 @@ public class PunishmentInfoCommand extends BUCommand
                 {
                     continue;
                 }
-                sendTypeInfo( user, storage, type );
+                sendTypeInfo( user, storage, server, type );
             }
         }
         else
@@ -89,22 +112,26 @@ public class PunishmentInfoCommand extends BUCommand
                 {
                     continue;
                 }
-                sendTypeInfo( user, storage, type );
+                sendTypeInfo( user, storage, server, type );
             }
         }
     }
 
-    private void sendTypeInfo( final User user, final UserStorage storage, final PunishmentType type )
+    private void sendTypeInfo( final User user, final UserStorage storage, String server, final PunishmentType type )
     {
+        if ( !useServerPunishments() || server == null )
+        {
+            server = "ALL";
+        }
         final PunishmentDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao();
 
         switch ( type )
         {
             case BAN:
             case TEMPBAN:
-                if ( dao.getBansDao().isBanned( storage.getUuid() ) )
+                if ( dao.getBansDao().isBanned( storage.getUuid(), server ) )
                 {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentBan( storage.getUuid() ) );
+                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentBan( storage.getUuid(), server ) );
                 }
                 else
                 {
@@ -113,9 +140,9 @@ public class PunishmentInfoCommand extends BUCommand
                 break;
             case IPBAN:
             case IPTEMPBAN:
-                if ( dao.getBansDao().isIPBanned( storage.getIp() ) )
+                if ( dao.getBansDao().isIPBanned( storage.getIp(), server ) )
                 {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentIPBan( storage.getIp() ) );
+                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentIPBan( storage.getIp(), server ) );
                 }
                 else
                 {
@@ -124,9 +151,9 @@ public class PunishmentInfoCommand extends BUCommand
                 break;
             case MUTE:
             case TEMPMUTE:
-                if ( dao.getMutesDao().isMuted( storage.getUuid() ) )
+                if ( dao.getMutesDao().isMuted( storage.getUuid(), server ) )
                 {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentMute( storage.getUuid() ) );
+                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentMute( storage.getUuid(), server ) );
                 }
                 else
                 {
@@ -135,9 +162,9 @@ public class PunishmentInfoCommand extends BUCommand
                 break;
             case IPMUTE:
             case IPTEMPMUTE:
-                if ( dao.getMutesDao().isIPMuted( storage.getIp() ) )
+                if ( dao.getMutesDao().isIPMuted( storage.getIp(), server ) )
                 {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentIPMute( storage.getIp() ) );
+                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentIPMute( storage.getIp(), server ) );
                 }
                 else
                 {

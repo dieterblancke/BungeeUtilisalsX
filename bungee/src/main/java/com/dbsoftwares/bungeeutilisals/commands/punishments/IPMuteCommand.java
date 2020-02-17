@@ -57,7 +57,7 @@ public class IPMuteCommand extends PunishmentCommand
             return;
         }
 
-        if ( punishmentArgs.launchEvent() )
+        if ( punishmentArgs.launchEvent( PunishmentType.IPMUTE ) )
         {
             return;
         }
@@ -67,7 +67,7 @@ public class IPMuteCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 true,
                 user.getName()
         );
@@ -117,7 +117,7 @@ public class IPMuteCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 null
         ) );
     }

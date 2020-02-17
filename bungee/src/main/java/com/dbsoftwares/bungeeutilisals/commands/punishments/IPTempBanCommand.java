@@ -63,7 +63,7 @@ public class IPTempBanCommand extends PunishmentCommand
             user.sendLangMessage( "punishments.iptempban.already-banned" );
             return;
         }
-        if ( punishmentArgs.launchEvent() )
+        if ( punishmentArgs.launchEvent( PunishmentType.IPTEMPBAN ) )
         {
             return;
         }
@@ -73,7 +73,7 @@ public class IPTempBanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 true,
                 user.getName(),
                 time
@@ -125,7 +125,7 @@ public class IPTempBanCommand extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                useServerPunishments() ? punishmentArgs.getServer() : "ALL",
+                punishmentArgs.getServerOrAll(),
                 time
         ) );
     }

@@ -93,7 +93,7 @@ public class PunishmentHistoryCommand extends BUCommand
         }
 
         final int previous = page > 1 ? page - 1 : 1;
-        final int next = page + 1 > pages ? pages : page + 1;
+        final int next = Math.min( page + 1, pages );
 
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;

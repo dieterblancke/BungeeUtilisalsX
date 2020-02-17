@@ -23,8 +23,10 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.utils.ReportUtils;
+import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.util.Date;
@@ -46,7 +48,16 @@ public class UserPunishExecutor implements EventExecutor
     {
         if ( event.isMute() )
         {
-            event.getUser().ifPresent( user -> user.setMute( event.getInfo() ) );
+            event.getUser().ifPresent( user ->
+            {
+                if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+                {
+                    user.getStorage().setData( "CURRENT_MUTES", Lists.newArrayList() );
+                }
+                final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+
+                mutes.add( event.getInfo() );
+            } );
         }
     }
 

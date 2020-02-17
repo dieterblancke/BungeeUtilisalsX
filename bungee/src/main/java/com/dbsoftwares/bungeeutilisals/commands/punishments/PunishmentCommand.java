@@ -21,6 +21,9 @@ package com.dbsoftwares.bungeeutilisals.commands.punishments;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -30,6 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class PunishmentCommand implements CommandCall
 {
@@ -43,6 +47,35 @@ public abstract class PunishmentCommand implements CommandCall
     protected Dao dao()
     {
         return BUCore.getApi().getStorageManager().getDao();
+    }
+
+    protected PunishmentRemovalArgs loadRemovalArguments( final User user, final List<String> args )
+    {
+        if ( useServerPunishments() )
+        {
+            if ( args.size() < 1 )
+            {
+                return null;
+            }
+        }
+        else
+        {
+            if ( args.size() < 2 )
+            {
+                return null;
+            }
+        }
+        final PunishmentRemovalArgs punishmentRemovalArgs = new PunishmentRemovalArgs();
+
+        punishmentRemovalArgs.setExecutor( user );
+        punishmentRemovalArgs.setPlayer( args.get( 0 ) );
+
+        if ( useServerPunishments() )
+        {
+            punishmentRemovalArgs.setServer( args.get( 1 ) );
+        }
+
+        return punishmentRemovalArgs;
     }
 
     protected PunishmentArgs loadArguments( final User user, final List<String> args, final boolean withTime )
@@ -146,18 +179,100 @@ public abstract class PunishmentCommand implements CommandCall
             return server == null ? "ALL" : server;
         }
 
-        public boolean launchEvent()
+        public boolean launchEvent( final PunishmentType type )
         {
             final UserPunishEvent event = new UserPunishEvent(
-                    PunishmentType.BAN,
+                    type,
                     executor,
                     storage.getUuid(),
                     storage.getUserName(),
                     storage.getIp(),
                     reason,
-                    useServerPunishments() ? server : executor.getServerName(),
+                    useServerPunishments() ? server : "ALL",
                     time
             );
+            BUCore.getApi().getEventLoader().launchEvent( event );
+
+            if ( event.isCancelled() )
+            {
+                executor.sendLangMessage( "punishments.cancelled" );
+                return true;
+            }
+            return false;
+        }
+    }
+
+    @Data
+    public class PunishmentRemovalArgs
+    {
+
+        private User executor;
+        private String player;
+        private String server;
+
+        private UserStorage storage;
+
+        public boolean hasJoined()
+        {
+            return dao().getUserDao().exists( player );
+        }
+
+        public UserStorage getStorage()
+        {
+            if ( storage == null )
+            {
+                return storage = dao().getUserDao().getUserData( player );
+            }
+            return storage;
+        }
+
+        public String getServerOrAll()
+        {
+            if ( !useServerPunishments() )
+            {
+                return "ALL";
+            }
+            return server == null ? "ALL" : server;
+        }
+
+        public void removeCachedMute()
+        {
+            final Optional<User> optionalUser = BUCore.getApi().getUser( player );
+            if ( !optionalUser.isPresent() )
+            {
+                return;
+            }
+            final User user = optionalUser.get();
+            if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+            {
+                return;
+            }
+            final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+
+            mutes.removeIf( mute ->
+            {
+                if ( useServerPunishments() )
+                {
+                    return mute.getServer().equalsIgnoreCase( this.getServerOrAll() );
+                }
+                else
+                {
+                    return true;
+                }
+            } );
+        }
+
+        public boolean launchEvent( final PunishmentRemovalAction type )
+        {
+            final UserPunishRemoveEvent event = new UserPunishRemoveEvent(
+                    type,
+                    executor,
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    storage.getIp(),
+                    useServerPunishments() ? server : "ALL"
+            );
+
             BUCore.getApi().getEventLoader().launchEvent( event );
 
             if ( event.isCancelled() )

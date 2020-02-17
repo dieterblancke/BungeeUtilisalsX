@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
@@ -296,24 +295,6 @@ public class ConsoleUser implements User
     public String getServerName()
     {
         return "BUNGEE";
-    }
-
-    @Override
-    public boolean isMuted()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public PunishmentInfo getMuteInfo()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public void setMute( PunishmentInfo info )
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override

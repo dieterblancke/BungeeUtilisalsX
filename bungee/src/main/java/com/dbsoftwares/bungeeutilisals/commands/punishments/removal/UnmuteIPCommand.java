@@ -18,65 +18,63 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentCommand;
 
 import java.util.List;
 
-public class UnmuteIPCommand implements CommandCall
+public class UnmuteIPCommand extends PunishmentCommand
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() < 1 )
+        final PunishmentRemovalArgs punishmentRemovalArgs = loadRemovalArguments( user, args );
+
+        if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unmuteip.usage" );
+            user.sendLangMessage( "punishments.unmuteip.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
-
-        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
+        if ( !punishmentRemovalArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
-
-        if ( !dao.getPunishmentDao().getMutesDao().isIPMuted( storage.getIp() ) )
+        final UserStorage storage = punishmentRemovalArgs.getStorage();
+        if ( !dao().getPunishmentDao().getMutesDao().isIPMuted( storage.getIp(), punishmentRemovalArgs.getServerOrAll() ) )
         {
             user.sendLangMessage( "punishments.unmuteip.not-muted" );
             return;
         }
 
-        final UserPunishRemoveEvent event = new UserPunishRemoveEvent( UserPunishRemoveEvent.PunishmentRemovalAction.UNMUTEIP, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), user.getServerName() );
-        BUCore.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
+        if ( punishmentRemovalArgs.launchEvent( PunishmentRemovalAction.UNMUTEIP ) )
         {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
+
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        dao.getPunishmentDao().getMutesDao().removeCurrentMute( storage.getUuid(), user.getName() );
+        dao().getPunishmentDao().getMutesDao().removeCurrentIPMute(
+                storage.getIp(),
+                user.getName(),
+                punishmentRemovalArgs.getServerOrAll()
+        );
 
         final PunishmentInfo info = new PunishmentInfo();
-        info.setUser( args.get( 0 ) );
+        info.setUser( punishmentRemovalArgs.getPlayer() );
         info.setId( "-1" );
         info.setExecutedBy( user.getName() );
         info.setRemovedBy( user.getName() );
-        info.setServer( user.getServerName() );
+        info.setServer( punishmentRemovalArgs.getServerOrAll() );
 
-        BUCore.getApi().getUser( args.get( 0 ) ).ifPresent( target -> target.setMute( null ) );
+        punishmentRemovalArgs.removeCachedMute();
+
         user.sendLangMessage( "punishments.unmuteip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )
