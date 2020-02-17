@@ -102,7 +102,6 @@ public class BungeeUtilisals extends Plugin
 {
 
     private static final String ERROR_STRING = "An error occured: ";
-    private static final String ENABLED_CONFIG_KEY = "enabled";
 
     @Getter
     private static BungeeUtilisals instance;
@@ -190,7 +189,7 @@ public class BungeeUtilisals extends Plugin
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserChatListener() );
 
-        if ( FileLocation.MOTD.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
+        if ( FileLocation.MOTD.getConfiguration().getBoolean( "enabled" ) )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new MotdPingListener() );
         }
@@ -208,7 +207,7 @@ public class BungeeUtilisals extends Plugin
         loader.register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
 
         // Loading Punishment system
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new PunishmentListener() );
 
@@ -219,7 +218,7 @@ public class BungeeUtilisals extends Plugin
             loader.register( UserCommandEvent.class, muteCheckExecutor );
         }
 
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
+        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
         {
             final FriendsExecutor executor = new FriendsExecutor();
             loader.register( UserLoadEvent.class, executor );
@@ -516,7 +515,7 @@ public class BungeeUtilisals extends Plugin
 
         loadGeneralCommands();
 
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( ENABLED_CONFIG_KEY ) )
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
         {
             loadPunishmentCommands();
         }

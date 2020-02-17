@@ -29,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -66,7 +67,7 @@ public class MuteCheckExecutor implements EventExecutor
     @Event(priority = Priority.HIGHEST)
     public void onChat( UserChatEvent event )
     {
-        User user = event.getUser();
+        final User user = event.getUser();
 
         if ( !isMuted( user, user.getServerName() ) )
         {
@@ -104,35 +105,38 @@ public class MuteCheckExecutor implements EventExecutor
 
     private boolean isMuted( final User user, final String server )
     {
-        return getCurrentMuteForUser( user, server ) == null;
+        return getCurrentMuteForUser( user, server ) != null;
     }
 
     private PunishmentInfo getCurrentMuteForUser( final User user, final String server )
     {
-        if ( user.getStorage().hasData( "CURRENT_MUTES" ) )
+        if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
         {
-            final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+            // mutes seem to not have loaded yet, loading them now ...
+            final MutesDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
+            final List<PunishmentInfo> mutes = Lists.newArrayList();
 
-            if ( mutes.isEmpty() )
-            {
-                return null;
-            }
+            mutes.addAll( dao.getActiveMutes( user.getUuid() ) );
+            mutes.addAll( dao.getActiveIPMutes( user.getIp() ) );
 
-            if ( useServerPunishments() )
-            {
-                return mutes.stream()
-                        .filter( mute -> mute.getServer().equals( "ALL" ) || mute.getServer().equals( server ) )
-                        .findAny()
-                        .orElse( null );
-            }
-            else
-            {
-                return mutes.get( 0 );
-            }
+            user.getStorage().setData( "CURRENT_MUTES", mutes );
+        }
+        final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+        if ( mutes.isEmpty() )
+        {
+            return null;
+        }
+
+        if ( useServerPunishments() )
+        {
+            return mutes.stream()
+                    .filter( mute -> mute.getServer().equalsIgnoreCase( "ALL" ) || mute.getServer().equalsIgnoreCase( server ) )
+                    .findAny()
+                    .orElse( null );
         }
         else
         {
-            return null;
+            return mutes.get( 0 );
         }
     }
 }

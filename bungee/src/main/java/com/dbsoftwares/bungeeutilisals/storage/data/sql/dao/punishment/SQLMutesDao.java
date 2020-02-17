@@ -726,4 +726,88 @@ public class SQLMutesDao implements MutesDao
 
         return info;
     }
+
+    @Override
+    public List<PunishmentInfo> getActiveMutes( UUID uuid )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.MUTE.getTable() + " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';"
+              ) )
+        {
+            pstmt.setString( 1, uuid.toString() );
+            pstmt.setBoolean( 2, true );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
+
+                    final int id = rs.getInt( "id" );
+                    final String user = rs.getString( "user" );
+                    final String ip = rs.getString( "ip" );
+                    final String reason = rs.getString( "reason" );
+                    final String server = rs.getString( "server" );
+                    final String executedby = rs.getString( "executed_by" );
+                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                    final long time = rs.getLong( "duration" );
+                    final boolean active = rs.getBoolean( "active" );
+                    final String removedby = rs.getString( "removed_by" );
+
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getActiveIPMutes( String ip )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.MUTE.getTable() + " WHERE ip = ? AND active = ? AND type LIKE 'IP%';"
+              ) )
+        {
+            pstmt.setString( 1, ip );
+            pstmt.setBoolean( 2, true );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
+
+                    final int id = rs.getInt( "id" );
+                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                    final String user = rs.getString( "user" );
+                    final String reason = rs.getString( "reason" );
+                    final String server = rs.getString( "server" );
+                    final String executedby = rs.getString( "executed_by" );
+                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                    final long time = rs.getLong( "duration" );
+                    final boolean active = rs.getBoolean( "active" );
+                    final String removedby = rs.getString( "removed_by" );
+
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+
+        return punishments;
+    }
 }

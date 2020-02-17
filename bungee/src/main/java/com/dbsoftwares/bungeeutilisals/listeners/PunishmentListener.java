@@ -42,7 +42,7 @@ public class PunishmentListener implements Listener
 {
 
     @EventHandler
-    public void onLogin( LoginEvent event )
+    public void onLogin( final LoginEvent event )
     {
         final PendingConnection connection = event.getConnection();
         final UUID uuid = connection.getUniqueId();
@@ -62,8 +62,8 @@ public class PunishmentListener implements Listener
         }
     }
 
-    @EventHandler
-    public void onSwitch( final ServerConnectEvent event )
+    @EventHandler(priority = 127)
+    public void onConnect( final ServerConnectEvent event )
     {
         final ServerInfo target = event.getTarget();
         final ProxiedPlayer player = event.getPlayer();
@@ -84,7 +84,15 @@ public class PunishmentListener implements Listener
         {
             event.setCancelled( true );
 
-            player.disconnect( Utils.format( kickReason ) );
+            // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
+            if ( event.getPlayer().getServer() == null )
+            {
+                player.disconnect( Utils.format( kickReason ) );
+            }
+            else
+            {
+                player.sendMessage( Utils.format( kickReason ) );
+            }
         }
     }
 

@@ -37,7 +37,7 @@ actions:
       amount: 7
     limit: 5
     actions:
-      - 'tempmute %user% 1d You have received too many warns recently!'
+      - 'tempmute %user% 1d ALL You have received too many warns recently!'
     # This is an example if an user gets tempmuted 3 times, he'll get tempbanned for one week.
     # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
     # UID (= Unique IDentifier) should be an unique string to identify the punishment action.
@@ -53,7 +53,7 @@ actions:
       amount: 2
     limit: 3
     actions:
-      - 'tempban %user% 1w You have received too many tempmutes recently!'
+      - 'tempban %user% 1w ALL You have received too many tempmutes recently!'
 
 blocked-mute-commands:
   - msg

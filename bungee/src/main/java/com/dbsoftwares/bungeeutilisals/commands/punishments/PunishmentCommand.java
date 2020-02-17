@@ -53,14 +53,14 @@ public abstract class PunishmentCommand implements CommandCall
     {
         if ( useServerPunishments() )
         {
-            if ( args.size() < 1 )
+            if ( args.size() < 2 )
             {
                 return null;
             }
         }
         else
         {
-            if ( args.size() < 2 )
+            if ( args.size() < 1 )
             {
                 return null;
             }
