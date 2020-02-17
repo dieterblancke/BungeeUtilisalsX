@@ -22,6 +22,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.Connection;
 
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 
 public class BungeeConnection implements Connection
 {
@@ -53,10 +54,14 @@ public class BungeeConnection implements Connection
         return null;
     }
 
+    public SocketAddress getSocketAddress()
+    {
+        return null;
+    }
+
     @Override
     public Unsafe unsafe()
     {
         return null;
     }
-
 }
