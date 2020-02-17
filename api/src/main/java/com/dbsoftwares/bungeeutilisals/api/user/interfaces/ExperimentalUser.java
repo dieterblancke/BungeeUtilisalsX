@@ -20,11 +20,13 @@ package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
 import net.md_5.bungee.protocol.DefinedPacket;
 
-public interface ExperimentalUser {
+public interface ExperimentalUser
+{
 
     /**
      * Sends a packet.
+     *
      * @param packet The packet to be sent.
      */
-    void sendPacket(DefinedPacket packet);
+    void sendPacket( DefinedPacket packet );
 }

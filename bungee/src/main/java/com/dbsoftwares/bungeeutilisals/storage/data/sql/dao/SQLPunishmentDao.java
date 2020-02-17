@@ -18,12 +18,17 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.punishment.SQLBansDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.sql.dao.punishment.SQLMutesDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,236 +37,213 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
 
-public class SQLPunishmentDao implements PunishmentDao {
+public class SQLPunishmentDao implements PunishmentDao
+{
 
-    private final static String SELECT = "SELECT %s FROM %s WHERE %s;";
-    private final static String UPDATE = "UPDATE %s SET %s WHERE %s;";
+    private final BansDao bansDao;
+    private final MutesDao mutesDao;
+    private final KickAndWarnDao kickAndWarnDao;
 
-    @Override
-    public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
-        long amount = 0;
-
-        String statement = format(
-                SELECT,
-                "COUNT(*) count",
-                type.getTablePlaceHolder(),
-                (type.isIP() ? "ip" : "uuid") + " = ? AND date >= ?"
-        );
-
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setString(1, identifier);
-            pstmt.setDate(2, new java.sql.Date(date.getTime()));
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    amount = rs.getLong("count");
-                }
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return amount;
+    public SQLPunishmentDao()
+    {
+        this.bansDao = new SQLBansDao();
+        this.mutesDao = new SQLMutesDao();
+        this.kickAndWarnDao = new SQLKickAndWarnDao();
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby) {
-        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, null);
+    public BansDao getBansDao()
+    {
+        return bansDao;
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby, String removedby) {
-        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, new Date(System.currentTimeMillis()), removedby);
+    public MutesDao getMutesDao()
+    {
+        return mutesDao;
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, Long time, String server, Boolean active, String executedby, Date date, String removedby) {
-        String sql = PlaceHolderAPI.formatMessage("INSERT INTO " + type.getTablePlaceHolder() + " ");
-
-        if (type.isActivatable()) {
-            if (type.isTemporary()) {
-                sql += "(uuid, user, ip, time, reason, server, active, executed_by, removed_by) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
-
-                try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                    preparedStatement.setString(1, uuid.toString());
-                    preparedStatement.setString(2, user);
-                    preparedStatement.setString(3, ip);
-                    preparedStatement.setLong(4, time);
-                    preparedStatement.setString(5, reason);
-                    preparedStatement.setString(6, server);
-                    preparedStatement.setBoolean(7, active);
-                    preparedStatement.setString(8, executedby);
-                    preparedStatement.setString(9, removedby);
-
-                    preparedStatement.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            } else {
-                sql += "(uuid, user, ip, reason, server, active, executed_by, removed_by) "
-                        + "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-
-                try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-                     PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                    preparedStatement.setString(1, uuid.toString());
-                    preparedStatement.setString(2, user);
-                    preparedStatement.setString(3, ip);
-                    preparedStatement.setString(4, reason);
-                    preparedStatement.setString(5, server);
-                    preparedStatement.setBoolean(6, active);
-                    preparedStatement.setString(7, executedby);
-                    preparedStatement.setString(8, removedby);
-
-                    preparedStatement.executeUpdate();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-            }
-        } else {
-            sql += "(uuid, user, ip, reason, server, executed_by) "
-                    + "VALUES (?, ?, ?, ?, ?, ?);";
-
-            try (Connection connection = BUCore.getApi().getStorageManager().getConnection();
-                 PreparedStatement preparedStatement = connection.prepareStatement(sql)) {
-                preparedStatement.setString(1, uuid.toString());
-                preparedStatement.setString(2, user);
-                preparedStatement.setString(3, ip);
-                preparedStatement.setString(4, reason);
-                preparedStatement.setString(5, server);
-                preparedStatement.setString(7, executedby);
-
-                preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-        }
-
-        PunishmentInfo info = new PunishmentInfo();
-
-        info.setUuid(uuid);
-        info.setUser(user);
-        info.setIP(ip);
-        info.setReason(reason);
-        info.setServer(server);
-        info.setExecutedBy(executedby);
-        info.setDate(date);
-        info.setType(type);
-
-        if (time != null) {
-            info.setExpireTime(time);
-        }
-        if (active != null) {
-            info.setActive(active);
-        }
-        if (removedby != null) {
-            info.setRemovedBy(removedby);
-        }
-
-        return info;
-
+    public KickAndWarnDao getKickAndWarnDao()
+    {
+        return kickAndWarnDao;
     }
 
     @Override
-    public boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive) {
-        boolean present = false;
-        String statement = format(
-                SELECT,
-                "id",
-                type.getTablePlaceHolder(),
-                (type.isIP() ? "ip = ?" : "uuid = ?") + (checkActive ? " AND active = 1" : "")
-        );
+    public long getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
+    {
+        int count = 0;
 
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setString(1, type.isIP() ? IP : uuid.toString());
+        if ( type.isActivatable() )
+        {
+            try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND type = ? AND punishmentaction_status = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, Dao.formatDateToString( date ) );
+                pstmt.setString( 3, type.toString() );
+                pstmt.setBoolean( 4, false );
 
-            try (ResultSet rs = pstmt.executeQuery()) {
-                present = rs.next();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return present;
-    }
-
-    @Override
-    public PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP) {
-        PunishmentInfo info = new PunishmentInfo();
-        info.setType(PunishmentType.BAN);
-
-        String statement = format(
-                SELECT,
-                "*",
-                type.getTablePlaceHolder(),
-                (type.isIP() ? "ip" : "uuid") + " = ? AND active = ?"
-        );
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setString(1, type.isIP() ? IP : uuid.toString());
-            pstmt.setBoolean(2, true);
-
-            try (ResultSet rs = pstmt.executeQuery()) {
-                if (rs.next()) {
-                    info.setId(rs.getInt("id"));
-                    info.setUuid(UUID.fromString(rs.getString("uuid")));
-                    info.setUser(rs.getString("user"));
-                    info.setIP(rs.getString("ip"));
-                    info.setReason(rs.getString("reason"));
-                    info.setServer(rs.getString("server"));
-                    info.setDate(rs.getTimestamp("date"));
-                    info.setExecutedBy(rs.getString("executed_by"));
-
-                    if (type.isActivatable()) {
-                        info.setActive(rs.getBoolean("active"));
-                        info.setRemovedBy(rs.getString("removed_by"));
-                    }
-                    if (type.isTemporary()) {
-                        info.setExpireTime(rs.getLong("time"));
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        count = rs.getInt( 1 );
                     }
                 }
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+            catch ( SQLException e )
+            {
+                BUCore.logException( e );
+            }
+        }
+        else
+        {
+            try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= ? AND punishmentaction_status = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, Dao.formatDateToString( date ) );
+                pstmt.setBoolean( 3, false );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        count = rs.getInt( 1 );
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BUCore.logException( e );
+            }
         }
 
-        return info;
+        return count;
     }
 
     @Override
-    public void removePunishment(PunishmentType type, UUID uuid, String IP, String removedBy) {
-        String statement = format(
-                UPDATE,
-                type.getTablePlaceHolder(),
-                "active = ?, removed_by = ?",
-                (type.isIP() ? "ip" : "uuid") + " = ? AND active = ?"
-        );
+    public long getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    {
+        int count = 0;
 
-        try (Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
-             PreparedStatement pstmt = connection.prepareStatement(statement)) {
-            pstmt.setBoolean(1, false);
-            pstmt.setString(2, removedBy);
-            pstmt.setString(3, type.isIP() ? IP : uuid.toString());
-            pstmt.setBoolean(4, true);
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= ? AND type = ? AND punishmentaction_status = ?;"
+              ) )
+        {
+            pstmt.setString( 1, ip );
+            pstmt.setString( 2, Dao.formatDateToString( date ) );
+            pstmt.setString( 3, type.toString() );
+            pstmt.setBoolean( 4, false );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    count = rs.getInt( 1 );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+        return count;
+    }
+
+    @Override
+    public void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
+    {
+        if ( type.isActivatable() )
+        {
+            try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= ? AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+                  ) )
+            {
+                pstmt.setBoolean( 1, true );
+                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 3, Dao.formatDateToString( date ) );
+                pstmt.setString( 4, type.toString() );
+                pstmt.setBoolean( 5, false );
+                pstmt.setInt( 6, limit );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BUCore.logException( e );
+            }
+        }
+        else
+        {
+            try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= ? AND punishmentaction_status = ? LIMIT ?;"
+                  ) )
+            {
+                pstmt.setBoolean( 1, true );
+                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 3, Dao.formatDateToString( date ) );
+                pstmt.setBoolean( 4, false );
+                pstmt.setInt( 5, limit );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BUCore.logException( e );
+            }
+        }
+    }
+
+    @Override
+    public void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= ? AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+              ) )
+        {
+            pstmt.setBoolean( 1, true );
+            pstmt.setString( 2, ip );
+            pstmt.setString( 3, Dao.formatDateToString( date ) );
+            pstmt.setString( 4, type.toString() );
+            pstmt.setBoolean( 5, false );
+            pstmt.setInt( 6, limit );
 
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
         }
     }
 
-    private String format(String line) {
-        return PlaceHolderAPI.formatMessage(line);
-    }
+    @Override
+    public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
+    {
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage(
+                      "INSERT INTO {punishmentactions-table} (uuid, user, ip, actionid) VALUES (?, ?, ?, ?);"
+              ) ) )
+        {
+            pstmt.setString( 1, uuid.toString() );
+            pstmt.setString( 2, username );
+            pstmt.setString( 3, ip );
+            pstmt.setString( 4, uid );
 
-    private String format(String line, Object... replacements) {
-        return PlaceHolderAPI.formatMessage(String.format(line, replacements));
+            pstmt.execute();
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
     }
 }

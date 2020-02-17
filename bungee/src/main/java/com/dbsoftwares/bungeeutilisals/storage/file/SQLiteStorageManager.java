@@ -19,8 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.storage.file;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLStorageManager;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -29,47 +30,67 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteStorageManager extends AbstractStorageManager {
+public class SQLiteStorageManager extends SQLStorageManager
+{
 
-    private Connection connection;
+    private UnclosableConnection connection;
     private File database;
 
-    public SQLiteStorageManager(Plugin plugin) throws SQLException {
-        super(plugin, StorageType.SQLITE, new SQLDao());
+    public SQLiteStorageManager( Plugin plugin ) throws SQLException
+    {
+        super( plugin, StorageType.SQLITE, new SQLDao() );
+        database = new File( BungeeUtilisals.getInstance().getDataFolder(), "data.db" );
 
-        database = new File(BungeeUtilisals.getInstance().getDataFolder(), "data.db");
-        if (!database.exists()) {
-            try {
-                database.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+        try
+        {
+            if ( !database.exists() && !database.createNewFile() )
+            {
+                return;
             }
         }
+        catch ( IOException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
+        }
 
+        try
+        {
+            Class.forName( "org.sqlite.JDBC" );
+        }
+        catch ( ClassNotFoundException e )
+        {
+            throw new RuntimeException( e );
+        }
         initializeConnection();
     }
 
-    private void initializeConnection() throws SQLException {
-        try {
-            Class.forName("org.sqlite.JDBC");
-
-            connection = DriverManager.getConnection("jdbc:sqlite:" + database.getPath());
-        } catch (ClassNotFoundException e) {
-            // should never occur | library loaded before
-            e.printStackTrace();
-        }
+    private UnclosableConnection initializeConnection() throws SQLException
+    {
+        return UnclosableConnection.wrap( DriverManager.getConnection( "jdbc:sqlite:" + database.getPath() ) );
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
-        if (connection.isClosed()) {
-            initializeConnection();
+    public synchronized Connection getConnection() throws SQLException
+    {
+        if ( connection == null || connection.isClosed() )
+        {
+            connection = initializeConnection();
         }
+
+        if ( connection == null || connection.isClosed() )
+        {
+            throw new SQLException( "Unable to create a connection to " + database.getPath() + "." );
+        }
+
         return connection;
     }
 
     @Override
-    public void close() throws SQLException {
-        connection.close();
+    public void close() throws SQLException
+    {
+        if ( connection != null && !connection.isClosed() )
+        {
+            connection.shutdown();
+        }
     }
 }

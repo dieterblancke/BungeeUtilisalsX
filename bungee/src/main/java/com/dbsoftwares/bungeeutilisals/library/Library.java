@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *  *
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  *
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *  *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -35,7 +35,8 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-public class Library {
+public class Library
+{
 
     private final static List<Library> registry = Lists.newArrayList();
 
@@ -45,66 +46,79 @@ public class Library {
     private final String version;
     private final boolean toLoad;
 
-    public Library(String name, String className, String downloadURL, String version, boolean toLoad) {
+    public Library( String name, String className, String downloadURL, String version, boolean toLoad )
+    {
         this.name = name;
         this.className = className;
-        this.downloadURL = downloadURL.replace("{version}", version);
+        this.downloadURL = downloadURL.replace( "{version}", version );
         this.version = version;
         this.toLoad = toLoad;
 
-        registry.add(this);
+        registry.add( this );
     }
 
-    public static Library getLibrary(final String name) {
-        return registry.stream().filter(library -> library.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    public static Library getLibrary( final String name )
+    {
+        return registry.stream().filter( library -> library.getName().equalsIgnoreCase( name ) ).findFirst().orElse( null );
     }
 
-    public boolean isPresent() {
-        return Utils.classFound(className);
+    public boolean isPresent()
+    {
+        return Utils.classFound( className );
     }
 
-    public void load() {
-        if (isPresent()) {
+    public void load()
+    {
+        if ( isPresent() )
+        {
             return;
         }
-        final File folder = new File(BungeeUtilisals.getInstance().getDataFolder(), "libraries");
-        if (!folder.exists()) {
+        final File folder = new File( BungeeUtilisals.getInstance().getDataFolder(), "libraries" );
+        if ( !folder.exists() )
+        {
             folder.mkdir();
         }
-        final File path = new File(folder, String.format("%s-v%s.jar", name.toLowerCase(), version));
+        final File path = new File( folder, String.format( "%s-v%s.jar", name.toLowerCase(), version ) );
 
         // Download libary if not present
-        if (!path.exists()) {
-            BUCore.getLogger().info("Downloading libary for " + toString());
+        if ( !path.exists() )
+        {
+            BUCore.getLogger().info( "Downloading libary for " + toString() );
 
-            try (final InputStream input = new URL(downloadURL).openStream();
-                 final ReadableByteChannel channel = Channels.newChannel(input);
-                 final FileOutputStream output = new FileOutputStream(path)) {
+            try ( final InputStream input = new URL( downloadURL ).openStream();
+                  final ReadableByteChannel channel = Channels.newChannel( input );
+                  final FileOutputStream output = new FileOutputStream( path ) )
+            {
 
-                output.getChannel().transferFrom(channel, 0, Long.MAX_VALUE);
-                BUCore.getLogger().info("Successfully downloaded libary for " + toString());
+                output.getChannel().transferFrom( channel, 0, Long.MAX_VALUE );
+                BUCore.getLogger().info( "Successfully downloaded libary for " + toString() );
 
-                BUCore.getLogger().info("Removing older versions of " + toString());
-                getOutdatedFiles(folder).forEach(File::delete);
-                BUCore.getLogger().info("Successfully removed older versions of " + toString());
-            } catch (IOException e) {
-                throw new RuntimeException("Failed downloading library for " + toString().toLowerCase(), e);
+                BUCore.getLogger().info( "Removing older versions of " + toString() );
+                getOutdatedFiles( folder ).forEach( File::delete );
+                BUCore.getLogger().info( "Successfully removed older versions of " + toString() );
+            }
+            catch ( IOException e )
+            {
+                throw new RuntimeException( "Failed downloading library for " + toString().toLowerCase(), e );
             }
         }
 
-        BungeeUtilisals.getInstance().getJarClassLoader().loadJar(path);
-        BUCore.getLogger().info("Loaded " + name + " libary!");
+        BungeeUtilisals.getInstance().getJarClassLoader().loadJar( path );
+        BUCore.getLogger().info( "Loaded " + name + " libary!" );
     }
 
-    private Collection<File> getOutdatedFiles(final File folder) {
+    private Collection<File> getOutdatedFiles( final File folder )
+    {
         final List<File> outdatedFiles = Lists.newArrayList();
         final String name = toString().toLowerCase();
 
-        for (File library : folder.listFiles()) {
+        for ( File library : folder.listFiles() )
+        {
             final String jarName = library.getName();
 
-            if (jarName.startsWith(name) && !jarName.equals(String.format("%s-v%s.jar", name.toLowerCase(), version))) {
-                outdatedFiles.add(library);
+            if ( jarName.startsWith( name ) && !jarName.equals( String.format( "%s-v%s.jar", name.toLowerCase(), version ) ) )
+            {
+                outdatedFiles.add( library );
             }
         }
 
@@ -112,7 +126,8 @@ public class Library {
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return name;
     }
 }

@@ -23,33 +23,47 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
-public interface UserDao {
+public interface UserDao
+{
 
-    void createUser(UUID uuid, String username, String ip, Language language);
+    void createUser( UUID uuid, String username, String ip, Language language, String joinedHost );
 
-    void createUser(UUID uuid, String username, String ip, Language language, Date login, Date logout);
+    void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost );
 
-    void updateUser(UUID uuid, String name, String ip, Language language, Date logout);
+    void updateUser( UUID uuid, String name, String ip, Language language, Date logout );
 
-    boolean exists(String name);
+    boolean exists( String name );
 
-    boolean exists(UUID uuid);
+    boolean exists( UUID uuid );
 
-    UserStorage getUserData(UUID uuid);
+    boolean ipExists( String ip );
 
-    UserStorage getUserData(String name);
+    UserStorage getUserData( UUID uuid );
 
-    List<String> getUsersOnIP(String ip);
+    UserStorage getUserData( String name );
 
-    Language getLanguage(UUID uuid);
+    List<String> getUsersOnIP( String ip );
 
-    void setName(UUID uuid, String name);
+    Language getLanguage( UUID uuid );
 
-    void setIP(UUID uuid, String ip);
+    void setName( UUID uuid, String name );
 
-    void setLanguage(UUID uuid, Language language);
+    void setIP( UUID uuid, String ip );
 
-    void setLogout(UUID uuid, Date logout);
+    void setLanguage( UUID uuid, Language language );
+
+    void setLogout( UUID uuid, Date logout );
+
+    void setJoinedHost( UUID uuid, String joinedHost );
+
+    Map<String, Integer> getJoinedHostList();
+
+    Map<String, Integer> searchJoinedHosts( final String searchTag );
+
+    void ignoreUser( UUID user, UUID ignore );
+
+    void unignoreUser( UUID user, UUID unignore );
 }

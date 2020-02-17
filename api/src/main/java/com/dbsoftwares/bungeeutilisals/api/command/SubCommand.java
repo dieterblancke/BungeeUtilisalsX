@@ -19,78 +19,105 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.Arrays;
 import java.util.List;
 
 @Data
-public abstract class SubCommand {
+public abstract class SubCommand implements CommandCall
+{
 
     private String name;
     private int minimumArgs;
     private int maximumArgs;
+    private List<String> aliases;
 
-    public SubCommand(String name) {
-        this(name, 0, 0);
+    public SubCommand( String name )
+    {
+        this( name, 0, 0 );
     }
 
-    public SubCommand(String name, int minimumArgs) {
-        this(name, minimumArgs, minimumArgs);
+    public SubCommand( String name, int minimumArgs )
+    {
+        this( name, minimumArgs, minimumArgs );
     }
 
-    public SubCommand(String name, int minimumArgs, int maximumArgs) {
+    public SubCommand( String name, int minimumArgs, int maximumArgs )
+    {
+        this( name, minimumArgs, maximumArgs, Lists.newArrayList() );
+    }
+
+    public SubCommand( String name, int minimumArgs, int maximumArgs, List<String> aliases )
+    {
         this.name = name;
         this.minimumArgs = minimumArgs;
         this.maximumArgs = maximumArgs;
+        this.aliases = aliases;
     }
 
     public abstract String getUsage();
 
     public abstract String getPermission();
 
-    public abstract void onExecute(User user, String[] args);
+    public abstract void onExecute( User user, String[] args );
 
-    private ConditionResult checkConditions(User user, String[] args) {
-        if (!args[0].equalsIgnoreCase(name)) {
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        onExecute( user, args.toArray( new String[0] ) );
+    }
+
+    private ConditionResult checkConditions( User user, String[] args )
+    {
+        if ( !args[0].equalsIgnoreCase( name ) && !aliases.contains( args[0] ) )
+        {
             return ConditionResult.FAILURE_WRONG_NAME;
         }
         final int length = args.length - 1;
 
-        if (length < minimumArgs || length > maximumArgs) {
+        if ( (minimumArgs >= 0 && length < minimumArgs) || (maximumArgs >= 0 && length > maximumArgs) )
+        {
             return ConditionResult.FAILURE_WRONG_ARGS_LENGTH;
         }
-        if (!getPermission().isEmpty()) {
-            if (!user.sender().hasPermission(getPermission())
-                    && !user.sender().hasPermission("bungeeutilisals.commands.*")
-                    && !user.sender().hasPermission("bungeeutilisals.*")
-                    && !user.sender().hasPermission("*")) {
-                return ConditionResult.FAILURE_PERMISSION;
-            }
+        if ( !getPermission().isEmpty()
+                && !user.sender().hasPermission( getPermission() )
+                && !user.sender().hasPermission( "bungeeutilisals.commands.*" )
+                && !user.sender().hasPermission( "bungeeutilisals.*" )
+                && !user.sender().hasPermission( "*" ) )
+        {
+            return ConditionResult.FAILURE_PERMISSION;
         }
         return ConditionResult.SUCCESS;
     }
 
-    public boolean execute(User user, String[] args) {
-        ConditionResult result = checkConditions(user, args);
+    public boolean execute( User user, String[] args )
+    {
+        final ConditionResult result = checkConditions( user, args );
 
-        if (result == ConditionResult.FAILURE_WRONG_ARGS_LENGTH) {
-            user.sendLangMessage("subcommands.usage", "{usage}", getUsage());
+        if ( result == ConditionResult.FAILURE_WRONG_ARGS_LENGTH )
+        {
+            user.sendLangMessage( "subcommands.usage", "{usage}", getUsage() );
             return true;
-        } else if (result == ConditionResult.FAILURE_PERMISSION) {
-            user.sendLangMessage("no-permission");
+        }
+        else if ( result == ConditionResult.FAILURE_PERMISSION )
+        {
+            user.sendLangMessage( "no-permission" );
             return true;
-        } else if (result == ConditionResult.SUCCESS) {
-            onExecute(user, Arrays.copyOfRange(args, 1, args.length));
+        }
+        else if ( result == ConditionResult.SUCCESS )
+        {
+            onExecute( user, Arrays.copyOfRange( args, 1, args.length ) );
             return true;
         }
 
         return false;
     }
 
-    public abstract List<String> getCompletions(User user, String[] args);
+    public abstract List<String> getCompletions( User user, String[] args );
 
-    public enum ConditionResult {
+    public enum ConditionResult
+    {
 
         FAILURE_PERMISSION, FAILURE_WRONG_NAME, FAILURE_WRONG_ARGS_LENGTH, SUCCESS
 

@@ -18,12 +18,12 @@
 
 package com.dbsoftwares.bungeeutilisals.api.command;
 
-import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -32,86 +32,121 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import java.util.List;
 import java.util.Optional;
 
-public abstract class Command extends net.md_5.bungee.api.plugin.Command implements TabExecutor {
+@Data
+public class Command
+{
 
-    public BUAPI api;
-    protected List<SubCommand> subCommands = Lists.newArrayList();
-    private String permission;
+    private final String name;
+    private final String[] aliases;
+    private final String permission;
+    private final List<String> parameters;
+    private final int cooldown;
+    private final CommandCall command;
+    private final TabCall tab;
 
-    public Command(String name) {
-        this(name, Lists.newArrayList(), null);
-    }
+    private CommandHolder commandHolder;
 
-    public Command(String name, String... aliases) {
-        this(name, Lists.newArrayList(aliases), null);
-    }
-
-    public Command(String name, List<String> aliases) {
-        this(name, aliases, null);
-    }
-
-    public Command(String name, List<String> aliases, String permission) {
-        super(name, "", aliases.toArray(new String[]{}));
+    public Command( final String name, final String[] aliases, final String permission, final List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
+    {
+        this.name = name;
+        this.aliases = aliases;
         this.permission = permission;
-        this.api = BUCore.getApi();
-
-        ProxyServer.getInstance().getPluginManager().registerCommand(BUCore.getApi().getPlugin(), this);
+        this.parameters = parameters;
+        this.cooldown = cooldown;
+        this.command = command;
+        this.tab = tab;
     }
 
-    @Override
-    public void execute(CommandSender sender, String[] args) {
-        BUAPI api = BUCore.getApi();
-        IConfiguration configuration = api.getLanguageManager().getLanguageConfiguration(api.getPlugin().getDescription().getName(), sender);
+    public void execute( final User user, final String[] argList )
+    {
+        final List<String> arguments = Lists.newArrayList();
+        final List<String> parameters = Lists.newArrayList();
 
-        if (permission != null && !permission.isEmpty()) {
-            if (!sender.hasPermission(permission)
-                    && !sender.hasPermission("bungeeutilisals.commands.*")
-                    && !sender.hasPermission("bungeeutilisals.*")
-                    && !sender.hasPermission("*")) {
-                BUCore.sendMessage(sender, configuration.getString("no-permission").replace("%permission%", permission));
-                return;
+        for ( String argument : argList )
+        {
+            if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
+            {
+                parameters.add( argument );
+            }
+            else
+            {
+                arguments.add( argument );
             }
         }
 
-        if (sender instanceof ProxiedPlayer) {
-            Optional<User> optional = api.getUser(sender.getName());
+        execute( user, arguments, parameters );
+    }
 
-            if (optional.isPresent()) {
-                User user = optional.get();
+    public void execute( final User user, final List<String> arguments, final List<String> parameters )
+    {
+        if ( permission != null
+                && !permission.isEmpty()
+                && !user.hasPermission( permission )
+                && !user.hasPermission( "bungeeutilisals.commands.*" )
+                && !user.hasPermission( "bungeeutilisals.*" )
+                && !user.hasPermission( "*" ) )
+        {
+            user.sendLangMessage( "no-permission", "%permission%", permission );
+            return;
+        }
 
-                try {
-                    BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(user, args));
-                    // onExecute(user, args); | testing plugin with Async Commands.
-                } catch (Exception e) {
-                    e.printStackTrace();
+        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        {
+            try
+            {
+                if ( cooldown > 0 && !user.getCooldowns().canUse( "COMMAND_COOLDOWNS_" + name ) )
+                {
+                    user.sendLangMessage(
+                            "general-commands.cooldown",
+                            "{time}",
+                            user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000
+                    );
+                    return;
                 }
-                return;
+
+                command.onExecute( user, arguments, parameters );
+
+                if ( cooldown > 0 )
+                {
+                    user.getCooldowns().updateTime( "COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown );
+                }
             }
-        }
-        try {
-            BUCore.getApi().getSimpleExecutor().asyncExecute(() -> onExecute(BUCore.getApi().getConsole(), args));
-            // onExecute(sender, args);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            catch ( Exception e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
+            }
+        } );
     }
 
-    @Override
-    public Iterable<String> onTabComplete(CommandSender sender, String[] args) {
-        Optional<User> optional = api.getUser(sender.getName());
-        if (sender instanceof ProxiedPlayer && optional.isPresent()) {
-            List<String> tabCompletion = onTabComplete(optional.get(), args);
+    public Iterable<String> onTabComplete( final CommandSender sender, final String[] args )
+    {
+        if ( !(sender instanceof ProxiedPlayer) )
+        {
+            return ImmutableList.of();
+        }
 
-            if (tabCompletion == null) {
-                if (args.length == 0) {
+        final Optional<User> optional = BUCore.getApi().getUser( sender.getName() );
+        if ( optional.isPresent() )
+        {
+            final User user = optional.get();
+            final List<String> tabCompletion = tab.onTabComplete( user, args );
+
+            if ( tabCompletion == null )
+            {
+                if ( args.length == 0 )
+                {
                     return BUCore.getApi().getPlayerUtils().getPlayers();
-                } else {
-                    String lastWord = args[args.length - 1];
-                    List<String> list = Lists.newArrayList();
+                }
+                else
+                {
+                    final String lastWord = args[args.length - 1];
+                    final List<String> list = Lists.newArrayList();
 
-                    for (String p : BUCore.getApi().getPlayerUtils().getPlayers()) {
-                        if (p.toLowerCase().startsWith(lastWord.toLowerCase())) {
-                            list.add(p);
+                    for ( String p : BUCore.getApi().getPlayerUtils().getPlayers() )
+                    {
+                        if ( p.toLowerCase().startsWith( lastWord.toLowerCase() ) )
+                        {
+                            list.add( p );
                         }
                     }
 
@@ -119,38 +154,76 @@ public abstract class Command extends net.md_5.bungee.api.plugin.Command impleme
                 }
             }
             return tabCompletion;
-        } else {
+        }
+        else
+        {
             return ImmutableList.of();
         }
     }
 
-    public abstract List<String> onTabComplete(User user, String[] args);
-
-    public abstract void onExecute(User user, String[] args);
-
-    public void unload() {
-        ProxyServer.getInstance().getPluginManager().unregisterCommand(this);
+    public void unload()
+    {
+        ProxyServer.getInstance().getPluginManager().unregisterCommand( commandHolder );
+        commandHolder = null;
     }
 
-    protected SubCommand findSubCommand(String name) {
-        return subCommands.stream().filter(subCommand -> subCommand.getName().equalsIgnoreCase(name)).findFirst().orElse(null);
+    public Command register()
+    {
+        if ( commandHolder != null )
+        {
+            throw new RuntimeException( "This command is already registered" );
+        }
+        commandHolder = new CommandHolder( name, aliases );
+
+        ProxyServer.getInstance().getPluginManager().registerCommand( BUCore.getApi().getPlugin(), commandHolder );
+        return this;
     }
 
-    protected List<String> getSubcommandCompletions(User user, String[] args) {
-        List<String> completions = Lists.newArrayList();
-
-        if (args.length == 0) {
-            subCommands.forEach(subCommand -> completions.add(subCommand.getName()));
-        } else if (args.length == 1) {
-            subCommands.stream().filter(subCommand -> subCommand.getName().toLowerCase().startsWith(args[0].toLowerCase()))
-                    .forEach(subCommand -> completions.add(subCommand.getName()));
-        } else {
-            SubCommand command = findSubCommand(args[0]);
-
-            if (command != null) {
-                return command.getCompletions(user, args);
+    boolean check( final List<String> args )
+    {
+        if ( args.size() == 0 )
+        {
+            return false;
+        }
+        if ( name.equalsIgnoreCase( args.get( 0 ) ) )
+        {
+            return true;
+        }
+        for ( String alias : aliases )
+        {
+            if ( alias.equalsIgnoreCase( args.get( 0 ) ) )
+            {
+                return true;
             }
         }
-        return completions;
+        return false;
+    }
+
+    private class CommandHolder extends net.md_5.bungee.api.plugin.Command implements TabExecutor
+    {
+
+        public CommandHolder( final String name, final String[] aliases )
+        {
+            super( name, "", aliases );
+        }
+
+        @Override
+        public void execute( CommandSender sender, String[] args )
+        {
+            if ( sender instanceof ProxiedPlayer )
+            {
+                BUCore.getApi().getUser( sender.getName() ).ifPresent( user -> Command.this.execute( user, args ) );
+            }
+            else
+            {
+                Command.this.execute( BUCore.getApi().getConsole(), args );
+            }
+        }
+
+        @Override
+        public Iterable<String> onTabComplete( CommandSender sender, String[] args )
+        {
+            return Command.this.onTabComplete( sender, args );
+        }
     }
 }

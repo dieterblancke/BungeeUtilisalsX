@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.reflection;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -27,39 +28,53 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-public class JarClassLoader {
+public class JarClassLoader
+{
 
     private static final Method ADD_URL;
 
-    static {
-        ADD_URL = ReflectionUtils.getMethod(URLClassLoader.class, "addURL", URL.class);
+    static
+    {
+        ADD_URL = ReflectionUtils.getMethod( URLClassLoader.class, "addURL", URL.class );
     }
 
     private final URLClassLoader classLoader;
 
-    public JarClassLoader(Plugin instance) throws IllegalStateException {
-        ClassLoader classLoader = instance.getClass().getClassLoader();
+    public JarClassLoader( Plugin instance )
+    {
+        final ClassLoader loader = instance.getClass().getClassLoader();
 
-        if (classLoader instanceof URLClassLoader) {
-            this.classLoader = (URLClassLoader) classLoader;
-        } else {
-            throw new IllegalStateException("Plugin ClassLoader is not instance of URLClassLoader");
+        if ( loader instanceof URLClassLoader )
+        {
+            this.classLoader = (URLClassLoader) loader;
+        }
+        else
+        {
+            throw new IllegalStateException( "Plugin ClassLoader is not instance of URLClassLoader" );
         }
     }
 
-    public void loadJar(URL url) {
-        try {
-            ADD_URL.invoke(this.classLoader, url);
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+    public void loadJar( URL url )
+    {
+        try
+        {
+            ADD_URL.invoke( this.classLoader, url );
+        }
+        catch ( IllegalAccessException | InvocationTargetException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
     }
 
-    public void loadJar(File file) {
-        try {
-            loadJar(file.toURI().toURL());
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+    public void loadJar( File file )
+    {
+        try
+        {
+            loadJar( file.toURI().toURL() );
+        }
+        catch ( MalformedURLException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
     }
 }

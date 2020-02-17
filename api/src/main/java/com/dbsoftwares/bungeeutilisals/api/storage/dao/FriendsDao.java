@@ -19,16 +19,39 @@
 package com.dbsoftwares.bungeeutilisals.api.storage.dao;
 
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettingType;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface FriendsDao {
+public interface FriendsDao
+{
 
-    void addFriend(User user, UUID identifier);
+    void addFriend( UUID user, UUID uuid );
 
-    void removeFriend(User user, UUID identifier);
+    void removeFriend( UUID user, UUID uuid );
 
-    List<FriendData> getFriends(UUID user);
+    List<FriendData> getFriends( UUID uuid );
+
+    long getAmountOfFriends( UUID uuid );
+
+    void addFriendRequest( UUID user, UUID uuid );
+
+    void removeFriendRequest( UUID user, UUID uuid );
+
+    List<FriendRequest> getIncomingFriendRequests( UUID uuid );
+
+    List<FriendRequest> getOutgoingFriendRequests( UUID uuid );
+
+    boolean hasIncomingFriendRequest( UUID user, UUID uuid );
+
+    boolean hasOutgoingFriendRequest( UUID user, UUID uuid );
+
+    void setSetting( UUID uuid, FriendSettingType type, boolean value );
+
+    boolean getSetting( UUID uuid, FriendSettingType type );
+
+    FriendSettings getSettings( UUID uuid );
 }

@@ -18,23 +18,78 @@
 
 package com.dbsoftwares.bungeeutilisals.executors;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 
-public class UserExecutor implements EventExecutor {
+import java.util.Comparator;
+import java.util.List;
+
+public class UserExecutor implements EventExecutor
+{
 
     @Event
-    public void onLoad(UserLoadEvent event) {
+    public void onLoad( UserLoadEvent event )
+    {
         User user = event.getUser();
-        event.getApi().getUsers().add(user);
+        event.getApi().getUsers().add( user );
     }
 
     @Event
-    public void onUnload(UserUnloadEvent event) {
+    public void onUnload( UserUnloadEvent event )
+    {
         User user = event.getUser();
-        event.getApi().getUsers().remove(user);
+        event.getApi().getUsers().remove( user );
+    }
+
+    @Event
+    public void onStaffLoad( UserLoadEvent event )
+    {
+        final User user = event.getUser();
+        final StaffRankData rank = findStaffRank( user );
+
+        if ( rank == null )
+        {
+            return;
+        }
+
+        BUCore.getApi().getEventLoader().launchEvent(
+                new NetworkStaffJoinEvent( user.getName(), user.getUuid(), rank.getName() )
+        );
+    }
+
+    @Event
+    public void onStaffUnload( UserUnloadEvent event )
+    {
+        final User user = event.getUser();
+        final StaffRankData rank = findStaffRank( user );
+
+        if ( rank == null )
+        {
+            return;
+        }
+
+        BUCore.getApi().getEventLoader().launchEvent(
+                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )
+        );
+    }
+
+    private StaffRankData findStaffRank( final User user )
+    {
+        final ProxiedPlayer player = user.getParent();
+        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
+
+        return ranks.stream()
+                .filter( rank -> player.hasPermission( rank.getPermission() ) )
+                .max( Comparator.comparingInt( StaffRankData::getPriority ) )
+                .orElse( null );
     }
 }

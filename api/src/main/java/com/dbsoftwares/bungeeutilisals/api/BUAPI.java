@@ -20,6 +20,9 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -31,6 +34,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -39,8 +43,10 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
-public interface BUAPI {
+public interface BUAPI
+{
 
     /**
      * @return The plugin instance of the BungeeUtilisals core.
@@ -53,7 +59,7 @@ public interface BUAPI {
     ILanguageManager getLanguageManager();
 
     /**
-     * @return The CentrixCore EventLoader allowing you to register EventHandlers.
+     * @return The BungeeUtilisalsX EventLoader allowing you to register EventHandlers.
      */
     IEventLoader getEventLoader();
 
@@ -61,13 +67,19 @@ public interface BUAPI {
      * @param name The user name you want to select on.
      * @return Empty optional if user is not present, User inside if present.
      */
-    Optional<User> getUser(String name);
+    Optional<User> getUser( String name );
+
+    /**
+     * @param uuid The user uuid you want to select on.
+     * @return Empty optional if user is not present, User inside if present.
+     */
+    Optional<User> getUser( UUID uuid );
 
     /**
      * @param player The player you want to select on.
      * @return Empty optional if user is not present, User inside if present.
      */
-    Optional<User> getUser(ProxiedPlayer player);
+    Optional<User> getUser( ProxiedPlayer player );
 
     /**
      * @return A list containing all online Users.
@@ -78,7 +90,7 @@ public interface BUAPI {
      * @param permission The permission the users must have.
      * @return A list containing all online users WITH the given permission.
      */
-    List<User> getUsers(String permission);
+    List<User> getUsers( String permission );
 
     /**
      * @return The BungeeUtilisals chat utility class.
@@ -94,7 +106,7 @@ public interface BUAPI {
      * @param location The Configuration location you want to request.
      * @return A YamlConfiguration instance from the requested file location.
      */
-    IConfiguration getConfig(FileLocation location);
+    IConfiguration getConfig( FileLocation location );
 
     /**
      * @return A new ProxyConnection instance.
@@ -117,7 +129,7 @@ public interface BUAPI {
      *
      * @param message The message to be broadcasted.
      */
-    void broadcast(String message);
+    void broadcast( String message );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -125,7 +137,7 @@ public interface BUAPI {
      * @param message    The message to be broadcasted.
      * @param permission The permission the user must have to receive the message.
      */
-    void broadcast(String message, String permission);
+    void broadcast( String message, String permission );
 
     /**
      * Broadcastas a message with a given prefix to the people with the given permission.
@@ -133,7 +145,7 @@ public interface BUAPI {
      * @param prefix  The prefix you want.
      * @param message The message to be broadcasted.
      */
-    void announce(String prefix, String message);
+    void announce( String prefix, String message );
 
     /**
      * Broadcastas a message with a given prefix to the people with the given permission.
@@ -142,7 +154,7 @@ public interface BUAPI {
      * @param message    The message to be broadcasted.
      * @param permission The permission the user must have to receive the message.
      */
-    void announce(String prefix, String message, String permission);
+    void announce( String prefix, String message, String permission );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
@@ -150,7 +162,7 @@ public interface BUAPI {
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast(String message, Object... placeholders);
+    void langBroadcast( String message, Object... placeholders );
 
     /**
      * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -159,7 +171,7 @@ public interface BUAPI {
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langPermissionBroadcast(String message, String permission, Object... placeholders);
+    void langPermissionBroadcast( String message, String permission, Object... placeholders );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
@@ -168,7 +180,7 @@ public interface BUAPI {
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast(ILanguageManager manager, String message, Object... placeholders);
+    void langBroadcast( ILanguageManager manager, String message, Object... placeholders );
 
     /**
      * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -178,7 +190,7 @@ public interface BUAPI {
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langPermissionBroadcast(ILanguageManager manager, String message, String permission, Object... placeholders);
+    void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
@@ -188,7 +200,7 @@ public interface BUAPI {
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
-    void pluginLangBroadcast(ILanguageManager manager, String plugin, String message, Object... placeholders);
+    void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders );
 
     /**
      * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -199,7 +211,7 @@ public interface BUAPI {
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void pluginLangPermissionBroadcast(ILanguageManager manager, String plugin, String message, String permission, Object... placeholders);
+    void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders );
 
 
     /**
@@ -221,4 +233,28 @@ public interface BUAPI {
      * @return the addon chat that is being used
      */
     IAddonManager getAddonManager();
+
+    /**
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar();
+
+    /**
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
+     * @param message  The display message of the BossBar
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar( BarColor color, BarStyle style, float progress, BaseComponent[] message );
+
+    /**
+     * @param uuid     UUID for the BossBar, should be unique!
+     * @param color    Color of the BossBar.
+     * @param style    Amount of divisions in the BossBar.
+     * @param progress Progress of the BossBar, between 0.0 and 1.0.
+     * @param message  The display message of the BossBar
+     * @return a new BossBar instance.
+     */
+    IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message );
 }

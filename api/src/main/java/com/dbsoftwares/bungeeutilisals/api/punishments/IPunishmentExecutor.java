@@ -18,13 +18,20 @@
 
 package com.dbsoftwares.bungeeutilisals.api.punishments;
 
+import com.dbsoftwares.configuration.api.IConfiguration;
+
 import java.util.List;
 
-public interface IPunishmentExecutor {
+public interface IPunishmentExecutor
+{
+
+    boolean isTemplateReason( final String reason );
+
+    List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template );
 
     String getDateFormat();
 
-    String setPlaceHolders(String line, PunishmentInfo info);
+    String setPlaceHolders( String line, PunishmentInfo info );
 
-    List<String> getPlaceHolders(PunishmentInfo info);
+    List<String> getPlaceHolders( PunishmentInfo info );
 }

@@ -29,7 +29,8 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @AllArgsConstructor
-public class PlaceHolderEvent {
+public class PlaceHolderEvent
+{
 
     private User user;
     private PlaceHolder placeHolder;

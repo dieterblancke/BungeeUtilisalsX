@@ -20,12 +20,15 @@ package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -39,7 +42,10 @@ import net.md_5.bungee.protocol.DefinedPacket;
 import java.util.List;
 import java.util.UUID;
 
-public class ConsoleUser implements User {
+public class ConsoleUser implements User
+{
+
+    private static final String NOT_SUPPORTED = "Not supported yet.";
 
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
@@ -48,243 +54,359 @@ public class ConsoleUser implements User {
     private List<FriendData> friends = Lists.newArrayList();
 
     @Override
-    public void load(ProxiedPlayer parent) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void load( ProxiedPlayer parent )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void unload() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void unload()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void save() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void save()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public UserStorage getStorage() {
+    public UserStorage getStorage()
+    {
         return storage;
     }
 
     @Override
-    public UserCooldowns getCooldowns() {
+    public UserCooldowns getCooldowns()
+    {
         return cooldowns;
     }
 
     @Override
-    public String getIP() {
+    public String getIp()
+    {
         return "127.0.0.1";
     }
 
     @Override
-    public Language getLanguage() {
+    public Language getLanguage()
+    {
         return BUCore.getApi().getLanguageManager().getDefaultLanguage();
     }
 
     @Override
-    public void setLanguage(Language language) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setLanguage( Language language )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public CommandSender sender() {
+    public CommandSender sender()
+    {
         return ProxyServer.getInstance().getConsole();
     }
 
     @Override
-    public void sendRawMessage(String message) {
-        sendMessage(new TextComponent(message));
+    public void sendRawMessage( String message )
+    {
+        sendMessage( new TextComponent( message ) );
     }
 
     @Override
-    public void sendRawColorMessage(String message) {
-        sendMessage(Utils.format(message));
+    public void sendRawColorMessage( String message )
+    {
+        sendMessage( Utils.format( message ) );
     }
 
     @Override
-    public void sendMessage(String message) {
-        sendMessage(getLanguageConfig().getString("prefix"), message);
+    public void sendMessage( String message )
+    {
+        sendMessage( getLanguageConfig().getString( "prefix" ), message );
     }
 
     @Override
-    public void sendLangMessage(String path) {
-        sendLangMessage(true, path);
+    public void sendLangMessage( String path )
+    {
+        sendLangMessage( true, path );
     }
 
     @Override
-    public void sendLangMessage(String path, Object... placeholders) {
-        sendLangMessage(true, path, placeholders);
+    public void sendLangMessage( String path, Object... placeholders )
+    {
+        sendLangMessage( true, path, placeholders );
     }
 
     @Override
-    public void sendLangMessage(boolean prefix, String path) {
-        final String message = buildLangMessage(path);
-        if (prefix) {
-            sendMessage(message);
-        } else {
-            sendRawColorMessage(message);
+    public void sendLangMessage( boolean prefix, String path )
+    {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ) );
+
+            sendMessage( component );
+            return;
+        }
+
+        String message = buildLangMessage( path );
+
+        if ( message.isEmpty() )
+        {
+            return;
+        }
+
+        if ( message.startsWith( "noprefix: " ) )
+        {
+            prefix = false;
+            message = message.replaceFirst( "noprefix: ", "" );
+        }
+
+        if ( prefix )
+        {
+            sendMessage( message );
+        }
+        else
+        {
+            sendRawColorMessage( message );
         }
     }
 
     @Override
-    public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
-        final String message = buildLangMessage(path, placeholders);
-        if (prefix) {
-            sendMessage(message);
-        } else {
-            sendRawColorMessage(message);
+    public void sendLangMessage( boolean prefix, String path, Object... placeholders )
+    {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ), placeholders );
+
+            sendMessage( component );
+            return;
+        }
+
+        String message = buildLangMessage( path, placeholders );
+
+        if ( message.isEmpty() )
+        {
+            return;
+        }
+
+        if ( message.startsWith( "noprefix: " ) )
+        {
+            prefix = false;
+            message = message.replaceFirst( "noprefix: ", "" );
+        }
+
+        if ( prefix )
+        {
+            sendMessage( message );
+        }
+        else
+        {
+            sendRawColorMessage( message );
         }
     }
 
     @Override
-    public void sendMessage(String prefix, String message) {
-        sendMessage(Utils.format(prefix + message));
+    public void sendMessage( String prefix, String message )
+    {
+        sendMessage( Utils.format( prefix + message ) );
     }
 
     @Override
-    public void sendMessage(BaseComponent component) {
-        sender().sendMessage(component);
+    public void sendMessage( BaseComponent component )
+    {
+        sender().sendMessage( component );
     }
 
     @Override
-    public void sendMessage(BaseComponent[] components) {
-        sender().sendMessage(components);
+    public void sendMessage( BaseComponent[] components )
+    {
+        sender().sendMessage( components );
     }
 
     @Override
-    public void kick(String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void kick( String reason )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void langKick(String path, Object... placeholders) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void langKick( String path, Object... placeholders )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void forceKick(String reason) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void forceKick( String reason )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return "CONSOLE";
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID getUuid()
+    {
         return UUID.randomUUID();
     }
 
     @Override
-    public void sendNoPermMessage() {
-        sendLangMessage("no-permission");
+    public void sendNoPermMessage()
+    {
+        sendLangMessage( "no-permission" );
     }
 
     @Override
-    public void setSocialspy(Boolean socialspy) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setSocialspy( Boolean socialspy )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public Boolean isSocialSpy() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Boolean isSocialSpy()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public ProxiedPlayer getParent() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public ProxiedPlayer getParent()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public IConfiguration getLanguageConfig() {
-        return BUCore.getApi().getLanguageManager().getConfig(BUCore.getApi().getPlugin().getDescription().getName(), getLanguage());
+    public IConfiguration getLanguageConfig()
+    {
+        return BUCore.getApi().getLanguageManager().getConfig( BUCore.getApi().getPlugin().getDescription().getName(), getLanguage() );
     }
 
     @Override
-    public boolean isConsole() {
+    public boolean isConsole()
+    {
         return true;
     }
 
     @Override
-    public String getServerName() {
+    public String getServerName()
+    {
         return "BUNGEE";
     }
 
     @Override
-    public boolean isMuted() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public boolean isInStaffChat()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public PunishmentInfo getMuteInfo() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setInStaffChat( boolean staffchat )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void setMute(PunishmentInfo info) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public boolean isInStaffChat() {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public void setInStaffChat(boolean staffchat) {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    @Override
-    public Version getVersion() {
+    public Version getVersion()
+    {
         return Version.latest();
     }
 
     @Override
-    public Location getLocation() {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public Location getLocation()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public void setLocation(Location location) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void setLocation( Location location )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
-    public String buildLangMessage(final String path, final Object... placeholders) {
+    public String buildLangMessage( final String path, final Object... placeholders )
+    {
+        if ( !getLanguageConfig().exists( path ) )
+        {
+            return "";
+        }
         final StringBuilder builder = new StringBuilder();
 
-        if (getLanguageConfig().isList(path)) {
-            final List<String> messages = getLanguageConfig().getStringList(path);
+        if ( getLanguageConfig().isList( path ) )
+        {
+            final List<String> messages = getLanguageConfig().getStringList( path );
 
-            for (int i = 0; i < messages.size(); i++) {
-                final String message = replacePlaceHolders(messages.get(i), placeholders);
-                builder.append(message);
+            if ( messages.isEmpty() )
+            {
+                return "";
+            }
 
-                if (i < messages.size() - 1) {
-                    builder.append("\n");
+            for ( int i = 0; i < messages.size(); i++ )
+            {
+                final String message = replacePlaceHolders( messages.get( i ), placeholders );
+                builder.append( message );
+
+                if ( i < messages.size() - 1 )
+                {
+                    builder.append( "\n" );
                 }
             }
-        } else {
-            final String message = replacePlaceHolders(getLanguageConfig().getString(path), placeholders);
+        }
+        else
+        {
+            final String message = replacePlaceHolders( getLanguageConfig().getString( path ), placeholders );
 
-            builder.append(message);
+            if ( message.isEmpty() )
+            {
+                return "";
+            }
+
+            builder.append( message );
         }
         return builder.toString();
     }
 
-    private String replacePlaceHolders(String message, Object... placeholders) {
-        for (int i = 0; i < placeholders.length - 1; i += 2) {
-            message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+    @Override
+    public FriendSettings getFriendSettings()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
+    }
+
+    @Override
+    public boolean hasPermission( String permission )
+    {
+        return sender().hasPermission( permission );
+    }
+
+    @Override
+    public MessageQueue<QueuedMessage> getMessageQueue()
+    {
+        return null;
+    }
+
+    @Override
+    public void executeMessageQueue()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
+    }
+
+    private String replacePlaceHolders( String message, Object... placeholders )
+    {
+        for ( int i = 0; i < placeholders.length - 1; i += 2 )
+        {
+            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
-        message = PlaceHolderAPI.formatMessage(this, message);
+        message = PlaceHolderAPI.formatMessage( this, message );
         return message;
     }
 
     @Override
-    public void sendPacket(DefinedPacket packet) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void sendPacket( DefinedPacket packet )
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 }

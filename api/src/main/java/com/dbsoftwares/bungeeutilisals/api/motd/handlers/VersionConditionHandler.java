@@ -23,62 +23,74 @@ import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import net.md_5.bungee.api.connection.PendingConnection;
 
-public class VersionConditionHandler extends ConditionHandler {
+public class VersionConditionHandler extends ConditionHandler
+{
 
-    public VersionConditionHandler(String condition) {
-        super(condition.replaceFirst("version ", ""));
+    public VersionConditionHandler( String condition )
+    {
+        super( condition.replaceFirst( "version ", "" ) );
     }
 
     @Override
-    public boolean checkCondition(PendingConnection connection) {
-        String[] args = condition.split(" ");
-        String operator = args[0];
-        Version version = formatVersion(args[1]);
+    public boolean checkCondition( PendingConnection connection )
+    {
+        final String[] args = condition.split( " " );
+        final String operator = args[0];
+        final Version version = formatVersion( args[1] );
 
-        if (version == null) {
+        if ( version == null )
+        {
             return false;
         }
 
-        switch (operator) {
+        switch ( operator )
+        {
             case "<":
-                return connection.getVersion() < version.getVersion();
+                return connection.getVersion() < version.getVersionId();
             case "<=":
-                return connection.getVersion() <= version.getVersion();
+                return connection.getVersion() <= version.getVersionId();
             case "==":
-                return connection.getVersion() == version.getVersion();
+                return connection.getVersion() == version.getVersionId();
             case "!=":
-                return connection.getVersion() != version.getVersion();
+                return connection.getVersion() != version.getVersionId();
             case ">=":
-                return connection.getVersion() >= version.getVersion();
+                return connection.getVersion() >= version.getVersionId();
             case ">":
-                return connection.getVersion() > version.getVersion();
+                return connection.getVersion() > version.getVersionId();
+            default:
+                return false;
         }
-
-        return false;
     }
 
-    private Version formatVersion(String mcVersion) {
-        try {
-            return Version.valueOf("MINECRAFT_" + mcVersion.replace(".", "_"));
-        } catch (IllegalArgumentException e) {
-            BUCore.getLogger().warn("Found an invalid version in condition 'version " + condition + "'!");
-            BUCore.getLogger().warn("Available versions:");
-            BUCore.getLogger().warn(listVersions());
+    private Version formatVersion( String mcVersion )
+    {
+        try
+        {
+            return Version.valueOf( "MINECRAFT_" + mcVersion.replace( ".", "_" ) );
+        }
+        catch ( IllegalArgumentException e )
+        {
+            BUCore.getLogger().warn( "Found an invalid version in condition 'version {}'!", condition );
+            BUCore.getLogger().warn( "Available versions:" );
+            BUCore.getLogger().warn( listVersions() );
             return null;
         }
     }
 
-    private String listVersions() {
-        StringBuilder builder = new StringBuilder();
+    private String listVersions()
+    {
+        final StringBuilder builder = new StringBuilder();
         int length = Version.values().length;
 
-        for (int i = 0; i < length; i++) {
-            Version version = Version.values()[i];
+        for ( int i = 0; i < length; i++ )
+        {
+            final Version version = Version.values()[i];
 
-            builder.append(version.toString());
+            builder.append( version.toString() );
 
-            if (i < length) {
-                builder.append(", ");
+            if ( i < length - 1 )
+            {
+                builder.append( ", " );
             }
         }
 

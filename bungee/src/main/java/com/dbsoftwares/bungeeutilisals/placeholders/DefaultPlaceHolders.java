@@ -19,104 +19,48 @@
 package com.dbsoftwares.bungeeutilisals.placeholders;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.PlaceHolderEventHandler;
+import net.md_5.bungee.api.ProxyServer;
 
-public class DefaultPlaceHolders implements PlaceHolderPack {
+public class DefaultPlaceHolders implements PlaceHolderPack
+{
 
     @Override
-    public void loadPack() {
-        PlaceHolderAPI.addPlaceHolder("{users-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.users");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{friends-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friends");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{friendrequests-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendrequests");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{friendsettings-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.friendsettings");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{bans-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.bans");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{ipbans-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.ipbans");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{tempbans-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.tempbans");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{iptempbans-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.iptempbans");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{mutes-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.mutes");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{ipmutes-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.ipmutes");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{tempmutes-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.tempmutes");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{iptempmutes-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.iptempmutes");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{kicks-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.kicks");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{warns-table}", false, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return BungeeUtilisals.getInstance().getConfig().getString("storage.schemas.warns");
-            }
-        });
-        PlaceHolderAPI.addPlaceHolder("{user}", true, new PlaceHolderEventHandler() {
-            @Override
-            public String getReplacement(PlaceHolderEvent event) {
-                return event.getUser().getName();
-            }
-        });
+    public void loadPack()
+    {
+        PlaceHolderAPI.addPlaceHolder( "{users-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.users" ) );
+        PlaceHolderAPI.addPlaceHolder( "{ignoredusers-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.ignoredusers" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friends-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friends" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friendrequests-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friendrequests" ) );
+        PlaceHolderAPI.addPlaceHolder( "{friendsettings-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.friendsettings" ) );
+        PlaceHolderAPI.addPlaceHolder( "{bans-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.bans" ) );
+        PlaceHolderAPI.addPlaceHolder( "{mutes-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.mutes" ) );
+        PlaceHolderAPI.addPlaceHolder( "{kicks-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.kicks" ) );
+        PlaceHolderAPI.addPlaceHolder( "{warns-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.warns" ) );
+        PlaceHolderAPI.addPlaceHolder( "{punishmentactions-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.punishmentactions" ) );
+        PlaceHolderAPI.addPlaceHolder( "{reports-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.reports" ) );
+        PlaceHolderAPI.addPlaceHolder( "{messagequeue-table}", false,
+                event -> BungeeUtilisals.getInstance().getConfig().getString( "storage.schemas.messagequeue" ) );
+        PlaceHolderAPI.addPlaceHolder( "{user}", true,
+                event -> event.getUser().getName() );
+        PlaceHolderAPI.addPlaceHolder( "{ping}", true,
+                event -> String.valueOf( event.getUser().getParent().getPing() ) );
+        PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
+                event -> String.valueOf( BUCore.getApi().getPlayerUtils().getTotalCount() ) );
+        PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
+                event -> String.valueOf( ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers() ) );
     }
 }

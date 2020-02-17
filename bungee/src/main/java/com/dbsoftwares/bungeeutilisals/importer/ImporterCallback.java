@@ -20,8 +20,9 @@ package com.dbsoftwares.bungeeutilisals.importer;
 
 import net.md_5.bungee.api.Callback;
 
-public interface ImporterCallback<T> extends Callback<T> {
+public interface ImporterCallback<T> extends Callback<T>
+{
 
-    void onStatusUpdate(final T status);
+    void onStatusUpdate( final T status );
 
 }

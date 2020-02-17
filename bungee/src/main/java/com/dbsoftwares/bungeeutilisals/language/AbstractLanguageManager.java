@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *  *
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  *
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *  *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -40,7 +40,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-public abstract class AbstractLanguageManager implements ILanguageManager {
+public abstract class AbstractLanguageManager implements ILanguageManager
+{
 
     @Getter
     protected Map<String, File> plugins = Maps.newHashMap();
@@ -53,139 +54,171 @@ public abstract class AbstractLanguageManager implements ILanguageManager {
     @Getter
     protected LanguageIntegration integration;
 
-    public AbstractLanguageManager(BungeeUtilisals plugin) {
-        integration = uuid -> plugin.getDatabaseManagement().getDao().getUserDao().getLanguage(uuid);
-        ISection section = FileLocation.LANGUAGES_CONFIG.getConfiguration().getSection("languages");
+    public AbstractLanguageManager( BungeeUtilisals plugin )
+    {
+        integration = uuid -> plugin.getDatabaseManagement().getDao().getUserDao().getLanguage( uuid );
+        ISection section = FileLocation.LANGUAGES_CONFIG.getConfiguration().getSection( "languages" );
 
-        for (String key : section.getKeys()) {
-            languages.add(new Language(key, section.getBoolean(key + ".default")));
+        for ( String key : section.getKeys() )
+        {
+            languages.add( new Language( key, section.getBoolean( key + ".default" ) ) );
         }
     }
 
     @Override
-    public Language getLangOrDefault(String language) {
-        return getLanguage(language).orElse(getDefaultLanguage());
+    public Language getLangOrDefault( String language )
+    {
+        return getLanguage( language ).orElse( getDefaultLanguage() );
     }
 
     @Override
-    public LanguageIntegration getLanguageIntegration() {
+    public LanguageIntegration getLanguageIntegration()
+    {
         return integration;
     }
 
     @Override
-    public void setLanguageIntegration(LanguageIntegration integration) {
+    public void setLanguageIntegration( LanguageIntegration integration )
+    {
         this.integration = integration;
     }
 
     @Override
-    public Language getDefaultLanguage() {
-        return languages.stream().filter(Language::isDefault).findFirst().orElse(languages.stream().findFirst().orElse(null));
+    public Language getDefaultLanguage()
+    {
+        return languages.stream().filter( Language::isDefault ).findFirst().orElse( languages.stream().findFirst().orElse( null ) );
     }
 
     @Override
-    public Optional<Language> getLanguage(String language) {
-        return languages.stream().filter(lang -> lang.getName().equalsIgnoreCase(language)).findFirst();
+    public Optional<Language> getLanguage( String language )
+    {
+        return languages.stream().filter( lang -> lang.getName().equalsIgnoreCase( language ) ).findFirst();
     }
 
     @Override
-    public void addPlugin(String plugin, File folder, FileStorageType type) {
-        plugins.put(plugin, folder);
-        fileTypes.put(plugin, type);
+    public void addPlugin( String plugin, File folder, FileStorageType type )
+    {
+        plugins.put( plugin, folder );
+        fileTypes.put( plugin, type );
     }
 
     @Override
-    public abstract void loadLanguages(String plugin);
+    public abstract void loadLanguages( String plugin );
 
     @Override
-    public IConfiguration getLanguageConfiguration(String plugin, User user) {
+    public IConfiguration getLanguageConfiguration( String plugin, User user )
+    {
         IConfiguration config = null;
-        if (user != null) {
-            config = getConfig(plugin, user.getLanguage());
+        if ( user != null )
+        {
+            config = getConfig( plugin, user.getLanguage() );
         }
-        if (config == null) {
-            config = getConfig(plugin, getDefaultLanguage());
+        if ( config == null )
+        {
+            config = getConfig( plugin, getDefaultLanguage() );
         }
         return config;
     }
 
     @Override
-    public IConfiguration getLanguageConfiguration(String plugin, ProxiedPlayer player) {
-        return getLanguageConfiguration(plugin, BungeeUtilisals.getApi().getUser(player).orElse(null));
+    public IConfiguration getLanguageConfiguration( String plugin, ProxiedPlayer player )
+    {
+        return getLanguageConfiguration( plugin, BungeeUtilisals.getApi().getUser( player ).orElse( null ) );
     }
 
     @Override
-    public IConfiguration getLanguageConfiguration(String plugin, CommandSender sender) {
-        return getLanguageConfiguration(plugin, BungeeUtilisals.getApi().getUser(sender.getName()).orElse(null));
+    public IConfiguration getLanguageConfiguration( String plugin, CommandSender sender )
+    {
+        return getLanguageConfiguration( plugin, BungeeUtilisals.getApi().getUser( sender.getName() ).orElse( null ) );
     }
 
     @Override
-    public File getFile(String plugin, Language language) {
-        if (!plugins.containsKey(plugin)) {
-            throw new RuntimeException("The plugin " + plugin + " is not registered!");
+    public File getFile( String plugin, Language language )
+    {
+        if ( !plugins.containsKey( plugin ) )
+        {
+            throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
-        if (fileTypes.get(plugin).equals(FileStorageType.JSON)) {
-            return new File(plugins.get(plugin), language.getName() + ".json");
+        if ( fileTypes.get( plugin ).equals( FileStorageType.JSON ) )
+        {
+            return new File( plugins.get( plugin ), language.getName() + ".json" );
         }
-        return new File(plugins.get(plugin), language.getName() + ".yml");
+        return new File( plugins.get( plugin ), language.getName() + ".yml" );
     }
 
     @Override
-    public IConfiguration getConfig(String plugin, Language language) {
-        if (!plugins.containsKey(plugin)) {
-            throw new RuntimeException("The plugin " + plugin + " is not registered!");
+    public IConfiguration getConfig( String plugin, Language language )
+    {
+        if ( !plugins.containsKey( plugin ) )
+        {
+            throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
-        File lang = getFile(plugin, language);
+        File lang = getFile( plugin, language );
 
-        if (!configurations.containsKey(lang)) {
-            BUCore.getLogger().warn("The plugin " + plugin + " did not register the language " + language.getName() + " yet!");
+        if ( !configurations.containsKey( lang ) )
+        {
+            BUCore.getLogger().warn( "The plugin " + plugin + " did not register the language " + language.getName() + " yet!" );
 
-            File deflang = getFile(plugin, getDefaultLanguage());
-            if (configurations.containsKey(deflang)) {
-                return configurations.get(deflang);
+            File deflang = getFile( plugin, getDefaultLanguage() );
+            if ( configurations.containsKey( deflang ) )
+            {
+                return configurations.get( deflang );
             }
             return null;
         }
-        return configurations.get(lang);
+        return configurations.get( lang );
     }
 
     @Override
-    public Boolean isRegistered(String plugin, Language language) {
-        if (!plugins.containsKey(plugin)) {
-            throw new RuntimeException("The plugin " + plugin + " is not registered!");
+    public Boolean isRegistered( String plugin, Language language )
+    {
+        if ( !plugins.containsKey( plugin ) )
+        {
+            throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
-        return getConfig(plugin, language) != null;
+        return getConfig( plugin, language ) != null;
     }
 
     @Override
-    public Boolean saveLanguage(String plugin, Language language) {
-        if (!plugins.containsKey(plugin)) {
-            throw new RuntimeException("The plugin " + plugin + " is not registered!");
+    public Boolean saveLanguage( String plugin, Language language )
+    {
+        if ( !plugins.containsKey( plugin ) )
+        {
+            throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
-        File lang = getFile(plugin, language);
-        IConfiguration config = configurations.get(lang);
+        File lang = getFile( plugin, language );
+        IConfiguration config = configurations.get( lang );
 
-        try {
+        try
+        {
             config.save();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
         return true;
     }
 
     @Override
-    public Boolean reloadConfig(String plugin, Language language) {
-        if (!plugins.containsKey(plugin)) {
-            throw new RuntimeException("The plugin " + plugin + " is not registered!");
+    public Boolean reloadConfig( String plugin, Language language )
+    {
+        if ( !plugins.containsKey( plugin ) )
+        {
+            throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
-        File lang = getFile(plugin, language);
-        IConfiguration config = configurations.get(lang);
-        try {
+        File lang = getFile( plugin, language );
+        IConfiguration config = configurations.get( lang );
+        try
+        {
             config.reload();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
         }
         return true;
     }
 
-    protected abstract File loadResource(String plugin, String source, File target);
+    protected abstract File loadResource( String plugin, String source, File target );
 }

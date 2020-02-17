@@ -24,25 +24,35 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.stream.Stream;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public class TitleAnnouncement extends Announcement {
+@Getter
+@Setter
+@ToString
+@EqualsAndHashCode(callSuper = false)
+public class TitleAnnouncement extends Announcement
+{
 
     private boolean language;
-    private String title, subtitle;
-    private int fadeIn, stay, fadeOut;
+    private String title;
+    private String subtitle;
+    private int fadeIn;
+    private int stay;
+    private int fadeOut;
 
-    public TitleAnnouncement(boolean language, String title, String subtitle,
-                             int fadeIn, int stay, int fadeOut, ServerGroup serverGroup, String receivePermission) {
-        super(serverGroup, receivePermission);
+    public TitleAnnouncement( boolean language, String title, String subtitle,
+                              int fadeIn, int stay, int fadeOut, ServerGroup serverGroup,
+                              String receivePermission )
+    {
+        super( serverGroup, receivePermission );
 
         this.language = language;
         this.title = title;
@@ -52,26 +62,32 @@ public class TitleAnnouncement extends Announcement {
         this.fadeOut = fadeOut;
     }
 
-    public void send() {
-        if (serverGroup.isGlobal()) {
-            send(filter(ProxyServer.getInstance().getPlayers().stream()));
-        } else {
-            serverGroup.getServerInfos().forEach(server -> send(filter(server.getPlayers().stream())));
+    public void send()
+    {
+        if ( serverGroup.isGlobal() )
+        {
+            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+        }
+        else
+        {
+            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
         }
     }
 
-    private void send(Stream<ProxiedPlayer> stream) {
-        stream.forEach(player -> {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), player);
+    private void send( Stream<ProxiedPlayer> stream )
+    {
+        stream.forEach( player ->
+        {
+            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), player );
             Title bungeeTitle = ProxyServer.getInstance().createTitle();
 
-            bungeeTitle.title(Utils.format(player, language ? config.getString(title) : title));
-            bungeeTitle.subTitle(Utils.format(player, language ? config.getString(subtitle) : subtitle));
-            bungeeTitle.fadeIn(fadeIn * 20);
-            bungeeTitle.stay(stay * 20);
-            bungeeTitle.fadeOut(fadeOut * 20);
+            bungeeTitle.title( Utils.format( player, language && config.exists( title ) ? config.getString( title ) : title ) );
+            bungeeTitle.subTitle( Utils.format( player, language && config.exists( subtitle ) ? config.getString( subtitle ) : subtitle ) );
+            bungeeTitle.fadeIn( fadeIn * 20 );
+            bungeeTitle.stay( stay * 20 );
+            bungeeTitle.fadeOut( fadeOut * 20 );
 
-            player.sendTitle(bungeeTitle);
-        });
+            player.sendTitle( bungeeTitle );
+        } );
     }
 }

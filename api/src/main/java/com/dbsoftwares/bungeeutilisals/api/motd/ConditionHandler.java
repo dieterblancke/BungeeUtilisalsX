@@ -24,10 +24,11 @@ import net.md_5.bungee.api.connection.PendingConnection;
 
 @Data
 @AllArgsConstructor
-public abstract class ConditionHandler {
+public abstract class ConditionHandler
+{
 
     protected String condition;
 
-    public abstract boolean checkCondition(PendingConnection connection);
+    public abstract boolean checkCondition( PendingConnection connection );
 
 }

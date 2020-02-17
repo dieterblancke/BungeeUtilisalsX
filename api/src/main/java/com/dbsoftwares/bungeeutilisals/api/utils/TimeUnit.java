@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *  *
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  *
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *  *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -18,526 +18,689 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils;
 
-public enum TimeUnit { // Same as the Java TimeUnit class, but added TICKS as a TimeUnit
-
-    NANOSECONDS {
-        public long toNanos(long d) {
-            return d;
-        }
-
-        public long toMicros(long d) {
-            return d / (micros / nanos);
-        }
-
-        public long toMillis(long d) {
-            return d / (millis / nanos);
-        }
-
-        public long toTicks(long d) {
-            return d / (ticks / nanos);
-        }
-
-        public long toSeconds(long d) {
-            return d / (seconds / nanos);
-        }
-
-        public long toMinutes(long d) {
-            return d / (minutes / nanos);
-        }
-
-        public long toHours(long d) {
-            return d / (hours / nanos);
-        }
-
-        public long toDays(long d) {
-            return d / (days / nanos);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / nanos);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toNanos(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return (int) (d - (m * millis));
-        }
-    },
-
-    MICROSECONDS {
-        public long toNanos(long d) {
-            return x(d, micros / nanos, MAX / (micros / nanos));
-        }
-
-        public long toMicros(long d) {
-            return d;
-        }
-
-        public long toMillis(long d) {
-            return d / (millis / micros);
-        }
-
-        public long toTicks(long d) {
-            return d / (ticks / micros);
-        }
-
-        public long toSeconds(long d) {
-            return d / (seconds / micros);
-        }
-
-        public long toMinutes(long d) {
-            return d / (minutes / micros);
-        }
-
-        public long toHours(long d) {
-            return d / (hours / micros);
-        }
-
-        public long toDays(long d) {
-            return d / (days / micros);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / micros);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toMicros(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return (int) ((d * micros) - (m * millis));
-        }
-    },
-
-    MILLISECONDS {
-        public long toNanos(long d) {
-            return x(d, millis / nanos, MAX / (millis / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, millis / micros, MAX / (millis / micros));
-        }
-
-        public long toMillis(long d) {
-            return d;
-        }
-
-        public long toTicks(long d) {
-            return d / (ticks / millis);
-        }
-
-        public long toSeconds(long d) {
-            return d / (seconds / millis);
-        }
-
-        public long toMinutes(long d) {
-            return d / (minutes / millis);
-        }
-
-        public long toHours(long d) {
-            return d / (hours / millis);
-        }
-
-        public long toDays(long d) {
-            return d / (days / millis);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / millis);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toMillis(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    TICKS {
-        public long toNanos(long d) {
-            return x(d, ticks / nanos, MAX / (ticks / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, ticks / micros, MAX / (ticks / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, ticks / millis, MAX / (ticks / millis));
-        }
-
-        public long toTicks(long d) {
-            return d;
-        }
-
-        public long toSeconds(long d) {
-            return d / (seconds / ticks);
-        }
-
-        public long toMinutes(long d) {
-            return d / (minutes / ticks);
-        }
-
-        public long toHours(long d) {
-            return d / (hours / ticks);
-        }
-
-        public long toDays(long d) {
-            return d / (days / ticks);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / ticks);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toSeconds(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    SECONDS {
-        public long toNanos(long d) {
-            return x(d, seconds / nanos, MAX / (seconds / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, seconds / micros, MAX / (seconds / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, seconds / millis, MAX / (seconds / millis));
-        }
-
-        public long toTicks(long d) {
-            return x(d, seconds / ticks, MAX / (seconds / ticks));
-        }
-
-        public long toSeconds(long d) {
-            return d;
-        }
-
-        public long toMinutes(long d) {
-            return d / (minutes / seconds);
-        }
-
-        public long toHours(long d) {
-            return d / (hours / seconds);
-        }
-
-        public long toDays(long d) {
-            return d / (days / seconds);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / seconds);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toSeconds(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    MINUTES {
-        public long toNanos(long d) {
-            return x(d, minutes / nanos, MAX / (minutes / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, minutes / micros, MAX / (minutes / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, minutes / millis, MAX / (minutes / millis));
-        }
-
-        public long toTicks(long d) {
-            return x(d, minutes / ticks, MAX / (minutes / ticks));
-        }
-
-        public long toSeconds(long d) {
-            return x(d, minutes / seconds, MAX / (minutes / seconds));
-        }
-
-        public long toMinutes(long d) {
-            return d;
-        }
-
-        public long toHours(long d) {
-            return d / (hours / minutes);
-        }
-
-        public long toDays(long d) {
-            return d / (days / minutes);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / minutes);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toMinutes(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    HOURS {
-        public long toNanos(long d) {
-            return x(d, hours / nanos, MAX / (hours / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, hours / micros, MAX / (hours / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, hours / millis, MAX / (hours / millis));
-        }
-
-        public long toTicks(long d) {
-            return x(d, hours / ticks, MAX / (hours / ticks));
-        }
-
-        public long toSeconds(long d) {
-            return x(d, hours / seconds, MAX / (hours / seconds));
-        }
-
-        public long toMinutes(long d) {
-            return x(d, hours / minutes, MAX / (hours / minutes));
-        }
-
-        public long toHours(long d) {
-            return d;
-        }
-
-        public long toDays(long d) {
-            return d / (days / hours);
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / hours);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toHours(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    DAYS {
-        public long toNanos(long d) {
-            return x(d, days / nanos, MAX / (days / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, days / micros, MAX / (days / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, days / millis, MAX / (days / millis));
-        }
-
-        public long toTicks(long d) {
-            return x(d, days / ticks, MAX / (days / ticks));
-        }
-
-        public long toSeconds(long d) {
-            return x(d, days / seconds, MAX / (days / seconds));
-        }
-
-        public long toMinutes(long d) {
-            return x(d, days / minutes, MAX / (days / minutes));
-        }
-
-        public long toHours(long d) {
-            return x(d, days / hours, MAX / (days / hours));
-        }
-
-        public long toDays(long d) {
-            return d;
-        }
-
-        public long toWeeks(long d) {
-            return d / (weeks / days);
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toDays(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    },
-
-    WEEKS {
-        public long toNanos(long d) {
-            return x(d, weeks / nanos, MAX / (weeks / nanos));
-        }
-
-        public long toMicros(long d) {
-            return x(d, weeks / micros, MAX / (weeks / micros));
-        }
-
-        public long toMillis(long d) {
-            return x(d, weeks / millis, MAX / (weeks / millis));
-        }
-
-        public long toTicks(long d) {
-            return x(d, weeks / ticks, MAX / (weeks / ticks));
-        }
-
-        public long toSeconds(long d) {
-            return x(d, weeks / seconds, MAX / (weeks / seconds));
-        }
-
-        public long toMinutes(long d) {
-            return x(d, weeks / minutes, MAX / (weeks / minutes));
-        }
-
-        public long toHours(long d) {
-            return x(d, weeks / hours, MAX / (weeks / hours));
-        }
-
-        public long toDays(long d) {
-            return x(d, weeks / days, MAX / (weeks / days));
-        }
-
-        public long toWeeks(long d) {
-            return d;
-        }
-
-        public long convert(long d, TimeUnit u) {
-            return u.toDays(d);
-        }
-
-        int excessNanos(long d, long m) {
-            return 0;
-        }
-    };
-
-    static final long nanos = 1L;
-    static final long micros = nanos * 1000L;
-    static final long millis = micros * 1000L;
-    static final long ticks = millis * 50L;
-    static final long seconds = ticks * 20L;
-    static final long minutes = seconds * 60L;
-    static final long hours = minutes * 60L;
-    static final long days = hours * 24L;
-    static final long weeks = days * 7L;
+public enum TimeUnit
+{ // Same as the Java TimeUnit class, but added TICKS as a TimeUnit
+
+    NANOSECONDS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return d / (MICROS / NANOS);
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return d / (MILLIS / NANOS);
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return d / (TICK / NANOS);
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return d / (SECOND / NANOS);
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d / (MINUTE / NANOS);
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / NANOS);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / NANOS);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / NANOS);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toNanos( d );
+                }
+
+            },
+
+    MICROSECONDS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, MICROS / NANOS, MAX / (MICROS / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return d / (MILLIS / MICROS);
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return d / (TICK / MICROS);
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return d / (SECOND / MICROS);
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d / (MINUTE / MICROS);
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / MICROS);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / MICROS);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / MICROS);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toMicros( d );
+                }
+
+            },
+
+    MILLISECONDS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, MILLIS / NANOS, MAX / (MILLIS / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, MILLIS / MICROS, MAX / (MILLIS / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return d / (TICK / MILLIS);
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return d / (SECOND / MILLIS);
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d / (MINUTE / MILLIS);
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / MILLIS);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / MILLIS);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / MILLIS);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toMillis( d );
+                }
+
+            },
+
+    TICKS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, TICK / NANOS, MAX / (TICK / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, TICK / MICROS, MAX / (TICK / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, TICK / MILLIS, MAX / (TICK / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return d / (SECOND / TICK);
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d / (MINUTE / TICK);
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / TICK);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / TICK);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / TICK);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toSeconds( d );
+                }
+
+            },
+
+    SECONDS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, SECOND / NANOS, MAX / (SECOND / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, SECOND / MICROS, MAX / (SECOND / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, SECOND / MILLIS, MAX / (SECOND / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return x( d, SECOND / TICK, MAX / (SECOND / TICK) );
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d / (MINUTE / SECOND);
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / SECOND);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / SECOND);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / SECOND);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toSeconds( d );
+                }
+
+            },
+
+    MINUTES
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, MINUTE / NANOS, MAX / (MINUTE / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, MINUTE / MICROS, MAX / (MINUTE / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, MINUTE / MILLIS, MAX / (MINUTE / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return x( d, MINUTE / TICK, MAX / (MINUTE / TICK) );
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return x( d, MINUTE / SECOND, MAX / (MINUTE / SECOND) );
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d / (HOUR / MINUTE);
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / MINUTE);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / MINUTE);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toMinutes( d );
+                }
+
+
+            },
+
+    HOURS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, HOUR / NANOS, MAX / (HOUR / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, HOUR / MICROS, MAX / (HOUR / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, HOUR / MILLIS, MAX / (HOUR / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return x( d, HOUR / TICK, MAX / (HOUR / TICK) );
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return x( d, HOUR / SECOND, MAX / (HOUR / SECOND) );
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return x( d, HOUR / MINUTE, MAX / (HOUR / MINUTE) );
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d / (DAY / HOUR);
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / HOUR);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toHours( d );
+                }
+
+            },
+
+    DAYS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, DAY / NANOS, MAX / (DAY / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, DAY / MICROS, MAX / (DAY / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, DAY / MILLIS, MAX / (DAY / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return x( d, DAY / TICK, MAX / (DAY / TICK) );
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return x( d, DAY / SECOND, MAX / (DAY / SECOND) );
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return x( d, DAY / MINUTE, MAX / (DAY / MINUTE) );
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return x( d, DAY / HOUR, MAX / (DAY / HOUR) );
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d / (WEEK / DAY);
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toDays( d );
+                }
+
+            },
+
+    WEEKS
+            {
+                @Override
+                public long toNanos( long d )
+                {
+                    return x( d, WEEK / NANOS, MAX / (WEEK / NANOS) );
+                }
+
+                @Override
+                public long toMicros( long d )
+                {
+                    return x( d, WEEK / MICROS, MAX / (WEEK / MICROS) );
+                }
+
+                @Override
+                public long toMillis( long d )
+                {
+                    return x( d, WEEK / MILLIS, MAX / (WEEK / MILLIS) );
+                }
+
+                @Override
+                public long toTicks( long d )
+                {
+                    return x( d, WEEK / TICK, MAX / (WEEK / TICK) );
+                }
+
+                @Override
+                public long toSeconds( long d )
+                {
+                    return x( d, WEEK / SECOND, MAX / (WEEK / SECOND) );
+                }
+
+                @Override
+                public long toMinutes( long d )
+                {
+                    return x( d, WEEK / MINUTE, MAX / (WEEK / MINUTE) );
+                }
+
+                @Override
+                public long toHours( long d )
+                {
+                    return x( d, WEEK / HOUR, MAX / (WEEK / HOUR) );
+                }
+
+                @Override
+                public long toDays( long d )
+                {
+                    return x( d, WEEK / DAY, MAX / (WEEK / DAY) );
+                }
+
+                @Override
+                public long toWeeks( long d )
+                {
+                    return d;
+                }
+
+                @Override
+                public long convert( long d, TimeUnit u )
+                {
+                    return u.toDays( d );
+                }
+
+            };
+
+    static final long NANOS = 1L;
+    static final long MICROS = NANOS * 1000L;
+    static final long MILLIS = MICROS * 1000L;
+    static final long TICK = MILLIS * 50L;
+    static final long SECOND = TICK * 20L;
+    static final long MINUTE = SECOND * 60L;
+    static final long HOUR = MINUTE * 60L;
+    static final long DAY = HOUR * 24L;
+    static final long WEEK = DAY * 7L;
     static final long MAX = Long.MAX_VALUE;
 
-    static long x(long d, long m, long over) {
-        if (d > over) return Long.MAX_VALUE;
-        if (d < -over) return Long.MIN_VALUE;
+    static long x( long d, long m, long over )
+    {
+        if ( d > over )
+        {
+            return Long.MAX_VALUE;
+        }
+        if ( d < -over )
+        {
+            return Long.MIN_VALUE;
+        }
         return d * m;
     }
 
-    public long convert(long sourceDuration, TimeUnit sourceUnit) {
-        throw new AbstractMethodError();
-    }
-
-    public long toNanos(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toMicros(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toMillis(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toSeconds(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toTicks(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toMinutes(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toHours(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toDays(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    public long toWeeks(long duration) {
-        throw new AbstractMethodError();
-    }
-
-    abstract int excessNanos(long d, long m);
-
-    public void timedWait(Object obj, long timeout) throws InterruptedException {
-        if (timeout > 0) {
-            long ms = toMillis(timeout);
-            int ns = excessNanos(timeout, ms);
-            obj.wait(ms, ns);
-        }
-    }
-
-    public void timedJoin(Thread thread, long timeout)
-            throws InterruptedException {
-        if (timeout > 0) {
-            long ms = toMillis(timeout);
-            int ns = excessNanos(timeout, ms);
-            thread.join(ms, ns);
-        }
-    }
-
-    public void sleep(long timeout) throws InterruptedException {
-        if (timeout > 0) {
-            long ms = toMillis(timeout);
-            int ns = excessNanos(timeout, ms);
-            Thread.sleep(ms, ns);
-        }
-    }
-
-    public static boolean isUnit(String unit) {
-        for (TimeUnit time : values()) {
-            if (time.toString().equalsIgnoreCase(unit)) {
+    public static boolean isUnit( String unit )
+    {
+        for ( TimeUnit time : values() )
+        {
+            if ( time.toString().equalsIgnoreCase( unit ) )
+            {
                 return true;
             }
         }
         return false;
     }
 
-    public static TimeUnit valueOfOrElse(String unit, TimeUnit def) {
-        if (isUnit(unit)) {
-            return valueOf(unit);
+    public static TimeUnit valueOfOrElse( String unit, TimeUnit def )
+    {
+        if ( isUnit( unit ) )
+        {
+            return valueOf( unit );
         }
         return def;
     }
 
-    public java.util.concurrent.TimeUnit toJavaTimeUnit() {
-        try {
-            return java.util.concurrent.TimeUnit.valueOf(toString());
-        } catch (IllegalArgumentException e) {
+    public long convert( long sourceDuration, TimeUnit sourceUnit )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toNanos( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toMicros( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toMillis( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toSeconds( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toTicks( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toMinutes( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toHours( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toDays( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public long toWeeks( long duration )
+    {
+        throw new AbstractMethodError();
+    }
+
+    public java.util.concurrent.TimeUnit toJavaTimeUnit()
+    {
+        try
+        {
+            return java.util.concurrent.TimeUnit.valueOf( toString() );
+        }
+        catch ( IllegalArgumentException e )
+        {
             return null;
         }
     }

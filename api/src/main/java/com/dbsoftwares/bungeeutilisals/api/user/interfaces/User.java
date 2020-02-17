@@ -19,12 +19,14 @@
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -33,13 +35,15 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.List;
 import java.util.UUID;
 
-public interface User extends ExperimentalUser {
+public interface User extends ExperimentalUser
+{
 
     /**
      * Loads the user in RAM.
+     *
      * @param parent The parent player, null if console
      */
-    void load(ProxiedPlayer parent);
+    void load( ProxiedPlayer parent );
 
     /**
      * Unloads the User from storage.
@@ -64,7 +68,7 @@ public interface User extends ExperimentalUser {
     /**
      * @return The IP of the User.
      */
-    String getIP();
+    String getIp();
 
     /**
      * @return The language of the User.
@@ -76,7 +80,7 @@ public interface User extends ExperimentalUser {
      *
      * @param language The new language.
      */
-    void setLanguage(Language language);
+    void setLanguage( Language language );
 
     /**
      * @return The User casted to CommandSender.
@@ -84,32 +88,32 @@ public interface User extends ExperimentalUser {
     CommandSender sender();
 
     /**
-     * Sends a raw message to the User, without CentrixCore prefix.
+     * Sends a raw message to the User, without BungeeUtilisalsX prefix.
      *
      * @param message The message which has to be sent.
      */
-    void sendRawMessage(String message);
+    void sendRawMessage( String message );
 
     /**
-     * Sends a raw message to the User, without CentrixCore prefix, but with colors replaced.
+     * Sends a raw message to the User, without BungeeUtilisalsX prefix, but with colors replaced.
      *
      * @param message The message which has to be sent, will be colored.
      */
-    void sendRawColorMessage(String message);
+    void sendRawColorMessage( String message );
 
     /**
-     * Sends a message to the User with the CentrixCore prefix + colors will be replaced.
+     * Sends a message to the User with the BungeeUtilisalsX prefix + colors will be replaced.
      *
-     * @param message The message which has to be sent. The CentrixCore prefix will appear before.
+     * @param message The message which has to be sent. The BungeeUtilisalsX prefix will appear before.
      */
-    void sendMessage(String message);
+    void sendMessage( String message );
 
     /**
      * Searches a message in the user's language configuration and sends that message.
      *
      * @param path The path to the message in the language file.
      */
-    void sendLangMessage(String path);
+    void sendLangMessage( String path );
 
     /**
      * Searches a message in the user's language configuration and sends that message formatted with placeholders.
@@ -117,7 +121,7 @@ public interface User extends ExperimentalUser {
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    void sendLangMessage(String path, Object... placeholders);
+    void sendLangMessage( String path, Object... placeholders );
 
     /**
      * Searches a message in the user's language configuration and sends that message.
@@ -125,7 +129,7 @@ public interface User extends ExperimentalUser {
      * @param prefix Should a prefix be added in front of the message or not?
      * @param path   The path to the message in the language file.
      */
-    void sendLangMessage(boolean prefix, String path);
+    void sendLangMessage( boolean prefix, String path );
 
     /**
      * Searches a message in the user's language configuration and sends that message formatted with placeholders.
@@ -134,7 +138,7 @@ public interface User extends ExperimentalUser {
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    void sendLangMessage(boolean prefix, String path, Object... placeholders);
+    void sendLangMessage( boolean prefix, String path, Object... placeholders );
 
     /**
      * Sends a message to the User with the given prefix + colors will be replaced.
@@ -142,26 +146,28 @@ public interface User extends ExperimentalUser {
      * @param prefix  The prefix for the message. Mostly used for plugin prefixes.
      * @param message The message which has to be sent.
      */
-    void sendMessage(String prefix, String message);
+    void sendMessage( String prefix, String message );
 
     /**
      * Sends a BaseComponent message to the user, colors will be formatted.
+     *
      * @param component The component to be sent.
      */
-    void sendMessage(BaseComponent component);
+    void sendMessage( BaseComponent component );
 
     /**
      * Sends a BaseComponent message to the user, colors will be formatted.
+     *
      * @param components The components to be sent.
      */
-    void sendMessage(BaseComponent[] components);
+    void sendMessage( BaseComponent[] components );
 
     /**
      * Synchronously kicks the User with a certain reason.
      *
      * @param reason The reason of the kick.
      */
-    void kick(String reason);
+    void kick( String reason );
 
     /**
      * Kicks user with message from language file.
@@ -169,14 +175,14 @@ public interface User extends ExperimentalUser {
      * @param path         Path in language file.
      * @param placeholders Placeholders to be replaced.
      */
-    void langKick(String path, Object... placeholders);
+    void langKick( String path, Object... placeholders );
 
     /**
      * Kicks the User with a certain reason.
      *
      * @param reason The reason of the kick.
      */
-    void forceKick(String reason);
+    void forceKick( String reason );
 
     /**
      * @return The user's name.
@@ -184,9 +190,9 @@ public interface User extends ExperimentalUser {
     String getName();
 
     /**
-     * @return The user's UUID.
+     * @return The user's uuid.
      */
-    UUID getUUID();
+    UUID getUuid();
 
     /**
      * Sends the standard no permission message to the User.
@@ -198,7 +204,7 @@ public interface User extends ExperimentalUser {
      *
      * @param socialspy The status of the Socialspy, true for on, false for off.
      */
-    void setSocialspy(Boolean socialspy);
+    void setSocialspy( Boolean socialspy );
 
     /**
      * @return Returns if the User is in Socialspy mode or not.
@@ -226,32 +232,16 @@ public interface User extends ExperimentalUser {
     String getServerName();
 
     /**
-     * @return true if user is muted, false if not.
-     */
-    boolean isMuted();
-
-    /**
-     * @return PunishmentInfo of current mute (if muted), null if not muted.
-     */
-    PunishmentInfo getMuteInfo();
-
-    /**
-     * Sets the user mute data in local cache.
-     *
-     * @param info The info to be stored.
-     */
-    void setMute(PunishmentInfo info);
-
-    /**
-     * Changes staffchat state.
-     * @param staffchat true if staffchat should be enabled, false if it should be disabled.
-     */
-    void setInStaffChat(boolean staffchat);
-
-    /**
      * @return true if staffchat is enabled, false if not.
      */
     boolean isInStaffChat();
+
+    /**
+     * Changes staffchat state.
+     *
+     * @param staffchat true if staffchat should be enabled, false if it should be disabled.
+     */
+    void setInStaffChat( boolean staffchat );
 
     /**
      * @return the version the user is playing on
@@ -268,7 +258,7 @@ public interface User extends ExperimentalUser {
      *
      * @param location the new user location
      */
-    void setLocation(Location location);
+    void setLocation( Location location );
 
     /**
      * Formats a language message from the given path.
@@ -277,10 +267,21 @@ public interface User extends ExperimentalUser {
      * @param placeholders The placeholders to be replaced.
      * @return A language message with given placeholders replaced.
      */
-    String buildLangMessage(String path, Object... placeholders);
+    String buildLangMessage( String path, Object... placeholders );
 
     /**
      * @return a list of the user's Friends
      */
     List<FriendData> getFriends();
+
+    /**
+     * @return the used friend settings
+     */
+    FriendSettings getFriendSettings();
+
+    boolean hasPermission( String permission );
+
+    MessageQueue<QueuedMessage> getMessageQueue();
+
+    void executeMessageQueue();
 }

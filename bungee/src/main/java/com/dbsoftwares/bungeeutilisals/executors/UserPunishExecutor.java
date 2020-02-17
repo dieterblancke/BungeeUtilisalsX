@@ -21,53 +21,111 @@ package com.dbsoftwares.bungeeutilisals.executors;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.utils.ReportUtils;
+import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 
 import java.util.Date;
 import java.util.List;
 
-public class UserPunishExecutor implements EventExecutor {
+public class UserPunishExecutor implements EventExecutor
+{
 
     @Event
-    public void updateMute(UserPunishEvent event) {
-        if (event.isMute()) {
-            event.getUser().ifPresent(user -> user.setMute(event.getInfo()));
+    public void handleReports( UserPunishmentFinishEvent event )
+    {
+        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+                ReportUtils.handleReportsFor( event.getExecutor().getName(), event.getUuid(), event.getType() )
+        );
+    }
+
+    @Event
+    public void updateMute( UserPunishmentFinishEvent event )
+    {
+        if ( event.isMute() )
+        {
+            event.getUser().ifPresent( user ->
+            {
+                if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+                {
+                    user.getStorage().setData( "CURRENT_MUTES", Lists.newArrayList() );
+                }
+                final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+
+                mutes.add( event.getInfo() );
+            } );
         }
     }
 
     @Event
-    public void executeActions(UserPunishEvent event) {
-        if (!FileLocation.PUNISHMENTS.hasData(event.getType().toString())) {
+    public void executeActions( UserPunishmentFinishEvent event )
+    {
+        if ( !FileLocation.PUNISHMENTS.hasData( event.getType().toString() ) )
+        {
             return;
         }
-        List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData(event.getType().toString());
+        final List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData( event.getType().toString() );
 
-        for (PunishmentAction action : actions) {
-            long amount;
+        for ( PunishmentAction action : actions )
+        {
+            final long amount;
 
-            if (event.isUserPunishment()) {
-                // UUID involved
+            if ( event.isUserPunishment() )
+            {
+                // uuid involved
                 amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                        event.getUUID().toString(),
                         event.getType(),
-                        new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
+                        event.getUuid(),
+                        new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                 );
-            } else {
-                // IP involved
-                amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                        event.getIp(),
+            }
+            else
+            {
+                // ip involved
+                amount = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
                         event.getType(),
-                        new Date(System.currentTimeMillis() - action.getUnit().toMillis(action.getTime()))
+                        event.getIp(),
+                        new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                 );
             }
 
-            if (amount >= action.getLimit()) {
-                action.getActions().forEach(command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
-                        ProxyServer.getInstance().getConsole(),
-                        command.replace("%user%", event.getName())));
+            if ( amount >= action.getLimit() )
+            {
+                action.getActions().forEach( command ->
+                        ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                                ProxyServer.getInstance().getConsole(),
+                                command.replace( "%user%", event.getName() )
+                        )
+                );
+
+                if ( event.isUserPunishment() )
+                {
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().updateActionStatus(
+                            action.getLimit(),
+                            event.getType(),
+                            event.getUuid(),
+                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                    );
+                }
+                else
+                {
+                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
+                            action.getLimit(),
+                            event.getType(),
+                            event.getIp(),
+                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                    );
+                }
+                BUCore.getApi().getStorageManager().getDao().getPunishmentDao().savePunishmentAction(
+                        event.getUuid(),
+                        event.getName(),
+                        event.getIp(),
+                        action.getUid()
+                );
             }
         }
     }

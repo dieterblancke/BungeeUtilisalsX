@@ -1,12 +1,14 @@
 glist:
   # Enable this command or not?
   enabled: true
+  name: glist
   aliases: 'blist, globallist'
   permission: bungeeutilisals.commands.glist
+  header: ''
   format:
     text: '&c%server% &7(%players%) &f» %playerlist%'
     hover:
-    - '&eClick here to go to &b%server%&e.'
+      - '&eClick here to go to &b%server%&e.'
     click:
       # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
       # RUN_COMMAND will only work for BungeeCord commands.
@@ -22,16 +24,17 @@ glist:
     enabled: false
     # The servers or servergroups which should occur in the /glist servers (allows you to for example group minigames)
     list:
-    - 'Lobbies'
-    - 'Factions'
-    - 'Skyblock'
-    - 'SkyWars'
+      - 'Lobbies'
+      - 'Factions'
+      - 'Skyblock'
+      - 'SkyWars'
   total:
     text: '&eThere is / are &c%total% &eplayer(s) online now!'
     hover:
-    - '%playerlist%'
+      - '%playerlist%'
 announce:
   enabled: true
+  name: announce
   aliases: 'alert, bigalert'
   permission: bungeeutilisals.commands.announce
   types:
@@ -54,28 +57,178 @@ announce:
       fadein: 1
       stay: 3
       fadeout: 1
+  # Path to preconfigured messages in the languages file.
+  pre_configured: 'custom.announce'
 find:
   enabled: true
+  name: find
   aliases: 'search'
   permission: bungeeutilisals.commands.find
 server:
   enabled: true
+  name: server
   aliases: 'switch'
   permission: bungeeutilisals.commands.server
 clearchat:
   enabled: true
+  name: clearchat
   aliases: 'cc'
   permission: bungeeutilisals.commands.clearchat
 chatlock:
   enabled: true
+  name: chatlock
   aliases: 'cl, lock, lockchat'
   permission: bungeeutilisals.commands.chatlock
   bypass: bungeeutilisals.chatlock.bypass
 glag:
   enabled: true
+  name: glag
   aliases: 'bgc, blag'
   permission: bungeeutilisals.commands.glag
 staffchat:
   enabled: true
+  name: staffchat
   aliases: 'sc, schat'
   permission: bungeeutilisals.commands.staffchat
+
+  # charchat makes it possible to chat in staffchat without using the /staffchat toggle
+  # if a message for example starts with '#' and the person has the staffchat permission, it will be seen as a staffchat message
+  charchat:
+    enabled: false
+    detect: '#'
+language:
+  enabled: true
+  name: language
+  aliases: 'lang'
+  permission: bungeeutilisals.commands.language
+staff:
+  enabled: false
+  name: staff
+  aliases: 'onlinestaff'
+  permission: bungeeutilisals.commands.staff
+
+  # here the staff ranks (that are shown in /staff) should be listed
+  # when using redis, make sure that all bungees are synchronized
+  ranks:
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
+    - name: 'helper'
+      # The display tag of the rank to be used in the command.
+      display: '&3&lHELPER'
+      # The permission that an user needs to be detected as this rank.
+      permission: 'bungeeutilisals.staff.helper'
+      # The priority of this rank, the higher the priority is, the higher the rank should be.
+      priority: 1
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
+    - name: 'moderator'
+      # The display tag of the rank to be used in the command.
+      display: '&2&lMODERATOR'
+      # The permission that an user needs to be detected as this rank.
+      permission: 'bungeeutilisals.staff.moderator'
+      # The priority of this rank, the higher the priority is, the higher the rank should be.
+      priority: 2
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
+    - name: 'admin'
+      # The display tag of the rank to be used in the command.
+      display: '&c&lADMIN'
+      # The permission that an user needs to be detected as this rank.
+      permission: 'bungeeutilisals.staff.admin'
+      # The priority of this rank, the higher the priority is, the higher the rank should be.
+      priority: 3
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
+    - name: 'developer'
+      # The display tag of the rank to be used in the command.
+      display: '&5&lDEVELOPER'
+      # The permission that an user needs to be detected as this rank.
+      permission: 'bungeeutilisals.staff.developer'
+      # The priority of this rank, the higher the priority is, the higher the rank should be.
+      priority: 4
+    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
+    - name: 'owner'
+      # The display tag of the rank to be used in the command.
+      display: '&4&lOWNER'
+      # The permission that an user needs to be detected as this rank.
+      permission: 'bungeeutilisals.staff.owner'
+      # The priority of this rank, the higher the priority is, the higher the rank should be.
+      priority: 5
+msg:
+  enabled: true
+  name: msg
+  aliases: 'm, whisper'
+  permission: bungeeutilisals.commands.msg
+reply:
+  enabled: true
+  name: reply
+  aliases: 'r'
+  permission: bungeeutilisals.commands.reply
+ignore:
+  enabled: true
+  name: ignore
+  aliases: 'bignore'
+  permission: bungeeutilisals.commands.ignore
+ping:
+  enabled: true
+  name: ping
+  aliases: 'gping, bping'
+  permission: bungeeutilisals.commands.ping
+  permission-other: bungeeutilisals.commands.ping.other
+report:
+  enabled: true
+  name: report
+  aliases: 'greport, breport'
+  permission: bungeeutilisals.commands.report
+  bypass: bungeeutilisals.commands.report.bypass
+
+  # If the reported user gets punished with one of the types below, it will automatically accept a report.
+  # To disable this, use: '  accept_on_punishment: []'
+  # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
+  accept_on_punishment:
+    - 'BAN'
+    - 'TEMPBAN'
+    - 'IPBAN'
+    - 'IPTEMPBAN'
+
+  subcommands:
+    create:
+      enabled: true
+      name: create
+      aliases: 'new, c'
+      permission: bungeeutilisals.commands.report.create
+      # Cooldown in seconds ...
+      cooldown: 10
+    list:
+      enabled: true
+      name: list
+      aliases: 'list, l'
+      permission: bungeeutilisals.commands.report.list
+    accept:
+      enabled: true
+      name: accept
+      aliases: ''
+      permission: bungeeutilisals.commands.report.accept
+    deny:
+      enabled: true
+      name: deny
+      aliases: ''
+      permission: bungeeutilisals.commands.report.deny
+    history:
+      enabled: true
+      name: history
+      aliases: 'hist'
+      permission: bungeeutilisals.commands.report.history
+domains:
+  enabled: true
+  name: domains
+  aliases: 'domainlist'
+  permission: bungeeutilisals.commands.domains
+
+  subcommands:
+    list:
+      enabled: true
+      name: list
+      aliases: 'ls, all'
+      permission: bungeeutilisals.commands.domains.list
+    search:
+      enabled: true
+      name: search
+      aliases: 'find, select'
+      permission: bungeeutilisals.commands.domains.search

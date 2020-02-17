@@ -23,19 +23,24 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
+import com.dbsoftwares.bungeeutilisals.utils.UserUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
@@ -46,360 +51,487 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Setter
-public class BUser implements User {
+public class BUser implements User
+{
 
     private ProxiedPlayer parent;
 
     private String name;
     private UUID uuid;
-    private String IP;
-    private Boolean socialspy;
+    private String ip;
+    private boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private PunishmentInfo mute;
+    private List<PunishmentInfo> mute;
     private Location location;
 
     @Getter
-    private List<FriendData> friends;
+    private List<FriendData> friends = Lists.newArrayList();
+    @Getter
+    private FriendSettings friendSettings;
 
     @Getter
     private boolean inStaffChat;
 
+    @Getter
+    private MessageQueue<QueuedMessage> messageQueue;
+
     @Override
-    public void load(ProxiedPlayer parent) {
-        Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
+    public void load( ProxiedPlayer parent )
+    {
+        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
 
         this.parent = parent;
         this.name = parent.getName();
         this.uuid = parent.getUniqueId();
-        this.IP = Utils.getIP(parent.getAddress());
+        this.ip = Utils.getIP( parent.getAddress() );
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 
-        if (dao.getUserDao().exists(uuid)) {
-            storage = dao.getUserDao().getUserData(uuid);
+        if ( dao.getUserDao().exists( uuid ) )
+        {
+            storage = dao.getUserDao().getUserData( uuid );
 
-            if (!storage.getUserName().equalsIgnoreCase(name)) {
-                dao.getUserDao().setName(uuid, name);
-                storage.setUserName(name);
+            if ( !storage.getUserName().equalsIgnoreCase( name ) )
+            {
+                dao.getUserDao().setName( uuid, name );
+                storage.setUserName( name );
             }
 
-            storage.setLanguage(BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage(uuid));
-        } else {
+            storage.setLanguage( BUCore.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
+
+            if ( storage.getJoinedHost() == null )
+            {
+                final String joinedHost = UserUtils.getJoinedHost( parent );
+
+                storage.setJoinedHost( joinedHost );
+                dao.getUserDao().setJoinedHost( uuid, joinedHost );
+            }
+        }
+        else
+        {
             final Language defLanguage = BUCore.getApi().getLanguageManager().getDefaultLanguage();
-            final Date date = new Date(System.currentTimeMillis());
+            final Date date = new Date( System.currentTimeMillis() );
+            final String joinedHost = UserUtils.getJoinedHost( parent );
 
             dao.getUserDao().createUser(
                     uuid,
                     name,
-                    IP,
-                    defLanguage
+                    ip,
+                    defLanguage,
+                    joinedHost
             );
 
-            storage = new UserStorage(uuid, name, IP, defLanguage, date, date, Maps.newHashMap());
+            storage = new UserStorage( uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), joinedHost, Maps.newHashMap() );
         }
 
-        if (!storage.getUserName().equals(name)) { // Stored name != user current name | Name changed?
-            storage.setUserName(name);
-            dao.getUserDao().setName(uuid, name);
+        if ( !storage.getUserName().equals( name ) )
+        { // Stored name != user current name | Name changed?
+            storage.setUserName( name );
+            dao.getUserDao().setName( uuid, name );
         }
 
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.MUTE, uuid, null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.MUTE, uuid, null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPMUTE, uuid, null, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.TEMPMUTE, uuid, null);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPMUTE, null, IP, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPMUTE, null, IP);
-            } else if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, IP, true)) {
-                mute = dao.getPunishmentDao().getPunishment(PunishmentType.IPTEMPMUTE, null, IP);
+        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        {
+            friends = dao.getFriendsDao().getFriends( uuid );
+            friendSettings = dao.getFriendsDao().getSettings( uuid );
+
+            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug" ) )
+            {
+                System.out.println( "Friend list of " + name );
+                System.out.println( Arrays.toString( friends.toArray() ) );
             }
         }
-
-        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
-            friends = dao.getFriendsDao().getFriends(uuid);
+        else
+        {
+            friendSettings = new FriendSettings();
         }
 
-        UserLoadEvent userLoadEvent = new UserLoadEvent(this);
-        BungeeUtilisals.getApi().getEventLoader().launchEvent(userLoadEvent);
+        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        {
+            messageQueue = BUCore.getApi().getStorageManager().getDao().createMessageQueue( this );
+            executeMessageQueue();
+        } );
+
+        final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
+        BungeeUtilisals.getApi().getEventLoader().launchEvent( userLoadEvent );
     }
 
     @Override
-    public void unload() {
+    public void unload()
+    {
         save();
         cooldowns.remove();
 
-        UserUnloadEvent event = new UserUnloadEvent(this);
-        BungeeUtilisals.getApi().getEventLoader().launchEventAsync(event);
+        final UserUnloadEvent event = new UserUnloadEvent( this );
+        BungeeUtilisals.getApi().getEventLoader().launchEvent( event );
 
         parent = null;
         storage.getData().clear();
     }
 
     @Override
-    public void save() {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser(uuid, getName(), IP, getLanguage(), new Date(System.currentTimeMillis()));
+    public void save()
+    {
+        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser( uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() ) );
     }
 
     @Override
-    public UserStorage getStorage() {
+    public UserStorage getStorage()
+    {
         return storage;
     }
 
     @Override
-    public UserCooldowns getCooldowns() {
+    public UserCooldowns getCooldowns()
+    {
         return cooldowns;
     }
 
     @Override
-    public String getIP() {
-        return IP;
+    public String getIp()
+    {
+        return ip;
     }
 
     @Override
-    public Language getLanguage() {
+    public Language getLanguage()
+    {
         return storage.getLanguage();
     }
 
     @Override
-    public void setLanguage(Language language) {
-        storage.setLanguage(language);
+    public void setLanguage( Language language )
+    {
+        storage.setLanguage( language );
     }
 
     @Override
-    public CommandSender sender() {
+    public CommandSender sender()
+    {
         return getParent();
     }
 
     @Override
-    public void sendRawMessage(String message) {
-        sendMessage(new TextComponent(PlaceHolderAPI.formatMessage(this, message)));
+    public void sendRawMessage( String message )
+    {
+        sendMessage( new TextComponent( PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override
-    public void sendRawColorMessage(String message) {
-        sendMessage(Utils.format(this, message));
+    public void sendRawColorMessage( String message )
+    {
+        sendMessage( Utils.format( this, message ) );
     }
 
     @Override
-    public void sendMessage(String message) {
-        sendMessage(getLanguageConfig().getString("prefix"), PlaceHolderAPI.formatMessage(this, message));
+    public void sendMessage( String message )
+    {
+        sendMessage( getLanguageConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
     }
 
     @Override
-    public void sendLangMessage(String path) {
-        sendLangMessage(true, path);
+    public void sendLangMessage( String path )
+    {
+        sendLangMessage( true, path );
     }
 
     @Override
-    public void sendLangMessage(String path, Object... placeholders) {
-        sendLangMessage(true, path, placeholders);
+    public void sendLangMessage( String path, Object... placeholders )
+    {
+        sendLangMessage( true, path, placeholders );
     }
 
     @Override
-    public void sendLangMessage(boolean prefix, String path) {
-        final String message = buildLangMessage(path);
-        if (prefix) {
-            sendMessage(message);
-        } else {
-            sendRawColorMessage(message);
+    public void sendLangMessage( boolean prefix, String path )
+    {
+        sendLangMessage( prefix, path, new Object[0] );
+    }
+
+    @Override
+    public void sendLangMessage( boolean prefix, String path, Object... placeholders )
+    {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ), placeholders );
+
+            sendMessage( component );
+            return;
+        }
+
+        String message = buildLangMessage( path, placeholders );
+
+        if ( message.isEmpty() )
+        {
+            return;
+        }
+
+        if ( message.startsWith( "noprefix: " ) )
+        {
+            prefix = false;
+            message = message.replaceFirst( "noprefix: ", "" );
+        }
+
+        if ( prefix )
+        {
+            sendMessage( message );
+        }
+        else
+        {
+            sendRawColorMessage( message );
         }
     }
 
     @Override
-    public void sendLangMessage(boolean prefix, String path, Object... placeholders) {
-        final String message = buildLangMessage(path, placeholders);
-        if (prefix) {
-            sendMessage(message);
-        } else {
-            sendRawColorMessage(message);
-        }
+    public void sendMessage( String prefix, String message )
+    {
+        sendMessage( Utils.format( prefix + PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override
-    public void sendMessage(String prefix, String message) {
-        sendMessage(Utils.format(prefix + PlaceHolderAPI.formatMessage(this, message)));
+    public void sendMessage( BaseComponent component )
+    {
+        getParent().sendMessage( component );
     }
 
     @Override
-    public void sendMessage(BaseComponent component) {
-        getParent().sendMessage(component);
+    public void sendMessage( BaseComponent[] components )
+    {
+        getParent().sendMessage( components );
     }
 
     @Override
-    public void sendMessage(BaseComponent[] components) {
-        getParent().sendMessage(components);
+    public void kick( String reason )
+    {
+        BUCore.getApi().getSimpleExecutor().asyncExecute( () -> getParent().disconnect( Utils.format( reason ) ) );
     }
 
     @Override
-    public void kick(String reason) {
-        BUCore.getApi().getSimpleExecutor().asyncExecute(() -> getParent().disconnect(Utils.format(reason)));
-    }
-
-    @Override
-    public void langKick(String path, Object... placeholders) {
-        if (getLanguageConfig().isList(path)) {
-            StringBuilder builder = new StringBuilder();
-
-            for (String message : getLanguageConfig().getStringList(path)) {
-                for (int i = 0; i < placeholders.length - 1; i += 2) {
-                    message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+    public void langKick( String path, Object... placeholders )
+    {
+        if ( getLanguageConfig().isList( path ) )
+        {
+            final String reason = getLanguageConfig().getStringList( path ).stream().map( str ->
+            {
+                for ( int i = 0; i < placeholders.length - 1; i += 2 )
+                {
+                    str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
                 }
+                return str;
+            } ).collect( Collectors.joining( "\n" ) );
 
-                builder.append(message).append("\n");
-            }
-            kick(builder.toString());
-        } else {
-            String message = getLanguageConfig().getString(path);
-            for (int i = 0; i < placeholders.length - 1; i += 2) {
-                message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+            kick( reason );
+        }
+        else
+        {
+            String message = getLanguageConfig().getString( path );
+            for ( int i = 0; i < placeholders.length - 1; i += 2 )
+            {
+                message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
             }
 
-            kick(message);
+            kick( message );
         }
     }
 
     @Override
-    public void forceKick(String reason) {
-        getParent().disconnect(Utils.format(reason));
+    public void forceKick( String reason )
+    {
+        getParent().disconnect( Utils.format( reason ) );
     }
 
     @Override
-    public String getName() {
+    public String getName()
+    {
         return name;
     }
 
     @Override
-    public UUID getUUID() {
+    public UUID getUuid()
+    {
         return uuid;
     }
 
     @Override
-    public void sendNoPermMessage() {
-        sendLangMessage("no-permission");
+    public void sendNoPermMessage()
+    {
+        sendLangMessage( "no-permission" );
     }
 
     @Override
-    public void setSocialspy(Boolean socialspy) {
+    public void setSocialspy( Boolean socialspy )
+    {
         this.socialspy = socialspy;
     }
 
     @Override
-    public Boolean isSocialSpy() {
+    public Boolean isSocialSpy()
+    {
         return socialspy;
     }
 
     @Override
-    public ProxiedPlayer getParent() {
+    public ProxiedPlayer getParent()
+    {
         return parent;
     }
 
     @Override
-    public IConfiguration getLanguageConfig() {
-        return BUCore.getApi().getLanguageManager().getLanguageConfiguration(BungeeUtilisals.getInstance().getDescription().getName(), this);
+    public IConfiguration getLanguageConfig()
+    {
+        return BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), this );
     }
 
     @Override
-    public boolean isConsole() {
+    public boolean isConsole()
+    {
         return false;
     }
 
     @Override
-    public String getServerName() {
+    public String getServerName()
+    {
         return getParent().getServer().getInfo().getName();
     }
 
     @Override
-    public boolean isMuted() {
-        return mute != null;
-    }
-
-    @Override
-    public PunishmentInfo getMuteInfo() {
-        return mute;
-    }
-
-    @Override
-    public Version getVersion() {
-        try {
-            return Version.getVersion(parent.getPendingConnection().getVersion());
-        } catch (Exception e) {
+    public Version getVersion()
+    {
+        try
+        {
+            return Version.getVersion( parent.getPendingConnection().getVersion() );
+        }
+        catch ( Exception e )
+        {
             return Version.MINECRAFT_1_8;
         }
     }
 
     @Override
-    public Location getLocation() {
+    public Location getLocation()
+    {
         return location;
     }
 
     @Override
-    public void setLocation(Location location) {
+    public void setLocation( Location location )
+    {
         this.location = location;
     }
 
     @Override
-    public String buildLangMessage(final String path, final Object... placeholders) {
+    public String buildLangMessage( final String path, final Object... placeholders )
+    {
+        if ( !getLanguageConfig().exists( path ) )
+        {
+            return "";
+        }
         final StringBuilder builder = new StringBuilder();
 
-        if (getLanguageConfig().isList(path)) {
-            final List<String> messages = getLanguageConfig().getStringList(path);
+        if ( getLanguageConfig().isList( path ) )
+        {
+            final List<String> messages = getLanguageConfig().getStringList( path );
 
-            for (int i = 0; i < messages.size(); i++) {
-                final String message = replacePlaceHolders(messages.get(i), placeholders);
-                builder.append(message);
+            if ( messages.isEmpty() )
+            {
+                return "";
+            }
 
-                if (i < messages.size() - 1) {
-                    builder.append("\n");
+            for ( int i = 0; i < messages.size(); i++ )
+            {
+                final String message = replacePlaceHolders( messages.get( i ), placeholders );
+                builder.append( message );
+
+                if ( i < messages.size() - 1 )
+                {
+                    builder.append( "\n" );
                 }
             }
-        } else {
-            final String message = replacePlaceHolders(getLanguageConfig().getString(path), placeholders);
+        }
+        else
+        {
+            final String message = replacePlaceHolders( getLanguageConfig().getString( path ), placeholders );
 
-            builder.append(message);
+            if ( message.isEmpty() )
+            {
+                return "";
+            }
+
+            builder.append( message );
         }
         return builder.toString();
     }
 
-    private String replacePlaceHolders(String message, Object... placeholders) {
-        for (int i = 0; i < placeholders.length - 1; i += 2) {
-            message = message.replace(placeholders[i].toString(), placeholders[i + 1].toString());
+    @Override
+    public boolean hasPermission( String permission )
+    {
+        return parent.hasPermission( permission );
+    }
+
+    @Override
+    public void executeMessageQueue()
+    {
+        QueuedMessage message = messageQueue.poll();
+
+        while ( message != null )
+        {
+            sendLangMessage( message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders() );
+
+            message = messageQueue.poll();
         }
-        message = PlaceHolderAPI.formatMessage(this, message);
+    }
+
+    private String replacePlaceHolders( String message, Object... placeholders )
+    {
+        for ( int i = 0; i < placeholders.length - 1; i += 2 )
+        {
+            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
+        }
+        message = PlaceHolderAPI.formatMessage( this, message );
         return message;
     }
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) {
+    public boolean equals( Object o )
+    {
+        if ( this == o )
+        {
             return true;
         }
-        if (o == null || getClass() != o.getClass()) {
+        if ( o == null || getClass() != o.getClass() )
+        {
             return false;
         }
-        if (!super.equals(o)) {
+        if ( !super.equals( o ) )
+        {
             return false;
         }
 
         BUser user = (BUser) o;
-        return user.name.equalsIgnoreCase(name) && user.uuid.equals(uuid);
+        return user.name.equalsIgnoreCase( name ) && user.uuid.equals( uuid );
     }
 
     @Override
-    public int hashCode() {
-        return Objects.hash(name, uuid);
+    public int hashCode()
+    {
+        return Objects.hash( name, uuid );
     }
 
     @Override
-    public void sendPacket(DefinedPacket packet) {
-        if (parent == null || !parent.isConnected()) {
+    public void sendPacket( DefinedPacket packet )
+    {
+        if ( parent == null || !parent.isConnected() )
+        {
             return;
         }
-        parent.unsafe().sendPacket(packet);
+        parent.unsafe().sendPacket( packet );
     }
 }

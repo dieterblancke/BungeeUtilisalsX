@@ -21,22 +21,26 @@ package com.dbsoftwares.bungeeutilisals.api.motd.handlers;
 import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import net.md_5.bungee.api.connection.PendingConnection;
 
-public class DomainConditionHandler extends ConditionHandler {
+public class DomainConditionHandler extends ConditionHandler
+{
 
-    public DomainConditionHandler(String condition) {
-        super(condition.replaceFirst("domain ", ""));
+    public DomainConditionHandler( String condition )
+    {
+        super( condition.replaceFirst( "domain ", "" ) );
     }
 
     @Override
-    public boolean checkCondition(PendingConnection connection) {
-        if (connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null) {
+    public boolean checkCondition( PendingConnection connection )
+    {
+        if ( connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null )
+        {
             return false;
         }
-        String[] args = condition.split(" ");
-        String operator = args[0];
-        String conditionHost = args[1];
-        String joinedHost = connection.getVirtualHost().getHostName();
+        final String[] args = condition.split( " " );
+        final String operator = args[0];
+        final String conditionHost = args[1];
+        final String joinedHost = connection.getVirtualHost().getHostName();
 
-        return operator.equalsIgnoreCase("==") == joinedHost.equalsIgnoreCase(conditionHost);
+        return operator.equalsIgnoreCase( "==" ) == joinedHost.equalsIgnoreCase( conditionHost );
     }
 }

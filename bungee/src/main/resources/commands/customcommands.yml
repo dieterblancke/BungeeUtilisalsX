@@ -1,58 +1,58 @@
 commands:
-- name: 'store'
-  aliases:
-  - 'shop'
-  - 'webshop'
-  - 'webstore'
-  permission: ''
-  messages:
-  - text: '&eYou can find our webstore at &bwww.example.com/store&e!'
-    # Remove this if you want no hover action.
-    hover:
-    - '&eClick to open visit our webstore.'
-    # Remove this if you want no click action.
-    click:
-      # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-      type: 'OPEN_URL'
-      action: 'www.example.com/store'
-  - text: '&eClick to checkout what we sell in our webstore!'
-    # Remove this if you want no click action.
-    click:
-      # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-      # RUN_COMMAND will only work for BungeeCord commands.
-      type: 'SUGGEST_COMMAND'
-      action: '/buy'
-  # Commands to be executed by the CONSOLE
-  execute:
-  - 'hello'
-- name: 'vote'
-  permission: ''
-  messages:
-    text: '&eYou can find our vote links at &bwww.example.com/vote&e!'
-    hover:
-    - '&eClick to vote for our server.'
-- name: 'whoami'
-  aliases:
-  - 'myself'
-  permission: ''
-  messages:
-  - text: '&eYour name is &b{user}&e.'
-- name: 'dbsoftwares'
-  aliases:
-  - 'didjee2'
-  permission: ''
-  messages:
-    text:
-    - text: '&eThis server is using '
-    - text: '&bBungeeUtilisals '
+  - name: 'store'
+    aliases:
+      - 'shop'
+      - 'webshop'
+      - 'webstore'
+    permission: ''
+    messages:
+      - text: '&eYou can find our webstore at &bwww.example.com/store&e!'
+        # Remove this if you want no hover action.
+        hover:
+          - '&eClick to open visit our webstore.'
+        # Remove this if you want no click action.
+        click:
+          # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+          type: 'OPEN_URL'
+          action: 'www.example.com/store'
+      - text: '&eClick to checkout what we sell in our webstore!'
+        # Remove this if you want no click action.
+        click:
+          # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+          # RUN_COMMAND will only work for BungeeCord commands.
+          type: 'SUGGEST_COMMAND'
+          action: '/buy'
+    # Commands to be executed by the CONSOLE
+    execute:
+      - 'hello'
+  - name: 'vote'
+    permission: ''
+    messages:
+      text: '&eYou can find our vote links at &bwww.example.com/vote&e!'
       hover:
-      - '&bBungeeUtilisals &eis a BungeeCord plugin maintained by &bDBSoftwares&e.'
-    - text: '&emade by '
-    - text: '&aDBSoftwares'
-      hover:
-      - '&ehttps://www.dbsoftwares.eu'
-      click:
-        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-        # RUN_COMMAND will only work for BungeeCord commands.
-        type: 'OPEN_URL'
-        action: 'https://www.dbsoftwares.eu'
+        - '&eClick to vote for our server.'
+  - name: 'whoami'
+    aliases:
+      - 'myself'
+    permission: ''
+    messages:
+      - text: '&eYour name is &b{user}&e.'
+  - name: 'dbsoftwares'
+    aliases:
+      - 'didjee2'
+    permission: ''
+    messages:
+      text:
+        - text: '&eThis server is using '
+        - text: '&bBungeeUtilisals '
+          hover:
+            - '&bBungeeUtilisals &eis a BungeeCord plugin maintained by &bDBSoftwares&e.'
+        - text: '&emade by '
+        - text: '&aDBSoftwares'
+          hover:
+            - '&ehttps://www.dbsoftwares.eu'
+          click:
+            # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+            # RUN_COMMAND will only work for BungeeCord commands.
+            type: 'OPEN_URL'
+            action: 'https://www.dbsoftwares.eu'

@@ -18,52 +18,58 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.hikari;
 
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLStorageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
-@EqualsAndHashCode(callSuper = true)
-@Data
-public abstract class HikariStorageManager extends AbstractStorageManager {
+public abstract class HikariStorageManager extends SQLStorageManager
+{
 
+    @Getter
     protected HikariConfig config;
+
+    @Getter
     protected HikariDataSource dataSource;
 
-    @SuppressWarnings("deprecation")
-    public HikariStorageManager(Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg) {
-        super(plugin, type, new SQLDao());
+    HikariStorageManager( Plugin plugin, StorageType type, IConfiguration configuration, HikariConfig cfg )
+    {
+        super( plugin, type, new SQLDao() );
         config = cfg == null ? new HikariConfig() : cfg;
-        config.setDataSourceClassName(getDataSourceClass());
-        config.addDataSourceProperty("serverName", configuration.getString("storage.hostname"));
-        config.addDataSourceProperty("port" + (type.equals(StorageType.POSTGRESQL) ? "Number" : ""),
-                configuration.getInteger("storage.port"));
-        config.addDataSourceProperty("databaseName", configuration.getString("storage.database"));
-        config.addDataSourceProperty("user", configuration.getString("storage.username"));
-        config.addDataSourceProperty("password", configuration.getString("storage.password"));
-        config.addDataSourceProperty("useSSL", configuration.getBoolean("storage.useSSL"));
+        config.setDataSourceClassName( getDataSourceClass() );
+        config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
+        config.addDataSourceProperty( "port" + (type.equals( StorageType.POSTGRESQL ) ? "Number" : ""),
+                configuration.getInteger( "storage.port" ) );
+        config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
+        config.addDataSourceProperty( "user", configuration.getString( "storage.username" ) );
+        config.addDataSourceProperty( "password", configuration.getString( "storage.password" ) );
 
-        config.setMaximumPoolSize(configuration.getInteger("storage.pool.max-pool-size"));
-        config.setMinimumIdle(configuration.getInteger("storage.pool.min-idle"));
-        config.setMaxLifetime(configuration.getInteger("storage.pool.max-lifetime") * 1000);
-        config.setConnectionTimeout(configuration.getInteger("storage.pool.connection-timeout") * 1000);
+        if ( !type.equals( StorageType.MARIADB ) )
+        {
+            config.addDataSourceProperty( "useSSL", configuration.getBoolean( "storage.useSSL" ) );
+        }
 
-        config.setPoolName("BungeeUtilisals");
-        config.setLeakDetectionThreshold(10000);
-        config.setConnectionTestQuery("/* BungeeUtilisals ping */ SELECT 1;");
-        config.setInitializationFailTimeout(-1);
+        config.setMaximumPoolSize( configuration.getInteger( "storage.pool.max-pool-size" ) );
+        config.setMinimumIdle( configuration.getInteger( "storage.pool.min-idle" ) );
+        config.setMaxLifetime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 );
+        config.setConnectionTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 );
 
-        dataSource = new HikariDataSource(config);
+        config.setPoolName( "BungeeUtilisalsX" );
+        config.setLeakDetectionThreshold( 10000 );
+        config.setConnectionTestQuery( "/* BungeeUtilisalsX ping */ SELECT 1;" );
+        config.setInitializationFailTimeout( -1 );
+
+        dataSource = new HikariDataSource( config );
     }
 
     protected abstract String getDataSourceClass();
 
     @Override
-    public void close() {
+    public void close()
+    {
         dataSource.close();
     }
 }

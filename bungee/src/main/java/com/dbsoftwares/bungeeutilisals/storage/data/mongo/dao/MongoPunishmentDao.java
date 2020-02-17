@@ -20,173 +20,192 @@ package com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
-import com.dbsoftwares.bungeeutilisals.api.utils.Validate;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoBansDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoKickAndWarnDao;
+import com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao.punishment.MongoMutesDao;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
+import com.mongodb.client.model.ReplaceOptions;
+import com.mongodb.client.model.Sorts;
 import org.bson.Document;
-import org.bson.conversions.Bson;
 
 import java.util.Date;
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
-public class MongoPunishmentDao implements PunishmentDao {
+public class MongoPunishmentDao implements PunishmentDao
+{
 
-    @Override
-    public long getPunishmentsSince(String identifier, PunishmentType type, Date date) {
-        MongoCollection<Document> collection = getDatabase().getCollection(format(type.getTablePlaceHolder()));
+    private final BansDao bansDao;
+    private final MutesDao mutesDao;
+    private final KickAndWarnDao kickAndWarnDao;
 
-        Bson idFilter = Filters.eq(type.isIP() ? "ip" : "uuid", identifier);
-        Bson dateFilter = Filters.gt("date", date);
-
-        return collection.countDocuments(Filters.and(idFilter, dateFilter));
+    public MongoPunishmentDao()
+    {
+        this.bansDao = new MongoBansDao();
+        this.mutesDao = new MongoMutesDao();
+        this.kickAndWarnDao = new MongoKickAndWarnDao();
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby) {
-        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, null);
+    public BansDao getBansDao()
+    {
+        return bansDao;
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user,
-                                           String ip, String reason, Long time, String server,
-                                           Boolean active, String executedby, String removedby) {
-        return insertPunishment(type, uuid, user, ip, reason, time, server, active, executedby, new Date(System.currentTimeMillis()), removedby);
+    public MutesDao getMutesDao()
+    {
+        return mutesDao;
     }
 
     @Override
-    public PunishmentInfo insertPunishment(PunishmentType type, UUID uuid, String user, String ip, String reason, Long time, String server, Boolean active, String executedby, Date date, String removedby) {
-        PunishmentInfo info = new PunishmentInfo();
+    public KickAndWarnDao getKickAndWarnDao()
+    {
+        return kickAndWarnDao;
+    }
 
-        info.setUuid(uuid);
-        info.setUser(user);
-        info.setIP(ip);
-        info.setReason(reason);
-        info.setServer(server);
-        info.setExecutedBy(executedby);
-        info.setDate(new Date(System.currentTimeMillis()));
-        info.setType(type);
+    @Override
+    public long getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
+        if ( type.isActivatable() )
+        {
+            return collection.countDocuments( Filters.and(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "type", type.toString() ),
+                    Filters.eq( "punishmentaction_status", false )
+            ) );
+        }
+        else
+        {
+            return collection.countDocuments( Filters.and(
+                    Filters.eq( "uuid", uuid ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "punishmentaction_status", false )
+            ) );
+        }
+    }
 
+    @Override
+    public long getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
+        return collection.countDocuments( Filters.and(
+                Filters.eq( "ip", ip ),
+                Filters.gte( "date", date ),
+                Filters.eq( "type", type.toString() ),
+                Filters.eq( "punishmentaction_status", false )
+        ) );
+    }
+
+    @Override
+    public void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
+        if ( type.isActivatable() )
+        {
+            collection.find(
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "type", type.toString() ),
+                            Filters.eq( "punishmentaction_status", false )
+                    ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
+
+                        save( collection, doc );
+                    } );
+        }
+        else
+        {
+            collection.find(
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "punishmentaction_status", false )
+                    ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
+
+                        save( collection, doc );
+                    } );
+        }
+    }
+
+    @Override
+    public void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
+    {
+        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
+        collection.find(
+                Filters.and(
+                        Filters.eq( "ip", ip ),
+                        Filters.gte( "date", date ),
+                        Filters.eq( "type", type.toString() ),
+                        Filters.eq( "punishmentaction_status", false )
+                ) )
+                .sort( Sorts.ascending( "date" ) )
+                .limit( limit )
+                .forEach( (Consumer<? super Document>) doc ->
+                {
+                    doc.put( "punishmentaction_status", true );
+
+                    save( collection, doc );
+                } );
+    }
+
+    @Override
+    public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
+    {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put("uuid", uuid);
-        data.put("user", user);
-        data.put("ip", ip);
-        data.put("reason", reason);
-        data.put("server", server);
-        data.put("date", date);
 
-        if (time != null) {
-            info.setExpireTime(time);
-            data.put("time", time);
-        }
-        if (active != null) {
-            info.setActive(active);
-            data.put("active", active);
-        }
-        if (removedby != null) {
-            info.setRemovedBy(removedby);
-            data.put("removed_by", removedby);
-        }
+        data.put( "uuid", uuid.toString() );
+        data.put( "user", username );
+        data.put( "ip", ip );
+        data.put( "actionid", uid );
+        data.put( "date", new Date() );
 
-        data.put("executed_by", executedby);
-
-        getDatabase().getCollection(format(type.getTablePlaceHolder())).insertOne(new Document(data));
-        return info;
+        db().getCollection( PlaceHolderAPI.formatMessage( "{punishmentactions-table}" ) ).insertOne( new Document( data ) );
     }
 
-    @Override
-    public boolean isPunishmentPresent(PunishmentType type, UUID uuid, String IP, boolean checkActive) {
-        List<Bson> filters = Lists.newArrayList();
+    // Recreating save api ...
+    private void save( final MongoCollection<Document> collection, final Document document )
+    {
+        final Object id = document.get( "_id" );
 
-        Validate.ifNotNull(uuid, u -> filters.add(Filters.eq("uuid", u)));
-        Validate.ifNotNull(IP, ip -> filters.add(Filters.eq("ip", ip)));
-        Validate.ifTrue(checkActive, active -> filters.add(Filters.eq("active", true)));
-
-        if (filters.size() > 1) {
-            return getDatabase().getCollection(format(type.getTablePlaceHolder()))
-                    .find(Filters.and(filters)).iterator().hasNext();
-        } else {
-            return filters.size() == 1 &&
-                    getDatabase().getCollection(format(type.getTablePlaceHolder()))
-                            .find(filters.get(0)).iterator().hasNext();
+        if ( id == null )
+        {
+            collection.insertOne( document );
+        }
+        else
+        {
+            collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }
     }
 
-    @Override
-    public PunishmentInfo getPunishment(PunishmentType type, UUID uuid, String IP) {
-        MongoCollection<Document> collection = getDatabase().getCollection(format(type.getTablePlaceHolder()));
-        Document document = null;
-
-        if (uuid != null) {
-            document = collection.find(Filters.eq("uuid", uuid.toString())).first();
-        } else if (IP != null) {
-            document = collection.find(Filters.eq("ip", IP)).first();
-        }
-
-        if (document != null) {
-            PunishmentInfo info = new PunishmentInfo();
-
-            info.setUuid(uuid);
-            info.setUser(document.getString("user"));
-            info.setIP(document.getString("ip"));
-            info.setReason(document.getString("reason"));
-            info.setServer(document.getString("server"));
-            info.setDate(document.getDate("date"));
-            info.setExecutedBy(document.getString("executed_by"));
-            info.setRemovedBy(document.containsKey("removed_by") ? null : document.getString("removed_by"));
-            info.setType(type);
-
-            if (document.containsKey("active")) {
-                info.setActive(document.getBoolean("active"));
-            }
-            if (document.containsKey("time")) {
-                info.setExpireTime(document.getLong("time"));
-            }
-
-            return info;
-        }
-
-        return new PunishmentInfo();
-    }
-
-    @Override
-    public void removePunishment(PunishmentType type, UUID uuid, String ip, String removedBy) {
-        MongoCollection<Document> coll = getDatabase().getCollection(format(type.getTablePlaceHolder()));
-
-        if (uuid != null) {
-            coll.updateOne(
-                    Filters.eq("uuid", uuid),
-                    Updates.combine(Updates.set("active", false), Updates.set("removed_by", removedBy))
-            );
-        } else if (ip != null) {
-            coll.updateOne(
-                    Filters.eq("ip", ip),
-                    Updates.combine(Updates.set("active", false), Updates.set("removed_by", removedBy))
-            );
-        }
-    }
-
-    private String format(String line) {
-        return PlaceHolderAPI.formatMessage(line);
-    }
-
-    private String format(String line, Object... replacements) {
-        return PlaceHolderAPI.formatMessage(String.format(line, replacements));
-    }
-
-    private MongoDatabase getDatabase() {
+    private MongoDatabase db()
+    {
         return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
     }
 }

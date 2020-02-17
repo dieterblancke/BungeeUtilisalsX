@@ -23,7 +23,8 @@ import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class PluginSchedulerInfo {
+public class PluginSchedulerInfo
+{
 
     private String plugin;
     private int running;

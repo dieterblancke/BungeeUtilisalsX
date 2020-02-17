@@ -24,21 +24,27 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.impl.InputPlaceHolderImpl
 
 import java.util.Optional;
 
-public class JavaScriptPlaceHolder extends InputPlaceHolderImpl {
+public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
+{
 
-    public JavaScriptPlaceHolder() {
-        super(false, "javascript");
+    public JavaScriptPlaceHolder()
+    {
+        super( false, "javascript" );
     }
 
     @Override
-    public String getReplacement(InputPlaceHolderEvent event) {
+    public String getReplacement( InputPlaceHolderEvent event )
+    {
         final Optional<Script> optional = BungeeUtilisals.getInstance().getScripts()
-                .stream().filter(s -> s.getFile().equalsIgnoreCase(event.getArgument()))
+                .stream().filter( s -> s.getFile().equalsIgnoreCase( event.getArgument() ) )
                 .findFirst();
 
-        if (optional.isPresent()) {
-            return optional.get().getReplacement(event.getUser());
-        } else {
+        if ( optional.isPresent() )
+        {
+            return optional.get().getReplacement( event.getUser() );
+        }
+        else
+        {
             return "script not found";
         }
     }

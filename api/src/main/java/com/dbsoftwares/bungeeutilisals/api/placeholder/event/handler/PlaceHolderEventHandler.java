@@ -20,8 +20,9 @@ package com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
 
-public abstract class PlaceHolderEventHandler {
+public interface PlaceHolderEventHandler
+{
 
-    public abstract String getReplacement(PlaceHolderEvent event);
+    String getReplacement( PlaceHolderEvent event );
 
 }

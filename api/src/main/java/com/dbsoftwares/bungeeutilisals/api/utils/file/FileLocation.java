@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.utils.file;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.DomainConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.NameConditionHandler;
@@ -39,161 +40,230 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
-public enum FileLocation {
+public enum FileLocation
+{
 
-    CONFIG("config.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    SERVERGROUPS("servergroups.yml") {
-        @Override
-        public void loadData() {
-            for (ISection group : configuration.getSectionList("groups")) {
-                String name = group.getString("name");
-
-                if (group.isList("servers")) {
-                    setData(name, new ServerGroup(name, false, group.getStringList("servers")));
-                } else {
-                    setData(name, new ServerGroup(name, true, Lists.newArrayList()));
+    CONFIG( "config.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
                 }
-            }
+            },
+    SERVERGROUPS( "servergroups.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    for ( ISection group : configuration.getSectionList( "groups" ) )
+                    {
+                        String name = group.getString( "name" );
 
-            for (String key : ProxyServer.getInstance().getServers().keySet()) {
-                if (!hasData(key)) {
-                    setData(key, new ServerGroup(key, false, Lists.newArrayList(key)));
-                }
-            }
-        }
-    },
-    MOTD("motd.yml") {
-        @Override
-        public void loadData() {
-            MotdData def = null;
+                        if ( group.isList( "servers" ) )
+                        {
+                            setData( name, new ServerGroup( name, false, group.getStringList( "servers" ) ) );
+                        }
+                        else
+                        {
+                            setData( name, new ServerGroup( name, true, Lists.newArrayList() ) );
+                        }
+                    }
 
-            for (ISection section : configuration.getSectionList("motd")) {
-                String condition = section.getString("condition");
-                String motd = section.getString("motd");
-
-                if (condition.equalsIgnoreCase("default")) {
-                    def = new MotdData(null, true, motd);
-                } else {
-                    if (condition.toLowerCase().startsWith("domain")) {
-                        getDataList().add(new MotdData(new DomainConditionHandler(condition), false, motd));
-                    } else if (condition.toLowerCase().startsWith("version")) {
-                        getDataList().add(new MotdData(new VersionConditionHandler(condition), false, motd));
-                    } else if (condition.toLowerCase().startsWith("name")) {
-                        getDataList().add(new MotdData(new NameConditionHandler(condition), false, motd));
-                    } else {
-                        BUCore.getLogger().warn("An invalid MOTD condition has been entered.");
-                        BUCore.getLogger().warn("Found condition: '" + condition.split(" ")[0] + "'. For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions");
+                    for ( String key : ProxyServer.getInstance().getServers().keySet() )
+                    {
+                        if ( !hasData( key ) )
+                        {
+                            setData( key, new ServerGroup( key, false, Lists.newArrayList( key ) ) );
+                        }
                     }
                 }
-            }
-            if (def != null) {
-                getDataList().add(def);
-            }
-        }
-    },
-    CUSTOMCOMMANDS("commands/customcommands.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    GENERALCOMMANDS("commands/generalcommands.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    ANTISWEAR("chat/protection/antiswear.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    ANTICAPS("chat/protection/anticaps.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    ANTIAD("chat/protection/antiadvertise.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    ANTISPAM("chat/protection/antispam.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    UTFSYMBOLS("chat/utfsymbols.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    FRIENDS_CONFIG("friends.yml") {
-        @Override
-        public void loadData() {
-        }
-    },
-    PUNISHMENTS("punishments.yml") {
-        @Override @SuppressWarnings("unchecked")
-        public void loadData() {
-            for (ISection section : configuration.getSectionList("actions")) {
-                try {
-                    PunishmentType type = PunishmentType.valueOf(section.getString("type"));
+            },
+    MOTD( "motd.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    for ( ISection section : configuration.getSectionList( "motd" ) )
+                    {
+                        final String condition = section.getString( "condition" );
+                        final String motd = section.getString( "motd" );
+                        final List<String> hoverMessages = section.exists( "player-hover" )
+                                ? section.getStringList( "player-hover" )
+                                : Lists.newArrayList();
 
-                    try {
-                        TimeUnit unit = TimeUnit.valueOf(section.getString("time.unit"));
+                        if ( condition.equalsIgnoreCase( "default" ) )
+                        {
+                            getDataList().add( new MotdData( null, true, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "domain" ) )
+                        {
+                            getDataList().add( new MotdData( new DomainConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "version" ) )
+                        {
+                            getDataList().add( new MotdData( new VersionConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else if ( condition.toLowerCase().startsWith( "name" ) )
+                        {
+                            getDataList().add( new MotdData( new NameConditionHandler( condition ), false, motd, hoverMessages ) );
+                        }
+                        else
+                        {
+                            BUCore.getLogger().warn( "An invalid MOTD condition has been entered." );
+                            BUCore.getLogger().warn( "For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions" );
+                        }
+                    }
+                }
+            },
+    CUSTOMCOMMANDS( "commands/customcommands.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    GENERALCOMMANDS( "commands/generalcommands.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    if ( configuration.getBoolean( "staff.enabled" ) )
+                    {
+                        final List<ISection> sections = configuration.getSectionList( "staff.ranks" );
 
-                        if (section.isInteger("time.amount")) {
-                            int amount = section.getInteger("time.amount");
-                            int limit = section.getInteger("limit");
+                        for ( ISection section : sections )
+                        {
+                            final String name = section.getString( "name" );
+                            final String display = section.getString( "display" );
+                            final String permission = section.getString( "permission" );
+                            final int priority = section.getInteger( "priority" );
 
-                            PunishmentAction action = new PunishmentAction(type, unit, amount, limit, section.getStringList("actions"));
-                            List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
-                                    type.toString(), Lists.newArrayList()
-                            );
+                            getDataList().add( new StaffRankData( name, display, permission, priority ) );
+                        }
+                    }
+                }
+            },
+    ANTISWEAR( "chat/protection/antiswear.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    ANTICAPS( "chat/protection/anticaps.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    ANTIAD( "chat/protection/antiadvertise.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    ANTISPAM( "chat/protection/antispam.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    UTFSYMBOLS( "chat/utfsymbols.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    FRIENDS_CONFIG( "friends.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            },
+    PUNISHMENTS( "punishments.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    for ( ISection section : configuration.getSectionList( "actions" ) )
+                    {
+                        try
+                        {
+                            final String uid = section.getString( "uid" );
+                            final PunishmentType type = PunishmentType.valueOf( section.getString( "type" ) );
 
-                            actions.add(action);
-                            setData(type.toString(), actions);
-                        } else {
+                            try
+                            {
+                                final TimeUnit unit = TimeUnit.valueOf( section.getString( "time.unit" ) );
+
+                                if ( section.isInteger( "time.amount" ) )
+                                {
+                                    final int amount = section.getInteger( "time.amount" );
+                                    final int limit = section.getInteger( "limit" );
+
+                                    final PunishmentAction action = new PunishmentAction( uid, type, unit, amount, limit, section.getStringList( "actions" ) );
+                                    final List<PunishmentAction> actions = (List<PunishmentAction>) getData().getOrDefault(
+                                            type.toString(), Lists.newArrayList()
+                                    );
+
+                                    actions.add( action );
+                                    setData( type.toString(), actions );
+                                }
+                                else
+                                {
+                                    BUCore.getApi().getPlugin().getLogger().warning(
+                                            "An invalid number has been entered (" + section.getString( "time.amount" ) + ")."
+                                    );
+                                }
+                            }
+                            catch ( IllegalArgumentException e )
+                            {
+                                BUCore.getApi().getPlugin().getLogger().warning(
+                                        "An invalid time unit has been entered (" + section.getString( "time.unit" ) + ")."
+                                );
+                            }
+                        }
+                        catch ( IllegalArgumentException e )
+                        {
                             BUCore.getApi().getPlugin().getLogger().warning(
-                                    "An invalid number has been entered (" + section.getString("time.amount") + ")."
+                                    "An invalid punishment type has been entered (" + section.getString( "type" ) + ")."
                             );
                         }
-                    } catch (IllegalArgumentException e) {
-                        BUCore.getApi().getPlugin().getLogger().warning(
-                                "An invalid time unit has been entered (" + section.getString("time.unit") + ")."
-                        );
                     }
-
-                } catch (IllegalArgumentException e) {
-                    BUCore.getApi().getPlugin().getLogger().warning(
-                            "An invalid punishment type has been entered (" + section.getString("type") + ")."
-                    );
                 }
-
-            }
-        }
-    },
-    LANGUAGES_CONFIG("languages/config.yml") {
-        @Override
-        public void loadData() {
-        }
-    };
-
-    @Getter
-    private String path;
-
-    @Getter
-    private LinkedHashMap<String, Object> data;
-
-    private LinkedList<Object> dataList;
+            },
+    LANGUAGES_CONFIG( "languages/config.yml" )
+            {
+                @Override
+                public void loadData()
+                {
+                    // do nothing
+                }
+            };
 
     @Getter
     protected IConfiguration configuration;
+    @Getter
+    private String path;
+    @Getter
+    private LinkedHashMap<String, Object> data;
+    private LinkedList<Object> dataList;
 
-    FileLocation(String path) {
+    FileLocation( String path )
+    {
         this.path = path;
         this.data = Maps.newLinkedHashMap();
         this.dataList = Lists.newLinkedList();
@@ -201,25 +271,28 @@ public enum FileLocation {
 
     public abstract void loadData();
 
-    @SuppressWarnings("unchecked")
-    public <T> T getData(String key) {
-        return (T) data.get(key);
+    public <T> T getData( String key )
+    {
+        return (T) data.get( key );
     }
 
-    public boolean hasData(String key) {
-        return data.containsKey(key);
+    public boolean hasData( String key )
+    {
+        return data.containsKey( key );
     }
 
-    public <T> void setData(String key, T data) {
-        this.data.put(key, data);
+    public <T> void setData( String key, T data )
+    {
+        this.data.put( key, data );
     }
 
-    public void loadConfiguration(File file) {
-        this.configuration = IConfiguration.loadYamlConfiguration(file);
+    public void loadConfiguration( File file )
+    {
+        this.configuration = IConfiguration.loadYamlConfiguration( file );
     }
 
-    @SuppressWarnings("unchecked")
-    public <T> List<T> getDataList() {
+    public <T> List<T> getDataList()
+    {
         return (List<T>) dataList;
     }
 }

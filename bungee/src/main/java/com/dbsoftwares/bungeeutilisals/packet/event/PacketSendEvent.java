@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *  *
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  *
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *  *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,7 +28,8 @@ import net.md_5.bungee.api.connection.Connection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
-public class PacketSendEvent extends AbstractEvent implements Cancellable {
+public class PacketSendEvent extends AbstractEvent implements Cancellable
+{
 
     @Getter
     @Setter
@@ -38,7 +39,8 @@ public class PacketSendEvent extends AbstractEvent implements Cancellable {
     private Connection receiver;
     private ProxiedPlayer player;
 
-    public PacketSendEvent(DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection receiver) {
+    public PacketSendEvent( DefinedPacket packet, ProxiedPlayer p, Connection sender, Connection receiver )
+    {
         this.cancelled = false;
         this.player = p;
         this.packet = packet;
@@ -46,23 +48,28 @@ public class PacketSendEvent extends AbstractEvent implements Cancellable {
         this.receiver = receiver;
     }
 
-    public ProxiedPlayer getPlayer() {
+    public ProxiedPlayer getPlayer()
+    {
         return player;
     }
 
-    public User getUser() {
-        return BUCore.getApi().getUser(player).orElse(null);
+    public User getUser()
+    {
+        return BUCore.getApi().getUser( player ).orElse( null );
     }
 
-    public DefinedPacket getPacket() {
+    public DefinedPacket getPacket()
+    {
         return packet;
     }
 
-    public Connection getSender() {
+    public Connection getSender()
+    {
         return sender;
     }
 
-    public Connection getReceiver() {
+    public Connection getReceiver()
+    {
         return receiver;
     }
 }

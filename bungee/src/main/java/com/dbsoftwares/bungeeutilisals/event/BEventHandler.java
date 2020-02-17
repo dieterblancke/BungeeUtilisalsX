@@ -28,10 +28,12 @@ import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @RequiredArgsConstructor
-public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
+public class BEventHandler<T extends BUEvent> implements EventHandler<T>
+{
 
     private final EventLoader eventloader;
-    @Getter private final Class<T> eventClass;
+    @Getter
+    private final Class<T> eventClass;
     @Getter
     private final Method executor;
     @Getter
@@ -40,38 +42,46 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T> {
     @Getter
     private final int priority;
 
-    private final AtomicInteger uses = new AtomicInteger(0);
+    private final AtomicInteger uses = new AtomicInteger( 0 );
 
     @Override
-    public void unregister() {
-        eventloader.unregister(this);
+    public void unregister()
+    {
+        eventloader.unregister( this );
     }
 
     @Override
-    public int getUsedAmount() {
+    public int getUsedAmount()
+    {
         return uses.get();
     }
 
     @Override
-    public boolean executeIfCancelled() {
+    public boolean executeIfCancelled()
+    {
         return executeIfCancelled;
     }
 
     @SuppressWarnings("unchecked")
-    void handle(BUEvent event) {
-        try {
+    void handle( BUEvent event )
+    {
+        try
+        {
             T castedEvent = (T) event;
 
-            executor.invoke(executorInstance, castedEvent);
+            executor.invoke( executorInstance, castedEvent );
             uses.getAndIncrement();
-        } catch (Throwable t) {
-            BUCore.getLogger().warn("Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName());
-            t.printStackTrace();
+        }
+        catch ( Exception e )
+        {
+            BUCore.getLogger().warn( "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() );
+            BUCore.getLogger().error( "An error occured: ", e );
         }
     }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "EventHandler for " + eventClass.getSimpleName() + ". Used Amount: " + uses + ", ingore cancelled: " + executeIfCancelled + ", priority: " + priority + ".";
     }
 }

@@ -17,21 +17,21 @@
   ~
   -->
 
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
-        <artifactId>BungeeUtilisals</artifactId>
+        <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-        <version>3.0.1.5</version>
+        <version>1.0.5.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bungee</artifactId>
 
     <repositories>
         <repository>
-            <id>bstats-repo</id>
-            <url>http://repo.bstats.org/content/repositories/releases/</url>
+            <id>CodeMC</id>
+            <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
     </repositories>
 
@@ -39,17 +39,17 @@
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>api</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.5.0</version>
         </dependency>
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>updater</artifactId>
-            <version>${project.version}</version>
+            <version>1.0.5.0</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bungeecord</artifactId>
-            <version>1.2</version>
+            <version>1.5</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -61,13 +61,13 @@
     </dependencies>
 
     <build>
-        <finalName>BungeeUtilisals</finalName>
+        <finalName>BungeeUtilisalsX v${project.version}</finalName>
 
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.2.1</version>
                 <configuration>
                     <relocations>
                         <relocation>
@@ -84,6 +84,29 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.8.1</version>
+                <configuration>
+                    <source>8</source>
+                    <target>8</target>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <addMavenDescriptor>false</addMavenDescriptor>
+                        <manifestEntries>
+                            <Built-By>DBSoftwares</Built-By>
+                        </manifestEntries>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
         <resources>

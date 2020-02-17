@@ -5,7 +5,11 @@ bypass: 'bungeeutilisals.bypass.antiad'
 
 # Please type these addresses in lowercase (= NO CAPS)
 allowed:
-- 'www.example.com'
-- 'http://www.example.com'
-- 'https://www.example.com'
-- 'play.exampleserver.com'
+  - 'www.example.com'
+  - 'http://www.example.com'
+  - 'https://www.example.com'
+  - 'play.exampleserver.com'
+
+# Commands that have to be executed when someone advertises (will be executed by console)
+commands: []
+# - 'warn {user} Advertising'

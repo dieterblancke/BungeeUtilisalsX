@@ -24,13 +24,15 @@ import net.md_5.bungee.api.CommandSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class BUCore {
+public final class BUCore
+{
 
     private static BUAPI instance = null;
-    private static Logger logger = LoggerFactory.getLogger("BungeeUtilisals");
+    private static Logger logger = LoggerFactory.getLogger( "BungeeUtilisalsX" );
 
-    private BUCore() {
-        throw new UnsupportedOperationException("This class cannot be instantiated.");
+    private BUCore()
+    {
+        throw new UnsupportedOperationException( "This class cannot be instantiated." );
     }
 
     /**
@@ -38,22 +40,30 @@ public final class BUCore {
      *
      * @return The BungeeUtilisals API.
      */
-    public static BUAPI getApi() {
+    public static BUAPI getApi()
+    {
         return instance;
     }
 
-    private static void initAPI(BUAPI inst) {
+    private static void initAPI( final BUAPI inst )
+    {
         instance = inst;
     }
 
-    public static void sendMessage(CommandSender sender, String message) {
-        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(getApi().getPlugin().getDescription().getName(), sender);
+    public static void sendMessage( final CommandSender sender, final String message )
+    {
+        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration( getApi().getPlugin().getDescription().getName(), sender );
 
-        sender.sendMessage(Utils.format(config.getString("prefix"), message));
+        sender.sendMessage( Utils.format( config.getString( "prefix" ), message ) );
     }
 
-    public static Logger getLogger() {
-
+    public static Logger getLogger()
+    {
         return logger;
+    }
+
+    public static void logException( final Exception e )
+    {
+        logger.error( "An error occured: ", e );
     }
 }

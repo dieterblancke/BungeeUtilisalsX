@@ -21,55 +21,66 @@ package com.dbsoftwares.bungeeutilisals.library;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import lombok.Getter;
 
-public enum StandardLibrary {
+public enum StandardLibrary
+{
 
     SQLITE(
             "org.sqlite.JDBC",
-            "http://central.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
-            "3.25.2",
-            checkType("SQLITE")
+            "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
+            "3.30.1",
+            checkType( "SQLITE" )
+    ),
+    H2(
+            "org.h2.jdbcx.JdbcDataSource",
+            "https://repo1.maven.org/maven2/com/h2database/h2/{version}/h2-{version}.jar",
+            "1.4.200",
+            checkType( "H2" )
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
-            "http://central.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
-            "2.3.0",
-            checkType("MARIADB")
+            "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
+            "2.5.4",
+            checkType( "MARIADB" )
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
-            "http://central.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.5",
-            checkType("POSTGRESQL")
+            "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
+            "42.2.9",
+            checkType( "POSTGRESQL" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
-            "http://central.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.8.2",
-            checkType("MONGODB")
+            "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
+            "3.12.1",
+            checkType( "MONGODB" )
     ),
-    HIKARIDB(
+    HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
-            "http://central.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
-            "3.2.0",
-            checkType("MYSQL", "MARIADB", "POSTGRESQL")
+            "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
+            "3.4.2",
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
-    GOOGLE_HTTP_CLIENT(
-            "com.google.api.client.http.HttpRequest",
-            "http://central.maven.org/maven2/com/google/http-client/google-http-client/1.26.0/google-http-client-{version}.jar",
-            "1.26.0",
+    UNIREST(
+            "kong.unirest.Unirest",
+            "https://repo1.maven.org/maven2/com/konghq/unirest-java/{version}/unirest-java-{version}-standalone.jar",
+            "3.4.01",
             true
     );
 
     @Getter
     private final Library library;
 
-    StandardLibrary(String className, String downloadURL, String version, boolean load) {
-        this.library = new Library(toString(), className, downloadURL, version, load);
+    StandardLibrary( String className, String downloadURL, String version, boolean load )
+    {
+        this.library = new Library( toString(), className, downloadURL, version, load );
     }
 
-    private static boolean checkType(String... types) {
-        for (String type : types) {
-            if (BungeeUtilisals.getInstance().getConfig().getString("storage.type").equalsIgnoreCase(type)) {
+    private static boolean checkType( String... types )
+    {
+        for ( String type : types )
+        {
+            if ( BungeeUtilisals.getInstance().getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
+            {
                 return true;
             }
         }

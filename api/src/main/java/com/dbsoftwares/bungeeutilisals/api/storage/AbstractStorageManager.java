@@ -32,7 +32,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public abstract class AbstractStorageManager {
+public abstract class AbstractStorageManager
+{
 
     @Getter
     private static AbstractStorageManager manager;
@@ -46,7 +47,8 @@ public abstract class AbstractStorageManager {
     @Getter
     private Dao dao;
 
-    public AbstractStorageManager(Plugin plugin, StorageType type, Dao dao) {
+    public AbstractStorageManager( Plugin plugin, StorageType type, Dao dao )
+    {
         manager = this;
 
         this.plugin = plugin;
@@ -54,34 +56,43 @@ public abstract class AbstractStorageManager {
         this.dao = dao;
     }
 
-    public String getName() {
+    public String getName()
+    {
         return type.getName();
     }
 
     public abstract Connection getConnection() throws SQLException;
 
-    public void initialize() throws Exception {
-        if (type.equals(StorageType.MONGODB)) {
+    public void initialize() throws Exception
+    {
+        if ( type.equals( StorageType.MONGODB ) )
+        {
             return;
         }
-        try (InputStream is = plugin.getResourceAsStream(type.getSchema())) {
-            if (is == null) {
-                throw new Exception("Could not find schema for " + type.toString() + ": " + type.getSchema() + "!");
+        try ( InputStream is = plugin.getResourceAsStream( type.getSchema() ) )
+        {
+            if ( is == null )
+            {
+                throw new Exception( "Could not find schema for " + type.toString() + ": " + type.getSchema() + "!" );
             }
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
-                 Connection connection = getConnection(); Statement st = connection.createStatement()) {
+            try ( BufferedReader reader = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) );
+                  Connection connection = getConnection(); Statement st = connection.createStatement() )
+            {
 
                 StringBuilder builder = new StringBuilder();
                 String line;
-                while ((line = reader.readLine()) != null) {
-                    builder.append(line);
+                while ( (line = reader.readLine()) != null )
+                {
+                    builder.append( line );
 
-                    if (line.endsWith(";")) {
-                        builder.deleteCharAt(builder.length() - 1);
+                    if ( line.endsWith( ";" ) )
+                    {
+                        builder.deleteCharAt( builder.length() - 1 );
 
-                        String statement = PlaceHolderAPI.formatMessage(builder.toString().trim());
-                        if (!statement.isEmpty()) {
-                            st.executeUpdate(statement);
+                        String statement = PlaceHolderAPI.formatMessage( builder.toString().trim() );
+                        if ( !statement.isEmpty() )
+                        {
+                            st.executeUpdate( statement );
                         }
 
                         builder = new StringBuilder();
@@ -93,18 +104,21 @@ public abstract class AbstractStorageManager {
 
     public abstract void close() throws SQLException;
 
-    public enum StorageType {
+    public enum StorageType
+    {
 
-        MYSQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MySQLStorageManager"),
-                "MySQL", "schemas/mysql.sql"),
-        POSTGRESQL(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.PostgreSQLStorageManager"),
-                "PostgreSQL", "schemas/postgresql.sql"),
-        MARIADB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.hikari.MariaDBStorageManager"),
-                "MariaDB", "schemas/mariadb.sql"),
-        SQLITE(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager"),
-                "SQLite", "schemas/sqlite.sql"),
-        MONGODB(ReflectionUtils.getClass("com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager"),
-                "MongoDB", null);
+        MYSQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.MySQLStorageManager" ),
+                "MySQL", "schemas/mysql.sql" ),
+        POSTGRESQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.PostgreSQLStorageManager" ),
+                "PostgreSQL", "schemas/postgresql.sql" ),
+        MARIADB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.MariaDBStorageManager" ),
+                "MariaDB", "schemas/mysql.sql" ),
+        SQLITE( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager" ),
+                "SQLite", "schemas/sqlite.sql" ),
+        H2( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.H2StorageManager" ),
+                "H2", "schemas/mysql.sql" ),
+        MONGODB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager" ),
+                "MongoDB", null );
 
         @Getter
         private Class<? extends AbstractStorageManager> manager;
@@ -113,8 +127,8 @@ public abstract class AbstractStorageManager {
         @Getter
         private String schema;
 
-        @SuppressWarnings("unchecked") // We know the classes are always an instance of AbstractStorageManager
-        StorageType(Class<?> manager, String name, String schema) {
+        StorageType( Class<?> manager, String name, String schema )
+        {
             this.manager = (Class<? extends AbstractStorageManager>) manager;
             this.name = name;
             this.schema = schema;

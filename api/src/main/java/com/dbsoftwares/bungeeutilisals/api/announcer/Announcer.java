@@ -33,19 +33,23 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 @Data
-public abstract class Announcer {
+public abstract class Announcer
+{
 
     private static final File folder;
     @Getter
     private static Map<AnnouncementType, Announcer> announcers = Maps.newHashMap();
 
-    static {
-        folder = new File(BUCore.getApi().getPlugin().getDataFolder(), "announcer");
-        if (!folder.exists()) {
+    static
+    {
+        folder = new File( BUCore.getApi().getPlugin().getDataFolder(), "announcer" );
+        if ( !folder.exists() )
+        {
             folder.mkdirs();
         }
     }
@@ -53,65 +57,79 @@ public abstract class Announcer {
     protected IConfiguration configuration;
     private ScheduledTask task;
     private AnnouncementType type;
-    private Map<Announcement, Boolean> announcements = Maps.newHashMap();
+    private LinkedHashMap<Announcement, Boolean> announcements = Maps.newLinkedHashMap();
     private Iterator<Announcement> announcementIterator;
     private boolean enabled;
     private TimeUnit unit;
     private int delay;
     private boolean random;
 
-    public Announcer(final AnnouncementType type) {
-        this(type, new File(folder, type.toString().toLowerCase() + ".yml"), BUCore.getApi().getPlugin().getResourceAsStream("announcers/" + type.toString().toLowerCase() + ".yml"));
+    public Announcer( final AnnouncementType type )
+    {
+        this( type, new File( folder, type.toString().toLowerCase() + ".yml" ), BUCore.getApi().getPlugin().getResourceAsStream( "announcers/" + type.toString().toLowerCase() + ".yml" ) );
     }
 
-    public Announcer(final AnnouncementType type, final File file, final InputStream defaultStream) {
+    public Announcer( final AnnouncementType type, final File file, final InputStream defaultStream )
+    {
         this.type = type;
 
-        if (!file.exists()) {
-            IConfiguration.createDefaultFile(defaultStream, file);
+        if ( !file.exists() )
+        {
+            IConfiguration.createDefaultFile( defaultStream, file );
         }
 
-        configuration = IConfiguration.loadYamlConfiguration(file);
-        enabled = configuration.getBoolean("enabled");
-        unit = TimeUnit.valueOfOrElse(configuration.getString("delay.unit"), TimeUnit.SECONDS);
-        delay = configuration.getInteger("delay.time");
-        random = configuration.getBoolean("random");
+        configuration = IConfiguration.loadYamlConfiguration( file );
+        enabled = configuration.getBoolean( "enabled" );
+        unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
+        delay = configuration.getInteger( "delay.time" );
+        random = configuration.getBoolean( "random" );
     }
 
     @SafeVarargs
-    public static void registerAnnouncers(Class<? extends Announcer>... classes) {
-        for (Class<? extends Announcer> clazz : classes) {
-            try {
+    public static void registerAnnouncers( Class<? extends Announcer>... classes )
+    {
+        for ( Class<? extends Announcer> clazz : classes )
+        {
+            try
+            {
                 Announcer announcer = clazz.newInstance();
 
-                if (announcer.isEnabled()) {
+                if ( announcer.isEnabled() )
+                {
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    BUCore.getLogger().info("Loading " + announcer.getType().toString().toLowerCase() + " announcements ...");
+                    BUCore.getLogger().info( "Loading {} announcements ...", announcer.getType().toString().toLowerCase() );
                 }
 
-                announcers.put(announcer.getType(), announcer);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                announcers.put( announcer.getType(), announcer );
+            }
+            catch ( InstantiationException | IllegalAccessException e )
+            {
+                BUCore.getLogger().error( "An error occured: ", e );
             }
         }
     }
 
-    public void start() {
-        if (task != null) {
-            throw new IllegalStateException("Announcer is already running.");
+    public void start()
+    {
+        if ( task != null )
+        {
+            throw new IllegalStateException( "Announcer is already running." );
         }
 
         task = ProxyServer.getInstance().getScheduler().schedule(
                 BUCore.getApi().getPlugin(),
-                new Runnable() {
+                new Runnable()
+                {
 
                     private Announcement previous;
 
                     @Override
-                    public void run() {
-                        if (previous != null) {
+                    public void run()
+                    {
+                        if ( previous != null )
+                        {
                             previous.clear();
                         }
                         Announcement next = (random ? getRandomAnnouncement() : getNextAnnouncement());
@@ -119,43 +137,52 @@ public abstract class Announcer {
                         previous = next;
                     }
                 },
-                delay,
+                0,
                 delay,
                 unit.toJavaTimeUnit()
         );
     }
 
-    public void stop() {
-        if (task == null) {
+    public void stop()
+    {
+        if ( task == null )
+        {
             return;
         }
         task.cancel();
         task = null;
     }
 
-    public void addAnnouncement(Announcement announcement) {
-        announcements.put(announcement, false);
+    public void addAnnouncement( Announcement announcement )
+    {
+        announcements.put( announcement, false );
     }
 
-    private Announcement getRandomAnnouncement() {
-        if (!announcements.containsValue(false)) { // finished Announcement rotation, restarting it
-            announcements.replaceAll((key, value) -> false);
+    private Announcement getRandomAnnouncement()
+    {
+        if ( !announcements.containsValue( false ) )
+        { // finished Announcement rotation, restarting it
+            announcements.replaceAll( ( key, value ) -> false );
         }
 
-        List<Announcement> announcementsKeys = Lists.newArrayList();
-        announcements.forEach((key, value) -> {
-            if (!value) {
-                announcementsKeys.add(key);
+        final List<Announcement> announcementsKeys = Lists.newArrayList();
+        announcements.forEach( ( key, value ) ->
+        {
+            if ( !value )
+            {
+                announcementsKeys.add( key );
             }
-        });
+        } );
 
-        Announcement random = MathUtils.getRandomFromList(announcementsKeys);
-        announcements.put(random, true);
-        return random;
+        final Announcement announcement = MathUtils.getRandomFromList( announcementsKeys );
+        announcements.put( announcement, true );
+        return announcement;
     }
 
-    private Announcement getNextAnnouncement() {
-        if (announcementIterator == null || !announcementIterator.hasNext()) {
+    private Announcement getNextAnnouncement()
+    {
+        if ( announcementIterator == null || !announcementIterator.hasNext() )
+        {
             announcementIterator = announcements.keySet().iterator();
         }
         return announcementIterator.next();
@@ -163,23 +190,28 @@ public abstract class Announcer {
 
     public abstract void loadAnnouncements();
 
-    public void reload() {
-        try {
+    public void reload()
+    {
+        try
+        {
             configuration.reload();
-        } catch (IOException e) {
-            e.printStackTrace();
+        }
+        catch ( IOException e )
+        {
+            BUCore.getLogger().error( "An error occured: ", e );
             return;
         }
         stop();
         announcements.clear();
         announcementIterator = null;
 
-        enabled = configuration.getBoolean("enabled");
-        unit = TimeUnit.valueOfOrElse(configuration.getString("delay.unit"), TimeUnit.SECONDS);
-        delay = configuration.getInteger("delay.time");
-        random = configuration.getBoolean("random");
+        enabled = configuration.getBoolean( "enabled" );
+        unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
+        delay = configuration.getInteger( "delay.time" );
+        random = configuration.getBoolean( "random" );
 
-        if (enabled) {
+        if ( enabled )
+        {
             loadAnnouncements();
             start();
         }

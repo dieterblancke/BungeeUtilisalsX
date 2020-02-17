@@ -19,80 +19,112 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class IPTempMuteCommand extends Command {
-
-    public IPTempMuteCommand() {
-        super("iptempmute", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.iptempmute.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.permission"));
-    }
+public class IPTempMuteCommand extends PunishmentCommand
+{
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return null;
-    }
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, true );
 
-    @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 3) {
-            user.sendLangMessage("punishments.iptempmute.usage");
+        if ( punishmentArgs == null )
+        {
+            user.sendLangMessage( "punishments.iptempmute.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String timeFormat = args[1];
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 2, args.length), " ");
-        Long time = Utils.parseDateDiff(timeFormat);
-
-        if (time == 0L) {
-            user.sendLangMessage("punishments.iptempmute.non-valid");
-            return;
-        }
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
-            return;
-        }
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.IPTEMPMUTE, null, storage.getIp(), true)) {
-            user.sendLangMessage("punishments.iptempmute.already-muted");
+        if ( !punishmentArgs.hasJoined() )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.IPTEMPMUTE, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), time);
-        api.getEventLoader().launchEvent(event);
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+        final long time = punishmentArgs.getTime();
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( time == 0L )
+        {
+            user.sendLangMessage( "punishments.iptempmute.non-valid" );
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
-
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.IPTEMPMUTE, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, time, user.getServerName(), true, user.getName()
+        if ( dao().getPunishmentDao().getMutesDao().isIPMuted( storage.getIp(), punishmentArgs.getServerOrAll() ) )
+        {
+            user.sendLangMessage( "punishments.iptempmute.already-muted" );
+            return;
+        }
+        if ( punishmentArgs.launchEvent( PunishmentType.IPTEMPMUTE ) )
+        {
+            return;
+        }
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertTempIPMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                true,
+                user.getName(),
+                time
         );
 
-        api.getUser(storage.getUserName()).ifPresent(muted -> muted.sendLangMessage("punishments.iptempmute.onmute",
-                executor.getPlaceHolders(info).toArray(new Object[]{})));
+        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
+        {
+            List<String> mute = null;
+            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+            {
+                mute = BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        muted.getLanguageConfig(), PunishmentType.IPTEMPMUTE, reason
+                );
+            }
+            if ( mute == null )
+            {
+                mute = muted.getLanguageConfig().getStringList( "punishments.iptempmute.onmute" );
+            }
 
-        user.sendLangMessage("punishments.iptempmute.executed", executor.getPlaceHolders(info));
+            mute.forEach( str -> muted.sendRawColorMessage( BUCore.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
+        } );
 
-        api.langPermissionBroadcast("punishments.iptempmute.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.iptempmute.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        user.sendLangMessage( "punishments.iptempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.iptempmute.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.iptempmute.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.iptempmute.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
+
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
+                PunishmentType.IPTEMPMUTE,
+                user,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                time
+        ) );
     }
 }

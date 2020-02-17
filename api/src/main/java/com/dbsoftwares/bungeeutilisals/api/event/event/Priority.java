@@ -18,7 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.api.event.event;
 
-public class Priority {
+public class Priority
+{
 
     public static final int LOWEST = -2000;
     public static final int LOW = -1000;
@@ -27,4 +28,7 @@ public class Priority {
     public static final int HIGHEST = 2000;
     public static final int DEBUG = Integer.MAX_VALUE;
 
+    private Priority()
+    {
+    }
 }

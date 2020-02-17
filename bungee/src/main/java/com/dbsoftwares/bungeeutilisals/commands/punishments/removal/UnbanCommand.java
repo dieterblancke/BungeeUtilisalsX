@@ -18,77 +18,80 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentCommand;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class UnbanCommand extends Command {
-
-    public UnbanCommand() {
-        super("unban", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.unban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unban.permission"));
-    }
+public class UnbanCommand extends PunishmentCommand
+{
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return null;
-    }
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        final PunishmentRemovalArgs punishmentRemovalArgs = loadRemovalArguments( user, args );
 
-    @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 1) {
-            user.sendLangMessage("punishments.unban.usage");
+        if ( punishmentRemovalArgs == null )
+        {
+            user.sendLangMessage( "punishments.unban.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
-
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !punishmentRemovalArgs.hasJoined() )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        PunishmentType type = PunishmentType.BAN;
-
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.TEMPBAN, storage.getUuid(), storage.getIp(), true)) {
-            type = PunishmentType.TEMPBAN;
-        } else if (!dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), storage.getIp(), true)) {
-            user.sendLangMessage("punishments.unban.not-banned");
+        final UserStorage storage = punishmentRemovalArgs.getStorage();
+        if ( !dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentRemovalArgs.getServerOrAll() ) )
+        {
+            user.sendLangMessage( "punishments.unban.not-banned" );
             return;
         }
 
-        UserPunishRemoveEvent event = new UserPunishRemoveEvent(UserPunishRemoveEvent.PunishmentRemovalAction.UNBAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), user.getServerName());
-        api.getEventLoader().launchEvent(event);
-
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( punishmentRemovalArgs.launchEvent( PunishmentRemovalAction.UNBAN ) )
+        {
             return;
         }
 
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
-        dao.getPunishmentDao().removePunishment(type, storage.getUuid(), storage.getIp(), user.getName());
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
+        dao().getPunishmentDao().getBansDao().removeCurrentBan(
+                storage.getUuid(),
+                user.getName(),
+                punishmentRemovalArgs.getServerOrAll()
+        );
 
-        PunishmentInfo info = new PunishmentInfo();
-        info.setUser(args[0]);
-        info.setId(-1);
-        info.setExecutedBy(user.getName());
-        info.setRemovedBy(user.getName());
+        final PunishmentInfo info = new PunishmentInfo();
+        info.setUser( punishmentRemovalArgs.getPlayer() );
+        info.setId( "-1" );
+        info.setExecutedBy( user.getName() );
+        info.setRemovedBy( user.getName() );
+        info.setServer( punishmentRemovalArgs.getServerOrAll() );
 
-        user.sendLangMessage("punishments.unban.executed", executor.getPlaceHolders(info));
+        user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        api.langPermissionBroadcast("punishments.unban.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.unban.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.unban.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.unban.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
     }
 }

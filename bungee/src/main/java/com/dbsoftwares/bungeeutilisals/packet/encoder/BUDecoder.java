@@ -1,16 +1,16 @@
 /*
  * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *  *
+ *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *  *
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
  * GNU General Public License for more details.
- *  *
+ *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <http://www.gnu.org/licenses/>.
  *
@@ -28,33 +28,41 @@ import net.md_5.bungee.protocol.PacketWrapper;
 
 import java.util.List;
 
-public class BUDecoder extends MessageToMessageDecoder<PacketWrapper> {
+public class BUDecoder extends MessageToMessageDecoder<PacketWrapper>
+{
 
     private boolean server;
     private ProxiedPlayer p;
 
-    public BUDecoder(boolean server, ProxiedPlayer player) {
+    public BUDecoder( boolean server, ProxiedPlayer player )
+    {
         this.server = server;
         this.p = player;
     }
 
     @Override
-    protected void decode(ChannelHandlerContext context, PacketWrapper wrapper, List<Object> output) {
-        if (wrapper.packet == null) {
-            output.add(wrapper);
+    protected void decode( ChannelHandlerContext context, PacketWrapper wrapper, List<Object> output )
+    {
+        if ( wrapper.packet == null )
+        {
+            output.add( wrapper );
             return;
         }
 
         PacketUpdateEvent event;
-        if (server) {
-            event = new PacketUpdateEvent(wrapper.packet, p, p.getServer(), new BungeeConnection());
-        } else {
-            event = new PacketUpdateEvent(wrapper.packet, p, p, new BungeeConnection());
+        if ( server )
+        {
+            event = new PacketUpdateEvent( wrapper.packet, p, p.getServer(), new BungeeConnection() );
+        }
+        else
+        {
+            event = new PacketUpdateEvent( wrapper.packet, p, p, new BungeeConnection() );
         }
 
-        BUCore.getApi().getEventLoader().launchEvent(event);
-        if (!event.isCancelled()) {
-            output.add(wrapper);
+        BUCore.getApi().getEventLoader().launchEvent( event );
+        if ( !event.isCancelled() )
+        {
+            output.add( wrapper );
         }
     }
 }

@@ -19,81 +19,108 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 
-public class BanCommand extends Command {
-
-    public BanCommand() {
-        super(
-                "ban",
-                Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.permission")
-        );
-    }
+public class BanCommand extends PunishmentCommand
+{
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return null;
-    }
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
 
-    @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 2) {
-            user.sendLangMessage("punishments.ban.usage");
+        if ( punishmentArgs == null )
+        {
+            user.sendLangMessage( "punishments.ban.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        Dao dao = BUCore.getApi().getStorageManager().getDao();
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
-
-        if (!dao.getUserDao().exists(args[0])) {
-            user.sendLangMessage("never-joined");
+        if ( !punishmentArgs.hasJoined() )
+        {
+            user.sendLangMessage( "never-joined" );
             return;
         }
 
-        UserStorage storage = dao.getUserDao().getUserData(args[0]);
-        if (dao.getPunishmentDao().isPunishmentPresent(PunishmentType.BAN, storage.getUuid(), null, true)) {
-            user.sendLangMessage("punishments.ban.already-banned");
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
+        {
+            user.sendLangMessage( "punishments.ban.already-banned" );
             return;
         }
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.BAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
-
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( punishmentArgs.launchEvent( PunishmentType.BAN ) )
+        {
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = dao.getPunishmentDao().insertPunishment(
-                PunishmentType.BAN, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                true,
+                user.getName()
         );
 
+        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
+        {
+            String kick = null;
+            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+            {
+                kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                        banned.getLanguageConfig(), PunishmentType.BAN, reason
+                ), "\n" );
+            }
+            if ( kick == null )
+            {
+                kick = Utils.formatList( banned.getLanguageConfig().getStringList( "punishments.ban.kick" ), "\n" );
+            }
+            kick = executor.setPlaceHolders( kick, info );
 
-        api.getUser(storage.getUserName()).ifPresent(banned -> {
-            String kick = Utils.formatList(banned.getLanguageConfig().getStringList("punishments.ban.kick"), "\n");
-            kick = executor.setPlaceHolders(kick, info);
+            banned.kick( kick );
+        } );
 
-            banned.kick(kick);
-        });
+        user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        user.sendLangMessage("punishments.ban.executed", executor.getPlaceHolders(info));
-        api.langPermissionBroadcast("punishments.ban.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.ban.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.ban.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.ban.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.ban.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
+
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
+                PunishmentType.BAN,
+                user,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                null
+        ) );
     }
 }

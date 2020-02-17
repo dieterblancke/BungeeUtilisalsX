@@ -28,13 +28,14 @@ import java.util.UUID;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PunishmentInfo {
+public class PunishmentInfo
+{
 
     private PunishmentType type;
 
-    private int id;
+    private String id;
     private String user;
-    private String IP;
+    private String ip;
     private UUID uuid;
     private String executedBy;
     private String server;
@@ -46,11 +47,13 @@ public class PunishmentInfo {
     private boolean active;
     private String removedBy;
 
-    public boolean isActivatable() {
-        return type.isActivatable();
+    public boolean isActivatable()
+    {
+        return type == null || type.isActivatable();
     }
 
-    public boolean isTemporary() {
-        return type.isTemporary();
+    public boolean isTemporary()
+    {
+        return type != null && type.isTemporary();
     }
 }

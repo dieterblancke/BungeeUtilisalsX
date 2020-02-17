@@ -26,65 +26,117 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.google.common.collect.Lists;
 
-public class MuteCheckExecutor implements EventExecutor {
+import java.util.List;
+
+import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+
+public class MuteCheckExecutor implements EventExecutor
+{
 
     @Event
-    public void onCommand(UserCommandEvent event) {
-        User user = event.getUser();
+    public void onCommand( UserCommandEvent event )
+    {
+        final User user = event.getUser();
 
-        if (!user.isMuted()) {
+        if ( !isMuted( user, user.getServerName() ) )
+        {
             return;
         }
-        PunishmentInfo info = user.getMuteInfo();
-        if (checkTemporaryMute(user, info)) {
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
+        if ( checkTemporaryMute( user, info ) )
+        {
             return;
         }
 
-        if (FileLocation.PUNISHMENTS.getConfiguration().getStringList("blocked-mute-commands")
-                .contains(event.getActualCommand().replaceFirst("/", ""))) {
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getStringList( "blocked-mute-commands" )
+                .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
+        {
 
-            user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                    event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
-            event.setCancelled(true);
+            user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                    event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+            event.setCancelled( true );
         }
     }
 
     // high priority
     @Event(priority = Priority.HIGHEST)
-    public void onChat(UserChatEvent event) {
-        User user = event.getUser();
+    public void onChat( UserChatEvent event )
+    {
+        final User user = event.getUser();
 
-        if (!user.isMuted()) {
+        if ( !isMuted( user, user.getServerName() ) )
+        {
             return;
         }
-        PunishmentInfo info = user.getMuteInfo();
-        if (checkTemporaryMute(user, info)) {
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
+        if ( checkTemporaryMute( user, info ) )
+        {
             return;
         }
 
-        user.sendLangMessage("punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                event.getApi().getPunishmentExecutor().getPlaceHolders(info).toArray(new Object[]{}));
-        event.setCancelled(true);
+        user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+        event.setCancelled( true );
     }
 
-    private boolean checkTemporaryMute(User user, PunishmentInfo info) {
-        if (info.isTemporary()) {
-            if (info.getExpireTime() <= System.currentTimeMillis()) {
-                if (info.getType().equals(PunishmentType.TEMPMUTE)) {
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.TEMPMUTE, user.getParent().getUniqueId(), null, "CONSOLE"
-                    );
-                } else {
-                    BUCore.getApi().getStorageManager().getDao().getPunishmentDao().removePunishment(
-                            PunishmentType.IPTEMPMUTE, null, user.getIP(), "CONSOLE"
-                    );
-                }
-                return true;
+    private boolean checkTemporaryMute( final User user, final PunishmentInfo info )
+    {
+        if ( info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis() )
+        {
+            final MutesDao mutesDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
+
+            if ( info.getType().equals( PunishmentType.TEMPMUTE ) )
+            {
+                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE", info.getServer() );
             }
+            else
+            {
+                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE", info.getServer() );
+            }
+            return true;
         }
         return false;
+    }
+
+    private boolean isMuted( final User user, final String server )
+    {
+        return getCurrentMuteForUser( user, server ) != null;
+    }
+
+    private PunishmentInfo getCurrentMuteForUser( final User user, final String server )
+    {
+        if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+        {
+            // mutes seem to not have loaded yet, loading them now ...
+            final MutesDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
+            final List<PunishmentInfo> mutes = Lists.newArrayList();
+
+            mutes.addAll( dao.getActiveMutes( user.getUuid() ) );
+            mutes.addAll( dao.getActiveIPMutes( user.getIp() ) );
+
+            user.getStorage().setData( "CURRENT_MUTES", mutes );
+        }
+        final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+        if ( mutes.isEmpty() )
+        {
+            return null;
+        }
+
+        if ( useServerPunishments() )
+        {
+            return mutes.stream()
+                    .filter( mute -> mute.getServer().equalsIgnoreCase( "ALL" ) || mute.getServer().equalsIgnoreCase( server ) )
+                    .findAny()
+                    .orElse( null );
+        }
+        else
+        {
+            return mutes.get( 0 );
+        }
     }
 }

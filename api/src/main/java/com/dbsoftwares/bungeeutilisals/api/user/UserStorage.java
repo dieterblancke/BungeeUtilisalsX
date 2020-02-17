@@ -19,39 +19,51 @@
 package com.dbsoftwares.bungeeutilisals.api.user;
 
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStorage {
+public class UserStorage
+{
 
-    private UUID Uuid;
+    private UUID uuid;
     private String userName;
     private String ip;
     private Language language;
     private Date firstLogin;
     private Date lastLogout;
+    private List<String> ignoredUsers = Lists.newArrayList();
+    private String joinedHost;
 
     private Map<String, Object> data = Maps.newHashMap();
 
-    @SuppressWarnings("unchecked")
-    public <T> T getData(String key) {
-        return !data.containsKey(key) ? null : (T) data.get(key);
+    public <T> T getData( final String key )
+    {
+        return !data.containsKey( key ) ? null : (T) data.get( key );
     }
 
-    public void setData(String key, Object value) {
-        data.put(key, value);
+    public void setData( final String key, final Object value )
+    {
+        data.put( key, value );
     }
 
-    public boolean hasData(String key) {
-        return data.containsKey(key);
+    public boolean hasData( final String key )
+    {
+        return data.containsKey( key );
+    }
+
+    public void removeData( final String key )
+    {
+        this.data.remove( key );
     }
 }

@@ -1,0 +1,100 @@
+/*
+ * Copyright (C) 2018 DBSoftwares - Dieter Blancke
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program. If not, see <http://www.gnu.org/licenses/>.
+ *
+ */
+
+package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+
+import java.util.List;
+
+public class FriendListSubCommandCall implements CommandCall
+{
+
+    @Override
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        final List<FriendData> allFriends = user.getFriends();
+
+        if ( allFriends.isEmpty() )
+        {
+            user.sendLangMessage( "friends.list.no-friends" );
+            return;
+        }
+
+        final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
+        final int page;
+
+        if ( args.size() >= 1 )
+        {
+            if ( MathUtils.isInteger( args.get( 0 ) ) )
+            {
+                final int tempPage = Integer.parseInt( args.get( 0 ) );
+
+                page = Math.min( tempPage, pages );
+            }
+            else
+            {
+                page = 1;
+            }
+        }
+        else
+        {
+            page = 1;
+        }
+
+        final int previous = page > 1 ? page - 1 : 1;
+        final int next = Math.min( page + 1, pages );
+
+        int maxNumber = page * 10;
+        int minNumber = maxNumber - 10;
+
+        if ( maxNumber > allFriends.size() )
+        {
+            maxNumber = allFriends.size();
+        }
+
+        final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
+        user.sendLangMessage(
+                "friends.list.head",
+                "{previousPage}", previous,
+                "{currentPage}", page,
+                "{nextPage}", next,
+                "{maxPages}", pages
+        );
+
+        final String now = user.getLanguageConfig().getString( "friends.list.online" );
+        final String onlineText = user.getLanguageConfig().getString( "friends.list.status.online" );
+        final String offlineText = user.getLanguageConfig().getString( "friends.list.status.offline" );
+
+        friends.forEach( friend ->
+                user.sendLangMessage(
+                        "friends.list.format",
+                        "{friendName}", friend.getFriend(),
+                        "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
+                        "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
+                        "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
+                )
+        );
+        user.sendLangMessage( "friends.list.foot", "{friendAmount}", allFriends.size() );
+    }
+}

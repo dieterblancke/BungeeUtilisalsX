@@ -19,8 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
@@ -29,58 +30,86 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-public class KickCommand extends Command {
-
-    public KickCommand() {
-        super("kick", Arrays.asList(FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString("commands.kick.aliases").split(", ")),
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.permission"));
-    }
+public class KickCommand implements CommandCall
+{
 
     @Override
-    public List<String> onTabComplete(User user, String[] args) {
-        return null;
-    }
-
-    @Override
-    public void onExecute(User user, String[] args) {
-        if (args.length < 2) {
-            user.sendLangMessage("punishments.kick.usage");
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        if ( args.size() < 2 )
+        {
+            user.sendLangMessage( "punishments.kick.usage" );
             return;
         }
-        String reason = Utils.formatList(Arrays.copyOfRange(args, 1, args.length), " ");
+        final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
 
-        Optional<User> optionalUser = BUCore.getApi().getUser(args[0]);
-        if (!optionalUser.isPresent()) {
-            user.sendLangMessage("offline");
+        final Optional<User> optionalUser = BUCore.getApi().getUser( args.get( 0 ) );
+        if ( !optionalUser.isPresent() )
+        {
+            user.sendLangMessage( "offline" );
             return;
         }
-        User target = optionalUser.get();
-        UserStorage storage = target.getStorage();
+        final User target = optionalUser.get();
+        final UserStorage storage = target.getStorage();
 
-        UserPunishEvent event = new UserPunishEvent(PunishmentType.KICK, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null);
-        api.getEventLoader().launchEvent(event);
+        final UserPunishEvent event = new UserPunishEvent( PunishmentType.KICK, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
+        BUCore.getApi().getEventLoader().launchEvent( event );
 
-        if (event.isCancelled()) {
-            user.sendLangMessage("punishments.cancelled");
+        if ( event.isCancelled() )
+        {
+            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
-        IPunishmentExecutor executor = api.getPunishmentExecutor();
+        final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().insertPunishment(
-                PunishmentType.KICK, storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, 0L, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().insertKick(
+                storage.getUuid(), storage.getUserName(), storage.getIp(),
+                reason, user.getServerName(), user.getName()
         );
 
-        target.langKick("punishments.kick.onkick", executor.getPlaceHolders(info).toArray(new Object[]{}));
+        String kick = null;
+        if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
+        {
+            kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                    target.getLanguageConfig(), PunishmentType.KICK, reason
+            ), "\n" );
 
-        api.langPermissionBroadcast("punishments.kick.broadcast",
-                FileLocation.PUNISHMENTS.getConfiguration().getString("commands.kick.broadcast"),
-                executor.getPlaceHolders(info).toArray(new Object[]{}));
+            kick = BUCore.getApi().getPunishmentExecutor().setPlaceHolders( kick, info );
+        }
+        if ( kick == null )
+        {
+            target.langKick( "punishments.kick.onkick", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
+        }
+        else
+        {
+            target.kick( kick );
+        }
+
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BUCore.getApi().langBroadcast(
+                        "punishments.kick.broadcast",
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+            else
+            {
+                BUCore.getApi().langPermissionBroadcast(
+                        "punishments.kick.broadcast",
+                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.kick.broadcast" ),
+                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                );
+            }
+        }
+        BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
+                PunishmentType.KICK, user, storage.getUuid(),
+                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
+        ) );
     }
 }

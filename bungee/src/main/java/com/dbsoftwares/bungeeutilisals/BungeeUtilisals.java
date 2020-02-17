@@ -19,14 +19,18 @@
 package com.dbsoftwares.bungeeutilisals;
 
 import com.dbsoftwares.bungeeutilisals.announcers.ActionBarAnnouncer;
+import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.command.Command;
+import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
@@ -36,28 +40,28 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
-import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommand;
 import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommand;
-import com.dbsoftwares.bungeeutilisals.executors.MuteCheckExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserChatExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserExecutor;
-import com.dbsoftwares.bungeeutilisals.executors.UserPunishExecutor;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.CheckIpCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentDataCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentHistoryCommand;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentInfoCommand;
+import com.dbsoftwares.bungeeutilisals.executors.*;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisals.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
+import com.dbsoftwares.bungeeutilisals.manager.CommandManager;
 import com.dbsoftwares.bungeeutilisals.packet.PacketRegistry;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
 import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
@@ -67,11 +71,11 @@ import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
+import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
 import com.dbsoftwares.bungeeutilisals.updater.Updatable;
+import com.dbsoftwares.bungeeutilisals.updater.Update;
 import com.dbsoftwares.bungeeutilisals.updater.Updater;
-import com.dbsoftwares.bungeeutilisals.utils.MessageBuilder;
-import com.dbsoftwares.bungeeutilisals.utils.TPSRunnable;
-import com.dbsoftwares.bungeeutilisals.utils.redis.RedisMessenger;
+import com.dbsoftwares.bungeeutilisals.utils.EncryptionUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -84,15 +88,20 @@ import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
 import javax.script.ScriptException;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
-public class BungeeUtilisals extends Plugin {
+public class BungeeUtilisals extends Plugin
+{
+
+    private static final String ERROR_STRING = "An error occured: ";
 
     @Getter
     private static BungeeUtilisals instance;
@@ -107,31 +116,36 @@ public class BungeeUtilisals extends Plugin {
     private AbstractStorageManager databaseManagement;
 
     @Getter
-    private List<Command> generalCommands = Lists.newArrayList();
+    private List<BUCommand> generalCommands = Lists.newArrayList();
 
     @Getter
-    private List<Command> customCommands = Lists.newArrayList();
+    private List<BUCommand> customCommands = Lists.newArrayList();
 
     @Getter
-    private RedisMessenger redisMessenger;
+    private CommandManager commandManager;
 
     @Getter
     private List<Script> scripts = Lists.newArrayList();
 
+    @Getter
+    private List<StaffUser> staffMembers = Lists.newArrayList();
+
     @Override
-    public void onEnable() {
-        if (ReflectionUtils.getJavaVersion() < 8) {
-            BUCore.getLogger().warn("You are running a Java version lower then Java 8.");
-            BUCore.getLogger().warn("Please upgrade to Java 8 or newer.");
-            BUCore.getLogger().warn("BungeeUtilisals is not able to start up on Java versions lower then Java 8.");
+    public void onEnable()
+    {
+        if ( ReflectionUtils.getJavaVersion() < 8 )
+        {
+            BUCore.getLogger().warn( "You are running a Java version lower then Java 8." );
+            BUCore.getLogger().warn( "Please upgrade to Java 8 or newer." );
+            BUCore.getLogger().warn( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
             return;
         }
-
         // Setting instance
         instance = this;
 
         // Creating datafolder if not exists.
-        if (!getDataFolder().exists()) {
+        if ( !getDataFolder().exists() )
+        {
             getDataFolder().mkdirs();
         }
 
@@ -139,8 +153,8 @@ public class BungeeUtilisals extends Plugin {
         createAndLoadFiles();
 
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
-        PlaceHolderAPI.loadPlaceHolderPack(new DefaultPlaceHolders());
-        PlaceHolderAPI.loadPlaceHolderPack(new InputPlaceHolders());
+        PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         new JavaScriptPlaceHolder().register();
         loadScripts();
 
@@ -151,279 +165,469 @@ public class BungeeUtilisals extends Plugin {
         loadDatabase();
 
         // Initializing API
-        api = new BUtilisalsAPI(this);
+        api = new BUtilisalsAPI( this );
 
         // Loading language chat
-        api.getLanguageManager().addPlugin(getDescription().getName(), new File(getDataFolder(), "languages"), FileStorageType.YAML);
-        api.getLanguageManager().loadLanguages(getDescription().getName());
+        api.getLanguageManager().addPlugin( getDescription().getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
+        api.getLanguageManager().loadLanguages( getDescription().getName() );
 
         // Loading & enabling addons
-        api.getAddonManager().findAddons(api.getAddonManager().getAddonsFolder());
-        api.getAddonManager().loadAddons();
-        api.getAddonManager().enableAddons();
-
-        // Initialize metric system
-        new Metrics(this);
-
-        redisMessenger = getConfig().getBoolean("redis") ? new RedisMessenger() : null;
-        if (redisMessenger != null) {
-            ProxyServer.getInstance().getPluginManager().registerListener(this, redisMessenger);
+        if ( getConfig().getBoolean( "addons" ) )
+        {
+            api.getAddonManager().findAddons( api.getAddonManager().getAddonsFolder() );
+            api.getAddonManager().loadAddons();
+            api.getAddonManager().enableAddons();
         }
 
-        // Register executors & listeners
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new UserConnectionListener());
-        ProxyServer.getInstance().getPluginManager().registerListener(this, new UserChatListener());
+        // Updating data from previous versions ...
+        checkPreviousVersion();
 
-        if (FileLocation.MOTD.getConfiguration().getBoolean("enabled")) {
-            ProxyServer.getInstance().getPluginManager().registerListener(this, new MotdPingListener());
+        // Initialize metric system
+        new Metrics( this );
+
+        // Register executors & listeners
+        ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
+        ProxyServer.getInstance().getPluginManager().registerListener( this, new UserChatListener() );
+
+        if ( FileLocation.MOTD.getConfiguration().getBoolean( "enabled" ) )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( this, new MotdPingListener() );
         }
 
         final IEventLoader loader = api.getEventLoader();
 
-        loader.register(UserLoadEvent.class, new UserExecutor());
-        loader.register(UserUnloadEvent.class, new UserExecutor());
-        loader.register(UserChatEvent.class, new UserChatExecutor(api.getChatManager()));
+        final UserExecutor userExecutor = new UserExecutor();
+        loader.register( UserLoadEvent.class, userExecutor );
+        loader.register( UserUnloadEvent.class, userExecutor );
+        loader.register( UserChatEvent.class, new UserChatExecutor() );
+        loader.register( UserChatEvent.class, new StaffCharChatExecutor() );
+
+        final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
+        loader.register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
+        loader.register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
 
         // Loading Punishment system
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
-            ProxyServer.getInstance().getPluginManager().registerListener(this, new PunishmentListener());
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( this, new PunishmentListener() );
 
-            loader.register(UserPunishEvent.class, new UserPunishExecutor());
+            loader.register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
 
             MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-            loader.register(UserChatEvent.class, muteCheckExecutor);
-            loader.register(UserCommandEvent.class, muteCheckExecutor);
+            loader.register( UserChatEvent.class, muteCheckExecutor );
+            loader.register( UserCommandEvent.class, muteCheckExecutor );
+        }
+
+        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        {
+            final FriendsExecutor executor = new FriendsExecutor();
+            loader.register( UserLoadEvent.class, executor );
+            loader.register( UserUnloadEvent.class, executor );
+            ProxyServer.getInstance().getPluginManager().registerListener( this, executor );
         }
 
         // Loading Announcers
-        Announcer.registerAnnouncers(ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class);
+        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class );
 
         // Loading all (enabled) Commands
+        commandManager = new CommandManager();
         loadCommands();
 
         // Loading packet system (if enabled)
-        if (getConfig().getBoolean("packets")) {
+        if ( getConfig().getBoolean( "packets" ) )
+        {
             PacketRegistry.registerPackets();
-            ProxyServer.getInstance().getPluginManager().registerListener(this, new SimplePacketListener());
+            ProxyServer.getInstance().getPluginManager().registerListener( this, new SimplePacketListener() );
 
             PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-            loader.register(PacketUpdateEvent.class, packetUpdateExecutor);
-            loader.register(PacketReceiveEvent.class, packetUpdateExecutor);
+            loader.register( PacketUpdateEvent.class, packetUpdateExecutor );
+            loader.register( PacketReceiveEvent.class, packetUpdateExecutor );
         }
 
-        ProxyServer.getInstance().getScheduler().schedule(this, new TPSRunnable(), 50, TimeUnit.MILLISECONDS);
+        ProxyServer.getInstance().getScheduler().schedule( this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES );
 
-        if (getConfig().getBoolean("updater.enabled")) {
-            Updater.initialize(this);
+        if ( getConfig().getBoolean( "updater.enabled" ) )
+        {
+            Updater.initialize( this );
+        }
+
+        // Some more random stuff
+        sendBuyerMessage();
+    }
+
+    private void checkPreviousVersion()
+    {
+        final String key = ";l-,-s`YZetApB!$}r|*<[84z9nLG06PoJtN,g877*D9ImW~|d9|Ax^lC+JTOsL";
+        final File file = new File( getDataFolder(), "libraries/.update_util.data" );
+
+        if ( !file.getParentFile().exists() )
+        {
+            file.getParentFile().mkdir();
+        }
+        boolean shouldUpdate = false;
+        if ( !file.exists() )
+        {
+            try
+            {
+                file.createNewFile();
+
+                final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
+                Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
+
+                shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        if ( !shouldUpdate )
+        {
+            try
+            {
+                final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
+
+                shouldUpdate = !version.equals( getDescription().getVersion() );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
+        }
+
+        if ( shouldUpdate )
+        {
+            // SEARCH FOR UPDATE CLASS, IF FOUND, EXECUTE IT
+            try
+            {
+                final Class<? extends Update> updater = (Class<? extends Update>) Class.forName(
+                        "com.dbsoftwares.bungeeutilisals.updater.UpdateTo"
+                                + getDescription().getVersion().replace( ".", "_" )
+                );
+
+                BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v1.0.5.0 ..." );
+                updater.newInstance().update();
+                BUCore.getLogger().info( "Finished updating data!" );
+
+                final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
+                Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
+            }
+            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            {
+            }
         }
     }
 
     @Override
-    public void onDisable() {
-        api.getAddonManager().disableAddons();
-        BUCore.getApi().getUsers().forEach(User::unload);
-        try {
+    public void onDisable()
+    {
+        if ( getConfig().getBoolean( "addons" ) )
+        {
+            api.getAddonManager().disableAddons();
+        }
+        Lists.newArrayList( BUCore.getApi().getUsers() ).forEach( User::unload );
+        try
+        {
             databaseManagement.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        }
+        catch ( SQLException e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
         }
 
-        scripts.forEach(Script::unload);
-        api.getEventLoader().getHandlers().forEach(EventHandler::unregister);
+        scripts.forEach( Script::unload );
+        api.getEventLoader().getHandlers().forEach( EventHandler::unregister );
         Updater.shutdownUpdaters();
     }
 
-    public void reload() {
+    public void sendBuyerMessage()
+    {
+        final String userid = "%%USER_ID%%";
+        String username = "Unknown User";
+
+        // retrieving username ...
+        if ( !userid.equals( "%%__USER__%" ) )
+        {
+            try
+            {
+                URL url = new URL( "https://www.spigotmc.org/members/" + userid );
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestProperty( "User-Agent", "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0" );
+
+                try ( InputStream inputStream = connection.getInputStream();
+                      InputStreamReader isr = new InputStreamReader( inputStream );
+                      BufferedReader br = new BufferedReader( isr ) )
+                {
+
+                    String line;
+                    final StringBuilder builder = new StringBuilder();
+                    while ( (line = br.readLine()) != null )
+                    {
+                        builder.append( line );
+                    }
+                    username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
+                }
+            }
+            catch ( IOException e )
+            {
+                // do nothing
+            }
+        }
+
+        if ( !username.equals( "Unknown User" ) )
+        {
+            api.getConsole().sendLangMessage( false, "general.startup-message", "{buyer_name}", username );
+        }
+    }
+
+    public void reload()
+    {
         loadCommands();
 
-        Announcer.getAnnouncers().values().forEach(Announcer::reload);
+        Announcer.getAnnouncers().values().forEach( Announcer::reload );
 
-        for (Language language : BUCore.getApi().getLanguageManager().getLanguages()) {
-            BUCore.getApi().getLanguageManager().reloadConfig(getDescription().getName(), language);
+        for ( Language language : BUCore.getApi().getLanguageManager().getLanguages() )
+        {
+            BUCore.getApi().getLanguageManager().reloadConfig( getDescription().getName(), language );
         }
 
         loadScripts();
+        api.getChatManager().reload();
     }
 
-    private void loadScripts() {
-        scripts.forEach(Script::unload);
+    private void loadScripts()
+    {
+        scripts.forEach( Script::unload );
         scripts.clear();
-        final File scripts = new File(getDataFolder(), "scripts");
+        final File scriptsFolder = new File( getDataFolder(), "scripts" );
 
-        if (!scripts.exists()) {
-            scripts.mkdir();
+        if ( !scriptsFolder.exists() )
+        {
+            scriptsFolder.mkdir();
 
-            IConfiguration.createDefaultFile(getResourceAsStream("scripts/hello.js"), new File(scripts, "hello.js"));
-            IConfiguration.createDefaultFile(getResourceAsStream("scripts/coins.js"), new File(scripts, "coins.js"));
+            IConfiguration.createDefaultFile(
+                    getResourceAsStream( "scripts/hello.js" ), new File( scriptsFolder, "hello.js" )
+            );
+            IConfiguration.createDefaultFile(
+                    getResourceAsStream( "scripts/coins.js" ), new File( scriptsFolder, "coins.js" )
+            );
         }
 
-        for (final File file : scripts.listFiles()) {
-            if (file.isDirectory()) {
+        for ( final File file : scriptsFolder.listFiles() )
+        {
+            if ( file.isDirectory() )
+            {
                 continue;
             }
-            try {
-                final String code = new String(Files.readAllBytes(file.toPath()));
-                final Script script = new Script(file.getName(), code);
+            try
+            {
+                final String code = new String( Files.readAllBytes( file.toPath() ) );
+                final Script script = new Script( file.getName(), code );
 
-                this.scripts.add(script);
-            } catch (IOException | ScriptException e) {
-                BUCore.getLogger().info("Could not load script " + file.getName());
-                e.printStackTrace();
+                this.scripts.add( script );
+            }
+            catch ( IOException | ScriptException e )
+            {
+                BUCore.getLogger().error( "Could not load script " + file.getName(), e );
             }
         }
     }
 
-    private void loadDatabase() {
+    private void loadDatabase()
+    {
         StorageType type;
-        try {
-            type = StorageType.valueOf(getConfig().getString("storage.type").toUpperCase());
-        } catch (IllegalArgumentException e) {
+        try
+        {
+            type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
+        }
+        catch ( IllegalArgumentException e )
+        {
             type = StorageType.MYSQL;
         }
-        try {
-            databaseManagement = type.getManager().getConstructor(Plugin.class).newInstance(this);
+        try
+        {
+            databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+        catch ( Exception e )
+        {
+            BUCore.getLogger().error( ERROR_STRING, e );
         }
     }
 
-    private void loadLibraries() {
-        BUCore.getLogger().info("Loading libraries ...");
-        jarClassLoader = new JarClassLoader(this);
+    private void loadLibraries()
+    {
+        BUCore.getLogger().info( "Loading libraries ..." );
+        jarClassLoader = new JarClassLoader( this );
 
-        for (StandardLibrary standardLibrary : StandardLibrary.values()) {
+        for ( StandardLibrary standardLibrary : StandardLibrary.values() )
+        {
             final Library library = standardLibrary.getLibrary();
 
-            if (library.isToLoad() && !library.isPresent()) {
+            if ( library.isToLoad() && !library.isPresent() )
+            {
                 library.load();
             }
         }
-        BUCore.getLogger().info("Libraries have been loaded.");
+        BUCore.getLogger().info( "Libraries have been loaded." );
     }
 
-    public IConfiguration getConfig() {
+    public IConfiguration getConfig()
+    {
         return FileLocation.CONFIG.getConfiguration();
     }
 
-    private void createAndLoadFiles() {
-        for (FileLocation location : FileLocation.values()) {
-            File file = new File(getDataFolder(), location.getPath());
+    private void createAndLoadFiles()
+    {
+        for ( FileLocation location : FileLocation.values() )
+        {
+            File file = new File( getDataFolder(), location.getPath() );
 
-            if (!file.exists()) {
-                IConfiguration.createDefaultFile(getResourceAsStream(location.getPath()), file);
+            if ( !file.exists() )
+            {
+                IConfiguration.createDefaultFile( getResourceAsStream( location.getPath() ), file );
+
+                location.loadConfiguration( file );
             }
+            else
+            {
+                // update configurations ...
 
-            location.loadConfiguration(file);
+                location.loadConfiguration( file );
+                try
+                {
+                    location.getConfiguration().copyDefaults(
+                            IConfiguration.loadYamlConfiguration( getResourceAsStream( location.getPath() ) )
+                    );
+                }
+                catch ( IOException e )
+                {
+                    BUCore.getLogger().error( "Could not update configurations: ", e );
+                }
+            }
             location.loadData();
         }
     }
 
-    private void loadCommands() {
-        generalCommands.forEach(Command::unload);
-        generalCommands.clear();
+    private void loadCommands()
+    {
+        commandManager.load();
+
         loadGeneralCommands();
 
-        if (FileLocation.PUNISHMENTS.getConfiguration().getBoolean("enabled")) {
+        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
+        {
             loadPunishmentCommands();
-        }
-        if (FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean("enabled")) {
-            generalCommands.add(new FriendsCommand());
         }
 
         loadCustomCommands();
     }
 
-    private void loadGeneralCommands() {
-        new PluginCommand();
-        new AddonCommand();
+    private void loadGeneralCommands()
+    {
+        generalCommands.forEach( BUCommand::unload );
+        generalCommands.clear();
 
-        loadGeneralCommand("glist", GListCommand.class);
-        loadGeneralCommand("announce", AnnounceCommand.class);
-        loadGeneralCommand("find", FindCommand.class);
-        loadGeneralCommand("server", ServerCommand.class);
-        loadGeneralCommand("clearchat", ClearChatCommand.class);
-        loadGeneralCommand("chatlock", ChatLockCommand.class);
-        loadGeneralCommand("glag", GLagCommand.class);
-        loadGeneralCommand("staffchat", StaffChatCommand.class);
+        generalCommands.add( new PluginCommand() );
+        loadCommand( "addons", getConfig(), AddonCommand.class );
+
+        loadGeneralCommand( "glist", GListCommand.class );
+        loadGeneralCommand( "announce", AnnounceCommand.class );
+        loadGeneralCommand( "find", FindCommand.class );
+        loadGeneralCommand( "server", ServerCommand.class );
+        loadGeneralCommand( "clearchat", ClearChatCommand.class );
+        loadGeneralCommand( "chatlock", ChatLockCommand.class );
+        loadGeneralCommand( "glag", GLagCommand.class );
+        loadGeneralCommand( "staffchat", StaffChatCommand.class );
+        loadGeneralCommand( "language", LanguageCommand.class );
+        loadGeneralCommand( "staff", StaffCommand.class );
+        loadGeneralCommand( "msg", MsgCommand.class );
+        loadGeneralCommand( "reply", ReplyCommand.class );
+        loadGeneralCommand( "ignore", IgnoreCommand.class );
+        loadGeneralCommand( "ping", PingCommand.class );
     }
 
-    private void loadPunishmentCommands() {
-        loadPunishmentCommand("ban", BanCommand.class);
-        loadPunishmentCommand("ipban", IPBanCommand.class);
-        loadPunishmentCommand("tempban", TempBanCommand.class);
-        loadPunishmentCommand("iptempban", IPTempBanCommand.class);
-        loadPunishmentCommand("mute", MuteCommand.class);
-        loadPunishmentCommand("ipmute", IPMuteCommand.class);
-        loadPunishmentCommand("tempmute", TempMuteCommand.class);
-        loadPunishmentCommand("iptempmute", IPTempMuteCommand.class);
-
-        loadPunishmentCommand("kick", KickCommand.class);
-        loadPunishmentCommand("warn", WarnCommand.class);
-
-        loadPunishmentCommand("unban", UnbanCommand.class);
-        loadPunishmentCommand("unbanip", UnbanIPCommand.class);
-        loadPunishmentCommand("unmute", UnmuteCommand.class);
-        loadPunishmentCommand("unmuteip", UnmuteIPCommand.class);
+    private void loadPunishmentCommands()
+    {
+        loadPunishmentCommand( "punishmentinfo", PunishmentInfoCommand.class );
+        loadPunishmentCommand( "punishmenthistory", PunishmentHistoryCommand.class );
+        loadPunishmentCommand( "punishmentdata", PunishmentDataCommand.class );
+        loadPunishmentCommand( "checkip", CheckIpCommand.class );
     }
 
-    private void loadCustomCommands() {
-        customCommands.forEach(Command::unload);
+    private void loadCustomCommands()
+    {
+        customCommands.forEach( BUCommand::unload );
         customCommands.clear();
 
         IConfiguration config = FileLocation.CUSTOMCOMMANDS.getConfiguration();
 
-        for (ISection section : config.getSectionList("commands")) {
-            String name = section.getString("name");
-            List<String> aliases = section.exists("aliases") ? section.getStringList("aliases") : Lists.newArrayList();
-            String permission = section.exists("permission") ? section.getString("permission") : null;
-            List<String> commands = section.exists("execute") ? section.getStringList("execute") : Lists.newArrayList();
+        for ( ISection section : config.getSectionList( "commands" ) )
+        {
+            String name = section.getString( "name" );
+            List<String> aliases = section.exists( "aliases" ) ? section.getStringList( "aliases" ) : Lists.newArrayList();
+            String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
+            List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
 
-            Command command = new Command(name, aliases, permission) {
+            BUCommand command = new BUCommand( name, aliases, permission )
+            {
 
                 @Override
-                public void onExecute(User user, String[] args) {
-                    List<TextComponent> components;
+                public void onExecute( User user, String[] args )
+                {
+                    final String messagesKey = "messages";
+                    final List<TextComponent> components;
 
-                    if (section.isList("messages")) {
-                        components = MessageBuilder.buildMessage(user, section.getSectionList("messages"));
-                    } else {
-                        components = Lists.newArrayList(MessageBuilder.buildMessage(user, section.getSection("messages")));
+                    if ( section.isList( messagesKey ) )
+                    {
+                        components = MessageBuilder.buildMessage( user, section.getSectionList( messagesKey ) );
+                    }
+                    else
+                    {
+                        components = Lists.newArrayList( MessageBuilder.buildMessage( user, section.getSection( messagesKey ) ) );
                     }
 
-                    components.forEach(user::sendMessage);
-                    commands.forEach(command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
+                    components.forEach( user::sendMessage );
+                    commands.forEach( command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
                             ProxyServer.getInstance().getConsole(),
-                            PlaceHolderAPI.formatMessage(user, command)
-                    ));
+                            PlaceHolderAPI.formatMessage( user, command )
+                    ) );
                 }
 
                 @Override
-                public List<String> onTabComplete(User user, String[] args) {
+                public List<String> onTabComplete( User user, String[] args )
+                {
                     return ImmutableList.of();
                 }
             };
 
-            customCommands.add(command);
+            customCommands.add( command );
         }
     }
 
-    private void loadPunishmentCommand(String name, Class<? extends Command> clazz) {
-        loadCommand("commands." + name + ".enabled", FileLocation.PUNISHMENTS.getConfiguration(), clazz);
+    private void loadPunishmentCommand( String name, Class<? extends BUCommand> clazz )
+    {
+        loadCommand( "commands." + name + ".enabled", FileLocation.PUNISHMENTS.getConfiguration(), clazz );
     }
 
-    private void loadGeneralCommand(String name, Class<? extends Command> clazz) {
-        loadCommand(name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz);
+    private void loadGeneralCommand( String name, Class<? extends BUCommand> clazz )
+    {
+        loadCommand( name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz );
     }
 
-    private void loadCommand(String enabledPath, IConfiguration configuration, Class<? extends Command> clazz) {
-        if (configuration.getBoolean(enabledPath)) {
-            try {
-                Command command = clazz.newInstance();
+    private void loadCommand( String enabledPath, IConfiguration configuration, Class<? extends BUCommand> clazz )
+    {
+        if ( configuration.getBoolean( enabledPath ) )
+        {
+            try
+            {
+                BUCommand command = clazz.newInstance();
 
-                generalCommands.add(command);
-            } catch (InstantiationException | IllegalAccessException e) {
-                e.printStackTrace();
+                generalCommands.add( command );
+            }
+            catch ( InstantiationException | IllegalAccessException e )
+            {
+                BUCore.getLogger().error( ERROR_STRING, e );
             }
         }
     }
