@@ -393,6 +393,13 @@ public class BungeeUtilisals extends Plugin
 
         loadScripts();
         api.getChatManager().reload();
+
+        if ( BUCore.getApi().getAddonManager() != null )
+        {
+            BUCore.getApi().getAddonManager().getAddons().stream()
+                    .map( addon -> addon.getDescription().getName() )
+                    .forEach( addon -> BUCore.getApi().getAddonManager().reloadAddon( addon ) );
+        }
     }
 
     private void loadScripts()
