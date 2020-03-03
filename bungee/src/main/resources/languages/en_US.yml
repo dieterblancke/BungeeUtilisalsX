@@ -728,6 +728,40 @@ punishments:
       message: '&bPlayers Found: &f{players}'
     foot: '&eLegenda: &aOnline  &7Offline  &cBanned'
 
+  staffhistory:
+    usage: '&ePlease use &b/staffhistory (user) [type / all] [page]&e!'
+    no-punishments: '&b{user} &ehas not punished anyone with type &b{type}&e!'
+
+    head:
+      text:
+        - text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {previousPage}'
+        - text: '&eStaff Punishment History of &a{user} &b({currentPage} of {maxPages})'
+        - text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {nextPage}'
+    format:
+      text: '&a- #{id} &b{type} &eon &b{date}&e, by &a{by}'
+      hover:
+        - '&eUser: &b{user}'
+        - '&eUuid: &b{uuid}'
+        - '&eIP: &b{ip}'
+        - '&eBy: &b{by}'
+        - '&eServer: &b{server}'
+        - '&eDate: &b{date}'
+        - '&eReason: &b{reason}'
+        - '&eExpires at: &b{expire}'
+        - '&eRemoved by: &b{removedBy}'
+      click:
+        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        # RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
+
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:

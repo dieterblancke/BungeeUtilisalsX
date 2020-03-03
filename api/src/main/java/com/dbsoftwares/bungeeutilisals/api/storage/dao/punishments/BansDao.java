@@ -59,6 +59,8 @@ public interface BansDao
 
     List<PunishmentInfo> getBans( UUID uuid );
 
+    List<PunishmentInfo> getBansExecutedBy( String name );
+
     List<PunishmentInfo> getBans( UUID uuid, String server );
 
     List<PunishmentInfo> getIPBans( String ip );

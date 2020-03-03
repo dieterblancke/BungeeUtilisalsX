@@ -55,6 +55,8 @@ public interface MutesDao
 
     List<PunishmentInfo> getMutes( UUID uuid, String server );
 
+    List<PunishmentInfo> getMutesExecutedBy( String name );
+
     List<PunishmentInfo> getIPMutes( String ip );
 
     List<PunishmentInfo> getIPMutes( String ip, String server );

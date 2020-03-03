@@ -126,6 +126,56 @@ public class MongoKickAndWarnDao implements KickAndWarnDao
     }
 
     @Override
+    public List<PunishmentInfo> getKicksExecutedBy( String name )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.KICK.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.eq( "executed_by", name ) );
+
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.KICK );
+
+            final String id = document.getObjectId( "_id" ).toString();
+            final String user = document.getString( "user" );
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null ) );
+        }
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getWarnsExecutedBy( String name )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.WARN.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.eq( "executed_by", name ) );
+
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.WARN );
+
+            final String id = document.getObjectId( "_id" ).toString();
+            final String user = document.getString( "user" );
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, -1, true, null ) );
+        }
+        return punishments;
+    }
+
+    @Override
     public PunishmentInfo getKickById( String id )
     {
         final MongoCollection<Document> collection = db().getCollection( PunishmentType.KICK.getTable() );

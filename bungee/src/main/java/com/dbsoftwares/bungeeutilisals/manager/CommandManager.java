@@ -98,6 +98,8 @@ public class CommandManager
         registerPunishmentCommand( "unbanip", "commands.unbanip", new UnbanIPCommand(), parameters );
         registerPunishmentCommand( "unmute", "commands.unmute", new UnmuteCommand(), parameters );
         registerPunishmentCommand( "unmuteip", "commands.unmuteip", new UnmuteIPCommand(), parameters );
+
+        registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommand(), parameters );
     }
 
     private void registerGeneralCommand( final String section, final CommandCall call )

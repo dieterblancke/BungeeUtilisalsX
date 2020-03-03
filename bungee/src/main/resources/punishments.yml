@@ -161,3 +161,7 @@ commands:
     enabled: true
     aliases: 'dupeip, checkalts'
     permission: bungeeutilisals.punishments.checkip
+  staffhistory:
+    enabled: true
+    aliases: 'shistory'
+    permission: bungeeutilisals.punishments.staffhistory

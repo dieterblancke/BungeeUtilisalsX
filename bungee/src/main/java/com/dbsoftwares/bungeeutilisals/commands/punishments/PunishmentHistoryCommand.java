@@ -85,7 +85,7 @@ public class PunishmentHistoryCommand extends BUCommand
             );
             return;
         }
-        final int pages = (int) Math.ceil( (double) allPunishments.size() / 15 );
+        final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
 
         if ( page > pages )
         {
