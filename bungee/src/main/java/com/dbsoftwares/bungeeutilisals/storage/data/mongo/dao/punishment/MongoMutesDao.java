@@ -410,6 +410,34 @@ public class MongoMutesDao implements MutesDao
     }
 
     @Override
+    public List<PunishmentInfo> getMutesExecutedBy( String name )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final FindIterable<Document> documents = collection.find( Filters.eq( "executed_by", name ) );
+
+        for ( Document document : documents )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
+
+            final String id = document.getObjectId( "_id" ).toString();
+            final String user = document.getString( "user" );
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final Long time = document.getLong( "duration" );
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
+
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+        }
+        return punishments;
+    }
+
+    @Override
     public List<PunishmentInfo> getIPMutes( String ip )
     {
         final List<PunishmentInfo> punishments = Lists.newArrayList();
