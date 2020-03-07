@@ -104,7 +104,7 @@ public class MongoToMongoConverter extends Converter
 
     private MongoDatabase getDatabase()
     {
-        return ((com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
+        return ((com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
     }
 
     public class MongoDBStorageManager extends AbstractStorageManager

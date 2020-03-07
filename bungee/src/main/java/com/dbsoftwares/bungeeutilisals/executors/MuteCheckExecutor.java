@@ -86,7 +86,7 @@ public class MuteCheckExecutor implements EventExecutor
 
     private boolean checkTemporaryMute( final User user, final PunishmentInfo info )
     {
-        if ( info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis() )
+        if ( info.isExpired() )
         {
             final MutesDao mutesDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
 

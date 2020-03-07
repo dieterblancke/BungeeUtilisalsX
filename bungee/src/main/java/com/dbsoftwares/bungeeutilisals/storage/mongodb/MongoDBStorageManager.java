@@ -45,6 +45,13 @@ public class MongoDBStorageManager extends AbstractStorageManager
     private MongoClient client;
     private MongoDatabase database;
 
+    public MongoDBStorageManager( final MongoClient client, final MongoDatabase database )
+    {
+        super( null, StorageType.MONGODB, new MongoDao() );
+        this.client = client;
+        this.database = database;
+    }
+
     public MongoDBStorageManager( Plugin plugin )
     {
         this( plugin, StorageType.MONGODB, BungeeUtilisals.getInstance().getConfig() );

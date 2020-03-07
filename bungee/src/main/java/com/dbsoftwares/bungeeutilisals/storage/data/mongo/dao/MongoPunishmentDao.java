@@ -18,9 +18,9 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
@@ -206,6 +206,6 @@ public class MongoPunishmentDao implements PunishmentDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
+        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
     }
 }

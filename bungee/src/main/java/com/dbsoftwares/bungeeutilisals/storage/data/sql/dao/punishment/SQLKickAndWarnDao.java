@@ -103,7 +103,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );
@@ -142,7 +142,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );
@@ -181,7 +181,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );
@@ -221,7 +221,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );

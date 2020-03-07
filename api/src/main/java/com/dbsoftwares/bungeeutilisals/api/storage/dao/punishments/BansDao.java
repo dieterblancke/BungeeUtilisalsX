@@ -30,7 +30,14 @@ public interface BansDao
 
     static boolean useServerPunishments()
     {
-        return FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "per-server-punishments" );
+        try
+        {
+            return FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "per-server-punishments" );
+        }
+        catch ( Exception e )
+        {
+            return true;
+        }
     }
 
     boolean isBanned( UUID uuid, String server );

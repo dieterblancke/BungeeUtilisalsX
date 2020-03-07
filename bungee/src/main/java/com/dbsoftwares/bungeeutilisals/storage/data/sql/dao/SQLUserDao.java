@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.sql.dao;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
@@ -66,10 +66,10 @@ public class SQLUserDao implements UserDao
     @Override
     public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost )
     {
-        final StorageType type = BungeeUtilisals.getInstance().getDatabaseManagement().getType();
+        final StorageType type = AbstractStorageManager.getManager().getType();
         final String statement = type == StorageType.SQLITE || type == StorageType.POSTGRESQL ? OTHER_INSERT_USER : INSERT_USER;
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( statement ) ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -78,8 +78,8 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 4, language.getName() );
             pstmt.setString( 5, Dao.formatDateToString( login ) );
             pstmt.setString( 6, Dao.formatDateToString( logout ) );
-            pstmt.setString( 7, username );
-            pstmt.setString( 8, joinedHost );
+            pstmt.setString( 7, joinedHost );
+            pstmt.setString( 8, username );
 
             pstmt.executeUpdate();
         }
@@ -92,7 +92,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void updateUser( UUID uuid, String name, String ip, Language language, Date logout )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER ) ) )
         {
             pstmt.setString( 1, name );
@@ -115,7 +115,7 @@ public class SQLUserDao implements UserDao
         boolean present = false;
         String statement = format( SELECT_USER, "id", name.contains( "." ) ? "ip = ?" : "username = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, name );
@@ -139,7 +139,7 @@ public class SQLUserDao implements UserDao
         boolean present = false;
         String statement = format( SELECT_USER, "id", "uuid = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -163,7 +163,7 @@ public class SQLUserDao implements UserDao
         boolean present = false;
         String statement = format( SELECT_USER, "id", "ip = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, ip );
@@ -187,7 +187,7 @@ public class SQLUserDao implements UserDao
         final UserStorage storage = new UserStorage();
         final String statement = format( SELECT_USER, "*", "uuid = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -225,7 +225,7 @@ public class SQLUserDao implements UserDao
         UserStorage storage = new UserStorage();
         String statement = format( SELECT_USER, "*", "username = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, name );
@@ -283,7 +283,7 @@ public class SQLUserDao implements UserDao
         List<String> users = Lists.newArrayList();
         String statement = format( SELECT_USER, "username", "ip = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, ip );
@@ -309,7 +309,7 @@ public class SQLUserDao implements UserDao
         Language language = null;
         String statement = format( SELECT_USER, "language", "uuid = ?" );
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( statement ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -332,7 +332,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void setName( UUID uuid, String name )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "username" ) ) )
         {
             pstmt.setString( 1, name );
@@ -349,7 +349,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void setIP( UUID uuid, String ip )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "ip" ) ) )
         {
             pstmt.setString( 1, ip );
@@ -366,7 +366,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void setLanguage( UUID uuid, Language language )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "language" ) ) )
         {
             pstmt.setString( 1, language.getName() );
@@ -383,7 +383,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void setLogout( UUID uuid, Date logout )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "lastlogout" ) ) )
         {
             pstmt.setString( 1, Dao.formatDateToString( logout ) );
@@ -400,7 +400,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void setJoinedHost( UUID uuid, String joinedHost )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "joined_host" ) ) )
         {
             pstmt.setString( 1, joinedHost );
@@ -419,9 +419,9 @@ public class SQLUserDao implements UserDao
     {
         final Map<String, Integer> map = Maps.newHashMap();
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT joined_host, COUNT(*) amount FROM bu_users GROUP BY joined_host;"
+                      format( "SELECT joined_host, COUNT(*) amount FROM {users-table} GROUP BY joined_host;" )
               ) )
         {
             try ( ResultSet rs = pstmt.executeQuery() )
@@ -450,9 +450,9 @@ public class SQLUserDao implements UserDao
     {
         final Map<String, Integer> map = Maps.newHashMap();
 
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT joined_host, COUNT(*) amount FROM bu_users WHERE joined_host LIKE ? GROUP BY joined_host;"
+                      format( "SELECT joined_host, COUNT(*) amount FROM {users-table} WHERE joined_host LIKE ? GROUP BY joined_host;" )
               ) )
         {
             pstmt.setString( 1, "%" + searchTag + "%" );
@@ -480,7 +480,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void ignoreUser( UUID user, UUID ignore )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       format( "INSERT INTO {ignoredusers-table}(user, ignored) VALUES (?, ?);" )
               ) )
@@ -499,7 +499,7 @@ public class SQLUserDao implements UserDao
     @Override
     public void unignoreUser( UUID user, UUID unignore )
     {
-        try ( Connection connection = BungeeUtilisals.getInstance().getDatabaseManagement().getConnection();
+        try ( Connection connection = AbstractStorageManager.getManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       format( "DELETE FROM {ignoredusers-table} WHERE user = ? AND ignored = ?;" )
               ) )

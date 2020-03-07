@@ -534,7 +534,7 @@ public class SQLMutesDao implements MutesDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
 
@@ -576,7 +576,7 @@ public class SQLMutesDao implements MutesDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
 
@@ -617,7 +617,7 @@ public class SQLMutesDao implements MutesDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
 
@@ -784,7 +784,7 @@ public class SQLMutesDao implements MutesDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
 
@@ -826,7 +826,7 @@ public class SQLMutesDao implements MutesDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
 

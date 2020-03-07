@@ -141,8 +141,8 @@ public class StaffHistoryCommand implements CommandCall
 
     private List<PunishmentInfo> listPunishments( final String name, final PunishmentType type )
     {
-        final Predicate<PunishmentInfo> permanentFilter = punishment -> punishment.getExpireTime() == null || punishment.getExpireTime() == -1;
-        final Predicate<PunishmentInfo> temporaryFilter = punishment -> punishment.getExpireTime() != null && punishment.getExpireTime() > 0;
+        final Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
+        final Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
         final Predicate<PunishmentInfo> ipFilter = punishment -> punishment.toString().contains( "IP" );
         final Predicate<PunishmentInfo> notIpFilter = punishment -> !punishment.toString().contains( "IP" );
 

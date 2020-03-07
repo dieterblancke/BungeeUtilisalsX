@@ -662,7 +662,7 @@ public class SQLBansDao implements BansDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPBAN );
 
@@ -704,7 +704,7 @@ public class SQLBansDao implements BansDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPBAN );
 
