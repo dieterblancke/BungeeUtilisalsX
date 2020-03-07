@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
@@ -321,6 +321,6 @@ public class MongoUserDao implements UserDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement()).getDatabase();
+        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
     }
 }

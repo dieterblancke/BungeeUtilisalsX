@@ -18,8 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.data.mongo.dao;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
@@ -44,7 +44,7 @@ public class MongoReportsDao implements ReportsDao
 
     private MongoDBStorageManager manager()
     {
-        return (MongoDBStorageManager) BungeeUtilisals.getInstance().getDatabaseManagement();
+        return (MongoDBStorageManager) AbstractStorageManager.getManager();
     }
 
     private MongoDatabase db()

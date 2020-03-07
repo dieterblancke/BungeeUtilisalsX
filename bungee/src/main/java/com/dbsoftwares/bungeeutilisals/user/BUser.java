@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
@@ -86,7 +87,7 @@ public class BUser implements User
     @Override
     public void load( ProxiedPlayer parent )
     {
-        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
+        final Dao dao = AbstractStorageManager.getManager().getDao();
 
         this.parent = parent;
         this.name = parent.getName();
@@ -180,7 +181,7 @@ public class BUser implements User
     @Override
     public void save()
     {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser( uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() ) );
+        AbstractStorageManager.getManager().getDao().getUserDao().updateUser( uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() ) );
     }
 
     @Override

@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.storage;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
@@ -69,7 +70,9 @@ public abstract class AbstractStorageManager
         {
             return;
         }
-        try ( InputStream is = plugin.getResourceAsStream( type.getSchema() ) )
+        try ( InputStream is = plugin == null
+                ? BUCore.class.getClassLoader().getResourceAsStream( type.getSchema() )
+                : plugin.getResourceAsStream( type.getSchema() ) )
         {
             if ( is == null )
             {
@@ -78,7 +81,6 @@ public abstract class AbstractStorageManager
             try ( BufferedReader reader = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) );
                   Connection connection = getConnection(); Statement st = connection.createStatement() )
             {
-
                 StringBuilder builder = new StringBuilder();
                 String line;
                 while ( (line = reader.readLine()) != null )

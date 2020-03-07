@@ -104,7 +104,7 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public AbstractStorageManager getStorageManager()
     {
-        return BungeeUtilisals.getInstance().getDatabaseManagement();
+        return AbstractStorageManager.getManager();
     }
 
     @Override
