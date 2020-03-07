@@ -283,12 +283,12 @@ public class SQLMutesTest extends SQLTest
         assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
 
         StorageUtils.unmute( storage.getUuid() );
-        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
         assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
 
         StorageUtils.unmuteIP( storage.getIp() );
-        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
-        assertEquals( 0, dao().getIPMutes( storage.getIp() ).size() );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
     }
 
     @Test

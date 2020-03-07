@@ -243,12 +243,12 @@ public class MongoBansTest
         assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
 
         StorageUtils.unban( storage.getUuid() );
-        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
         assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
 
         StorageUtils.unbanIP( storage.getIp() );
-        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
-        assertEquals( 0, dao().getIPBans( storage.getIp() ).size() );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
     }
 
     @Test
