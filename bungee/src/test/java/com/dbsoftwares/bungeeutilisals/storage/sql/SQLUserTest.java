@@ -42,10 +42,6 @@ import static org.junit.Assert.*;
 
 public class SQLUserTest
 {
-
-    // TODO: register placeholders for tables (so valid table names are used)
-    // TODO: make sure to initialize the database setup for mysql.sql on SQL_UTILS.setup();
-
     private static final SQLUtils SQL_UTILS = new SQLUtils();
     private final String table = PlaceHolderAPI.formatMessage( "{users-table}" );
 

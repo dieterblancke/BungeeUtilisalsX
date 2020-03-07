@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `{bans-table}`
     removed_by              VARCHAR(32),
     removed_at              TIMESTAMP   NULL DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_bans (id, uuid, user, ip, active, server)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -92,7 +92,7 @@ CREATE TABLE IF NOT EXISTS `{mutes-table}`
     removed_by              VARCHAR(32),
     removed_at              TIMESTAMP   NULL DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_mutes (id, uuid, user, ip, active, server)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -110,7 +110,7 @@ CREATE TABLE IF NOT EXISTS `{kicks-table}`
     date                    TIMESTAMP            DEFAULT CURRENT_TIMESTAMP NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_kicks (id, uuid, user, ip)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -127,7 +127,7 @@ CREATE TABLE IF NOT EXISTS `{warns-table}`
     date                    TIMESTAMP            DEFAULT CURRENT_TIMESTAMP NOT NULL,
     executed_by             VARCHAR(64) NOT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_warns (id, uuid, user, ip)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -141,7 +141,7 @@ CREATE TABLE IF NOT EXISTS `{punishmentactions-table}`
     ip       VARCHAR(32)                         NOT NULL,
     actionid VARCHAR(36)                         NOT NULL,
     date     TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_punishactions (id, uuid, user, ip, actionid)
 ) DEFAULT CHARSET = UTF8MB4;
 
@@ -157,7 +157,7 @@ CREATE TABLE IF NOT EXISTS `{reports-table}`
     server      VARCHAR(64)                         NOT NULL,
     reason      TEXT                                NOT NULL,
     accepted    BOOLEAN,
-    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
+    FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid) ON DELETE CASCADE,
     INDEX idx_reports (id, uuid, reported_by, handled)
 ) DEFAULT CHARSET = UTF8MB4;
 

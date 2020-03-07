@@ -122,20 +122,17 @@ public class PunishmentListener implements Listener
             return null;
         }
 
-        if ( info.isTemporary() )
+        if ( info.isExpired() )
         {
-            if ( info.getExpireTime() <= System.currentTimeMillis() )
+            if ( info.getType().equals( PunishmentType.TEMPBAN ) )
             {
-                if ( info.getType().equals( PunishmentType.TEMPBAN ) )
-                {
-                    bansDao.removeCurrentBan( uuid, "EXPIRED", server );
-                }
-                else
-                {
-                    bansDao.removeCurrentIPBan( ip, "EXPIRED", server );
-                }
-                return null;
+                bansDao.removeCurrentBan( uuid, "EXPIRED", server );
             }
+            else
+            {
+                bansDao.removeCurrentIPBan( ip, "EXPIRED", server );
+            }
+            return null;
         }
 
         String kick = null;

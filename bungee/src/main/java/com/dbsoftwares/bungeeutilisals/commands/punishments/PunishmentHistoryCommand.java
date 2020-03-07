@@ -152,10 +152,8 @@ public class PunishmentHistoryCommand extends BUCommand
 
     private List<PunishmentInfo> listPunishments( final UserStorage storage, final PunishmentType type )
     {
-        final Predicate<PunishmentInfo> permanentFilter = punishment ->
-                punishment.getExpireTime() == null || punishment.getExpireTime() == -1;
-        final Predicate<PunishmentInfo> temporaryFilter = punishment ->
-                punishment.getExpireTime() != null || punishment.getExpireTime() > 0;
+        final Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
+        final Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
 
         switch ( type )
         {

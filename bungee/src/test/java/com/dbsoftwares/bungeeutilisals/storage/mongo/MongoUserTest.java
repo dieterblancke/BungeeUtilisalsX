@@ -28,6 +28,7 @@ import com.google.common.collect.Maps;
 import com.mongodb.client.MongoDatabase;
 import org.apache.commons.compress.utils.Lists;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -56,10 +57,15 @@ public class MongoUserTest
         MONGO_UTILS.destroy();
     }
 
+    @Before
+    public void before()
+    {
+        db().getCollection( table ).drop();
+    }
+
     @Test
     public void testUserCreate()
     {
-        db().getCollection( table ).drop();
         StorageUtils.createRandomUser();
         assertEquals( 1, db().getCollection( table ).countDocuments() );
     }
@@ -67,7 +73,6 @@ public class MongoUserTest
     @Test
     public void testMultipleUserCreate()
     {
-        db().getCollection( table ).drop();
         for ( int i = 0; i < 10; i++ )
         {
             StorageUtils.createRandomUser();

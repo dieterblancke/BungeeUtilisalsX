@@ -20,8 +20,10 @@ package com.dbsoftwares.bungeeutilisals.storage;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Date;
@@ -104,5 +106,149 @@ public class StorageUtils
         storage.setJoinedHost( RandomStringUtils.randomAlphanumeric( 3 ) );
 
         return storage;
+    }
+
+    public static PunishmentInfo insertBan( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().insertBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName()
+        );
+    }
+
+    public static PunishmentInfo insertTempBan( final UserStorage storage, long duration )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().insertTempBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName(),
+                System.currentTimeMillis() + TimeUnit.SECONDS.toMillis( duration )
+        );
+    }
+
+    public static PunishmentInfo insertIPBan( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().insertIPBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName()
+        );
+    }
+
+    public static PunishmentInfo insertTempIPBan( final UserStorage storage, long duration )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().insertTempIPBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName(),
+                System.currentTimeMillis() + TimeUnit.SECONDS.toMillis( duration )
+        );
+    }
+
+    public static PunishmentInfo insertMute( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().insertMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName()
+        );
+    }
+
+    public static PunishmentInfo insertTempMute( final UserStorage storage, long duration )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().insertTempMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName(),
+                System.currentTimeMillis() + TimeUnit.SECONDS.toMillis( duration )
+        );
+    }
+
+    public static PunishmentInfo insertIPMute( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().insertIPMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName()
+        );
+    }
+
+    public static PunishmentInfo insertTempIPMute( final UserStorage storage, long duration )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().insertTempIPMute(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                true,
+                storage.getUserName(),
+                System.currentTimeMillis() + TimeUnit.SECONDS.toMillis( duration )
+        );
+    }
+
+    public static void unban( final UUID uuid )
+    {
+        AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().removeCurrentBan(
+                uuid,
+                RandomStringUtils.randomAlphanumeric( 12 ),
+                "ALL"
+        );
+    }
+
+    public static void unbanIP( final String ip )
+    {
+        AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().removeCurrentIPBan(
+                ip,
+                RandomStringUtils.randomAlphanumeric( 12 ),
+                "ALL"
+        );
+    }
+
+    public static void unmute( final UUID uuid )
+    {
+        AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().removeCurrentMute(
+                uuid,
+                RandomStringUtils.randomAlphanumeric( 12 ),
+                "ALL"
+        );
+    }
+
+    public static void unmuteIP( final String ip )
+    {
+        AbstractStorageManager.getManager().getDao().getPunishmentDao().getMutesDao().removeCurrentIPMute(
+                ip,
+                RandomStringUtils.randomAlphanumeric( 12 ),
+                "ALL"
+        );
     }
 }
