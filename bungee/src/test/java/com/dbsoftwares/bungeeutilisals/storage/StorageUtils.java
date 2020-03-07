@@ -216,6 +216,31 @@ public class StorageUtils
         );
     }
 
+
+    public static PunishmentInfo insertKick( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getKickAndWarnDao().insertKick(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                storage.getUserName()
+        );
+    }
+
+    public static PunishmentInfo insertWarn( final UserStorage storage )
+    {
+        return AbstractStorageManager.getManager().getDao().getPunishmentDao().getKickAndWarnDao().insertWarn(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                RandomStringUtils.randomAlphanumeric( 32 ),
+                "ALL",
+                storage.getUserName()
+        );
+    }
+
     public static void unban( final UUID uuid )
     {
         AbstractStorageManager.getManager().getDao().getPunishmentDao().getBansDao().removeCurrentBan(

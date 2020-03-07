@@ -246,6 +246,34 @@ public class MongoMutesTest
     }
 
     @Test
+    public void testGetMutes()
+    {
+        final UserStorage storage = StorageUtils.createRandomUser();
+
+        StorageUtils.insertMute( storage );
+        assertEquals( 1, dao().getMutes( storage.getUuid() ).size() );
+
+        StorageUtils.insertTempMute( storage, 15 );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+
+        StorageUtils.insertIPMute( storage );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 1, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.insertTempIPMute( storage, 15 );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.unmute( storage.getUuid() );
+        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.unmuteIP( storage.getIp() );
+        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 0, dao().getIPMutes( storage.getIp() ).size() );
+    }
+
+    @Test
     public void testGetExecutedMutes()
     {
         final UserStorage storage = StorageUtils.createRandomUser();

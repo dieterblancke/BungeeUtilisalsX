@@ -20,10 +20,10 @@ package com.dbsoftwares.bungeeutilisals.storage.sql.punishment;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.StorageUtils;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLTest;
 import com.dbsoftwares.bungeeutilisals.storage.sql.SQLUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,12 +32,11 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
-public class SQLBansTest
+public class SQLBansTest extends SQLTest
 {
     private static final SQLUtils SQL_UTILS = new SQLUtils();
     private final String table = PlaceHolderAPI.formatMessage( "{bans-table}" );
@@ -78,33 +77,13 @@ public class SQLBansTest
         }
     }
 
-    private int count()
-    {
-        int count = 0;
-        try ( Connection connection = manager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( "SELECT * FROM " + table + ";" ) )
-        {
-            final ResultSet rs = pstmt.executeQuery();
-
-            while ( rs.next() )
-            {
-                count++;
-            }
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
-        return count;
-    }
-
     @Test
     public void testBan()
     {
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertBan( storage );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -116,7 +95,7 @@ public class SQLBansTest
             StorageUtils.insertBan( storage );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -125,7 +104,7 @@ public class SQLBansTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertIPBan( storage );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -137,7 +116,7 @@ public class SQLBansTest
             StorageUtils.insertIPBan( storage );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -146,7 +125,7 @@ public class SQLBansTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertTempBan( storage, 15 );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -158,7 +137,7 @@ public class SQLBansTest
             StorageUtils.insertTempBan( storage, 15 );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -167,7 +146,7 @@ public class SQLBansTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertTempIPBan( storage, 15 );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -179,7 +158,7 @@ public class SQLBansTest
             StorageUtils.insertTempIPBan( storage, 15 );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -263,6 +242,34 @@ public class SQLBansTest
     }
 
     @Test
+    public void testGetBans()
+    {
+        final UserStorage storage = StorageUtils.createRandomUser();
+
+        StorageUtils.insertBan( storage );
+        assertEquals( 1, dao().getBans( storage.getUuid() ).size() );
+
+        StorageUtils.insertTempBan( storage, 15 );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+
+        StorageUtils.insertIPBan( storage );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 1, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.insertTempIPBan( storage, 15 );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.unban( storage.getUuid() );
+        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.unbanIP( storage.getIp() );
+        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 0, dao().getIPBans( storage.getIp() ).size() );
+    }
+
+    @Test
     public void testIPTempBanDecay()
     {
         final UserStorage storage = StorageUtils.createRandomUser();
@@ -300,11 +307,6 @@ public class SQLBansTest
         StorageUtils.unbanIP( storage.getIp() );
 
         assertEquals( 4, dao().getBansExecutedBy( storage.getUserName() ).size() );
-    }
-
-    private AbstractStorageManager manager()
-    {
-        return AbstractStorageManager.getManager();
     }
 
     private BansDao dao()

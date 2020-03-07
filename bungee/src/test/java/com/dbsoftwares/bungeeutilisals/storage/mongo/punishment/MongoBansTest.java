@@ -224,6 +224,34 @@ public class MongoBansTest
     }
 
     @Test
+    public void testGetBans()
+    {
+        final UserStorage storage = StorageUtils.createRandomUser();
+
+        StorageUtils.insertBan( storage );
+        assertEquals( 1, dao().getBans( storage.getUuid() ).size() );
+
+        StorageUtils.insertTempBan( storage, 15 );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+
+        StorageUtils.insertIPBan( storage );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 1, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.insertTempIPBan( storage, 15 );
+        assertEquals( 2, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.unban( storage.getUuid() );
+        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPBans( storage.getIp() ).size() );
+
+        StorageUtils.unbanIP( storage.getIp() );
+        assertEquals( 0, dao().getBans( storage.getUuid() ).size() );
+        assertEquals( 0, dao().getIPBans( storage.getIp() ).size() );
+    }
+
+    @Test
     public void testIPTempBanDecay()
     {
         final UserStorage storage = StorageUtils.createRandomUser();

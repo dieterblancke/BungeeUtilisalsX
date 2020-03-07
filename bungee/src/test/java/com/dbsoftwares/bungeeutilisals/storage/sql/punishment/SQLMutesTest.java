@@ -20,10 +20,10 @@ package com.dbsoftwares.bungeeutilisals.storage.sql.punishment;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.StorageUtils;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLTest;
 import com.dbsoftwares.bungeeutilisals.storage.sql.SQLUtils;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,12 +32,11 @@ import org.junit.Test;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import static org.junit.Assert.*;
 
-public class SQLMutesTest
+public class SQLMutesTest extends SQLTest
 {
     private static final SQLUtils SQL_UTILS = new SQLUtils();
     private final String table = PlaceHolderAPI.formatMessage( "{mutes-table}" );
@@ -78,33 +77,13 @@ public class SQLMutesTest
         }
     }
 
-    private int count()
-    {
-        int count = 0;
-        try ( Connection connection = manager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( "SELECT * FROM " + table + ";" ) )
-        {
-            final ResultSet rs = pstmt.executeQuery();
-
-            while ( rs.next() )
-            {
-                count++;
-            }
-        }
-        catch ( SQLException e )
-        {
-            e.printStackTrace();
-        }
-        return count;
-    }
-
     @Test
     public void testMute()
     {
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertMute( storage );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -116,7 +95,7 @@ public class SQLMutesTest
             StorageUtils.insertMute( storage );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -125,7 +104,7 @@ public class SQLMutesTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertIPMute( storage );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -137,7 +116,7 @@ public class SQLMutesTest
             StorageUtils.insertIPMute( storage );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -146,7 +125,7 @@ public class SQLMutesTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertTempMute( storage, 15 );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -158,7 +137,7 @@ public class SQLMutesTest
             StorageUtils.insertTempMute( storage, 15 );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -167,7 +146,7 @@ public class SQLMutesTest
         final UserStorage storage = StorageUtils.createRandomUser();
         StorageUtils.insertTempIPMute( storage, 15 );
 
-        assertEquals( 1, count() );
+        assertEquals( 1, count( table ) );
     }
 
     @Test
@@ -179,7 +158,7 @@ public class SQLMutesTest
             StorageUtils.insertTempIPMute( storage, 15 );
         }
 
-        assertEquals( 10, count() );
+        assertEquals( 10, count( table ) );
     }
 
     @Test
@@ -285,6 +264,34 @@ public class SQLMutesTest
     }
 
     @Test
+    public void testGetMutes()
+    {
+        final UserStorage storage = StorageUtils.createRandomUser();
+
+        StorageUtils.insertMute( storage );
+        assertEquals( 1, dao().getMutes( storage.getUuid() ).size() );
+
+        StorageUtils.insertTempMute( storage, 15 );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+
+        StorageUtils.insertIPMute( storage );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 1, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.insertTempIPMute( storage, 15 );
+        assertEquals( 2, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.unmute( storage.getUuid() );
+        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 2, dao().getIPMutes( storage.getIp() ).size() );
+
+        StorageUtils.unmuteIP( storage.getIp() );
+        assertEquals( 0, dao().getMutes( storage.getUuid() ).size() );
+        assertEquals( 0, dao().getIPMutes( storage.getIp() ).size() );
+    }
+
+    @Test
     public void testGetExecutedMutes()
     {
         final UserStorage storage = StorageUtils.createRandomUser();
@@ -300,11 +307,6 @@ public class SQLMutesTest
         StorageUtils.unmuteIP( storage.getIp() );
 
         assertEquals( 4, dao().getMutesExecutedBy( storage.getUserName() ).size() );
-    }
-
-    private AbstractStorageManager manager()
-    {
-        return AbstractStorageManager.getManager();
     }
 
     private MutesDao dao()
