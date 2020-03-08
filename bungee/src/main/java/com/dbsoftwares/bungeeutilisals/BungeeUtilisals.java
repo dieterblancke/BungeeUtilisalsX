@@ -101,8 +101,6 @@ import java.util.concurrent.TimeUnit;
 public class BungeeUtilisals extends Plugin
 {
 
-    private static final String ERROR_STRING = "An error occured: ";
-
     @Getter
     private static BungeeUtilisals instance;
 
@@ -275,8 +273,7 @@ public class BungeeUtilisals extends Plugin
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
 
                 shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -288,8 +285,7 @@ public class BungeeUtilisals extends Plugin
                 final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
 
                 shouldUpdate = !version.equals( getDescription().getVersion() );
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -305,14 +301,13 @@ public class BungeeUtilisals extends Plugin
                                 + getDescription().getVersion().replace( ".", "_" )
                 );
 
-                BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v1.0.5.0 ..." );
+                BUCore.getLogger().info( "Updating data to support BungeeUtilisalsX v" + getDescription().getVersion() + " ..." );
                 updater.newInstance().update();
                 BUCore.getLogger().info( "Finished updating data!" );
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
-            }
-            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
             {
             }
         }
@@ -329,10 +324,9 @@ public class BungeeUtilisals extends Plugin
         try
         {
             databaseManagement.close();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().error( "An error occured: ", e );
         }
 
         scripts.forEach( Script::unload );
@@ -361,14 +355,13 @@ public class BungeeUtilisals extends Plugin
 
                     String line;
                     final StringBuilder builder = new StringBuilder();
-                    while ( (line = br.readLine()) != null )
+                    while ( ( line = br.readLine() ) != null )
                     {
                         builder.append( line );
                     }
                     username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
                 }
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 // do nothing
             }
@@ -432,8 +425,7 @@ public class BungeeUtilisals extends Plugin
                 final Script script = new Script( file.getName(), code );
 
                 this.scripts.add( script );
-            }
-            catch ( IOException | ScriptException e )
+            } catch ( IOException | ScriptException e )
             {
                 BUCore.getLogger().error( "Could not load script " + file.getName(), e );
             }
@@ -446,8 +438,7 @@ public class BungeeUtilisals extends Plugin
         try
         {
             type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
-        }
-        catch ( IllegalArgumentException e )
+        } catch ( IllegalArgumentException e )
         {
             type = StorageType.MYSQL;
         }
@@ -455,10 +446,9 @@ public class BungeeUtilisals extends Plugin
         {
             databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        }
-        catch ( Exception e )
+        } catch ( Exception e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().error( "An error occured: ", e );
         }
     }
 
@@ -495,8 +485,7 @@ public class BungeeUtilisals extends Plugin
                 IConfiguration.createDefaultFile( getResourceAsStream( location.getPath() ), file );
 
                 location.loadConfiguration( file );
-            }
-            else
+            } else
             {
                 // update configurations ...
 
@@ -506,8 +495,7 @@ public class BungeeUtilisals extends Plugin
                     location.getConfiguration().copyDefaults(
                             IConfiguration.loadYamlConfiguration( getResourceAsStream( location.getPath() ) )
                     );
-                }
-                catch ( IOException e )
+                } catch ( IOException e )
                 {
                     BUCore.getLogger().error( "Could not update configurations: ", e );
                 }
@@ -588,8 +576,7 @@ public class BungeeUtilisals extends Plugin
                     if ( section.isList( messagesKey ) )
                     {
                         components = MessageBuilder.buildMessage( user, section.getSectionList( messagesKey ) );
-                    }
-                    else
+                    } else
                     {
                         components = Lists.newArrayList( MessageBuilder.buildMessage( user, section.getSection( messagesKey ) ) );
                     }
@@ -631,10 +618,9 @@ public class BungeeUtilisals extends Plugin
                 BUCommand command = clazz.newInstance();
 
                 generalCommands.add( command );
-            }
-            catch ( InstantiationException | IllegalAccessException e )
+            } catch ( InstantiationException | IllegalAccessException e )
             {
-                BUCore.getLogger().error( ERROR_STRING, e );
+                BUCore.getLogger().error( "An error occured: ", e );
             }
         }
     }
