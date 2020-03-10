@@ -57,7 +57,6 @@ import java.util.stream.Collectors;
 public class BUtilisalsAPI implements BUAPI
 {
 
-    private static final String REDIS_CONFIG_KEY = "redis";
     private final BungeeUtilisals instance;
     private ConsoleUser console;
     private List<User> users;

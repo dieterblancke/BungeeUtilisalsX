@@ -18,8 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
 
@@ -27,8 +29,15 @@ public class HelpOpCommandCall implements CommandCall
 {
 
     @Override
-    public void onExecute( User user, List<String> args, List<String> parameters )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
+        final String message = String.join( " ", args );
 
+        BUCore.getApi().langPermissionBroadcast(
+                "general-commands.helpop.broadcast",
+                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.receive-broadcast" ),
+                "{message}", message,
+                "{user}", user.getName()
+        );
     }
 }

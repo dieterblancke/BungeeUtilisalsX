@@ -232,3 +232,9 @@ domains:
       name: search
       aliases: 'find, select'
       permission: bungeeutilisals.commands.domains.search
+helpop:
+  enabled: true
+  name: bhelpop
+  aliases: 'ghelpop'
+  permission: bungeeutilisals.commands.helpop
+  receive-broadcast: bungeeutilisals.commands.helpop.receive_broadcast

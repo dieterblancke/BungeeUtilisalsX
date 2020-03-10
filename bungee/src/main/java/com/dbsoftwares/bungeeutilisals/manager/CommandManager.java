@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
@@ -56,6 +57,7 @@ public class CommandManager
     {
         registerGeneralCommand( "report", new ReportCommandCall() );
         registerGeneralCommand( "domains", new DomainsCommandCall() );
+        registerGeneralCommand( "helpop", new HelpOpCommandCall() );
 
         registerPunishmentCommand(
                 "friends",
