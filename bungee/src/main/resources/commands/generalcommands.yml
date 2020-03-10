@@ -238,3 +238,4 @@ helpop:
   aliases: 'ghelpop'
   permission: bungeeutilisals.commands.helpop
   receive-broadcast: bungeeutilisals.commands.helpop.receive_broadcast
+  reply-permission: bungeeutilisals.commands.helpop.reply

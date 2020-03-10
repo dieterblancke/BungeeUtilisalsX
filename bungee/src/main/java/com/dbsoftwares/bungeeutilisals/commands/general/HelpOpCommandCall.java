@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public class HelpOpCommandCall implements CommandCall
 {
@@ -36,13 +37,59 @@ public class HelpOpCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.helpop.usage" );
             return;
         }
+        if ( args.get( 0 ).equalsIgnoreCase( "reply" ) && args.size() > 2 )
+        {
+            executeReplySubCommand( user, args );
+            return;
+        }
         final String message = String.join( " ", args );
+        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.receive-broadcast" );
+
+        if ( !user.hasPermission( permission ) )
+        {
+            user.sendLangMessage(
+                    "general-commands.helpop.broadcast",
+                    "{message}", message,
+                    "{user}", user.getName()
+            );
+        }
 
         BUCore.getApi().langPermissionBroadcast(
                 "general-commands.helpop.broadcast",
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.receive-broadcast" ),
+                permission,
                 "{message}", message,
                 "{user}", user.getName()
+        );
+    }
+
+    private void executeReplySubCommand( final User user, final List<String> args )
+    {
+        if ( !user.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.reply-permission" ) ) )
+        {
+            user.sendLangMessage( "no-permission" );
+            return;
+        }
+
+        final String targetName = args.get( 1 );
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( targetName );
+        final String message = String.join( " ", args.subList( 2, args.size() ) );
+
+        if ( !optionalTarget.isPresent() )
+        {
+            user.sendLangMessage( "offline" );
+            return;
+        }
+        final User target = optionalTarget.get();
+
+        target.sendLangMessage(
+                "general-commands.helpop.reply-receive",
+                "{user}", user.getName(),
+                "{message}", message
+        );
+        user.sendLangMessage(
+                "general-commands.helpop.reply-send",
+                "{user}", target.getName(),
+                "{message}", message
         );
     }
 }
