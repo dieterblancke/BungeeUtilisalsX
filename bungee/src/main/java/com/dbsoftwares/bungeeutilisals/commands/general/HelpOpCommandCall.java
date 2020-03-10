@@ -31,6 +31,11 @@ public class HelpOpCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
+        if ( args.size() == 0 )
+        {
+            user.sendLangMessage( "general-commands.helpop.usage" );
+            return;
+        }
         final String message = String.join( " ", args );
 
         BUCore.getApi().langPermissionBroadcast(
