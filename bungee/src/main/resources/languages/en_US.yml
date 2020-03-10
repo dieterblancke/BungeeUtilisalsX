@@ -264,6 +264,10 @@ general-commands:
         - ''
       format: '- &e{domain} &f| &a&lONLINE&f: {online} | &e&lTOTAL&f: {total}'
       footer: ''
+  helpop:
+    usage: '&ePlease use &b/bhelpop (message)&e!'
+
+    broadcast: '&7(&3&lHELPOP&7) &b{user} &7» &f{message}'
 
 friends:
   join:
