@@ -67,11 +67,16 @@ public class BUser implements User
     private String name;
     private UUID uuid;
     private String ip;
-    private boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
     private List<PunishmentInfo> mute;
     private Location location;
+
+    @Getter
+    private boolean socialSpy;
+
+    @Getter
+    private boolean commandSpy;
 
     @Getter
     private List<FriendData> friends = Lists.newArrayList();
@@ -365,18 +370,6 @@ public class BUser implements User
     public void sendNoPermMessage()
     {
         sendLangMessage( "no-permission" );
-    }
-
-    @Override
-    public void setSocialspy( Boolean socialspy )
-    {
-        this.socialspy = socialspy;
-    }
-
-    @Override
-    public Boolean isSocialSpy()
-    {
-        return socialspy;
     }
 
     @Override

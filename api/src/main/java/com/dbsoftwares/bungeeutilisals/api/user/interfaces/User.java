@@ -200,16 +200,28 @@ public interface User extends ExperimentalUser
     void sendNoPermMessage();
 
     /**
+     * @return Returns if the User is in Socialspy mode or not.
+     */
+    boolean isSocialSpy();
+
+    /**
      * Sets the Socialspy of the User on or off.
      *
      * @param socialspy The status of the Socialspy, true for on, false for off.
      */
-    void setSocialspy( Boolean socialspy );
+    void setSocialSpy( boolean socialspy );
 
     /**
-     * @return Returns if the User is in Socialspy mode or not.
+     * @return Returns if the User is in CommandSpy mode or not.
      */
-    Boolean isSocialSpy();
+    boolean isCommandSpy();
+
+    /**
+     * Sets the CommandSpy of the User on or off.
+     *
+     * @param commandspy The status of the CommandSpy, true for on, false for off.
+     */
+    void setCommandSpy( boolean commandspy );
 
     /**
      * @return The Player who's behind the User.
