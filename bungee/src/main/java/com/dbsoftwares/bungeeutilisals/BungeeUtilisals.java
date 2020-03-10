@@ -69,6 +69,7 @@ import com.dbsoftwares.bungeeutilisals.packet.executors.PacketUpdateExecutor;
 import com.dbsoftwares.bungeeutilisals.packet.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
+import com.dbsoftwares.bungeeutilisals.placeholders.UserPlaceHolderPack;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisals.placeholders.javascript.Script;
 import com.dbsoftwares.bungeeutilisals.runnables.UserMessageQueueRunnable;
@@ -153,6 +154,8 @@ public class BungeeUtilisals extends Plugin
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
+
         new JavaScriptPlaceHolder().register();
         loadScripts();
 
