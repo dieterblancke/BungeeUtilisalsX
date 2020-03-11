@@ -28,14 +28,7 @@ public class SocialSpyCommandCall implements CommandCall
     @Override
     public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        boolean enable = true;
-
-        if ( user.isSocialSpy() )
-        {
-            enable = false;
-        }
-
-        if ( enable )
+        if ( !user.isSocialSpy() )
         {
             user.sendLangMessage( "general-commands.socialspy.enabled" );
             user.setSocialSpy( true );

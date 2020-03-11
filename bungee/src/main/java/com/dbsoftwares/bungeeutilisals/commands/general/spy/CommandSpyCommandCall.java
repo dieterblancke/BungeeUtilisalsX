@@ -28,14 +28,7 @@ public class CommandSpyCommandCall implements CommandCall
     @Override
     public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        boolean enable = true;
-
-        if ( user.isCommandSpy() )
-        {
-            enable = false;
-        }
-
-        if ( enable )
+        if ( !user.isCommandSpy() )
         {
             user.sendLangMessage( "general-commands.commandspy.enabled" );
             user.setCommandSpy( true );
