@@ -16,34 +16,27 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.event.events.user;
+package com.dbsoftwares.bungeeutilisals.commands.general.spy;
 
-import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-/**
- * This event is being executed upon User Command execute.
- */
-@Data
-@EqualsAndHashCode(callSuper = true)
-public class UserCommandEvent extends AbstractEvent implements Cancellable
+import java.util.List;
+
+public class SocialSpyCommandCall implements CommandCall
 {
-
-    private User user;
-    private String command;
-    private boolean cancelled = false;
-
-    public UserCommandEvent( final User user, final String command )
+    @Override
+    public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        this.user = user;
-        this.command = command;
-    }
-
-    public String getActualCommand()
-    {
-        return command.split( " " )[0].toLowerCase();
+        if ( !user.isSocialSpy() )
+        {
+            user.sendLangMessage( "general-commands.socialspy.enabled" );
+            user.setSocialSpy( true );
+        }
+        else
+        {
+            user.sendLangMessage( "general-commands.socialspy.disabled" );
+            user.setSocialSpy( false );
+        }
     }
 }

@@ -165,6 +165,26 @@ ignore:
   name: ignore
   aliases: 'bignore'
   permission: bungeeutilisals.commands.ignore
+socialspy:
+  enabled: true
+  name: socialspy
+  aliases: 'ss, sspy'
+  permission: bungeeutilisals.commands.socialspy
+commandspy:
+  enabled: true
+  name: commandspy
+  aliases: 'cs, cspy'
+  permission: bungeeutilisals.commands.commandspy
+
+  # Commands to be ignored
+  ignored-commands:
+    - login
+    - register
+    - reg
+    - l
+    - changepassword
+    - changepass
+    - cp
 ping:
   enabled: true
   name: ping

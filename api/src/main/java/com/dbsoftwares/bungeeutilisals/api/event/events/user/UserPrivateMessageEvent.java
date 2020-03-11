@@ -19,31 +19,26 @@
 package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 /**
- * This event is being executed upon User Command execute.
+ * This event is being executed upon User Private Message.
  */
 @Data
 @EqualsAndHashCode(callSuper = true)
-public class UserCommandEvent extends AbstractEvent implements Cancellable
+public class UserPrivateMessageEvent extends AbstractEvent
 {
 
-    private User user;
-    private String command;
-    private boolean cancelled = false;
+    private User sender;
+    private User receiver;
+    private String message;
 
-    public UserCommandEvent( final User user, final String command )
+    public UserPrivateMessageEvent( final User sender, final User receiver, final String message )
     {
-        this.user = user;
-        this.command = command;
-    }
-
-    public String getActualCommand()
-    {
-        return command.split( " " )[0].toLowerCase();
+        this.sender = sender;
+        this.receiver = receiver;
+        this.message = message;
     }
 }

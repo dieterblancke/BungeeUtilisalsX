@@ -20,6 +20,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
@@ -90,6 +91,8 @@ public class MsgCommand extends BUCommand
 
                     user.sendRawMessage( msgMessage );
                 }
+
+                BUCore.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
             }
             else
             {

@@ -26,6 +26,8 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommand;
@@ -55,6 +57,8 @@ public class CommandManager
 
     private void loadGeneralCommands()
     {
+        registerGeneralCommand( "socialspy", new SocialSpyCommandCall() );
+        registerGeneralCommand( "commandspy", new CommandSpyCommandCall() );
         registerGeneralCommand( "report", new ReportCommandCall() );
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "helpop", new HelpOpCommandCall() );

@@ -31,10 +31,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.*;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
@@ -206,6 +203,10 @@ public class BungeeUtilisals extends Plugin
         final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
         loader.register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
         loader.register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
+
+        final SpyEventExecutor spyEventExecutor = new SpyEventExecutor();
+        loader.register( UserPrivateMessageEvent.class, spyEventExecutor );
+        loader.register( UserCommandEvent.class, spyEventExecutor );
 
         // Loading Punishment system
         if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )

@@ -32,6 +32,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -46,7 +47,12 @@ public class ConsoleUser implements User
 {
 
     private static final String NOT_SUPPORTED = "Not supported yet.";
-
+    @Getter
+    @Setter
+    private boolean socialSpy;
+    @Getter
+    @Setter
+    private boolean commandSpy;
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
 
@@ -259,18 +265,6 @@ public class ConsoleUser implements User
     public void sendNoPermMessage()
     {
         sendLangMessage( "no-permission" );
-    }
-
-    @Override
-    public void setSocialspy( Boolean socialspy )
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public Boolean isSocialSpy()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override
