@@ -85,7 +85,7 @@ public class PunishmentHistoryCommand extends BUCommand
             );
             return;
         }
-        final int pages = (int) Math.ceil( (double) allPunishments.size() / 15 );
+        final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
 
         if ( page > pages )
         {
@@ -93,7 +93,7 @@ public class PunishmentHistoryCommand extends BUCommand
         }
 
         final int previous = page > 1 ? page - 1 : 1;
-        final int next = page + 1 > pages ? pages : page + 1;
+        final int next = Math.min( page + 1, pages );
 
         int maxNumber = page * 10;
         int minNumber = maxNumber - 10;
@@ -152,10 +152,8 @@ public class PunishmentHistoryCommand extends BUCommand
 
     private List<PunishmentInfo> listPunishments( final UserStorage storage, final PunishmentType type )
     {
-        final Predicate<PunishmentInfo> permanentFilter = punishment ->
-                punishment.getExpireTime() == null || punishment.getExpireTime() == -1;
-        final Predicate<PunishmentInfo> temporaryFilter = punishment ->
-                punishment.getExpireTime() != null || punishment.getExpireTime() > 0;
+        final Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
+        final Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
 
         switch ( type )
         {

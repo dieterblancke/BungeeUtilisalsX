@@ -20,8 +20,8 @@ package com.dbsoftwares.bungeeutilisals.storage.file;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLStorageManager;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.File;
@@ -30,7 +30,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-public class SQLiteStorageManager extends AbstractStorageManager
+public class SQLiteStorageManager extends SQLStorageManager
 {
 
     private UnclosableConnection connection;

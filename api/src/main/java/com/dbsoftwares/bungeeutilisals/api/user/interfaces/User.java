@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
@@ -201,16 +200,28 @@ public interface User extends ExperimentalUser
     void sendNoPermMessage();
 
     /**
+     * @return Returns if the User is in Socialspy mode or not.
+     */
+    boolean isSocialSpy();
+
+    /**
      * Sets the Socialspy of the User on or off.
      *
      * @param socialspy The status of the Socialspy, true for on, false for off.
      */
-    void setSocialspy( Boolean socialspy );
+    void setSocialSpy( boolean socialspy );
 
     /**
-     * @return Returns if the User is in Socialspy mode or not.
+     * @return Returns if the User is in CommandSpy mode or not.
      */
-    Boolean isSocialSpy();
+    boolean isCommandSpy();
+
+    /**
+     * Sets the CommandSpy of the User on or off.
+     *
+     * @param commandspy The status of the CommandSpy, true for on, false for off.
+     */
+    void setCommandSpy( boolean commandspy );
 
     /**
      * @return The Player who's behind the User.
@@ -231,23 +242,6 @@ public interface User extends ExperimentalUser
      * @return the name of the server the user is in, returns BUNGEE in case of Console.
      */
     String getServerName();
-
-    /**
-     * @return true if user is muted, false if not.
-     */
-    boolean isMuted();
-
-    /**
-     * @return PunishmentInfo of current mute (if muted), null if not muted.
-     */
-    PunishmentInfo getMuteInfo();
-
-    /**
-     * Sets the user mute data in local cache.
-     *
-     * @param info The info to be stored.
-     */
-    void setMute( PunishmentInfo info );
 
     /**
      * @return true if staffchat is enabled, false if not.

@@ -21,28 +21,22 @@ package com.dbsoftwares.bungeeutilisals.api.event.events.user;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Cancellable;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * This event will be executed upon User Chat. UserChatPreExecuteEvent is being executed AFTER this event.
  */
+@Data
 @EqualsAndHashCode(callSuper = true)
 public class UserChatEvent extends AbstractEvent implements Cancellable
 {
 
-    @Getter
-    @Setter
-    User user;
-    @Getter
-    @Setter
-    String message;
-    @Getter
-    @Setter
+    private User user;
+    private String message;
     private boolean cancelled = false;
 
-    public UserChatEvent( User user, String message )
+    public UserChatEvent( final User user, final String message )
     {
         this.user = user;
         this.message = message;

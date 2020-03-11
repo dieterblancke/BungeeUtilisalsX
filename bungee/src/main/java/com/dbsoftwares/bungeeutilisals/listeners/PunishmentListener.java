@@ -28,8 +28,11 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
+import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.LoginEvent;
+import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -39,12 +42,62 @@ public class PunishmentListener implements Listener
 {
 
     @EventHandler
-    public void onLogin( LoginEvent event )
+    public void onLogin( final LoginEvent event )
     {
         final PendingConnection connection = event.getConnection();
         final UUID uuid = connection.getUniqueId();
         final String ip = Utils.getIP( connection.getAddress() );
 
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", true ) )
+        {
+            System.out.println( String.format( "Checking ban for UUID: %s and IP: %s for server ALL", uuid.toString(), ip ) );
+        }
+
+        final String kickReason = getKickReasonIfBanned( uuid, ip, "ALL" );
+
+        if ( kickReason != null )
+        {
+            event.setCancelled( true );
+            event.setCancelReason( Utils.format( kickReason ) );
+        }
+    }
+
+    @EventHandler(priority = 127)
+    public void onConnect( final ServerConnectEvent event )
+    {
+        final ServerInfo target = event.getTarget();
+        final ProxiedPlayer player = event.getPlayer();
+        final String ip = Utils.getIP( player.getAddress() );
+        final String kickReason = getKickReasonIfBanned( player.getUniqueId(), ip, target.getName() );
+
+        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", true ) )
+        {
+            System.out.println( String.format(
+                    "Checking ban for UUID: %s and IP: %s for server %s",
+                    player.getUniqueId().toString(),
+                    ip,
+                    target.getName()
+            ) );
+        }
+
+        if ( kickReason != null )
+        {
+            event.setCancelled( true );
+
+            // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
+            if ( event.getPlayer().getServer() == null )
+            {
+                player.disconnect( Utils.format( kickReason ) );
+            }
+            else
+            {
+                player.sendMessage( Utils.format( kickReason ) );
+            }
+        }
+    }
+
+    private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
+    {
         final BUAPI api = BUCore.getApi();
         final UserStorage storage = api.getStorageManager().getDao().getUserDao().getUserData( uuid );
         final Language language = storage.getLanguage() == null ? api.getLanguageManager().getDefaultLanguage() : storage.getLanguage();
@@ -52,55 +105,49 @@ public class PunishmentListener implements Listener
         final IConfiguration config = api.getLanguageManager().getConfig(
                 BungeeUtilisals.getInstance().getDescription().getName(), language
         );
-        final BansDao bansDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
+
+        final BansDao bansDao = api.getStorageManager().getDao().getPunishmentDao().getBansDao();
         PunishmentInfo info = null;
-
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", true ) )
+        if ( bansDao.isBanned( uuid, server ) )
         {
-            System.out.println( String.format( "Checking ban for UUID: %s and IP: %s", uuid.toString(), ip ) );
+            info = bansDao.getCurrentBan( uuid, server );
+        }
+        else if ( bansDao.isIPBanned( ip, server ) )
+        {
+            info = bansDao.getCurrentIPBan( ip, server );
         }
 
-        if ( bansDao.isBanned( uuid ) )
+        if ( info == null )
         {
-            info = bansDao.getCurrentBan( uuid );
+            return null;
         }
-        else if ( bansDao.isIPBanned( ip ) )
-        {
-            info = bansDao.getCurrentIPBan( ip );
-        }
-        if ( info != null )
-        { // active punishment found
-            if ( info.isTemporary() )
-            {
-                if ( info.getExpireTime() <= System.currentTimeMillis() )
-                {
-                    if ( info.getType().equals( PunishmentType.TEMPBAN ) )
-                    {
-                        bansDao.removeCurrentBan( uuid, "CONSOLE" );
-                    }
-                    else
-                    {
-                        bansDao.removeCurrentIPBan( ip, "CONSOLE" );
-                    }
-                    return;
-                }
-            }
-            String kick = null;
-            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
-            {
-                kick = Utils.formatList(
-                        BUCore.getApi().getPunishmentExecutor().searchTemplate( config, info.getType(), info.getReason() ),
-                        "\n"
-                );
-            }
-            if ( kick == null )
-            {
-                kick = Utils.formatList( config.getStringList( "punishments." + info.getType().toString().toLowerCase() + ".kick" ), "\n" );
-            }
-            kick = api.getPunishmentExecutor().setPlaceHolders( kick, info );
 
-            event.setCancelled( true );
-            event.setCancelReason( Utils.format( kick ) );
+        if ( info.isExpired() )
+        {
+            if ( info.getType().equals( PunishmentType.TEMPBAN ) )
+            {
+                bansDao.removeCurrentBan( uuid, "EXPIRED", server );
+            }
+            else
+            {
+                bansDao.removeCurrentIPBan( ip, "EXPIRED", server );
+            }
+            return null;
         }
+
+        String kick = null;
+        if ( api.getPunishmentExecutor().isTemplateReason( info.getReason() ) )
+        {
+            kick = Utils.formatList(
+                    api.getPunishmentExecutor().searchTemplate( config, info.getType(), info.getReason() ),
+                    "\n"
+            );
+        }
+        if ( kick == null )
+        {
+            kick = Utils.formatList( config.getStringList( "punishments." + info.getType().toString().toLowerCase() + ".kick" ), "\n" );
+        }
+        kick = api.getPunishmentExecutor().setPlaceHolders( kick, info );
+        return kick;
     }
 }

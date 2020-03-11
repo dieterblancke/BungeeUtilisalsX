@@ -19,13 +19,10 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -33,47 +30,47 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
 
-public class BanCommand implements CommandCall
+public class BanCommand extends PunishmentCommand
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() < 2 )
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+
+        if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.ban.usage" );
+            user.sendLangMessage( "punishments.ban.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
-        final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
-
-        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
+        if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
 
-        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
-        if ( dao.getPunishmentDao().getBansDao().isBanned( storage.getUuid() ) )
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
         {
             user.sendLangMessage( "punishments.ban.already-banned" );
             return;
         }
 
-        final UserPunishEvent event = new UserPunishEvent( PunishmentType.BAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
-        BUCore.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
+        if ( punishmentArgs.launchEvent( PunishmentType.BAN ) )
         {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
 
-        final PunishmentInfo info = dao.getPunishmentDao().getBansDao().insertBan(
-                storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, user.getServerName(), true, user.getName()
+        final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertBan(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                true,
+                user.getName()
         );
 
         BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
@@ -116,8 +113,14 @@ public class BanCommand implements CommandCall
         }
 
         BUCore.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.BAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
+                PunishmentType.BAN,
+                user,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                punishmentArgs.getServerOrAll(),
+                null
         ) );
     }
 }

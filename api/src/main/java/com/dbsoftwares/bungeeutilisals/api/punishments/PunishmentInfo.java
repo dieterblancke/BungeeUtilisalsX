@@ -54,6 +54,11 @@ public class PunishmentInfo
 
     public boolean isTemporary()
     {
-        return type != null && type.isTemporary();
+        return type != null && type.isTemporary() && expireTime != null;
+    }
+
+    public boolean isExpired()
+    {
+        return isTemporary() && expireTime <= System.currentTimeMillis();
     }
 }

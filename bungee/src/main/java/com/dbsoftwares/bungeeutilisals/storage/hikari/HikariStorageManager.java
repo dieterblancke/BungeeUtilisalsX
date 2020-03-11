@@ -18,19 +18,15 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.hikari;
 
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.storage.data.sql.SQLDao;
+import com.dbsoftwares.bungeeutilisals.storage.sql.SQLStorageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
-import java.sql.*;
-
-import static com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI.formatMessage;
-
-public abstract class HikariStorageManager extends AbstractStorageManager
+public abstract class HikariStorageManager extends SQLStorageManager
 {
 
     @Getter
@@ -75,33 +71,5 @@ public abstract class HikariStorageManager extends AbstractStorageManager
     public void close()
     {
         dataSource.close();
-    }
-
-    @Override
-    public void initialize() throws Exception
-    {
-        super.initialize();
-
-        try ( Connection connection = getConnection() )
-        {
-            final DatabaseMetaData metaData = connection.getMetaData();
-
-            // Adding joined_host table if needed
-            initJoinedHostColumn( connection, metaData );
-        }
-    }
-
-    private void initJoinedHostColumn( final Connection connection, final DatabaseMetaData metaData ) throws SQLException
-    {
-        try ( ResultSet rs = metaData.getColumns( null, null, formatMessage( "{users-table}" ), "joined_host" ) )
-        {
-            if ( !rs.next() )
-            {
-                try ( PreparedStatement pstmt = connection.prepareStatement( formatMessage( "ALTER TABLE {users-table} ADD joined_host TEXT" ) ) )
-                {
-                    pstmt.execute();
-                }
-            }
-        }
     }
 }

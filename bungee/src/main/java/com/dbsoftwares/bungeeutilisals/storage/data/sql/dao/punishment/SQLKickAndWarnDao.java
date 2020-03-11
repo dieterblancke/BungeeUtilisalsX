@@ -103,7 +103,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );
@@ -142,10 +142,90 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
                     final int id = rs.getInt( "id" );
                     final String ip = rs.getString( "ip" );
+                    final String user = rs.getString( "user" );
+                    final String reason = rs.getString( "reason" );
+                    final String server = rs.getString( "server" );
+                    final String executedby = rs.getString( "executed_by" );
+                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                    punishments.add( PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getKicksExecutedBy( String name )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE executed_by = ?;"
+              ) )
+        {
+            pstmt.setString( 1, name );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    final int id = rs.getInt( "id" );
+                    final String ip = rs.getString( "ip" );
+                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                    final String user = rs.getString( "user" );
+                    final String reason = rs.getString( "reason" );
+                    final String server = rs.getString( "server" );
+                    final String executedby = rs.getString( "executed_by" );
+                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                    punishments.add( PunishmentDao.buildPunishmentInfo(
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
+                    ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BUCore.logException( e );
+        }
+
+        return punishments;
+    }
+
+    @Override
+    public List<PunishmentInfo> getWarnsExecutedBy( String name )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE executed_by = ?;"
+              ) )
+        {
+            pstmt.setString( 1, name );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    final int id = rs.getInt( "id" );
+                    final String ip = rs.getString( "ip" );
+                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
                     final String user = rs.getString( "user" );
                     final String reason = rs.getString( "reason" );
                     final String server = rs.getString( "server" );

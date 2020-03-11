@@ -27,9 +27,9 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
@@ -67,11 +67,16 @@ public class BUser implements User
     private String name;
     private UUID uuid;
     private String ip;
-    private boolean socialspy;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private PunishmentInfo mute;
+    private List<PunishmentInfo> mute;
     private Location location;
+
+    @Getter
+    private boolean socialSpy;
+
+    @Getter
+    private boolean commandSpy;
 
     @Getter
     private List<FriendData> friends = Lists.newArrayList();
@@ -87,7 +92,7 @@ public class BUser implements User
     @Override
     public void load( ProxiedPlayer parent )
     {
-        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
+        final Dao dao = AbstractStorageManager.getManager().getDao();
 
         this.parent = parent;
         this.name = parent.getName();
@@ -139,20 +144,6 @@ public class BUser implements User
             dao.getUserDao().setName( uuid, name );
         }
 
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
-        {
-            final MutesDao mutesDao = dao.getPunishmentDao().getMutesDao();
-
-            if ( mutesDao.isMuted( uuid ) )
-            {
-                this.mute = mutesDao.getCurrentMute( uuid );
-            }
-            else if ( mutesDao.isIPMuted( ip ) )
-            {
-                this.mute = mutesDao.getCurrentIPMute( ip );
-            }
-        }
-
         if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
         {
             friends = dao.getFriendsDao().getFriends( uuid );
@@ -195,7 +186,7 @@ public class BUser implements User
     @Override
     public void save()
     {
-        BungeeUtilisals.getInstance().getDatabaseManagement().getDao().getUserDao().updateUser( uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() ) );
+        AbstractStorageManager.getManager().getDao().getUserDao().updateUser( uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() ) );
     }
 
     @Override
@@ -382,18 +373,6 @@ public class BUser implements User
     }
 
     @Override
-    public void setSocialspy( Boolean socialspy )
-    {
-        this.socialspy = socialspy;
-    }
-
-    @Override
-    public Boolean isSocialSpy()
-    {
-        return socialspy;
-    }
-
-    @Override
     public ProxiedPlayer getParent()
     {
         return parent;
@@ -415,18 +394,6 @@ public class BUser implements User
     public String getServerName()
     {
         return getParent().getServer().getInfo().getName();
-    }
-
-    @Override
-    public boolean isMuted()
-    {
-        return mute != null;
-    }
-
-    @Override
-    public PunishmentInfo getMuteInfo()
-    {
-        return mute;
     }
 
     @Override

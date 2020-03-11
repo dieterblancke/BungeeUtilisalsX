@@ -18,66 +18,60 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentCommand;
 
 import java.util.List;
 
-public class UnbanCommand implements CommandCall
+public class UnbanCommand extends PunishmentCommand
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() < 1 )
+        final PunishmentRemovalArgs punishmentRemovalArgs = loadRemovalArguments( user, args );
+
+        if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unban.usage" );
+            user.sendLangMessage( "punishments.unban.usage" + (useServerPunishments() ? "-server" : "") );
             return;
         }
-        final Dao dao = BungeeUtilisals.getInstance().getDatabaseManagement().getDao();
-
-        if ( !dao.getUserDao().exists( args.get( 0 ) ) )
+        if ( !punishmentRemovalArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );
             return;
         }
-        final UserStorage storage = dao.getUserDao().getUserData( args.get( 0 ) );
-
-        if ( !dao.getPunishmentDao().getBansDao().isBanned( storage.getUuid() ) )
+        final UserStorage storage = punishmentRemovalArgs.getStorage();
+        if ( !dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentRemovalArgs.getServerOrAll() ) )
         {
             user.sendLangMessage( "punishments.unban.not-banned" );
             return;
         }
 
-        final UserPunishRemoveEvent event = new UserPunishRemoveEvent(
-                UserPunishRemoveEvent.PunishmentRemovalAction.UNBAN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), user.getServerName()
-        );
-        BUCore.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
+        if ( punishmentRemovalArgs.launchEvent( PunishmentRemovalAction.UNBAN ) )
         {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
 
         final IPunishmentExecutor executor = BUCore.getApi().getPunishmentExecutor();
-        dao.getPunishmentDao().getBansDao().removeCurrentBan( storage.getUuid(), user.getName() );
+        dao().getPunishmentDao().getBansDao().removeCurrentBan(
+                storage.getUuid(),
+                user.getName(),
+                punishmentRemovalArgs.getServerOrAll()
+        );
 
         final PunishmentInfo info = new PunishmentInfo();
-        info.setUser( args.get( 0 ) );
+        info.setUser( punishmentRemovalArgs.getPlayer() );
         info.setId( "-1" );
         info.setExecutedBy( user.getName() );
         info.setRemovedBy( user.getName() );
-        info.setServer( user.getServerName() );
+        info.setServer( punishmentRemovalArgs.getServerOrAll() );
 
         user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 

@@ -174,6 +174,16 @@ general-commands:
     list:
       message: '&eList of users you are currently ignoring: &b{ignoredusers}'
       separator: ', '
+  socialspy:
+    enabled: '&eYour &bsocialspy &eis now &aenabled&e!'
+    disabled: '&eYour &bsocialspy &eis now &cdisabled&e!'
+
+    message: '&7(SSPY) &8[&b{sender} &e-> &b{receiver}&8] &f{message}!'
+  commandspy:
+    enabled: '&eYour &bcommandspy &eis now &aenabled&e!'
+    disabled: '&eYour &bcommandspy &eis now &cdisabled&e!'
+
+    message: '&7(CSPY) &8[&b{server}&8] &b{user} &eexecuted command &7{command} &e!'
   ping:
     message: '&eYour ping is: &b{ping} ms&e!'
     other: '&b{target}''s &eping is &b{targetPing} ms&e!'
@@ -264,6 +274,12 @@ general-commands:
         - ''
       format: '- &e{domain} &f| &a&lONLINE&f: {online} | &e&lTOTAL&f: {total}'
       footer: ''
+  helpop:
+    usage: '&ePlease use &b/bhelpop (message) &eor &b/helpop reply (user) (message)&e!'
+
+    broadcast: '&7(&3&lHELPOP&7) &b{user} &7» &f{message}'
+    reply-receive: '&7(&3&lHELPOP&7) &b{user} &3-> Me &7» &f{message}'
+    reply-send: '&7(&3&lHELPOP&7) &3Me -> &b{user} &7» &f{message}'
 
 friends:
   join:
@@ -436,6 +452,7 @@ punishments:
 
   ban:
     usage: '&fPlease use &a/ban (user) (reason)&f!'
+    usage-server: '&fPlease use &a/ban (user) (server) (reason)&f!'
     already-banned: '&fThis user is already banned!'
     executed: '&fYou have banned &e{user} for &e{reason}&f!'
     broadcast:
@@ -452,6 +469,7 @@ punishments:
 
   ipban:
     usage: '&fPlease use &a/ipban (user / IP) (reason)&f!'
+    usage-server: '&fPlease use &a/ipban (user / IP) (server) (reason)&f!'
     already-banned: '&fThis user is already ipbanned!'
     executed: '&fYou have ipbanned &e{user} for &e{reason}&f!'
     broadcast:
@@ -468,6 +486,7 @@ punishments:
 
   tempban:
     usage: '&fPlease use &a/tempban (user) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/tempban (user) (timeformat) (server) (reason)&f!'
     already-banned: '&fThis user is already tempbanned!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempbanned &e{user} for &e{reason}&f!'
@@ -486,6 +505,7 @@ punishments:
 
   iptempban:
     usage: '&fPlease use &a/iptempban (user / IP) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/iptempban (user / IP) (timeformat) (server) (reason)&f!'
     already-banned: '&fThis user is already iptempbanned!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempbanned &e{user} for &e{reason}&f!'
@@ -504,6 +524,7 @@ punishments:
 
   mute:
     usage: '&fPlease use &a/mute (user) (reason)&f!'
+    usage-server: '&fPlease use &a/mute (user) (server) (reason)&f!'
     already-muted: '&fThis user is already muted!'
     executed: '&fYou have muted &e{user} for &e{reason}&f!'
     broadcast:
@@ -519,6 +540,7 @@ punishments:
       - '&cUnmute at: &fNever'
   ipmute:
     usage: '&fPlease use &a/ipmute (user / IP) (reason)&f!'
+    usage-server: '&fPlease use &a/ipmute (user / IP) (server) (reason)&f!'
     already-muted: '&fThis user is already ipmuted!'
     executed: '&fYou have ipmuted &e{user} for &e{reason}&f!'
     broadcast:
@@ -535,6 +557,7 @@ punishments:
 
   tempmute:
     usage: '&fPlease use &a/tempmute (user) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/tempmute (user) (timeformat) (server) (reason)&f!'
     already-muted: '&fThis user is already tempmuted!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have tempmuted &e{user} for &e{reason}&f!'
@@ -553,6 +576,7 @@ punishments:
 
   iptempmute:
     usage: '&fPlease use &a/iptempmute (user / IP) (timeformat) (reason)&f!'
+    usage-server: '&fPlease use &a/iptempmute (user / IP) (timeformat) (server) (reason)&f!'
     already-muted: '&fThis user is already iptempmuted!'
     non-valid: '&fPlease enter a valid time format!'
     executed: '&fYou have iptempmuted &e{user} for &e{reason}&f!'
@@ -601,6 +625,7 @@ punishments:
 
   unban:
     usage: '&fPlease use &a/unban (user)&f!'
+    usage-server: '&fPlease use &a/unban (user) (server)&f!'
     not-banned: '&fThis user is not banned!'
     executed: '&fYou have unbanned &e{user}&f!'
     broadcast:
@@ -608,6 +633,7 @@ punishments:
 
   unbanip:
     usage: '&fPlease use &a/unbanip (user)&f!'
+    usage-server: '&fPlease use &a/unbanip (user) (server)&f!'
     not-banned: '&fThis user is not ipbanned!'
     executed: '&fYou have unbanned &e{user}&f''s IP&f!'
     broadcast:
@@ -615,6 +641,7 @@ punishments:
 
   unmute:
     usage: '&fPlease use &a/unmute (user)&f!'
+    usage-server: '&fPlease use &a/unmute (user) (server)&f!'
     not-muted: '&fThis user is not muted!'
     executed: '&fYou have unmuted &e{user}&f!'
     broadcast:
@@ -622,6 +649,7 @@ punishments:
 
   unmuteip:
     usage: '&fPlease use &a/unmuteip (user)&f!'
+    usage-server: '&fPlease use &a/unmuteip (user) (server)&f!'
     not-muted: '&fThis user is not ipmuted!'
     executed: '&fYou have unmuted &e{user}&f''s IP&f!'
     broadcast:
@@ -629,6 +657,7 @@ punishments:
 
   punishmentinfo:
     usage: '&ePlease use &b/punishmentinfo (user) [type / all]&e!'
+    usage-server: '&ePlease use &b/punishmentinfo (user) (server) [type / all]&e!'
 
     typeinfo:
       found:
@@ -714,6 +743,40 @@ punishments:
       separator: '&f, '
       message: '&bPlayers Found: &f{players}'
     foot: '&eLegenda: &aOnline  &7Offline  &cBanned'
+
+  staffhistory:
+    usage: '&ePlease use &b/staffhistory (user) [type / all] [page]&e!'
+    no-punishments: '&b{user} &ehas not punished anyone with type &b{type}&e!'
+
+    head:
+      text:
+        - text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {previousPage}'
+        - text: '&eStaff Punishment History of &a{user} &b({currentPage} of {maxPages})'
+        - text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {nextPage}'
+    format:
+      text: '&a- #{id} &b{type} &eon &b{date}&e, by &a{by}'
+      hover:
+        - '&eUser: &b{user}'
+        - '&eUuid: &b{uuid}'
+        - '&eIP: &b{ip}'
+        - '&eBy: &b{by}'
+        - '&eServer: &b{server}'
+        - '&eDate: &b{date}'
+        - '&eReason: &b{reason}'
+        - '&eExpires at: &b{expire}'
+        - '&eRemoved by: &b{removedBy}'
+      click:
+        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        # RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
 
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")

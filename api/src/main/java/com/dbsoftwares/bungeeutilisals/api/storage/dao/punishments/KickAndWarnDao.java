@@ -34,6 +34,10 @@ public interface KickAndWarnDao
 
     List<PunishmentInfo> getWarns( final UUID uuid );
 
+    List<PunishmentInfo> getKicksExecutedBy( String name );
+
+    List<PunishmentInfo> getWarnsExecutedBy( String name );
+
     PunishmentInfo getKickById( final String id );
 
     PunishmentInfo getWarnById( final String id );

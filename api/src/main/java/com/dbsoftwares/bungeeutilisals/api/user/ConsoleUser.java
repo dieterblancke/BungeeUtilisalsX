@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
@@ -33,6 +32,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
+import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -47,7 +47,12 @@ public class ConsoleUser implements User
 {
 
     private static final String NOT_SUPPORTED = "Not supported yet.";
-
+    @Getter
+    @Setter
+    private boolean socialSpy;
+    @Getter
+    @Setter
+    private boolean commandSpy;
     private UserStorage storage = new UserStorage();
     private UserCooldowns cooldowns = new UserCooldowns();
 
@@ -263,18 +268,6 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public void setSocialspy( Boolean socialspy )
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public Boolean isSocialSpy()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
     public ProxiedPlayer getParent()
     {
         throw new UnsupportedOperationException( NOT_SUPPORTED );
@@ -296,24 +289,6 @@ public class ConsoleUser implements User
     public String getServerName()
     {
         return "BUNGEE";
-    }
-
-    @Override
-    public boolean isMuted()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public PunishmentInfo getMuteInfo()
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    @Override
-    public void setMute( PunishmentInfo info )
-    {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
     @Override

@@ -29,6 +29,11 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
+import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
 
 public class MuteCheckExecutor implements EventExecutor
 {
@@ -38,11 +43,11 @@ public class MuteCheckExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
-        if ( !user.isMuted() )
+        if ( !isMuted( user, user.getServerName() ) )
         {
             return;
         }
-        final PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
         if ( checkTemporaryMute( user, info ) )
         {
             return;
@@ -62,13 +67,13 @@ public class MuteCheckExecutor implements EventExecutor
     @Event(priority = Priority.HIGHEST)
     public void onChat( UserChatEvent event )
     {
-        User user = event.getUser();
+        final User user = event.getUser();
 
-        if ( !user.isMuted() )
+        if ( !isMuted( user, user.getServerName() ) )
         {
             return;
         }
-        final PunishmentInfo info = user.getMuteInfo();
+        final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
         if ( checkTemporaryMute( user, info ) )
         {
             return;
@@ -79,22 +84,59 @@ public class MuteCheckExecutor implements EventExecutor
         event.setCancelled( true );
     }
 
-    private boolean checkTemporaryMute( User user, PunishmentInfo info )
+    private boolean checkTemporaryMute( final User user, final PunishmentInfo info )
     {
-        if ( info.isTemporary() && info.getExpireTime() <= System.currentTimeMillis() )
+        if ( info.isExpired() )
         {
             final MutesDao mutesDao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
 
             if ( info.getType().equals( PunishmentType.TEMPMUTE ) )
             {
-                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE" );
+                mutesDao.removeCurrentMute( user.getParent().getUniqueId(), "CONSOLE", info.getServer() );
             }
             else
             {
-                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE" );
+                mutesDao.removeCurrentIPMute( user.getIp(), "CONSOLE", info.getServer() );
             }
             return true;
         }
         return false;
+    }
+
+    private boolean isMuted( final User user, final String server )
+    {
+        return getCurrentMuteForUser( user, server ) != null;
+    }
+
+    private PunishmentInfo getCurrentMuteForUser( final User user, final String server )
+    {
+        if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+        {
+            // mutes seem to not have loaded yet, loading them now ...
+            final MutesDao dao = BUCore.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
+            final List<PunishmentInfo> mutes = Lists.newArrayList();
+
+            mutes.addAll( dao.getActiveMutes( user.getUuid() ) );
+            mutes.addAll( dao.getActiveIPMutes( user.getIp() ) );
+
+            user.getStorage().setData( "CURRENT_MUTES", mutes );
+        }
+        final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+        if ( mutes.isEmpty() )
+        {
+            return null;
+        }
+
+        if ( useServerPunishments() )
+        {
+            return mutes.stream()
+                    .filter( mute -> mute.getServer().equalsIgnoreCase( "ALL" ) || mute.getServer().equalsIgnoreCase( server ) )
+                    .findAny()
+                    .orElse( null );
+        }
+        else
+        {
+            return mutes.get( 0 );
+        }
     }
 }
