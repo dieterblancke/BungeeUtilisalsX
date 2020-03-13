@@ -28,6 +28,22 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>api</artifactId>
 
+    <repositories>
+        <repository>
+            <id>md_5-snapshots</id>
+            <url>http://repo.md-5.net/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <version>0.3.8-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

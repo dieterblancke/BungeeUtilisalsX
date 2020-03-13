@@ -20,6 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.gson.Gson;
+import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,6 +31,9 @@ public final class BUCore
 
     private static BUAPI instance = null;
     private static Logger logger = LoggerFactory.getLogger( "BungeeUtilisalsX" );
+
+    @Getter
+    private static final Gson gson = new Gson();
 
     private BUCore()
     {
