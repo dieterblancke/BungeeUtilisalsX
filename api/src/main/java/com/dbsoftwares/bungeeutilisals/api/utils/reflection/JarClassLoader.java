@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.logging.Level;
 
 public class JarClassLoader
 {
@@ -62,7 +63,7 @@ public class JarClassLoader
         }
         catch ( IllegalAccessException | InvocationTargetException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -74,7 +75,7 @@ public class JarClassLoader
         }
         catch ( MalformedURLException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 }

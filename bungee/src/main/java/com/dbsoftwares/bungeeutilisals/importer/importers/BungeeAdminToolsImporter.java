@@ -32,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class BungeeAdminToolsImporter extends Importer
 {
@@ -270,7 +271,7 @@ public class BungeeAdminToolsImporter extends Importer
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 

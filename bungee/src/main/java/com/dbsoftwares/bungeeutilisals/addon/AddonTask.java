@@ -26,6 +26,7 @@ import lombok.Data;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 @Data
 public class AddonTask implements Runnable, IAddonTask
@@ -85,7 +86,7 @@ public class AddonTask implements Runnable, IAddonTask
             }
             catch ( Exception e )
             {
-                BUCore.getLogger().error( String.format( "Task %s encountered an exception", id ), e );
+                BUCore.getLogger().log( Level.SEVERE, String.format( "Task %s encountered an exception", id ), e );
             }
 
             if ( period <= 0 )

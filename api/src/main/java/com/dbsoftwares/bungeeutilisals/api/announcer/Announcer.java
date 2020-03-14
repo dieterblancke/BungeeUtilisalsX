@@ -36,6 +36,7 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 @Data
 public abstract class Announcer
@@ -99,14 +100,14 @@ public abstract class Announcer
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    BUCore.getLogger().info( "Loading {} announcements ...", announcer.getType().toString().toLowerCase() );
+                    BUCore.getLogger().info( "Loading " + announcer.getType().toString().toLowerCase() + " announcements ..." );
                 }
 
                 announcers.put( announcer.getType(), announcer );
             }
             catch ( InstantiationException | IllegalAccessException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -198,7 +199,7 @@ public abstract class Announcer
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return;
         }
         stop();

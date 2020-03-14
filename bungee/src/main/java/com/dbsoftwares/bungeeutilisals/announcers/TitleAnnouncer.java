@@ -43,7 +43,7 @@ public class TitleAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().warn( "Could not find a servergroup or -name for {}!", section.getString( "server" ) );
+                BUCore.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
 

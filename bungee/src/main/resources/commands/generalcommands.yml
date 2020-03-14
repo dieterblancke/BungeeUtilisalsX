@@ -68,7 +68,12 @@ server:
   enabled: true
   name: server
   aliases: 'switch'
+  # Enabling this will create commands for each server (for example /factions /skywars /skyblock ...)
+  slash-server:
+    enabled: false
+    permission: bungeeutilisals.commands.server.{server}
   permission: bungeeutilisals.commands.server
+  permission-other: bungeeutilisals.commands.server.other
 clearchat:
   enabled: true
   name: clearchat

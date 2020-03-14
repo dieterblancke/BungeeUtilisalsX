@@ -30,6 +30,7 @@ import kong.unirest.Unirest;
 import java.io.File;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class AddonInstallSubCommand extends SubCommand
@@ -85,7 +86,7 @@ public class AddonInstallSubCommand extends SubCommand
             catch ( Exception e )
             {
                 user.sendLangMessage( "general-commands.addon.install.error.download", "{name}", addonName );
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
         else

@@ -86,7 +86,7 @@ public class GListCommand extends BUCommand
 
                 if ( group == null )
                 {
-                    BUCore.getLogger().warn( "Could not find a servergroup or -name for " + server + "!" );
+                    BUCore.getLogger().warning( "Could not find a servergroup or -name for " + server + "!" );
                     return;
                 }
 

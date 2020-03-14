@@ -33,6 +33,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public abstract class BUCommand extends Command implements CommandCall, TabExecutor
 {
@@ -96,7 +97,7 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                     }
                     catch ( Exception e )
                     {
-                        BUCore.getLogger().error( "An error occured: ", e );
+                        BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                     }
                 } );
                 return;
@@ -112,7 +113,7 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
                 }
                 catch ( Exception e )
                 {
-                    BUCore.getLogger().error( "An error occured: ", e );
+                    BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                 }
             } );
         }

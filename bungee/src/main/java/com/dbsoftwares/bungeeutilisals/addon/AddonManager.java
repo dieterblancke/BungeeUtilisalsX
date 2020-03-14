@@ -43,6 +43,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.logging.Level;
 
 public class AddonManager implements IAddonManager
 {
@@ -144,12 +145,12 @@ public class AddonManager implements IAddonManager
             {
                 if ( !loadAddon( addonStatuses, new ArrayDeque<>(), addon ) )
                 {
-                    BUCore.getLogger().warn( "Could not enable addon {}", entry.getKey() );
+                    BUCore.getLogger().warning( "Could not enable addon " + entry.getKey() );
                 }
             }
             catch ( AddonException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
         toBeLoaded.clear();
@@ -172,7 +173,7 @@ public class AddonManager implements IAddonManager
 
                     if ( !loadAddon( Maps.newHashMap(), new ArrayDeque<>(), description ) )
                     {
-                        BUCore.getLogger().warn( "Could not enable addon {}", addonFile.getName().replace( ".jar", "" ) );
+                        BUCore.getLogger().warning( "Could not enable addon " + addonFile.getName().replace( ".jar", "" ) );
                     }
                 }
             }
@@ -202,10 +203,10 @@ public class AddonManager implements IAddonManager
             try
             {
                 addon.onEnable();
-                BUCore.getLogger().info(
-                        "Enabled addon {} version {} by {}",
+                BUCore.getLogger().info( String.format(
+                        "Enabled addon %s version %s by %s",
                         addon.getDescription().getName(), addon.getDescription().getVersion(), addon.getDescription().getAuthor()
-                );
+                ) );
             }
             catch ( final Exception t )
             {
@@ -352,18 +353,20 @@ public class AddonManager implements IAddonManager
 
         boolean status = true;
 
-        final int numericApiVersion = Integer.parseInt( description.getApiVersion().replace( ".", "" ) );
+        final int numericApiVersion = Integer.parseInt(
+                description.getApiVersion().replaceAll( "[^\\d]", "" )
+        );
         final int numericVersion = Integer.parseInt(
-                BungeeUtilisals.getInstance().getDescription().getVersion().replace( ".", "" )
+                BUCore.getApi().getPlugin().getDescription().getVersion().replaceAll( "[^\\d]", "" )
         );
 
         if ( numericApiVersion > numericVersion )
         {
-            BUCore.getLogger().warn(
-                    "{} requires your server to run BungeeUtilisalsX version {} or higher!",
+            BUCore.getLogger().warning( String.format(
+                    "%s requires your server to run BungeeUtilisalsX version %s or higher!",
                     description.getName(),
                     description.getApiVersion()
-            );
+            ) );
             status = false;
         }
 
@@ -382,7 +385,7 @@ public class AddonManager implements IAddonManager
                         builder.append( element.getName() ).append( " -> " );
                     }
                     builder.append( description.getName() ).append( " -> " ).append( dependency );
-                    BUCore.getLogger().warn( "Circular dependency detected: {}", builder );
+                    BUCore.getLogger().warning( "Circular dependency detected: " + builder );
                     status = false;
                 }
                 else
@@ -395,7 +398,9 @@ public class AddonManager implements IAddonManager
 
             if ( dependStatus == Boolean.FALSE && description.getRequiredDependencies().contains( dependency ) )
             {
-                BUCore.getLogger().warn( "{} (required by {}) is unavailable", dependency, description.getName() );
+                BUCore.getLogger().warning(
+                        String.format( "%s (required by %s) is unavailable", dependency, description.getName() )
+                );
                 status = false;
             }
 
@@ -419,7 +424,10 @@ public class AddonManager implements IAddonManager
 
                 addon.onLoad();
 
-                BUCore.getLogger().info( "Loaded addon {} version {} by {}", description.getName(), description.getVersion(), description.getAuthor() );
+                BUCore.getLogger().info( String.format(
+                        "Loaded addon %s version %s by %s",
+                        description.getName(), description.getVersion(), description.getAuthor()
+                ) );
             }
             catch ( final Exception e )
             {

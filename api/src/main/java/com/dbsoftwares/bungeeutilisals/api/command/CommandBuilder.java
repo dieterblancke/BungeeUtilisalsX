@@ -54,7 +54,7 @@ public class CommandBuilder
     };
     private boolean enabled;
     private String name;
-    private String[] aliases;
+    private String[] aliases = new String[0];
     private String permission;
     private int cooldown;
     private CommandCall call;

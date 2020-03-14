@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class AddonEnableSubCommand extends SubCommand
@@ -75,7 +76,7 @@ public class AddonEnableSubCommand extends SubCommand
                 catch ( AddonException e )
                 {
                     user.sendLangMessage( "general-commands.addon.enable.failed", "{name}", addonName );
-                    BUCore.getLogger().error( "An error occured: ", e );
+                    BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                 }
             }
         }
