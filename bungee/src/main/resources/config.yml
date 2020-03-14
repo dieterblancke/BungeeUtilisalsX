@@ -6,12 +6,8 @@ bridging:
   name: 'bungee'
 
   bungee:
-    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS
+    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS, this will by default use redis (see below for credentials)
     enabled: false
-
-    # Should BungeeUtilisalsX attempt to use RedisBungee?
-    # If not enabled, BungeeUtilisalsX will setup it's own redis connection with the credentials entered below.
-    use-redisbungee: true
   spigot:
     # For data syncing between Spigot and BungeeCord servers
     enabled: true
