@@ -18,8 +18,100 @@
 
 package com.dbsoftwares.bungeeutilisals.api.bridge;
 
+import com.dbsoftwares.bungeeutilisals.api.bridge.impl.PluginMessageBridge;
+import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
+import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.configuration.api.ISection;
+import net.md_5.bungee.api.ProxyServer;
+
 public class BridgeManager
 {
-    // TODO: initialize optimal bridge (based on configuration)
-    // TODO: initialize (hidden) storage file with unique server name (UUIDx2) in it (add comment on top to NOT REMOVE IT)
+    private RedisBridge redisBridge;
+    private PluginMessageBridge pluginMessageBridge;
+
+    public BridgeManager()
+    {
+    }
+
+    public void setup()
+    {
+        final ISection config = FileLocation.CONFIG.getConfiguration().getSection( "bridging" );
+
+        if ( !config.getBoolean( "enabled" ) )
+        {
+            return;
+        }
+        boolean redisBridgeSetup = false;
+        if ( config.getBoolean( "bungee.enabled" ) )
+        {
+            redisBridge = new RedisBridge();
+            redisBridgeSetup = redisBridge.setup();
+        }
+        if ( config.getBoolean( "spigot.enabled" ) )
+        {
+            if ( redisBridge == null && config.getStringList( "spigot.methods" ).contains( "redis" ) )
+            {
+                redisBridge = new RedisBridge();
+                redisBridgeSetup = redisBridge.setup();
+            }
+
+            if ( config.getStringList( "spigot.methods" ).contains( "pluginmessaging" ) )
+            {
+                pluginMessageBridge = new PluginMessageBridge();
+            }
+        }
+
+        if ( redisBridge != null && !redisBridgeSetup )
+        {
+            ProxyServer.getInstance().getLogger().warning(
+                    "Could not set up the Redis Bridge! Please check your configuration."
+            );
+            ProxyServer.getInstance().getLogger().warning(
+                    "Bungee bridging will not work without the 'Redis Bridge' functioning!!"
+            );
+
+            if ( config.getBoolean( "spigot.enabled" ) )
+            {
+                if ( pluginMessageBridge != null )
+                {
+                    ProxyServer.getInstance().getLogger().warning(
+                            "Spigot bridging will fall back onto Plugin Message Briding."
+                    );
+                }
+                else
+                {
+                    ProxyServer.getInstance().getLogger().warning(
+                            "Spigot bridging will not work without the 'Redis Bridge' functioning! "
+                                    + "This because the Plugin Message Fallback Bridge is disabled."
+                    );
+                }
+            }
+        }
+    }
+
+    public boolean useBungeeBridge()
+    {
+        return redisBridge != null;
+    }
+
+    public boolean useSpigotBridge()
+    {
+        return redisBridge != null || pluginMessageBridge != null;
+    }
+
+    public Bridge getBungeeBridge()
+    {
+        return redisBridge;
+    }
+
+    public Bridge getSpigotBridge()
+    {
+        return redisBridge != null ? redisBridge : pluginMessageBridge;
+    }
+
+    public void shutdown()
+    {
+        redisBridge.shutdownBridge();
+        pluginMessageBridge.shutdownBridge();
+    }
 }

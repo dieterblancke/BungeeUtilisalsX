@@ -19,10 +19,12 @@
 package com.dbsoftwares.bungeeutilisals.api.bridge.message;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -31,14 +33,27 @@ import java.util.UUID;
 public class BridgedMessage
 {
 
+    private BridgeType type;
     private UUID identifier;
     private String from;
+    private List<String> targets;
+    private List<String> ignoredTargets;
     private String message;
 
-    public BridgedMessage( final UUID identifier, final String from, final Object message )
+    public BridgedMessage(
+            final BridgeType type,
+            final UUID identifier,
+            final String from,
+            final List<String> targets,
+            final List<String> ignoredTargets,
+            final Object message
+    )
     {
+        this.type = type;
         this.identifier = identifier;
         this.from = from;
+        this.targets = targets;
+        this.ignoredTargets = ignoredTargets;
         this.message = BUCore.getGson().toJson( message );
     }
 }

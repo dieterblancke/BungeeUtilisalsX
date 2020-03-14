@@ -65,6 +65,12 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/konghq/unirest-java/{version}/unirest-java-{version}-standalone.jar",
             "3.4.01",
             true
+    ),
+    JEDIS(
+            "redis.clients.jedis.Jedis",
+            "https://repo1.maven.org/maven2/redis/clients/jedis/{version}/jedis-{version}.jar",
+            "3.2.0",
+            true
     );
 
     @Getter

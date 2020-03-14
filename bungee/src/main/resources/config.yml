@@ -2,23 +2,23 @@
 debug: false
 
 bridging:
+  # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
+  name: 'bungee'
+
   bungee:
     # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS
     enabled: false
-    # Order of methods BungeeUtilisals should attempt to set up.
-    methods:
-      - redis
-      - sockets
 
-    # Should BungeeUtilisalsX attempt to use RedisBungee? If not enabled, BungeeUtilisalsX will attempt to use the backup methods.
+    # Should BungeeUtilisalsX attempt to use RedisBungee?
+    # If not enabled, BungeeUtilisalsX will setup it's own redis connection with the credentials entered below.
     use-redisbungee: true
   spigot:
     # For data syncing between Spigot and BungeeCord servers
     enabled: true
-    # Order of methods BungeeUtilisals should attempt to set up. Plugin Messaging will prioritize players with lower ping.
+    # By default, BungeeUtilisalsX will attempt to connect to a SpigotMC server using Redis PubSub channel.
+    # If BungeeUtilisalsX cannot connect to the redis credentials provided below, it will fall back to Plugin Messaging
     methods:
       - redis
-      - sockets
       - pluginmessaging
 
   redis:
@@ -26,8 +26,7 @@ bridging:
     host: 127.0.0.1
     port: 6379
     password: ''
-  sockets:
-    port: 5000
+    max-connections: 5
 
 # Currently this should only be enabled for AntiAFKAddon.
 # This feature is highly experimental and might increase load on your server.
