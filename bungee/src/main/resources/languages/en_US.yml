@@ -4,6 +4,7 @@ never-joined: '&fThat user never joined before!'
 offline: '&fThat user is not online!'
 no-number: '&ePlease enter a valid number!'
 date-format: 'dd-MM-yyyy kk:mm:ss'
+not-for-console: '&eThis action is currently only supported for usage by players.'
 
 general:
   startup-message:
@@ -100,6 +101,7 @@ general-commands:
     notfound: '&eThe server &b{server} &edoes not exist!'
     alreadyconnected: '&eYou are already connected to &b{server}&e!'
     connecting: '&eYou are being connected to &b{server}&e!'
+    sent-other: '&eSent &b{user} &eto &b{server}&e!'
   clearchat:
     usage: '&ePlease use &b/clearchat (local / global)&e!'
     cleared: '&eYour chat has been cleared by &b{user}&e!'

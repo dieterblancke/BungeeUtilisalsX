@@ -25,6 +25,7 @@ import net.md_5.bungee.protocol.ProtocolConstants;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 public class PacketUtils
 {
@@ -49,7 +50,7 @@ public class PacketUtils
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return false;
         }
     }
@@ -65,7 +66,7 @@ public class PacketUtils
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return null;
     }

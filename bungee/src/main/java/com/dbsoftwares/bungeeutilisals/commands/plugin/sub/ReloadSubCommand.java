@@ -27,6 +27,7 @@ import com.google.common.collect.ImmutableList;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.logging.Level;
 
 public class ReloadSubCommand extends SubCommand
 {
@@ -63,7 +64,7 @@ public class ReloadSubCommand extends SubCommand
             }
             catch ( IOException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                 user.sendMessage( "&fCould not reload " + location.toString().toLowerCase().replace( "_", " " ) + "!" );
             }
         }

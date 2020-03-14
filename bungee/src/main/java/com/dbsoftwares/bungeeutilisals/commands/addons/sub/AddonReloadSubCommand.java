@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 
 import java.util.List;
+import java.util.logging.Level;
 import java.util.stream.Collectors;
 
 public class AddonReloadSubCommand extends SubCommand
@@ -67,7 +68,7 @@ public class AddonReloadSubCommand extends SubCommand
             }
             catch ( Exception e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                 user.sendLangMessage( "general-commands.addon.reload.error", "{name}", addon );
             }
         }

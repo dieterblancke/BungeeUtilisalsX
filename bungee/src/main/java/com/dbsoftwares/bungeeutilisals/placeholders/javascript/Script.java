@@ -34,6 +34,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.logging.Level;
 
 @Data
 public class Script
@@ -119,7 +120,7 @@ public class Script
             }
             catch ( IOException e )
             {
-                BUCore.getLogger().info( "Could not remove empty script storage.", e );
+                BUCore.getLogger().log( Level.WARNING, "Could not remove empty script storage.", e );
             }
         }
     }

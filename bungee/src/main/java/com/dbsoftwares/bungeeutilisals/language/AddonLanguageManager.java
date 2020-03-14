@@ -27,6 +27,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.io.ByteStreams;
 
 import java.io.*;
+import java.util.logging.Level;
 
 public class AddonLanguageManager extends AbstractLanguageManager
 {
@@ -84,7 +85,7 @@ public class AddonLanguageManager extends AbstractLanguageManager
             }
             catch ( IOException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -124,7 +125,7 @@ public class AddonLanguageManager extends AbstractLanguageManager
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return target;
     }

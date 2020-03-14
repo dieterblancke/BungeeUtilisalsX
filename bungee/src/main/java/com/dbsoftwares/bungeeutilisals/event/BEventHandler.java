@@ -26,6 +26,7 @@ import lombok.RequiredArgsConstructor;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
 @RequiredArgsConstructor
 public class BEventHandler<T extends BUEvent> implements EventHandler<T>
@@ -74,8 +75,8 @@ public class BEventHandler<T extends BUEvent> implements EventHandler<T>
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().warn( "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() );
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().warning( "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 

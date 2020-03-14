@@ -29,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.logging.Level;
 
 public class PlaceHolderAPI
 {
@@ -55,7 +56,7 @@ public class PlaceHolderAPI
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return message;
         }
     }
@@ -76,7 +77,7 @@ public class PlaceHolderAPI
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return message;
         }
     }

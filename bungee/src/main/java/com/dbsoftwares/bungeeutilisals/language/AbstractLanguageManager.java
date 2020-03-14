@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
 public abstract class AbstractLanguageManager implements ILanguageManager
 {
@@ -157,7 +158,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
 
         if ( !configurations.containsKey( lang ) )
         {
-            BUCore.getLogger().warn( "The plugin " + plugin + " did not register the language " + language.getName() + " yet!" );
+            BUCore.getLogger().warning( "The plugin " + plugin + " did not register the language " + language.getName() + " yet!" );
 
             File deflang = getFile( plugin, getDefaultLanguage() );
             if ( configurations.containsKey( deflang ) )
@@ -195,7 +196,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return true;
     }
@@ -215,7 +216,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return true;
     }

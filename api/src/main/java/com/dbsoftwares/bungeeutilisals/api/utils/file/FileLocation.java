@@ -110,8 +110,8 @@ public enum FileLocation
                         }
                         else
                         {
-                            BUCore.getLogger().warn( "An invalid MOTD condition has been entered." );
-                            BUCore.getLogger().warn( "For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions" );
+                            BUCore.getLogger().warning( "An invalid MOTD condition has been entered." );
+                            BUCore.getLogger().warning( "For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions" );
                         }
                     }
                 }

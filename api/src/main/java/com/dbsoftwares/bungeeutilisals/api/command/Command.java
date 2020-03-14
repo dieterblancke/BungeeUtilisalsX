@@ -31,6 +31,7 @@ import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 @Data
 public class Command
@@ -113,7 +114,7 @@ public class Command
             }
             catch ( Exception e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         } );
     }

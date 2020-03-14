@@ -28,6 +28,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
 
 import java.io.*;
+import java.util.logging.Level;
 
 public class PluginLanguageManager extends AbstractLanguageManager
 {
@@ -85,7 +86,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
             }
             catch ( IOException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -125,7 +126,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return target;
     }

@@ -34,11 +34,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
 public class SQLFriendsDao implements FriendsDao
 {
-
-    private static final String ERROR_STRING = "An error occured: ";
 
     @Override
     public void addFriend( UUID user, UUID uuid )
@@ -55,7 +54,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -74,7 +73,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -107,7 +106,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friends;
@@ -135,7 +134,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return count;
@@ -156,7 +155,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -175,7 +174,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -209,7 +208,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friendRequests;
@@ -245,7 +244,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friendRequests;
@@ -274,7 +273,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return found;
@@ -303,7 +302,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return found;
@@ -357,7 +356,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -388,7 +387,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return setting;
@@ -419,7 +418,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return settings == null ? new FriendSettings() : settings;

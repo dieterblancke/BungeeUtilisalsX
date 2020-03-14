@@ -270,6 +270,7 @@ public class ConsoleUser implements User
     @Override
     public ProxiedPlayer getParent()
     {
+        sendLangMessage( "not-for-console" );
         throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 

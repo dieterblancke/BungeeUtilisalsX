@@ -27,11 +27,10 @@ import com.google.common.collect.Lists;
 import java.sql.*;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import java.util.logging.Level;
 
 public class BungeeUtilisalsImporter extends Importer
 {
-
-    private static final String ERROR_STRING = "An error occured: ";
 
     private Connection createConnection( final Map<String, String> properties ) throws SQLException
     {
@@ -90,7 +89,7 @@ public class BungeeUtilisalsImporter extends Importer
                     }
                     catch ( Exception e )
                     {
-                        BUCore.getLogger().error( ERROR_STRING, e );
+                        BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                         continue;
                     }
 
@@ -110,7 +109,7 @@ public class BungeeUtilisalsImporter extends Importer
                     }
                     catch ( Exception e )
                     {
-                        BUCore.getLogger().error( ERROR_STRING, e );
+                        BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                         continue;
                     }
 
@@ -130,7 +129,7 @@ public class BungeeUtilisalsImporter extends Importer
                     }
                     catch ( Exception e )
                     {
-                        BUCore.getLogger().error( ERROR_STRING, e );
+                        BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                         continue;
                     }
 
@@ -166,7 +165,7 @@ public class BungeeUtilisalsImporter extends Importer
                     }
                     catch ( Exception e )
                     {
-                        BUCore.getLogger().error( ERROR_STRING, e );
+                        BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
                         continue;
                     }
 
@@ -187,7 +186,7 @@ public class BungeeUtilisalsImporter extends Importer
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 

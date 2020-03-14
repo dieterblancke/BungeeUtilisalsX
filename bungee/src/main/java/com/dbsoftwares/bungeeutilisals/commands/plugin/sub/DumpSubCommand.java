@@ -57,6 +57,7 @@ import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.logging.Level;
 
 public class DumpSubCommand extends SubCommand
 {
@@ -123,8 +124,8 @@ public class DumpSubCommand extends SubCommand
             catch ( IOException e )
             {
                 user.sendMessage( "Could not create dump. Please check the console for errors." );
-                BUCore.getLogger().warn( "Could not create dump request" );
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().warning( "Could not create dump request" );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         } );
     }
@@ -286,7 +287,7 @@ public class DumpSubCommand extends SubCommand
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return Lists.newArrayList();
         }
     }

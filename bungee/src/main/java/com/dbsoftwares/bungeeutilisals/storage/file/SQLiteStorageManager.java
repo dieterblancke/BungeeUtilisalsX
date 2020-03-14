@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
 public class SQLiteStorageManager extends SQLStorageManager
 {
@@ -50,7 +51,7 @@ public class SQLiteStorageManager extends SQLStorageManager
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         try
