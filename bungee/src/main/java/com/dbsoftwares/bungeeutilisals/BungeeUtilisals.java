@@ -24,7 +24,6 @@ import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
@@ -128,9 +127,6 @@ public class BungeeUtilisals extends Plugin
     @Getter
     private List<StaffUser> staffMembers = Lists.newArrayList();
 
-    @Getter
-    private BridgeManager bridgeManager;
-
     @Override
     public void onEnable()
     {
@@ -187,9 +183,6 @@ public class BungeeUtilisals extends Plugin
 
         // Initialize metric system
         new Metrics( this );
-
-        // Initializing bridge manager if enabled
-        bridgeManager = new BridgeManager();
 
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );

@@ -160,7 +160,7 @@ public class LanguageUtils
         }
     }
 
-    private static String replacePlaceHolders( User user, String message, Object... placeholders )
+    public static String replacePlaceHolders( User user, String message, Object... placeholders )
     {
         for ( int i = 0; i < placeholders.length - 1; i += 2 )
         {

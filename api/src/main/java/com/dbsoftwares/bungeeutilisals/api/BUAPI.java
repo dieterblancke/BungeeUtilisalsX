@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -52,6 +53,11 @@ public interface BUAPI
      * @return The plugin instance of the BungeeUtilisals core.
      */
     Plugin getPlugin();
+
+    /**
+     * @return The loaded bridging manager.
+     */
+    BridgeManager getBridgeManager();
 
     /**
      * @return The language chat of BungeeUtilisals.

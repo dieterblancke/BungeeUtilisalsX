@@ -38,6 +38,7 @@ public class BridgedMessage
     private String from;
     private List<String> targets;
     private List<String> ignoredTargets;
+    private String action;
     private String message;
 
     public BridgedMessage(
@@ -46,6 +47,7 @@ public class BridgedMessage
             final String from,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object message
     )
     {
@@ -54,6 +56,7 @@ public class BridgedMessage
         this.from = from;
         this.targets = targets;
         this.ignoredTargets = ignoredTargets;
+        this.action = action;
         this.message = BUCore.getGson().toJson( message );
     }
 }

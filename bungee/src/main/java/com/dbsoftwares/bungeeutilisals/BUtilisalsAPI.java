@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -67,6 +68,7 @@ public class BUtilisalsAPI implements BUAPI
     private IPunishmentExecutor punishmentExecutor;
     private IPlayerUtils playerUtils;
     private IAddonManager addonManager;
+    private BridgeManager bridgeManager;
 
     public BUtilisalsAPI( BungeeUtilisals instance )
     {
@@ -81,11 +83,18 @@ public class BUtilisalsAPI implements BUAPI
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
         this.playerUtils = new BungeePlayerUtils();
+        this.bridgeManager = new BridgeManager();
 
         if ( getConfig( FileLocation.CONFIG ).getBoolean( "addons" ) )
         {
             this.addonManager = new AddonManager();
         }
+    }
+
+    @Override
+    public BridgeManager getBridgeManager()
+    {
+        return bridgeManager;
     }
 
     @Override

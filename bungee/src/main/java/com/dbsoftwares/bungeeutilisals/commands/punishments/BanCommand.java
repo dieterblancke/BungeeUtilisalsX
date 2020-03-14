@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -27,8 +28,14 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
+import com.google.common.collect.Maps;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class BanCommand extends PunishmentCommand
 {
@@ -73,23 +80,50 @@ public class BanCommand extends PunishmentCommand
                 user.getName()
         );
 
-        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( storage.getUserName() );
+
+        if ( optionalTarget.isPresent() )
         {
+            final User target = optionalTarget.get();
+
             String kick = null;
             if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
             {
                 kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
-                        banned.getLanguageConfig(), PunishmentType.BAN, reason
+                        target.getLanguageConfig(), PunishmentType.BAN, reason
                 ), "\n" );
             }
             if ( kick == null )
             {
-                kick = Utils.formatList( banned.getLanguageConfig().getStringList( "punishments.ban.kick" ), "\n" );
+                kick = Utils.formatList( target.getLanguageConfig().getStringList( "punishments.ban.kick" ), "\n" );
             }
             kick = executor.setPlaceHolders( kick, info );
 
-            banned.kick( kick );
-        } );
+            target.kick( kick );
+        }
+        else
+        {
+            if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+            {
+                final Map<String, Object> data = Maps.newHashMap();
+                data.put( "reason", reason );
+
+                BUCore.getApi().getBridgeManager().getBungeeBridge().sendMessage(
+                        BridgeType.BUNGEE_BUNGEE,
+                        "USER",
+                        new UserAction(
+                                storage,
+                                UserActionType.KICK,
+                                new BridgedUserMessage(
+                                        true,
+                                        "punishments.ban.kick",
+                                        data,
+                                        executor.getPlaceHolders( info ).toArray()
+                                )
+                        )
+                );
+            }
+        }
 
         user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 

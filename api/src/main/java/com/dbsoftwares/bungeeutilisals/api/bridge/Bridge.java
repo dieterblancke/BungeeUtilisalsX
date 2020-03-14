@@ -21,17 +21,17 @@ package com.dbsoftwares.bungeeutilisals.api.bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.Maps;
 import lombok.Getter;
-import net.md_5.bungee.api.plugin.Listener;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public abstract class Bridge implements Listener
+public abstract class Bridge implements EventExecutor
 {
 
     @Getter
@@ -72,10 +72,11 @@ public abstract class Bridge implements Listener
 
     public abstract boolean setup();
 
-    public abstract BridgedMessage sendMessage( final BridgeType type, final Object data );
+    public abstract BridgedMessage sendMessage( final BridgeType type, final String action, final Object data );
 
     public abstract <T> BridgedMessage sendMessage(
             final BridgeType type,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer
@@ -85,6 +86,7 @@ public abstract class Bridge implements Listener
             final BridgeType type,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object data
     );
 
@@ -92,6 +94,7 @@ public abstract class Bridge implements Listener
             final BridgeType type,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer

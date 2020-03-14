@@ -49,6 +49,7 @@ public class PluginMessageBridge extends Bridge implements Listener
         {
             ProxyServer.getInstance().registerChannel( "bungeeutilisalsx:default-channel" );
             ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), this );
+            BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
         }
         catch ( Exception e )
         {
@@ -61,6 +62,7 @@ public class PluginMessageBridge extends Bridge implements Listener
     @Override
     public BridgedMessage sendMessage(
             final BridgeType type,
+            final String action,
             final Object data
     )
     {
@@ -71,12 +73,13 @@ public class PluginMessageBridge extends Bridge implements Listener
                 .map( ServerInfo::getName )
                 .collect( Collectors.toList() );
 
-        return sendTargetedMessage( type, targets, null, data );
+        return sendTargetedMessage( type, targets, null, action, data );
     }
 
     @Override
     public <T> BridgedMessage sendMessage(
             final BridgeType type,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer
@@ -89,7 +92,7 @@ public class PluginMessageBridge extends Bridge implements Listener
                 .map( ServerInfo::getName )
                 .collect( Collectors.toList() );
 
-        return sendTargetedMessage( type, targets, null, data, responseType, consumer );
+        return sendTargetedMessage( type, targets, null, action, data, responseType, consumer );
     }
 
     @Override
@@ -97,6 +100,7 @@ public class PluginMessageBridge extends Bridge implements Listener
             final BridgeType type,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object data
     )
     {
@@ -106,6 +110,7 @@ public class PluginMessageBridge extends Bridge implements Listener
                 FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
+                action,
                 data
         );
 
@@ -118,6 +123,7 @@ public class PluginMessageBridge extends Bridge implements Listener
             final BridgeType type,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer
@@ -129,6 +135,7 @@ public class PluginMessageBridge extends Bridge implements Listener
                 FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
+                action,
                 data
         );
 
@@ -187,7 +194,11 @@ public class PluginMessageBridge extends Bridge implements Listener
         }
 
         final BridgeResponseEvent responseEvent = new BridgeResponseEvent(
-                message.getType(), message.getIdentifier(), message.getFrom(), message.getMessage()
+                message.getType(),
+                message.getIdentifier(),
+                message.getFrom(),
+                message.getAction(),
+                message.getMessage()
         );
         BUCore.getApi().getEventLoader().launchEventAsync( responseEvent );
     }

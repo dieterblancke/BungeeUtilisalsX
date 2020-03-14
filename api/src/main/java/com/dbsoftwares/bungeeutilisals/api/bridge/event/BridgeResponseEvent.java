@@ -37,6 +37,7 @@ public class BridgeResponseEvent extends AbstractEvent
     private final BridgeType type;
     private final UUID identifier;
     private final String from;
+    private final String action;
     private final String data;
 
     public String asString()

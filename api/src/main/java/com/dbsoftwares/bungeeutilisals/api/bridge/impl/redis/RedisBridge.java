@@ -52,7 +52,7 @@ public class RedisBridge extends Bridge
     {
         try
         {
-            ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), this );
+            BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
 
             // Getting credentials from configuration
             final ISection section = FileLocation.CONFIG.getConfiguration().getSection( "bridging.redis" );
@@ -123,24 +123,34 @@ public class RedisBridge extends Bridge
     }
 
     @Override
-    public BridgedMessage sendMessage( final BridgeType type, final Object data )
+    public BridgedMessage sendMessage(
+            final BridgeType type,
+            final String action,
+            final Object data
+    )
     {
-        return sendTargetedMessage( type, null, null, data );
+        return sendTargetedMessage( type, null, null, action, data );
     }
 
     @Override
     public <T> BridgedMessage sendMessage(
             final BridgeType type,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer
     )
     {
-        return sendTargetedMessage( type, null, null, data, responseType, consumer );
+        return sendTargetedMessage( type, null, null, action, data, responseType, consumer );
     }
 
     @Override
-    public BridgedMessage sendTargetedMessage( final BridgeType type, final List<String> targets, final List<String> ignoredTargets, final Object data )
+    public BridgedMessage sendTargetedMessage(
+            final BridgeType type,
+            final List<String> targets,
+            final List<String> ignoredTargets,
+            final String action,
+            final Object data )
     {
         final BridgedMessage message = new BridgedMessage(
                 type,
@@ -148,6 +158,7 @@ public class RedisBridge extends Bridge
                 FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
+                action,
                 data
         );
 
@@ -160,6 +171,7 @@ public class RedisBridge extends Bridge
             final BridgeType type,
             final List<String> targets,
             final List<String> ignoredTargets,
+            final String action,
             final Object data,
             final Class<T> responseType,
             final Consumer<T> consumer
@@ -171,6 +183,7 @@ public class RedisBridge extends Bridge
                 FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
+                action,
                 data
         );
         consumersMap.put( message.getIdentifier().toString(), new SimpleEntry<>( responseType, consumer ) );
@@ -197,7 +210,11 @@ public class RedisBridge extends Bridge
         }
 
         final BridgeResponseEvent responseEvent = new BridgeResponseEvent(
-                message.getType(), message.getIdentifier(), message.getFrom(), message.getMessage()
+                message.getType(),
+                message.getIdentifier(),
+                message.getFrom(),
+                message.getAction(),
+                message.getMessage()
         );
         BUCore.getApi().getEventLoader().launchEventAsync( responseEvent );
     }
