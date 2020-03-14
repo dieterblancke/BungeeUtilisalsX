@@ -41,11 +41,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Level;
 
 public class MongoToSQLConverter extends Converter
 {
-
-    private static final String ERROR_STRING = "An error occured: ";
 
     @Override
     protected void importData( final ImporterCallback<ConverterStatus> importerCallback, final Map<String, String> properties )
@@ -81,7 +80,7 @@ public class MongoToSQLConverter extends Converter
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( ERROR_STRING, e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         for ( PunishmentType type : PunishmentType.values() )
         {
@@ -104,7 +103,7 @@ public class MongoToSQLConverter extends Converter
             }
             catch ( SQLException e )
             {
-                BUCore.getLogger().error( ERROR_STRING, e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }

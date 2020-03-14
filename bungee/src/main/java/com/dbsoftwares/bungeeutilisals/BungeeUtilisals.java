@@ -95,6 +95,7 @@ import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin
@@ -135,9 +136,9 @@ public class BungeeUtilisals extends Plugin
     {
         if ( ReflectionUtils.getJavaVersion() < 8 )
         {
-            BUCore.getLogger().warn( "You are running a Java version lower then Java 8." );
-            BUCore.getLogger().warn( "Please upgrade to Java 8 or newer." );
-            BUCore.getLogger().warn( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
+            BUCore.getLogger().warning( "You are running a Java version lower then Java 8." );
+            BUCore.getLogger().warning( "Please upgrade to Java 8 or newer." );
+            BUCore.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
             return;
         }
         // Setting instance
@@ -341,7 +342,7 @@ public class BungeeUtilisals extends Plugin
         }
         catch ( SQLException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         scripts.forEach( Script::unload );
@@ -444,7 +445,7 @@ public class BungeeUtilisals extends Plugin
             }
             catch ( IOException | ScriptException e )
             {
-                BUCore.getLogger().error( "Could not load script " + file.getName(), e );
+                BUCore.getLogger().log( Level.SEVERE, "Could not load script " + file.getName(), e );
             }
         }
     }
@@ -467,7 +468,7 @@ public class BungeeUtilisals extends Plugin
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -518,7 +519,7 @@ public class BungeeUtilisals extends Plugin
                 }
                 catch ( IOException e )
                 {
-                    BUCore.getLogger().error( "Could not update configurations: ", e );
+                    BUCore.getLogger().log( Level.SEVERE, "Could not update configurations: ", e );
                 }
             }
             location.loadData();
@@ -550,7 +551,6 @@ public class BungeeUtilisals extends Plugin
         loadGeneralCommand( "glist", GListCommand.class );
         loadGeneralCommand( "announce", AnnounceCommand.class );
         loadGeneralCommand( "find", FindCommand.class );
-        loadGeneralCommand( "server", ServerCommand.class );
         loadGeneralCommand( "clearchat", ClearChatCommand.class );
         loadGeneralCommand( "chatlock", ChatLockCommand.class );
         loadGeneralCommand( "glag", GLagCommand.class );
@@ -643,7 +643,7 @@ public class BungeeUtilisals extends Plugin
             }
             catch ( InstantiationException | IllegalAccessException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }

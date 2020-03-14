@@ -25,6 +25,8 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.SlashServerCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
@@ -37,6 +39,8 @@ import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.List;
 
@@ -62,6 +66,7 @@ public class CommandManager
         registerGeneralCommand( "report", new ReportCommandCall() );
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "helpop", new HelpOpCommandCall() );
+        registerGeneralCommand( "server", new ServerCommandCall() );
 
         registerPunishmentCommand(
                 "friends",
@@ -69,6 +74,28 @@ public class CommandManager
                 FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "command" ),
                 new FriendsCommandCall()
         );
+
+        if ( FileLocation.GENERALCOMMANDS.getConfiguration().getBoolean( "server.slash-server.enabled" ) )
+        {
+            registerSlashServerCommands();
+        }
+    }
+
+    private void registerSlashServerCommands()
+    {
+        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "server.slash-server.permission" );
+
+        for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
+        {
+            final String name = info.getName().toLowerCase();
+            final CommandBuilder builder = CommandBuilder.builder()
+                    .enabled( true )
+                    .name( name )
+                    .permission( permission.replace( "{server}", name ) )
+                    .executable( new SlashServerCommandCall( name ) );
+
+            buildCommand( name, builder );
+        }
     }
 
     private void loadPunishmentCommands()
@@ -151,11 +178,11 @@ public class CommandManager
             command.register();
 
             commands.add( command );
-            BUCore.getLogger().debug( "Registered a command named " + command.getName() + "." );
+            BUCore.getLogger().info( "Registered a command named " + command.getName() + "." );
         }
         else
         {
-            BUCore.getLogger().debug( "Skipping registration of a command named " + name + "." );
+            BUCore.getLogger().info( "Skipping registration of a command named " + name + "." );
         }
     }
 

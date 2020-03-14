@@ -23,14 +23,15 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import net.md_5.bungee.api.ProxyServer;
+
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public final class BUCore
 {
 
     private static BUAPI instance = null;
-    private static Logger logger = LoggerFactory.getLogger( "BungeeUtilisalsX" );
 
     @Getter
     private static final Gson gson = new Gson();
@@ -57,18 +58,25 @@ public final class BUCore
 
     public static void sendMessage( final CommandSender sender, final String message )
     {
-        IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration( getApi().getPlugin().getDescription().getName(), sender );
+        final IConfiguration config = getApi().getLanguageManager().getLanguageConfiguration(
+                getApi().getPlugin().getDescription().getName(),
+                sender
+        );
 
         sender.sendMessage( Utils.format( config.getString( "prefix" ), message ) );
     }
 
     public static Logger getLogger()
     {
-        return logger;
+        if ( getApi() == null || getApi().getPlugin() == null )
+        {
+            return ProxyServer.getInstance().getLogger();
+        }
+        return getApi().getPlugin().getLogger();
     }
 
     public static void logException( final Exception e )
     {
-        logger.error( "An error occured: ", e );
+        getLogger().log( Level.SEVERE, "An error occured: ", e );
     }
 }
