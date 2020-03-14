@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import net.md_5.bungee.api.ProxyServer;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPubSub;
 
@@ -85,7 +85,7 @@ public class PubSubHandler extends JedisPubSub implements Runnable
             }
             catch ( Exception e )
             {
-                ProxyServer.getInstance().getLogger().log( Level.SEVERE, "Could not create default pubsub channels.", e );
+                BUCore.getLogger().log( Level.SEVERE, "Could not create default pubsub channels.", e );
                 unsubscribe();
             }
         }

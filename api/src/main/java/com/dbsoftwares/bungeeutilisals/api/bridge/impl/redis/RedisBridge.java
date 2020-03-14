@@ -84,7 +84,7 @@ public class RedisBridge extends Bridge
             {
                 jedis.ping();
 
-                ProxyServer.getInstance().getLogger().log( Level.INFO, "Successfully connected to Redis server." );
+                BUCore.getLogger().log( Level.INFO, "Successfully connected to Redis server." );
             }
             catch ( JedisConnectionException e )
             {
@@ -117,7 +117,7 @@ public class RedisBridge extends Bridge
         }
         catch ( JedisConnectionException e )
         {
-            ProxyServer.getInstance().getLogger().log( Level.SEVERE, "Could not establish a connection.", e );
+            BUCore.getLogger().log( Level.SEVERE, "Could not establish a connection.", e );
             throw new RuntimeException( "Unable to publish channel message", e );
         }
     }

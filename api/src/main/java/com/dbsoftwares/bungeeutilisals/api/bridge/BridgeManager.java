@@ -18,11 +18,11 @@
 
 package com.dbsoftwares.bungeeutilisals.api.bridge;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.PluginMessageBridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.ISection;
-import net.md_5.bungee.api.ProxyServer;
 
 public class BridgeManager
 {
@@ -63,10 +63,10 @@ public class BridgeManager
 
         if ( redisBridge != null && !redisBridgeSetup )
         {
-            ProxyServer.getInstance().getLogger().warning(
+            BUCore.getLogger().warning(
                     "Could not set up the Redis Bridge! Please check your configuration."
             );
-            ProxyServer.getInstance().getLogger().warning(
+            BUCore.getLogger().warning(
                     "Bungee bridging will not work without the 'Redis Bridge' functioning!!"
             );
 
@@ -74,13 +74,13 @@ public class BridgeManager
             {
                 if ( pluginMessageBridge != null )
                 {
-                    ProxyServer.getInstance().getLogger().warning(
+                    BUCore.getLogger().warning(
                             "Spigot bridging will fall back onto Plugin Message Briding."
                     );
                 }
                 else
                 {
-                    ProxyServer.getInstance().getLogger().warning(
+                    BUCore.getLogger().warning(
                             "Spigot bridging will not work without the 'Redis Bridge' functioning! "
                                     + "This because the Plugin Message Fallback Bridge is disabled."
                     );
