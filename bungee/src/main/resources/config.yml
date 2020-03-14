@@ -1,6 +1,34 @@
 # Enable to get debug messages (where they are enabled)
 debug: false
 
+bridging:
+  bungee:
+    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS
+    enabled: false
+    # Order of methods BungeeUtilisals should attempt to set up.
+    methods:
+      - redis
+      - sockets
+
+    # Should BungeeUtilisalsX attempt to use RedisBungee? If not enabled, BungeeUtilisalsX will attempt to use the backup methods.
+    use-redisbungee: true
+  spigot:
+    # For data syncing between Spigot and BungeeCord servers
+    enabled: true
+    # Order of methods BungeeUtilisals should attempt to set up. Plugin Messaging will prioritize players with lower ping.
+    methods:
+      - redis
+      - sockets
+      - pluginmessaging
+
+  redis:
+    # Redis credentials, for Bungee to Bungee briding, this will only be used if no RedisBungee is found.
+    host: 127.0.0.1
+    port: 6379
+    password: ''
+  sockets:
+    port: 5000
+
 # Currently this should only be enabled for AntiAFKAddon.
 # This feature is highly experimental and might increase load on your server.
 # This might also cause errors when newer versions come out, and BungeeUtilisals isn't updated yet.
