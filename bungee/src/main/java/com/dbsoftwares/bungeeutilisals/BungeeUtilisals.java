@@ -188,10 +188,7 @@ public class BungeeUtilisals extends Plugin
         new Metrics( this );
 
         // Initializing bridge manager if enabled
-        if ( getConfig().getBoolean( "bridging.enabled" ) )
-        {
-            bridgeManager = new BridgeManager();
-        }
+        bridgeManager = new BridgeManager();
 
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
