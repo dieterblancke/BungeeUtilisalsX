@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
@@ -72,23 +71,9 @@ public class IPBanCommand extends PunishmentCommand
                 user.getName()
         );
 
-        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
-        {
-            String kick = null;
-            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-            {
-                kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
-                        banned.getLanguageConfig(), PunishmentType.IPBAN, reason
-                ), "\n" );
-            }
-            if ( kick == null )
-            {
-                kick = Utils.formatList( banned.getLanguageConfig().getStringList( "punishments.ipban.kick" ), "\n" );
-            }
-            kick = executor.setPlaceHolders( kick, info );
-
-            banned.kick( kick );
-        } );
+        BUCore.getApi().getUsers().stream()
+                .filter( u -> u.getIp().equalsIgnoreCase( storage.getIp() ) )
+                .forEach( u -> kickUser( u, "punishments.ipban.kick", info ) );
 
         user.sendLangMessage( "punishments.ipban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 

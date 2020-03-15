@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
-import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeManager;
+import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -38,6 +38,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
+import com.dbsoftwares.bungeeutilisals.bridging.BridgeManager;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
@@ -68,7 +69,7 @@ public class BUtilisalsAPI implements BUAPI
     private IPunishmentExecutor punishmentExecutor;
     private IPlayerUtils playerUtils;
     private IAddonManager addonManager;
-    private BridgeManager bridgeManager;
+    private IBridgeManager bridgeManager;
 
     public BUtilisalsAPI( BungeeUtilisals instance )
     {
@@ -84,6 +85,7 @@ public class BUtilisalsAPI implements BUAPI
         this.punishmentExecutor = new PunishmentExecutor();
         this.playerUtils = new BungeePlayerUtils();
         this.bridgeManager = new BridgeManager();
+        this.bridgeManager.setup();
 
         if ( getConfig( FileLocation.CONFIG ).getBoolean( "addons" ) )
         {
@@ -92,7 +94,7 @@ public class BUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public BridgeManager getBridgeManager()
+    public IBridgeManager getBridgeManager()
     {
         return bridgeManager;
     }

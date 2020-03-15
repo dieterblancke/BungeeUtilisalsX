@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -29,6 +30,7 @@ import lombok.Getter;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public abstract class Bridge implements EventExecutor
@@ -37,6 +39,7 @@ public abstract class Bridge implements EventExecutor
     @Getter
     protected boolean setup;
     protected Map<String, SimpleEntry<Class<?>, Consumer>> consumersMap = Maps.newConcurrentMap();
+    protected Set<EventHandler<BridgeResponseEvent>> eventHandlers;
 
     protected boolean canAccept( final BridgedMessage message )
     {

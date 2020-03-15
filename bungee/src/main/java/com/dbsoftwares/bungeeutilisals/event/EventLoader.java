@@ -49,7 +49,11 @@ public class EventLoader implements IEventLoader
 
         for ( Method method : executor.getClass().getDeclaredMethods() )
         {
-            if ( method.getParameters()[0].getType().equals( eventClass ) && method.isAnnotationPresent( Event.class ) )
+            if (
+                    method.getParameterCount() > 0
+                            && method.getParameters()[0].getType().equals( eventClass )
+                            && method.isAnnotationPresent( Event.class )
+            )
             {
                 Event event = method.getAnnotation( Event.class );
                 int priority = event.priority();

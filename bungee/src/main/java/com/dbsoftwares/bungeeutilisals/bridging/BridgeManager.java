@@ -16,18 +16,26 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.bridge;
+package com.dbsoftwares.bungeeutilisals.bridging;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
+import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
+import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.PluginMessageBridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.handlers.BungeeBridgeResponseHandler;
 import com.dbsoftwares.configuration.api.ISection;
 
-public class BridgeManager
+import java.util.Set;
+
+public class BridgeManager implements IBridgeManager
 {
     private RedisBridge redisBridge;
     private PluginMessageBridge pluginMessageBridge;
+    private Set<EventHandler<BridgeResponseEvent>> eventHandlers;
 
     public BridgeManager()
     {
@@ -75,7 +83,7 @@ public class BridgeManager
                 if ( pluginMessageBridge != null )
                 {
                     BUCore.getLogger().warning(
-                            "Spigot bridging will fall back onto Plugin Message Briding."
+                            "Spigot bridging will fall back onto Plugin Message Bridging."
                     );
                 }
                 else
@@ -87,6 +95,12 @@ public class BridgeManager
                 }
             }
         }
+
+        eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, new BungeeBridgeResponseHandler() );
+
+        BUCore.getLogger().info(
+                "Successfully set up the bridging system!"
+        );
     }
 
     public boolean useBungeeBridge()
@@ -111,7 +125,18 @@ public class BridgeManager
 
     public void shutdown()
     {
-        redisBridge.shutdownBridge();
-        pluginMessageBridge.shutdownBridge();
+        if ( redisBridge != null )
+        {
+            redisBridge.shutdownBridge();
+        }
+        if ( pluginMessageBridge != null )
+        {
+            pluginMessageBridge.shutdownBridge();
+        }
+        if ( eventHandlers != null )
+        {
+            eventHandlers.forEach( EventHandler::unregister );
+            eventHandlers.clear();
+        }
     }
 }

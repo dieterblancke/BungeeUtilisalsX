@@ -143,6 +143,26 @@ public abstract class PunishmentCommand implements CommandCall
         return punishmentArgs;
     }
 
+    protected void kickUser( final User user, final String path, final PunishmentInfo info )
+    {
+        String kick = null;
+        if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
+        {
+            kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
+                    user.getLanguageConfig(), info.getType(), info.getReason()
+            ), "\n" );
+        }
+        if ( kick == null )
+        {
+            kick = Utils.formatList(
+                    user.getLanguageConfig().getStringList( path ),
+                    "\n"
+            );
+        }
+        kick = BUCore.getApi().getPunishmentExecutor().setPlaceHolders( kick, info );
+        user.kick( kick );
+    }
+
     @Data
     public class PunishmentArgs
     {

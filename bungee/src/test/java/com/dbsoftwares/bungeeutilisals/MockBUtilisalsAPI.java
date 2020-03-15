@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
@@ -53,6 +54,12 @@ public class MockBUtilisalsAPI implements BUAPI
 
     @Override
     public Plugin getPlugin()
+    {
+        return null;
+    }
+
+    @Override
+    public IBridgeManager getBridgeManager()
     {
         return null;
     }

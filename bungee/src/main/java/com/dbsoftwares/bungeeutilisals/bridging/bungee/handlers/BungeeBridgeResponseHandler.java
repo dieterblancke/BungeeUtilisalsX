@@ -84,12 +84,13 @@ public class BungeeBridgeResponseHandler implements EventExecutor
     private void kickUser( final User user, final BridgedUserMessage message )
     {
         final String reason = (String) message.getData().get( "reason" );
+        final String type = (String) message.getData().get( "type" );
 
         String kick = null;
         if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig(), PunishmentType.BAN, reason
+                    user.getLanguageConfig(), PunishmentType.valueOf( type ), reason
             ), "\n" );
         }
         if ( kick == null )

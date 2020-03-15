@@ -26,11 +26,11 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import java.util.List;
@@ -86,20 +86,7 @@ public class BanCommand extends PunishmentCommand
         {
             final User target = optionalTarget.get();
 
-            String kick = null;
-            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-            {
-                kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
-                        target.getLanguageConfig(), PunishmentType.BAN, reason
-                ), "\n" );
-            }
-            if ( kick == null )
-            {
-                kick = Utils.formatList( target.getLanguageConfig().getStringList( "punishments.ban.kick" ), "\n" );
-            }
-            kick = executor.setPlaceHolders( kick, info );
-
-            target.kick( kick );
+            kickUser( target, "punishments.ban.kick", info );
         }
         else
         {
@@ -107,9 +94,12 @@ public class BanCommand extends PunishmentCommand
             {
                 final Map<String, Object> data = Maps.newHashMap();
                 data.put( "reason", reason );
+                data.put( "type", info.getType() );
 
-                BUCore.getApi().getBridgeManager().getBungeeBridge().sendMessage(
+                BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
                         BridgeType.BUNGEE_BUNGEE,
+                        null,
+                        Lists.newArrayList( FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ) ),
                         "USER",
                         new UserAction(
                                 storage,

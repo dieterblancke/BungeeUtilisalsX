@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 
 public class PluginMessageBridge extends Bridge implements Listener
 {
+
     @Override
     public boolean setup()
     {
@@ -49,7 +50,7 @@ public class PluginMessageBridge extends Bridge implements Listener
         {
             ProxyServer.getInstance().registerChannel( "bungeeutilisalsx:default-channel" );
             ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), this );
-            BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
+            eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
         }
         catch ( Exception e )
         {
@@ -173,9 +174,14 @@ public class PluginMessageBridge extends Bridge implements Listener
     @Override
     public void shutdownBridge()
     {
-        // ignore
         consumersMap.clear();
         ProxyServer.getInstance().getPluginManager().unregisterListener( this );
+
+        if ( eventHandlers != null )
+        {
+            eventHandlers.forEach( com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler::unregister );
+            eventHandlers.clear();
+        }
     }
 
     @EventHandler

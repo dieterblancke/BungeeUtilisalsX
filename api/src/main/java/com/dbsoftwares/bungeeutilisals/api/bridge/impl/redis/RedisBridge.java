@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
+import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.configuration.api.ISection;
 import lombok.Getter;
@@ -52,7 +53,7 @@ public class RedisBridge extends Bridge
     {
         try
         {
-            BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
+            eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
 
             // Getting credentials from configuration
             final ISection section = FileLocation.CONFIG.getConfiguration().getSection( "bridging.redis" );
@@ -113,6 +114,12 @@ public class RedisBridge extends Bridge
     {
         try ( Jedis jedis = pool.getResource() )
         {
+            if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+            {
+                BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
+                BUCore.getLogger().info( message.toString() );
+            }
+
             jedis.publish( "BUX_DEFAULT_CHANNEL", BUCore.getGson().toJson( message ) );
         }
         catch ( JedisConnectionException e )
@@ -198,15 +205,36 @@ public class RedisBridge extends Bridge
         pubSubHandler.poison();
         pool.close();
         consumersMap.clear();
+
+        if ( eventHandlers != null )
+        {
+            eventHandlers.forEach( EventHandler::unregister );
+            eventHandlers.clear();
+        }
     }
 
     private void onGeneralPubSubMessage( final String data )
     {
         final BridgedMessage message = BUCore.getGson().fromJson( data, BridgedMessage.class );
 
+        if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+        {
+            BUCore.getLogger().info( "Received message on BUX_DEFAULT_CHANNEL (redis):" );
+            BUCore.getLogger().info( message.toString() );
+        }
+
         if ( !super.canAccept( message ) )
         {
+            if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+            {
+                BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " could not be accepted!" );
+                BUCore.getLogger().info( message.toString() );
+            }
             return;
+        }
+        if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+        {
+            BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " was accepted, executing event ..." );
         }
 
         final BridgeResponseEvent responseEvent = new BridgeResponseEvent(

@@ -25,10 +25,10 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TempBanCommand extends PunishmentCommand
 {
@@ -80,23 +80,15 @@ public class TempBanCommand extends PunishmentCommand
                 time
         );
 
-        BUCore.getApi().getUser( storage.getUserName() ).ifPresent( banned ->
-        {
-            String kick = null;
-            if ( BUCore.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-            {
-                kick = Utils.formatList( BUCore.getApi().getPunishmentExecutor().searchTemplate(
-                        banned.getLanguageConfig(), PunishmentType.TEMPBAN, reason
-                ), "\n" );
-            }
-            if ( kick == null )
-            {
-                kick = Utils.formatList( banned.getLanguageConfig().getStringList( "punishments.tempban.kick" ), "\n" );
-            }
-            kick = executor.setPlaceHolders( kick, info );
+        final Optional<User> optionalTarget = BUCore.getApi().getUser( storage.getUserName() );
 
-            banned.kick( kick );
-        } );
+
+        if ( optionalTarget.isPresent() )
+        {
+            final User target = optionalTarget.get();
+
+            kickUser( target, "punishments.tempban.kick", info );
+        }
 
         user.sendLangMessage( "punishments.tempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
