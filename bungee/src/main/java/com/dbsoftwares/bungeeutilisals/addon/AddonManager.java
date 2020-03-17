@@ -240,15 +240,42 @@ public class AddonManager implements IAddonManager
         {
             addon.onDisable();
 
+            if ( scheduler.getTasks( addonName ) != null )
+            {
+                final List<IAddonTask> tasksList = Lists.newArrayList( scheduler.getTasks( addonName ) );
 
-            Validate.ifNotNull( scheduler.getTasks( addonName ), taskList -> taskList.forEach( IAddonTask::cancel ) );
-            Validate.ifNotNull( eventHandlers.get( addonName ), handlerList -> handlerList.forEach( EventHandler::unregister ) );
-            Validate.ifNotNull( listeners.get( addonName ), listenerList -> listenerList.forEach( listener ->
-                    ProxyServer.getInstance().getPluginManager().unregisterListener( listener )
-            ) );
-            Validate.ifNotNull( commands.get( addonName ), commandList -> commandList.forEach( command ->
-                    ProxyServer.getInstance().getPluginManager().unregisterCommand( command )
-            ) );
+                for ( IAddonTask task : tasksList )
+                {
+                    task.cancel();
+                }
+            }
+            if ( eventHandlers.get( addonName ) != null )
+            {
+                final List<EventHandler> handlerList = Lists.newArrayList( eventHandlers.get( addonName ) );
+
+                for ( EventHandler handler : handlerList )
+                {
+                    handler.unregister();
+                }
+            }
+            if ( listeners.get( addonName ) != null )
+            {
+                final List<Listener> listenerList = Lists.newArrayList( listeners.get( addonName ) );
+
+                for ( Listener listener : listenerList )
+                {
+                    ProxyServer.getInstance().getPluginManager().unregisterListener( listener );
+                }
+            }
+            if ( commands.get( addonName ) != null )
+            {
+                final List<Command> commandList = Lists.newArrayList( commands.get( addonName ) );
+
+                for ( Command command : commandList )
+                {
+                    ProxyServer.getInstance().getPluginManager().unregisterCommand( command );
+                }
+            }
 
             if ( addon.getClass().getClassLoader() instanceof AddonClassLoader )
             {

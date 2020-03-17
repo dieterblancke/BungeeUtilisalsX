@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
@@ -27,15 +26,8 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class BanCommand extends PunishmentCommand
 {
@@ -80,40 +72,8 @@ public class BanCommand extends PunishmentCommand
                 user.getName()
         );
 
-        final Optional<User> optionalTarget = BUCore.getApi().getUser( storage.getUserName() );
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            kickUser( target, "punishments.ban.kick", info );
-        }
-        else
-        {
-            if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
-            {
-                final Map<String, Object> data = Maps.newHashMap();
-                data.put( "reason", reason );
-                data.put( "type", info.getType() );
-
-                BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
-                        BridgeType.BUNGEE_BUNGEE,
-                        null,
-                        Lists.newArrayList( FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ) ),
-                        "USER",
-                        new UserAction(
-                                storage,
-                                UserActionType.KICK,
-                                new BridgedUserMessage(
-                                        true,
-                                        "punishments.ban.kick",
-                                        data,
-                                        executor.getPlaceHolders( info ).toArray()
-                                )
-                        )
-                );
-            }
-        }
+        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+        super.attemptKick( storage, "punishments.ban.kick", info );
 
         user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 

@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 
 import java.util.List;
-import java.util.Optional;
 
 public class TempBanCommand extends PunishmentCommand
 {
@@ -80,15 +79,8 @@ public class TempBanCommand extends PunishmentCommand
                 time
         );
 
-        final Optional<User> optionalTarget = BUCore.getApi().getUser( storage.getUserName() );
-
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            kickUser( target, "punishments.tempban.kick", info );
-        }
+        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+        super.attemptKick( storage, "punishments.tempban.kick", info );
 
         user.sendLangMessage( "punishments.tempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 

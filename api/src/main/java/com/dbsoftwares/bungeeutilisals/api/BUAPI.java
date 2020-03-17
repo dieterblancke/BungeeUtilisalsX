@@ -146,7 +146,7 @@ public interface BUAPI
     void broadcast( String message, String permission );
 
     /**
-     * Broadcastas a message with a given prefix to the people with the given permission.
+     * Broadcasts a message with a given prefix to the people with the given permission.
      *
      * @param prefix  The prefix you want.
      * @param message The message to be broadcasted.
@@ -154,7 +154,7 @@ public interface BUAPI
     void announce( String prefix, String message );
 
     /**
-     * Broadcastas a message with a given prefix to the people with the given permission.
+     * Broadcasts a message with a given prefix to the people with the given permission.
      *
      * @param prefix     The prefix you want.
      * @param message    The message to be broadcasted.
@@ -171,7 +171,7 @@ public interface BUAPI
     void langBroadcast( String message, Object... placeholders );
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param permission   The permission the user must have to receive the message.
@@ -189,7 +189,7 @@ public interface BUAPI
     void langBroadcast( ILanguageManager manager, String message, Object... placeholders );
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param manager      The languagemanager instance to be used.
      * @param message      The location (in the languages file) of the message to be broadcasted.
@@ -209,7 +209,7 @@ public interface BUAPI
     void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders );
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param manager      The languagemanager instance to be used.
      * @param plugin       The plugin name to be used.

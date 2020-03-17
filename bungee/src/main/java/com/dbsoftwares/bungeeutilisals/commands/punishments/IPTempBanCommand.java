@@ -78,9 +78,8 @@ public class IPTempBanCommand extends PunishmentCommand
                 time
         );
 
-        BUCore.getApi().getUsers().stream()
-                .filter( u -> u.getIp().equalsIgnoreCase( storage.getIp() ) )
-                .forEach( u -> kickUser( u, "punishments.iptempban.kick", info ) );
+        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+        super.attemptKick( storage, "punishments.iptempban.kick", info );
 
         user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
