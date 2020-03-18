@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.api.utils.Version;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.google.common.collect.Lists;
-import net.md_5.bungee.api.Favicon;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -37,9 +36,6 @@ import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import javax.imageio.ImageIO;
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
@@ -60,14 +56,6 @@ public class MotdPingListener implements Listener
         if ( !loadConditionalMotd( event, dataList ) )
         {
             loadDefaultMotd( event, dataList );
-        }
-        try
-        {
-            event.getResponse().setFavicon( Favicon.create( ImageIO.read( new File( "/server-icon.png" ) ) ) );
-        }
-        catch ( IOException e )
-        {
-            // ignore
         }
     }
 
