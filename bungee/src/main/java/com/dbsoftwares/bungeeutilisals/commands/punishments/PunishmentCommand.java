@@ -124,7 +124,7 @@ public abstract class PunishmentCommand implements CommandCall
             else
             {
                 punishmentArgs.setTime( args.get( 1 ) );
-                punishmentArgs.setReason( Utils.formatList( args.subList( 1, args.size() ), " " ) );
+                punishmentArgs.setReason( Utils.formatList( args.subList( 2, args.size() ), " " ) );
             }
         }
         else
