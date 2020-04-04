@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.event.InputPlaceHolderEve
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
@@ -69,7 +69,7 @@ public class InputPlaceHolders implements PlaceHolderPack
             @Override
             public String getReplacement( InputPlaceHolderEvent event )
             {
-                ServerGroup server = FileLocation.SERVERGROUPS.getData( event.getArgument() );
+                final ServerGroup server = ConfigFiles.SERVERGROUPS.getServer( event.getArgument() );
 
                 if ( server == null )
                 {

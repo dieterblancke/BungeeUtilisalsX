@@ -37,7 +37,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
 import com.dbsoftwares.bungeeutilisals.utils.UserUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -144,7 +144,7 @@ public class BUser implements User
             dao.getUserDao().setName( uuid, name );
         }
 
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );

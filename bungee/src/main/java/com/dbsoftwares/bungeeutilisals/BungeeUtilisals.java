@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
 import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
@@ -31,14 +32,17 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.*;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
@@ -147,7 +151,7 @@ public class BungeeUtilisals extends Plugin
         }
 
         // Loading setting files ...
-        createAndLoadFiles();
+        ConfigFiles.loadAllConfigs( this );
 
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
@@ -182,13 +186,13 @@ public class BungeeUtilisals extends Plugin
         checkPreviousVersion();
 
         // Initialize metric system
-        new Metrics( this );
+        registerMetrics();
 
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserChatListener() );
 
-        if ( FileLocation.MOTD.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.MOTD.isEnabled() )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new MotdPingListener() );
         }
@@ -210,7 +214,7 @@ public class BungeeUtilisals extends Plugin
         loader.register( UserCommandEvent.class, spyEventExecutor );
 
         // Loading Punishment system
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new PunishmentListener() );
 
@@ -221,7 +225,7 @@ public class BungeeUtilisals extends Plugin
             loader.register( UserCommandEvent.class, muteCheckExecutor );
         }
 
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
             final FriendsExecutor executor = new FriendsExecutor();
             loader.register( UserLoadEvent.class, executor );
@@ -385,6 +389,7 @@ public class BungeeUtilisals extends Plugin
 
     public void reload()
     {
+        ConfigFiles.reloadAllConfigs();
         loadCommands();
 
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
@@ -484,39 +489,41 @@ public class BungeeUtilisals extends Plugin
 
     public IConfiguration getConfig()
     {
-        return FileLocation.CONFIG.getConfiguration();
+        return ConfigFiles.CONFIG.getConfig();
     }
 
-    private void createAndLoadFiles()
+    private void registerMetrics()
     {
-        for ( FileLocation location : FileLocation.values() )
-        {
-            File file = new File( getDataFolder(), location.getPath() );
+        final Metrics metrics = new Metrics( this );
 
-            if ( !file.exists() )
-            {
-                IConfiguration.createDefaultFile( getResourceAsStream( location.getPath() ), file );
-
-                location.loadConfiguration( file );
-            }
-            else
-            {
-                // update configurations ...
-
-                location.loadConfiguration( file );
-                try
-                {
-                    location.getConfiguration().copyDefaults(
-                            IConfiguration.loadYamlConfiguration( getResourceAsStream( location.getPath() ) )
-                    );
-                }
-                catch ( IOException e )
-                {
-                    BUCore.getLogger().log( Level.SEVERE, "Could not update configurations: ", e );
-                }
-            }
-            location.loadData();
-        }
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "punishments",
+                () -> ConfigFiles.PUNISHMENTS.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "motds",
+                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "friends",
+                () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "actionbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "title_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "bossbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "chat_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
+        ) );
     }
 
     private void loadCommands()
@@ -525,7 +532,7 @@ public class BungeeUtilisals extends Plugin
 
         loadGeneralCommands();
 
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
         {
             loadPunishmentCommands();
         }
@@ -569,7 +576,7 @@ public class BungeeUtilisals extends Plugin
         customCommands.forEach( BUCommand::unload );
         customCommands.clear();
 
-        IConfiguration config = FileLocation.CUSTOMCOMMANDS.getConfiguration();
+        final IConfiguration config = ConfigFiles.CUSTOMCOMMANDS.getConfig();
 
         for ( ISection section : config.getSectionList( "commands" ) )
         {
@@ -616,12 +623,12 @@ public class BungeeUtilisals extends Plugin
 
     private void loadPunishmentCommand( String name, Class<? extends BUCommand> clazz )
     {
-        loadCommand( "commands." + name + ".enabled", FileLocation.PUNISHMENTS.getConfiguration(), clazz );
+        loadCommand( "commands." + name + ".enabled", ConfigFiles.PUNISHMENTS.getConfig(), clazz );
     }
 
     private void loadGeneralCommand( String name, Class<? extends BUCommand> clazz )
     {
-        loadCommand( name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz );
+        loadCommand( name + ".enabled", ConfigFiles.GENERALCOMMANDS.getConfig(), clazz );
     }
 
     private void loadCommand( String enabledPath, IConfiguration configuration, Class<? extends BUCommand> clazz )

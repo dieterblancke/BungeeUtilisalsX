@@ -26,7 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -36,8 +36,8 @@ public class UserChatExecutor implements EventExecutor
     @Event(priority = Priority.HIGHEST, executeIfCancelled = false)
     public void onUnicodeReplace( UserChatEvent event )
     {
-        String message = event.getMessage();
-        IConfiguration config = FileLocation.UTFSYMBOLS.getConfiguration();
+        final String message = event.getMessage();
+        final IConfiguration config = ConfigFiles.UTFSYMBOLS.getConfig();
 
         if ( config.getBoolean( "fancychat.enabled" )
                 && event.getUser().getParent().hasPermission( config.getString( "fancychat.permission" ) ) )
@@ -49,7 +49,7 @@ public class UserChatExecutor implements EventExecutor
     @Event(priority = Priority.LOW, executeIfCancelled = false)
     public void onUnicodeSymbol( UserChatEvent event )
     {
-        IConfiguration config = FileLocation.UTFSYMBOLS.getConfiguration();
+        final IConfiguration config = ConfigFiles.UTFSYMBOLS.getConfig();
 
         if ( config.getBoolean( "symbols.enabled" ) && event.getUser().getParent().hasPermission( config.getString( "symbols.permission" ) ) )
         {
@@ -62,7 +62,7 @@ public class UserChatExecutor implements EventExecutor
     {
         final User user = event.getUser();
         final String message = event.getMessage();
-        final IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
+        final IConfiguration config = ConfigFiles.ANTISWEAR.getConfig();
 
         if ( BUCore.getApi().getChatManager().checkForSwear( event.getUser(), message ) )
         {
@@ -96,7 +96,7 @@ public class UserChatExecutor implements EventExecutor
     {
         final User user = event.getUser();
         final String message = event.getMessage();
-        final IConfiguration config = FileLocation.ANTICAPS.getConfiguration();
+        final IConfiguration config = ConfigFiles.ANTICAPS.getConfig();
 
         if ( BUCore.getApi().getChatManager().checkForCaps( user, message ) )
         {
@@ -129,7 +129,7 @@ public class UserChatExecutor implements EventExecutor
     public void onSpamChat( UserChatEvent event )
     {
         final User user = event.getUser();
-        final IConfiguration config = FileLocation.ANTISPAM.getConfiguration();
+        final IConfiguration config = ConfigFiles.ANTISPAM.getConfig();
 
         if ( BUCore.getApi().getChatManager().checkForSpam( user ) )
         {
@@ -157,7 +157,7 @@ public class UserChatExecutor implements EventExecutor
     {
         final User user = event.getUser();
         final String message = event.getMessage();
-        final IConfiguration config = FileLocation.ANTIAD.getConfiguration();
+        final IConfiguration config = ConfigFiles.ANTIAD.getConfig();
 
         if ( BUCore.getApi().getChatManager().checkForAdvertisement( user, message ) )
         {

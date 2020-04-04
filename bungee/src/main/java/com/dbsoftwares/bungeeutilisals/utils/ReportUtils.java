@@ -2,7 +2,7 @@ package com.dbsoftwares.bungeeutilisals.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
@@ -14,7 +14,7 @@ public class ReportUtils
 
     public static void handleReportsFor( final String accepter, final UUID uuid, final PunishmentType type )
     {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
 
         if ( !config.getBoolean( "report.enabled" ) )
         {

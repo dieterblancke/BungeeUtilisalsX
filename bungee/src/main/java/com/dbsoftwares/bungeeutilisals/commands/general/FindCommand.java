@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -35,8 +35,8 @@ public class FindCommand extends BUCommand
     {
         super(
                 "find",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "find.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "find.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "find.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "find.permission" )
         );
     }
 

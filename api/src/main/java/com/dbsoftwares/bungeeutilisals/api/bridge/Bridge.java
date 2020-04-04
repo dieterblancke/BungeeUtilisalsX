@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 
@@ -43,7 +43,7 @@ public abstract class Bridge implements EventExecutor
 
     protected boolean canAccept( final BridgedMessage message )
     {
-        final String currentName = FileLocation.CONFIG.getConfiguration().getString( "bridging.name" );
+        final String currentName = ConfigFiles.CONFIG.getConfig().getString( "bridging.name" );
 
         if ( message.getTargets() != null && !message.getTargets().isEmpty() )
         {

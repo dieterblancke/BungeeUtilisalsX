@@ -19,15 +19,11 @@
 package com.dbsoftwares.bungeeutilisals.commands.plugin.sub;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.google.common.collect.ImmutableList;
 
-import java.io.IOException;
 import java.util.List;
-import java.util.logging.Level;
 
 public class ReloadSubCommand extends SubCommand
 {
@@ -52,22 +48,6 @@ public class ReloadSubCommand extends SubCommand
     @Override
     public void onExecute( User user, String[] args )
     {
-        for ( FileLocation location : FileLocation.values() )
-        {
-            try
-            {
-                location.getConfiguration().reload();
-
-                location.getData().clear();
-                location.getDataList().clear();
-                location.loadData();
-            }
-            catch ( IOException e )
-            {
-                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
-                user.sendMessage( "&fCould not reload " + location.toString().toLowerCase().replace( "_", " " ) + "!" );
-            }
-        }
         BungeeUtilisals.getInstance().reload();
         user.sendMessage( "&fAll configuration files have been reloaded!" );
     }

@@ -32,9 +32,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -107,12 +105,6 @@ public interface BUAPI
      * @return A SimpleExecutor instance.
      */
     SimpleExecutor getSimpleExecutor();
-
-    /**
-     * @param location The Configuration location you want to request.
-     * @return A YamlConfiguration instance from the requested file location.
-     */
-    IConfiguration getConfig( FileLocation location );
 
     /**
      * @return A new ProxyConnection instance.

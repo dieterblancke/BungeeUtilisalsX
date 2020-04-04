@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
@@ -43,8 +43,8 @@ public class GListCommand extends BUCommand
     {
         super(
                 "glist",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glist.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glist.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "glist.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "glist.permission" )
         );
     }
 
@@ -57,7 +57,7 @@ public class GListCommand extends BUCommand
     @Override
     public void onExecute( User user, String[] args )
     {
-        IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
         String color = config.getString( "glist.playerlist.color" );
         String separator = config.getString( "glist.playerlist.separator" );
         List<TextComponent> messages = Lists.newArrayList();
@@ -82,7 +82,7 @@ public class GListCommand extends BUCommand
         {
             for ( String server : config.getStringList( "glist.servers.list" ) )
             {
-                ServerGroup group = FileLocation.SERVERGROUPS.getData( server );
+                final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( server );
 
                 if ( group == null )
                 {

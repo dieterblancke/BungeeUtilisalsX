@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.util.Arrays;
@@ -40,9 +40,9 @@ public class PunishmentHistoryCommand extends BUCommand
 
     public PunishmentHistoryCommand()
     {
-        super( "punishmenthistory", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
+        super( "punishmenthistory", Arrays.asList( ConfigFiles.PUNISHMENTS.getConfig()
                         .getString( "commands.punishmenthistory.aliases" ).split( ", " ) ),
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.punishmenthistory.permission" )
+                ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.punishmenthistory.permission" )
         );
     }
 

@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.md_5.bungee.api.ProxyServer;
@@ -44,9 +44,11 @@ public class CheckIpCommand extends BUCommand
 
     public CheckIpCommand()
     {
-        super( "checkip", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString( "commands.checkip.aliases" ).split( ", " ) ),
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.checkip.permission" ) );
+        super(
+                "checkip",
+                Arrays.asList( ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.checkip.aliases" ).split( ", " ) ),
+                ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.checkip.permission" )
+        );
     }
 
     @Override

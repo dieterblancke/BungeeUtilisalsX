@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ServerPing;
@@ -49,7 +49,7 @@ public class MotdPingListener implements Listener
     @EventHandler
     public void onPing( ProxyPingEvent event )
     {
-        final List<MotdData> dataList = FileLocation.MOTD.getDataList();
+        final List<MotdData> dataList = ConfigFiles.MOTD.getMotds();
 
         insertName( event.getConnection() );
 

@@ -23,5 +23,6 @@ public enum UserActionType
     KICK,
     KICK_IP,
     MESSAGE,
-    MUTE
+    MUTE,
+    MUTE_IP,
 }

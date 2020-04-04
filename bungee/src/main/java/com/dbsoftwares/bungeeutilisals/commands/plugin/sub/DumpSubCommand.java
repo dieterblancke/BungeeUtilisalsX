@@ -22,7 +22,8 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.SubCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.Config;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.bungeeutilisals.dump.Dump;
 import com.dbsoftwares.bungeeutilisals.dump.PluginInfo;
@@ -176,10 +177,10 @@ public class DumpSubCommand extends SubCommand
         }
 
         final Map<String, Map<String, Object>> configurations = Maps.newHashMap();
-        for ( FileLocation location : FileLocation.values() )
+        for ( Config config : ConfigFiles.getAllConfigs() )
         {
-            final Map<String, Object> values = readValues( location.getConfiguration().getValues() );
-            configurations.put( location.toString().toLowerCase(), values );
+            final Map<String, Object> values = readValues( config.getConfig().getValues() );
+            configurations.put( config.toString().toLowerCase(), values );
         }
 
         return new Dump( "BungeeUtilisals", systemInfo, plugins, getTasks(), getScripts(), configurations );

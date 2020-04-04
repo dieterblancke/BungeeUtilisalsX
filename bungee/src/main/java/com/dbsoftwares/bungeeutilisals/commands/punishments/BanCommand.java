@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 
@@ -90,7 +90,7 @@ public class BanCommand extends PunishmentCommand
             {
                 BUCore.getApi().langPermissionBroadcast(
                         "punishments.ban.broadcast",
-                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.ban.broadcast" ),
+                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.ban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommandCall;
@@ -70,12 +70,12 @@ public class CommandManager
 
         registerPunishmentCommand(
                 "friends",
-                FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ),
-                FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "command" ),
+                ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
+                ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
                 new FriendsCommandCall()
         );
 
-        if ( FileLocation.GENERALCOMMANDS.getConfiguration().getBoolean( "server.slash-server.enabled" ) )
+        if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {
             registerSlashServerCommands();
         }
@@ -83,7 +83,7 @@ public class CommandManager
 
     private void registerSlashServerCommands()
     {
-        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "server.slash-server.permission" );
+        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.slash-server.permission" );
 
         for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
         {
@@ -100,7 +100,7 @@ public class CommandManager
 
     private void loadPunishmentCommands()
     {
-        final IConfiguration config = FileLocation.PUNISHMENTS.getConfiguration();
+        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
 
         if ( !config.getBoolean( "enabled" ) )
         {
@@ -139,7 +139,7 @@ public class CommandManager
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( section )
-                .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( section ) )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( section ) )
                 .executable( call );
 
         buildCommand( section, commandBuilder );
@@ -147,7 +147,7 @@ public class CommandManager
 
     private void registerPunishmentCommand( final String name, final String section, final CommandCall call, final List<String> parameters )
     {
-        final IConfiguration config = FileLocation.PUNISHMENTS.getConfiguration();
+        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
 
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )

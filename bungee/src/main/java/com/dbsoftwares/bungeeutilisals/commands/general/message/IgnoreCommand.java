@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -36,8 +36,8 @@ public class IgnoreCommand extends BUCommand
     {
         super(
                 "ignore",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ignore.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ignore.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ignore.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ignore.permission" )
         );
     }
 

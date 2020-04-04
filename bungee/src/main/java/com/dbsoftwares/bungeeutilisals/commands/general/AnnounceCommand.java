@@ -29,7 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.utils.redisdata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -52,8 +52,8 @@ public class AnnounceCommand extends BUCommand
     {
         super(
                 "announce",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "announce.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "announce.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "announce.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "announce.permission" )
         );
     }
 
@@ -67,7 +67,7 @@ public class AnnounceCommand extends BUCommand
 
     private static void sendAnnounce( AnnouncementType type, String message )
     {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
 
         switch ( type )
         {
@@ -147,7 +147,7 @@ public class AnnounceCommand extends BUCommand
 
     private static void sendBossBar( final String message )
     {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
         final List<IBossBar> bossBars = Lists.newArrayList();
 
         final BarColor color = BarColor.valueOf( config.getString( "announce.types.bossbar.color" ) );
@@ -181,7 +181,7 @@ public class AnnounceCommand extends BUCommand
 
     private static void sendActionBar( final String message )
     {
-        if ( FileLocation.GENERALCOMMANDS.getConfiguration().getBoolean( "announce.types.actionbar.enabled" ) )
+        if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "announce.types.actionbar.enabled" ) )
         {
             ProxyServer.getInstance().getPlayers().forEach( p -> p.sendMessage(
                     ChatMessageType.ACTION_BAR,
@@ -197,7 +197,7 @@ public class AnnounceCommand extends BUCommand
 
     private static void sendTitle( final String title, final String subtitle )
     {
-        final IConfiguration config = FileLocation.GENERALCOMMANDS.getConfiguration();
+        final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
 
         if ( config.getBoolean( "announce.types.title.enabled" ) )
         {

@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.utils.ReportUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
@@ -64,11 +64,11 @@ public class UserPunishExecutor implements EventExecutor
     @Event
     public void executeActions( UserPunishmentFinishEvent event )
     {
-        if ( !FileLocation.PUNISHMENTS.hasData( event.getType().toString() ) )
+        if ( !ConfigFiles.PUNISHMENTS.getPunishmentActions().containsKey( event.getType() ) )
         {
             return;
         }
-        final List<PunishmentAction> actions = FileLocation.PUNISHMENTS.getData( event.getType().toString() );
+        final List<PunishmentAction> actions = ConfigFiles.PUNISHMENTS.getPunishmentActions().get( event.getType() );
 
         for ( PunishmentAction action : actions )
         {

@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ChatColor;
 
@@ -37,8 +37,8 @@ public class GLagCommand extends BUCommand
     {
         super(
                 "glag",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glag.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "glag.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "glag.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "glag.permission" )
         );
     }
 

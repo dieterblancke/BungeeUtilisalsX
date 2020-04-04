@@ -34,7 +34,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
@@ -45,7 +45,6 @@ import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -87,7 +86,7 @@ public class BUtilisalsAPI implements BUAPI
         this.bridgeManager = new BridgeManager();
         this.bridgeManager.setup();
 
-        if ( getConfig( FileLocation.CONFIG ).getBoolean( "addons" ) )
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "addons" ) )
         {
             this.addonManager = new AddonManager();
         }
@@ -181,12 +180,6 @@ public class BUtilisalsAPI implements BUAPI
     public SimpleExecutor getSimpleExecutor()
     {
         return simpleExecutor;
-    }
-
-    @Override
-    public IConfiguration getConfig( FileLocation location )
-    {
-        return location.getConfiguration();
     }
 
     @Override

@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.announcers.announcements.TitleAnnouncemen
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 
@@ -39,7 +39,7 @@ public class TitleAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = FileLocation.SERVERGROUPS.getData( section.getString( "server" ) );
+            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
             if ( group == null )
             {

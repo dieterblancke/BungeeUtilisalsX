@@ -31,10 +31,9 @@ import java.util.logging.Logger;
 public final class BUCore
 {
 
-    private static BUAPI instance = null;
-
     @Getter
     private static final Gson gson = new Gson();
+    private static BUAPI instance = null;
 
     private BUCore()
     {

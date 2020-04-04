@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentCommand;
 
 import java.util.List;
@@ -88,7 +88,7 @@ public class UnbanCommand extends PunishmentCommand
             {
                 BUCore.getApi().langPermissionBroadcast(
                         "punishments.unban.broadcast",
-                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.unban.broadcast" ),
+                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.unban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.updater;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import kong.unirest.HttpResponse;
@@ -63,7 +63,7 @@ public class UpdateRunner implements Runnable
 
                     BUCore.getApi().langPermissionBroadcast(
                             "updater.update-found",
-                            BUCore.getApi().getConfig( FileLocation.CONFIG ).getString( "updater.permission" ),
+                            ConfigFiles.CONFIG.getConfig().getString( "updater.permission" ),
                             "{name}", data.getName(),
                             "{version}", data.getCurrentVersion(),
                             "{newVersion}", version

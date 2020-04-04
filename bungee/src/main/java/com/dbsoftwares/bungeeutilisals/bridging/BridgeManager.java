@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.PluginMessageBridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.handlers.BungeeBridgeResponseHandler;
 import com.dbsoftwares.configuration.api.ISection;
 
@@ -43,7 +43,7 @@ public class BridgeManager implements IBridgeManager
 
     public void setup()
     {
-        final ISection config = FileLocation.CONFIG.getConfiguration().getSection( "bridging" );
+        final ISection config = ConfigFiles.CONFIG.getConfig().getSection( "bridging" );
 
         if ( !config.getBoolean( "enabled" ) )
         {

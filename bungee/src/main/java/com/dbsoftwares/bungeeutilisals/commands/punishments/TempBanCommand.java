@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 
@@ -97,7 +97,7 @@ public class TempBanCommand extends PunishmentCommand
             {
                 BUCore.getApi().langPermissionBroadcast(
                         "punishments.tempban.broadcast",
-                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.tempban.broadcast" ),
+                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.tempban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

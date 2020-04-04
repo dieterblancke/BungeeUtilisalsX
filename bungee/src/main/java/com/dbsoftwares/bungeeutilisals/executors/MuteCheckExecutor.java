@@ -28,7 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -53,7 +53,7 @@ public class MuteCheckExecutor implements EventExecutor
             return;
         }
 
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getStringList( "blocked-mute-commands" )
+        if ( ConfigFiles.PUNISHMENTS.getConfig().getStringList( "blocked-mute-commands" )
                 .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
         {
 

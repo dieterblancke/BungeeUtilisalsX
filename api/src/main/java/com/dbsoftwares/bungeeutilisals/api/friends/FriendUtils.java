@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.friends;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
 import net.md_5.bungee.api.CommandSender;
 
@@ -41,7 +41,7 @@ public class FriendUtils
 
     public static int getFriendsLimit( final CommandSender sender )
     {
-        final ISection limits = FileLocation.FRIENDS_CONFIG.getConfiguration().getSection( "friendlimits" );
+        final ISection limits = ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "friendlimits" );
         final List<String> permissions = sender.getPermissions().stream()
                 .filter( perm -> perm.startsWith( limits.getString( "permission" ) ) )
                 .collect( Collectors.toList() );

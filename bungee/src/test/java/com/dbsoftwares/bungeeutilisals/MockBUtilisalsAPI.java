@@ -33,10 +33,8 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.language.MockLanguageManager;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -116,12 +114,6 @@ public class MockBUtilisalsAPI implements BUAPI
     public SimpleExecutor getSimpleExecutor()
     {
         return new SimpleExecutor();
-    }
-
-    @Override
-    public IConfiguration getConfig( FileLocation location )
-    {
-        return null;
     }
 
     @Override

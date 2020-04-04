@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
@@ -56,7 +56,7 @@ public class RedisBridge extends Bridge
             eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
 
             // Getting credentials from configuration
-            final ISection section = FileLocation.CONFIG.getConfiguration().getSection( "bridging.redis" );
+            final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "bridging.redis" );
 
             final String host = section.getString( "host", "localhost" );
             final int port = section.getInteger( "port", 6379 );
@@ -114,7 +114,7 @@ public class RedisBridge extends Bridge
     {
         try ( Jedis jedis = pool.getResource() )
         {
-            if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
             {
                 BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
                 BUCore.getLogger().info( message.toString() );
@@ -162,7 +162,7 @@ public class RedisBridge extends Bridge
         final BridgedMessage message = new BridgedMessage(
                 type,
                 UUID.randomUUID(),
-                FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
+                ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
                 action,
@@ -187,7 +187,7 @@ public class RedisBridge extends Bridge
         final BridgedMessage message = new BridgedMessage(
                 type,
                 UUID.randomUUID(),
-                FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
+                ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
                 action,
@@ -217,7 +217,7 @@ public class RedisBridge extends Bridge
     {
         final BridgedMessage message = BUCore.getGson().fromJson( data, BridgedMessage.class );
 
-        if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
         {
             BUCore.getLogger().info( "Received message on BUX_DEFAULT_CHANNEL (redis):" );
             BUCore.getLogger().info( message.toString() );
@@ -225,14 +225,14 @@ public class RedisBridge extends Bridge
 
         if ( !super.canAccept( message ) )
         {
-            if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
             {
                 BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " could not be accepted!" );
                 BUCore.getLogger().info( message.toString() );
             }
             return;
         }
-        if ( FileLocation.CONFIG.getConfiguration().getBoolean( "debug" ) )
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
         {
             BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " was accepted, executing event ..." );
         }

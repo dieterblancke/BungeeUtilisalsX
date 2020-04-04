@@ -26,7 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -42,8 +42,8 @@ public class StaffCommand extends BUCommand
     {
         super(
                 "staff",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staff.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staff.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staff.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staff.permission" )
         );
     }
 

@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.ImmutableList;
 
 import java.util.Arrays;
@@ -37,8 +37,8 @@ public class ReplyCommand extends BUCommand
     {
         super(
                 "reply",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "reply.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "reply.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "reply.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "reply.permission" )
         );
     }
 

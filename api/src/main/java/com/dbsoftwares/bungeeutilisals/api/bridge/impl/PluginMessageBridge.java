@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -108,7 +108,7 @@ public class PluginMessageBridge extends Bridge implements Listener
         final BridgedMessage message = new BridgedMessage(
                 type,
                 UUID.randomUUID(),
-                FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
+                ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
                 action,
@@ -133,7 +133,7 @@ public class PluginMessageBridge extends Bridge implements Listener
         final BridgedMessage message = new BridgedMessage(
                 type,
                 UUID.randomUUID(),
-                FileLocation.CONFIG.getConfiguration().getString( "bridging.name" ),
+                ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
                 targets,
                 ignoredTargets,
                 action,

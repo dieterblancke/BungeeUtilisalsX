@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
 
 import java.util.Date;
@@ -50,7 +50,7 @@ public class ReportCreateSubCommandCall implements CommandCall
             user.sendLangMessage( "offline" );
             return;
         }
-        final String bypassPermission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "report.bypass" );
+        final String bypassPermission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "report.bypass" );
         final Optional<User> optionalUser = BUCore.getApi().getUser( targetName );
         if ( optionalUser.isPresent() )
         {

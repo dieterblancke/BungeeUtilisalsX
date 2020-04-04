@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import redis.clients.jedis.Jedis;
@@ -80,7 +80,7 @@ public class PubSubHandler extends JedisPubSub implements Runnable
             {
                 jedis.subscribe(
                         this,
-                        "redismessenger-" + FileLocation.CONFIG.getConfiguration().getString( "bridging.name" )
+                        "redismessenger-" + ConfigFiles.CONFIG.getConfig().getString( "bridging.name" )
                 );
             }
             catch ( Exception e )

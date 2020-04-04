@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 
@@ -104,7 +104,7 @@ public class IPMuteCommand extends PunishmentCommand
             {
                 BUCore.getApi().langPermissionBroadcast(
                         "punishments.ipmute.broadcast",
-                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.ipmute.broadcast" ),
+                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.ipmute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

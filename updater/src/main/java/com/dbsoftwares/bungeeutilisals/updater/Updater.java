@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.updater;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Sets;
@@ -91,7 +91,7 @@ public class Updater
 
     private void initialize()
     {
-        final IConfiguration config = BUCore.getApi().getConfig( FileLocation.CONFIG );
+        final IConfiguration config = ConfigFiles.CONFIG.getConfig();
         final int delay = config.getInteger( "updater.delay" );
 
         if ( delay <= 0 )
@@ -106,7 +106,7 @@ public class Updater
 
     public void shutdown()
     {
-        if ( !BUCore.getApi().getConfig( FileLocation.CONFIG ).getBoolean( "updater.install" ) )
+        if ( !ConfigFiles.CONFIG.getConfig().getBoolean( "updater.install" ) )
         {
             return;
         }
@@ -117,6 +117,6 @@ public class Updater
 
     private boolean shouldInstall()
     {
-        return BUCore.getApi().getConfig( FileLocation.CONFIG ).getBoolean( "updater.install" );
+        return ConfigFiles.CONFIG.getConfig().getBoolean( "updater.install" );
     }
 }

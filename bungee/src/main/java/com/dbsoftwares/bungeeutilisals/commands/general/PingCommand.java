@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,8 +35,8 @@ public class PingCommand extends BUCommand
     {
         super(
                 "ping",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.permission" )
         );
     }
 
@@ -59,7 +59,7 @@ public class PingCommand extends BUCommand
         }
         else
         {
-            final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "ping.permission-other" );
+            final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.permission-other" );
             if ( permission != null
                     && !permission.isEmpty()
                     && !user.getParent().hasPermission( permission )

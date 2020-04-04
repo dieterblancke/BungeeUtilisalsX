@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.Arrays;
 import java.util.List;
@@ -35,9 +35,9 @@ public class PunishmentDataCommand extends BUCommand
 
     public PunishmentDataCommand()
     {
-        super( "punishmentdata", Arrays.asList( FileLocation.PUNISHMENTS.getConfiguration()
-                        .getString( "commands.punishmentdata.aliases" ).split( ", " ) ),
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.punishmentdata.permission" )
+        super( "punishmentdata",
+                Arrays.asList( ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.punishmentdata.aliases" ).split( ", " ) ),
+                ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.punishmentdata.permission" )
         );
     }
 

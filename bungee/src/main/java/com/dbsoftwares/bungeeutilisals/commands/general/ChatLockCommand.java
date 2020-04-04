@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -45,8 +45,8 @@ public class ChatLockCommand extends BUCommand implements Listener
     {
         super(
                 "chatlock",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "chatlock.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "chatlock.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "chatlock.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "chatlock.permission" )
         );
 
         ProxyServer.getInstance().getPluginManager().registerListener( BungeeUtilisals.getInstance(), this );
@@ -107,7 +107,7 @@ public class ChatLockCommand extends BUCommand implements Listener
             return;
         }
         final ProxiedPlayer player = (ProxiedPlayer) event.getSender();
-        final boolean canTalk = player.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "chatlock.bypass" ) )
+        final boolean canTalk = player.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "chatlock.bypass" ) )
                 || !lockedChatServers.contains( "ALL" ) && !lockedChatServers.contains( player.getServer().getInfo().getName() );
 
         if ( !canTalk )

@@ -20,10 +20,15 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
@@ -40,8 +45,8 @@ public class StaffChatCommand extends BUCommand implements Listener
     {
         super(
                 "staffchat",
-                Arrays.asList( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staffchat.aliases" ).split( ", " ) ),
-                FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staffchat.permission" )
+                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.aliases" ).split( ", " ) ),
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" )
         );
         ProxyServer.getInstance().getPluginManager().registerListener( BungeeUtilisals.getInstance(), this );
     }
@@ -52,7 +57,7 @@ public class StaffChatCommand extends BUCommand implements Listener
         {
             ProxiedPlayer parent = user.getParent();
 
-            if ( parent.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staffchat.permission" ) )
+            if ( parent.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ) )
                     || parent.hasPermission( "bungeeutilisals.commands.*" )
                     || parent.hasPermission( "bungeeutilisals.*" )
                     || parent.hasPermission( "*" ) )
@@ -98,13 +103,35 @@ public class StaffChatCommand extends BUCommand implements Listener
         {
             if ( user.isInStaffChat() )
             {
-                if ( player.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "staffchat.permission" ) )
+                if ( player.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ) )
                         || player.hasPermission( "bungeeutilisals.commands.*" )
                         || player.hasPermission( "bungeeutilisals.*" )
                         || player.hasPermission( "*" ) )
                 {
                     event.setCancelled( true );
                     sendStaffChatMessage( user.getServerName(), user.getName(), event.getMessage() );
+
+                    if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+                    {
+                        BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+                                BridgeType.BUNGEE_BUNGEE,
+                                null,
+                                Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                                "USER",
+                                new UserAction(
+                                        null,
+                                        UserActionType.MESSAGE,
+                                        new BridgedUserMessage(
+                                                true,
+                                                "general-commands.staffchat.format",
+                                                Maps.newHashMap(),
+                                                "{user}", user.getName(),
+                                                "{server}", user.getServerName(),
+                                                "{message}", event.getMessage()
+                                        )
+                                )
+                        );
+                    }
                 }
                 else
                 {

@@ -28,7 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -102,7 +102,7 @@ public class KickCommand implements CommandCall
             {
                 BUCore.getApi().langPermissionBroadcast(
                         "punishments.kick.broadcast",
-                        FileLocation.PUNISHMENTS.getConfiguration().getString( "commands.kick.broadcast" ),
+                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.kick.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

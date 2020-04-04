@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -48,7 +48,7 @@ public class SlashServerCommandCall implements CommandCall
 
         if ( args.size() == 1 )
         {
-            if ( !user.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "server.permission-other" ) ) )
+            if ( !user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.permission-other" ) ) )
             {
                 user.sendLangMessage( "no-permission" );
                 return;
