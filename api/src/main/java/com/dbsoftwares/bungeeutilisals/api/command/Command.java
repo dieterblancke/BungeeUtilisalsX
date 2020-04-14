@@ -27,6 +27,7 @@ import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
@@ -166,6 +167,11 @@ public class Command
     {
         ProxyServer.getInstance().getPluginManager().unregisterCommand( commandHolder );
         commandHolder = null;
+
+        if ( this instanceof Listener )
+        {
+            ProxyServer.getInstance().getPluginManager().unregisterListener( (Listener) this );
+        }
     }
 
     public Command register()
@@ -177,6 +183,11 @@ public class Command
         commandHolder = new CommandHolder( name, aliases );
 
         ProxyServer.getInstance().getPluginManager().registerCommand( BUCore.getApi().getPlugin(), commandHolder );
+
+        if ( this instanceof Listener )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), (Listener) this );
+        }
         return this;
     }
 
