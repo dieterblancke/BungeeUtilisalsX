@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommand;
+import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 public class StaffCharChatExecutor implements EventExecutor
@@ -48,7 +48,7 @@ public class StaffCharChatExecutor implements EventExecutor
         }
         final String message = event.getMessage().substring( detect.length() );
 
-        StaffChatCommand.sendStaffChatMessage( user.getServerName(), user.getName(), message );
+        StaffChatCommandCall.sendStaffChatMessage( user.getServerName(), user.getName(), message );
         event.setCancelled( true );
     }
 }
