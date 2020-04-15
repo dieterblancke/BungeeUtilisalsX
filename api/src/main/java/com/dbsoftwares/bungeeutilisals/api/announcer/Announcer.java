@@ -182,6 +182,10 @@ public abstract class Announcer
 
     private Announcement getNextAnnouncement()
     {
+        if ( announcements.isEmpty() )
+        {
+            throw new RuntimeException( "No " + type.toString().toLowerCase() + " announcements are found! Please create some in your config" );
+        }
         if ( announcementIterator == null || !announcementIterator.hasNext() )
         {
             announcementIterator = announcements.keySet().iterator();
