@@ -168,9 +168,9 @@ public class Command
         ProxyServer.getInstance().getPluginManager().unregisterCommand( commandHolder );
         commandHolder = null;
 
-        if ( this instanceof Listener )
+        if ( command instanceof Listener )
         {
-            ProxyServer.getInstance().getPluginManager().unregisterListener( (Listener) this );
+            ProxyServer.getInstance().getPluginManager().unregisterListener( (Listener) command );
         }
     }
 
@@ -184,9 +184,9 @@ public class Command
 
         ProxyServer.getInstance().getPluginManager().registerCommand( BUCore.getApi().getPlugin(), commandHolder );
 
-        if ( this instanceof Listener )
+        if ( command instanceof Listener )
         {
-            ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), (Listener) this );
+            ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), (Listener) command );
         }
         return this;
     }
