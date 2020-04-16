@@ -38,6 +38,32 @@ public class StaffChatCommandCall implements CommandCall, Listener
 {
     public static void sendStaffChatMessage( String serverName, String userName, String message )
     {
+        handleStaffChatMessage( serverName, userName, message );
+
+        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        {
+            BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    true,
+                                    "general-commands.staffchat.format",
+                                    Maps.newHashMap(),
+                                    "{user}", userName,
+                                    "{server}", serverName,
+                                    "{message}", message
+                            )
+                    )
+            );
+        }
+    }
+
+    private static void handleStaffChatMessage(String serverName, String userName, String message) {
         for ( User user : BUCore.getApi().getUsers() )
         {
             ProxiedPlayer parent = user.getParent();
@@ -87,6 +113,7 @@ public class StaffChatCommandCall implements CommandCall, Listener
                         || player.hasPermission( "*" ) )
                 {
                     event.setCancelled( true );
+
                     sendStaffChatMessage( user.getServerName(), user.getName(), event.getMessage() );
 
                     if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
