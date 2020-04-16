@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.SlashServerCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
@@ -67,6 +68,7 @@ public class CommandManager
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "helpop", new HelpOpCommandCall() );
         registerGeneralCommand( "server", new ServerCommandCall() );
+        registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
 
         registerPunishmentCommand(
                 "friends",

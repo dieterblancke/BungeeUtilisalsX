@@ -35,6 +35,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.logging.Level;
 
+@Deprecated
 public abstract class BUCommand extends Command implements CommandCall, TabExecutor
 {
 

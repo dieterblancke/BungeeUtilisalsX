@@ -18,10 +18,9 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
@@ -38,19 +37,8 @@ import net.md_5.bungee.event.EventHandler;
 import java.util.Arrays;
 import java.util.List;
 
-public class StaffChatCommand extends BUCommand implements Listener
+public class StaffChatCommandCall implements CommandCall, Listener
 {
-
-    public StaffChatCommand()
-    {
-        super(
-                "staffchat",
-                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.aliases" ).split( ", " ) ),
-                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" )
-        );
-        ProxyServer.getInstance().getPluginManager().registerListener( BungeeUtilisals.getInstance(), this );
-    }
-
     public static void sendStaffChatMessage( String serverName, String userName, String message )
     {
         for ( User user : BUCore.getApi().getUsers() )
@@ -69,26 +57,19 @@ public class StaffChatCommand extends BUCommand implements Listener
     }
 
     @Override
-    public List<String> onTabComplete( User user, String[] args )
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        return Lists.newArrayList( "on", "off" );
-    }
+        // If amount of arguments > 0, then we should directly send a message in staff chat
+        if ( args.size() > 0 )
+        {
+            sendStaffChatMessage( user.getServerName(), user.getName(), String.join( " ", args ) );
+            return;
+        }
 
-    @Override
-    public void onExecute( User user, String[] args )
-    {
         user.setInStaffChat( !user.isInStaffChat() );
 
         user.sendLangMessage( "general-commands.staffchat."
                 + (user.isInStaffChat() ? "enabled" : "disabled") );
-    }
-
-    @Override
-    public void unload()
-    {
-        super.unload();
-
-        ProxyServer.getInstance().getPluginManager().unregisterListener( this );
     }
 
     @EventHandler

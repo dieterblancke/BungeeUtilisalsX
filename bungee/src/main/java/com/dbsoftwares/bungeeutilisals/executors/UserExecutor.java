@@ -70,13 +70,8 @@ public class UserExecutor implements EventExecutor
         final User user = event.getUser();
         final StaffRankData rank = findStaffRank( user );
 
-        if ( rank == null )
-        {
-            return;
-        }
-
         BUCore.getApi().getEventLoader().launchEvent(
-                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )
+                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank == null ? null : rank.getName() )
         );
     }
 

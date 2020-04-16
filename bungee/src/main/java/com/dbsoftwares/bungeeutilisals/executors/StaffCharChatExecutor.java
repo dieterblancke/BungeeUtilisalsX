@@ -48,7 +48,7 @@ public class StaffCharChatExecutor implements EventExecutor
         }
         final String message = event.getMessage().substring( detect.length() );
 
-        StaffChatCommand.sendStaffChatMessage( user.getServerName(), user.getName(), message );
+        StaffChatCommandCall.sendStaffChatMessage( user.getServerName(), user.getName(), message );
         event.setCancelled( true );
     }
 }
