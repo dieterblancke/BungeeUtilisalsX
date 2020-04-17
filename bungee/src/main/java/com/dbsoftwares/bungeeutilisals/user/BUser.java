@@ -228,7 +228,7 @@ public class BUser implements User
     @Override
     public void sendRawMessage( String message )
     {
-        sendMessage( new TextComponent( PlaceHolderAPI.formatMessage( this, message ) ) );
+        sendMessage( TextComponent.fromLegacyText( PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override

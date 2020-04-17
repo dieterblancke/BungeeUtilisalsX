@@ -116,7 +116,7 @@ public class ConsoleUser implements User
     @Override
     public void sendRawMessage( String message )
     {
-        sendMessage( new TextComponent( message ) );
+        sendMessage( TextComponent.fromLegacyText( message ) );
     }
 
     @Override
