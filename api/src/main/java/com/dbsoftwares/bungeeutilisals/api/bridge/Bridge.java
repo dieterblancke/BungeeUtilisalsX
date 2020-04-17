@@ -41,7 +41,7 @@ public abstract class Bridge implements EventExecutor
     protected Map<String, SimpleEntry<Class<?>, Consumer>> consumersMap = Maps.newConcurrentMap();
     protected Set<EventHandler<BridgeResponseEvent>> eventHandlers;
 
-    protected boolean canAccept( final BridgedMessage message )
+    public boolean canAccept( final BridgedMessage message )
     {
         final String currentName = ConfigFiles.CONFIG.getConfig().getString( "bridging.name" );
 

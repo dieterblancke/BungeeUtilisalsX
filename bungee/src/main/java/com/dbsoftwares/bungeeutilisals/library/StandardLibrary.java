@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals.library;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import lombok.Getter;
 
 public enum StandardLibrary
@@ -60,24 +59,6 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.4.2",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
-    ),
-    UNIREST(
-            "kong.unirest.Unirest",
-            "https://repo1.maven.org/maven2/com/konghq/unirest-java/{version}/unirest-java-{version}-standalone.jar",
-            "3.4.01",
-            true
-    ),
-    JEDIS(
-            "redis.clients.jedis.Jedis",
-            "https://repo1.maven.org/maven2/redis/clients/jedis/{version}/jedis-{version}.jar",
-            "3.2.0",
-            ConfigFiles.GENERALCOMMANDS.isEnabled( "bridging" )
-    ),
-    APACHE_POOL2(
-            "org.apache.commons.pool2.impl.GenericObjectPoolConfig",
-            "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
-            "2.6.2",
-            ConfigFiles.GENERALCOMMANDS.isEnabled( "bridging" )
     );
 
     @Getter

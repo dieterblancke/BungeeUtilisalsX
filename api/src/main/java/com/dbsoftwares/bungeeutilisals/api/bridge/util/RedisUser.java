@@ -16,21 +16,21 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.api.bridge;
+package com.dbsoftwares.bungeeutilisals.api.bridge.util;
 
-import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.UserUtils;
+import lombok.Data;
 
-public interface IBridgeManager
+import java.io.Serializable;
+
+@Data
+public class RedisUser implements Serializable
 {
-    void setup();
+    private String currentDomain;
 
-    boolean useBungeeBridge();
-
-    boolean useSpigotBridge();
-
-    RedisBridge getBungeeBridge();
-
-    Bridge getSpigotBridge();
-
-    void shutdown();
+    public RedisUser( final User user )
+    {
+        this.currentDomain = UserUtils.getJoinedHost( user.getParent() );
+    }
 }

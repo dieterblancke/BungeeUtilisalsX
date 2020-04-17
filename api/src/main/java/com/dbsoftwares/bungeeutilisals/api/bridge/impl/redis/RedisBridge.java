@@ -22,31 +22,47 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
+import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.codecs.RedisUserCodec;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
+import com.dbsoftwares.bungeeutilisals.api.bridge.util.RedisUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Maps;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.RedisFuture;
+import io.lettuce.core.RedisURI;
+import io.lettuce.core.api.StatefulRedisConnection;
+import io.lettuce.core.api.async.RedisAsyncCommands;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import lombok.Getter;
-import net.md_5.bungee.api.ProxyServer;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.JedisPoolConfig;
-import redis.clients.jedis.exceptions.JedisConnectionException;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.logging.Level;
 
 public class RedisBridge extends Bridge
 {
 
+    private final static String REDIS_USER_KEY = "REDIS_USER_KEY";
+    private final Cache<Object, Map<String, RedisUser>> redisUserCache = CacheBuilder.newBuilder()
+            .expireAfterWrite( 5, TimeUnit.SECONDS )
+            .build();
+
     @Getter
-    private JedisPool pool;
-    private PubSubHandler pubSubHandler;
+    private RedisClient redisClient;
+    private StatefulRedisPubSubConnection<String, String> pubSubConnection;
+    @Getter
+    private StatefulRedisConnection<String, RedisUser> userConnection;
 
     @Override
     public boolean setup()
@@ -60,47 +76,25 @@ public class RedisBridge extends Bridge
 
             final String host = section.getString( "host", "localhost" );
             final int port = section.getInteger( "port", 6379 );
-            final String password = section.getString( "password" ).isEmpty() ? null : section.getString( "password" );
+            final String password = section.getString( "password" );
 
-            // Setting up jedis pool
-            final FutureTask<JedisPool> task = new FutureTask<>( () ->
-            {
-                final JedisPoolConfig config = new JedisPoolConfig();
-                config.setMaxTotal( section.getInteger( "max-connections", 5 ) );
+            final RedisURI uri = RedisURI.builder()
+                    .withHost( host )
+                    .withPort( port )
+                    .withPassword( password )
+                    .build();
+            this.redisClient = RedisClient.create( uri );
+            this.pubSubConnection = this.redisClient.connectPubSub();
+            this.userConnection = this.redisClient.connect( new RedisUserCodec() );
 
-                return new JedisPool( config, host, port, 0, password );
-            } );
-            ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), task );
-            try
-            {
-                pool = task.get();
-            }
-            catch ( InterruptedException | ExecutionException e )
-            {
-                setup = false;
-                throw new RuntimeException( "Unable to create Jedis pool", e );
-            }
 
-            try ( Jedis jedis = pool.getResource() )
-            {
-                jedis.ping();
+            this.pubSubConnection.addListener( new RedisDefaultPubSubListener( this ) );
 
-                BUCore.getLogger().log( Level.INFO, "Successfully connected to Redis server." );
-            }
-            catch ( JedisConnectionException e )
-            {
-                pool.destroy();
-                pool = null;
-                setup = false;
-                throw e;
-            }
+            final RedisUserExecutor executor = new RedisUserExecutor( this );
+            BUCore.getApi().getEventLoader().register( UserLoadEvent.class, executor );
+            BUCore.getApi().getEventLoader().register( UserUnloadEvent.class, executor );
 
-            // Setting up PubSub channel handler
-            pubSubHandler = new PubSubHandler( this );
-            ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), pubSubHandler );
-
-            // Setting up default channel.
-            pubSubHandler.registerConsumer( "BUX_DEFAULT_CHANNEL", this::onGeneralPubSubMessage );
+            BUCore.getLogger().log( Level.INFO, "Successfully connected to Redis server." );
             return setup = true;
         }
         catch ( Exception e )
@@ -112,21 +106,12 @@ public class RedisBridge extends Bridge
 
     private void sendMessage( final BridgedMessage message )
     {
-        try ( Jedis jedis = pool.getResource() )
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
         {
-            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
-            {
-                BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
-                BUCore.getLogger().info( message.toString() );
-            }
-
-            jedis.publish( "BUX_DEFAULT_CHANNEL", BUCore.getGson().toJson( message ) );
+            BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
+            BUCore.getLogger().info( message.toString() );
         }
-        catch ( JedisConnectionException e )
-        {
-            BUCore.getLogger().log( Level.SEVERE, "Could not establish a connection.", e );
-            throw new RuntimeException( "Unable to publish channel message", e );
-        }
+        pubSubConnection.sync().publish( "BUX_DEFAULT_CHANNEL", BUCore.getGson().toJson( message ) );
     }
 
     @Override
@@ -202,8 +187,7 @@ public class RedisBridge extends Bridge
     @Override
     public void shutdownBridge()
     {
-        pubSubHandler.poison();
-        pool.close();
+        redisClient.shutdown();
         consumersMap.clear();
 
         if ( eventHandlers != null )
@@ -213,37 +197,30 @@ public class RedisBridge extends Bridge
         }
     }
 
-    private void onGeneralPubSubMessage( final String data )
+    public Map<String, RedisUser> getAllRedisUsers()
     {
-        final BridgedMessage message = BUCore.getGson().fromJson( data, BridgedMessage.class );
-
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+        try
         {
-            BUCore.getLogger().info( "Received message on BUX_DEFAULT_CHANNEL (redis):" );
-            BUCore.getLogger().info( message.toString() );
-        }
-
-        if ( !super.canAccept( message ) )
-        {
-            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+            return redisUserCache.get( REDIS_USER_KEY, () ->
             {
-                BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " could not be accepted!" );
-                BUCore.getLogger().info( message.toString() );
-            }
-            return;
-        }
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
-        {
-            BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " was accepted, executing event ..." );
-        }
+                final RedisAsyncCommands<String, RedisUser> commands = userConnection.async();
+                final RedisFuture<Map<String, RedisUser>> future = commands.hgetall( "bungeeutilisalsx:users" );
 
-        final BridgeResponseEvent responseEvent = new BridgeResponseEvent(
-                message.getType(),
-                message.getIdentifier(),
-                message.getFrom(),
-                message.getAction(),
-                message.getMessage()
-        );
-        BUCore.getApi().getEventLoader().launchEventAsync( responseEvent );
+                try
+                {
+                    return future.get();
+                }
+                catch ( InterruptedException | ExecutionException e )
+                {
+                    e.printStackTrace();
+                    return Maps.newHashMap();
+                }
+            } );
+        }
+        catch ( ExecutionException e )
+        {
+            e.printStackTrace();
+            return Maps.newHashMap();
+        }
     }
 }

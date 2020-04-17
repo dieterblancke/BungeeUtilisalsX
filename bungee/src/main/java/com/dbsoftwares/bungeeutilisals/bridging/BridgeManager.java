@@ -53,8 +53,17 @@ public class BridgeManager implements IBridgeManager
         boolean redisBridgeSetup = false;
         if ( config.getBoolean( "bungee.enabled" ) )
         {
-            redisBridge = new RedisBridge();
-            redisBridgeSetup = redisBridge.setup();
+            if ( ProxyServer.getInstance().getPluginManager().getPlugin( "RedisBungee" ) == null )
+            {
+                BUCore.getLogger().warning(
+                        "Could not set up the Bungee Bridge, RedisBungee needs to be present for this!"
+                );
+            }
+            else
+            {
+                redisBridge = new RedisBridge();
+                redisBridgeSetup = redisBridge.setup();
+            }
         }
         if ( config.getBoolean( "spigot.enabled" ) )
         {
@@ -115,7 +124,7 @@ public class BridgeManager implements IBridgeManager
         return redisBridge != null || pluginMessageBridge != null;
     }
 
-    public Bridge getBungeeBridge()
+    public RedisBridge getBungeeBridge()
     {
         return redisBridge;
     }

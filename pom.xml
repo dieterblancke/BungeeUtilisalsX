@@ -110,17 +110,21 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.konghq</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>3.4.01</version>
-            <classifier>standalone</classifier>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>com.imaginarycode.minecraft</groupId>
             <artifactId>RedisBungee</artifactId>
             <version>0.3.8-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.konghq</groupId>
+            <artifactId>unirest-java</artifactId>
+            <version>3.4.01</version>
+            <classifier>standalone</classifier>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>5.2.2.RELEASE</version>
         </dependency>
     </dependencies>
 

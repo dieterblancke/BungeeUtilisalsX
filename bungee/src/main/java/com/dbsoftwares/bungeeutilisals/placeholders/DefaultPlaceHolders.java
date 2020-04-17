@@ -60,5 +60,8 @@ public class DefaultPlaceHolders implements PlaceHolderPack
                 event -> String.valueOf( BUCore.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
                 event -> String.valueOf( ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers() ) );
+
+        PlaceHolderAPI.addPlaceHolder( "{redis_online}", false,
+                event -> String.valueOf( BUCore.getApi().getBridgeManager().useBungeeBridge() ? BUCore.getApi().getPlayerUtils().getTotalCount() : 0 ) );
     }
 }

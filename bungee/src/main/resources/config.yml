@@ -19,11 +19,9 @@ bridging:
       - pluginmessaging
 
   redis:
-    # Redis credentials, for Bungee to Bungee briding, this will only be used if no RedisBungee is found.
     host: 127.0.0.1
     port: 6379
     password: ''
-    max-connections: 5
 
 # Currently this should only be enabled for AntiAFKAddon.
 # This feature is highly experimental and might increase load on your server.

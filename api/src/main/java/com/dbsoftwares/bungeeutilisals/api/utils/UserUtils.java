@@ -16,11 +16,14 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.utils;
+package com.dbsoftwares.bungeeutilisals.api.utils;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.util.RedisUser;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+
+import java.util.Collection;
 
 public class UserUtils
 {
@@ -48,9 +51,29 @@ public class UserUtils
 
     public static long getOnlinePlayersOnDomain( final String domain )
     {
-        return ProxyServer.getInstance().getPlayers()
-                .stream()
-                .filter( player -> getJoinedHost( player ).equalsIgnoreCase( domain ) )
-                .count();
+        int amount = 0;
+        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        {
+            final Collection<RedisUser> users = BUCore.getApi().getBridgeManager().getBungeeBridge().getAllRedisUsers().values();
+
+            for ( RedisUser user : users )
+            {
+                if ( user.getCurrentDomain().equalsIgnoreCase( domain ) )
+                {
+                    amount++;
+                }
+            }
+        }
+        else
+        {
+            for ( ProxiedPlayer player : ProxyServer.getInstance().getPlayers() )
+            {
+                if ( getJoinedHost( player ).equalsIgnoreCase( domain ) )
+                {
+                    amount++;
+                }
+            }
+        }
+        return amount;
     }
 }
