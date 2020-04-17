@@ -183,18 +183,6 @@ public class MockBUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders )
-    {
-
-    }
-
-    @Override
-    public void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders )
-    {
-
-    }
-
-    @Override
     public Collection<Announcer> getAnnouncers()
     {
         return null;

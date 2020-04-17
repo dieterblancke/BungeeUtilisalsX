@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.library;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import lombok.Getter;
 
 public enum StandardLibrary
@@ -70,13 +71,13 @@ public enum StandardLibrary
             "redis.clients.jedis.Jedis",
             "https://repo1.maven.org/maven2/redis/clients/jedis/{version}/jedis-{version}.jar",
             "3.2.0",
-            true
+            ConfigFiles.GENERALCOMMANDS.isEnabled( "bridging" )
     ),
     APACHE_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPoolConfig",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
             "2.6.2",
-            true
+            ConfigFiles.GENERALCOMMANDS.isEnabled( "bridging" )
     );
 
     @Getter

@@ -32,7 +32,10 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public class StaffChatCommandCall implements CommandCall, Listener
 {
@@ -42,10 +45,19 @@ public class StaffChatCommandCall implements CommandCall, Listener
 
         if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
         {
+            final Map<String, Object> data = Maps.newHashMap();
+
+            data.put( "PERMISSION", Lists.newArrayList(
+                    ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
+                    "bungeeutilisals.commands.*",
+                    "bungeeutilisals.*",
+                    "*"
+            ) );
+
             BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,
@@ -53,7 +65,7 @@ public class StaffChatCommandCall implements CommandCall, Listener
                             new BridgedUserMessage(
                                     true,
                                     "general-commands.staffchat.format",
-                                    Maps.newHashMap(),
+                                    data,
                                     "{user}", userName,
                                     "{server}", serverName,
                                     "{message}", message
@@ -63,7 +75,8 @@ public class StaffChatCommandCall implements CommandCall, Listener
         }
     }
 
-    private static void handleStaffChatMessage(String serverName, String userName, String message) {
+    private static void handleStaffChatMessage( String serverName, String userName, String message )
+    {
         for ( User user : BUCore.getApi().getUsers() )
         {
             ProxiedPlayer parent = user.getParent();

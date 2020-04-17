@@ -28,6 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.handlers.BungeeBridgeResponseHandler;
 import com.dbsoftwares.configuration.api.ISection;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.util.Set;
 
@@ -105,7 +106,8 @@ public class BridgeManager implements IBridgeManager
 
     public boolean useBungeeBridge()
     {
-        return redisBridge != null;
+        return redisBridge != null
+                && ProxyServer.getInstance().getPluginManager().getPlugin( "RedisBungee" ) != null;
     }
 
     public boolean useSpigotBridge()

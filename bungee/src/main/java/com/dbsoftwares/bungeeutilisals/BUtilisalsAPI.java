@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
@@ -39,13 +40,18 @@ import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.LanguageUtils;
 import com.dbsoftwares.bungeeutilisals.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisals.bridging.BridgeManager;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
+import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
+import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -82,9 +88,9 @@ public class BUtilisalsAPI implements BUAPI
         this.languageManager = new PluginLanguageManager( instance );
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
-        this.playerUtils = new BungeePlayerUtils();
         this.bridgeManager = new BridgeManager();
         this.bridgeManager.setup();
+        this.playerUtils = bridgeManager.useBungeeBridge() ? new RedisPlayerUtils() : new BungeePlayerUtils();
 
         if ( ConfigFiles.CONFIG.getConfig().getBoolean( "addons" ) )
         {
@@ -211,6 +217,29 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void broadcast( String message, String permission )
     {
+        if ( bridgeManager.useBungeeBridge() )
+        {
+            final Map<String, Object> data = Maps.newHashMap();
+
+            data.put( "PERMISSION", Collections.singletonList( permission ) );
+
+            bridgeManager.getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    false,
+                                    message,
+                                    data
+                            )
+                    )
+            );
+        }
+
         users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( message ) );
         getConsole().sendMessage( message );
     }
@@ -218,6 +247,25 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message )
     {
+        if ( bridgeManager.useBungeeBridge() )
+        {
+            bridgeManager.getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    false,
+                                    prefix + message,
+                                    Maps.newHashMap()
+                            )
+                    )
+            );
+        }
+
         users.forEach( user -> user.sendMessage( prefix, message ) );
         getConsole().sendMessage( prefix, message );
     }
@@ -225,6 +273,29 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message, String permission )
     {
+        if ( bridgeManager.useBungeeBridge() )
+        {
+            final Map<String, Object> data = Maps.newHashMap();
+
+            data.put( "PERMISSION", Collections.singletonList( permission ) );
+
+            bridgeManager.getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    false,
+                                    prefix + message,
+                                    data
+                            )
+                    )
+            );
+        }
+
         users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( prefix, message ) );
         getConsole().sendMessage( prefix, message );
     }
@@ -232,12 +303,56 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langBroadcast( String message, Object... placeholders )
     {
+        if ( bridgeManager.useBungeeBridge() )
+        {
+            bridgeManager.getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    true,
+                                    message,
+                                    Maps.newHashMap(),
+                                    placeholders
+                            )
+                    )
+            );
+        }
+
         langBroadcast( languageManager, message, placeholders );
     }
 
     @Override
     public void langPermissionBroadcast( String message, String permission, Object... placeholders )
     {
+        if ( bridgeManager.useBungeeBridge() )
+        {
+            final Map<String, Object> data = Maps.newHashMap();
+
+            data.put( "PERMISSION", Collections.singletonList( permission ) );
+
+            bridgeManager.getBungeeBridge().sendTargetedMessage(
+                    BridgeType.BUNGEE_BUNGEE,
+                    null,
+                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    "USER",
+                    new UserAction(
+                            null,
+                            UserActionType.MESSAGE,
+                            new BridgedUserMessage(
+                                    true,
+                                    message,
+                                    data,
+                                    placeholders
+                            )
+                    )
+            );
+        }
+
         langPermissionBroadcast( languageManager, message, permission, placeholders );
     }
 
@@ -253,20 +368,6 @@ public class BUtilisalsAPI implements BUAPI
     {
         users.stream().filter( user -> user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
         LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
-    }
-
-    @Override
-    public void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders )
-    {
-        users.forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
-        LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
-    }
-
-    @Override
-    public void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders )
-    {
-        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, plugin, user, message, placeholders ) );
-        LanguageUtils.sendLangMessage( manager, plugin, getConsole(), message, placeholders );
     }
 
     @Override
