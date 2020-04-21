@@ -176,6 +176,7 @@ report:
       permission: bungeeutilisals.commands.report.create
       # Cooldown in seconds ...
       cooldown: 10
+      broadcast: bungeeutilisals.report.receive
     list:
       enabled: true
       name: list

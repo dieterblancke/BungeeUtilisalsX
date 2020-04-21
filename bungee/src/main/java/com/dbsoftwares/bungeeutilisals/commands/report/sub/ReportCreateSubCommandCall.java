@@ -73,7 +73,7 @@ public class ReportCreateSubCommandCall implements CommandCall
 
         BUCore.getApi().langPermissionBroadcast(
                 "general-commands.report.create.broadcast",
-                "",
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "report.subcommands.create.broadcast" ),
                 "{target}", targetName,
                 "{user}", user.getName(),
                 "{reason}", reason,
