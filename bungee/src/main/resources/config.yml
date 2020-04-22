@@ -15,7 +15,6 @@ bridging:
     # By default, BungeeUtilisalsX will attempt to connect to a SpigotMC server using Redis PubSub channel.
     # If BungeeUtilisalsX cannot connect to the redis credentials provided below, it will fall back to Plugin Messaging
     methods:
-      - redis
       - pluginmessaging
 
   redis:
