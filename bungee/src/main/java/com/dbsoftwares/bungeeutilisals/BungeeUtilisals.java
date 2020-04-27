@@ -38,7 +38,6 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
@@ -77,12 +76,9 @@ import com.dbsoftwares.bungeeutilisals.updater.Updater;
 import com.dbsoftwares.bungeeutilisals.utils.EncryptionUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
@@ -115,9 +111,6 @@ public class BungeeUtilisals extends Plugin
 
     @Getter
     private List<BUCommand> generalCommands = Lists.newArrayList();
-
-    @Getter
-    private List<BUCommand> customCommands = Lists.newArrayList();
 
     @Getter
     private CommandManager commandManager;
@@ -525,8 +518,6 @@ public class BungeeUtilisals extends Plugin
         {
             loadPunishmentCommands();
         }
-
-        loadCustomCommands();
     }
 
     private void loadGeneralCommands()
@@ -556,56 +547,6 @@ public class BungeeUtilisals extends Plugin
         loadPunishmentCommand( "punishmenthistory", PunishmentHistoryCommand.class );
         loadPunishmentCommand( "punishmentdata", PunishmentDataCommand.class );
         loadPunishmentCommand( "checkip", CheckIpCommand.class );
-    }
-
-    private void loadCustomCommands()
-    {
-        customCommands.forEach( BUCommand::unload );
-        customCommands.clear();
-
-        final IConfiguration config = ConfigFiles.CUSTOMCOMMANDS.getConfig();
-
-        for ( ISection section : config.getSectionList( "commands" ) )
-        {
-            String name = section.getString( "name" );
-            List<String> aliases = section.exists( "aliases" ) ? section.getStringList( "aliases" ) : Lists.newArrayList();
-            String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
-            List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
-
-            BUCommand command = new BUCommand( name, aliases, permission )
-            {
-
-                @Override
-                public void onExecute( User user, String[] args )
-                {
-                    final String messagesKey = "messages";
-                    final List<TextComponent> components;
-
-                    if ( section.isList( messagesKey ) )
-                    {
-                        components = MessageBuilder.buildMessage( user, section.getSectionList( messagesKey ) );
-                    }
-                    else
-                    {
-                        components = Lists.newArrayList( MessageBuilder.buildMessage( user, section.getSection( messagesKey ) ) );
-                    }
-
-                    components.forEach( user::sendMessage );
-                    commands.forEach( command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
-                            ProxyServer.getInstance().getConsole(),
-                            PlaceHolderAPI.formatMessage( user, command )
-                    ) );
-                }
-
-                @Override
-                public List<String> onTabComplete( User user, String[] args )
-                {
-                    return ImmutableList.of();
-                }
-            };
-
-            customCommands.add( command );
-        }
     }
 
     private void loadPunishmentCommand( String name, Class<? extends BUCommand> clazz )

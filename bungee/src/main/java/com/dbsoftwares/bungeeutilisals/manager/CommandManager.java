@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisals.commands.CustomCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
@@ -55,6 +56,7 @@ public class CommandManager
         }
         loadGeneralCommands();
         loadPunishmentCommands();
+        loadCustomCommands();
     }
 
     private void loadGeneralCommands()
@@ -133,6 +135,28 @@ public class CommandManager
         registerPunishmentCommand( "unmuteip", "commands.unmuteip", new UnmuteIPCommand(), parameters );
 
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommand(), parameters );
+    }
+
+    private void loadCustomCommands()
+    {
+        final IConfiguration config = ConfigFiles.CUSTOMCOMMANDS.getConfig();
+
+        for ( ISection section : config.getSectionList( "commands" ) )
+        {
+            final String name = section.getString( "name" );
+            final List<String> aliases = section.exists( "aliases" ) ? section.getStringList( "aliases" ) : Lists.newArrayList();
+            final String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
+            final List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
+            final String server = section.exists( "server" ) ? section.getString( "server" ) : "ALL";
+
+            final CommandBuilder commandBuilder = CommandBuilder.builder()
+                    .name( name )
+                    .aliases( aliases )
+                    .permission( permission )
+                    .executable( new CustomCommandCall( section, server, commands ) );
+
+            buildCommand( name, commandBuilder );
+        }
     }
 
     private void registerGeneralCommand( final String section, final CommandCall call )

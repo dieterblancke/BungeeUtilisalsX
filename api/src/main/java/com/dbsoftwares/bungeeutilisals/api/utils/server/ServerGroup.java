@@ -129,4 +129,16 @@ public class ServerGroup
 
         return servers;
     }
+
+    public boolean isInGroup( final String serverName )
+    {
+        for ( String server : servers )
+        {
+            if ( server.equalsIgnoreCase( serverName ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
