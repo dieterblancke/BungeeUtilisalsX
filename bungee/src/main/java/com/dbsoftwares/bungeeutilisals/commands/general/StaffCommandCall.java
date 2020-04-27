@@ -26,6 +26,8 @@ import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -39,31 +41,41 @@ public class StaffCommandCall implements CommandCall
     @Override
     public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        if ( args.size() > 0 && args.get( 0 ).equalsIgnoreCase( "toggle" ) )
+        if ( args.size() > 0 )
         {
-            StaffUser staffUser = null;
+            final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
 
-            for ( StaffUser su : BungeeUtilisals.getInstance().getStaffMembers() )
-            {
-                if ( su.getUuid().equals( user.getUuid() ) )
-                {
-                    staffUser = su;
-                }
-            }
+            // Big yikes code, but works for now
+            final List<String> commands = Arrays.asList( config.getString( "staff.toggle.aliases" ).split( ", " ) );
 
-            if ( staffUser != null )
+            if ( config.getBoolean( "staff.toggle.enabled" )
+                    && ( config.getString( "staff.toggle.name" ).equalsIgnoreCase( args.get( 0 ) ) || commands.contains( args.get( 0 ) ) )
+                    && user.hasPermission( config.getString( "staff.toggle.permission" ) ) )
             {
-                if ( staffUser.isHidden() )
+                StaffUser staffUser = null;
+
+                for ( StaffUser su : BungeeUtilisals.getInstance().getStaffMembers() )
                 {
-                    staffUser.setHidden( true );
-                    user.sendLangMessage( "general-commands.staff.toggle.hidden" );
+                    if ( su.getUuid().equals( user.getUuid() ) )
+                    {
+                        staffUser = su;
+                    }
                 }
-                else
+
+                if ( staffUser != null )
                 {
-                    staffUser.setHidden( false );
-                    user.sendLangMessage( "general-commands.staff.toggle.unhidden" );
+                    if ( staffUser.isHidden() )
+                    {
+                        staffUser.setHidden( true );
+                        user.sendLangMessage( "general-commands.staff.toggle.hidden" );
+                    }
+                    else
+                    {
+                        staffUser.setHidden( false );
+                        user.sendLangMessage( "general-commands.staff.toggle.unhidden" );
+                    }
+                    return;
                 }
-                return;
             }
         }
 

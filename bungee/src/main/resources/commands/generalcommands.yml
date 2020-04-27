@@ -111,6 +111,12 @@ staff:
   name: staff
   aliases: 'onlinestaff'
   permission: bungeeutilisals.commands.staff
+
+  toggle:
+    enabled: true
+    name: toggle
+    aliases: 'hide, unhide'
+    permission: bungeeutilisals.commands.staff.toggle
 msg:
   enabled: true
   name: msg

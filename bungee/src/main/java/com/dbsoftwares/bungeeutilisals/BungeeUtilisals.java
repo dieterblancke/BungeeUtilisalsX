@@ -279,8 +279,7 @@ public class BungeeUtilisals extends Plugin
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
 
                 shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -292,8 +291,7 @@ public class BungeeUtilisals extends Plugin
                 final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
 
                 shouldUpdate = !version.equals( getDescription().getVersion() );
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -315,8 +313,7 @@ public class BungeeUtilisals extends Plugin
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
-            }
-            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
             {
             }
         }
@@ -333,8 +330,7 @@ public class BungeeUtilisals extends Plugin
         try
         {
             databaseManagement.close();
-        }
-        catch ( SQLException e )
+        } catch ( SQLException e )
         {
             BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
@@ -365,14 +361,13 @@ public class BungeeUtilisals extends Plugin
 
                     String line;
                     final StringBuilder builder = new StringBuilder();
-                    while ( (line = br.readLine()) != null )
+                    while ( ( line = br.readLine() ) != null )
                     {
                         builder.append( line );
                     }
                     username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
                 }
-            }
-            catch ( IOException e )
+            } catch ( IOException e )
             {
                 // do nothing
             }
@@ -437,8 +432,7 @@ public class BungeeUtilisals extends Plugin
                 final Script script = new Script( file.getName(), code );
 
                 this.scripts.add( script );
-            }
-            catch ( IOException | ScriptException e )
+            } catch ( IOException | ScriptException e )
             {
                 BUCore.getLogger().log( Level.SEVERE, "Could not load script " + file.getName(), e );
             }
@@ -451,8 +445,7 @@ public class BungeeUtilisals extends Plugin
         try
         {
             type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
-        }
-        catch ( IllegalArgumentException e )
+        } catch ( IllegalArgumentException e )
         {
             type = StorageType.MYSQL;
         }
@@ -460,8 +453,7 @@ public class BungeeUtilisals extends Plugin
         {
             databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        }
-        catch ( Exception e )
+        } catch ( Exception e )
         {
             BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
@@ -552,7 +544,6 @@ public class BungeeUtilisals extends Plugin
         loadGeneralCommand( "chatlock", ChatLockCommand.class );
         loadGeneralCommand( "glag", GLagCommand.class );
         loadGeneralCommand( "language", LanguageCommand.class );
-        loadGeneralCommand( "staff", StaffCommandCall.class );
         loadGeneralCommand( "msg", MsgCommand.class );
         loadGeneralCommand( "reply", ReplyCommand.class );
         loadGeneralCommand( "ignore", IgnoreCommand.class );
@@ -636,8 +627,7 @@ public class BungeeUtilisals extends Plugin
                 BUCommand command = clazz.newInstance();
 
                 generalCommands.add( command );
-            }
-            catch ( InstantiationException | IllegalAccessException e )
+            } catch ( InstantiationException | IllegalAccessException e )
             {
                 BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
