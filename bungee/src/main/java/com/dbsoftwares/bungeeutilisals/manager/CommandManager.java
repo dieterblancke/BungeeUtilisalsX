@@ -24,10 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.HelpOpCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.ServerCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.SlashServerCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.StaffChatCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
@@ -69,6 +66,7 @@ public class CommandManager
         registerGeneralCommand( "helpop", new HelpOpCommandCall() );
         registerGeneralCommand( "server", new ServerCommandCall() );
         registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
+        registerGeneralCommand( "staff", new StaffCommandCall() );
 
         registerPunishmentCommand(
                 "friends",

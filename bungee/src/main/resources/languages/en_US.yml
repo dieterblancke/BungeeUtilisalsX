@@ -133,6 +133,9 @@ general-commands:
     no_staff: '&eThere is no staff online at the moment!'
     head: '&fList of online staff members:'
     foot: '&eIn total, there are &b{total} &estaff members online!'
+    toggle:
+      hidden: '&eYou are now hidden from the /staff list!'
+      unhidden: '&eYou are now visible again in the /staff list!'
     users:
       separator: ', '
       user:

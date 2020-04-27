@@ -20,14 +20,12 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
+import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.config.ServerInfo;
@@ -35,27 +33,40 @@ import net.md_5.bungee.api.config.ServerInfo;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class StaffCommand extends BUCommand
+public class StaffCommandCall implements CommandCall
 {
 
-    public StaffCommand()
-    {
-        super(
-                "staff",
-                Arrays.asList( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staff.aliases" ).split( ", " ) ),
-                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staff.permission" )
-        );
-    }
-
     @Override
-    public List<String> onTabComplete( User user, String[] args )
+    public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        return ImmutableList.of();
-    }
+        if ( args.size() > 0 && args.get( 0 ).equalsIgnoreCase( "toggle" ) )
+        {
+            StaffUser staffUser = null;
 
-    @Override
-    public void onExecute( User user, String[] args )
-    {
+            for ( StaffUser su : BungeeUtilisals.getInstance().getStaffMembers() )
+            {
+                if ( su.getUuid().equals( user.getUuid() ) )
+                {
+                    staffUser = su;
+                }
+            }
+
+            if ( staffUser != null )
+            {
+                if ( staffUser.isHidden() )
+                {
+                    staffUser.setHidden( true );
+                    user.sendLangMessage( "general-commands.staff.toggle.hidden" );
+                }
+                else
+                {
+                    staffUser.setHidden( false );
+                    user.sendLangMessage( "general-commands.staff.toggle.unhidden" );
+                }
+                return;
+            }
+        }
+
         final List<StaffUser> staffUsers = BungeeUtilisals.getInstance().getStaffMembers();
         if ( staffUsers.isEmpty() )
         {
@@ -65,6 +76,7 @@ public class StaffCommand extends BUCommand
 
         final Map<StaffRankData, List<StaffUser>> staffMembers = staffUsers
                 .stream()
+                .filter( staffUser -> !staffUser.isHidden() )
                 .collect( Collectors.groupingBy( StaffUser::getRank ) );
 
         final LinkedList<StaffRankData> onlineStaffRanks = staffMembers
@@ -75,10 +87,9 @@ public class StaffCommand extends BUCommand
 
         user.sendLangMessage( "general-commands.staff.head", "{total}", staffUsers.size() );
 
-        onlineStaffRanks.forEach( rank ->
+        for ( StaffRankData rank : onlineStaffRanks )
         {
             final List<StaffUser> users = staffMembers.get( rank );
-
             final TextComponent component = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getSection( "general-commands.staff.rank" ),
@@ -87,7 +98,9 @@ public class StaffCommand extends BUCommand
                     "{total}", staffUsers.size()
             );
 
-            findUsersComponents( component ).forEach( c ->
+            final List<TextComponent> components = findUsersComponents( component );
+
+            for ( TextComponent c : components )
             {
                 c.setText( "" );
 
@@ -111,10 +124,10 @@ public class StaffCommand extends BUCommand
                         c.addExtra( user.buildLangMessage( "general-commands.staff.users.separator" ) );
                     }
                 }
-            } );
+            }
 
             user.sendMessage( component );
-        } );
+        }
 
         user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
     }

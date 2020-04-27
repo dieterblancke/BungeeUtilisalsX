@@ -552,7 +552,7 @@ public class BungeeUtilisals extends Plugin
         loadGeneralCommand( "chatlock", ChatLockCommand.class );
         loadGeneralCommand( "glag", GLagCommand.class );
         loadGeneralCommand( "language", LanguageCommand.class );
-        loadGeneralCommand( "staff", StaffCommand.class );
+        loadGeneralCommand( "staff", StaffCommandCall.class );
         loadGeneralCommand( "msg", MsgCommand.class );
         loadGeneralCommand( "reply", ReplyCommand.class );
         loadGeneralCommand( "ignore", IgnoreCommand.class );
