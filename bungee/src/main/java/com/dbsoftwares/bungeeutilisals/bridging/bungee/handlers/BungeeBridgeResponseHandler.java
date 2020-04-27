@@ -80,8 +80,7 @@ public class BungeeBridgeResponseHandler implements EventExecutor
                 {
                     // all users
                     users.addAll( BUCore.getApi().getUsers() );
-                }
-                else
+                } else
                 {
                     // specific user
                     final Optional<User> optionalUser = BUCore.getApi().getUser( action.getUser().getUuid() );
@@ -92,31 +91,35 @@ public class BungeeBridgeResponseHandler implements EventExecutor
                     users.add( optionalUser.get() );
                 }
 
-                users.stream().filter( user ->
+                for ( User user : users )
                 {
+                    boolean canUse = false;
                     if ( permissions == null )
                     {
-                        return true;
-                    }
-                    for ( String permission : permissions )
+                        canUse = true;
+                    } else
                     {
-                        if ( user.hasPermission( permission ) )
+                        for ( String permission : permissions )
                         {
-                            return true;
+                            if ( user.hasPermission( permission ) )
+                            {
+                                canUse = true;
+                                break;
+                            }
                         }
                     }
-                    return false;
-                } ).forEach( user ->
-                {
-                    if ( message.isLanguage() )
+
+                    if ( canUse )
                     {
-                        user.sendLangMessage( message.getMessage(), message.getPlaceholders() );
+                        if ( message.isLanguage() )
+                        {
+                            user.sendLangMessage( message.getMessage(), message.getPlaceholders() );
+                        } else
+                        {
+                            user.sendRawColorMessage( message.getMessage() );
+                        }
                     }
-                    else
-                    {
-                        user.sendRawColorMessage( message.getMessage() );
-                    }
-                } );
+                }
                 users.clear();
                 break;
             }
@@ -180,8 +183,7 @@ public class BungeeBridgeResponseHandler implements EventExecutor
         if ( mute == null )
         {
             user.sendLangMessage( "punishments.mute.onmute", message.getPlaceholders() );
-        }
-        else
+        } else
         {
             mute.forEach( str -> user.sendRawColorMessage( LanguageUtils.replacePlaceHolders( user, str, message.getPlaceholders() ) ) );
         }

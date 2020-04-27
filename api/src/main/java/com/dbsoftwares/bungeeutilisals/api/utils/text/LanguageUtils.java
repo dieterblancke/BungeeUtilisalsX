@@ -22,9 +22,11 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 public class LanguageUtils
@@ -141,7 +143,14 @@ public class LanguageUtils
             return;
         }
 
-        if ( config.isList( path ) )
+        if ( config.isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage( user, config.getSection( path ), placeholders );
+
+            user.sendMessage( component );
+        }
+        else if ( config.isList( path ) )
         {
             for ( String message : config.getStringList( path ) )
             {

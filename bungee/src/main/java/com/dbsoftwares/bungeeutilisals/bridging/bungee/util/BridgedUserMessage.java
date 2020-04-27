@@ -19,16 +19,19 @@
 package com.dbsoftwares.bungeeutilisals.bridging.bungee.util;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 import java.util.Map;
 
 @Data
+@NoArgsConstructor
 public class BridgedUserMessage
 {
-    private final boolean language;
-    private final String message;
-    private final Map<String, Object> data;
-    private final Object[] placeholders;
+    private boolean language;
+    private String message;
+    private Map<String, Object> data;
+    private Object[] placeholders;
 
     public BridgedUserMessage( final boolean language, final String message, final Map<String, Object> data, final Object... placeholders )
     {

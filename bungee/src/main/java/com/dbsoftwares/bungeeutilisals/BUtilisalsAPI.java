@@ -59,7 +59,6 @@ import net.md_5.bungee.api.plugin.Plugin;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BUtilisalsAPI implements BUAPI
 {
@@ -76,7 +75,7 @@ public class BUtilisalsAPI implements BUAPI
     private IAddonManager addonManager;
     private IBridgeManager bridgeManager;
 
-    public BUtilisalsAPI( BungeeUtilisals instance )
+    BUtilisalsAPI( BungeeUtilisals instance )
     {
         APIHandler.registerProvider( this );
 
@@ -149,13 +148,27 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public Optional<User> getUser( String name )
     {
-        return users.stream().filter( user -> user.getName().equalsIgnoreCase( name ) ).findFirst();
+        for ( User user : users )
+        {
+            if ( user.getName().equalsIgnoreCase( name ) )
+            {
+                return Optional.of( user );
+            }
+        }
+        return Optional.ofNullable( null );
     }
 
     @Override
     public Optional<User> getUser( UUID uuid )
     {
-        return users.stream().filter( user -> user.getUuid().equals( uuid ) ).findFirst();
+        for ( User user : users )
+        {
+            if ( user.getUuid().equals( uuid ) )
+            {
+                return Optional.of( user );
+            }
+        }
+        return Optional.ofNullable( null );
     }
 
     @Override
@@ -173,7 +186,16 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public List<User> getUsers( String permission )
     {
-        return users.stream().filter( user -> user.getParent().hasPermission( permission ) ).collect( Collectors.toList() );
+        final List<User> result = Lists.newArrayList();
+
+        for ( User user : users )
+        {
+            if ( user.getParent().hasPermission( permission ) )
+            {
+                result.add( user );
+            }
+        }
+        return result;
     }
 
     @Override
@@ -240,7 +262,13 @@ public class BUtilisalsAPI implements BUAPI
             );
         }
 
-        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( message ) );
+        for ( User user : users )
+        {
+            if ( user.getParent().hasPermission( permission ) )
+            {
+                user.sendMessage( message );
+            }
+        }
         getConsole().sendMessage( message );
     }
 
@@ -296,7 +324,13 @@ public class BUtilisalsAPI implements BUAPI
             );
         }
 
-        users.stream().filter( user -> user.getParent().hasPermission( permission ) ).forEach( user -> user.sendMessage( prefix, message ) );
+        for ( User user : users )
+        {
+            if ( user.getParent().hasPermission( permission ) )
+            {
+                user.sendMessage( prefix, message );
+            }
+        }
         getConsole().sendMessage( prefix, message );
     }
 
@@ -359,14 +393,23 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langBroadcast( ILanguageManager manager, String message, Object... placeholders )
     {
-        users.forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
+        for ( User user : users )
+        {
+            LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders );
+        }
         LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
 
     @Override
     public void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders )
     {
-        users.stream().filter( user -> user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) ).forEach( user -> LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders ) );
+        for ( User user : users )
+        {
+            if ( user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) )
+            {
+                LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders );
+            }
+        }
         LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
     }
 
