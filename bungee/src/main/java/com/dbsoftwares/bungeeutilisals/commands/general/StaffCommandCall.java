@@ -66,20 +66,23 @@ public class StaffCommandCall implements CommandCall
                 {
                     if ( staffUser.isHidden() )
                     {
-                        staffUser.setHidden( true );
-                        user.sendLangMessage( "general-commands.staff.toggle.hidden" );
+                        staffUser.setHidden( false );
+                        user.sendLangMessage( "general-commands.staff.toggle.unhidden" );
                     }
                     else
                     {
-                        staffUser.setHidden( false );
-                        user.sendLangMessage( "general-commands.staff.toggle.unhidden" );
+                        staffUser.setHidden( true );
+                        user.sendLangMessage( "general-commands.staff.toggle.hidden" );
                     }
                     return;
                 }
             }
         }
 
-        final List<StaffUser> staffUsers = BungeeUtilisals.getInstance().getStaffMembers();
+        final List<StaffUser> staffUsers = BungeeUtilisals.getInstance().getStaffMembers()
+                .stream()
+                .filter( staffUser -> !staffUser.isHidden() )
+                .collect( Collectors.toList() );
         if ( staffUsers.isEmpty() )
         {
             user.sendLangMessage( "general-commands.staff.no_staff" );
@@ -88,7 +91,6 @@ public class StaffCommandCall implements CommandCall
 
         final Map<StaffRankData, List<StaffUser>> staffMembers = staffUsers
                 .stream()
-                .filter( staffUser -> !staffUser.isHidden() )
                 .collect( Collectors.groupingBy( StaffUser::getRank ) );
 
         final LinkedList<StaffRankData> onlineStaffRanks = staffMembers

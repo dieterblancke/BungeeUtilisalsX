@@ -90,6 +90,10 @@ public class RedisPlayerUtils implements IPlayerUtils
     {
         final UUID uuid = RedisBungee.getApi().getUuidFromName( name );
 
+        if ( uuid == null )
+        {
+            return false;
+        }
         return RedisBungee.getApi().isPlayerOnline( uuid );
     }
 
