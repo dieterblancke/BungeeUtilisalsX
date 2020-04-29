@@ -21,11 +21,19 @@ package com.dbsoftwares.bungeeutilisals.updater;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.google.common.io.CharStreams;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import kong.unirest.HttpResponse;
-import kong.unirest.Unirest;
 import lombok.RequiredArgsConstructor;
+
+import javax.net.ssl.HttpsURLConnection;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 @RequiredArgsConstructor
 public class UpdateRunner implements Runnable
@@ -43,12 +51,10 @@ public class UpdateRunner implements Runnable
     {
         final UpdatableData data = updater.getUpdatable();
 
-        final HttpResponse<String> response = Unirest.get( data.getUrl() )
-                .asString();
-
-        if ( response.isSuccess() )
+        try
         {
-            final JsonObject object = GSON.fromJson( response.getBody(), JsonObject.class );
+            final String response = sendGetRequest( data.getUrl() );
+            final JsonObject object = GSON.fromJson( response, JsonObject.class );
             final String status = object.get( "status" ).getAsString();
 
             if ( status.equalsIgnoreCase( "success" ) )
@@ -71,13 +77,52 @@ public class UpdateRunner implements Runnable
                 }
             }
         }
+        catch ( Exception e )
+        {
+            // ignore
+        }
     }
 
-    protected void shutdown()
+    private String sendGetRequest( final String url )
+    {
+        String result = "";
+        try
+        {
+            final HttpsURLConnection connection = (HttpsURLConnection) new URL( url ).openConnection();
+            connection.setRequestMethod( "GET" );
+
+            try ( InputStream is = connection.getInputStream();
+                  InputStreamReader isr = new InputStreamReader( is );
+                  BufferedReader in = new BufferedReader( isr ) )
+            {
+                result = CharStreams.toString( in );
+            }
+        }
+        catch ( IOException e )
+        {
+            // ignore
+        }
+        return result;
+    }
+
+    void shutdown()
     {
         if ( updateFound && url != null )
         {
-            Unirest.get( url ).asFile( updater.getUpdatable().getFile().getAbsolutePath() );
+            try
+            {
+                final HttpsURLConnection connection = (HttpsURLConnection) new URL( url ).openConnection();
+                connection.setRequestMethod( "GET" );
+
+                try ( InputStream is = connection.getInputStream() )
+                {
+                    Files.copy( is, updater.getUpdatable().getFile().toPath(), StandardCopyOption.REPLACE_EXISTING );
+                }
+            }
+            catch ( Exception e )
+            {
+                // ignore
+            }
         }
     }
 

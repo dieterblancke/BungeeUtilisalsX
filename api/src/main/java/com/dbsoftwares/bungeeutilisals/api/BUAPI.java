@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisals.api;
 
-import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -28,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
@@ -123,6 +123,11 @@ public interface BUAPI
     ConsoleUser getConsole();
 
     /**
+     * @return An either the active HubBalancer or null in case it's disabled.
+     */
+    IHubBalancer getHubBalancer();
+
+    /**
      * Broadcasts a message with the BungeeUtilisals prefix.
      *
      * @param message The message to be broadcasted.
@@ -206,11 +211,6 @@ public interface BUAPI
      * @return the storage chat used.
      */
     AbstractStorageManager getStorageManager();
-
-    /**
-     * @return the addon chat that is being used
-     */
-    IAddonManager getAddonManager();
 
     /**
      * @return a new BossBar instance.

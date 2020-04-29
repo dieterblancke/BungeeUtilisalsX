@@ -39,7 +39,7 @@ public class UnbanCommand extends PunishmentCommand
 
         if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unban.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.unban.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentRemovalArgs.hasJoined() )

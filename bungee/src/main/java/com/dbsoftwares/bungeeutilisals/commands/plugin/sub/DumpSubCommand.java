@@ -133,7 +133,7 @@ public class DumpSubCommand extends SubCommand
 
     private Dump getDump()
     {
-        final OperatingSystemMXBean operatingSystemMXBean = ((OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean());
+        final OperatingSystemMXBean operatingSystemMXBean = ( (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() );
         final long totalMemory = bytesToMegaBytes( operatingSystemMXBean.getTotalPhysicalMemorySize() );
         final long freeMemory = bytesToMegaBytes( operatingSystemMXBean.getFreePhysicalMemorySize() );
         final long usedMemory = totalMemory - freeMemory;
@@ -200,7 +200,7 @@ public class DumpSubCommand extends SubCommand
                 {
                     if ( item instanceof ISection )
                     {
-                        sectionList.add( readValues( ((ISection) item).getValues() ) );
+                        sectionList.add( readValues( ( (ISection) item ).getValues() ) );
                     }
                 }
                 if ( !sectionList.isEmpty() )
@@ -214,7 +214,7 @@ public class DumpSubCommand extends SubCommand
             }
             else if ( value instanceof ISection )
             {
-                values.put( key, readValues( ((ISection) value).getValues() ) );
+                values.put( key, readValues( ( (ISection) value ).getValues() ) );
             }
             else
             {
@@ -226,7 +226,7 @@ public class DumpSubCommand extends SubCommand
                 {
                     if ( value instanceof String )
                     {
-                        value = ((String) value).replace( "\r\n", " " ).replace( "\n", " " );
+                        value = ( (String) value ).replace( "\r\n", " " ).replace( "\n", " " );
                     }
                     values.put( key, value );
                 }

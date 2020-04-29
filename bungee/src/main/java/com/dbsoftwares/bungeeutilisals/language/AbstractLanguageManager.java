@@ -55,7 +55,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     @Getter
     protected LanguageIntegration integration;
 
-    public AbstractLanguageManager( BungeeUtilisals plugin )
+    AbstractLanguageManager( BungeeUtilisals plugin )
     {
         integration = uuid -> plugin.getDatabaseManagement().getDao().getUserDao().getLanguage( uuid );
         ISection section = ConfigFiles.LANGUAGES_CONFIG.getConfig().getSection( "languages" );

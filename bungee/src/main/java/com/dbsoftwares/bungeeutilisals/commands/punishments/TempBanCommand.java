@@ -39,7 +39,7 @@ public class TempBanCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.tempban.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.tempban.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

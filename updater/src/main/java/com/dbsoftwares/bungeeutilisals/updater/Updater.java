@@ -111,7 +111,7 @@ public class Updater
             return;
         }
 
-        ((UpdateRunner) task.getTask()).shutdown();
+        ( (UpdateRunner) task.getTask() ).shutdown();
         task.cancel();
     }
 

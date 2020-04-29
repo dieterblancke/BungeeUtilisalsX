@@ -133,7 +133,7 @@ public abstract class Announcer
                         {
                             previous.clear();
                         }
-                        Announcement next = (random ? getRandomAnnouncement() : getNextAnnouncement());
+                        Announcement next = ( random ? getRandomAnnouncement() : getNextAnnouncement() );
                         next.send();
                         previous = next;
                     }

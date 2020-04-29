@@ -39,7 +39,7 @@ public class TempMuteCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.tempmute.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.tempmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

@@ -41,7 +41,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
-import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
@@ -59,11 +58,6 @@ import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.manager.CommandManager;
-import com.dbsoftwares.bungeeutilisals.packet.PacketRegistry;
-import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
-import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
-import com.dbsoftwares.bungeeutilisals.packet.executors.PacketUpdateExecutor;
-import com.dbsoftwares.bungeeutilisals.packet.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.UserPlaceHolderPack;
@@ -164,14 +158,6 @@ public class BungeeUtilisals extends Plugin
         api.getLanguageManager().addPlugin( getDescription().getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
         api.getLanguageManager().loadLanguages( getDescription().getName() );
 
-        // Loading & enabling addons
-        if ( getConfig().getBoolean( "addons" ) )
-        {
-            api.getAddonManager().findAddons( api.getAddonManager().getAddonsFolder() );
-            api.getAddonManager().loadAddons();
-            api.getAddonManager().enableAddons();
-        }
-
         // Updating data from previous versions ...
         checkPreviousVersion();
 
@@ -230,17 +216,6 @@ public class BungeeUtilisals extends Plugin
         commandManager = new CommandManager();
         loadCommands();
 
-        // Loading packet system (if enabled)
-        if ( getConfig().getBoolean( "packets" ) )
-        {
-            PacketRegistry.registerPackets();
-            ProxyServer.getInstance().getPluginManager().registerListener( this, new SimplePacketListener() );
-
-            PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-            loader.register( PacketUpdateEvent.class, packetUpdateExecutor );
-            loader.register( PacketReceiveEvent.class, packetUpdateExecutor );
-        }
-
         ProxyServer.getInstance().getScheduler().schedule( this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES );
 
         if ( getConfig().getBoolean( "updater.enabled" ) )
@@ -272,7 +247,8 @@ public class BungeeUtilisals extends Plugin
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
 
                 shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -284,7 +260,8 @@ public class BungeeUtilisals extends Plugin
                 final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
 
                 shouldUpdate = !version.equals( getDescription().getVersion() );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -306,7 +283,8 @@ public class BungeeUtilisals extends Plugin
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
-            } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            }
+            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
             {
             }
         }
@@ -315,15 +293,12 @@ public class BungeeUtilisals extends Plugin
     @Override
     public void onDisable()
     {
-        if ( getConfig().getBoolean( "addons" ) )
-        {
-            api.getAddonManager().disableAddons();
-        }
         Lists.newArrayList( BUCore.getApi().getUsers() ).forEach( User::unload );
         try
         {
             databaseManagement.close();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
             BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
@@ -360,7 +335,8 @@ public class BungeeUtilisals extends Plugin
                     }
                     username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
                 }
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 // do nothing
             }
@@ -375,6 +351,12 @@ public class BungeeUtilisals extends Plugin
     public void reload()
     {
         ConfigFiles.reloadAllConfigs();
+
+        if ( BUCore.getApi().getHubBalancer() != null )
+        {
+            BUCore.getApi().getHubBalancer().reload();
+        }
+
         loadCommands();
 
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
@@ -386,13 +368,6 @@ public class BungeeUtilisals extends Plugin
 
         loadScripts();
         api.getChatManager().reload();
-
-        if ( BUCore.getApi().getAddonManager() != null )
-        {
-            BUCore.getApi().getAddonManager().getAddons().stream()
-                    .map( addon -> addon.getDescription().getName() )
-                    .forEach( addon -> BUCore.getApi().getAddonManager().reloadAddon( addon ) );
-        }
     }
 
     private void loadScripts()
@@ -425,7 +400,8 @@ public class BungeeUtilisals extends Plugin
                 final Script script = new Script( file.getName(), code );
 
                 this.scripts.add( script );
-            } catch ( IOException | ScriptException e )
+            }
+            catch ( IOException | ScriptException e )
             {
                 BUCore.getLogger().log( Level.SEVERE, "Could not load script " + file.getName(), e );
             }
@@ -438,7 +414,8 @@ public class BungeeUtilisals extends Plugin
         try
         {
             type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             type = StorageType.MYSQL;
         }
@@ -446,7 +423,8 @@ public class BungeeUtilisals extends Plugin
         {
             databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
             BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
@@ -526,8 +504,6 @@ public class BungeeUtilisals extends Plugin
         generalCommands.clear();
 
         generalCommands.add( new PluginCommand() );
-        loadCommand( "addons", getConfig(), AddonCommand.class );
-
         loadGeneralCommand( "glist", GListCommand.class );
         loadGeneralCommand( "announce", AnnounceCommand.class );
         loadGeneralCommand( "find", FindCommand.class );
@@ -568,7 +544,8 @@ public class BungeeUtilisals extends Plugin
                 BUCommand command = clazz.newInstance();
 
                 generalCommands.add( command );
-            } catch ( InstantiationException | IllegalAccessException e )
+            }
+            catch ( InstantiationException | IllegalAccessException e )
             {
                 BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }

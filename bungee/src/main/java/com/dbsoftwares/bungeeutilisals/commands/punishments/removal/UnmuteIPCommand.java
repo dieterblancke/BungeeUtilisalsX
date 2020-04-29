@@ -39,7 +39,7 @@ public class UnmuteIPCommand extends PunishmentCommand
 
         if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unmuteip.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.unmuteip.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentRemovalArgs.hasJoined() )

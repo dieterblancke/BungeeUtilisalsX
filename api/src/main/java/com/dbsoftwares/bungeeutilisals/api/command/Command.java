@@ -122,7 +122,7 @@ public class Command
 
     public Iterable<String> onTabComplete( final CommandSender sender, final String[] args )
     {
-        if ( !(sender instanceof ProxiedPlayer) )
+        if ( !( sender instanceof ProxiedPlayer ) )
         {
             return ImmutableList.of();
         }

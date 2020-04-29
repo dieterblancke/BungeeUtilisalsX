@@ -56,9 +56,9 @@ public class GLagCommand extends BUCommand
         final String date = df2.format( new Date( uptime ) );
 
         user.sendLangMessage( "general-commands.glag",
-                "{maxmemory}", (Runtime.getRuntime().maxMemory() / 1024 / 1024) + " MB",
-                "{freememory}", (Runtime.getRuntime().freeMemory() / 1024 / 1024) + " MB",
-                "{totalmemory}", (Runtime.getRuntime().totalMemory() / 1024 / 1024) + " MB",
+                "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
+                "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
+                "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
                 "{onlinesince}", date
         );
     }

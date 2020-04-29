@@ -265,6 +265,6 @@ public class MongoFriendsDao implements FriendsDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
+        return ( (MongoDBStorageManager) AbstractStorageManager.getManager() ).getDatabase();
     }
 }

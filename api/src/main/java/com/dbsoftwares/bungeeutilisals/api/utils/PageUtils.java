@@ -34,7 +34,7 @@ public class PageUtils
             throw new PageNotFoundException( page, maxPages );
         }
 
-        final int begin = ((page - 1) * 10);
+        final int begin = ( ( page - 1 ) * 10 );
         int end = begin + 10;
 
         if ( end > list.size() )

@@ -94,7 +94,7 @@ public class ChatManager implements IChatManager
             }
         }
 
-        return (upperCase / message.length()) > (config.getDouble( "percentage" ) / 100);
+        return ( upperCase / message.length() ) > ( config.getDouble( "percentage" ) / 100 );
     }
 
     @Override
@@ -197,7 +197,7 @@ public class ChatManager implements IChatManager
             }
             if ( charFound )
             {
-                builder.append( (char) (65248 + replaceableChar) );
+                builder.append( (char) ( 65248 + replaceableChar ) );
             }
             else
             {

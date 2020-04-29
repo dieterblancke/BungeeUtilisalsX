@@ -39,7 +39,7 @@ public class MuteCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.mute.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.mute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

@@ -31,11 +31,12 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.util.List;
 import java.util.UUID;
 
-public interface User extends ExperimentalUser
+public interface User
 {
 
     /**
@@ -291,9 +292,26 @@ public interface User extends ExperimentalUser
      */
     FriendSettings getFriendSettings();
 
+    /**
+     * @param permission The permission to check
+     * @return This simply calls the parent.hasPermission() method
+     */
     boolean hasPermission( String permission );
 
+    /**
+     * @return the list of queued messages for this user.
+     */
     MessageQueue<QueuedMessage> getMessageQueue();
 
+    /**
+     * Executes the queued message
+     */
     void executeMessageQueue();
+
+    /**
+     * Sends a packet.
+     *
+     * @param packet The packet to be sent.
+     */
+    void sendPacket( DefinedPacket packet );
 }

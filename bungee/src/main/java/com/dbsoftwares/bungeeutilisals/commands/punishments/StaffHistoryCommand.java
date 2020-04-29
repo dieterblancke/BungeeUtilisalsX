@@ -48,7 +48,7 @@ public class StaffHistoryCommand implements CommandCall
         final String username = args.get( 0 );
         final String action = args.size() > 1 ? args.get( 1 ) : "all";
         int page = args.size() > 2
-                ? (MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1)
+                ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
                 : 1;
 
         final List<PunishmentInfo> allPunishments = listPunishments( username, action );

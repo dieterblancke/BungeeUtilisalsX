@@ -202,7 +202,7 @@ public class MongoToSQLConverter extends Converter
             if ( user != null && !user.isEmpty() )
             {
                 credential = MongoCredential.createCredential( user, database,
-                        (password == null || password.isEmpty() ? null : password.toCharArray()) );
+                        ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
             }
             MongoClientOptions options = MongoClientOptions.builder().applicationName( "BungeeUtilisals" ).build();
 

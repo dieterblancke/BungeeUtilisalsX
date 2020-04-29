@@ -112,7 +112,7 @@ public class EventLoader implements IEventLoader
     {
         if ( event instanceof AbstractEvent )
         {
-            ((AbstractEvent) event).setApi( BUCore.getApi() );
+            ( (AbstractEvent) event ).setApi( BUCore.getApi() );
         }
 
         for ( Map.Entry<Class<? extends BUEvent>, Set<EventHandler<?>>> ent : handlerMap.entrySet() )
@@ -131,7 +131,7 @@ public class EventLoader implements IEventLoader
                 {
                     BEventHandler handler = (BEventHandler) h;
 
-                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ((Cancellable) event).isCancelled() )
+                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ( (Cancellable) event ).isCancelled() )
                     {
                         continue;
                     }

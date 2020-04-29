@@ -39,7 +39,7 @@ public class BanCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.ban.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.ban.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

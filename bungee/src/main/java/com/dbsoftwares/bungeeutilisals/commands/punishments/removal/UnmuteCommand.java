@@ -39,7 +39,7 @@ public class UnmuteCommand extends PunishmentCommand
 
         if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unmute.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.unmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentRemovalArgs.hasJoined() )

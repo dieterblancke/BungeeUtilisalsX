@@ -69,7 +69,7 @@ public class MongoDBStorageManager extends AbstractStorageManager
         if ( user != null && !user.isEmpty() )
         {
             credential = MongoCredential.createCredential( user, database,
-                    (password == null || password.isEmpty() ? null : password.toCharArray()) );
+                    ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
         }
         MongoClientOptions options = MongoClientOptions.builder()
                 .applicationName( "BungeeUtilisalsX" )

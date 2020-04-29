@@ -35,6 +35,7 @@ import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPComma
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommand;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommand;
 import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
+import com.dbsoftwares.bungeeutilisals.hubbalancer.commands.HubCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -70,7 +71,7 @@ public class CommandManager
         registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
         registerGeneralCommand( "staff", new StaffCommandCall() );
 
-        registerPunishmentCommand(
+        registerCommand(
                 "friends",
                 ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
                 ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
@@ -81,22 +82,14 @@ public class CommandManager
         {
             registerSlashServerCommands();
         }
-    }
 
-    private void registerSlashServerCommands()
-    {
-        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.slash-server.permission" );
-
-        for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
+        if ( ConfigFiles.HUBBALANCER.isEnabled() )
         {
-            final String name = info.getName().toLowerCase();
-            final CommandBuilder builder = CommandBuilder.builder()
-                    .enabled( true )
-                    .name( name )
-                    .permission( permission.replace( "{server}", name ) )
-                    .executable( new SlashServerCommandCall( name ) );
-
-            buildCommand( name, builder );
+            registerCommand(
+                    "hub",
+                    ConfigFiles.HUBBALANCER.getConfig().getSection( "commands.hub" ),
+                    new HubCommandCall()
+            );
         }
     }
 
@@ -135,6 +128,23 @@ public class CommandManager
         registerPunishmentCommand( "unmuteip", "commands.unmuteip", new UnmuteIPCommand(), parameters );
 
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommand(), parameters );
+    }
+
+    private void registerSlashServerCommands()
+    {
+        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.slash-server.permission" );
+
+        for ( ServerInfo info : ProxyServer.getInstance().getServers().values() )
+        {
+            final String name = info.getName().toLowerCase();
+            final CommandBuilder builder = CommandBuilder.builder()
+                    .enabled( true )
+                    .name( name )
+                    .permission( permission.replace( "{server}", name ) )
+                    .executable( new SlashServerCommandCall( name ) );
+
+            buildCommand( name, builder );
+        }
     }
 
     private void loadCustomCommands()
@@ -183,7 +193,17 @@ public class CommandManager
         buildCommand( name, commandBuilder );
     }
 
-    private void registerPunishmentCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
+    private void registerCommand( final String name, final ISection section, final CommandCall call )
+    {
+        final CommandBuilder commandBuilder = CommandBuilder.builder()
+                .name( name )
+                .fromSection( section )
+                .executable( call );
+
+        buildCommand( name, commandBuilder );
+    }
+
+    private void registerCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )

@@ -39,7 +39,7 @@ public class IPTempMuteCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.iptempmute.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.iptempmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

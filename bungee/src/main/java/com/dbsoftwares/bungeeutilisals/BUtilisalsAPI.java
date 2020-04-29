@@ -18,9 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.addon.AddonManager;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -31,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
@@ -44,6 +43,7 @@ import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
 import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisals.event.EventLoader;
+import com.dbsoftwares.bungeeutilisals.hubbalancer.HubBalancer;
 import com.dbsoftwares.bungeeutilisals.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisals.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisals.punishments.PunishmentExecutor;
@@ -52,18 +52,19 @@ import com.dbsoftwares.bungeeutilisals.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisals.utils.player.RedisPlayerUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.plugin.Plugin;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
 
+@Getter
 public class BUtilisalsAPI implements BUAPI
 {
 
-    private final BungeeUtilisals instance;
+    private final BungeeUtilisals plugin;
     private ConsoleUser console;
     private List<User> users;
     private IChatManager chatManager;
@@ -72,35 +73,29 @@ public class BUtilisalsAPI implements BUAPI
     private SimpleExecutor simpleExecutor;
     private IPunishmentExecutor punishmentExecutor;
     private IPlayerUtils playerUtils;
-    private IAddonManager addonManager;
     private IBridgeManager bridgeManager;
+    private IHubBalancer hubBalancer;
 
-    BUtilisalsAPI( BungeeUtilisals instance )
+    BUtilisalsAPI( BungeeUtilisals plugin )
     {
         APIHandler.registerProvider( this );
 
-        this.instance = instance;
+        this.plugin = plugin;
         this.console = new ConsoleUser();
         this.users = Collections.synchronizedList( Lists.newArrayList() );
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
-        this.languageManager = new PluginLanguageManager( instance );
+        this.languageManager = new PluginLanguageManager( plugin );
         this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
         this.bridgeManager = new BridgeManager();
         this.bridgeManager.setup();
         this.playerUtils = bridgeManager.useBungeeBridge() ? new RedisPlayerUtils() : new BungeePlayerUtils();
 
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "addons" ) )
+        if ( ConfigFiles.HUBBALANCER.isEnabled() )
         {
-            this.addonManager = new AddonManager();
+            this.hubBalancer = new HubBalancer();
         }
-    }
-
-    @Override
-    public IBridgeManager getBridgeManager()
-    {
-        return bridgeManager;
     }
 
     @Override
@@ -110,39 +105,9 @@ public class BUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public IPlayerUtils getPlayerUtils()
-    {
-        return playerUtils;
-    }
-
-    @Override
     public AbstractStorageManager getStorageManager()
     {
         return AbstractStorageManager.getManager();
-    }
-
-    @Override
-    public IAddonManager getAddonManager()
-    {
-        return addonManager;
-    }
-
-    @Override
-    public Plugin getPlugin()
-    {
-        return instance;
-    }
-
-    @Override
-    public ILanguageManager getLanguageManager()
-    {
-        return languageManager;
-    }
-
-    @Override
-    public IEventLoader getEventLoader()
-    {
-        return eventLoader;
     }
 
     @Override
@@ -199,34 +164,10 @@ public class BUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public IChatManager getChatManager()
-    {
-        return chatManager;
-    }
-
-    @Override
-    public SimpleExecutor getSimpleExecutor()
-    {
-        return simpleExecutor;
-    }
-
-    @Override
     public Connection getConnection() throws SQLException
     {
-        instance.getDatabaseManagement().getConnection();
-        return instance.getDatabaseManagement().getConnection();
-    }
-
-    @Override
-    public IPunishmentExecutor getPunishmentExecutor()
-    {
-        return punishmentExecutor;
-    }
-
-    @Override
-    public ConsoleUser getConsole()
-    {
-        return console;
+        plugin.getDatabaseManagement().getConnection();
+        return plugin.getDatabaseManagement().getConnection();
     }
 
     @Override
@@ -395,9 +336,9 @@ public class BUtilisalsAPI implements BUAPI
     {
         for ( User user : users )
         {
-            LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders );
+            LanguageUtils.sendLangMessage( manager, plugin.getDescription().getName(), user, message, placeholders );
         }
-        LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
+        LanguageUtils.sendLangMessage( manager, plugin.getDescription().getName(), getConsole(), message, placeholders );
     }
 
     @Override
@@ -407,10 +348,10 @@ public class BUtilisalsAPI implements BUAPI
         {
             if ( user.getParent().hasPermission( permission ) || user.getParent().hasPermission( "bungeeutilisals.*" ) )
             {
-                LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), user, message, placeholders );
+                LanguageUtils.sendLangMessage( manager, plugin.getDescription().getName(), user, message, placeholders );
             }
         }
-        LanguageUtils.sendLangMessage( manager, instance.getDescription().getName(), getConsole(), message, placeholders );
+        LanguageUtils.sendLangMessage( manager, plugin.getDescription().getName(), getConsole(), message, placeholders );
     }
 
     @Override

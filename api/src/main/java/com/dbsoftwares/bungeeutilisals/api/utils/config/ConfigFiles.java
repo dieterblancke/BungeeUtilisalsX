@@ -45,6 +45,7 @@ public class ConfigFiles
     public static PunishmentsConfig PUNISHMENTS = new PunishmentsConfig( "punishments.yml" );
     public static Config LANGUAGES_CONFIG = new Config( "languages/config.yml" );
     public static RanksConfig RANKS = new RanksConfig( "chat/ranks.yml" );
+    public static Config HUBBALANCER = new Config( "hubbalancer.yml" );
 
     public static void loadAllConfigs( final Plugin plugin )
     {

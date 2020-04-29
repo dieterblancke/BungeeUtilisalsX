@@ -127,7 +127,7 @@ public abstract class BUCommand extends Command implements CommandCall, TabExecu
     @Override
     public Iterable<String> onTabComplete( CommandSender sender, String[] args )
     {
-        if ( !(sender instanceof ProxiedPlayer) )
+        if ( !( sender instanceof ProxiedPlayer ) )
         {
             return ImmutableList.of();
         }

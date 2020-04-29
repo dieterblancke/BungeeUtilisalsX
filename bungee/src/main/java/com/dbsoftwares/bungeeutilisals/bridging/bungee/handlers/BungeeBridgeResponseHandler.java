@@ -80,7 +80,8 @@ public class BungeeBridgeResponseHandler implements EventExecutor
                 {
                     // all users
                     users.addAll( BUCore.getApi().getUsers() );
-                } else
+                }
+                else
                 {
                     // specific user
                     final Optional<User> optionalUser = BUCore.getApi().getUser( action.getUser().getUuid() );
@@ -97,7 +98,8 @@ public class BungeeBridgeResponseHandler implements EventExecutor
                     if ( permissions == null )
                     {
                         canUse = true;
-                    } else
+                    }
+                    else
                     {
                         for ( String permission : permissions )
                         {
@@ -114,7 +116,8 @@ public class BungeeBridgeResponseHandler implements EventExecutor
                         if ( message.isLanguage() )
                         {
                             user.sendLangMessage( message.getMessage(), message.getPlaceholders() );
-                        } else
+                        }
+                        else
                         {
                             user.sendRawColorMessage( message.getMessage() );
                         }
@@ -183,7 +186,8 @@ public class BungeeBridgeResponseHandler implements EventExecutor
         if ( mute == null )
         {
             user.sendLangMessage( "punishments.mute.onmute", message.getPlaceholders() );
-        } else
+        }
+        else
         {
             mute.forEach( str -> user.sendRawColorMessage( LanguageUtils.replacePlaceHolders( user, str, message.getPlaceholders() ) ) );
         }

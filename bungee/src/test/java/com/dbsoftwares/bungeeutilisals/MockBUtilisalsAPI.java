@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisals;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
@@ -29,6 +28,7 @@ import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
@@ -135,6 +135,12 @@ public class MockBUtilisalsAPI implements BUAPI
     }
 
     @Override
+    public IHubBalancer getHubBalancer()
+    {
+        return null;
+    }
+
+    @Override
     public void broadcast( String message )
     {
 
@@ -198,12 +204,6 @@ public class MockBUtilisalsAPI implements BUAPI
     public AbstractStorageManager getStorageManager()
     {
         return AbstractStorageManager.getManager();
-    }
-
-    @Override
-    public IAddonManager getAddonManager()
-    {
-        return null;
     }
 
     @Override

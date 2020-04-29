@@ -72,7 +72,7 @@ public class PunishmentHistoryCommand extends BUCommand
         final UserStorage storage = dao.getUserDao().getUserData( username );
         final String action = args.length > 1 ? args[1] : "all";
         int page = args.length > 2
-                ? (MathUtils.isInteger( args[2] ) ? Integer.parseInt( args[2] ) : 1)
+                ? ( MathUtils.isInteger( args[2] ) ? Integer.parseInt( args[2] ) : 1 )
                 : 1;
 
         final List<PunishmentInfo> allPunishments = listPunishments( storage, action );

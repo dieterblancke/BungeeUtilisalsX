@@ -39,7 +39,7 @@ public class IPTempBanCommand extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.iptempban.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.iptempban.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )

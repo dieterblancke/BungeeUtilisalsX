@@ -39,7 +39,7 @@ public class UnbanIPCommand extends PunishmentCommand
 
         if ( punishmentRemovalArgs == null )
         {
-            user.sendLangMessage( "punishments.unbanip.usage" + (useServerPunishments() ? "-server" : "") );
+            user.sendLangMessage( "punishments.unbanip.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentRemovalArgs.hasJoined() )
