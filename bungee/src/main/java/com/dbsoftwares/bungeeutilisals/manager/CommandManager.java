@@ -150,6 +150,7 @@ public class CommandManager
             final String server = section.exists( "server" ) ? section.getString( "server" ) : "ALL";
 
             final CommandBuilder commandBuilder = CommandBuilder.builder()
+                    .enabled( true )
                     .name( name )
                     .aliases( aliases )
                     .permission( permission )

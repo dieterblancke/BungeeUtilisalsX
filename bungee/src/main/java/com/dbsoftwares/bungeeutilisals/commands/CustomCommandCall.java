@@ -29,7 +29,7 @@ public class CustomCommandCall implements CommandCall
         {
             final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( server );
 
-            if ( !group.isInGroup( user.getServerName() ) )
+            if ( group != null && !group.isInGroup( user.getServerName() ) )
             {
                 return;
             }
