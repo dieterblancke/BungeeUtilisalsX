@@ -48,8 +48,13 @@ public class Command
 
     private CommandHolder commandHolder;
 
-    public Command( final String name, final String[] aliases, final String permission, final List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
+    public Command( final String name, final String[] aliases, final String permission, List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
     {
+        if ( parameters == null )
+        {
+            parameters = Lists.newArrayList();
+        }
+
         this.name = name;
         this.aliases = aliases;
         this.permission = permission;
