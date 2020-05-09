@@ -48,7 +48,7 @@ public class Command
 
     private CommandHolder commandHolder;
 
-    public Command( final String name, final String[] aliases, final String permission, List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
+    Command( final String name, final String[] aliases, final String permission, List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
     {
         if ( parameters == null )
         {
@@ -129,7 +129,7 @@ public class Command
     {
         if ( !( sender instanceof ProxiedPlayer ) )
         {
-            return ImmutableList.of();
+            return TabCompleter.empty();
         }
 
         final Optional<User> optional = BUCore.getApi().getUser( sender.getName() );
@@ -164,7 +164,7 @@ public class Command
         }
         else
         {
-            return ImmutableList.of();
+            return TabCompleter.empty();
         }
     }
 

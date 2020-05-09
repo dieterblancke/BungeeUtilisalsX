@@ -41,6 +41,13 @@ subcommands:
 
 general-commands:
   cooldown: '&eThis command is on cooldown for &b{time} &emore seconds!'
+  bungeeutilisals:
+    help:
+      - '&e- &b/bux version'
+      - '&e- &b/bux reload'
+      - '&e- &b/bux dump'
+      - '&e- &b/bux import (plugin) [properties]'
+      - '&e- &b/bux convert (oldtype) [properties]'
   announce:
     usage: '&ePlease use &b/announce (p/b/c/a/t) (message)&e.'
   find:

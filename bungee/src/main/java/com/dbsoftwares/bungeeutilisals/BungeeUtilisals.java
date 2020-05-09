@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
@@ -41,15 +40,6 @@ import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
-import com.dbsoftwares.bungeeutilisals.commands.general.*;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommand;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.CheckIpCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentDataCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentHistoryCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentInfoCommand;
 import com.dbsoftwares.bungeeutilisals.executors.*;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
@@ -102,9 +92,6 @@ public class BungeeUtilisals extends Plugin
 
     @Getter
     private AbstractStorageManager databaseManagement;
-
-    @Getter
-    private List<BUCommand> generalCommands = Lists.newArrayList();
 
     @Getter
     private CommandManager commandManager;
@@ -214,7 +201,7 @@ public class BungeeUtilisals extends Plugin
 
         // Loading all (enabled) Commands
         commandManager = new CommandManager();
-        loadCommands();
+        commandManager.load();
 
         ProxyServer.getInstance().getScheduler().schedule( this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES );
 
@@ -357,7 +344,7 @@ public class BungeeUtilisals extends Plugin
             BUCore.getApi().getHubBalancer().reload();
         }
 
-        loadCommands();
+        commandManager.load();
 
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
 
@@ -488,71 +475,5 @@ public class BungeeUtilisals extends Plugin
                 "hubbalancer",
                 () -> BUCore.getApi().getHubBalancer() != null ? "enabled" : "disabled"
         ) );
-    }
-
-    private void loadCommands()
-    {
-        commandManager.load();
-
-        loadGeneralCommands();
-
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
-        {
-            loadPunishmentCommands();
-        }
-    }
-
-    private void loadGeneralCommands()
-    {
-        generalCommands.forEach( BUCommand::unload );
-        generalCommands.clear();
-
-        generalCommands.add( new PluginCommand() );
-        loadGeneralCommand( "glist", GListCommand.class );
-        loadGeneralCommand( "announce", AnnounceCommand.class );
-        loadGeneralCommand( "find", FindCommand.class );
-        loadGeneralCommand( "clearchat", ClearChatCommand.class );
-        loadGeneralCommand( "chatlock", ChatLockCommand.class );
-        loadGeneralCommand( "glag", GLagCommand.class );
-        loadGeneralCommand( "language", LanguageCommand.class );
-        loadGeneralCommand( "msg", MsgCommand.class );
-        loadGeneralCommand( "reply", ReplyCommand.class );
-        loadGeneralCommand( "ignore", IgnoreCommand.class );
-        loadGeneralCommand( "ping", PingCommand.class );
-    }
-
-    private void loadPunishmentCommands()
-    {
-        loadPunishmentCommand( "punishmentinfo", PunishmentInfoCommand.class );
-        loadPunishmentCommand( "punishmenthistory", PunishmentHistoryCommand.class );
-        loadPunishmentCommand( "punishmentdata", PunishmentDataCommand.class );
-        loadPunishmentCommand( "checkip", CheckIpCommand.class );
-    }
-
-    private void loadPunishmentCommand( String name, Class<? extends BUCommand> clazz )
-    {
-        loadCommand( "commands." + name + ".enabled", ConfigFiles.PUNISHMENTS.getConfig(), clazz );
-    }
-
-    private void loadGeneralCommand( String name, Class<? extends BUCommand> clazz )
-    {
-        loadCommand( name + ".enabled", ConfigFiles.GENERALCOMMANDS.getConfig(), clazz );
-    }
-
-    private void loadCommand( String enabledPath, IConfiguration configuration, Class<? extends BUCommand> clazz )
-    {
-        if ( configuration.getBoolean( enabledPath ) )
-        {
-            try
-            {
-                BUCommand command = clazz.newInstance();
-
-                generalCommands.add( command );
-            }
-            catch ( InstantiationException | IllegalAccessException e )
-            {
-                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
-            }
-        }
     }
 }
