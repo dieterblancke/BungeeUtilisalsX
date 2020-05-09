@@ -50,7 +50,8 @@ public class HelpOpCommandCall implements CommandCall
             user.sendLangMessage(
                     "general-commands.helpop.broadcast",
                     "{message}", message,
-                    "{user}", user.getName()
+                    "{user}", user.getName(),
+                    "{user_server}", user.getServerName()
             );
         }
 
@@ -58,7 +59,8 @@ public class HelpOpCommandCall implements CommandCall
                 "general-commands.helpop.broadcast",
                 permission,
                 "{message}", message,
-                "{user}", user.getName()
+                "{user}", user.getName(),
+                "{user_server}", user.getServerName()
         );
     }
 

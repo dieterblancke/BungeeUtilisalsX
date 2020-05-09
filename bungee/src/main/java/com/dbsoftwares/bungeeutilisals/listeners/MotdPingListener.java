@@ -161,9 +161,12 @@ public class MotdPingListener implements Listener
             }
             final Field nameField = ReflectionUtils.getField( connection.getClass(), "name" );
 
-            if ( nameField != null )
+            for ( Field field : connection.getClass().getDeclaredFields() )
             {
-                nameField.set( connection, name );
+                if ( field.getName().equals( "name" ) )
+                {
+                    nameField.set( connection, name );
+                }
             }
         }
         catch ( Exception e )
