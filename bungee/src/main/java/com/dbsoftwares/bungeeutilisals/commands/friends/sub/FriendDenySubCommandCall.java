@@ -40,7 +40,7 @@ public class FriendDenySubCommandCall implements CommandCall
             return;
         }
         final String name = args.get( 0 );
-        final int friendLimit = FriendUtils.getFriendsLimit( user );
+        final int friendLimit = FriendUtils.getFriendLimit( user );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
         final Optional<User> optionalTarget = BUCore.getApi().getUser( name );
         final UserStorage storage;

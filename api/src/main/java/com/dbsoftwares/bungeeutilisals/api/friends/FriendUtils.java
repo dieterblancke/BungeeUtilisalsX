@@ -19,13 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.api.friends;
 
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
 import net.md_5.bungee.api.CommandSender;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class FriendUtils
 {
@@ -34,34 +30,23 @@ public class FriendUtils
     {
     }
 
-    public static int getFriendsLimit( final User user )
+    public static int getFriendLimit( final User user )
     {
-        return getFriendsLimit( user.sender() );
+        return getFriendLimit( user.sender() );
     }
 
-    public static int getFriendsLimit( final CommandSender sender )
+    public static int getFriendLimit( final CommandSender sender )
     {
         final ISection limits = ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "friendlimits" );
-        final List<String> permissions = sender.getPermissions().stream()
-                .filter( perm -> perm.startsWith( limits.getString( "permission" ) ) )
-                .collect( Collectors.toList() );
-
         int highestLimit = limits.getInteger( "limits.default", 10 );
 
-        for ( String permission : permissions )
+        for ( String key : limits.getKeys( "limits" ) )
         {
-            final String[] parts = permission.split( "\\." );
-            final String lastPart = parts[parts.length - 1];
-
-            int limit = 0;
-            if ( limits.exists( "limits." + lastPart ) )
+            if ( !sender.hasPermission( limits.getString( "permission" ) + key ) )
             {
-                limit = limits.getInteger( "limits." + lastPart );
+                continue;
             }
-            else if ( MathUtils.isInteger( lastPart ) )
-            {
-                limit = Integer.parseInt( lastPart );
-            }
+            final int limit = limits.getInteger( "limits." + key );
 
             if ( limit > highestLimit )
             {
