@@ -18,13 +18,14 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +40,7 @@ public class MsgCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.msg.usage" );
             return;
         }
-        final String name = args.get(0);
+        final String name = args.get( 0 );
 
         if ( user.getName().equalsIgnoreCase( name ) )
         {
@@ -47,7 +48,7 @@ public class MsgCommandCall implements CommandCall
             return;
         }
 
-        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
+        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) && !isHidden( name ) )
         {
             final Optional<User> optional = BUCore.getApi().getUser( name );
             final String message = String.join( " ", args.subList( 1, args.size() ) );
@@ -93,5 +94,17 @@ public class MsgCommandCall implements CommandCall
         {
             user.sendLangMessage( "offline" );
         }
+    }
+
+    private boolean isHidden( final String name )
+    {
+        for ( StaffUser user : BungeeUtilisals.getInstance().getStaffMembers() )
+        {
+            if ( user.getName().equalsIgnoreCase( name ) && user.isHidden() )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

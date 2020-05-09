@@ -18,10 +18,12 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
+import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCompleter;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -47,7 +49,7 @@ public class ReplyCommandCall implements CommandCall, TabCall
         }
 
         final String name = user.getStorage().getData( "MSG_LAST_USER" );
-        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
+        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) && !isHidden( name ) )
         {
             final Optional<User> optional = BUCore.getApi().getUser( name );
             final String message = String.join( " ", args );
@@ -99,5 +101,17 @@ public class ReplyCommandCall implements CommandCall, TabCall
     public List<String> onTabComplete( final User user, final String[] args )
     {
         return TabCompleter.empty();
+    }
+
+    private boolean isHidden( final String name )
+    {
+        for ( StaffUser user : BungeeUtilisals.getInstance().getStaffMembers() )
+        {
+            if ( user.getName().equalsIgnoreCase( name ) && user.isHidden() )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
