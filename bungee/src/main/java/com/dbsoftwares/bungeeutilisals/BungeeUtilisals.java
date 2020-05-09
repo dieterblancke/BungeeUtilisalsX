@@ -484,6 +484,10 @@ public class BungeeUtilisals extends Plugin
                 "chat_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
         ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "hubbalancer",
+                () -> BUCore.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+        ) );
     }
 
     private void loadCommands()
