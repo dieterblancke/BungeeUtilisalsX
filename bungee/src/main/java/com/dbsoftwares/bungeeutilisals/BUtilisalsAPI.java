@@ -376,6 +376,6 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public List<StaffUser> getStaffMembers()
     {
-        return BungeeUtilisals.getApi().getStaffMembers();
+        return BungeeUtilisals.getInstance().getStaffMembers();
     }
 }

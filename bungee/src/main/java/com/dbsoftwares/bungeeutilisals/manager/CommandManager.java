@@ -159,7 +159,7 @@ public class CommandManager
         {
             final String name = info.getName().toLowerCase();
             final CommandBuilder builder = CommandBuilder.builder()
-                    .enabled( true )
+                    .enabled( true )   x
                     .name( name )
                     .permission( permission.replace( "{server}", name ) )
                     .executable( new SlashServerCommandCall( name ) );
