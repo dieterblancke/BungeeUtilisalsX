@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 
@@ -30,7 +31,7 @@ public class CommandBuilder
 {
 
     private static final TabCall DEFAULT_TAB_CALL = ( user, args ) -> TabCompleter.buildTabCompletion(
-            BUCore.getApi().getPlayerUtils().getPlayers(), args
+            StaffUtils.filterPlayerList(BUCore.getApi().getPlayerUtils().getPlayers()), args
     );
     private boolean enabled;
     private String name;

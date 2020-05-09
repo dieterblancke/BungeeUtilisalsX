@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
@@ -235,4 +236,9 @@ public interface BUAPI
      * @return a new BossBar instance.
      */
     IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message );
+
+    /**
+     * @return a list of online staff members
+     */
+    List<StaffUser> getStaffMembers();
 }

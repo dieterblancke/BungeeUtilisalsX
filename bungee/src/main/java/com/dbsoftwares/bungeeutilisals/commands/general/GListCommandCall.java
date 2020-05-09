@@ -29,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -70,7 +71,7 @@ public class GListCommandCall implements CommandCall, TabCall
                                 config.getSection( "glist.header" ),
                                 "%total%", BUCore.getApi().getPlayerUtils().getTotalCount() - hiddenUsers,
                                 "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                        filterPlayerList( BUCore.getApi().getPlayerUtils().getPlayers() )
+                                        StaffUtils.filterPlayerList( BUCore.getApi().getPlayerUtils().getPlayers() )
                                 ) )
                         )
                 );
@@ -99,7 +100,7 @@ public class GListCommandCall implements CommandCall, TabCall
                                 config.getSection( "glist.format" ),
                                 "%server%", group.getName(),
                                 "%players%", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ),
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( filterPlayerList( group.getPlayerList() ) ) )
+                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) ) )
                         )
                 );
             }
@@ -114,7 +115,7 @@ public class GListCommandCall implements CommandCall, TabCall
                                 config.getSection( "glist.format" ),
                                 "%server%", info.getName(),
                                 "%players%", String.valueOf( info.getPlayers().size() - getHiddenUsers( info ) ),
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( filterPlayerList(
+                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( StaffUtils.filterPlayerList(
                                         info.getPlayers().stream().map( ProxiedPlayer::getName ).collect( Collectors.toList() )
                                 ) ) )
                         )
@@ -127,7 +128,7 @@ public class GListCommandCall implements CommandCall, TabCall
                         config.getSection( "glist.total" ),
                         "%total%", BUCore.getApi().getPlayerUtils().getTotalCount() - hiddenUsers,
                         "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                filterPlayerList( BUCore.getApi().getPlayerUtils().getPlayers() )
+                                StaffUtils.filterPlayerList( BUCore.getApi().getPlayerUtils().getPlayers() )
                         ) )
                 )
         );
@@ -204,30 +205,5 @@ public class GListCommandCall implements CommandCall, TabCall
             }
         }
         return hidden;
-    }
-
-    private List<String> filterPlayerList( final List<String> players )
-    {
-        final List<String> temp = Lists.newArrayList();
-
-        for ( String player : players )
-        {
-            boolean isHidden = false;
-
-            for ( StaffUser user : BungeeUtilisals.getInstance().getStaffMembers() )
-            {
-                if ( user.getName().equalsIgnoreCase( player ) && user.isHidden() )
-                {
-                    isHidden = true;
-                    break;
-                }
-            }
-
-            if ( !isHidden )
-            {
-                temp.add( player );
-            }
-        }
-        return temp;
     }
 }
