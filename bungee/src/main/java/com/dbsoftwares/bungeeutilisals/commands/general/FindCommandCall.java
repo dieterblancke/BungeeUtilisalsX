@@ -18,11 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -40,7 +39,7 @@ public class FindCommandCall implements CommandCall
             return;
         }
 
-        if ( isHidden( args.get( 0 ) ) )
+        if ( StaffUtils.isHidden( args.get( 0 ) ) )
         {
             user.sendLangMessage( "offline" );
             return;
@@ -63,17 +62,5 @@ public class FindCommandCall implements CommandCall
                 .orElse( args.get( 0 ) );
 
         user.sendLangMessage( "general-commands.find.message", "{user}", playerName, "{server}", server.getName() );
-    }
-
-    private boolean isHidden( final String name )
-    {
-        for ( StaffUser user : BungeeUtilisals.getInstance().getStaffMembers() )
-        {
-            if ( user.isHidden() )
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

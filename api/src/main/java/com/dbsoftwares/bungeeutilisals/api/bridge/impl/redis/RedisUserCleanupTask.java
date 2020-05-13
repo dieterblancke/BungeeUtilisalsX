@@ -64,14 +64,14 @@ public class RedisUserCleanupTask implements Runnable
 
         if ( !usersToDelete.isEmpty() )
         {
-            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
                 BUCore.getLogger().info( "Cleaning up " + usersToDelete.size() + " users from the redis user hash." );
             }
 
             final Future<Long> future = this.bridge.getUserConnection().async().hdel( "bungeeutilisalsx:users", usersToDelete.toArray( new String[0] ) );
 
-            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
                 try
                 {

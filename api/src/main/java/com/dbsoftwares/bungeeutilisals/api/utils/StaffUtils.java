@@ -37,4 +37,16 @@ public class StaffUtils
         }
         return temp;
     }
+
+    public static boolean isHidden( final String name )
+    {
+        for ( StaffUser user : BUCore.getApi().getStaffMembers() )
+        {
+            if ( user.getName().equalsIgnoreCase( name ) && user.isHidden() )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }

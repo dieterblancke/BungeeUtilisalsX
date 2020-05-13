@@ -149,7 +149,7 @@ public class BUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
                 System.out.println( "Friend list of " + name );
                 System.out.println( Arrays.toString( friends.toArray() ) );
@@ -465,9 +465,23 @@ public class BUser implements User
     }
 
     @Override
-    public boolean hasPermission( String permission )
+    public boolean hasPermission( final String permission )
     {
-        return parent.hasPermission( permission );
+        final boolean hasPermission = parent.hasPermission( permission );
+
+        if ( ConfigFiles.CONFIG.isDebug() )
+        {
+            if ( hasPermission )
+            {
+                BUCore.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+            }
+            else
+            {
+                BUCore.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+            }
+        }
+
+        return hasPermission;
     }
 
     @Override

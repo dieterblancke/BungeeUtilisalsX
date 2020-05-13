@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.api.friends;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
-import net.md_5.bungee.api.CommandSender;
 
 public class FriendUtils
 {
@@ -32,21 +31,18 @@ public class FriendUtils
 
     public static int getFriendLimit( final User user )
     {
-        return getFriendLimit( user.sender() );
-    }
+        final String permission = ConfigFiles.FRIENDS_CONFIG.getConfig().getString( "friendlimits.permission" );
+        int highestLimit = 0;
 
-    public static int getFriendLimit( final CommandSender sender )
-    {
-        final ISection limits = ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "friendlimits" );
-        int highestLimit = limits.getInteger( "limits.default", 10 );
-
-        for ( String key : limits.getKeys( "limits" ) )
+        for ( ISection section : ConfigFiles.FRIENDS_CONFIG.getConfig().getSectionList( "friendlimits.limits" ) )
         {
-            if ( !sender.hasPermission( limits.getString( "permission" ) + key ) )
+            final String name = section.getString( "name" );
+            final int limit = section.getInteger( "limit" );
+
+            if ( !name.equalsIgnoreCase( "default" ) && !user.hasPermission( permission + name ) )
             {
                 continue;
             }
-            final int limit = limits.getInteger( "limits." + key );
 
             if ( limit > highestLimit )
             {

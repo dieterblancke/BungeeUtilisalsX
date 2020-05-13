@@ -18,10 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.config;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.config.configs.MotdConfig;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.configs.PunishmentsConfig;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.configs.RanksConfig;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.configs.ServerGroupsConfig;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.configs.*;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -31,7 +28,7 @@ import java.util.List;
 public class ConfigFiles
 {
 
-    public static Config CONFIG = new Config( "config.yml" );
+    public static MainConfig CONFIG = new MainConfig( "config.yml" );
     public static ServerGroupsConfig SERVERGROUPS = new ServerGroupsConfig( "servergroups.yml" );
     public static MotdConfig MOTD = new MotdConfig( "motd.yml" );
     public static Config CUSTOMCOMMANDS = new Config( "commands/customcommands.yml" );
