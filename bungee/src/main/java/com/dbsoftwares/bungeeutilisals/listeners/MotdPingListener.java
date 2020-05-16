@@ -159,13 +159,11 @@ public class MotdPingListener implements Listener
             {
                 return;
             }
-            final Field nameField = ReflectionUtils.getField( connection.getClass(), "name" );
-
             for ( Field field : connection.getClass().getDeclaredFields() )
             {
                 if ( field.getName().equals( "name" ) )
                 {
-                    nameField.set( connection, name );
+                    field.set( connection, name );
                 }
             }
         }
