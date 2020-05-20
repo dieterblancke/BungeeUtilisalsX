@@ -19,9 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.api.command;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.collect.Lists;
 
 import java.util.Arrays;
 import java.util.List;
@@ -30,28 +30,9 @@ import java.util.function.Consumer;
 public class CommandBuilder
 {
 
-    private static final TabCall DEFAULT_TAB_CALL = ( user, args ) ->
-    {
-        if ( args.length == 0 )
-        {
-            return BUCore.getApi().getPlayerUtils().getPlayers();
-        }
-        else
-        {
-            final String lastWord = args[args.length - 1];
-            final List<String> list = Lists.newArrayList();
-
-            for ( String p : BUCore.getApi().getPlayerUtils().getPlayers() )
-            {
-                if ( p.toLowerCase().startsWith( lastWord.toLowerCase() ) )
-                {
-                    list.add( p );
-                }
-            }
-
-            return list;
-        }
-    };
+    private static final TabCall DEFAULT_TAB_CALL = ( user, args ) -> TabCompleter.buildTabCompletion(
+            StaffUtils.filterPlayerList(BUCore.getApi().getPlayerUtils().getPlayers()), args
+    );
     private boolean enabled;
     private String name;
     private String[] aliases = new String[0];

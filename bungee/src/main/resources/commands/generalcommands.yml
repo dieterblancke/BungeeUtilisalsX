@@ -1,3 +1,30 @@
+bungeeutilisals:
+  enabled: true
+  name: bungeeutilisals
+  aliases: 'bux, bu, bungeeutilisalsx'
+  permission: bungeeutilisals.commands.admin
+
+  subcommands:
+    version:
+      enabled: true
+      name: version
+      permission: bungeeutilisals.commands.admin.version
+    reload:
+      enabled: true
+      name: reload
+      permission: bungeeutilisals.commands.admin.reload
+    dump:
+      enabled: true
+      name: dump
+      permission: bungeeutilisals.commands.admin.dump
+    import:
+      enabled: true
+      name: import
+      permission: bungeeutilisals.commands.admin.import
+    convert:
+      enabled: true
+      name: convert
+      permission: bungeeutilisals.commands.admin.convert
 glist:
   # Enable this command or not?
   enabled: true

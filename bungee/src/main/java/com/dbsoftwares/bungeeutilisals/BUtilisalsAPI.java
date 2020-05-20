@@ -26,6 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
 import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
@@ -370,5 +371,11 @@ public class BUtilisalsAPI implements BUAPI
     public IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message )
     {
         return new BossBar( uuid, color, style, progress, message );
+    }
+
+    @Override
+    public List<StaffUser> getStaffMembers()
+    {
+        return BungeeUtilisals.getInstance().getStaffMembers();
     }
 }

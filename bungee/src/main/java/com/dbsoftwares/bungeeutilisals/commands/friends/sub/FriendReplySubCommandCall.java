@@ -21,6 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 
 import java.util.List;
@@ -49,7 +50,7 @@ public class FriendReplySubCommandCall implements CommandCall
             user.sendLangMessage( "friends.reply.not-friend", "{user}", name );
             return;
         }
-        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) )
+        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
             final Optional<User> optional = BUCore.getApi().getUser( name );
             final String message = String.join( " ", args );

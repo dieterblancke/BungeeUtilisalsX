@@ -25,12 +25,11 @@ public class HubBalancer implements IHubBalancer
 {
 
     @Getter
-    private Set<ServerData> servers;
+    private Set<ServerData> servers = Sets.newHashSet();
 
     public HubBalancer()
     {
         final IConfiguration configuration = ConfigFiles.HUBBALANCER.getConfig();
-        this.servers = Sets.newHashSet();
 
         for ( String lobby : configuration.getStringList( "lobbies" ) )
         {
@@ -43,7 +42,7 @@ public class HubBalancer implements IHubBalancer
         }
 
         ProxyServer.getInstance().getScheduler().schedule(
-                BungeeUtilisals.getInstance(), new ServerPingTask(), 0, configuration.getInteger( "ping-delay" ), TimeUnit.SECONDS
+                BungeeUtilisals.getInstance(), new ServerPingTask(), 1, configuration.getInteger( "ping-delay" ), TimeUnit.SECONDS
         );
 
         ProxyServer.getInstance().getPluginManager().registerListener( BungeeUtilisals.getInstance(), new JoinListener() );

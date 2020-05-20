@@ -43,7 +43,7 @@ public class RedisDefaultPubSubListener extends RedisPubSubAdapter<String, Strin
         }
         final BridgedMessage message = BUCore.getGson().fromJson( data, BridgedMessage.class );
 
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+        if ( ConfigFiles.CONFIG.isDebug() )
         {
             BUCore.getLogger().info( "Received message on BUX_DEFAULT_CHANNEL (redis):" );
             BUCore.getLogger().info( message.toString() );
@@ -51,14 +51,14 @@ public class RedisDefaultPubSubListener extends RedisPubSubAdapter<String, Strin
 
         if ( !bridge.canAccept( message ) )
         {
-            if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
                 BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " could not be accepted!" );
                 BUCore.getLogger().info( message.toString() );
             }
             return;
         }
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+        if ( ConfigFiles.CONFIG.isDebug() )
         {
             BUCore.getLogger().info( "Message with uuid " + message.getIdentifier() + " was accepted, executing event ..." );
         }

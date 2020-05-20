@@ -106,7 +106,7 @@ public class RedisBridge extends Bridge
 
     private void sendMessage( final BridgedMessage message )
     {
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "debug" ) )
+        if ( ConfigFiles.CONFIG.isDebug() )
         {
             BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
             BUCore.getLogger().info( message.toString() );
