@@ -65,7 +65,7 @@ public class DumpSubCommandCall implements CommandCall, TabCall
 {
 
     @Override
-    @SuppressWarnings( "all" )
+    @SuppressWarnings("all")
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final Dump dump = getDump();

@@ -31,7 +31,7 @@ public class CommandBuilder
 {
 
     private static final TabCall DEFAULT_TAB_CALL = ( user, args ) -> TabCompleter.buildTabCompletion(
-            StaffUtils.filterPlayerList(BUCore.getApi().getPlayerUtils().getPlayers()), args
+            StaffUtils.filterPlayerList( BUCore.getApi().getPlayerUtils().getPlayers() ), args
     );
     private boolean enabled;
     private String name;

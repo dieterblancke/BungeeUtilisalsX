@@ -36,14 +36,12 @@ import com.dbsoftwares.bungeeutilisals.utils.redisdata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -224,7 +222,7 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     {
         if ( args.size() >= 2 )
         {
-            final String types = args.get(0);
+            final String types = args.get( 0 );
             final String message = Joiner.on( " " ).join( args.subList( 1, args.size() ) );
 
             final AnnounceMessage announceMessage = new AnnounceMessage( getTypes( types ), message );

@@ -25,7 +25,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import java.util.stream.Stream;
 
 @Data
-public abstract class Announcement
+public abstract class Announcement implements IAnnouncement
 {
 
     protected ServerGroup serverGroup;

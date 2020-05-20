@@ -23,7 +23,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-        <version>1.1.0-DEV5</version>
+        <version>1.1.0-DEV6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bungee</artifactId>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>api</artifactId>
-            <version>1.1.0-DEV5</version>
+            <version>1.1.0-DEV6</version>
         </dependency>
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>updater</artifactId>
-            <version>1.1.0-DEV5</version>
+            <version>1.1.0-DEV6</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>

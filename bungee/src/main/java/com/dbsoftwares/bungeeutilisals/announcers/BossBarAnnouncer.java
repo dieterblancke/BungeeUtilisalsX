@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisals.api.announcer.IAnnouncement;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
@@ -90,6 +91,9 @@ public class BossBarAnnouncer extends Announcer
     public void stop()
     {
         super.stop();
-        super.getAnnouncements().keySet().forEach( Announcement::clear );
+        for ( IAnnouncement announcement : super.getAnnouncements() )
+        {
+            announcement.clear();
+        }
     }
 }

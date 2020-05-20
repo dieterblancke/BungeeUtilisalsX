@@ -30,7 +30,6 @@ import com.dbsoftwares.bungeeutilisals.converter.converters.MongoToSQLConverter;
 import com.dbsoftwares.bungeeutilisals.converter.converters.SQLtoMongoConverter;
 import com.dbsoftwares.bungeeutilisals.converter.converters.SQLtoSQLConverter;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import java.util.List;

@@ -25,6 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.TabCompleter;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+
 import java.util.List;
 
 public class IgnoreCommandCall implements CommandCall, TabCall
@@ -38,7 +39,7 @@ public class IgnoreCommandCall implements CommandCall, TabCall
             user.sendLangMessage( "general-commands.ignore.usage" );
             return;
         }
-        final String action = args.get(0);
+        final String action = args.get( 0 );
 
         if ( action.equalsIgnoreCase( "add" ) || action.equalsIgnoreCase( "remove" ) )
         {
@@ -47,7 +48,7 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                 user.sendLangMessage( "general-commands.ignore.usage" );
                 return;
             }
-            final String name = args.get(1);
+            final String name = args.get( 1 );
 
             if ( user.getName().equalsIgnoreCase( name ) )
             {

@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCompleter;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.google.common.collect.ImmutableList;
 import net.md_5.bungee.api.ChatColor;
 
 import java.lang.management.ManagementFactory;

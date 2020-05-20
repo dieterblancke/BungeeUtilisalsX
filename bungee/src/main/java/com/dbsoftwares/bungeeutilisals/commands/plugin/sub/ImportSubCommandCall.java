@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.importer.Importer;
 import com.dbsoftwares.bungeeutilisals.importer.ImporterCallback;
 import com.dbsoftwares.bungeeutilisals.importer.importers.BungeeAdminToolsImporter;
 import com.dbsoftwares.bungeeutilisals.importer.importers.BungeeUtilisalsImporter;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
 import java.util.List;

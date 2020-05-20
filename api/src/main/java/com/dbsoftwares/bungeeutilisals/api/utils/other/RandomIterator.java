@@ -20,10 +20,11 @@ package com.dbsoftwares.bungeeutilisals.api.utils.other;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 public class RandomIterator<T> implements Iterator<T>
 {
-
+    private static final Random RANDOM = new Random();
     private final List<T> data;
     private final int[] iteratedIndexes;
 
@@ -36,28 +37,46 @@ public class RandomIterator<T> implements Iterator<T>
     @Override
     public boolean hasNext()
     {
-        return countZeroValues() > 0;
+        return hasZeroValue();
     }
 
     @Override
     public T next()
     {
-        // TODO: get random
-        return null;
+        final int[] activeIndexes = getActiveIndexes();
+        final int idx = activeIndexes[RANDOM.nextInt( activeIndexes.length )];
+        iteratedIndexes[idx] = 1;
+
+        return data.get( idx );
     }
 
-    private int countZeroValues()
+    private int[] getActiveIndexes()
     {
-        int zeroValues = 0;
+        final int[] zeroIndexes = {};
+        int counter = 0;
 
         for ( int i = 0; i < iteratedIndexes.length; i++ )
         {
             if ( iteratedIndexes[i] == 0 )
             {
-                zeroValues++;
+                zeroIndexes[counter] = i;
+                counter++;
             }
         }
 
-        return zeroValues;
+        return zeroIndexes;
+    }
+
+    private boolean hasZeroValue()
+    {
+        for ( int iteratedIndex : iteratedIndexes )
+        {
+            if ( iteratedIndex == 0 )
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
