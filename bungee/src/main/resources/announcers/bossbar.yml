@@ -6,7 +6,7 @@ enabled: true
 random: false
 
 # If set to true, each server will be grouped separately.
-# If true, every server that has an announcement set up will receive it every 30 seconds.
+# If true, every server that has an announcement set up will receive it every 2 minutes.
 # If false, the announcer will iterate through the servers separately (causing higher delays)
 group-per-server: false
 
