@@ -5,6 +5,11 @@ enabled: true
 # If set to false, the announcement messages will be sent ordered as below.
 random: false
 
+# If set to true, each server will be grouped separately.
+# If true, every server that has an announcement set up will receive it every 30 seconds.
+# If false, the announcer will iterate through the servers separately (causing higher delays)
+group-per-server: false
+
 delay:
   # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
   # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS

@@ -64,6 +64,7 @@ public abstract class Announcer
     private TimeUnit unit;
     private int delay;
     private boolean random;
+    private boolean groupPerServer;
 
     public Announcer( final AnnouncementType type )
     {
@@ -84,6 +85,7 @@ public abstract class Announcer
         unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
         delay = configuration.getInteger( "delay.time" );
         random = configuration.getBoolean( "random" );
+        groupPerServer = configuration.exists( "group-per-server" ) ? configuration.getBoolean( "group-per-server" ) : false;
     }
 
     @SafeVarargs
@@ -214,6 +216,7 @@ public abstract class Announcer
         unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
         delay = configuration.getInteger( "delay.time" );
         random = configuration.getBoolean( "random" );
+        groupPerServer = configuration.exists( "group-per-server" ) ? configuration.getBoolean( "group-per-server" ) : false;
 
         if ( enabled )
         {
