@@ -52,7 +52,7 @@ public class RandomIterator<T> implements Iterator<T>
 
     private int[] getActiveIndexes()
     {
-        final int[] zeroIndexes = {};
+        final int[] zeroIndexes = new int[getZeroValueCount()];
         int counter = 0;
 
         for ( int i = 0; i < iteratedIndexes.length; i++ )
@@ -65,6 +65,20 @@ public class RandomIterator<T> implements Iterator<T>
         }
 
         return zeroIndexes;
+    }
+
+    private int getZeroValueCount()
+    {
+        int amount = 0;
+        for ( int iteratedIndex : iteratedIndexes )
+        {
+            if ( iteratedIndex == 0 )
+            {
+                amount++;
+            }
+        }
+
+        return amount;
     }
 
     private boolean hasZeroValue()
