@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.bridge;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
@@ -73,7 +74,13 @@ public abstract class Bridge implements EventExecutor
         entry.getValue().accept( event.asCasted( entry.getKey() ) );
     }
 
-    public abstract boolean setup();
+    public boolean setup()
+    {
+        eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
+        return true;
+    }
+
+    public abstract void sendMessage( final BridgedMessage message );
 
     public abstract BridgedMessage sendMessage( final BridgeType type, final String action, final Object data );
 

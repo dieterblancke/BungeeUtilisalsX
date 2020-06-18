@@ -26,10 +26,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventLoader implements IEventLoader
@@ -47,7 +44,15 @@ public class EventLoader implements IEventLoader
         Set<EventHandler<?>> handlers = handlerMap.computeIfAbsent( eventClass, c -> ConcurrentHashMap.newKeySet() );
         Set<EventHandler<T>> addedHandlers = ConcurrentHashMap.newKeySet();
 
-        for ( Method method : executor.getClass().getDeclaredMethods() )
+        final List<Method> methods = Lists.newArrayList();
+        methods.addAll( Arrays.asList( executor.getClass().getDeclaredMethods() ) );
+
+        if ( executor.getClass().getSuperclass() != null )
+        {
+            methods.addAll( Arrays.asList( executor.getClass().getSuperclass().getDeclaredMethods() ) );
+        }
+
+        for ( Method method : methods )
         {
             if (
                     method.getParameterCount() > 0
@@ -55,6 +60,8 @@ public class EventLoader implements IEventLoader
                             && method.isAnnotationPresent( Event.class )
             )
             {
+                System.out.println( method );
+
                 Event event = method.getAnnotation( Event.class );
                 int priority = event.priority();
                 boolean executeIfCancelled = event.executeIfCancelled();
@@ -71,7 +78,7 @@ public class EventLoader implements IEventLoader
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends BUEvent> Set<EventHandler<T>> getHandlers( Class<T> eventClass )
     {
         Set<EventHandler<?>> handlers = handlerMap.get( eventClass );

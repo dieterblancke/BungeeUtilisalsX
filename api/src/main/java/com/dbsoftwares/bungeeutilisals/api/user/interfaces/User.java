@@ -230,6 +230,11 @@ public interface User
     ProxiedPlayer getParent();
 
     /**
+     * @return The ping of the current user.
+     */
+    int getPing();
+
+    /**
      * @return The user his language config.
      */
     IConfiguration getLanguageConfig();

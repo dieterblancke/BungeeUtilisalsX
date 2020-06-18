@@ -19,8 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
@@ -33,11 +33,7 @@ public class PingCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( user instanceof ConsoleUser )
-        {
-            return;
-        }
-        if ( args.size() == 0 )
+        if ( args.isEmpty() )
         {
             user.sendLangMessage( "general-commands.ping.message" );
         }
@@ -46,10 +42,10 @@ public class PingCommandCall implements CommandCall
             final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.permission-other" );
             if ( permission != null
                     && !permission.isEmpty()
-                    && !user.getParent().hasPermission( permission )
-                    && !user.getParent().hasPermission( "bungeeutilisals.commands.*" )
-                    && !user.getParent().hasPermission( "bungeeutilisals.*" )
-                    && !user.getParent().hasPermission( "*" ) )
+                    && !user.hasPermission( permission )
+                    && !user.hasPermission( "bungeeutilisals.commands.*" )
+                    && !user.hasPermission( "bungeeutilisals.*" )
+                    && !user.hasPermission( "*" ) )
             {
                 user.sendLangMessage( "no-permission", "%permission%", permission );
                 return;
@@ -59,7 +55,25 @@ public class PingCommandCall implements CommandCall
 
             if ( !optionalUser.isPresent() )
             {
-                user.sendLangMessage( "offline" );
+                // If using redis, check is player is online in redisbungee
+                if ( BUCore.getApi().getBridgeManager().useBridging() && BUCore.getApi().getPlayerUtils().isOnline( args.get( 0 ) ) )
+                {
+                    BUCore.getApi().getBridgeManager().getBridge().sendMessage(
+                            BridgeType.BUNGEE_BUNGEE,
+                            "GET_USER_PING",
+                            args.get( 0 ),
+                            Integer.class,
+                            ping -> user.sendLangMessage(
+                                    "general-commands.ping.other",
+                                    "{target}", args.get( 0 ),
+                                    "{targetPing}", ping
+                            )
+                    );
+                }
+                else
+                {
+                    user.sendLangMessage( "offline" );
+                }
                 return;
             }
             final User target = optionalUser.get();
@@ -67,7 +81,7 @@ public class PingCommandCall implements CommandCall
             user.sendLangMessage(
                     "general-commands.ping.other",
                     "{target}", target.getName(),
-                    "{targetPing}", target.getParent().getPing()
+                    "{targetPing}", target.getPing()
             );
         }
     }

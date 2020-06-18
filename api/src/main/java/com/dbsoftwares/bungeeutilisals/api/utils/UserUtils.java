@@ -52,9 +52,9 @@ public class UserUtils
     public static long getOnlinePlayersOnDomain( final String domain )
     {
         int amount = 0;
-        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        if ( BUCore.getApi().getBridgeManager().useBridging() )
         {
-            final Collection<RedisUser> users = BUCore.getApi().getBridgeManager().getBungeeBridge().getAllRedisUsers().values();
+            final Collection<RedisUser> users = BUCore.getApi().getBridgeManager().getBridge().getAllRedisUsers().values();
 
             for ( RedisUser user : users )
             {

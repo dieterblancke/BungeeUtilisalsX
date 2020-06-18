@@ -91,7 +91,7 @@ public class BUtilisalsAPI implements BUAPI
         this.punishmentExecutor = new PunishmentExecutor();
         this.bridgeManager = new BridgeManager();
         this.bridgeManager.setup();
-        this.playerUtils = bridgeManager.useBungeeBridge() ? new RedisPlayerUtils() : new BungeePlayerUtils();
+        this.playerUtils = bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils();
 
         if ( ConfigFiles.HUBBALANCER.isEnabled() )
         {
@@ -181,13 +181,13 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void broadcast( String message, String permission )
     {
-        if ( bridgeManager.useBungeeBridge() )
+        if ( bridgeManager.useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
 
             data.put( "PERMISSION", Collections.singletonList( permission ) );
 
-            bridgeManager.getBungeeBridge().sendTargetedMessage(
+            bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -217,9 +217,9 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message )
     {
-        if ( bridgeManager.useBungeeBridge() )
+        if ( bridgeManager.useBridging() )
         {
-            bridgeManager.getBungeeBridge().sendTargetedMessage(
+            bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -243,13 +243,13 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void announce( String prefix, String message, String permission )
     {
-        if ( bridgeManager.useBungeeBridge() )
+        if ( bridgeManager.useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
 
             data.put( "PERMISSION", Collections.singletonList( permission ) );
 
-            bridgeManager.getBungeeBridge().sendTargetedMessage(
+            bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -279,9 +279,9 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langBroadcast( String message, Object... placeholders )
     {
-        if ( bridgeManager.useBungeeBridge() )
+        if ( bridgeManager.useBridging() )
         {
-            bridgeManager.getBungeeBridge().sendTargetedMessage(
+            bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -305,13 +305,13 @@ public class BUtilisalsAPI implements BUAPI
     @Override
     public void langPermissionBroadcast( String message, String permission, Object... placeholders )
     {
-        if ( bridgeManager.useBungeeBridge() )
+        if ( bridgeManager.useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
 
             data.put( "PERMISSION", Collections.singletonList( permission ) );
 
-            bridgeManager.getBungeeBridge().sendTargetedMessage(
+            bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),

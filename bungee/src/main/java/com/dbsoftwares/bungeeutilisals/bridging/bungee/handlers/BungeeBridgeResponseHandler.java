@@ -43,6 +43,12 @@ public class BungeeBridgeResponseHandler implements EventExecutor
         {
             handleUserAction( event.asCasted( UserAction.class ) );
         }
+        else if ( event.getAction().equals( "GET_USER_PING" ) )
+        {
+            final Optional<User> user = BUCore.getApi().getUser( event.asPrimitive().getAsString() );
+
+            user.ifPresent( value -> event.reply( value.getPing() ) );
+        }
     }
 
     private void handleUserAction( final UserAction action )

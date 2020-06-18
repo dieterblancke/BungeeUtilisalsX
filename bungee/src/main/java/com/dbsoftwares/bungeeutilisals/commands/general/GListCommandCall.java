@@ -151,7 +151,7 @@ public class GListCommandCall implements CommandCall, TabCall
                         hidden++;
                     }
                 }
-                else if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+                else if ( BUCore.getApi().getBridgeManager().useBridging() )
                 {
                     final ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer( user.getName() );
 
@@ -180,7 +180,7 @@ public class GListCommandCall implements CommandCall, TabCall
                         hidden++;
                     }
                 }
-                else if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+                else if ( BUCore.getApi().getBridgeManager().useBridging() )
                 {
                     final ServerInfo server = BUCore.getApi().getPlayerUtils().findPlayer( user.getName() );
 

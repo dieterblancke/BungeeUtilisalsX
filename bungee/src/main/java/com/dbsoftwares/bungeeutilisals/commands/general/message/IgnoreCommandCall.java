@@ -34,7 +34,7 @@ public class IgnoreCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() == 0 )
+        if ( args.isEmpty() )
         {
             user.sendLangMessage( "general-commands.ignore.usage" );
             return;

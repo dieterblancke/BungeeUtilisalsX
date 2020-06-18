@@ -20,17 +20,21 @@ package com.dbsoftwares.bungeeutilisals.api.bridge.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
+import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Collections;
 import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class BridgeResponseEvent extends AbstractEvent
 {
 
@@ -45,6 +49,11 @@ public class BridgeResponseEvent extends AbstractEvent
         return data;
     }
 
+    public JsonPrimitive asPrimitive()
+    {
+        return BUCore.getGson().fromJson( data, JsonPrimitive.class );
+    }
+
     public JsonObject asObject()
     {
         return BUCore.getGson().fromJson( data, JsonObject.class );
@@ -53,5 +62,18 @@ public class BridgeResponseEvent extends AbstractEvent
     public <T> T asCasted( final Class<T> clazz )
     {
         return BUCore.getGson().fromJson( data, clazz );
+    }
+
+    public void reply( final Object data )
+    {
+        BUCore.getApi().getBridgeManager().getBridge().sendMessage( new BridgedMessage(
+                type,
+                identifier,
+                ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
+                Collections.singletonList( from ),
+                null,
+                action,
+                data
+        ) );
     }
 }

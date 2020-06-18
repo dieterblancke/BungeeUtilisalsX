@@ -24,13 +24,9 @@ public interface IBridgeManager
 {
     void setup();
 
-    boolean useBungeeBridge();
+    boolean useBridging();
 
-    boolean useSpigotBridge();
-
-    RedisBridge getBungeeBridge();
-
-    Bridge getSpigotBridge();
+    RedisBridge getBridge();
 
     void shutdown();
 }

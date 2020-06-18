@@ -43,7 +43,7 @@ public class StaffChatCommandCall implements CommandCall, Listener
     {
         handleStaffChatMessage( serverName, userName, message );
 
-        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        if ( BUCore.getApi().getBridgeManager().useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
 
@@ -54,7 +54,7 @@ public class StaffChatCommandCall implements CommandCall, Listener
                     "*"
             ) );
 
-            BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+            BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -129,9 +129,9 @@ public class StaffChatCommandCall implements CommandCall, Listener
 
                     sendStaffChatMessage( user.getServerName(), user.getName(), event.getMessage() );
 
-                    if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+                    if ( BUCore.getApi().getBridgeManager().useBridging() )
                     {
-                        BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+                        BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
                                 BridgeType.BUNGEE_BUNGEE,
                                 null,
                                 Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),

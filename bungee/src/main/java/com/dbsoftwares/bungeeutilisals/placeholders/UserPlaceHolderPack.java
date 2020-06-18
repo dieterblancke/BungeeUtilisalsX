@@ -50,7 +50,7 @@ public class UserPlaceHolderPack implements PlaceHolderPack
 
     private String getUserPing( final PlaceHolderEvent event )
     {
-        return String.valueOf( event.getUser().getParent().getPing() );
+        return String.valueOf( event.getUser().getPing() );
     }
 
     private String getUserPrefix( final PlaceHolderEvent event )

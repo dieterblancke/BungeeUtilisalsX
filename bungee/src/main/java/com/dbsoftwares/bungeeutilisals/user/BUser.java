@@ -379,6 +379,12 @@ public class BUser implements User
     }
 
     @Override
+    public int getPing()
+    {
+        return parent.getPing();
+    }
+
+    @Override
     public IConfiguration getLanguageConfig()
     {
         return BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), this );

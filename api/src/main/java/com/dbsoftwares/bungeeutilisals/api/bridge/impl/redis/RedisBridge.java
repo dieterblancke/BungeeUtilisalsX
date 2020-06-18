@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
-import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.codecs.RedisUserCodec;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.bridge.util.RedisUser;
@@ -32,6 +31,7 @@ import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisFuture;
@@ -53,7 +53,7 @@ import java.util.logging.Level;
 public class RedisBridge extends Bridge
 {
 
-    private final static String REDIS_USER_KEY = "REDIS_USER_KEY";
+    private static final String REDIS_USER_KEY = "REDIS_USER_KEY";
     private final Cache<Object, Map<String, RedisUser>> redisUserCache = CacheBuilder.newBuilder()
             .expireAfterWrite( 5, TimeUnit.SECONDS )
             .build();
@@ -61,16 +61,17 @@ public class RedisBridge extends Bridge
     @Getter
     private RedisClient redisClient;
     private StatefulRedisPubSubConnection<String, String> pubSubConnection;
+    private StatefulRedisPubSubConnection<String, String> pubSubSubscriberConnection;
+
     @Getter
     private StatefulRedisConnection<String, RedisUser> userConnection;
 
     @Override
     public boolean setup()
     {
+        super.setup();
         try
         {
-            eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
-
             // Getting credentials from configuration
             final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "bridging.redis" );
 
@@ -85,32 +86,38 @@ public class RedisBridge extends Bridge
                     .build();
             this.redisClient = RedisClient.create( uri );
             this.pubSubConnection = this.redisClient.connectPubSub();
+            this.pubSubSubscriberConnection = this.redisClient.connectPubSub();
             this.userConnection = this.redisClient.connect( new RedisUserCodec() );
 
-
-            this.pubSubConnection.addListener( new RedisDefaultPubSubListener( this ) );
+            this.pubSubSubscriberConnection.sync().subscribe( "BUX_DEFAULT_CHANNEL" );
+            this.pubSubSubscriberConnection.addListener( new RedisDefaultPubSubListener( this ) );
 
             final RedisUserExecutor executor = new RedisUserExecutor( this );
             BUCore.getApi().getEventLoader().register( UserLoadEvent.class, executor );
             BUCore.getApi().getEventLoader().register( UserUnloadEvent.class, executor );
 
             BUCore.getLogger().log( Level.INFO, "Successfully connected to Redis server." );
-            return setup = true;
+            setup = true;
         }
         catch ( Exception e )
         {
+            setup = false;
             e.printStackTrace();
-            return setup = false;
         }
+        return setup;
     }
 
-    private void sendMessage( final BridgedMessage message )
+    @Override
+    public void sendMessage( final BridgedMessage message )
     {
         if ( ConfigFiles.CONFIG.isDebug() )
         {
             BUCore.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
             BUCore.getLogger().info( message.toString() );
         }
+        if ( message.getIgnoredTargets() == null ) message.setIgnoredTargets( Lists.newArrayList() );
+        message.getIgnoredTargets().add( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) );
+
         pubSubConnection.sync().publish( "BUX_DEFAULT_CHANNEL", BUCore.getGson().toJson( message ) );
     }
 

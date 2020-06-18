@@ -199,13 +199,13 @@ public abstract class PunishmentCommand implements CommandCall
 
     private void bridgedKick( final UserStorage storage, final String path, final PunishmentInfo info )
     {
-        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        if ( BUCore.getApi().getBridgeManager().useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
             data.put( "reason", info.getReason() );
             data.put( "type", info.getType() );
 
-            BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+            BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
@@ -272,13 +272,13 @@ public abstract class PunishmentCommand implements CommandCall
 
     private void bridgedMute( final UserStorage storage, final String path, final PunishmentInfo info )
     {
-        if ( BUCore.getApi().getBridgeManager().useBungeeBridge() )
+        if ( BUCore.getApi().getBridgeManager().useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
             data.put( "reason", info.getReason() );
             data.put( "type", info.getType() );
 
-            BUCore.getApi().getBridgeManager().getBungeeBridge().sendTargetedMessage(
+            BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
                     Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),

@@ -19,10 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.bridging;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.bridge.event.BridgeResponseEvent;
-import com.dbsoftwares.bungeeutilisals.api.bridge.impl.PluginMessageBridge;
 import com.dbsoftwares.bungeeutilisals.api.bridge.impl.redis.RedisBridge;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
@@ -34,12 +32,13 @@ import java.util.Set;
 
 public class BridgeManager implements IBridgeManager
 {
+
     private RedisBridge redisBridge;
-    private PluginMessageBridge pluginMessageBridge;
     private Set<EventHandler<BridgeResponseEvent>> eventHandlers;
 
     public BridgeManager()
     {
+        // empty constructor
     }
 
     public void setup()
@@ -65,18 +64,10 @@ public class BridgeManager implements IBridgeManager
                 redisBridgeSetup = redisBridge.setup();
             }
         }
-        if ( config.getBoolean( "spigot.enabled" ) )
+        if ( config.getBoolean( "spigot.enabled" ) && redisBridge == null )
         {
-            if ( redisBridge == null && config.getStringList( "spigot.methods" ).contains( "redis" ) )
-            {
-                redisBridge = new RedisBridge();
-                redisBridgeSetup = redisBridge.setup();
-            }
-
-            if ( config.getStringList( "spigot.methods" ).contains( "pluginmessaging" ) )
-            {
-                pluginMessageBridge = new PluginMessageBridge();
-            }
+            redisBridge = new RedisBridge();
+            redisBridgeSetup = redisBridge.setup();
         }
 
         if ( redisBridge != null && !redisBridgeSetup )
@@ -87,23 +78,6 @@ public class BridgeManager implements IBridgeManager
             BUCore.getLogger().warning(
                     "Bungee bridging will not work without the 'Redis Bridge' functioning!!"
             );
-
-            if ( config.getBoolean( "spigot.enabled" ) )
-            {
-                if ( pluginMessageBridge != null )
-                {
-                    BUCore.getLogger().warning(
-                            "Spigot bridging will fall back onto Plugin Message Bridging."
-                    );
-                }
-                else
-                {
-                    BUCore.getLogger().warning(
-                            "Spigot bridging will not work without the 'Redis Bridge' functioning! "
-                                    + "This because the Plugin Message Fallback Bridge is disabled."
-                    );
-                }
-            }
         }
 
         eventHandlers = BUCore.getApi().getEventLoader().register( BridgeResponseEvent.class, new BungeeBridgeResponseHandler() );
@@ -113,25 +87,15 @@ public class BridgeManager implements IBridgeManager
         );
     }
 
-    public boolean useBungeeBridge()
+    public boolean useBridging()
     {
         return redisBridge != null
                 && ProxyServer.getInstance().getPluginManager().getPlugin( "RedisBungee" ) != null;
     }
 
-    public boolean useSpigotBridge()
-    {
-        return redisBridge != null || pluginMessageBridge != null;
-    }
-
-    public RedisBridge getBungeeBridge()
+    public RedisBridge getBridge()
     {
         return redisBridge;
-    }
-
-    public Bridge getSpigotBridge()
-    {
-        return redisBridge != null ? redisBridge : pluginMessageBridge;
     }
 
     public void shutdown()
@@ -139,10 +103,6 @@ public class BridgeManager implements IBridgeManager
         if ( redisBridge != null )
         {
             redisBridge.shutdownBridge();
-        }
-        if ( pluginMessageBridge != null )
-        {
-            pluginMessageBridge.shutdownBridge();
         }
         if ( eventHandlers != null )
         {

@@ -7,15 +7,11 @@ bridging:
   name: 'bungee'
 
   bungee:
-    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS, this will by default use redis (see below for credentials)
+    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS, this will use redis (see below for credentials)
     enabled: false
   spigot:
-    # For data syncing between Spigot and BungeeCord servers
+    # For syncing between Spigot and BungeeCord servers, this will use redis (see below for credentials)
     enabled: true
-    # By default, BungeeUtilisalsX will attempt to connect to a SpigotMC server using Redis PubSub channel.
-    # If BungeeUtilisalsX cannot connect to the redis credentials provided below, it will fall back to Plugin Messaging
-    methods:
-      - pluginmessaging
 
   redis:
     host: 127.0.0.1
