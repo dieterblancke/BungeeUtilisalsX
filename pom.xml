@@ -42,8 +42,9 @@
 
     <distributionManagement>
         <repository>
-            <id>dbsoftwares</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/dieterblancke/BungeeUtilisalsX</url>
         </repository>
     </distributionManagement>
 
