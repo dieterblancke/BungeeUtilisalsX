@@ -36,6 +36,11 @@ chat-protection:
 placeholders:
   timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
 
+  format:
+    date: 'dd-MM-yyyy'
+    time: 'kk:mm:ss'
+    datetime: 'dd-MM-yyyy kk:mm:ss'
+
 subcommands:
   usage: '&ePlease use &b{usage}&e!'
 

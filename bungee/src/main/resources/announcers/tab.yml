@@ -1,0 +1,43 @@
+# Set to true to enable this announcer, false to disable.
+enabled: false
+
+# If set to true, the announcement messages will be sent random.
+# If set to false, the announcement messages will be sent ordered as below.
+random: false
+
+# If set to true, each server will be grouped separately.
+# If true, every server that has an announcement set up will receive it every 30 seconds.
+# If false, the announcer will iterate through the servers separately (causing higher delays)
+group-per-server: false
+
+delay:
+  # Recommended TimeUnits: MILLISECONDS, SECONDS, MINUTES & HOURS
+  # Possible TimeUnits: NANOSECONDS, MICROSECONDS, MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS, WEEKS
+  unit: SECONDS
+  time: 1
+
+announcements:
+  # You can enter a ServerGroup name or a ServerName in here.
+  # Do note that ServerGroup names will be prioritized above ServerNames.
+  - server: Global
+    # Permission you need in order to receive the announcement, leave empty if no permission.
+    permission: ''
+    # Should the message be retrieved from the language files? If true, you must use a valid path!
+    language: false
+    # The lines for the header of the tab list.
+    header:
+      - '&7----------------[ &e&lBungeeUtilisalsX &7]----------------'
+      - ''
+      - '&7Current Date: &a{date}'
+      - '&7Current Time: &a{time}'
+      - ''
+      - '&aGlobal &7online: &b{proxy_online} players'
+      - '&a{server} &7online: &b{server_online} players'
+      - ''
+    # The lines for the footer of the tab list.
+    footer:
+      - ''
+      - '&7This server uses &bBungeeUtilisalsX&7!'
+      - '&7For more info, check out &ahttps://centrix.link/bux&7!'
+      - ''
+      - '&7----------------[ &e&lBungeeUtilisalsX &7]----------------'

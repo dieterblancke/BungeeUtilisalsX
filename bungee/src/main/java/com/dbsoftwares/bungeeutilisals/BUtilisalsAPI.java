@@ -185,12 +185,12 @@ public class BUtilisalsAPI implements BUAPI
         {
             final Map<String, Object> data = Maps.newHashMap();
 
-            data.put( "PERMISSION", Collections.singletonList( permission ) );
+            data.put( "PERMISSION", Lists.newArrayList( permission ) );
 
             bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,
@@ -222,7 +222,7 @@ public class BUtilisalsAPI implements BUAPI
             bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,
@@ -247,12 +247,12 @@ public class BUtilisalsAPI implements BUAPI
         {
             final Map<String, Object> data = Maps.newHashMap();
 
-            data.put( "PERMISSION", Collections.singletonList( permission ) );
+            data.put( "PERMISSION", Lists.newArrayList( permission ) );
 
             bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,
@@ -284,7 +284,7 @@ public class BUtilisalsAPI implements BUAPI
             bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,
@@ -309,12 +309,12 @@ public class BUtilisalsAPI implements BUAPI
         {
             final Map<String, Object> data = Maps.newHashMap();
 
-            data.put( "PERMISSION", Collections.singletonList( permission ) );
+            data.put( "PERMISSION", Lists.newArrayList( permission ) );
 
             bridgeManager.getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,

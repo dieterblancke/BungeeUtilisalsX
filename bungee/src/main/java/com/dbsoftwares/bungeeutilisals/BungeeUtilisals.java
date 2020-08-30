@@ -18,10 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.announcers.ActionBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
+import com.dbsoftwares.bungeeutilisals.announcers.*;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
@@ -97,10 +94,10 @@ public class BungeeUtilisals extends Plugin
     private CommandManager commandManager;
 
     @Getter
-    private List<Script> scripts = Lists.newArrayList();
+    private final List<Script> scripts = Lists.newArrayList();
 
     @Getter
-    private List<StaffUser> staffMembers = Lists.newArrayList();
+    private final List<StaffUser> staffMembers = Lists.newArrayList();
 
     @Override
     public void onEnable()
@@ -197,7 +194,7 @@ public class BungeeUtilisals extends Plugin
         }
 
         // Loading Announcers
-        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class );
+        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class, TabAnnouncer.class );
 
         // Loading all (enabled) Commands
         commandManager = new CommandManager();
@@ -273,6 +270,7 @@ public class BungeeUtilisals extends Plugin
             }
             catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
             {
+                // ignore
             }
         }
     }
@@ -470,6 +468,10 @@ public class BungeeUtilisals extends Plugin
         metrics.addCustomChart( new Metrics.SimplePie(
                 "chat_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "tab_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new Metrics.SimplePie(
                 "hubbalancer",

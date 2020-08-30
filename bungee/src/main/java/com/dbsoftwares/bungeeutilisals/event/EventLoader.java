@@ -60,8 +60,6 @@ public class EventLoader implements IEventLoader
                             && method.isAnnotationPresent( Event.class )
             )
             {
-                System.out.println( method );
-
                 Event event = method.getAnnotation( Event.class );
                 int priority = event.priority();
                 boolean executeIfCancelled = event.executeIfCancelled();

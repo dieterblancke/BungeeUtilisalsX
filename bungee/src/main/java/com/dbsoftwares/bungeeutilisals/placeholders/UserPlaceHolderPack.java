@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.placeholders;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
@@ -39,6 +40,7 @@ public class UserPlaceHolderPack implements PlaceHolderPack
         PlaceHolderAPI.addPlaceHolder( "{user_prefix}", true, this::getUserPrefix );
         PlaceHolderAPI.addPlaceHolder( "{ping}", true, this::getUserPing );
         PlaceHolderAPI.addPlaceHolder( "{server}", true, this::getServerName );
+        PlaceHolderAPI.addPlaceHolder( "{server_online}", true, this::getServerCount );
         PlaceHolderAPI.addPlaceHolder( "{language_short}", true, this::getShortLanguage );
         PlaceHolderAPI.addPlaceHolder( "{language_long}", true, this::getLongLanguage );
     }
@@ -65,6 +67,11 @@ public class UserPlaceHolderPack implements PlaceHolderPack
     private String getServerName( final PlaceHolderEvent event )
     {
         return event.getUser().getServerName();
+    }
+
+    private String getServerCount( final PlaceHolderEvent event )
+    {
+        return String.valueOf( BUCore.getApi().getPlayerUtils().getPlayerCount( event.getUser().getServerName() ) );
     }
 
     private String getShortLanguage( final PlaceHolderEvent event )
