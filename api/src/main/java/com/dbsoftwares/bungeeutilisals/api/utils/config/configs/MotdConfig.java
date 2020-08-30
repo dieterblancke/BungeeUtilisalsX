@@ -18,9 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.api.utils.config.configs;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.DomainConditionHandler;
+import com.dbsoftwares.bungeeutilisals.api.motd.handlers.MultiConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.NameConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.motd.handlers.VersionConditionHandler;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.Config;
@@ -61,28 +62,56 @@ public class MotdConfig extends Config
             final List<String> hoverMessages = section.exists( "player-hover" )
                     ? section.getStringList( "player-hover" )
                     : Lists.newArrayList();
+            final ConditionHandler handler = this.createConditionHandler( condition );
 
-            if ( condition.equalsIgnoreCase( "default" ) )
+            this.motds.add( new MotdData( handler, handler == null, motd, hoverMessages ) );
+        }
+    }
+
+    private ConditionHandler createConditionHandler( final String condition )
+    {
+        if ( condition.contains( "||" ) || condition.contains( "&&" ) )
+        {
+            return this.createMultiConditionHandler( condition );
+        }
+
+        if ( condition.toLowerCase().startsWith( "domain" ) )
+        {
+            return new DomainConditionHandler( condition );
+        }
+        else if ( condition.toLowerCase().startsWith( "version" ) )
+        {
+            return new VersionConditionHandler( condition );
+        }
+        else if ( condition.toLowerCase().startsWith( "name" ) )
+        {
+            return new NameConditionHandler( condition );
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    private ConditionHandler createMultiConditionHandler( final String conditions )
+    {
+        final List<ConditionHandler> handlers = Lists.newArrayList();
+
+        if ( conditions.contains( "||" ) )
+        {
+            for ( String condition : conditions.split( "\\|\\|" ) )
             {
-                motds.add( new MotdData( null, true, motd, hoverMessages ) );
-            }
-            else if ( condition.toLowerCase().startsWith( "domain" ) )
-            {
-                motds.add( new MotdData( new DomainConditionHandler( condition ), false, motd, hoverMessages ) );
-            }
-            else if ( condition.toLowerCase().startsWith( "version" ) )
-            {
-                motds.add( new MotdData( new VersionConditionHandler( condition ), false, motd, hoverMessages ) );
-            }
-            else if ( condition.toLowerCase().startsWith( "name" ) )
-            {
-                motds.add( new MotdData( new NameConditionHandler( condition ), false, motd, hoverMessages ) );
-            }
-            else
-            {
-                BUCore.getLogger().warning( "An invalid MOTD condition has been entered." );
-                BUCore.getLogger().warning( "For all available conditions, see https://docs.dbsoftwares.eu/bungeeutilisals/motd-chat#conditions" );
+                handlers.add( this.createConditionHandler( condition.trim() ) );
             }
         }
+        else if ( conditions.contains( "&&" ) )
+        {
+            for ( String condition : conditions.split( "&&" ) )
+            {
+                handlers.add( this.createConditionHandler( condition.trim() ) );
+            }
+        }
+
+        return new MultiConditionHandler( conditions, conditions.contains( "&&" ), handlers.toArray( new ConditionHandler[0] ) );
     }
 }
