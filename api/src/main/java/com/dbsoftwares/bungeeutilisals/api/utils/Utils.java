@@ -52,6 +52,13 @@ public class Utils
     private static final Pattern timePattern = Pattern.compile( "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
+    private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
+    private static final boolean IS_1_16;
+
+    static
+    {
+        IS_1_16 = ReflectionUtils.getMethod( ChatColor.class, "of", String.class ) != null;
+    }
 
     private Utils()
     {
@@ -69,6 +76,21 @@ public class Utils
         {
             return message;
         }
+
+        if ( IS_1_16 )
+        {
+            Matcher matcher = HEX_PATTERN.matcher( message );
+            while ( matcher.find() )
+            {
+                final ChatColor hexColor = ChatColor.of( matcher.group().substring( 1, matcher.group().length() - 1 ) );
+                final String before = message.substring( 0, matcher.start() );
+                final String after = message.substring( matcher.end() );
+
+                message = before + hexColor + after;
+                matcher = HEX_PATTERN.matcher( message );
+            }
+        }
+
         return ChatColor.translateAlternateColorCodes( '&', message );
     }
 

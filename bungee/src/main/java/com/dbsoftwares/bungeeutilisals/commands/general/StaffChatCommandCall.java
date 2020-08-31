@@ -57,7 +57,7 @@ public class StaffChatCommandCall implements CommandCall, Listener
             BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
                     BridgeType.BUNGEE_BUNGEE,
                     null,
-                    Collections.singletonList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
                     "USER",
                     new UserAction(
                             null,

@@ -399,6 +399,10 @@ public class BUser implements User
     @Override
     public String getServerName()
     {
+        if ( getParent() == null || getParent().getServer() == null || getParent().getServer().getInfo() == null )
+        {
+            return "";
+        }
         return getParent().getServer().getInfo().getName();
     }
 

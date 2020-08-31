@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.google.common.collect.Lists;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import lombok.AllArgsConstructor;
@@ -70,7 +71,7 @@ public class BridgeResponseEvent extends AbstractEvent
                 type,
                 identifier,
                 ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ),
-                Collections.singletonList( from ),
+                Lists.newArrayList( from ),
                 null,
                 action,
                 data
