@@ -26,7 +26,6 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
-import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
@@ -101,11 +100,6 @@ public interface BUAPI
      * @return The BungeeUtilisals chat utility class.
      */
     IChatManager getChatManager();
-
-    /**
-     * @return A SimpleExecutor instance.
-     */
-    SimpleExecutor getSimpleExecutor();
 
     /**
      * @return A new ProxyConnection instance.

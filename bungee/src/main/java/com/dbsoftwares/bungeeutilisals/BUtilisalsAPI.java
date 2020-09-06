@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
-import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
@@ -66,15 +65,14 @@ public class BUtilisalsAPI implements BUAPI
 {
 
     private final BungeeUtilisals plugin;
-    private ConsoleUser console;
-    private List<User> users;
-    private IChatManager chatManager;
-    private IEventLoader eventLoader;
-    private ILanguageManager languageManager;
-    private SimpleExecutor simpleExecutor;
-    private IPunishmentExecutor punishmentExecutor;
-    private IPlayerUtils playerUtils;
-    private IBridgeManager bridgeManager;
+    private final ConsoleUser console;
+    private final List<User> users;
+    private final IChatManager chatManager;
+    private final IEventLoader eventLoader;
+    private final ILanguageManager languageManager;
+    private final IPunishmentExecutor punishmentExecutor;
+    private final IPlayerUtils playerUtils;
+    private final IBridgeManager bridgeManager;
     private IHubBalancer hubBalancer;
 
     BUtilisalsAPI( BungeeUtilisals plugin )
@@ -87,7 +85,6 @@ public class BUtilisalsAPI implements BUAPI
         this.chatManager = new ChatManager();
         this.eventLoader = new EventLoader();
         this.languageManager = new PluginLanguageManager( plugin );
-        this.simpleExecutor = new SimpleExecutor();
         this.punishmentExecutor = new PunishmentExecutor();
         this.bridgeManager = new BridgeManager();
         this.bridgeManager.setup();

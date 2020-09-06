@@ -46,6 +46,7 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -160,7 +161,7 @@ public class BUser implements User
             friendSettings = new FriendSettings();
         }
 
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () ->
         {
             messageQueue = BUCore.getApi().getStorageManager().getDao().createMessageQueue( this );
             executeMessageQueue();
@@ -317,7 +318,7 @@ public class BUser implements User
     @Override
     public void kick( String reason )
     {
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () -> getParent().disconnect( Utils.format( reason ) ) );
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () -> getParent().disconnect( Utils.format( reason ) ) );
     }
 
     @Override

@@ -19,13 +19,17 @@
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 public class ServerCommandCall implements CommandCall
@@ -34,7 +38,7 @@ public class ServerCommandCall implements CommandCall
     @Override
     public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        if ( args.size() < 1 )
+        if ( args.isEmpty() )
         {
             user.sendLangMessage( "general-commands.server.usage", "{server}", user.getServerName() );
             return;
@@ -51,40 +55,62 @@ public class ServerCommandCall implements CommandCall
             final Optional<User> optionalTarget = BUCore.getApi().getUser( args.get( 0 ) );
             final ServerInfo server = ProxyServer.getInstance().getServerInfo( args.get( 1 ) );
 
-            if ( !optionalTarget.isPresent() )
-            {
-                user.sendLangMessage( "offline" );
-                return;
-            }
-            final User target = optionalTarget.get();
-
             if ( server == null )
             {
                 user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( 1 ) );
                 return;
             }
 
-            user.sendLangMessage(
-                    "general-commands.server.sent-other",
-                    "{user}", target.getName(),
-                    "{server}", server.getName()
-            );
-            sendToServer( target, server );
-            return;
+            if ( !optionalTarget.isPresent() )
+            {
+                if ( BUCore.getApi().getBridgeManager().useBridging()
+                        && BUCore.getApi().getPlayerUtils().isOnline( args.get( 0 ) ) )
+                {
+                    final Map<String, String> object = Maps.newHashMap();
+
+                    object.put( "user", args.get( 0 ) );
+                    object.put( "server", server.getName() );
+
+                    BUCore.getApi().getBridgeManager().getBridge().sendTargetedMessage(
+                            BridgeType.BUNGEE_BUNGEE,
+                            null,
+                            Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
+                            "USER_MOVE_SERVER",
+                            object
+                    );
+                }
+                else
+                {
+                    user.sendLangMessage( "offline" );
+                }
+            }
+            else
+            {
+                final User target = optionalTarget.get();
+
+                user.sendLangMessage(
+                        "general-commands.server.sent-other",
+                        "{user}", target.getName(),
+                        "{server}", server.getName()
+                );
+                sendToServer( target, server );
+            }
         }
-
-        final ServerInfo server = ProxyServer.getInstance().getServerInfo( args.get( 0 ) );
-
-        if ( server == null )
+        else
         {
-            user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( 0 ) );
-            return;
-        }
+            final ServerInfo server = ProxyServer.getInstance().getServerInfo( args.get( 0 ) );
 
-        sendToServer( user, server );
+            if ( server == null )
+            {
+                user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( 0 ) );
+                return;
+            }
+
+            sendToServer( user, server );
+        }
     }
 
-    private void sendToServer( final User user, final ServerInfo server )
+    public static void sendToServer( final User user, final ServerInfo server )
     {
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
         {

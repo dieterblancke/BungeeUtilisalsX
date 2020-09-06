@@ -38,7 +38,7 @@ public class UserPunishExecutor implements EventExecutor
     @Event
     public void handleReports( UserPunishmentFinishEvent event )
     {
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () ->
                 ReportUtils.handleReportsFor( event.getExecutor().getName(), event.getUuid(), event.getType() )
         );
     }

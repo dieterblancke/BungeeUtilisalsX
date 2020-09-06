@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.lang.reflect.Method;
 import java.util.*;
@@ -153,6 +154,6 @@ public class EventLoader implements IEventLoader
         {
             throw new IllegalArgumentException( "cannot call Cancellable event async" );
         }
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () -> launchEvent( event ) );
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () -> launchEvent( event ) );
     }
 }

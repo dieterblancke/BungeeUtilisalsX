@@ -66,13 +66,13 @@ public class Command
     public void execute( final User user, final String[] argList )
     {
         final List<String> arguments = Lists.newArrayList();
-        final List<String> parameters = Lists.newArrayList();
+        final List<String> params = Lists.newArrayList();
 
         for ( String argument : argList )
         {
             if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
             {
-                parameters.add( argument );
+                params.add( argument );
             }
             else
             {
@@ -80,7 +80,7 @@ public class Command
             }
         }
 
-        execute( user, arguments, parameters );
+        execute( user, arguments, params );
     }
 
     public void execute( final User user, final List<String> arguments, final List<String> parameters )
@@ -96,7 +96,7 @@ public class Command
             return;
         }
 
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () ->
         {
             try
             {
@@ -197,7 +197,7 @@ public class Command
 
     boolean check( final List<String> args )
     {
-        if ( args.size() == 0 )
+        if ( args.isEmpty() )
         {
             return false;
         }
