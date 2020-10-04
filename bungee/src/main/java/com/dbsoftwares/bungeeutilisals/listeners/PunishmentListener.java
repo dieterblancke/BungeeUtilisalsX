@@ -27,6 +27,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -48,7 +49,7 @@ public class PunishmentListener implements Listener
         final UUID uuid = connection.getUniqueId();
         final String ip = Utils.getIP( connection.getAddress() );
 
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", true ) )
+        if ( ConfigFiles.CONFIG.isDebug() )
         {
             System.out.println( String.format( "Checking ban for UUID: %s and IP: %s for server ALL", uuid.toString(), ip ) );
         }
@@ -70,7 +71,7 @@ public class PunishmentListener implements Listener
         final String ip = Utils.getIP( player.getAddress() );
         final String kickReason = getKickReasonIfBanned( player.getUniqueId(), ip, target.getName() );
 
-        if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug", true ) )
+        if ( ConfigFiles.CONFIG.isDebug() )
         {
             System.out.println( String.format(
                     "Checking ban for UUID: %s and IP: %s for server %s",

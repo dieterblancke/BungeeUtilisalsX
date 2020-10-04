@@ -18,11 +18,17 @@
 
 package com.dbsoftwares.bungeeutilisals.placeholders;
 
+import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+
+import java.util.Comparator;
 
 public class UserPlaceHolderPack implements PlaceHolderPack
 {
@@ -31,8 +37,10 @@ public class UserPlaceHolderPack implements PlaceHolderPack
     public void loadPack()
     {
         PlaceHolderAPI.addPlaceHolder( "{user}", true, this::getUserName );
+        PlaceHolderAPI.addPlaceHolder( "{user_prefix}", true, this::getUserPrefix );
         PlaceHolderAPI.addPlaceHolder( "{ping}", true, this::getUserPing );
         PlaceHolderAPI.addPlaceHolder( "{server}", true, this::getServerName );
+        PlaceHolderAPI.addPlaceHolder( "{server_online}", true, this::getServerCount );
         PlaceHolderAPI.addPlaceHolder( "{language_short}", true, this::getShortLanguage );
         PlaceHolderAPI.addPlaceHolder( "{language_long}", true, this::getLongLanguage );
     }
@@ -44,12 +52,26 @@ public class UserPlaceHolderPack implements PlaceHolderPack
 
     private String getUserPing( final PlaceHolderEvent event )
     {
-        return String.valueOf( event.getUser().getParent().getPing() );
+        return String.valueOf( event.getUser().getPing() );
+    }
+
+    private String getUserPrefix( final PlaceHolderEvent event )
+    {
+        return ConfigFiles.RANKS.getRanks().stream()
+                .filter( rank -> event.getUser().hasPermission( rank.getPermission() ) )
+                .max( Comparator.comparingInt( StaffRankData::getPriority ) )
+                .map( rank -> Utils.c( rank.getDisplay() ) )
+                .orElse( "" );
     }
 
     private String getServerName( final PlaceHolderEvent event )
     {
         return event.getUser().getServerName();
+    }
+
+    private String getServerCount( final PlaceHolderEvent event )
+    {
+        return String.valueOf( BUCore.getApi().getPlayerUtils().getPlayerCount( event.getUser().getServerName() ) );
     }
 
     private String getShortLanguage( final PlaceHolderEvent event )

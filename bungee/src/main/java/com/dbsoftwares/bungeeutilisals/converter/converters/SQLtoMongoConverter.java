@@ -209,7 +209,7 @@ public class SQLtoMongoConverter extends Converter
                 public Connection getConnection() throws SQLException
                 {
                     final Connection connection = DriverManager.getConnection(
-                            "jdbc:" + (type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql") + "://" + properties.get( "host" ) + ":"
+                            "jdbc:" + ( type.equals( StorageType.POSTGRESQL ) ? "postgresql" : "mysql" ) + "://" + properties.get( "host" ) + ":"
                                     + properties.get( "port" )
                                     + "/" + properties.get( "database" ),
                             properties.get( "username" ),

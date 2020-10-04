@@ -1,3 +1,30 @@
+bungeeutilisals:
+  enabled: true
+  name: bungeeutilisals
+  aliases: 'bux, bu, bungeeutilisalsx'
+  permission: bungeeutilisals.commands.admin
+
+  subcommands:
+    version:
+      enabled: true
+      name: version
+      permission: bungeeutilisals.commands.admin.version
+    reload:
+      enabled: true
+      name: reload
+      permission: bungeeutilisals.commands.admin.reload
+    dump:
+      enabled: true
+      name: dump
+      permission: bungeeutilisals.commands.admin.dump
+    import:
+      enabled: true
+      name: import
+      permission: bungeeutilisals.commands.admin.import
+    convert:
+      enabled: true
+      name: convert
+      permission: bungeeutilisals.commands.admin.convert
 glist:
   # Enable this command or not?
   enabled: true
@@ -112,49 +139,11 @@ staff:
   aliases: 'onlinestaff'
   permission: bungeeutilisals.commands.staff
 
-  # here the staff ranks (that are shown in /staff) should be listed
-  # when using redis, make sure that all bungees are synchronized
-  ranks:
-    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
-    - name: 'helper'
-      # The display tag of the rank to be used in the command.
-      display: '&3&lHELPER'
-      # The permission that an user needs to be detected as this rank.
-      permission: 'bungeeutilisals.staff.helper'
-      # The priority of this rank, the higher the priority is, the higher the rank should be.
-      priority: 1
-    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
-    - name: 'moderator'
-      # The display tag of the rank to be used in the command.
-      display: '&2&lMODERATOR'
-      # The permission that an user needs to be detected as this rank.
-      permission: 'bungeeutilisals.staff.moderator'
-      # The priority of this rank, the higher the priority is, the higher the rank should be.
-      priority: 2
-    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
-    - name: 'admin'
-      # The display tag of the rank to be used in the command.
-      display: '&c&lADMIN'
-      # The permission that an user needs to be detected as this rank.
-      permission: 'bungeeutilisals.staff.admin'
-      # The priority of this rank, the higher the priority is, the higher the rank should be.
-      priority: 3
-    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
-    - name: 'developer'
-      # The display tag of the rank to be used in the command.
-      display: '&5&lDEVELOPER'
-      # The permission that an user needs to be detected as this rank.
-      permission: 'bungeeutilisals.staff.developer'
-      # The priority of this rank, the higher the priority is, the higher the rank should be.
-      priority: 4
-    # The name of the rank (this serves as an UNIQUE IDENTIFIER).
-    - name: 'owner'
-      # The display tag of the rank to be used in the command.
-      display: '&4&lOWNER'
-      # The permission that an user needs to be detected as this rank.
-      permission: 'bungeeutilisals.staff.owner'
-      # The priority of this rank, the higher the priority is, the higher the rank should be.
-      priority: 5
+  toggle:
+    enabled: true
+    name: toggle
+    aliases: 'hide, unhide'
+    permission: bungeeutilisals.commands.staff.toggle
 msg:
   enabled: true
   name: msg
@@ -220,6 +209,7 @@ report:
       permission: bungeeutilisals.commands.report.create
       # Cooldown in seconds ...
       cooldown: 10
+      broadcast: bungeeutilisals.report.receive
     list:
       enabled: true
       name: list

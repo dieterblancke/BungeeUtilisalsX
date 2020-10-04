@@ -167,6 +167,6 @@ public class MongoKicksAndWarnsTest
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) manager()).getDatabase();
+        return ( (MongoDBStorageManager) manager() ).getDatabase();
     }
 }

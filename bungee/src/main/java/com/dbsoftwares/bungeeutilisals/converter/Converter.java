@@ -69,7 +69,7 @@ public abstract class Converter
 
         public double getProgressionPercent()
         {
-            return (((double) convertedEntries / (double) totalEntries) * 100);
+            return ( ( (double) convertedEntries / (double) totalEntries ) * 100 );
         }
 
         public long getRemainingEntries()

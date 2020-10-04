@@ -54,7 +54,7 @@ public abstract class Importer
                     }
                     else
                     {
-                        return UUID.nameUUIDFromBytes( ("OfflinePlayer:" + name).getBytes( Charsets.UTF_8 ) )
+                        return UUID.nameUUIDFromBytes( ( "OfflinePlayer:" + name ).getBytes( Charsets.UTF_8 ) )
                                 .toString().replaceAll( "-", "" );
                     }
                 }
@@ -133,7 +133,7 @@ public abstract class Importer
 
         public double getProgressionPercent()
         {
-            return (((double) convertedEntries / (double) totalEntries) * 100);
+            return ( ( (double) convertedEntries / (double) totalEntries ) * 100 );
         }
 
         public int getRemainingEntries()

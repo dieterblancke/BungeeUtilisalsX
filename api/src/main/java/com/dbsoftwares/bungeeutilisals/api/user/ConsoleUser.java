@@ -53,11 +53,11 @@ public class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
-    private UserStorage storage = new UserStorage();
-    private UserCooldowns cooldowns = new UserCooldowns();
+    private final UserStorage storage = new UserStorage();
+    private final UserCooldowns cooldowns = new UserCooldowns();
 
     @Getter
-    private List<FriendData> friends = Lists.newArrayList();
+    private final List<FriendData> friends = Lists.newArrayList();
 
     @Override
     public void load( ProxiedPlayer parent )
@@ -116,7 +116,7 @@ public class ConsoleUser implements User
     @Override
     public void sendRawMessage( String message )
     {
-        sendMessage( new TextComponent( message ) );
+        sendMessage( TextComponent.fromLegacyText( message ) );
     }
 
     @Override
@@ -272,6 +272,12 @@ public class ConsoleUser implements User
     {
         sendLangMessage( "not-for-console" );
         throw new UnsupportedOperationException( NOT_SUPPORTED );
+    }
+
+    @Override
+    public int getPing()
+    {
+        return 0;
     }
 
     @Override

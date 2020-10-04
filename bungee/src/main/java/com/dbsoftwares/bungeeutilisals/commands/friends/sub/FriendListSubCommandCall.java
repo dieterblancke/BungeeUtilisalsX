@@ -23,7 +23,9 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
@@ -33,7 +35,7 @@ public class FriendListSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final List<FriendData> allFriends = user.getFriends();
+        final List<FriendData> allFriends = this.filterPlayerList( user.getFriends() );
 
         if ( allFriends.isEmpty() )
         {
@@ -86,15 +88,31 @@ public class FriendListSubCommandCall implements CommandCall
         final String onlineText = user.getLanguageConfig().getString( "friends.list.status.online" );
         final String offlineText = user.getLanguageConfig().getString( "friends.list.status.offline" );
 
-        friends.forEach( friend ->
-                user.sendLangMessage(
-                        "friends.list.format",
-                        "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
-                        "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
-                        "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
-                )
-        );
+        for ( FriendData friend : friends )
+        {
+            user.sendLangMessage(
+                    "friends.list.format",
+                    "{friendName}", friend.getFriend(),
+                    "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
+                    "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
+                    "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
+            );
+        }
         user.sendLangMessage( "friends.list.foot", "{friendAmount}", allFriends.size() );
+    }
+
+    private List<FriendData> filterPlayerList( final List<FriendData> orig )
+    {
+        final List<FriendData> result = Lists.newArrayList();
+
+        for ( FriendData data : orig )
+        {
+            if ( StaffUtils.isHidden( data.getFriend() ) )
+            {
+                continue;
+            }
+            result.add( data );
+        }
+        return result;
     }
 }

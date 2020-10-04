@@ -26,7 +26,7 @@
     <groupId>com.dbsoftwares.bungeeutilisals</groupId>
     <artifactId>BungeeUtilisalsX</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.0-DEV1</version>
+    <version>1.1.0-DEV10</version>
 
     <modules>
         <module>api</module>
@@ -42,8 +42,9 @@
 
     <distributionManagement>
         <repository>
-            <id>dbsoftwares</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+            <id>github</id>
+            <name>GitHub Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/dieterblancke/BungeeUtilisalsX</url>
         </repository>
     </distributionManagement>
 
@@ -66,13 +67,13 @@
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.16-R0.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-protocol</artifactId>
-            <version>1.14-SNAPSHOT</version>
+            <version>1.16-R0.3-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -110,11 +111,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.konghq</groupId>
-            <artifactId>unirest-java</artifactId>
-            <version>3.4.01</version>
-            <classifier>standalone</classifier>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <version>0.3.8-SNAPSHOT</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>5.2.2.RELEASE</version>
         </dependency>
     </dependencies>
 

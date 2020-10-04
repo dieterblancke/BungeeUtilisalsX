@@ -35,17 +35,18 @@ import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
+import com.dbsoftwares.bungeeutilisals.api.utils.UserUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.other.QueuedMessage;
-import com.dbsoftwares.bungeeutilisals.utils.UserUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.CommandSender;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -144,12 +145,12 @@ public class BUser implements User
             dao.getUserDao().setName( uuid, name );
         }
 
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( BungeeUtilisals.getInstance().getConfig().getBoolean( "debug" ) )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
                 System.out.println( "Friend list of " + name );
                 System.out.println( Arrays.toString( friends.toArray() ) );
@@ -160,7 +161,7 @@ public class BUser implements User
             friendSettings = new FriendSettings();
         }
 
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () ->
         {
             messageQueue = BUCore.getApi().getStorageManager().getDao().createMessageQueue( this );
             executeMessageQueue();
@@ -228,7 +229,7 @@ public class BUser implements User
     @Override
     public void sendRawMessage( String message )
     {
-        sendMessage( new TextComponent( PlaceHolderAPI.formatMessage( this, message ) ) );
+        sendMessage( TextComponent.fromLegacyText( PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override
@@ -317,7 +318,7 @@ public class BUser implements User
     @Override
     public void kick( String reason )
     {
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () -> getParent().disconnect( Utils.format( reason ) ) );
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () -> getParent().disconnect( Utils.format( reason ) ) );
     }
 
     @Override
@@ -379,6 +380,12 @@ public class BUser implements User
     }
 
     @Override
+    public int getPing()
+    {
+        return parent.getPing();
+    }
+
+    @Override
     public IConfiguration getLanguageConfig()
     {
         return BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), this );
@@ -393,6 +400,10 @@ public class BUser implements User
     @Override
     public String getServerName()
     {
+        if ( getParent() == null || getParent().getServer() == null || getParent().getServer().getInfo() == null )
+        {
+            return "";
+        }
         return getParent().getServer().getInfo().getName();
     }
 
@@ -465,9 +476,23 @@ public class BUser implements User
     }
 
     @Override
-    public boolean hasPermission( String permission )
+    public boolean hasPermission( final String permission )
     {
-        return parent.hasPermission( permission );
+        final boolean hasPermission = parent.hasPermission( permission );
+
+        if ( ConfigFiles.CONFIG.isDebug() )
+        {
+            if ( hasPermission )
+            {
+                BUCore.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+            }
+            else
+            {
+                BUCore.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+            }
+        }
+
+        return hasPermission;
     }
 
     @Override

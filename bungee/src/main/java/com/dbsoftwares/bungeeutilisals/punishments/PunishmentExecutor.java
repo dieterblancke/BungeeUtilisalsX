@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -36,18 +36,18 @@ public class PunishmentExecutor implements IPunishmentExecutor
     @Override
     public boolean isTemplateReason( final String reason )
     {
-        if ( !FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "templates.enabled" ) )
+        if ( !ConfigFiles.PUNISHMENTS.getConfig().getBoolean( "templates.enabled" ) )
         {
             return false;
         }
-        return reason.startsWith( FileLocation.PUNISHMENTS.getConfiguration().getString( "templates.detect" ) );
+        return reason.startsWith( ConfigFiles.PUNISHMENTS.getConfig().getString( "templates.detect" ) );
     }
 
     @Override
     public List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template )
     {
         template = template.replaceFirst(
-                FileLocation.PUNISHMENTS.getConfiguration().getString( "templates.detect" ),
+                ConfigFiles.PUNISHMENTS.getConfig().getString( "templates.detect" ),
                 ""
         );
         final List<ISection> sections = config.getSectionList( "punishments.templates" );
@@ -108,7 +108,7 @@ public class PunishmentExecutor implements IPunishmentExecutor
     @Override
     public String getDateFormat()
     {
-        return FileLocation.PUNISHMENTS.getConfiguration().getString( "date-format" );
+        return ConfigFiles.PUNISHMENTS.getConfig().getString( "date-format" );
     }
 
     @Override

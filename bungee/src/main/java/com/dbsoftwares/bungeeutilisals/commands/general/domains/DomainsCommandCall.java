@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general.domains;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 public class DomainsCommandCall extends ParentCommand implements CommandCall
 {
@@ -33,14 +33,14 @@ public class DomainsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "list" )
-                        .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( "domains.subcommands.list" ) )
+                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.list" ) )
                         .executable( new DomainsListSubCommandCall() )
                         .build()
         );
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "search" )
-                        .fromSection( FileLocation.GENERALCOMMANDS.getConfiguration().getSection( "domains.subcommands.search" ) )
+                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.search" ) )
                         .executable( new DomainsSearchSubCommandCall() )
                         .build()
         );

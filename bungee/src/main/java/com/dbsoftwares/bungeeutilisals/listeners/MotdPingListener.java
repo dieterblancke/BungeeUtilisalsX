@@ -25,8 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
@@ -53,7 +52,7 @@ public class MotdPingListener implements Listener
     @EventHandler
     public void onPing( ProxyPingEvent event )
     {
-        final List<MotdData> dataList = FileLocation.MOTD.getDataList();
+        final List<MotdData> dataList = ConfigFiles.MOTD.getMotds();
 
         insertName( event.getConnection() );
 
@@ -159,11 +158,12 @@ public class MotdPingListener implements Listener
             {
                 return;
             }
-            final Field nameField = ReflectionUtils.getField( connection.getClass(), "name" );
-
-            if ( nameField != null )
+            for ( Field field : connection.getClass().getDeclaredFields() )
             {
-                nameField.set( connection, name );
+                if ( field.getName().equals( "name" ) )
+                {
+                    field.set( connection, name );
+                }
             }
         }
         catch ( Exception e )

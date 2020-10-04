@@ -250,7 +250,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -286,7 +286,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -369,7 +369,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -400,7 +400,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -428,7 +428,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -458,7 +458,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -489,7 +489,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -515,7 +515,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -547,7 +547,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -578,7 +578,7 @@ public class MongoMutesDao implements MutesDao
             final String server = document.getString( "server" );
             final String executedby = document.getString( "executed_by" );
             final Date date = document.getDate( "date" );
-            final Long time = ((Number) document.get( "duration" )).longValue();
+            final Long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
 
@@ -589,6 +589,6 @@ public class MongoMutesDao implements MutesDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
+        return ( (MongoDBStorageManager) AbstractStorageManager.getManager() ).getDatabase();
     }
 }

@@ -303,6 +303,6 @@ public class MongoBansTest
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) manager()).getDatabase();
+        return ( (MongoDBStorageManager) manager() ).getDatabase();
     }
 }

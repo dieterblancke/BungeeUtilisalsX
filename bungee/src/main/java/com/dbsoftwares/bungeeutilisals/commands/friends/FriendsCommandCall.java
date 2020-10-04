@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.friends;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.friends.sub.*;
 
 public class FriendsCommandCall extends ParentCommand implements CommandCall
@@ -34,7 +34,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "add" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.add" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.add" )
                         .executable( new FriendAddSubCommandCall() )
                         .build()
         );
@@ -42,7 +42,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "accept" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.accept" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.accept" )
                         .executable( new FriendAcceptSubCommandCall() )
                         .build()
         );
@@ -50,7 +50,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "deny" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.deny" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.deny" )
                         .executable( new FriendDenySubCommandCall() )
                         .build()
         );
@@ -58,7 +58,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "removerequest" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.removerequest" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.removerequest" )
                         .executable( new FriendRemoveRequestSubCommandCall() )
                         .build()
         );
@@ -66,7 +66,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "remove" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.remove" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.remove" )
                         .executable( new FriendRemoveSubCommandCall() )
                         .build()
         );
@@ -74,7 +74,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "list" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.list" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.list" )
                         .executable( new FriendListSubCommandCall() )
                         .build()
         );
@@ -82,7 +82,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "requests" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.requests" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.requests" )
                         .executable( new FriendRequestsSubCommandCall() )
                         .build()
         );
@@ -90,7 +90,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "msg" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.msg" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.msg" )
                         .executable( new FriendMsgSubCommandCall() )
                         .build()
         );
@@ -98,7 +98,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "reply" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.reply" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.reply" )
                         .executable( new FriendReplySubCommandCall() )
                         .build()
         );
@@ -106,7 +106,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "settings" )
-                        .fromSection( FileLocation.FRIENDS_CONFIG.getConfiguration(), "subcommands.settings" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.settings" )
                         .executable( new FriendSettingsSubCommandCall() )
                         .build()
         );

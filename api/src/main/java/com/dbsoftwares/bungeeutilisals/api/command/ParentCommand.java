@@ -21,6 +21,8 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.google.common.collect.Lists;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -29,8 +31,11 @@ import java.util.stream.Collectors;
 public class ParentCommand implements TabCall
 {
 
+    @Getter
     private final List<Command> subCommands = Lists.newArrayList();
-    private final Consumer<User> helpConsumer;
+
+    @Setter
+    private Consumer<User> helpConsumer;
 
     public ParentCommand( final String helpPath )
     {

@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -55,10 +55,10 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     @Getter
     protected LanguageIntegration integration;
 
-    public AbstractLanguageManager( BungeeUtilisals plugin )
+    AbstractLanguageManager( BungeeUtilisals plugin )
     {
         integration = uuid -> plugin.getDatabaseManagement().getDao().getUserDao().getLanguage( uuid );
-        ISection section = FileLocation.LANGUAGES_CONFIG.getConfiguration().getSection( "languages" );
+        ISection section = ConfigFiles.LANGUAGES_CONFIG.getConfig().getSection( "languages" );
 
         for ( String key : section.getKeys() )
         {

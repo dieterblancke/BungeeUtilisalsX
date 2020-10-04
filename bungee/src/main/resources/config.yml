@@ -1,13 +1,22 @@
 # Enable to get debug messages (where they are enabled)
 debug: false
 
-# Currently this should only be enabled for AntiAFKAddon.
-# This feature is highly experimental and might increase load on your server.
-# This might also cause errors when newer versions come out, and BungeeUtilisals isn't updated yet.
-packets: false
+bridging:
+  enabled: true
+  # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
+  name: 'bungee'
 
-# Set to true to enable the use of addons ...
-addons: false
+  bungee:
+    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS, this will use redis (see below for credentials)
+    enabled: false
+  spigot:
+    # For syncing between Spigot and BungeeCord servers, this will use redis (see below for credentials)
+    enabled: true
+
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    password: ''
 
 updater:
   # Set to true to enable updater checks.

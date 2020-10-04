@@ -41,7 +41,7 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config = cfg == null ? new HikariConfig() : cfg;
         config.setDataSourceClassName( getDataSourceClass() );
         config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
-        config.addDataSourceProperty( "port" + (type.equals( StorageType.POSTGRESQL ) ? "Number" : ""),
+        config.addDataSourceProperty( "port" + ( type.equals( StorageType.POSTGRESQL ) ? "Number" : "" ),
                 configuration.getInteger( "storage.port" ) );
         config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
         config.addDataSourceProperty( "user", configuration.getString( "storage.username" ) );

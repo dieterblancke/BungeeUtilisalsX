@@ -321,6 +321,6 @@ public class MongoUserDao implements UserDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
+        return ( (MongoDBStorageManager) AbstractStorageManager.getManager() ).getDatabase();
     }
 }

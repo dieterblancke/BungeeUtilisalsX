@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.Optional;
@@ -43,14 +43,15 @@ public class HelpOpCommandCall implements CommandCall
             return;
         }
         final String message = String.join( " ", args );
-        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.receive-broadcast" );
+        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "helpop.receive-broadcast" );
 
         if ( !user.hasPermission( permission ) )
         {
             user.sendLangMessage(
                     "general-commands.helpop.broadcast",
                     "{message}", message,
-                    "{user}", user.getName()
+                    "{user}", user.getName(),
+                    "{user_server}", user.getServerName()
             );
         }
 
@@ -58,13 +59,14 @@ public class HelpOpCommandCall implements CommandCall
                 "general-commands.helpop.broadcast",
                 permission,
                 "{message}", message,
-                "{user}", user.getName()
+                "{user}", user.getName(),
+                "{user_server}", user.getServerName()
         );
     }
 
     private void executeReplySubCommand( final User user, final List<String> args )
     {
-        if ( !user.hasPermission( FileLocation.GENERALCOMMANDS.getConfiguration().getString( "helpop.reply-permission" ) ) )
+        if ( !user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "helpop.reply-permission" ) ) )
         {
             user.sendLangMessage( "no-permission" );
             return;

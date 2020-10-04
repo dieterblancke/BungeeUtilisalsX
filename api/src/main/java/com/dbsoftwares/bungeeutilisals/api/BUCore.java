@@ -20,6 +20,8 @@ package com.dbsoftwares.bungeeutilisals.api;
 
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.google.gson.Gson;
+import lombok.Getter;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 
@@ -29,6 +31,8 @@ import java.util.logging.Logger;
 public final class BUCore
 {
 
+    @Getter
+    private static final Gson gson = new Gson();
     private static BUAPI instance = null;
 
     private BUCore()

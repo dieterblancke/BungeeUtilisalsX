@@ -40,7 +40,7 @@ public class FriendAddSubCommandCall implements CommandCall
             user.sendLangMessage( "friends.add.usage" );
             return;
         }
-        final int friendLimit = FriendUtils.getFriendsLimit( user );
+        final int friendLimit = FriendUtils.getFriendLimit( user );
 
         if ( user.getFriends().size() >= friendLimit )
         {
