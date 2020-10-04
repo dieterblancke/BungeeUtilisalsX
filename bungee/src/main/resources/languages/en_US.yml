@@ -250,6 +250,12 @@ general-commands:
     broadcast: '&7(&3&lHELPOP&7) &b{user} &7» &f{message}'
     reply-receive: '&7(&3&lHELPOP&7) &b{user} &3-> Me &7» &f{message}'
     reply-send: '&7(&3&lHELPOP&7) &3Me -> &b{user} &7» &f{message}'
+  msgtoggle:
+    enabled: '&eAll your private messages are now &cdisabled&e!'
+    disabled: '&eAll your private messages are now &aenabled&e!'
+
+    pm-cmd-disabled: '&eYou cannot send or receive any private messages while you have them &cdisabled&e.'
+    not-receiving-pms: '&eThis user currently has private messages &cdisabled&e!'
 
 friends:
   join:

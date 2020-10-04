@@ -60,6 +60,7 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Setter
+@Getter
 public class BUser implements User
 {
 
@@ -72,23 +73,13 @@ public class BUser implements User
     private UserStorage storage;
     private List<PunishmentInfo> mute;
     private Location location;
-
-    @Getter
     private boolean socialSpy;
-
-    @Getter
     private boolean commandSpy;
-
-    @Getter
     private List<FriendData> friends = Lists.newArrayList();
-    @Getter
     private FriendSettings friendSettings;
-
-    @Getter
     private boolean inStaffChat;
-
-    @Getter
     private MessageQueue<QueuedMessage> messageQueue;
+    private boolean msgToggled;
 
     @Override
     public void load( ProxiedPlayer parent )

@@ -29,6 +29,7 @@ import com.dbsoftwares.bungeeutilisals.commands.general.*;
 import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommandCall;
+import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgToggleCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
@@ -86,6 +87,7 @@ public class CommandManager
         registerGeneralCommand( "msg", new MsgCommandCall() );
         registerGeneralCommand( "reply", new ReplyCommandCall() );
         registerGeneralCommand( "ignore", new IgnoreCommandCall() );
+        registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
 
         registerCommand(
                 "friends",
