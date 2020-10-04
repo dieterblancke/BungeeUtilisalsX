@@ -26,6 +26,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageE
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisals.user.BUser;
 
 import java.util.List;
 import java.util.Optional;
@@ -36,6 +37,11 @@ public class ReplyCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
+        if ( user instanceof BUser && ( (BUser) user ).isMsgToggled() )
+        {
+            user.sendLangMessage( "general-commands.msgtoggle.pm-cmd-disabled" );
+            return;
+        }
         if ( args.size() < 1 )
         {
             user.sendLangMessage( "general-commands.reply.usage" );
@@ -56,6 +62,12 @@ public class ReplyCommandCall implements CommandCall, TabCall
             if ( optional.isPresent() )
             {
                 final User target = optional.get();
+
+                if ( target instanceof BUser && ( (BUser) target ).isMsgToggled() )
+                {
+                    user.sendLangMessage( "general-commands.msgtoggle.not-receiving-pms" );
+                    return;
+                }
 
                 if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
                 {

@@ -159,6 +159,11 @@ ignore:
   name: ignore
   aliases: 'bignore'
   permission: bungeeutilisals.commands.ignore
+msgtoggle:
+  enabled: true
+  name: msgtoggle
+  aliases: 'msgt'
+  permission: bungeeutilisals.commands.msgtoggle
 socialspy:
   enabled: true
   name: socialspy
