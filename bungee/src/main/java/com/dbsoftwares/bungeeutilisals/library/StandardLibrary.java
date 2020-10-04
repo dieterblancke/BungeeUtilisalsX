@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.library;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import lombok.Getter;
 
 public enum StandardLibrary
@@ -59,6 +60,24 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.4.2",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
+    ),
+    LETTUCE(
+            "io.lettuce.core.RedisClient",
+            "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
+            "6.0.0.RELEASE",
+            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+    ),
+    REACTOR_CORE(
+            "reactor.core.scheduler.Schedulers",
+            "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
+            "3.3.10.RELEASE",
+            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+    ),
+    REACTIVE_STREAMS(
+            "org.reactivestreams.Processor",
+            "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
+            "1.0.3",
+            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     );
 
     @Getter
@@ -73,7 +92,7 @@ public enum StandardLibrary
     {
         for ( String type : types )
         {
-            if ( BungeeUtilisals.getInstance().getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
+            if ( ConfigFiles.CONFIG.getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
             {
                 return true;
             }

@@ -86,22 +86,6 @@
                             <pattern>org.bstats</pattern>
                             <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.metrics</shadedPattern>
                         </relocation>
-                        <relocation>
-                            <pattern>io.lettuce.core</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.lettuce</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>reactor</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactor</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.reactivestreams</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactivestreams</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>io.netty</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.netty</shadedPattern>
-                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
