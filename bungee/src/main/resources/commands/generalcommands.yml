@@ -259,3 +259,9 @@ helpop:
   permission: bungeeutilisals.commands.helpop
   receive-broadcast: bungeeutilisals.commands.helpop.receive_broadcast
   reply-permission: bungeeutilisals.commands.helpop.reply
+shout:
+  enabled: true
+  name: shout
+  aliases: 'sh'
+  permission: bungeeutilisals.commands.shout
+  staff-permission: bungeeutilisals.commands.shout.staff
