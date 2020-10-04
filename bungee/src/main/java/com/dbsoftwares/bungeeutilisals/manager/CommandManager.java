@@ -88,6 +88,7 @@ public class CommandManager
         registerGeneralCommand( "reply", new ReplyCommandCall() );
         registerGeneralCommand( "ignore", new IgnoreCommandCall() );
         registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
+        registerGeneralCommand( "shout", new ShoutCommandCall() );
 
         registerCommand(
                 "friends",
