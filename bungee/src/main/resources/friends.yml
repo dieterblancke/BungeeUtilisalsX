@@ -2,7 +2,7 @@
 enabled: false
 
 friendlimits:
-  # With what the limit permission should start, by default an example would be: "bungeeutilisals.friends.limit.25", "bungeeutilisals.friends.limit.default", ...
+  # With what the limit permission should start, by default an example would be: "bungeeutilisals.friends.limit.default", ...
   permission: 'bungeeutilisals.friends.limit.'
   # Allows you to use "bungeeutilisals.friends.limit.vip" (if the option above is the default one), which will equal to 15 friends.
   # This is very useful if you are ever to change the friend limit someone should have.
