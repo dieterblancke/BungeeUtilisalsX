@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.BUAPI;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 
 import java.lang.reflect.Method;
+import java.util.logging.Level;
 
 public class APIHandler
 {
@@ -38,7 +39,7 @@ public class APIHandler
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         REGISTER = register;
@@ -52,7 +53,7 @@ public class APIHandler
         }
         catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 }

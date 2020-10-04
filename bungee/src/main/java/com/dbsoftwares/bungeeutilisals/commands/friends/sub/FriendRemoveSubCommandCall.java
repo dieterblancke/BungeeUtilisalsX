@@ -20,7 +20,6 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendUtils;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
@@ -40,7 +39,6 @@ public class FriendRemoveSubCommandCall implements CommandCall
             return;
         }
         final String name = args.get( 0 );
-        final int friendLimit = FriendUtils.getFriendsLimit( user );
         final Dao dao = BUCore.getApi().getStorageManager().getDao();
 
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )

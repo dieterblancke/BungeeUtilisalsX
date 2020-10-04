@@ -59,12 +59,6 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "3.4.2",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
-    ),
-    UNIREST(
-            "kong.unirest.Unirest",
-            "https://repo1.maven.org/maven2/com/konghq/unirest-java/{version}/unirest-java-{version}-standalone.jar",
-            "3.4.01",
-            true
     );
 
     @Getter

@@ -22,7 +22,13 @@ import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderPack;
+import com.dbsoftwares.bungeeutilisals.api.placeholder.event.PlaceHolderEvent;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.ProxyServer;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DefaultPlaceHolders implements PlaceHolderPack
 {
@@ -60,5 +66,52 @@ public class DefaultPlaceHolders implements PlaceHolderPack
                 event -> String.valueOf( BUCore.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
                 event -> String.valueOf( ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers() ) );
+
+        PlaceHolderAPI.addPlaceHolder( "{redis_online}", false,
+                event -> String.valueOf( BUCore.getApi().getBridgeManager().useBridging() ? BUCore.getApi().getPlayerUtils().getTotalCount() : 0 ) );
+
+        PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
+        PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );
+        PlaceHolderAPI.addPlaceHolder( "{datetime}", false, this::getCurrentDateTime );
+    }
+
+    private String getCurrentDate( final PlaceHolderEvent event )
+    {
+        return this.getCurrentTime( event.getUser(), "date" );
+    }
+
+    private String getCurrentTime( final PlaceHolderEvent event )
+    {
+        return this.getCurrentTime( event.getUser(), "time" );
+    }
+
+    private String getCurrentDateTime( final PlaceHolderEvent event )
+    {
+        return this.getCurrentTime( event.getUser(), "datetime" );
+    }
+
+    private String getCurrentTime( final User user, final String type )
+    {
+        final IConfiguration configuration = getLanguageConfiguration( user );
+
+        if ( configuration == null )
+        {
+            return "";
+        }
+        final SimpleDateFormat dateFormat = new SimpleDateFormat( configuration.getString( "placeholders.format." + type ) );
+
+        return dateFormat.format( new Date() );
+    }
+
+    private IConfiguration getLanguageConfiguration( User user )
+    {
+        if ( user == null )
+        {
+            return BUCore.getApi().getLanguageManager().getConfig(
+                    BUCore.getApi().getPlugin().getDescription().getName(),
+                    BUCore.getApi().getLanguageManager().getDefaultLanguage()
+            );
+        }
+        return user.getLanguageConfig();
     }
 }

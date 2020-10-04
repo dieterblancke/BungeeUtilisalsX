@@ -21,16 +21,17 @@ package com.dbsoftwares.bungeeutilisals.api.command;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.Data;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.api.plugin.TabExecutor;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Level;
 
 @Data
 public class Command
@@ -46,8 +47,13 @@ public class Command
 
     private CommandHolder commandHolder;
 
-    public Command( final String name, final String[] aliases, final String permission, final List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
+    Command( final String name, final String[] aliases, final String permission, List<String> parameters, final int cooldown, final CommandCall command, final TabCall tab )
     {
+        if ( parameters == null )
+        {
+            parameters = Lists.newArrayList();
+        }
+
         this.name = name;
         this.aliases = aliases;
         this.permission = permission;
@@ -60,13 +66,13 @@ public class Command
     public void execute( final User user, final String[] argList )
     {
         final List<String> arguments = Lists.newArrayList();
-        final List<String> parameters = Lists.newArrayList();
+        final List<String> params = Lists.newArrayList();
 
         for ( String argument : argList )
         {
             if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
             {
-                parameters.add( argument );
+                params.add( argument );
             }
             else
             {
@@ -74,7 +80,7 @@ public class Command
             }
         }
 
-        execute( user, arguments, parameters );
+        execute( user, arguments, params );
     }
 
     public void execute( final User user, final List<String> arguments, final List<String> parameters )
@@ -90,7 +96,7 @@ public class Command
             return;
         }
 
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () ->
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () ->
         {
             try
             {
@@ -113,16 +119,16 @@ public class Command
             }
             catch ( Exception e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         } );
     }
 
     public Iterable<String> onTabComplete( final CommandSender sender, final String[] args )
     {
-        if ( !(sender instanceof ProxiedPlayer) )
+        if ( !( sender instanceof ProxiedPlayer ) )
         {
-            return ImmutableList.of();
+            return TabCompleter.empty();
         }
 
         final Optional<User> optional = BUCore.getApi().getUser( sender.getName() );
@@ -157,7 +163,7 @@ public class Command
         }
         else
         {
-            return ImmutableList.of();
+            return TabCompleter.empty();
         }
     }
 
@@ -165,6 +171,11 @@ public class Command
     {
         ProxyServer.getInstance().getPluginManager().unregisterCommand( commandHolder );
         commandHolder = null;
+
+        if ( command instanceof Listener )
+        {
+            ProxyServer.getInstance().getPluginManager().unregisterListener( (Listener) command );
+        }
     }
 
     public Command register()
@@ -176,12 +187,17 @@ public class Command
         commandHolder = new CommandHolder( name, aliases );
 
         ProxyServer.getInstance().getPluginManager().registerCommand( BUCore.getApi().getPlugin(), commandHolder );
+
+        if ( command instanceof Listener )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( BUCore.getApi().getPlugin(), (Listener) command );
+        }
         return this;
     }
 
     boolean check( final List<String> args )
     {
-        if ( args.size() == 0 )
+        if ( args.isEmpty() )
         {
             return false;
         }

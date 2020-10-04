@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,7 +35,7 @@ public class SpyEventExecutor implements EventExecutor
     @Event
     public void onPrivateMessage( final UserPrivateMessageEvent event )
     {
-        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "socialspy.permission" );
+        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "socialspy.permission" );
         final List<User> users = BUCore.getApi().getUsers()
                 .stream()
                 .filter( user -> user.isSocialSpy() && user.hasPermission( permission ) )
@@ -60,7 +60,7 @@ public class SpyEventExecutor implements EventExecutor
     @Event
     public void onCommand( final UserCommandEvent event )
     {
-        final String permission = FileLocation.GENERALCOMMANDS.getConfiguration().getString( "commandspy.permission" );
+        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "commandspy.permission" );
         final List<User> users = BUCore.getApi().getUsers()
                 .stream()
                 .filter( user -> user.isCommandSpy() && user.hasPermission( permission ) )
@@ -72,7 +72,7 @@ public class SpyEventExecutor implements EventExecutor
         }
 
         final String commandName = event.getActualCommand().replaceFirst( "/", "" );
-        for ( String command : FileLocation.GENERALCOMMANDS.getConfiguration().getStringList( "commandspy.ignored-commands" ) )
+        for ( String command : ConfigFiles.GENERALCOMMANDS.getConfig().getStringList( "commandspy.ignored-commands" ) )
         {
             if ( command.trim().equalsIgnoreCase( commandName.trim() ) )
             {

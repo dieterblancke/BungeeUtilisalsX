@@ -7,19 +7,6 @@ BungeeUtilisalsX is a fully recoded, cleaner and bigger version of [BungeeUtilis
 # Features
 ![](https://i.imgur.com/W0wxhWk.png)
 
-# Addons 
-BungeeUtilisalsX also has "addons", these are a form of an extension that allow you to add additional features.
-
-A **list of addons** can be found [by clicking here.](https://forums.dbsoftwares.eu/)
-
-We currently have the following addons:
-- [**AntiAFKAddon**](https://forums.dbsoftwares.eu/d/3-antiafk-addon) - This addon detects if an user is afk and provides an /afk command. It detects **movement (in bungeecord)**, commands & chat usage.
-- [**HubBalancerAddon**](https://forums.dbsoftwares.eu/d/4-hubbalancer-addon) - This addon provides a hub balancer, hub command and allows balancing between fallback servers.
-- **ScoreboardAddon**- This addon provides a hightly animatable, no-flicker, **asynchronous bungeecord** **scoreboard**.
-- **XMLPlaceHolderAddon**- Provides XML placeholders that allow you to have placeholders with input.
-- **ExtraPlaceHoldersAddon**- Adds additional placeholders to BungeeUtilisalsX that are not included in the main plugin.
-
-
 # Useful Links
 
 [![](https://i.imgur.com/4QxyURe.png)](https://discord.dbsoftwares.eu/)
@@ -27,7 +14,6 @@ We currently have the following addons:
 [![](https://i.imgur.com/krx1GRR.png)](https://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX/wikis/Commands)
 [![](https://i.imgur.com/oBrmVB8.png)](https://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX/wikis/FAQ-&-Common-Issues)
 [![](https://i.imgur.com/gXpFBqN.png)](https://www.patreon.com/dbsoftwares)
-[![](https://i.imgur.com/8YiQPDr.png)](https://forums.dbsoftwares.eu/)
 
 # Test Server
 You can test BungeeUtilisalsX on our test server: **test.dbsoftwares.eu**
@@ -36,7 +22,6 @@ You can test BungeeUtilisalsX on our test server: **test.dbsoftwares.eu**
 - Web UI (likely based on Laravel framework) **[50%]**
 - Discord integration (a discord bot that would connect with BungeeUtilisals to have things like staff chat, stats, ... connected **[0 %]**
 - Party System **[0 %]**
-
 
 # Donate
 

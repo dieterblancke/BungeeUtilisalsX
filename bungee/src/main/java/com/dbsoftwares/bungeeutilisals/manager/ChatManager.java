@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.manager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -50,7 +50,7 @@ public class ChatManager implements IChatManager
     @Override
     public Boolean checkForAdvertisement( User user, String message )
     {
-        IConfiguration config = FileLocation.ANTIAD.getConfiguration();
+        IConfiguration config = ConfigFiles.ANTIAD.getConfig();
         if ( !config.getBoolean( "enabled" ) || user.getParent().hasPermission( config.getString( "bypass" ) ) )
         {
             return false;
@@ -77,7 +77,7 @@ public class ChatManager implements IChatManager
     @Override
     public Boolean checkForCaps( User user, String message )
     {
-        IConfiguration config = FileLocation.ANTICAPS.getConfiguration();
+        IConfiguration config = ConfigFiles.ANTICAPS.getConfig();
 
         if ( !config.getBoolean( "enabled" ) || user.getParent().hasPermission( config.getString( "bypass" ) )
                 || message.length() < config.getInteger( "min-length" ) )
@@ -94,13 +94,13 @@ public class ChatManager implements IChatManager
             }
         }
 
-        return (upperCase / message.length()) > (config.getDouble( "percentage" ) / 100);
+        return ( upperCase / message.length() ) > ( config.getDouble( "percentage" ) / 100 );
     }
 
     @Override
     public Boolean checkForSpam( User user )
     {
-        IConfiguration config = FileLocation.ANTISPAM.getConfiguration();
+        IConfiguration config = ConfigFiles.ANTISPAM.getConfig();
         if ( !config.getBoolean( "enabled" ) || user.getParent().hasPermission( config.getString( "bypass" ) ) )
         {
             return false;
@@ -118,7 +118,7 @@ public class ChatManager implements IChatManager
     @Override
     public Boolean checkForSwear( User user, String message )
     {
-        IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
+        IConfiguration config = ConfigFiles.ANTISWEAR.getConfig();
         if ( !config.getBoolean( "enabled" ) || user.getParent().hasPermission( config.getString( "bypass" ) ) )
         {
             return false;
@@ -138,7 +138,7 @@ public class ChatManager implements IChatManager
     @Override
     public String replaceSwearWords( User user, String message, String replacement )
     {
-        IConfiguration config = FileLocation.ANTISWEAR.getConfiguration();
+        IConfiguration config = ConfigFiles.ANTISWEAR.getConfig();
         if ( !config.getBoolean( "enabled" ) || user.getParent().hasPermission( config.getString( "bypass" ) ) )
         {
             return message;
@@ -197,7 +197,7 @@ public class ChatManager implements IChatManager
             }
             if ( charFound )
             {
-                builder.append( (char) (65248 + replaceableChar) );
+                builder.append( (char) ( 65248 + replaceableChar ) );
             }
             else
             {
@@ -214,7 +214,7 @@ public class ChatManager implements IChatManager
         swearPatterns.clear();
         utfSymbols.getClass();
 
-        for ( String word : FileLocation.ANTISWEAR.getConfiguration().getStringList( "words" ) )
+        for ( String word : ConfigFiles.ANTISWEAR.getConfig().getStringList( "words" ) )
         {
             StringBuilder builder = new StringBuilder( "\\b(" );
 
@@ -228,7 +228,7 @@ public class ChatManager implements IChatManager
             swearPatterns.add( Pattern.compile( builder.toString() ) );
         }
 
-        final ISection section = FileLocation.UTFSYMBOLS.getConfiguration().getSection( "symbols.symbols" );
+        final ISection section = ConfigFiles.UTFSYMBOLS.getConfig().getSection( "symbols.symbols" );
         for ( String key : section.getKeys() )
         {
             utfSymbols.put( key, section.getString( key ) );

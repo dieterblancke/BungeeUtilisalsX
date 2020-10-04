@@ -18,22 +18,21 @@
 
 package com.dbsoftwares.bungeeutilisals.api;
 
-import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
-import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -52,6 +51,11 @@ public interface BUAPI
      * @return The plugin instance of the BungeeUtilisals core.
      */
     Plugin getPlugin();
+
+    /**
+     * @return The loaded bridging manager.
+     */
+    IBridgeManager getBridgeManager();
 
     /**
      * @return The language chat of BungeeUtilisals.
@@ -98,17 +102,6 @@ public interface BUAPI
     IChatManager getChatManager();
 
     /**
-     * @return A SimpleExecutor instance.
-     */
-    SimpleExecutor getSimpleExecutor();
-
-    /**
-     * @param location The Configuration location you want to request.
-     * @return A YamlConfiguration instance from the requested file location.
-     */
-    IConfiguration getConfig( FileLocation location );
-
-    /**
      * @return A new ProxyConnection instance.
      * @throws SQLException When an error occurs trying to setup the connection.
      */
@@ -123,6 +116,11 @@ public interface BUAPI
      * @return ConsoleUser instance.
      */
     ConsoleUser getConsole();
+
+    /**
+     * @return An either the active HubBalancer or null in case it's disabled.
+     */
+    IHubBalancer getHubBalancer();
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
@@ -140,7 +138,7 @@ public interface BUAPI
     void broadcast( String message, String permission );
 
     /**
-     * Broadcastas a message with a given prefix to the people with the given permission.
+     * Broadcasts a message with a given prefix to the people with the given permission.
      *
      * @param prefix  The prefix you want.
      * @param message The message to be broadcasted.
@@ -148,7 +146,7 @@ public interface BUAPI
     void announce( String prefix, String message );
 
     /**
-     * Broadcastas a message with a given prefix to the people with the given permission.
+     * Broadcasts a message with a given prefix to the people with the given permission.
      *
      * @param prefix     The prefix you want.
      * @param message    The message to be broadcasted.
@@ -165,7 +163,7 @@ public interface BUAPI
     void langBroadcast( String message, Object... placeholders );
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param permission   The permission the user must have to receive the message.
@@ -180,39 +178,19 @@ public interface BUAPI
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
+    @Deprecated
     void langBroadcast( ILanguageManager manager, String message, Object... placeholders );
 
     /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
      *
      * @param manager      The languagemanager instance to be used.
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
+    @Deprecated
     void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders );
-
-    /**
-     * Broadcasts a message with the BungeeUtilisals prefix.
-     *
-     * @param manager      The languagemanager instance to be used.
-     * @param plugin       The plugin name to be used.
-     * @param message      The location (in the languages file) of the message to be broadcasted.
-     * @param placeholders PlaceHolders + their replacements
-     */
-    void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders );
-
-    /**
-     * Broadcastas a message with the BungeeUtilisals prefix to the people with the given permission.
-     *
-     * @param manager      The languagemanager instance to be used.
-     * @param plugin       The plugin name to be used.
-     * @param message      The location (in the languages file) of the message to be broadcasted.
-     * @param permission   The permission the user must have to receive the message.
-     * @param placeholders PlaceHolders + their replacements
-     */
-    void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders );
-
 
     /**
      * @return a list of all announcers.
@@ -228,11 +206,6 @@ public interface BUAPI
      * @return the storage chat used.
      */
     AbstractStorageManager getStorageManager();
-
-    /**
-     * @return the addon chat that is being used
-     */
-    IAddonManager getAddonManager();
 
     /**
      * @return a new BossBar instance.
@@ -257,4 +230,9 @@ public interface BUAPI
      * @return a new BossBar instance.
      */
     IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message );
+
+    /**
+     * @return a list of online staff members
+     */
+    List<StaffUser> getStaffMembers();
 }

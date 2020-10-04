@@ -23,7 +23,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-        <version>1.0.5.0</version>
+        <version>1.1.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>bungee</artifactId>
@@ -39,12 +39,12 @@
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.5.0</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>com.dbsoftwares.bungeeutilisals</groupId>
             <artifactId>updater</artifactId>
-            <version>1.0.5.0</version>
+            <version>1.1.0</version>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
@@ -84,7 +84,23 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.metrics</shadedPattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.metrics</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.lettuce.core</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.lettuce</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>reactor</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactor</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.reactivestreams</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactivestreams</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.netty</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.netty</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

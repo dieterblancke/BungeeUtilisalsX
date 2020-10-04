@@ -19,23 +19,22 @@
 package com.dbsoftwares.bungeeutilisals;
 
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.addon.IAddonManager;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisals.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisals.api.chat.IChatManager;
+import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
-import com.dbsoftwares.bungeeutilisals.api.execution.SimpleExecutor;
 import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisals.api.other.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
 import com.dbsoftwares.bungeeutilisals.api.utils.player.IPlayerUtils;
 import com.dbsoftwares.bungeeutilisals.language.MockLanguageManager;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -53,6 +52,12 @@ public class MockBUtilisalsAPI implements BUAPI
 
     @Override
     public Plugin getPlugin()
+    {
+        return null;
+    }
+
+    @Override
+    public IBridgeManager getBridgeManager()
     {
         return null;
     }
@@ -106,18 +111,6 @@ public class MockBUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public SimpleExecutor getSimpleExecutor()
-    {
-        return new SimpleExecutor();
-    }
-
-    @Override
-    public IConfiguration getConfig( FileLocation location )
-    {
-        return null;
-    }
-
-    @Override
     public Connection getConnection() throws SQLException
     {
         return AbstractStorageManager.getManager().getConnection();
@@ -131,6 +124,12 @@ public class MockBUtilisalsAPI implements BUAPI
 
     @Override
     public ConsoleUser getConsole()
+    {
+        return null;
+    }
+
+    @Override
+    public IHubBalancer getHubBalancer()
     {
         return null;
     }
@@ -184,18 +183,6 @@ public class MockBUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public void pluginLangBroadcast( ILanguageManager manager, String plugin, String message, Object... placeholders )
-    {
-
-    }
-
-    @Override
-    public void pluginLangPermissionBroadcast( ILanguageManager manager, String plugin, String message, String permission, Object... placeholders )
-    {
-
-    }
-
-    @Override
     public Collection<Announcer> getAnnouncers()
     {
         return null;
@@ -214,12 +201,6 @@ public class MockBUtilisalsAPI implements BUAPI
     }
 
     @Override
-    public IAddonManager getAddonManager()
-    {
-        return null;
-    }
-
-    @Override
     public IBossBar createBossBar()
     {
         return null;
@@ -233,6 +214,12 @@ public class MockBUtilisalsAPI implements BUAPI
 
     @Override
     public IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message )
+    {
+        return null;
+    }
+
+    @Override
+    public List<StaffUser> getStaffMembers()
     {
         return null;
     }

@@ -206,6 +206,6 @@ public class MongoPunishmentDao implements PunishmentDao
 
     private MongoDatabase db()
     {
-        return ((MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
+        return ( (MongoDBStorageManager) AbstractStorageManager.getManager() ).getDatabase();
     }
 }

@@ -27,11 +27,9 @@ import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeav
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.Comparator;
-import java.util.List;
 
 public class UserExecutor implements EventExecutor
 {
@@ -72,23 +70,15 @@ public class UserExecutor implements EventExecutor
         final User user = event.getUser();
         final StaffRankData rank = findStaffRank( user );
 
-        if ( rank == null )
-        {
-            return;
-        }
-
         BUCore.getApi().getEventLoader().launchEvent(
-                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank.getName() )
+                new NetworkStaffLeaveEvent( user.getName(), user.getUuid(), rank == null ? null : rank.getName() )
         );
     }
 
     private StaffRankData findStaffRank( final User user )
     {
-        final ProxiedPlayer player = user.getParent();
-        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
-
-        return ranks.stream()
-                .filter( rank -> player.hasPermission( rank.getPermission() ) )
+        return ConfigFiles.RANKS.getRanks().stream()
+                .filter( rank -> user.hasPermission( rank.getPermission() ) )
                 .max( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .orElse( null );
     }

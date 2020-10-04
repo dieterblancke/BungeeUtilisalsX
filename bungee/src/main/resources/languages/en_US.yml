@@ -4,6 +4,7 @@ never-joined: '&fThat user never joined before!'
 offline: '&fThat user is not online!'
 no-number: '&ePlease enter a valid number!'
 date-format: 'dd-MM-yyyy kk:mm:ss'
+not-for-console: '&eThis action is currently only supported for usage by players.'
 
 general:
   startup-message:
@@ -35,58 +36,23 @@ chat-protection:
 placeholders:
   timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
 
+  format:
+    date: 'dd-MM-yyyy'
+    time: 'kk:mm:ss'
+    datetime: 'dd-MM-yyyy kk:mm:ss'
+
 subcommands:
   usage: '&ePlease use &b{usage}&e!'
 
 general-commands:
   cooldown: '&eThis command is on cooldown for &b{time} &emore seconds!'
-  addon:
-    notfound: '&eCould not find an addon named &b{name}&e!'
-    list:
-      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
-      header: '&eAddon list (page &b{page}&e)'
-      item:
-        text: '&b#{id}: {addon}'
-        hover:
-          - '&f⎯⎯⎯⎯⎯ &eAddon &b#{id} {name} &f⎯⎯⎯⎯⎯&r'
-          - '&eVersion: &b{version}'
-          - '&eAuthor: &b{author}'
-          - '&eRequired Dependencies: &b{reqDepends}'
-          - '&eOptional Dependencies: &b{optDepends}'
-          - '&eDescription: &b{description}'
-          - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
-        click:
-          type: 'RUN_COMMAND'
-          action: '/addon info {name}'
-      footer: ''
-    info:
-      - '&f⎯⎯⎯⎯⎯ &eAddon &b{name} &eInfo &f⎯⎯⎯⎯⎯&r'
-      - '&eInstalled: &b{installed}'
-      - '&eVersion: &b{version}'
-      - '&eAuthor: &b{author}'
-      - '&eRequired Dependencies: &b{reqDepends}'
-      - '&eOptional Dependencies: &b{optDepends}'
-      - '&eDescription: &b{description}'
-      - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
-    reload:
-      error: '&cCould not reload addon &4{name}&c, check the console for errors!'
-      success: '&aYou have reloaded the addon &2{name}&a!'
-    install:
-      error:
-        nodepend: '&eThis addon requires the following dependencies to be installed: &b{dependencies}&e!'
-        download: '&eCould not download &b{name}&e, check the console for errors!'
-        enable: '&eAn error occured while enabling this addon, check the console for more!'
-      installed: '&eThe addon &b{name} &ehas been installed.'
-    uninstall:
-      failed: '&cCould not delete addon located at &4{path}&c!'
-      success: '&aSuccessfully disabled and removed &2{name}&a!'
-    enable:
-      alreadyloaded: '&eAddon &b{name} &eis already loaded!'
-      failed: '&cCould not enable &4{name}&c, check the console for errors!'
-      success: '&aSuccessfully enabled &2{name}&a!'
-    disable:
-      failed: '&cCould not disable &4{name}&c, check the console for errors!'
-      success: '&aSuccessfully disabled &2{name}&a!'
+  bungeeutilisals:
+    help:
+      - '&e- &b/bux version'
+      - '&e- &b/bux reload'
+      - '&e- &b/bux dump'
+      - '&e- &b/bux import (plugin) [properties]'
+      - '&e- &b/bux convert (oldtype) [properties]'
   announce:
     usage: '&ePlease use &b/announce (p/b/c/a/t) (message)&e.'
   find:
@@ -100,6 +66,7 @@ general-commands:
     notfound: '&eThe server &b{server} &edoes not exist!'
     alreadyconnected: '&eYou are already connected to &b{server}&e!'
     connecting: '&eYou are being connected to &b{server}&e!'
+    sent-other: '&eSent &b{user} &eto &b{server}&e!'
   clearchat:
     usage: '&ePlease use &b/clearchat (local / global)&e!'
     cleared: '&eYour chat has been cleared by &b{user}&e!'
@@ -131,6 +98,9 @@ general-commands:
     no_staff: '&eThere is no staff online at the moment!'
     head: '&fList of online staff members:'
     foot: '&eIn total, there are &b{total} &estaff members online!'
+    toggle:
+      hidden: '&eYou are now hidden from the /staff list!'
+      unhidden: '&eYou are now visible again in the /staff list!'
     users:
       separator: ', '
       user:
@@ -280,6 +250,15 @@ general-commands:
     broadcast: '&7(&3&lHELPOP&7) &b{user} &7» &f{message}'
     reply-receive: '&7(&3&lHELPOP&7) &b{user} &3-> Me &7» &f{message}'
     reply-send: '&7(&3&lHELPOP&7) &3Me -> &b{user} &7» &f{message}'
+  msgtoggle:
+    enabled: '&eAll your private messages are now &cdisabled&e!'
+    disabled: '&eAll your private messages are now &aenabled&e!'
+
+    pm-cmd-disabled: '&eYou cannot send or receive any private messages while you have them &cdisabled&e.'
+    not-receiving-pms: '&eThis user currently has private messages &cdisabled&e!'
+  shout:
+    shout-broadcast: '&6&lSHOUT &e&l{servername} &b{user} &8» &f{message}'
+    shout-broadcast-staff: '&6&lSHOUT &e&l{servername} &c(Staff) &b{user} &8» &f{message}'
 
 friends:
   join:
@@ -777,6 +756,20 @@ punishments:
         type: 'SUGGEST_COMMAND'
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
+
+hubbalancer:
+  no-lobbies-found: '&eCould not find any lobbies, perhaps they are offline?'
+  no-fallback:
+    - '&cYou have been disconnected'
+    - ''
+    - '&eWe could not find an online fallback server'
+    - '&bPlease try rejoining!'
+  already-in-lobby: '&cYou are already in one of our lobbies!'
+  server-not-found: '&cCould not find lobby server &4{serverName}&c!'
+  invalid-id: '&cPlease use a number between &41 and {lobbyAmount}&c!'
+  connected: '&eYou are being connected to &b{serverName}&e!'
+  offline: '&eIt seems that &b{serverName} &eis offline at the moment, try again later!'
+  already-connected: '&eYou are already connected to &b{serverName}&e!'
 
 custom:
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")

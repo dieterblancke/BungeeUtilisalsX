@@ -13,7 +13,7 @@ motd:
       - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
       - '&8&m---------------------------------'
   # User pings the server at the 'play.example.net' domain, condition is invalid when domain name is unknown.
-  - condition: 'domain == play.example.net'
+  - condition: 'domain == play.example.net || domain == play.example.com'
     motd: |-
       &aIt seems that you are playing on &2play.example.net&a!
       &e     Please switch to &bplay.example.com &einstead!

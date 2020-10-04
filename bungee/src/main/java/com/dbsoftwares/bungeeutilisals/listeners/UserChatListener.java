@@ -37,7 +37,7 @@ public class UserChatListener implements Listener
     public void onChat( ChatEvent event )
     {
         BUAPI api = BungeeUtilisals.getApi();
-        Optional<User> optional = api.getUser( ((CommandSender) event.getSender()).getName() );
+        Optional<User> optional = api.getUser( ( (CommandSender) event.getSender() ).getName() );
 
         if ( !optional.isPresent() )
         {

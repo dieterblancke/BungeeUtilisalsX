@@ -70,9 +70,9 @@ public class VersionConditionHandler extends ConditionHandler
         }
         catch ( IllegalArgumentException e )
         {
-            BUCore.getLogger().warn( "Found an invalid version in condition 'version {}'!", condition );
-            BUCore.getLogger().warn( "Available versions:" );
-            BUCore.getLogger().warn( listVersions() );
+            BUCore.getLogger().warning( "Found an invalid version in condition 'version " + condition + "'!" );
+            BUCore.getLogger().warning( "Available versions:" );
+            BUCore.getLogger().warning( listVersions() );
             return null;
         }
     }

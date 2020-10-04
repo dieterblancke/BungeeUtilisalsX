@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisals.commands.general.domains;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.utils.UserUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.UserUtils;
 
 import java.util.List;
 import java.util.Map;

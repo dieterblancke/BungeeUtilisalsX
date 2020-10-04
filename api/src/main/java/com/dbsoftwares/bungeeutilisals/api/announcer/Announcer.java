@@ -19,8 +19,9 @@
 package com.dbsoftwares.bungeeutilisals.api.announcer;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisals.api.utils.other.RandomIterator;
+import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,9 +34,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 @Data
 public abstract class Announcer
@@ -57,12 +58,13 @@ public abstract class Announcer
     protected IConfiguration configuration;
     private ScheduledTask task;
     private AnnouncementType type;
-    private LinkedHashMap<Announcement, Boolean> announcements = Maps.newLinkedHashMap();
-    private Iterator<Announcement> announcementIterator;
+    private List<IAnnouncement> announcements = Lists.newArrayList();
+    private Iterator<IAnnouncement> announcementIterator;
     private boolean enabled;
     private TimeUnit unit;
     private int delay;
     private boolean random;
+    private boolean groupPerServer;
 
     public Announcer( final AnnouncementType type )
     {
@@ -79,10 +81,8 @@ public abstract class Announcer
         }
 
         configuration = IConfiguration.loadYamlConfiguration( file );
-        enabled = configuration.getBoolean( "enabled" );
-        unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
-        delay = configuration.getInteger( "delay.time" );
-        random = configuration.getBoolean( "random" );
+
+        load();
     }
 
     @SafeVarargs
@@ -99,14 +99,14 @@ public abstract class Announcer
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    BUCore.getLogger().info( "Loading {} announcements ...", announcer.getType().toString().toLowerCase() );
+                    BUCore.getLogger().info( "Loading " + announcer.getType().toString().toLowerCase() + " announcements ..." );
                 }
 
                 announcers.put( announcer.getType(), announcer );
             }
             catch ( InstantiationException | IllegalAccessException e )
             {
-                BUCore.getLogger().error( "An error occured: ", e );
+                BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -123,18 +123,31 @@ public abstract class Announcer
                 new Runnable()
                 {
 
-                    private Announcement previous;
+                    private IAnnouncement previous;
 
                     @Override
                     public void run()
                     {
-                        if ( previous != null )
+                        if ( groupPerServer )
                         {
-                            previous.clear();
+                            for ( IAnnouncement announcement : announcements )
+                            {
+                                if ( announcement instanceof GroupedAnnouncement )
+                                {
+                                    announcement.send();
+                                }
+                            }
                         }
-                        Announcement next = (random ? getRandomAnnouncement() : getNextAnnouncement());
-                        next.send();
-                        previous = next;
+                        else
+                        {
+                            if ( previous != null )
+                            {
+                                previous.clear();
+                            }
+                            final IAnnouncement next = getNextAnnouncement();
+                            next.send();
+                            previous = next;
+                        }
                     }
                 },
                 0,
@@ -155,35 +168,46 @@ public abstract class Announcer
 
     public void addAnnouncement( Announcement announcement )
     {
-        announcements.put( announcement, false );
+        if ( groupPerServer )
+        {
+            final GroupedAnnouncement groupedAnnouncement = getGroupedAnnouncement( announcement.getServerGroup() );
+            groupedAnnouncement.getAnnouncements().add( announcement );
+        }
+        else
+        {
+            announcements.add( announcement );
+        }
     }
 
-    private Announcement getRandomAnnouncement()
+    private GroupedAnnouncement getGroupedAnnouncement( final ServerGroup group )
     {
-        if ( !announcements.containsValue( false ) )
-        { // finished Announcement rotation, restarting it
-            announcements.replaceAll( ( key, value ) -> false );
+        for ( IAnnouncement a : announcements )
+        {
+            if ( a instanceof GroupedAnnouncement )
+            {
+                final GroupedAnnouncement ga = (GroupedAnnouncement) a;
+
+                if ( ga.getGroup().equals( group ) )
+                {
+                    return ga;
+                }
+            }
         }
 
-        final List<Announcement> announcementsKeys = Lists.newArrayList();
-        announcements.forEach( ( key, value ) ->
-        {
-            if ( !value )
-            {
-                announcementsKeys.add( key );
-            }
-        } );
-
-        final Announcement announcement = MathUtils.getRandomFromList( announcementsKeys );
-        announcements.put( announcement, true );
+        final GroupedAnnouncement announcement = new GroupedAnnouncement( random, group, Lists.newArrayList() );
+        announcements.add( announcement );
         return announcement;
     }
 
-    private Announcement getNextAnnouncement()
+    private IAnnouncement getNextAnnouncement()
     {
+        if ( announcements.isEmpty() )
+        {
+            throw new RuntimeException( "No " + type.toString().toLowerCase() + " announcements are found! Please create some in your config" );
+        }
         if ( announcementIterator == null || !announcementIterator.hasNext() )
         {
-            announcementIterator = announcements.keySet().iterator();
+            announcementIterator = random ? new RandomIterator<>( announcements ) : announcements.iterator();
         }
         return announcementIterator.next();
     }
@@ -198,22 +222,28 @@ public abstract class Announcer
         }
         catch ( IOException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return;
         }
         stop();
         announcements.clear();
         announcementIterator = null;
 
-        enabled = configuration.getBoolean( "enabled" );
-        unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
-        delay = configuration.getInteger( "delay.time" );
-        random = configuration.getBoolean( "random" );
+        load();
 
         if ( enabled )
         {
             loadAnnouncements();
             start();
         }
+    }
+
+    private void load()
+    {
+        this.enabled = configuration.getBoolean( "enabled" );
+        this.unit = TimeUnit.valueOfOrElse( configuration.getString( "delay.unit" ), TimeUnit.SECONDS );
+        this.delay = configuration.getInteger( "delay.time" );
+        this.random = configuration.getBoolean( "random" );
+        this.groupPerServer = configuration.exists( "group-per-server" ) ? configuration.getBoolean( "group-per-server" ) : false;
     }
 }

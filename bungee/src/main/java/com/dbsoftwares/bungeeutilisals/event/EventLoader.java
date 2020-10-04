@@ -24,12 +24,10 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import net.md_5.bungee.api.ProxyServer;
 
 import java.lang.reflect.Method;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class EventLoader implements IEventLoader
@@ -47,9 +45,21 @@ public class EventLoader implements IEventLoader
         Set<EventHandler<?>> handlers = handlerMap.computeIfAbsent( eventClass, c -> ConcurrentHashMap.newKeySet() );
         Set<EventHandler<T>> addedHandlers = ConcurrentHashMap.newKeySet();
 
-        for ( Method method : executor.getClass().getDeclaredMethods() )
+        final List<Method> methods = Lists.newArrayList();
+        methods.addAll( Arrays.asList( executor.getClass().getDeclaredMethods() ) );
+
+        if ( executor.getClass().getSuperclass() != null )
         {
-            if ( method.getParameters()[0].getType().equals( eventClass ) && method.isAnnotationPresent( Event.class ) )
+            methods.addAll( Arrays.asList( executor.getClass().getSuperclass().getDeclaredMethods() ) );
+        }
+
+        for ( Method method : methods )
+        {
+            if (
+                    method.getParameterCount() > 0
+                            && method.getParameters()[0].getType().equals( eventClass )
+                            && method.isAnnotationPresent( Event.class )
+            )
             {
                 Event event = method.getAnnotation( Event.class );
                 int priority = event.priority();
@@ -67,7 +77,7 @@ public class EventLoader implements IEventLoader
     }
 
     @Override
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     public <T extends BUEvent> Set<EventHandler<T>> getHandlers( Class<T> eventClass )
     {
         Set<EventHandler<?>> handlers = handlerMap.get( eventClass );
@@ -108,7 +118,7 @@ public class EventLoader implements IEventLoader
     {
         if ( event instanceof AbstractEvent )
         {
-            ((AbstractEvent) event).setApi( BUCore.getApi() );
+            ( (AbstractEvent) event ).setApi( BUCore.getApi() );
         }
 
         for ( Map.Entry<Class<? extends BUEvent>, Set<EventHandler<?>>> ent : handlerMap.entrySet() )
@@ -127,7 +137,7 @@ public class EventLoader implements IEventLoader
                 {
                     BEventHandler handler = (BEventHandler) h;
 
-                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ((Cancellable) event).isCancelled() )
+                    if ( !handler.executeIfCancelled() && event instanceof Cancellable && ( (Cancellable) event ).isCancelled() )
                     {
                         continue;
                     }
@@ -144,6 +154,6 @@ public class EventLoader implements IEventLoader
         {
             throw new IllegalArgumentException( "cannot call Cancellable event async" );
         }
-        BUCore.getApi().getSimpleExecutor().asyncExecute( () -> launchEvent( event ) );
+        ProxyServer.getInstance().getScheduler().runAsync( BUCore.getApi().getPlugin(), () -> launchEvent( event ) );
     }
 }

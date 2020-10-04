@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api.friends;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 public enum FriendSettingType
@@ -40,6 +40,6 @@ public enum FriendSettingType
 
     public boolean getDefault()
     {
-        return FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "settings." + toString().toLowerCase() );
+        return ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
     }
 }

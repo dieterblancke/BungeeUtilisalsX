@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
 import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.UUID;
@@ -32,7 +32,7 @@ public interface BansDao
     {
         try
         {
-            return FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "per-server-punishments" );
+            return ConfigFiles.PUNISHMENTS.getConfig().getBoolean( "per-server-punishments" );
         }
         catch ( Exception e )
         {

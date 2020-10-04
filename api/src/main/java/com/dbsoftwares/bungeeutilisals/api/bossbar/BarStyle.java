@@ -88,6 +88,6 @@ public class BarStyle
     @Override
     public boolean equals( Object obj )
     {
-        return obj == this || (obj instanceof BarStyle && ((BarStyle) obj).getId() == id);
+        return obj == this || ( obj instanceof BarStyle && ( (BarStyle) obj ).getId() == id );
     }
 }

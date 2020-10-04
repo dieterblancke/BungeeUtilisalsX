@@ -18,13 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.announcers.ActionBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.BossBarAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.ChatAnnouncer;
-import com.dbsoftwares.bungeeutilisals.announcers.TitleAnnouncer;
+import com.dbsoftwares.bungeeutilisals.announcers.*;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.command.BUCommand;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
 import com.dbsoftwares.bungeeutilisals.api.event.event.IEventLoader;
@@ -37,20 +34,9 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager.StorageType;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
-import com.dbsoftwares.bungeeutilisals.commands.addons.AddonCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.*;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommand;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommand;
-import com.dbsoftwares.bungeeutilisals.commands.plugin.PluginCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.CheckIpCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentDataCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentHistoryCommand;
-import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentInfoCommand;
 import com.dbsoftwares.bungeeutilisals.executors.*;
 import com.dbsoftwares.bungeeutilisals.library.Library;
 import com.dbsoftwares.bungeeutilisals.library.StandardLibrary;
@@ -59,11 +45,6 @@ import com.dbsoftwares.bungeeutilisals.listeners.PunishmentListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserChatListener;
 import com.dbsoftwares.bungeeutilisals.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisals.manager.CommandManager;
-import com.dbsoftwares.bungeeutilisals.packet.PacketRegistry;
-import com.dbsoftwares.bungeeutilisals.packet.event.PacketReceiveEvent;
-import com.dbsoftwares.bungeeutilisals.packet.event.PacketUpdateEvent;
-import com.dbsoftwares.bungeeutilisals.packet.executors.PacketUpdateExecutor;
-import com.dbsoftwares.bungeeutilisals.packet.listeners.SimplePacketListener;
 import com.dbsoftwares.bungeeutilisals.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisals.placeholders.UserPlaceHolderPack;
@@ -76,12 +57,9 @@ import com.dbsoftwares.bungeeutilisals.updater.Updater;
 import com.dbsoftwares.bungeeutilisals.utils.EncryptionUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.plugin.Plugin;
 import org.bstats.bungeecord.Metrics;
 
@@ -94,6 +72,7 @@ import java.nio.file.StandardOpenOption;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
 
 @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin
@@ -112,28 +91,22 @@ public class BungeeUtilisals extends Plugin
     private AbstractStorageManager databaseManagement;
 
     @Getter
-    private List<BUCommand> generalCommands = Lists.newArrayList();
-
-    @Getter
-    private List<BUCommand> customCommands = Lists.newArrayList();
-
-    @Getter
     private CommandManager commandManager;
 
     @Getter
-    private List<Script> scripts = Lists.newArrayList();
+    private final List<Script> scripts = Lists.newArrayList();
 
     @Getter
-    private List<StaffUser> staffMembers = Lists.newArrayList();
+    private final List<StaffUser> staffMembers = Lists.newArrayList();
 
     @Override
     public void onEnable()
     {
         if ( ReflectionUtils.getJavaVersion() < 8 )
         {
-            BUCore.getLogger().warn( "You are running a Java version lower then Java 8." );
-            BUCore.getLogger().warn( "Please upgrade to Java 8 or newer." );
-            BUCore.getLogger().warn( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
+            BUCore.getLogger().warning( "You are running a Java version lower then Java 8." );
+            BUCore.getLogger().warning( "Please upgrade to Java 8 or newer." );
+            BUCore.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
             return;
         }
         // Setting instance
@@ -146,7 +119,7 @@ public class BungeeUtilisals extends Plugin
         }
 
         // Loading setting files ...
-        createAndLoadFiles();
+        ConfigFiles.loadAllConfigs( this );
 
         // Loading default PlaceHolders. Must be done BEFORE API / database loads.
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
@@ -169,25 +142,17 @@ public class BungeeUtilisals extends Plugin
         api.getLanguageManager().addPlugin( getDescription().getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
         api.getLanguageManager().loadLanguages( getDescription().getName() );
 
-        // Loading & enabling addons
-        if ( getConfig().getBoolean( "addons" ) )
-        {
-            api.getAddonManager().findAddons( api.getAddonManager().getAddonsFolder() );
-            api.getAddonManager().loadAddons();
-            api.getAddonManager().enableAddons();
-        }
-
         // Updating data from previous versions ...
         checkPreviousVersion();
 
         // Initialize metric system
-        new Metrics( this );
+        registerMetrics();
 
         // Register executors & listeners
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserConnectionListener() );
         ProxyServer.getInstance().getPluginManager().registerListener( this, new UserChatListener() );
 
-        if ( FileLocation.MOTD.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.MOTD.isEnabled() )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new MotdPingListener() );
         }
@@ -209,7 +174,7 @@ public class BungeeUtilisals extends Plugin
         loader.register( UserCommandEvent.class, spyEventExecutor );
 
         // Loading Punishment system
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( this, new PunishmentListener() );
 
@@ -220,7 +185,7 @@ public class BungeeUtilisals extends Plugin
             loader.register( UserCommandEvent.class, muteCheckExecutor );
         }
 
-        if ( FileLocation.FRIENDS_CONFIG.getConfiguration().getBoolean( "enabled" ) )
+        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
             final FriendsExecutor executor = new FriendsExecutor();
             loader.register( UserLoadEvent.class, executor );
@@ -229,22 +194,11 @@ public class BungeeUtilisals extends Plugin
         }
 
         // Loading Announcers
-        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class );
+        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class, TabAnnouncer.class );
 
         // Loading all (enabled) Commands
         commandManager = new CommandManager();
-        loadCommands();
-
-        // Loading packet system (if enabled)
-        if ( getConfig().getBoolean( "packets" ) )
-        {
-            PacketRegistry.registerPackets();
-            ProxyServer.getInstance().getPluginManager().registerListener( this, new SimplePacketListener() );
-
-            PacketUpdateExecutor packetUpdateExecutor = new PacketUpdateExecutor();
-            loader.register( PacketUpdateEvent.class, packetUpdateExecutor );
-            loader.register( PacketReceiveEvent.class, packetUpdateExecutor );
-        }
+        commandManager.load();
 
         ProxyServer.getInstance().getScheduler().schedule( this, new UserMessageQueueRunnable(), 1, TimeUnit.MINUTES );
 
@@ -277,7 +231,8 @@ public class BungeeUtilisals extends Plugin
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
 
                 shouldUpdate = getDescription().getVersion().equalsIgnoreCase( "1.0.5.0" );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -289,7 +244,8 @@ public class BungeeUtilisals extends Plugin
                 final String version = EncryptionUtils.decrypt( new String( Files.readAllBytes( file.toPath() ) ), key );
 
                 shouldUpdate = !version.equals( getDescription().getVersion() );
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 e.printStackTrace();
             }
@@ -311,8 +267,10 @@ public class BungeeUtilisals extends Plugin
 
                 final String encrypted = EncryptionUtils.encrypt( getDescription().getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
-            } catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
+            }
+            catch ( ClassNotFoundException | IllegalAccessException | InstantiationException | IOException ignored )
             {
+                // ignore
             }
         }
     }
@@ -320,17 +278,14 @@ public class BungeeUtilisals extends Plugin
     @Override
     public void onDisable()
     {
-        if ( getConfig().getBoolean( "addons" ) )
-        {
-            api.getAddonManager().disableAddons();
-        }
         Lists.newArrayList( BUCore.getApi().getUsers() ).forEach( User::unload );
         try
         {
             databaseManagement.close();
-        } catch ( SQLException e )
+        }
+        catch ( SQLException e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         scripts.forEach( Script::unload );
@@ -365,7 +320,8 @@ public class BungeeUtilisals extends Plugin
                     }
                     username = builder.toString().split( "<title>" )[1].split( "</title>" )[0].split( " | " )[0];
                 }
-            } catch ( IOException e )
+            }
+            catch ( IOException e )
             {
                 // do nothing
             }
@@ -379,7 +335,14 @@ public class BungeeUtilisals extends Plugin
 
     public void reload()
     {
-        loadCommands();
+        ConfigFiles.reloadAllConfigs();
+
+        if ( BUCore.getApi().getHubBalancer() != null )
+        {
+            BUCore.getApi().getHubBalancer().reload();
+        }
+
+        commandManager.load();
 
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
 
@@ -390,13 +353,6 @@ public class BungeeUtilisals extends Plugin
 
         loadScripts();
         api.getChatManager().reload();
-
-        if ( BUCore.getApi().getAddonManager() != null )
-        {
-            BUCore.getApi().getAddonManager().getAddons().stream()
-                    .map( addon -> addon.getDescription().getName() )
-                    .forEach( addon -> BUCore.getApi().getAddonManager().reloadAddon( addon ) );
-        }
     }
 
     private void loadScripts()
@@ -429,9 +385,10 @@ public class BungeeUtilisals extends Plugin
                 final Script script = new Script( file.getName(), code );
 
                 this.scripts.add( script );
-            } catch ( IOException | ScriptException e )
+            }
+            catch ( IOException | ScriptException e )
             {
-                BUCore.getLogger().error( "Could not load script " + file.getName(), e );
+                BUCore.getLogger().log( Level.SEVERE, "Could not load script " + file.getName(), e );
             }
         }
     }
@@ -442,7 +399,8 @@ public class BungeeUtilisals extends Plugin
         try
         {
             type = StorageType.valueOf( getConfig().getString( "storage.type" ).toUpperCase() );
-        } catch ( IllegalArgumentException e )
+        }
+        catch ( IllegalArgumentException e )
         {
             type = StorageType.MYSQL;
         }
@@ -450,9 +408,10 @@ public class BungeeUtilisals extends Plugin
         {
             databaseManagement = type.getManager().getConstructor( Plugin.class ).newInstance( this );
             databaseManagement.initialize();
-        } catch ( Exception e )
+        }
+        catch ( Exception e )
         {
-            BUCore.getLogger().error( "An error occured: ", e );
+            BUCore.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -475,157 +434,48 @@ public class BungeeUtilisals extends Plugin
 
     public IConfiguration getConfig()
     {
-        return FileLocation.CONFIG.getConfiguration();
+        return ConfigFiles.CONFIG.getConfig();
     }
 
-    private void createAndLoadFiles()
+    private void registerMetrics()
     {
-        for ( FileLocation location : FileLocation.values() )
-        {
-            File file = new File( getDataFolder(), location.getPath() );
+        final Metrics metrics = new Metrics( this );
 
-            if ( !file.exists() )
-            {
-                IConfiguration.createDefaultFile( getResourceAsStream( location.getPath() ), file );
-
-                location.loadConfiguration( file );
-            } else
-            {
-                // update configurations ...
-
-                location.loadConfiguration( file );
-                try
-                {
-                    location.getConfiguration().copyDefaults(
-                            IConfiguration.loadYamlConfiguration( getResourceAsStream( location.getPath() ) )
-                    );
-                } catch ( IOException e )
-                {
-                    BUCore.getLogger().error( "Could not update configurations: ", e );
-                }
-            }
-            location.loadData();
-        }
-    }
-
-    private void loadCommands()
-    {
-        commandManager.load();
-
-        loadGeneralCommands();
-
-        if ( FileLocation.PUNISHMENTS.getConfiguration().getBoolean( "enabled" ) )
-        {
-            loadPunishmentCommands();
-        }
-
-        loadCustomCommands();
-    }
-
-    private void loadGeneralCommands()
-    {
-        generalCommands.forEach( BUCommand::unload );
-        generalCommands.clear();
-
-        generalCommands.add( new PluginCommand() );
-        loadCommand( "addons", getConfig(), AddonCommand.class );
-
-        loadGeneralCommand( "glist", GListCommand.class );
-        loadGeneralCommand( "announce", AnnounceCommand.class );
-        loadGeneralCommand( "find", FindCommand.class );
-        loadGeneralCommand( "server", ServerCommand.class );
-        loadGeneralCommand( "clearchat", ClearChatCommand.class );
-        loadGeneralCommand( "chatlock", ChatLockCommand.class );
-        loadGeneralCommand( "glag", GLagCommand.class );
-        loadGeneralCommand( "staffchat", StaffChatCommand.class );
-        loadGeneralCommand( "language", LanguageCommand.class );
-        loadGeneralCommand( "staff", StaffCommand.class );
-        loadGeneralCommand( "msg", MsgCommand.class );
-        loadGeneralCommand( "reply", ReplyCommand.class );
-        loadGeneralCommand( "ignore", IgnoreCommand.class );
-        loadGeneralCommand( "ping", PingCommand.class );
-    }
-
-    private void loadPunishmentCommands()
-    {
-        loadPunishmentCommand( "punishmentinfo", PunishmentInfoCommand.class );
-        loadPunishmentCommand( "punishmenthistory", PunishmentHistoryCommand.class );
-        loadPunishmentCommand( "punishmentdata", PunishmentDataCommand.class );
-        loadPunishmentCommand( "checkip", CheckIpCommand.class );
-    }
-
-    private void loadCustomCommands()
-    {
-        customCommands.forEach( BUCommand::unload );
-        customCommands.clear();
-
-        IConfiguration config = FileLocation.CUSTOMCOMMANDS.getConfiguration();
-
-        for ( ISection section : config.getSectionList( "commands" ) )
-        {
-            String name = section.getString( "name" );
-            List<String> aliases = section.exists( "aliases" ) ? section.getStringList( "aliases" ) : Lists.newArrayList();
-            String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
-            List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
-
-            BUCommand command = new BUCommand( name, aliases, permission )
-            {
-
-                @Override
-                public void onExecute( User user, String[] args )
-                {
-                    final String messagesKey = "messages";
-                    final List<TextComponent> components;
-
-                    if ( section.isList( messagesKey ) )
-                    {
-                        components = MessageBuilder.buildMessage( user, section.getSectionList( messagesKey ) );
-                    } else
-                    {
-                        components = Lists.newArrayList( MessageBuilder.buildMessage( user, section.getSection( messagesKey ) ) );
-                    }
-
-                    components.forEach( user::sendMessage );
-                    commands.forEach( command -> ProxyServer.getInstance().getPluginManager().dispatchCommand(
-                            ProxyServer.getInstance().getConsole(),
-                            PlaceHolderAPI.formatMessage( user, command )
-                    ) );
-                }
-
-                @Override
-                public List<String> onTabComplete( User user, String[] args )
-                {
-                    return ImmutableList.of();
-                }
-            };
-
-            customCommands.add( command );
-        }
-    }
-
-    private void loadPunishmentCommand( String name, Class<? extends BUCommand> clazz )
-    {
-        loadCommand( "commands." + name + ".enabled", FileLocation.PUNISHMENTS.getConfiguration(), clazz );
-    }
-
-    private void loadGeneralCommand( String name, Class<? extends BUCommand> clazz )
-    {
-        loadCommand( name + ".enabled", FileLocation.GENERALCOMMANDS.getConfiguration(), clazz );
-    }
-
-    private void loadCommand( String enabledPath, IConfiguration configuration, Class<? extends BUCommand> clazz )
-    {
-        if ( configuration.getBoolean( enabledPath ) )
-        {
-            try
-            {
-                BUCommand command = clazz.newInstance();
-
-                generalCommands.add( command );
-            } catch ( InstantiationException | IllegalAccessException e )
-            {
-                BUCore.getLogger().error( "An error occured: ", e );
-            }
-        }
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "punishments",
+                () -> ConfigFiles.PUNISHMENTS.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "motds",
+                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "friends",
+                () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "actionbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "title_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "bossbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "chat_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "tab_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new Metrics.SimplePie(
+                "hubbalancer",
+                () -> BUCore.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+        ) );
     }
 }

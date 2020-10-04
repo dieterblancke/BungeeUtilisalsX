@@ -25,10 +25,13 @@ import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-import com.dbsoftwares.bungeeutilisals.api.utils.reflection.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;
+import net.md_5.bungee.api.ServerPing.PlayerInfo;
+import net.md_5.bungee.api.ServerPing.Players;
+import net.md_5.bungee.api.ServerPing.Protocol;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
@@ -49,36 +52,49 @@ public class MotdPingListener implements Listener
     @EventHandler
     public void onPing( ProxyPingEvent event )
     {
-        final List<MotdData> dataList = FileLocation.MOTD.getDataList();
+        final List<MotdData> dataList = ConfigFiles.MOTD.getMotds();
 
         insertName( event.getConnection() );
 
-        if ( !loadConditionalMotd( event, dataList ) )
+        ServerPing result = loadConditionalMotd( event, dataList );
+        if ( result == null )
         {
-            loadDefaultMotd( event, dataList );
+            result = loadDefaultMotd( event, dataList );
+        }
+
+
+        if ( result != null )
+        {
+            event.setResponse( result );
         }
     }
 
-    private void loadMotd( final ProxyPingEvent event, final MotdData motd )
+    private ServerPing loadMotd( final ProxyPingEvent event, final MotdData motd )
     {
         if ( motd == null )
         {
-            return;
+            return null;
         }
+        final ServerPing orig = event.getResponse();
         final String message = formatMessage( motd.getMotd(), event );
         final BaseComponent component = new TextComponent( Utils.format( message ) );
 
-        event.getResponse().setDescriptionComponent( component );
-
-        final List<ServerPing.PlayerInfo> hoverMessages = Lists.newArrayList();
+        final List<PlayerInfo> hoverMessages = Lists.newArrayList();
         for ( String hoverMessage : motd.getHoverMessages() )
         {
-            hoverMessages.add( new ServerPing.PlayerInfo(
+            hoverMessages.add( new PlayerInfo(
                     Utils.c( formatMessage( hoverMessage, event ) ),
                     EMPTY_UUID
             ) );
         }
-        event.getResponse().getPlayers().setSample( hoverMessages.toArray( new ServerPing.PlayerInfo[0] ) );
+        final PlayerInfo[] hover = hoverMessages.toArray( new PlayerInfo[0] );
+
+        return new ServerPing(
+                new Protocol( orig.getVersion().getName(), orig.getVersion().getProtocol() ),
+                new Players( orig.getPlayers().getMax(), orig.getPlayers().getOnline(), hover ),
+                component,
+                ProxyServer.getInstance().getConfig().getFaviconObject()
+        );
     }
 
     private String formatMessage( String message, final ProxyPingEvent event )
@@ -101,15 +117,15 @@ public class MotdPingListener implements Listener
         return message;
     }
 
-    private void loadDefaultMotd( final ProxyPingEvent event, final List<MotdData> motds )
+    private ServerPing loadDefaultMotd( final ProxyPingEvent event, final List<MotdData> motds )
     {
         final List<MotdData> defMotds = motds.stream().filter( MotdData::isDef ).collect( Collectors.toList() );
         final MotdData motd = MathUtils.getRandomFromList( defMotds );
 
-        loadMotd( event, motd );
+        return loadMotd( event, motd );
     }
 
-    private boolean loadConditionalMotd( final ProxyPingEvent event, final List<MotdData> motds )
+    private ServerPing loadConditionalMotd( final ProxyPingEvent event, final List<MotdData> motds )
     {
         final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).collect( Collectors.toList() );
 
@@ -124,11 +140,10 @@ public class MotdPingListener implements Listener
                 ).collect( Collectors.toList() );
                 final MotdData motd = MathUtils.getRandomFromList( conditionalMotds );
 
-                loadMotd( event, motd );
-                return true;
+                return loadMotd( event, motd );
             }
         }
-        return false;
+        return null;
     }
 
     // Name not known on serverlist ping, so we're loading the last seen name on the IP as the initial connection name.
@@ -143,11 +158,12 @@ public class MotdPingListener implements Listener
             {
                 return;
             }
-            final Field nameField = ReflectionUtils.getField( connection.getClass(), "name" );
-
-            if ( nameField != null )
+            for ( Field field : connection.getClass().getDeclaredFields() )
             {
-                nameField.set( connection, name );
+                if ( field.getName().equals( "name" ) )
+                {
+                    field.set( connection, name );
+                }
             }
         }
         catch ( Exception e )

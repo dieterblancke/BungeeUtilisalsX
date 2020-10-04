@@ -104,7 +104,7 @@ public class MongoToMongoConverter extends Converter
 
     private MongoDatabase getDatabase()
     {
-        return ((com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager) AbstractStorageManager.getManager()).getDatabase();
+        return ( (com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager) AbstractStorageManager.getManager() ).getDatabase();
     }
 
     public class MongoDBStorageManager extends AbstractStorageManager
@@ -124,7 +124,7 @@ public class MongoToMongoConverter extends Converter
             if ( user != null && !user.isEmpty() )
             {
                 credential = MongoCredential.createCredential( user, database,
-                        (password == null || password.isEmpty() ? null : password.toCharArray()) );
+                        ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
             }
             MongoClientOptions options = MongoClientOptions.builder().applicationName( "BungeeUtilisals" ).build();
 

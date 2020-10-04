@@ -25,9 +25,7 @@ import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
 import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
-import com.dbsoftwares.bungeeutilisals.api.utils.file.FileLocation;
-
-import java.util.List;
+import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
 
 public class StaffNetworkExecutor implements EventExecutor
 {
@@ -50,9 +48,7 @@ public class StaffNetworkExecutor implements EventExecutor
 
     private StaffRankData findStaffRank( final String rankName )
     {
-        final List<StaffRankData> ranks = FileLocation.GENERALCOMMANDS.getDataList();
-
-        return ranks.stream()
+        return ConfigFiles.RANKS.getRanks().stream()
                 .filter( rank -> rank.getName().equals( rankName ) )
                 .findFirst()
                 .orElseThrow( () -> new RuntimeException(
