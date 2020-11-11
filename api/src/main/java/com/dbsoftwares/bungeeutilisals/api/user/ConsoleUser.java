@@ -22,8 +22,8 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.HasPlaceholders;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -42,22 +42,22 @@ import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
-public class ConsoleUser implements User
+public class ConsoleUser implements User, HasPlaceholders
 {
 
     private static final String NOT_SUPPORTED = "Not supported yet.";
+    private final UserStorage storage = new UserStorage();
+    private final UserCooldowns cooldowns = new UserCooldowns();
+    @Getter
+    private final List<FriendData> friends = Lists.newArrayList();
     @Getter
     @Setter
     private boolean socialSpy;
     @Getter
     @Setter
     private boolean commandSpy;
-    private final UserStorage storage = new UserStorage();
-    private final UserCooldowns cooldowns = new UserCooldowns();
-
-    @Getter
-    private final List<FriendData> friends = Lists.newArrayList();
 
     @Override
     public void load( ProxiedPlayer parent )
@@ -122,12 +122,20 @@ public class ConsoleUser implements User
     @Override
     public void sendRawColorMessage( String message )
     {
+        if ( message.isEmpty() )
+        {
+            return;
+        }
         sendMessage( Utils.format( message ) );
     }
 
     @Override
     public void sendMessage( String message )
     {
+        if ( message.isEmpty() )
+        {
+            return;
+        }
         sendMessage( getLanguageConfig().getString( "prefix" ), message );
     }
 
@@ -146,51 +154,34 @@ public class ConsoleUser implements User
     @Override
     public void sendLangMessage( boolean prefix, String path )
     {
-        if ( getLanguageConfig().isSection( path ) )
-        {
-            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
-            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ) );
-
-            sendMessage( component );
-            return;
-        }
-
-        String message = buildLangMessage( path );
-
-        if ( message.isEmpty() )
-        {
-            return;
-        }
-
-        if ( message.startsWith( "noprefix: " ) )
-        {
-            prefix = false;
-            message = message.replaceFirst( "noprefix: ", "" );
-        }
-
-        if ( prefix )
-        {
-            sendMessage( message );
-        }
-        else
-        {
-            sendRawColorMessage( message );
-        }
+        sendLangMessage( prefix, path, new Object[0] );
     }
 
     @Override
     public void sendLangMessage( boolean prefix, String path, Object... placeholders )
     {
+        this.sendLangMessage( path, prefix, null, null, placeholders );
+    }
+
+    @Override
+    public void sendLangMessage( final String path,
+                                 boolean prefix,
+                                 final Function<String, String> prePlaceholderFormatter,
+                                 final Function<String, String> postPlaceholderFormatter,
+                                 final Object... placeholders )
+    {
         if ( getLanguageConfig().isSection( path ) )
         {
             // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
-            final TextComponent component = MessageBuilder.buildMessage( this, getLanguageConfig().getSection( path ), placeholders );
+            final TextComponent component = MessageBuilder.buildMessage(
+                    this, getLanguageConfig().getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
+            );
 
             sendMessage( component );
             return;
         }
 
-        String message = buildLangMessage( path, placeholders );
+        String message = buildLangMessage( path, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
 
         if ( message.isEmpty() )
         {
@@ -222,13 +213,31 @@ public class ConsoleUser implements User
     @Override
     public void sendMessage( BaseComponent component )
     {
+        if ( component instanceof TextComponent && ( (TextComponent) component ).getText().isEmpty() )
+        {
+            return;
+        }
         sender().sendMessage( component );
     }
 
     @Override
     public void sendMessage( BaseComponent[] components )
     {
-        sender().sendMessage( components );
+        boolean shouldSkip = true;
+
+        for ( BaseComponent component : components )
+        {
+            if ( !( component instanceof TextComponent ) || !( (TextComponent) component ).getText().isEmpty() )
+            {
+                shouldSkip = false;
+                break;
+            }
+        }
+
+        if ( !shouldSkip )
+        {
+            sender().sendMessage( components );
+        }
     }
 
     @Override
@@ -331,6 +340,16 @@ public class ConsoleUser implements User
     @Override
     public String buildLangMessage( final String path, final Object... placeholders )
     {
+        return this.buildLangMessage( path, null, null, placeholders );
+    }
+
+    @Override
+    public String buildLangMessage(
+            final String path,
+            final Function<String, String> prePlaceholderFormatter,
+            final Function<String, String> postPlaceholderFormatter,
+            final Object... placeholders )
+    {
         if ( !getLanguageConfig().exists( path ) )
         {
             return "";
@@ -348,7 +367,12 @@ public class ConsoleUser implements User
 
             for ( int i = 0; i < messages.size(); i++ )
             {
-                final String message = replacePlaceHolders( messages.get( i ), placeholders );
+                final String message = replacePlaceHolders(
+                        messages.get( i ),
+                        prePlaceholderFormatter,
+                        postPlaceholderFormatter,
+                        placeholders
+                );
                 builder.append( message );
 
                 if ( i < messages.size() - 1 )
@@ -359,7 +383,12 @@ public class ConsoleUser implements User
         }
         else
         {
-            final String message = replacePlaceHolders( getLanguageConfig().getString( path ), placeholders );
+            final String message = replacePlaceHolders(
+                    getLanguageConfig().getString( path ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+            );
 
             if ( message.isEmpty() )
             {
@@ -393,16 +422,6 @@ public class ConsoleUser implements User
     public void executeMessageQueue()
     {
         throw new UnsupportedOperationException( NOT_SUPPORTED );
-    }
-
-    private String replacePlaceHolders( String message, Object... placeholders )
-    {
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
-        message = PlaceHolderAPI.formatMessage( this, message );
-        return message;
     }
 
     @Override

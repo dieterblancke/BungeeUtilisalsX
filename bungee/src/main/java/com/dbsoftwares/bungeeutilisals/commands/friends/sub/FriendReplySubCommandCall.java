@@ -68,22 +68,22 @@ public class FriendReplySubCommandCall implements CommandCall
                 // only needs to be set for target, as the current user (sender) still has this target as last user
                 target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
 
-                {
-                    String msgMessage = target.buildLangMessage( "friends.reply.format.receive" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{sender}", user.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    target.sendRawMessage( msgMessage );
-                }
-                {
-                    String msgMessage = user.buildLangMessage( "friends.reply.format.send" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{receiver}", target.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    user.sendRawMessage( msgMessage );
-                }
+                target.sendLangMessage(
+                        "friends.reply.format.receive",
+                        false,
+                        Utils::c,
+                        null,
+                        "{sender}", user.getName(),
+                        "{message}", message
+                );
+                user.sendLangMessage(
+                        "friends.reply.format.send",
+                        false,
+                        Utils::c,
+                        null,
+                        "{receiver}", target.getName(),
+                        "{message}", message
+                );
             }
             else
             {

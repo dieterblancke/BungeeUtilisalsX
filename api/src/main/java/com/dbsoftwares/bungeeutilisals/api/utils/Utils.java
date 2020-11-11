@@ -32,6 +32,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.AbstractPacketHandler;
 
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,6 +42,7 @@ import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.regex.Matcher;
@@ -53,6 +55,8 @@ public class Utils
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
     private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
+    private static final String GRADIENT_HEX_RAW_PATTERN = "<\\$#([A-Fa-f0-9]){6}>";
+    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( GRADIENT_HEX_RAW_PATTERN );
     private static final boolean IS_1_16;
 
     static
@@ -76,22 +80,144 @@ public class Utils
         {
             return message;
         }
+        message = colorHex( message );
 
-        if ( IS_1_16 )
+        return ChatColor.translateAlternateColorCodes( '&', message );
+    }
+
+    public static String colorHex( String message )
+    {
+        if ( !IS_1_16 )
         {
-            Matcher matcher = HEX_PATTERN.matcher( message );
-            while ( matcher.find() )
-            {
-                final ChatColor hexColor = ChatColor.of( matcher.group().substring( 1, matcher.group().length() - 1 ) );
-                final String before = message.substring( 0, matcher.start() );
-                final String after = message.substring( matcher.end() );
+            return message;
+        }
+        final Matcher matcher = HEX_PATTERN.matcher( message );
+        while ( matcher.find() )
+        {
+            final ChatColor hexColor = ChatColor.of( matcher.group().substring( 1, matcher.group().length() - 1 ) );
+            final String before = message.substring( 0, matcher.start() );
+            final String after = message.substring( matcher.end() );
 
-                message = before + hexColor + after;
-                matcher = HEX_PATTERN.matcher( message );
+            message = before + hexColor + after;
+        }
+        message = colorGradients( message );
+        return message;
+    }
+
+    private static String colorGradients( String message )
+    {
+        final List<String> hexColorCodes = Lists.newArrayList();
+
+        final Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
+        while ( matcher.find() )
+        {
+            hexColorCodes.add( matcher.group().replace( "<$", "" ).replace( ">", "" ) );
+        }
+
+        final String[] parts = message.split( GRADIENT_HEX_RAW_PATTERN );
+        final StringBuilder stringBuilder = new StringBuilder();
+        int hexIdx = 0;
+
+        for ( int i = 0; i < parts.length; i++ )
+        {
+            final String part = parts[i];
+
+            if ( i == 0 )
+            {
+                stringBuilder.append( part );
+            }
+            else
+            {
+                if ( part.isEmpty() || hexIdx + 1 >= hexColorCodes.size() )
+                {
+                    stringBuilder.append( part );
+                }
+                else
+                {
+                    final String startColor = hexColorCodes.get( hexIdx );
+                    final String endColor = hexColorCodes.get( hexIdx + 1 );
+                    stringBuilder.append( applyGradient( part, startColor, endColor ) );
+                    hexIdx++;
+                }
+            }
+        }
+        return stringBuilder.toString();
+    }
+
+    private static String applyGradient( final String text, final String startHexColor, final String endHexColor )
+    {
+        final char[] characters = text.toCharArray();
+        final int length = characters.length;
+        final Color startColor = Color.decode( startHexColor );
+        final Color endColor = Color.decode( endHexColor );
+
+        double rStep = Math.abs( (double) ( startColor.getRed() - endColor.getRed() ) / length );
+        double gStep = Math.abs( (double) ( startColor.getGreen() - endColor.getGreen() ) / length );
+        double bStep = Math.abs( (double) ( startColor.getBlue() - endColor.getBlue() ) / length );
+
+        if ( startColor.getRed() > endColor.getRed() )
+        {
+            rStep = -rStep;
+        }
+        if ( startColor.getGreen() > endColor.getGreen() )
+        {
+            gStep = -gStep;
+        }
+        if ( startColor.getBlue() > endColor.getBlue() )
+        {
+            bStep = -bStep;
+        }
+        final IntegerRange integerRange = new IntegerRange( 0, 255 );
+        Color textColor = new Color( startColor.getRGB() );
+        boolean previousTimeWasColor = false;
+        boolean skipNext = false;
+        final StringBuilder resultBuilder = new StringBuilder();
+
+        for ( int i = 0; i < length; i++ )
+        {
+            if ( skipNext )
+            {
+                resultBuilder.append( characters[i] );
+                skipNext = false;
+                continue;
+            }
+            if ( previousTimeWasColor && isColor( characters, i ) )
+            {
+                resultBuilder.append( characters[i] );
+                skipNext = true;
+                continue;
+            }
+            final int red = integerRange.keepWithinRange( Math.round( textColor.getRed() + rStep ) );
+            final int green = integerRange.keepWithinRange( Math.round( textColor.getGreen() + gStep ) );
+            final int blue = integerRange.keepWithinRange( Math.round( textColor.getBlue() + bStep ) );
+
+            textColor = new Color( red, green, blue );
+            final ChatColor chatColor = ChatColor.of( textColor );
+
+            resultBuilder.append( chatColor.toString() )
+                    .append( characters[i] );
+
+            if ( isColor( characters, i ) )
+            {
+                skipNext = true;
+                previousTimeWasColor = true;
+            }
+            else
+            {
+                previousTimeWasColor = false;
             }
         }
 
-        return ChatColor.translateAlternateColorCodes( '&', message );
+        return resultBuilder.toString();
+    }
+
+    private static boolean isColor( final char[] chars, final int idx )
+    {
+        if ( idx >= chars.length )
+        {
+            return false;
+        }
+        return chars[idx] == ChatColor.COLOR_CHAR && ChatColor.getByChar( chars[idx + 1] ) != null;
     }
 
     /**

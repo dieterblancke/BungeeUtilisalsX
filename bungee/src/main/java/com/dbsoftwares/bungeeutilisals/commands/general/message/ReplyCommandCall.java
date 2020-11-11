@@ -78,22 +78,22 @@ public class ReplyCommandCall implements CommandCall, TabCall
                 // only needs to be set for target, as the current user (sender) still has this target as last user
                 target.getStorage().setData( "MSG_LAST_USER", user.getName() );
 
-                {
-                    String msgMessage = target.buildLangMessage( "general-commands.reply.format.receive" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{sender}", user.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    target.sendRawMessage( msgMessage );
-                }
-                {
-                    String msgMessage = user.buildLangMessage( "general-commands.reply.format.send" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{receiver}", target.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    user.sendRawMessage( msgMessage );
-                }
+                target.sendLangMessage(
+                        "general-commands.reply.format.receive",
+                        false,
+                        Utils::c,
+                        null,
+                        "{sender}", user.getName(),
+                        "{message}", message
+                );
+                user.sendLangMessage(
+                        "general-commands.reply.format.send",
+                        false,
+                        Utils::c,
+                        null,
+                        "{receiver}", target.getName(),
+                        "{message}", message
+                );
 
                 BUCore.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
             }

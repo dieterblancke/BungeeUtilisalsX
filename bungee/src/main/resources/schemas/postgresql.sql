@@ -6,7 +6,7 @@ CREATE TABLE IF NOT EXISTS "{users-table}"
     ip          VARCHAR(32)        NOT NULL,
     language    VARCHAR(24)        NOT NULL,
     firstlogin  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    lastlogout  TIMESTAMP          NOT NULL,
+    lastlogout  TIMESTAMP          NOT NULL DEFAULT CURRENT_TIMESTAMP,
     joined_host TEXT,
 );
 

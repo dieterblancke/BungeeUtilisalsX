@@ -222,7 +222,7 @@ public class SQLFriendsDao implements FriendsDao
         try ( Connection connection = BUCore.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       format( "SELECT user, friend, username, requested_at FROM {friendrequests-table}"
-                              + " JOIN {users-table} ON user = uuid"
+                              + " JOIN {users-table} ON friend = uuid"
                               + " WHERE user = ?;" )
               ) )
         {

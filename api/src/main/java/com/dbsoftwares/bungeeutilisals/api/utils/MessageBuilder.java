@@ -29,26 +29,57 @@ import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class MessageBuilder
 {
 
-    public static TextComponent buildMessage( User user, ISection section, Object... placeholders )
+    public static TextComponent buildMessage( final User user,
+                                              final ISection section,
+                                              final Object... placeholders )
+    {
+        return buildMessage( user, section, null, null, placeholders );
+    }
+
+    public static TextComponent buildMessage( final User user,
+                                              final ISection section,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
     {
         if ( section.isList( "text" ) )
         {
             final TextComponent component = new TextComponent();
+            final List<ISection> sections = section.getSectionList( "text" );
 
-            section.getSectionList( "text" ).forEach( text -> component.addExtra( buildMessage( user, text, placeholders ) ) );
+            for ( ISection text : sections )
+            {
+                component.addExtra(
+                        buildMessage( user, text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
+                );
+            }
             return component;
         }
-        final BaseComponent[] text = searchAndFormat( user, user.getLanguageConfig(), section.getString( "text" ), placeholders );
+        final BaseComponent[] text = searchAndFormat(
+                user,
+                user.getLanguageConfig(),
+                section.getString( "text" ),
+                prePlaceholderFormatter,
+                postPlaceholderFormatter,
+                placeholders
+        );
         final TextComponent component = new TextComponent( text );
 
         if ( section.exists( "hover" ) )
         {
-            final BaseComponent[] components = searchHoverMessageAndFormat( user, section, placeholders );
+            final BaseComponent[] components = searchHoverMessageAndFormat(
+                    user,
+                    section,
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+            );
 
             if ( components != null )
             {
@@ -59,22 +90,31 @@ public class MessageBuilder
         {
             component.setClickEvent( new ClickEvent(
                     ClickEvent.Action.valueOf( section.getString( "click.type" ) ),
-                    PlaceHolderAPI.formatMessage( user, Utils.c( format( section.getString( "click.action" ), placeholders ) ) )
+                    PlaceHolderAPI.formatMessage( user, Utils.c( format(
+                            section.getString( "click.action" ),
+                            prePlaceholderFormatter,
+                            postPlaceholderFormatter,
+                            placeholders
+                    ) ) )
             ) );
         }
 
         return component;
     }
 
-    public static List<TextComponent> buildMessage( User user, List<ISection> sections, Object... placeholders )
+    public static List<TextComponent> buildMessage( final User user, final List<ISection> sections, final Object... placeholders )
     {
-        List<TextComponent> components = Lists.newArrayList();
+        final List<TextComponent> components = Lists.newArrayList();
 
         sections.forEach( section -> components.add( buildMessage( user, section, placeholders ) ) );
         return components;
     }
 
-    private static String searchAndFormat( IConfiguration config, String str, Object... placeholders )
+    private static String searchAndFormat( final IConfiguration config,
+                                           final String str,
+                                           final Function<String, String> prePlaceholderFormatter,
+                                           final Function<String, String> postPlaceholderFormatter,
+                                           final Object... placeholders )
     {
         String text = str;
 
@@ -89,10 +129,15 @@ public class MessageBuilder
                 text = Utils.formatList( config.getStringList( str ), System.lineSeparator() );
             }
         }
-        return format( text, placeholders );
+        return format( text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
     }
 
-    private static BaseComponent[] searchAndFormat( final User user, IConfiguration config, String str, Object... placeholders )
+    private static BaseComponent[] searchAndFormat( final User user,
+                                                    final IConfiguration config,
+                                                    final String str,
+                                                    final Function<String, String> prePlaceholderFormatter,
+                                                    final Function<String, String> postPlaceholderFormatter,
+                                                    final Object... placeholders )
     {
         if ( config.exists( str ) )
         {
@@ -100,12 +145,12 @@ public class MessageBuilder
             {
                 return Utils.format(
                         user,
-                        format( config.getString( str ), placeholders )
+                        format( config.getString( str ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
                 );
             }
             else if ( config.isList( str ) )
             {
-                final List<String> list = format( config.getStringList( str ), placeholders );
+                final List<String> list = format( config.getStringList( str ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
 
                 return Utils.format( user, list );
             }
@@ -113,7 +158,7 @@ public class MessageBuilder
 
         return Utils.format(
                 user,
-                format( str, placeholders )
+                format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
         );
     }
 
@@ -129,29 +174,55 @@ public class MessageBuilder
                 .replace( "\n", newLine );
     }
 
-    private static List<String> format( final List<String> list, Object... placeholders )
+    private static List<String> format( final List<String> list,
+                                        final Function<String, String> prePlaceholderFormatter,
+                                        final Function<String, String> postPlaceholderFormatter,
+                                        final Object... placeholders )
     {
-        return list.stream().map( str -> format( str, placeholders ) ).collect( Collectors.toList() );
+        return list.stream()
+                .map( str -> format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders ) )
+                .collect( Collectors.toList() );
     }
 
-    private static String format( String str, final Object... placeholders )
+    private static String format( String str,
+                                  final Function<String, String> prePlaceholderFormatter,
+                                  final Function<String, String> postPlaceholderFormatter,
+                                  final Object... placeholders )
     {
+        if ( prePlaceholderFormatter != null )
+        {
+            str = prePlaceholderFormatter.apply( str );
+        }
         str = formatLine( str );
 
         for ( int i = 0; i < placeholders.length - 1; i += 2 )
         {
             str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
+
+        if ( postPlaceholderFormatter != null )
+        {
+            str = postPlaceholderFormatter.apply( str );
+        }
         return str;
     }
 
-    private static BaseComponent[] searchHoverMessageAndFormat( final User user, final ISection section, final Object... placeholders )
+    private static BaseComponent[] searchHoverMessageAndFormat( final User user,
+                                                                final ISection section,
+                                                                final Function<String, String> prePlaceholderFormatter,
+                                                                final Function<String, String> postPlaceholderFormatter,
+                                                                final Object... placeholders )
     {
         if ( section.isList( "hover" ) )
         {
             return Utils.format(
                     user,
-                    format( section.getStringList( "hover" ), placeholders )
+                    format(
+                            section.getStringList( "hover" ),
+                            prePlaceholderFormatter,
+                            postPlaceholderFormatter,
+                            placeholders
+                    )
             );
         }
         else
@@ -160,7 +231,14 @@ public class MessageBuilder
             {
                 return null;
             }
-            return searchAndFormat( user, user.getLanguageConfig(), section.getString( "hover" ), placeholders );
+            return searchAndFormat(
+                    user,
+                    user.getLanguageConfig(),
+                    section.getString( "hover" ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+            );
         }
     }
 }

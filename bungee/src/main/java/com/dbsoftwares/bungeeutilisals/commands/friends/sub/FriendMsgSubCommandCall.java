@@ -64,22 +64,23 @@ public class FriendMsgSubCommandCall implements CommandCall
                 user.getStorage().setData( "FRIEND_MSG_LAST_USER", target.getName() );
                 target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
 
-                {
-                    String msgMessage = target.buildLangMessage( "friends.msg.format.receive" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{sender}", user.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
 
-                    target.sendRawMessage( msgMessage );
-                }
-                {
-                    String msgMessage = user.buildLangMessage( "friends.msg.format.send" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{receiver}", target.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    user.sendRawMessage( msgMessage );
-                }
+                target.sendLangMessage(
+                        "friends.msg.format.receive",
+                        false,
+                        Utils::c,
+                        null,
+                        "{sender}", user.getName(),
+                        "{message}", message
+                );
+                user.sendLangMessage(
+                        "friends.msg.format.send",
+                        false,
+                        Utils::c,
+                        null,
+                        "{receiver}", target.getName(),
+                        "{message}", message
+                );
             }
             else
             {

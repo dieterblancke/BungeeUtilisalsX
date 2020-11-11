@@ -35,6 +35,7 @@ import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Function;
 
 public interface User
 {
@@ -115,6 +116,18 @@ public interface User
      * @param path The path to the message in the language file.
      */
     void sendLangMessage( String path );
+
+    /**
+     * Searches a message in the user's language configuration and sends that message.
+     * If the formatter functions are given, they can be used to manipulate the string.
+     *
+     * @param path                     The path to the message in the language file.
+     * @param prefix                   Should a prefix be added in front of the message or not?
+     * @param prePlaceholderFormatter  This string formatter can be used to manipulate the string before placeholder replacement.
+     * @param postPlaceholderFormatter This string formatter can be used to manipulate the string after placeholder replacement.
+     * @param placeholders             The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
+     */
+    void sendLangMessage( String path, boolean prefix, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders );
 
     /**
      * Searches a message in the user's language configuration and sends that message formatted with placeholders.
@@ -286,6 +299,17 @@ public interface User
      * @return A language message with given placeholders replaced.
      */
     String buildLangMessage( String path, Object... placeholders );
+
+    /**
+     * Formats a language message from the given path.
+     *
+     * @param path                     The language file path to be used.
+     * @param prePlaceholderFormatter  This string formatter can be used to manipulate the string before placeholder replacement.
+     * @param postPlaceholderFormatter This string formatter can be used to manipulate the string after placeholder replacement.
+     * @param placeholders             The placeholders to be replaced.
+     * @return A language message with given placeholders replaced.
+     */
+    String buildLangMessage( String path, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders );
 
     /**
      * @return a list of the user's Friends

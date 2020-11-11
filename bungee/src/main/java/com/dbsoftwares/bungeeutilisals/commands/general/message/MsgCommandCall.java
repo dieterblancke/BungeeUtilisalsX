@@ -77,22 +77,22 @@ public class MsgCommandCall implements CommandCall
                 user.getStorage().setData( "MSG_LAST_USER", target.getName() );
                 target.getStorage().setData( "MSG_LAST_USER", user.getName() );
 
-                {
-                    String msgMessage = target.buildLangMessage( "general-commands.msg.format.receive" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{sender}", user.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    target.sendRawMessage( msgMessage );
-                }
-                {
-                    String msgMessage = user.buildLangMessage( "general-commands.msg.format.send" );
-                    msgMessage = Utils.c( msgMessage );
-                    msgMessage = msgMessage.replace( "{receiver}", target.getName() );
-                    msgMessage = msgMessage.replace( "{message}", message );
-
-                    user.sendRawMessage( msgMessage );
-                }
+                target.sendLangMessage(
+                        "general-commands.msg.format.receive",
+                        false,
+                        Utils::c,
+                        null,
+                        "{sender}", user.getName(),
+                        "{message}", message
+                );
+                user.sendLangMessage(
+                        "general-commands.msg.format.send",
+                        false,
+                        Utils::c,
+                        null,
+                        "{receiver}", target.getName(),
+                        "{message}", message
+                );
 
                 BUCore.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
             }
