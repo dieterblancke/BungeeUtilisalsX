@@ -91,7 +91,7 @@ public class Utils
         {
             return message;
         }
-        final Matcher matcher = HEX_PATTERN.matcher( message );
+        Matcher matcher = HEX_PATTERN.matcher( message );
         while ( matcher.find() )
         {
             final ChatColor hexColor = ChatColor.of( matcher.group().substring( 1, matcher.group().length() - 1 ) );
@@ -99,6 +99,7 @@ public class Utils
             final String after = message.substring( matcher.end() );
 
             message = before + hexColor + after;
+            matcher = HEX_PATTERN.matcher( message );
         }
         message = colorGradients( message );
         return message;
