@@ -1,11 +1,55 @@
 package com.dbsoftwares.bungeeutilisals.api.user.interfaces;
 
 import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.Collection;
 import java.util.function.Function;
 
-public interface HasPlaceholders
+public interface CanReceiveMessages
 {
+
+    default boolean isEmpty( final BaseComponent component )
+    {
+        if ( !( component instanceof TextComponent ) || !( (TextComponent) component ).getText().isEmpty() )
+        {
+            return false;
+        }
+        return this.isEmpty( component.getExtra() );
+    }
+
+    default boolean isEmpty( final BaseComponent[] components )
+    {
+        if ( components == null )
+        {
+            return true;
+        }
+        for ( BaseComponent component : components )
+        {
+            if ( !isEmpty( component ) )
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    default boolean isEmpty( final Collection<BaseComponent> components )
+    {
+        if ( components == null )
+        {
+            return true;
+        }
+        for ( BaseComponent component : components )
+        {
+            if ( !isEmpty( component ) )
+            {
+                return false;
+            }
+        }
+        return true;
+    }
 
     default String replacePlaceHolders( String message,
                                         final Function<String, String> prePlaceholderFormatter,

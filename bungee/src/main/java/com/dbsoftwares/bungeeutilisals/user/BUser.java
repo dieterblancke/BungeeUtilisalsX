@@ -33,7 +33,7 @@ import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisals.api.user.Location;
 import com.dbsoftwares.bungeeutilisals.api.user.UserCooldowns;
 import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.HasPlaceholders;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.CanReceiveMessages;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.UserUtils;
@@ -63,7 +63,7 @@ import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class BUser implements User, HasPlaceholders
+public class BUser implements User, CanReceiveMessages
 {
 
     private ProxiedPlayer parent;
@@ -222,7 +222,8 @@ public class BUser implements User, HasPlaceholders
     @Override
     public void sendRawMessage( String message )
     {
-        if (message.isEmpty()) {
+        if ( message.isEmpty() )
+        {
             return;
         }
         sendMessage( TextComponent.fromLegacyText( PlaceHolderAPI.formatMessage( this, message ) ) );
@@ -237,7 +238,8 @@ public class BUser implements User, HasPlaceholders
     @Override
     public void sendMessage( String message )
     {
-        if (message.isEmpty()) {
+        if ( message.isEmpty() )
+        {
             return;
         }
         sendMessage( getLanguageConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
@@ -317,7 +319,7 @@ public class BUser implements User, HasPlaceholders
     @Override
     public void sendMessage( BaseComponent component )
     {
-        if ( component instanceof TextComponent && ( (TextComponent) component ).getText().isEmpty() )
+        if ( this.isEmpty( component ) )
         {
             return;
         }
@@ -327,21 +329,11 @@ public class BUser implements User, HasPlaceholders
     @Override
     public void sendMessage( BaseComponent[] components )
     {
-        boolean shouldSkip = true;
-
-        for ( BaseComponent component : components )
+        if ( this.isEmpty( components ) )
         {
-            if ( !( component instanceof TextComponent ) || !( (TextComponent) component ).getText().isEmpty() )
-            {
-                shouldSkip = false;
-                break;
-            }
+            return;
         }
-
-        if ( !shouldSkip )
-        {
-            getParent().sendMessage( components );
-        }
+        getParent().sendMessage( components );
     }
 
     @Override

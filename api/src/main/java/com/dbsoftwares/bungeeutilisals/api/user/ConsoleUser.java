@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisals.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisals.api.language.Language;
 import com.dbsoftwares.bungeeutilisals.api.storage.dao.MessageQueue;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.HasPlaceholders;
+import com.dbsoftwares.bungeeutilisals.api.user.interfaces.CanReceiveMessages;
 import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-public class ConsoleUser implements User, HasPlaceholders
+public class ConsoleUser implements User, CanReceiveMessages
 {
 
     private static final String NOT_SUPPORTED = "Not supported yet.";
@@ -213,7 +213,7 @@ public class ConsoleUser implements User, HasPlaceholders
     @Override
     public void sendMessage( BaseComponent component )
     {
-        if ( component instanceof TextComponent && ( (TextComponent) component ).getText().isEmpty() )
+        if ( this.isEmpty( component ) )
         {
             return;
         }
@@ -223,21 +223,11 @@ public class ConsoleUser implements User, HasPlaceholders
     @Override
     public void sendMessage( BaseComponent[] components )
     {
-        boolean shouldSkip = true;
-
-        for ( BaseComponent component : components )
+        if ( this.isEmpty( components ) )
         {
-            if ( !( component instanceof TextComponent ) || !( (TextComponent) component ).getText().isEmpty() )
-            {
-                shouldSkip = false;
-                break;
-            }
+            return;
         }
-
-        if ( !shouldSkip )
-        {
-            sender().sendMessage( components );
-        }
+        sender().sendMessage( components );
     }
 
     @Override

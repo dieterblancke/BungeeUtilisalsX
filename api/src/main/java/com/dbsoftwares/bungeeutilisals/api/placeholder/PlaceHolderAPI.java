@@ -63,6 +63,10 @@ public class PlaceHolderAPI
 
     public static String formatMessage( String message )
     {
+        if ( message == null )
+        {
+            return "";
+        }
         try
         {
             for ( PlaceHolder placeholder : placeholders )

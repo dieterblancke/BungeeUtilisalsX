@@ -78,7 +78,7 @@ public class Utils
     {
         if ( message == null )
         {
-            return message;
+            return "";
         }
         message = colorHex( message );
 
