@@ -20,11 +20,11 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendData;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendData;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
 import com.google.common.collect.Lists;
 
 import java.util.List;

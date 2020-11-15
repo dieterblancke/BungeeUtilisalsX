@@ -19,7 +19,7 @@
 package com.dbsoftwares.bungeeutilisals.storage.sql;
 
 import com.dbsoftwares.bungeeutilisals.TestUtils;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.AbstractStorageManager;
 
 import java.sql.SQLException;
 

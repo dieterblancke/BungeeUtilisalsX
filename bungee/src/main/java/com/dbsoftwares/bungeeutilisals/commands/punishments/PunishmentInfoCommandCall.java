@@ -20,17 +20,17 @@ package com.dbsoftwares.bungeeutilisals.commands.punishments;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.PunishmentDao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.PunishmentDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
 
 import java.util.List;
 
-import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static com.dbsoftwares.bungeeutilisalsx.common.storage.dao.punishments.BansDao.useServerPunishments;
 
 public class PunishmentInfoCommandCall implements CommandCall
 {

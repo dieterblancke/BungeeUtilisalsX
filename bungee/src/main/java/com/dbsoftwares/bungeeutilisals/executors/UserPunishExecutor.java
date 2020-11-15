@@ -19,12 +19,12 @@
 package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishmentFinishEvent;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentAction;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentAction;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.utils.ReportUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;

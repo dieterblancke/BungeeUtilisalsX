@@ -1,9 +1,9 @@
 package com.dbsoftwares.bungeeutilisals.utils;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.other.Report;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.util.List;

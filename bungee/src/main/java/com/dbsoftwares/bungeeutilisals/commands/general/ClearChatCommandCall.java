@@ -22,9 +22,9 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCompleter;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 

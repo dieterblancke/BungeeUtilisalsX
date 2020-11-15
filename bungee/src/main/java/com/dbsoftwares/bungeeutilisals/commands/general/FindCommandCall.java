@@ -20,8 +20,8 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.StaffUtils;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.config.ServerInfo;
 

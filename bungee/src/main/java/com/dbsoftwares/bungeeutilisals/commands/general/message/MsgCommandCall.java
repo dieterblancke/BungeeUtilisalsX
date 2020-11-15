@@ -20,10 +20,10 @@ package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPrivateMessageEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.StaffUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
 import com.dbsoftwares.bungeeutilisals.user.BUser;
 
 import java.util.List;

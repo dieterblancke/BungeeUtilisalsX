@@ -19,8 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.AbstractEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.event.*;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.AbstractEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

@@ -20,9 +20,9 @@ package com.dbsoftwares.bungeeutilisals.announcers.announcements;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;

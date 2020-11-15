@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.sql.punishment;
 
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.punishments.BansDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.StorageUtils;
 import com.dbsoftwares.bungeeutilisals.storage.sql.SQLTest;
 import com.dbsoftwares.bungeeutilisals.storage.sql.SQLUtils;

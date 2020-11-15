@@ -22,9 +22,9 @@ import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCompleter;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.UserDao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.UserDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
 

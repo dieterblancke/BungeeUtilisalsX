@@ -20,13 +20,13 @@ package com.dbsoftwares.bungeeutilisals.commands.report.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.ReportsDao;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.PageUtils.PageNotFoundException;
-import com.dbsoftwares.bungeeutilisals.api.utils.other.Report;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.ReportsDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.PageUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.PageUtils.PageNotFoundException;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.other.Report;
 
 import java.util.List;
 

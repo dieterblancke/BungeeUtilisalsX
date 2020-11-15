@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals.api;
 
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.gson.Gson;
 import lombok.Getter;

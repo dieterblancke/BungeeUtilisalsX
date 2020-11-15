@@ -21,11 +21,11 @@ package com.dbsoftwares.bungeeutilisals.executors;
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 
 public class StaffNetworkExecutor implements EventExecutor
 {

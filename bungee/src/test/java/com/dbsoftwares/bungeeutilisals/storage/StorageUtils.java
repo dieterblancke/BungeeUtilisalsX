@@ -19,11 +19,11 @@
 package com.dbsoftwares.bungeeutilisals.storage;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.TimeUnit;
 import org.apache.commons.lang3.RandomStringUtils;
 
 import java.util.Date;

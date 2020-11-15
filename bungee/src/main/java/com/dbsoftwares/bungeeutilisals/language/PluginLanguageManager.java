@@ -20,7 +20,7 @@ package com.dbsoftwares.bungeeutilisals.language;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.io.ByteStreams;

@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisals.utils.APIHandler;
 
 public class TestUtils

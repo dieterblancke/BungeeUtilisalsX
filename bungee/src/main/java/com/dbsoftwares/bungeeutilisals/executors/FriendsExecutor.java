@@ -20,12 +20,12 @@ package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.friends.FriendRequest;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendRequest;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.plugin.Listener;

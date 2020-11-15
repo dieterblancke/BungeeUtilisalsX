@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.language;
 
-import com.dbsoftwares.bungeeutilisals.api.language.ILanguageManager;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.language.LanguageIntegration;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.ILanguageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.LanguageIntegration;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.CommandSender;

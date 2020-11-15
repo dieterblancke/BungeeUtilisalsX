@@ -19,13 +19,13 @@
 package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.motd.ConditionHandler;
-import com.dbsoftwares.bungeeutilisals.api.motd.MotdData;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.Version;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.motd.ConditionHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.motd.MotdData;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Version;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.ServerPing;

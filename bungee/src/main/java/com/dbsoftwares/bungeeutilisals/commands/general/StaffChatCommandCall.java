@@ -19,13 +19,13 @@
 package com.dbsoftwares.bungeeutilisals.commands.general;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bridge.BridgeType;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserAction;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.types.UserActionType;
-import com.dbsoftwares.bungeeutilisals.bridging.bungee.util.BridgedUserMessage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserAction;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserActionType;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.util.BridgedUserMessage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -33,7 +33,6 @@ import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 

@@ -6,21 +6,6 @@ no-number: '&ePlease enter a valid number!'
 date-format: 'dd-MM-yyyy kk:mm:ss'
 not-for-console: '&eThis action is currently only supported for usage by players.'
 
-general:
-  startup-message:
-    - ''
-    - '&b<-----------------------------------> &e&lBungeeUtilisalsX &b<----------------------------------->'
-    - ''
-    - '&aBungeeUtilisalsX successfully started up.'
-    - '&aThank you &e{buyer_name} &afor buying BungeeUtilisalsX! We truly appreciate your support.'
-    - ''
-    - '&6If you encounter any issues, do not hesitate to contact us by:'
-    - '&e- PM''ing &bdidjee2 &eon SpigotMC or MC-Market'
-    - '&e- contacting us on our Discord: &bhttps://discord.dbsoftwares.eu'
-    - '&e- creating an issue at our Git repository: &bhttps://git.dbsoftwares.eu/dbsoftwares/BungeeUtilisalsX'
-    - ''
-    - '&b<-----------------------------------> &e&lBungeeUtilisalsX &b<----------------------------------->'
-
 updater:
   update-found:
     - '&eAn update has been found for &b{name}&e.'

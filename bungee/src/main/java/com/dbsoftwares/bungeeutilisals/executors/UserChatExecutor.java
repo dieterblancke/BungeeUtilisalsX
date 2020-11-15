@@ -20,13 +20,13 @@ package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Priority;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.ProxyServer;
 

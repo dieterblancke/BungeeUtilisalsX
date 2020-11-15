@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.sql;
 
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.StorageUtils;
 import com.google.common.collect.Maps;
 import org.apache.commons.compress.utils.Lists;

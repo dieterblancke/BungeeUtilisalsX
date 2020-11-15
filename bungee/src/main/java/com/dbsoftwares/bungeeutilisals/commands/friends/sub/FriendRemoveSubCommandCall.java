@@ -20,9 +20,9 @@ package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
 import java.util.Optional;

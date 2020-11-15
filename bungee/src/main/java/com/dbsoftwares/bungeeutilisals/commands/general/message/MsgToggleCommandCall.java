@@ -1,8 +1,8 @@
 package com.dbsoftwares.bungeeutilisals.commands.general.message;
 
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.user.ConsoleUser;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.ConsoleUser;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.user.BUser;
 
 import java.util.List;

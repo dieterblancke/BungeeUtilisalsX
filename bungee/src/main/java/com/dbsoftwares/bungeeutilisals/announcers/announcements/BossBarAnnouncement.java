@@ -20,11 +20,11 @@ package com.dbsoftwares.bungeeutilisals.announcers.announcements;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.announcer.Announcement;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
-import com.dbsoftwares.bungeeutilisals.api.utils.TimeUnit;
-import com.dbsoftwares.bungeeutilisals.api.utils.Utils;
-import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
 import com.dbsoftwares.bungeeutilisals.bossbar.BossBarMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;

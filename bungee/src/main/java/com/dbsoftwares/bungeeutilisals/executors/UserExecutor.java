@@ -20,14 +20,14 @@ package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffRankData;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffJoinEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.network.NetworkStaffLeaveEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 
 import java.util.Comparator;
 

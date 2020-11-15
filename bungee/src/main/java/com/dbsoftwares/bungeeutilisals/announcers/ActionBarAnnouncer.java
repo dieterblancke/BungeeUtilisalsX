@@ -20,10 +20,10 @@ package com.dbsoftwares.bungeeutilisals.announcers;
 
 import com.dbsoftwares.bungeeutilisals.announcers.announcements.ActionBarAnnouncement;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.announcer.AnnouncementType;
-import com.dbsoftwares.bungeeutilisals.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.api.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
+import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 
 public class ActionBarAnnouncer extends Announcer

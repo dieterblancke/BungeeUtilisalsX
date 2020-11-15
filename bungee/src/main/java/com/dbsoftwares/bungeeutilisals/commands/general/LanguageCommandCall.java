@@ -21,8 +21,8 @@ package com.dbsoftwares.bungeeutilisals.commands.general;
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisals.api.command.TabCall;
-import com.dbsoftwares.bungeeutilisals.api.language.Language;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
 import java.util.Optional;

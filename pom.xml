@@ -23,15 +23,16 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dbsoftwares.bungeeutilisals</groupId>
+    <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
     <artifactId>BungeeUtilisalsX</artifactId>
     <packaging>pom</packaging>
-    <version>1.1.2</version>
+    <version>1.2.0</version>
 
     <modules>
         <module>api</module>
         <module>bungee</module>
-        <module>updater</module>
+        <module>common</module>
+        <module>newbungee</module>
     </modules>
 
     <developers>
@@ -65,33 +66,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-api</artifactId>
-            <version>1.16-R0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>net.md-5</groupId>
-            <artifactId>bungeecord-protocol</artifactId>
-            <version>1.16-R0.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.dbsoftwares.configuration</groupId>
-            <artifactId>ConfigurationAPI</artifactId>
-            <version>1.3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-simple</artifactId>
-            <version>1.7.30</version>
-        </dependency>
-        <dependency>
             <groupId>org.mongodb</groupId>
             <artifactId>mongo-java-driver</artifactId>
             <version>3.12.1</version>
@@ -107,12 +81,6 @@
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>1.18.10</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.imaginarycode.minecraft</groupId>
-            <artifactId>RedisBungee</artifactId>
-            <version>0.3.8-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

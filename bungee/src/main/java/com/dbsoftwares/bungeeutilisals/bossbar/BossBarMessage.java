@@ -18,8 +18,8 @@
 
 package com.dbsoftwares.bungeeutilisals.bossbar;
 
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

@@ -20,9 +20,9 @@ package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
 import com.dbsoftwares.bungeeutilisals.api.BUAPI;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.ChatEvent;
 import net.md_5.bungee.api.plugin.Listener;

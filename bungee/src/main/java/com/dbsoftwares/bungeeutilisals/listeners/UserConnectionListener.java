@@ -19,8 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.listeners;
 
 import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserPreLoadEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserPreLoadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisals.user.BUser;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;

@@ -19,12 +19,12 @@
 package com.dbsoftwares.bungeeutilisals.commands.punishments.removal;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
-import com.dbsoftwares.bungeeutilisals.api.punishments.IPunishmentExecutor;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.PunishmentCommand;
 
 import java.util.List;

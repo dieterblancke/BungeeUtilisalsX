@@ -19,21 +19,21 @@
 package com.dbsoftwares.bungeeutilisals.executors;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Priority;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserChatEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserCommandEvent;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentInfo;
-import com.dbsoftwares.bungeeutilisals.api.punishments.PunishmentType;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.MutesDao;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Priority;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.punishments.MutesDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import static com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static com.dbsoftwares.bungeeutilisalsx.common.storage.dao.punishments.BansDao.useServerPunishments;
 
 public class MuteCheckExecutor implements EventExecutor
 {

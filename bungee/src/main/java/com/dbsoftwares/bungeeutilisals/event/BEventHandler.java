@@ -19,8 +19,8 @@
 package com.dbsoftwares.bungeeutilisals.event;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.event.event.BUEvent;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.BUEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

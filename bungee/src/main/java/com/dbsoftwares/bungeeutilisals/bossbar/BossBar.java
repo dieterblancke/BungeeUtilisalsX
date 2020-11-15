@@ -19,16 +19,16 @@
 package com.dbsoftwares.bungeeutilisals.bossbar;
 
 import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarColor;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.BossBarAction;
-import com.dbsoftwares.bungeeutilisals.api.bossbar.IBossBar;
-import com.dbsoftwares.bungeeutilisals.api.event.event.Event;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventExecutor;
-import com.dbsoftwares.bungeeutilisals.api.event.event.EventHandler;
-import com.dbsoftwares.bungeeutilisals.api.event.events.user.UserUnloadEvent;
-import com.dbsoftwares.bungeeutilisals.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisals.api.utils.Version;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarColor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarStyle;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BossBarAction;
+import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.IBossBar;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.utils.Version;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.chat.BaseComponent;

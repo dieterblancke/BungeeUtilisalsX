@@ -18,10 +18,10 @@
 
 package com.dbsoftwares.bungeeutilisals.storage.mongo.punishment;
 
-import com.dbsoftwares.bungeeutilisals.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisals.api.storage.AbstractStorageManager;
-import com.dbsoftwares.bungeeutilisals.api.storage.dao.punishments.KickAndWarnDao;
-import com.dbsoftwares.bungeeutilisals.api.user.UserStorage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.AbstractStorageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.punishments.KickAndWarnDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisals.storage.StorageUtils;
 import com.dbsoftwares.bungeeutilisals.storage.mongo.MongoUtils;
 import com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager;
