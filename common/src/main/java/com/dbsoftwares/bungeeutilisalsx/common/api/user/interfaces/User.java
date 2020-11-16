@@ -256,18 +256,18 @@ public interface User
     boolean isInStaffChat();
 
     /**
-     * Sends the user to a server.
-     *
-     * @param proxyServer the server to send the user to.
-     */
-    void sendToServer( IProxyServer proxyServer );
-
-    /**
      * Changes staffchat state.
      *
      * @param staffchat true if staffchat should be enabled, false if it should be disabled.
      */
     void setInStaffChat( boolean staffchat );
+
+    /**
+     * Sends the user to a server.
+     *
+     * @param proxyServer the server to send the user to.
+     */
+    void sendToServer( IProxyServer proxyServer );
 
     /**
      * @return the version the user is playing on
@@ -332,16 +332,34 @@ public interface User
      *
      * @param actionbar the message to be displayed in the action bar.
      */
-    void sendActionBar(String actionbar);
+    void sendActionBar( String actionbar );
 
     /**
      * Sends an title to the user.
      *
-     * @param title the title to be sent
+     * @param title    the title to be sent
      * @param subtitle the subtitle to be sent
-     * @param fadein the time the title should fade in
-     * @param stay the time the title should stay
-     * @param fadeout the time the title should fade out
+     * @param fadein   the time the title should fade in
+     * @param stay     the time the title should stay
+     * @param fadeout  the time the title should fade out
      */
-    void sendTitle(String title, String subtitle, int fadein, int stay, int fadeout);
+    void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout );
+
+    /**
+     * @return true if user is not receiving pm's, false if the user does allow pm's
+     */
+    boolean isMsgToggled();
+
+    /**
+     * Changes the msgtoggle status.
+     *
+     * @param status true if toggled, false if not
+     */
+    void setMsgToggled( boolean status );
+
+    /**
+     * Sends a packet to this user.
+     * @param packet the packet to be sent.
+     */
+    void sendPacket(final Object packet);
 }

@@ -1,5 +1,9 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee;
 
+import com.dbsoftwares.bungeeutilisalsx.bungee.bossbar.BossBar;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserAction;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserActionType;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisalsx.bungee.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
@@ -299,19 +303,26 @@ public class BuXApi implements IBuXApi
     @Override
     public IBossBar createBossBar()
     {
-        return null;
+        return new BossBar();
     }
 
     @Override
-    public IBossBar createBossBar( BarColor color, BarStyle style, float progress, BaseComponent[] message )
+    public IBossBar createBossBar( final BarColor color,
+                                   final BarStyle style,
+                                   final float progress,
+                                   final BaseComponent[] message )
     {
-        return null;
+        return createBossBar( UUID.randomUUID(), color, style, progress, message );
     }
 
     @Override
-    public IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message )
+    public IBossBar createBossBar( final UUID uuid,
+                                   final BarColor color,
+                                   final BarStyle style,
+                                   final float progress,
+                                   final BaseComponent[] message )
     {
-        return null;
+        return new BossBar( uuid, color, style, progress, message );
     }
 
     @Override

@@ -23,14 +23,13 @@ import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.*;
-import com.dbsoftwares.bungeeutilisals.commands.general.domains.DomainsCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.IgnoreCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.MsgToggleCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.message.ReplyCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.spy.CommandSpyCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.general.spy.SocialSpyCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.bungee.commands.general.domains.DomainsCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.ReplyCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.*;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommandCall;
@@ -58,25 +57,7 @@ public class CommandManager
 
     private void loadGeneralCommands()
     {
-        registerGeneralCommand( "socialspy", new SocialSpyCommandCall() );
-        registerGeneralCommand( "commandspy", new CommandSpyCommandCall() );
         registerGeneralCommand( "report", new ReportCommandCall() );
-        registerGeneralCommand( "domains", new DomainsCommandCall() );
-        registerGeneralCommand( "helpop", new HelpOpCommandCall() );
-        registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
-        registerGeneralCommand( "staff", new StaffCommandCall() );
-        registerGeneralCommand( "find", new FindCommandCall() );
-        registerGeneralCommand( "ping", new PingCommandCall() );
-        registerGeneralCommand( "language", new LanguageCommandCall() );
-        registerGeneralCommand( "glag", new GLagCommandCall() );
-        registerGeneralCommand( "clearchat", new ClearChatCommandCall() );
-        registerGeneralCommand( "chatlock", new ChatLockCommandCall() );
-        registerGeneralCommand( "glist", new GListCommandCall() );
-        registerGeneralCommand( "msg", new MsgCommandCall() );
-        registerGeneralCommand( "reply", new ReplyCommandCall() );
-        registerGeneralCommand( "ignore", new IgnoreCommandCall() );
-        registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
-        registerGeneralCommand( "shout", new ShoutCommandCall() );
 
         registerCommand(
                 "friends",

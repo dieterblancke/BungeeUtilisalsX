@@ -25,9 +25,13 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.CustomCommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.general.AnnounceCommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.general.ServerCommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.general.SlashServerCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.*;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.ReplyCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -58,6 +62,21 @@ public abstract class CommandManager
         registerGeneralCommand( "bungeeutilisals", new PluginCommandCall() );
         registerGeneralCommand( "server", new ServerCommandCall() );
         registerGeneralCommand( "announce", new AnnounceCommandCall() );
+        registerGeneralCommand( "find", new FindCommandCall() );
+        registerGeneralCommand( "glag", new GLagCommandCall() );
+        registerGeneralCommand( "clearchat", new ClearChatCommandCall() );
+        registerGeneralCommand( "helpop", new HelpOpCommandCall() );
+        registerGeneralCommand( "staff", new StaffCommandCall() );
+        registerGeneralCommand( "ping", new PingCommandCall() );
+        registerGeneralCommand( "language", new LanguageCommandCall() );
+        registerGeneralCommand( "glist", new GListCommandCall() );
+        registerGeneralCommand( "shout", new ShoutCommandCall() );
+        registerGeneralCommand( "socialspy", new SocialSpyCommandCall() );
+        registerGeneralCommand( "commandspy", new CommandSpyCommandCall() );
+        registerGeneralCommand( "msg", new MsgCommandCall() );
+        registerGeneralCommand( "reply", new ReplyCommandCall() );
+        registerGeneralCommand( "ignore", new IgnoreCommandCall() );
+        registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
         // TODO
 
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )

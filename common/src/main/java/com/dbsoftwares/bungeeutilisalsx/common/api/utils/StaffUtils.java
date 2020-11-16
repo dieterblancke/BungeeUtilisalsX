@@ -4,6 +4,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.List;
 
 public class StaffUtils
@@ -13,7 +14,7 @@ public class StaffUtils
     {
     }
 
-    public static List<String> filterPlayerList( final List<String> players )
+    public static List<String> filterPlayerList( final Collection<String> players )
     {
         final List<String> temp = Lists.newArrayList();
 

@@ -171,7 +171,10 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         {
             for ( User user : BuX.getApi().getUsers() )
             {
-                user.sendActionBar( Utils.format( p, message.replace( "%nl%", "" ).replace( "%sub%", "" ) ) );
+                user.sendActionBar( Utils.formatString(
+                        user,
+                        message.replace( "%nl%", "" ).replace( "%sub%", "" )
+                ) );
             }
         }
     }

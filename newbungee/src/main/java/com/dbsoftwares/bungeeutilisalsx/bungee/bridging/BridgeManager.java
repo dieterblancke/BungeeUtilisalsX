@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.impl.redis.RedisBridge;
-import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.handlers.BungeeBridgeResponseHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
@@ -36,7 +36,7 @@ public class BridgeManager implements IBridgeManager
 {
 
     private RedisBridge redisBridge;
-    private Set<EventHandler<BridgeResponseEvent>> eventHandlers;
+    private Set<IEventHandler<BridgeResponseEvent>> eventHandlers;
 
     public BridgeManager()
     {
@@ -108,7 +108,7 @@ public class BridgeManager implements IBridgeManager
         }
         if ( eventHandlers != null )
         {
-            eventHandlers.forEach( EventHandler::unregister );
+            eventHandlers.forEach( IEventHandler::unregister );
             eventHandlers.clear();
         }
     }

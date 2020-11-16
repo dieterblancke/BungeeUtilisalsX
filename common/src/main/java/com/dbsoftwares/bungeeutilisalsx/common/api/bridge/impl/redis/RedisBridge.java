@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.Bridge;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.BridgeType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.message.BridgedMessage;
-import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -174,7 +174,7 @@ public class RedisBridge extends Bridge
 
         if ( eventHandlers != null )
         {
-            eventHandlers.forEach( EventHandler::unregister );
+            eventHandlers.forEach( IEventHandler::unregister );
             eventHandlers.clear();
         }
     }

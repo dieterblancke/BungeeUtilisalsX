@@ -34,7 +34,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.player.IPlayerUtils;
-import com.dbsoftwares.bungeeutilisals.language.MockLanguageManager;
+import com.dbsoftwares.bungeeutilisalsx.common.language.MockLanguageManager;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

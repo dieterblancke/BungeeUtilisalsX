@@ -2,6 +2,7 @@ package com.dbsoftwares.bungeeutilisalsx.bungee;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.BridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.bungee.commands.BungeeCommandManager;
+import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
@@ -17,6 +18,8 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import com.dbsoftwares.bungeeutilisalsx.common.event.EventLoader;
+import com.dbsoftwares.bungeeutilisalsx.common.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
 import com.dbsoftwares.configuration.api.FileStorageType;
@@ -45,12 +48,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         final IBridgeManager bridgeManager = new BridgeManager();
         bridgeManager.setup();
 
-        // TODO
         return new BuXApi(
                 bridgeManager,
-                null,
-                null,
-                null,
+                new PluginLanguageManager(),
+                new EventLoader(),
+                new HubBalancer(),
                 new PunishmentExecutor(),
                 bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils(),
                 new ChatManager()
@@ -75,7 +77,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     protected void registerLanguages()
     {
         this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
-        this.getApi().getLanguageManager().loadLanguages( this.getName() );
+        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
     }
 
     @Override

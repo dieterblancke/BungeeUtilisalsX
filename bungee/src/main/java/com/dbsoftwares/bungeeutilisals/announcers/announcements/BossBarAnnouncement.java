@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisals.bossbar.BossBarMessage;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bossbar.BossBarMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.EqualsAndHashCode;

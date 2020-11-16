@@ -28,7 +28,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisals.bossbar.BossBarMessage;
+import com.dbsoftwares.bungeeutilisalsx.bungee.bossbar.BossBarMessage;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 

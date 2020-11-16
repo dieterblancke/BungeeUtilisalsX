@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisalsx.common;
 
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
 import com.dbsoftwares.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
@@ -299,7 +299,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
 
         scripts.forEach( Script::unload );
-        api.getEventLoader().getHandlers().forEach( EventHandler::unregister );
+        api.getEventLoader().getHandlers().forEach( IEventHandler::unregister );
         Updater.shutdownUpdaters();
     }
 }

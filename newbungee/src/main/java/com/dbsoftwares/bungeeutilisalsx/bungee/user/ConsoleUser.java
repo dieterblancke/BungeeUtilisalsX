@@ -50,13 +50,13 @@ public class ConsoleUser implements User, CanReceiveMessages
     @Override
     public void unload()
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
     public void save()
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
@@ -209,19 +209,19 @@ public class ConsoleUser implements User, CanReceiveMessages
     @Override
     public void kick( String reason )
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
     public void langKick( String path, Object... placeholders )
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
     public void forceKick( String reason )
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
@@ -269,13 +269,13 @@ public class ConsoleUser implements User, CanReceiveMessages
     @Override
     public boolean isInStaffChat()
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        return false;
     }
 
     @Override
     public void setInStaffChat( boolean staffchat )
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
@@ -374,12 +374,42 @@ public class ConsoleUser implements User, CanReceiveMessages
     @Override
     public void executeMessageQueue()
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
     public void executeCommand( final String command )
     {
         ProxyServer.getInstance().getPluginManager().dispatchCommand( ProxyServer.getInstance().getConsole(), command );
+    }
+
+    @Override
+    public void sendActionBar( String actionbar )
+    {
+        // do nothing
+    }
+
+    @Override
+    public void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout )
+    {
+        // do nothing
+    }
+
+    @Override
+    public boolean isMsgToggled()
+    {
+        return false;
+    }
+
+    @Override
+    public void setMsgToggled( boolean status )
+    {
+        // do nothing
+    }
+
+    @Override
+    public void sendPacket( final Object packet )
+    {
+        // do nothing
     }
 }

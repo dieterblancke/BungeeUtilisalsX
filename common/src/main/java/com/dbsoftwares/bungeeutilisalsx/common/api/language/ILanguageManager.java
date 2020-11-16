@@ -75,7 +75,7 @@ public interface ILanguageManager
      *
      * @param plugin The plugin of which the languages should be loaded.
      */
-    void loadLanguages( String plugin );
+    void loadLanguages( final Class<?> resourceClass, String plugin );
 
     /**
      * @param plugin The plugin of which you want to get the language config.

@@ -46,10 +46,13 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
+import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.Title;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.net.InetSocketAddress;
 import java.sql.Date;
@@ -540,9 +543,38 @@ public class BungeeUser implements User, CanReceiveMessages
     }
 
     @Override
-    public void executeCommand( String command )
+    public void executeCommand( final String command )
     {
+        ProxyServer.getInstance().getPluginManager().dispatchCommand( parent, command );
+    }
 
+    @Override
+    public void sendActionBar( final String actionbar )
+    {
+        parent.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( actionbar ) );
+    }
+
+    @Override
+    public void sendTitle( final String title, final String subtitle, final int fadein, final int stay, final int fadeout )
+    {
+        final Title bungeeTitle = ProxyServer.getInstance().createTitle();
+
+        bungeeTitle.title( Utils.format( this, title ) );
+        bungeeTitle.subTitle( Utils.format( this, subtitle ) );
+        bungeeTitle.fadeIn( fadein * 20 );
+        bungeeTitle.stay( stay * 20 );
+        bungeeTitle.fadeOut( fadeout * 20 );
+
+        parent.sendTitle( bungeeTitle );
+    }
+
+    @Override
+    public void sendPacket( final Object packet )
+    {
+        if ( packet instanceof DefinedPacket )
+        {
+            parent.unsafe().sendPacket( (DefinedPacket) packet );
+        }
     }
 
     @Override
