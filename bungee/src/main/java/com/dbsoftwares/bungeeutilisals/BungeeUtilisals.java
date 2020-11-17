@@ -18,8 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisals;
 
-import com.dbsoftwares.bungeeutilisals.announcers.*;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.*;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisals.api.data.StaffUser;
@@ -61,16 +60,8 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.plugin.Plugin;
-import org.bstats.bungeecord.Metrics;
 
-import javax.script.ScriptException;
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.StandardOpenOption;
-import java.sql.SQLException;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
 
 @Updatable(url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/")
 public class BungeeUtilisals extends Plugin
@@ -144,8 +135,5 @@ public class BungeeUtilisals extends Plugin
             loader.register( UserUnloadEvent.class, executor );
             ProxyServer.getInstance().getPluginManager().registerListener( this, executor );
         }
-
-        // Loading Announcers
-        Announcer.registerAnnouncers( ActionBarAnnouncer.class, ChatAnnouncer.class, TitleAnnouncer.class, BossBarAnnouncer.class, TabAnnouncer.class );
     }
 }

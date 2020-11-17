@@ -16,22 +16,25 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.tab;
 
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.TitleAnnouncement;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
+import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
-public class TitleAnnouncer extends Announcer
+import java.util.List;
+
+@Slf4j
+public class TabAnnouncer extends Announcer
 {
 
-    public TitleAnnouncer()
+    public TabAnnouncer()
     {
-        super( AnnouncementType.TITLE );
+        super( AnnouncementType.TAB );
     }
 
     @Override
@@ -43,19 +46,20 @@ public class TitleAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                log.warn( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
 
-            final int fadeIn = section.getInteger( "fadein" );
-            final int stay = section.getInteger( "stay" );
-            final int fadeOut = section.getInteger( "fadeout" );
             final String permission = section.getString( "permission" );
             final boolean language = section.getBoolean( "language" );
-            final String title = section.getString( "title" );
-            final String subtitle = section.getString( "subtitle" );
+            final List<String> header = section.isList( "header" )
+                    ? section.getStringList( "header" )
+                    : Lists.newArrayList( section.getString( "header" ) );
+            final List<String> footer = section.isList( "footer" )
+                    ? section.getStringList( "footer" )
+                    : Lists.newArrayList( section.getString( "footer" ) );
 
-            addAnnouncement( new TitleAnnouncement( language, title, subtitle, fadeIn, stay, fadeOut, group, permission ) );
+            addAnnouncement( new TabAnnouncement( language, header, footer, group, permission ) );
         }
     }
 }

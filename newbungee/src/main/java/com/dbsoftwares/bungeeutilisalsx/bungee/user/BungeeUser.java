@@ -551,7 +551,7 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public void sendActionBar( final String actionbar )
     {
-        parent.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( actionbar ) );
+        parent.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( this, actionbar ) );
     }
 
     @Override
@@ -575,6 +575,12 @@ public class BungeeUser implements User, CanReceiveMessages
         {
             parent.unsafe().sendPacket( (DefinedPacket) packet );
         }
+    }
+
+    @Override
+    public void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer )
+    {
+        parent.setTabHeader( header, footer );
     }
 
     @Override

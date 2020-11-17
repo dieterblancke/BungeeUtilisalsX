@@ -362,4 +362,6 @@ public interface User
      * @param packet the packet to be sent.
      */
     void sendPacket(final Object packet);
+
+    void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer );
 }

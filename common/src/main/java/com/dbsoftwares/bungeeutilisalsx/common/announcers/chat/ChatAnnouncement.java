@@ -16,20 +16,18 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers.announcements;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.chat;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -37,7 +35,7 @@ import java.util.stream.Stream;
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode( callSuper = false )
 public class ChatAnnouncement extends Announcement
 {
 
@@ -66,20 +64,19 @@ public class ChatAnnouncement extends Announcement
     {
         if ( serverGroup.isGlobal() )
         {
-            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+            send( filter( BuX.getApi().getUsers().stream() ) );
         }
         else
         {
-            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
+            serverGroup.getServers().forEach( server -> send( filter( server.getUsers().stream() ) ) );
         }
     }
 
-    private void send( Stream<ProxiedPlayer> stream )
+    private void send( Stream<User> stream )
     {
-        stream.forEach( player ->
+        stream.forEach( user ->
         {
-            IConfiguration config = BUCore.getApi().getLanguageManager()
-                    .getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), player );
+            final IConfiguration config = user.getLanguageConfig();
 
             final List<String> messageList;
             if ( languagePath != null )
@@ -96,7 +93,7 @@ public class ChatAnnouncement extends Announcement
                 {
                     message = config.getString( "prefix" ) + message;
                 }
-                player.sendMessage( Utils.format( player, message ) );
+                user.sendMessage( Utils.format( user, message ) );
             }
         } );
     }

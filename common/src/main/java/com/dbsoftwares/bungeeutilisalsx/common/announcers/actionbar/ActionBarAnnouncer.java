@@ -16,16 +16,16 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.actionbar;
 
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.ActionBarAnnouncement;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 public class ActionBarAnnouncer extends Announcer
 {
 
@@ -43,7 +43,7 @@ public class ActionBarAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                log.warn( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
 

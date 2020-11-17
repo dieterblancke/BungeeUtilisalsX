@@ -16,24 +16,22 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.title;
 
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.ChatAnnouncement;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
+import lombok.extern.slf4j.Slf4j;
 
-import java.util.List;
-
-public class ChatAnnouncer extends Announcer
+@Slf4j
+public class TitleAnnouncer extends Announcer
 {
 
-    public ChatAnnouncer()
+    public TitleAnnouncer()
     {
-        super( AnnouncementType.CHAT );
+        super( AnnouncementType.TITLE );
     }
 
     @Override
@@ -45,28 +43,19 @@ public class ChatAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().warning(
-                        "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
-                );
+                log.warn( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
 
-            final String messagesKey = "messages";
-            final boolean usePrefix = section.getBoolean( "use-prefix" );
+            final int fadeIn = section.getInteger( "fadein" );
+            final int stay = section.getInteger( "stay" );
+            final int fadeOut = section.getInteger( "fadeout" );
             final String permission = section.getString( "permission" );
+            final boolean language = section.getBoolean( "language" );
+            final String title = section.getString( "title" );
+            final String subtitle = section.getString( "subtitle" );
 
-            if ( section.isList( messagesKey ) )
-            {
-                List<String> messages = section.getStringList( messagesKey );
-
-                addAnnouncement( new ChatAnnouncement( usePrefix, messages, group, permission ) );
-            }
-            else
-            {
-                String messagePath = section.getString( messagesKey );
-
-                addAnnouncement( new ChatAnnouncement( usePrefix, messagePath, group, permission ) );
-            }
+            addAnnouncement( new TitleAnnouncement( language, title, subtitle, fadeIn, stay, fadeOut, group, permission ) );
         }
     }
 }

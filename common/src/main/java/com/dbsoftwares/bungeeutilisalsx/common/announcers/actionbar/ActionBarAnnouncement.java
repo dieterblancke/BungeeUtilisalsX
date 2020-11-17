@@ -16,35 +16,32 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers.announcements;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.actionbar;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
-import net.md_5.bungee.api.scheduler.ScheduledTask;
 
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode( callSuper = false )
 public class ActionBarAnnouncement extends Announcement
 {
 
     private boolean language;
     private int time;
     private String message;
-    private ScheduledTask task;
+    private ScheduledFuture task;
 
     public ActionBarAnnouncement( boolean language, int time, String message, ServerGroup serverGroup, String receivePermission )
     {
@@ -60,16 +57,16 @@ public class ActionBarAnnouncement extends Announcement
     {
         if ( serverGroup.isGlobal() )
         {
-            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+            send( filter( BuX.getApi().getUsers().stream() ) );
         }
         else
         {
-            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
+            serverGroup.getServers().forEach( server -> send( filter( server.getUsers().stream() ) ) );
         }
 
         if ( time > 1 )
         {
-            task = ProxyServer.getInstance().getScheduler().schedule( BungeeUtilisals.getInstance(), new Runnable()
+            task = BuX.getInstance().getScheduler().runTaskRepeating( 1, 1, TimeUnit.SECONDS, new Runnable()
             {
 
                 private int count = 1;
@@ -81,23 +78,23 @@ public class ActionBarAnnouncement extends Announcement
 
                     if ( count > time )
                     {
-                        task.cancel();
+                        task.cancel( true );
                         return;
                     }
                     if ( serverGroup.isGlobal() )
                     {
-                        send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+                        send( filter( BuX.getApi().getUsers().stream() ) );
                     }
                     else
                     {
-                        serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
+                        serverGroup.getServers().forEach( server -> send( filter( server.getUsers().stream() ) ) );
                     }
                 }
-            }, 1, 1, java.util.concurrent.TimeUnit.SECONDS );
+            } );
         }
     }
 
-    private void send( Stream<ProxiedPlayer> stream )
+    private void send( Stream<User> stream )
     {
         stream.forEach( player ->
         {
@@ -105,12 +102,12 @@ public class ActionBarAnnouncement extends Announcement
 
             if ( language )
             {
-                bar = BUCore.getApi().getLanguageManager().getLanguageConfiguration(
-                        BungeeUtilisals.getInstance().getDescription().getName(), player
+                bar = BuX.getApi().getLanguageManager().getLanguageConfiguration(
+                        BuX.getInstance().getName(), player
                 ).getString( message );
             }
 
-            player.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( player, bar ) );
+            player.sendActionBar( bar );
         } );
     }
 }

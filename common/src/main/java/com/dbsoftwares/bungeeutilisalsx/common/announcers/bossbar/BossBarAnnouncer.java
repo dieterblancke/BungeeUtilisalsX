@@ -16,24 +16,23 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.bossbar;
 
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.BossBarAnnouncement;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.IAnnouncement;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarStyle;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.TimeUnit;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
-import com.dbsoftwares.bungeeutilisalsx.bungee.bossbar.BossBarMessage;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
+@Slf4j
 public class BossBarAnnouncer extends Announcer
 {
 
@@ -51,7 +50,7 @@ public class BossBarAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                log.info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
             final List<BossBarMessage> messages = Lists.newArrayList();

@@ -16,28 +16,25 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers.announcements;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.title;
 
-import com.dbsoftwares.bungeeutilisals.BungeeUtilisals;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.Title;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
 
 import java.util.stream.Stream;
 
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode( callSuper = false )
 public class TitleAnnouncement extends Announcement
 {
 
@@ -66,28 +63,27 @@ public class TitleAnnouncement extends Announcement
     {
         if ( serverGroup.isGlobal() )
         {
-            send( filter( ProxyServer.getInstance().getPlayers().stream() ) );
+            send( filter( BuX.getApi().getUsers().stream() ) );
         }
         else
         {
-            serverGroup.getServerInfos().forEach( server -> send( filter( server.getPlayers().stream() ) ) );
+            serverGroup.getServers().forEach( server -> send( filter( server.getUsers().stream() ) ) );
         }
     }
 
-    private void send( Stream<ProxiedPlayer> stream )
+    private void send( Stream<User> stream )
     {
-        stream.forEach( player ->
+        stream.forEach( user ->
         {
-            IConfiguration config = BUCore.getApi().getLanguageManager().getLanguageConfiguration( BungeeUtilisals.getInstance().getDescription().getName(), player );
-            Title bungeeTitle = ProxyServer.getInstance().createTitle();
+            final IConfiguration config = user.getLanguageConfig();
 
-            bungeeTitle.title( Utils.format( player, language && config.exists( title ) ? config.getString( title ) : title ) );
-            bungeeTitle.subTitle( Utils.format( player, language && config.exists( subtitle ) ? config.getString( subtitle ) : subtitle ) );
-            bungeeTitle.fadeIn( fadeIn * 20 );
-            bungeeTitle.stay( stay * 20 );
-            bungeeTitle.fadeOut( fadeOut * 20 );
-
-            player.sendTitle( bungeeTitle );
+            user.sendTitle(
+                    language && config.exists( title ) ? config.getString( title ) : title,
+                    language && config.exists( subtitle ) ? config.getString( subtitle ) : subtitle,
+                    fadeIn,
+                    stay,
+                    fadeOut
+            );
         } );
     }
 }

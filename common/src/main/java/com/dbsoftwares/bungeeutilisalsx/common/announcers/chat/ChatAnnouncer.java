@@ -16,25 +16,24 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.announcers;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.chat;
 
-import com.dbsoftwares.bungeeutilisals.announcers.announcements.TabAnnouncement;
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.server.ServerGroup;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 
-public class TabAnnouncer extends Announcer
+@Slf4j
+public class ChatAnnouncer extends Announcer
 {
 
-    public TabAnnouncer()
+    public ChatAnnouncer()
     {
-        super( AnnouncementType.TAB );
+        super( AnnouncementType.CHAT );
     }
 
     @Override
@@ -46,20 +45,28 @@ public class TabAnnouncer extends Announcer
 
             if ( group == null )
             {
-                BUCore.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                log.warn(
+                        "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
+                );
                 return;
             }
 
+            final String messagesKey = "messages";
+            final boolean usePrefix = section.getBoolean( "use-prefix" );
             final String permission = section.getString( "permission" );
-            final boolean language = section.getBoolean( "language" );
-            final List<String> header = section.isList( "header" )
-                    ? section.getStringList( "header" )
-                    : Lists.newArrayList( section.getString( "header" ) );
-            final List<String> footer = section.isList( "footer" )
-                    ? section.getStringList( "footer" )
-                    : Lists.newArrayList( section.getString( "footer" ) );
 
-            addAnnouncement( new TabAnnouncement( language, header, footer, group, permission ) );
+            if ( section.isList( messagesKey ) )
+            {
+                List<String> messages = section.getStringList( messagesKey );
+
+                addAnnouncement( new ChatAnnouncement( usePrefix, messages, group, permission ) );
+            }
+            else
+            {
+                String messagePath = section.getString( messagesKey );
+
+                addAnnouncement( new ChatAnnouncement( usePrefix, messagePath, group, permission ) );
+            }
         }
     }
 }

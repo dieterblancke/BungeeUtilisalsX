@@ -1,5 +1,10 @@
 package com.dbsoftwares.bungeeutilisalsx.common;
 
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.actionbar.ActionBarAnnouncer;
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.bossbar.BossBarAnnouncer;
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.chat.ChatAnnouncer;
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.tab.TabAnnouncer;
+import com.dbsoftwares.bungeeutilisalsx.common.announcers.title.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
@@ -86,6 +91,14 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerLanguages();
         this.registerListeners();
         this.registerCommands();
+
+        Announcer.registerAnnouncers(
+                ActionBarAnnouncer.class,
+                ChatAnnouncer.class,
+                TitleAnnouncer.class,
+                BossBarAnnouncer.class,
+                TabAnnouncer.class
+        );
 
         if ( ConfigFiles.CONFIG.getConfig().getBoolean( "updater.enabled" ) )
         {

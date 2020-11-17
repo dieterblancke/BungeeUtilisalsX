@@ -16,7 +16,7 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisalsx.bungee.bossbar;
+package com.dbsoftwares.bungeeutilisalsx.common.announcers.bossbar;
 
 import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarColor;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bossbar.BarStyle;
