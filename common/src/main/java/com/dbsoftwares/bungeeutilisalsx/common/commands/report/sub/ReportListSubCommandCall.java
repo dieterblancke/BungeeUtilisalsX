@@ -16,17 +16,17 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.report.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.report.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.ReportsDao;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.PageUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.PageUtils.PageNotFoundException;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.other.Report;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.PageUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.PageUtils.PageNotFoundException;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.List;
 
@@ -36,7 +36,7 @@ public class ReportListSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
+        final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
         final List<Report> reports;
         final int page;
 

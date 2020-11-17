@@ -16,16 +16,16 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.report.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.report.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.ReportsDao;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.UserDao;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.other.Report;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.List;
 
@@ -48,7 +48,7 @@ public class ReportAcceptSubCommandCall implements CommandCall
         }
 
         final long id = Long.parseLong( args.get( 0 ) );
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final Dao dao = BuX.getApi().getStorageManager().getDao();
         final ReportsDao reportsDao = dao.getReportsDao();
         final UserDao userDao = dao.getUserDao();
 

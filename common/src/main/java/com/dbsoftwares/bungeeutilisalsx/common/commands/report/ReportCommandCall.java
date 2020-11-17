@@ -16,13 +16,13 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.report;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.report;
 
-import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.commands.report.sub.*;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandBuilder;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.ParentCommand;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.report.sub.*;
 
 public class ReportCommandCall extends ParentCommand implements CommandCall
 {

@@ -16,14 +16,14 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
 
 import java.util.List;
 
@@ -44,12 +44,12 @@ public class FriendRequestsSubCommandCall implements CommandCall
 
         if ( type.contains( "out" ) )
         {
-            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( user.getUuid() );
+            allRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( user.getUuid() );
             requestType = "outgoing";
         }
         else if ( type.contains( "in" ) )
         {
-            allRequests = BUCore.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() );
+            allRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() );
             requestType = "incoming";
         }
         else

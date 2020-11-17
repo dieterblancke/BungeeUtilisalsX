@@ -16,13 +16,13 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.StaffUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,9 +46,9 @@ public class FriendMsgSubCommandCall implements CommandCall
             return;
         }
 
-        if ( BUCore.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
+        if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
-            final Optional<User> optional = BUCore.getApi().getUser( name );
+            final Optional<User> optional = BuX.getApi().getUser( name );
             final String message = String.join( " ", args.subList( 1, args.size() ) );
 
             if ( optional.isPresent() )

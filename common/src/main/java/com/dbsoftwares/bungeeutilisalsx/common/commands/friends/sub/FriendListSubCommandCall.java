@@ -16,15 +16,15 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.MathUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.StaffUtils;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -94,7 +94,7 @@ public class FriendListSubCommandCall implements CommandCall
                     "friends.list.format",
                     "{friendName}", friend.getFriend(),
                     "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
-                    "{online}", BUCore.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
+                    "{online}", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
                     "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
             );
         }

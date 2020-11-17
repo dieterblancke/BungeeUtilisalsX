@@ -16,13 +16,13 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends;
 
-import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisals.api.command.ParentCommand;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.commands.friends.sub.*;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandBuilder;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.ParentCommand;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub.*;
 
 public class FriendsCommandCall extends ParentCommand implements CommandCall
 {

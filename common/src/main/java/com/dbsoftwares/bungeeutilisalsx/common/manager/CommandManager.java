@@ -33,6 +33,8 @@ import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.ReplyCom
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.report.ReportCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -77,12 +79,18 @@ public abstract class CommandManager
         registerGeneralCommand( "reply", new ReplyCommandCall() );
         registerGeneralCommand( "ignore", new IgnoreCommandCall() );
         registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
-        // TODO
+        registerGeneralCommand( "report", new ReportCommandCall() );
 
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {
             registerSlashServerCommands();
         }
+        registerCommand(
+                "friends",
+                ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
+                ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
+                new FriendsCommandCall()
+        );
     }
 
     protected void registerSlashServerCommands()

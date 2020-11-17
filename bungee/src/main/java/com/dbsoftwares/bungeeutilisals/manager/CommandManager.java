@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisals.api.command.Command;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisals.commands.friends.FriendsCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.bungee.commands.general.domains.DomainsCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
@@ -36,7 +36,7 @@ import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanCommand
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnbanIPCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteCommandCall;
 import com.dbsoftwares.bungeeutilisals.commands.punishments.removal.UnmuteIPCommandCall;
-import com.dbsoftwares.bungeeutilisals.commands.report.ReportCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.report.ReportCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.commands.HubCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -51,20 +51,7 @@ public class CommandManager
 
     public void load()
     {
-        loadGeneralCommands();
         loadPunishmentCommands();
-    }
-
-    private void loadGeneralCommands()
-    {
-        registerGeneralCommand( "report", new ReportCommandCall() );
-
-        registerCommand(
-                "friends",
-                ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
-                ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
-                new FriendsCommandCall()
-        );
     }
 
     private void loadPunishmentCommands()

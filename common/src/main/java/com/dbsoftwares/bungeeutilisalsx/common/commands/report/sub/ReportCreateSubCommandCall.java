@@ -16,14 +16,14 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.report.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.report.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.ReportsDao;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.other.Report;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.Date;
 import java.util.List;
@@ -45,13 +45,13 @@ public class ReportCreateSubCommandCall implements CommandCall
         final String targetName = args.get( 0 );
         final String reason = String.join( " ", args.subList( 1, args.size() ) );
 
-        if ( !BUCore.getApi().getPlayerUtils().isOnline( targetName ) )
+        if ( !BuX.getApi().getPlayerUtils().isOnline( targetName ) )
         {
             user.sendLangMessage( "offline" );
             return;
         }
         final String bypassPermission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "report.bypass" );
-        final Optional<User> optionalUser = BUCore.getApi().getUser( targetName );
+        final Optional<User> optionalUser = BuX.getApi().getUser( targetName );
         if ( optionalUser.isPresent() )
         {
             final User target = optionalUser.get();
@@ -63,15 +63,15 @@ public class ReportCreateSubCommandCall implements CommandCall
             }
         }
 
-        final UUID targetUuid = BUCore.getApi().getPlayerUtils().getUuid( targetName );
+        final UUID targetUuid = BuX.getApi().getPlayerUtils().getUuid( targetName );
 
         final Report report = new Report( -1, targetUuid, targetName, user.getName(), new Date(), user.getServerName(), reason, false, false );
-        final ReportsDao reportsDao = BUCore.getApi().getStorageManager().getDao().getReportsDao();
+        final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
 
         reportsDao.addReport( report );
         user.sendLangMessage( "general-commands.report.create.created", "{target}", targetName );
 
-        BUCore.getApi().langPermissionBroadcast(
+        BuX.getApi().langPermissionBroadcast(
                 "general-commands.report.create.broadcast",
                 ConfigFiles.GENERALCOMMANDS.getConfig().getString( "report.subcommands.create.broadcast" ),
                 "{target}", targetName,

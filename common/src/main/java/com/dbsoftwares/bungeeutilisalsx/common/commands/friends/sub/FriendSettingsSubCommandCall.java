@@ -16,14 +16,14 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendSettingType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.utils.Utils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -67,7 +67,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
             }
 
             user.getFriendSettings().set( type, value );
-            BUCore.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
+            BuX.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
 
             user.sendLangMessage( "friends.settings.updated", "{type}", type.toString().toLowerCase() );
         }

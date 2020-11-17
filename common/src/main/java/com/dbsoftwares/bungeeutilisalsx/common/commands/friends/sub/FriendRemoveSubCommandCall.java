@@ -16,11 +16,11 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisals.commands.friends.sub;
+package com.dbsoftwares.bungeeutilisalsx.common.commands.friends.sub;
 
-import com.dbsoftwares.bungeeutilisals.api.BUCore;
-import com.dbsoftwares.bungeeutilisals.api.command.CommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.dao.Dao;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 
@@ -39,7 +39,7 @@ public class FriendRemoveSubCommandCall implements CommandCall
             return;
         }
         final String name = args.get( 0 );
-        final Dao dao = BUCore.getApi().getStorageManager().getDao();
+        final Dao dao = BuX.getApi().getStorageManager().getDao();
 
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
@@ -47,7 +47,7 @@ public class FriendRemoveSubCommandCall implements CommandCall
             return;
         }
 
-        final Optional<User> optionalTarget = BUCore.getApi().getUser( name );
+        final Optional<User> optionalTarget = BuX.getApi().getUser( name );
         final UserStorage storage;
 
         if ( optionalTarget.isPresent() )
