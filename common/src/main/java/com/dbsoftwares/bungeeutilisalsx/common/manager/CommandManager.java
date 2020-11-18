@@ -25,24 +25,29 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.CustomCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.*;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.message.ReplyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.punishments.*;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.punishments.removal.UnbanCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.punishments.removal.UnbanIPCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.punishments.removal.UnmuteCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.punishments.removal.UnmuteIPCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.commands.report.ReportCommandCall;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 
-@Slf4j
 public abstract class CommandManager
 {
 
@@ -55,8 +60,9 @@ public abstract class CommandManager
             this.unregisterAll();
         }
 
-        // TODO
+        this.registerGeneralCommands();
         this.registerCustomCommands();
+        this.registerPunishmentCommands();
     }
 
     protected void registerGeneralCommands()
@@ -80,6 +86,9 @@ public abstract class CommandManager
         registerGeneralCommand( "ignore", new IgnoreCommandCall() );
         registerGeneralCommand( "msgtoggle", new MsgToggleCommandCall() );
         registerGeneralCommand( "report", new ReportCommandCall() );
+        registerGeneralCommand( "chatlock", new ChatLockCommandCall() );
+        registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
+        registerGeneralCommand( "domains", new DomainsCommandCall() );
 
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {
@@ -91,6 +100,46 @@ public abstract class CommandManager
                 ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
                 new FriendsCommandCall()
         );
+    }
+
+    protected void registerPunishmentCommands()
+    {
+        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
+
+        if ( !config.getBoolean( "enabled" ) )
+        {
+            return;
+        }
+        final List<String> parameters = Lists.newArrayList();
+        final ISection parameterSection = config.getSection( "parameters" );
+
+        for ( String key : parameterSection.getKeys() )
+        {
+            if ( parameterSection.getBoolean( key ) )
+            {
+                parameters.add( "-" + key );
+            }
+        }
+
+        registerPunishmentCommand( "ban", "commands.ban", new BanCommandCall(), parameters );
+        registerPunishmentCommand( "ipban", "commands.ipban", new IPBanCommandCall(), parameters );
+        registerPunishmentCommand( "tempban", "commands.tempban", new TempBanCommandCall(), parameters );
+        registerPunishmentCommand( "iptempban", "commands.iptempban", new IPTempBanCommandCall(), parameters );
+        registerPunishmentCommand( "mute", "commands.mute", new MuteCommandCall(), parameters );
+        registerPunishmentCommand( "ipmute", "commands.ipmute", new IPMuteCommandCall(), parameters );
+        registerPunishmentCommand( "tempmute", "commands.tempmute", new TempMuteCommandCall(), parameters );
+        registerPunishmentCommand( "iptempmute", "commands.iptempmute", new IPTempMuteCommandCall(), parameters );
+        registerPunishmentCommand( "kick", "commands.kick", new KickCommandCall(), parameters );
+        registerPunishmentCommand( "warn", "commands.warn", new WarnCommandCall(), parameters );
+        registerPunishmentCommand( "unban", "commands.unban", new UnbanCommandCall(), parameters );
+        registerPunishmentCommand( "unbanip", "commands.unbanip", new UnbanIPCommandCall(), parameters );
+        registerPunishmentCommand( "unmute", "commands.unmute", new UnmuteCommandCall(), parameters );
+        registerPunishmentCommand( "unmuteip", "commands.unmuteip", new UnmuteIPCommandCall(), parameters );
+        registerPunishmentCommand( "punishmentinfo", "commands.punishmentinfo", new PunishmentInfoCommandCall(), null );
+        registerPunishmentCommand( "punishmenthistory", "commands.punishmenthistory", new PunishmentHistoryCommandCall(), null );
+        registerPunishmentCommand( "punishmentdata", "commands.punishmentdata", new PunishmentDataCommandCall(), null );
+        registerPunishmentCommand( "checkip", "commands.checkip", new CheckIpCommandCall(), null );
+        registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
     }
 
     protected void registerSlashServerCommands()
@@ -190,11 +239,11 @@ public abstract class CommandManager
             command.register();
 
             commands.add( command );
-            log.info( "Registered a command named " + command.getName() + "." );
+            BuX.getLogger().info( "Registered a command named " + command.getName() + "." );
         }
         else
         {
-            log.info( "Skipping registration of a command named " + name + "." );
+            BuX.getLogger().info( "Skipping registration of a command named " + name + "." );
         }
     }
 

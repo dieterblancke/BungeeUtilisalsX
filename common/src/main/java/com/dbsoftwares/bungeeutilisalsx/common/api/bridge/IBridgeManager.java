@@ -18,11 +18,12 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.bridge;
 
-import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.impl.redis.RedisBridge;
+import com.dbsoftwares.bungeeutilisalsx.common.IBuXApi;
+import com.dbsoftwares.bungeeutilisalsx.common.bridge.redis.RedisBridge;
 
 public interface IBridgeManager
 {
-    void setup();
+    void setup( IBuXApi api );
 
     boolean useBridging();
 

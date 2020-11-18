@@ -33,13 +33,12 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
 import java.util.Optional;
 
-@Slf4j
 public class GListCommandCall implements CommandCall, TabCall
 {
 
@@ -88,7 +87,7 @@ public class GListCommandCall implements CommandCall, TabCall
 
                 if ( group == null )
                 {
-                    log.warn( "Could not find a servergroup or -name for " + server + "!" );
+                    BuX.getLogger().warning( "Could not find a servergroup or -name for " + server + "!" );
                     return;
                 }
 

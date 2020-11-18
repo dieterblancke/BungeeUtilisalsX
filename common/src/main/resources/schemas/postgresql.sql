@@ -1,6 +1,6 @@
 CREATE TABLE IF NOT EXISTS "{users-table}"
 (
-    id          BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid        VARCHAR(48) UNIQUE NOT NULL,
     username    VARCHAR(32)        NOT NULL,
     ip          VARCHAR(32)        NOT NULL,
@@ -50,7 +50,7 @@ CREATE INDEX IF NOT EXISTS idx_friendreq ON "{friendrequests-table}" ("user", fr
 
 CREATE TABLE IF NOT EXISTS "{bans-table}"
 (
-    id                      BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid                    VARCHAR(48) NOT NULL,
     "user"                  VARCHAR(32) NOT NULL,
     ip                      VARCHAR(32) NOT NULL,
@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS "{bans-table}"
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT FALSE,
     removed_by              VARCHAR(32),
-    removed_at              TIMESTAMP   NULL DEFAULT NULL,
+    removed_at              TIMESTAMP   NULL     DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT FALSE,
     FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
 );
@@ -72,7 +72,7 @@ CREATE INDEX IF NOT EXISTS idx_bans ON "{bans-table}" (id, uuid, "user", ip, act
 
 CREATE TABLE IF NOT EXISTS "{mutes-table}"
 (
-    id                      BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid                    VARCHAR(48) NOT NULL,
     "user"                  VARCHAR(32) NOT NULL,
     ip                      VARCHAR(32) NOT NULL,
@@ -85,7 +85,7 @@ CREATE TABLE IF NOT EXISTS "{mutes-table}"
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT FALSE,
     removed_by              VARCHAR(32),
-    removed_at              TIMESTAMP   NULL DEFAULT NULL,
+    removed_at              TIMESTAMP   NULL     DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT FALSE,
     FOREIGN KEY (uuid) REFERENCES "{users-table}" (uuid)
 );
@@ -95,7 +95,7 @@ CREATE INDEX IF NOT EXISTS idx_mutes ON "{mutes-table}" (id, uuid, "user", ip, a
 
 CREATE TABLE IF NOT EXISTS "{kicks-table}"
 (
-    id                      BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid                    VARCHAR(36) NOT NULL,
     "user"                  VARCHAR(32) NOT NULL,
     ip                      VARCHAR(32) NOT NULL,
@@ -111,7 +111,7 @@ CREATE INDEX IF NOT EXISTS idx_kicks ON "{kicks-table}" (id, uuid, "user", ip);
 
 CREATE TABLE IF NOT EXISTS "{warns-table}"
 (
-    id                      BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid                    VARCHAR(36) NOT NULL,
     "user"                  VARCHAR(32) NOT NULL,
     ip                      VARCHAR(32) NOT NULL,
@@ -127,7 +127,7 @@ CREATE INDEX IF NOT EXISTS idx_warns ON "{warns-table}" (id, uuid, "user", ip);
 
 CREATE TABLE IF NOT EXISTS "{punishmentactions-table}"
 (
-    id       BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid     VARCHAR(36)                         NOT NULL,
     "user"   VARCHAR(32)                         NOT NULL,
     ip       VARCHAR(32)                         NOT NULL,
@@ -140,7 +140,7 @@ CREATE INDEX IF NOT EXISTS idx_punishactions ON "{punishmentactions-table}" (id,
 
 CREATE TABLE IF NOT EXISTS "{reports-table}"
 (
-    id          BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     uuid        VARCHAR(36)                         NOT NULL,
     reported_by VARCHAR(32)                         NOT NULL,
     date        TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
@@ -155,7 +155,7 @@ CREATE INDEX IF NOT EXISTS idx_reports ON "{reports-table}" (id, uuid, reported_
 
 CREATE TABLE IF NOT EXISTS "{messagequeue-table}"
 (
-    id      BIGSERIAL PRIMARY KEY,
+    id BIGSERIAL PRIMARY KEY,
     "user"  VARCHAR(36)                         NOT NULL,
     message TEXT                                NOT NULL,
     date    TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,

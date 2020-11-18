@@ -22,15 +22,15 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.StorageType;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.sql.SQLStorageManager;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLiteStorageManager extends SQLStorageManager
 {
 
@@ -51,7 +51,7 @@ public class SQLiteStorageManager extends SQLStorageManager
         }
         catch ( IOException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         try

@@ -52,14 +52,16 @@ public class Updater
     {
         final Class<?> clazz = instance.getClass();
 
-        if ( !clazz.isAnnotationPresent( Updatable.class ) )
+        if ( !clazz.isAnnotationPresent( Updatable.class ) && !clazz.getSuperclass().isAnnotationPresent( Updatable.class ) )
         {
             throw new RuntimeException( clazz.getSimpleName() + " does not have the @Updatable annotation." );
         }
 
         try
         {
-            final Updatable updatable = clazz.getAnnotation( Updatable.class );
+            final Updatable updatable = clazz.isAnnotationPresent( Updatable.class )
+                    ? clazz.getAnnotation( Updatable.class )
+                    : clazz.getSuperclass().getAnnotation( Updatable.class );
             final Method getDescription = ReflectionUtils.getMethod( clazz, "getDescription" );
             final Object description = getDescription.invoke( instance );
 

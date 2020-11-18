@@ -26,7 +26,7 @@ import lombok.EqualsAndHashCode;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class InputPlaceHolder extends PlaceHolder
 {
 

@@ -29,7 +29,7 @@ import java.util.function.Function;
 public class ConsoleUser implements User, CanReceiveMessages
 {
 
-    private static final String NOT_SUPPORTED = "Not supported yet.";
+    private static final String NOT_SUPPORTED = "The console does not support this operation!";
     private final UserStorage storage = new UserStorage();
     private final UserCooldowns cooldowns = new UserCooldowns();
     @Getter
@@ -86,7 +86,7 @@ public class ConsoleUser implements User, CanReceiveMessages
     @Override
     public void setLanguage( Language language )
     {
-        throw new UnsupportedOperationException( NOT_SUPPORTED );
+        // do nothing
     }
 
     @Override
@@ -411,5 +411,17 @@ public class ConsoleUser implements User, CanReceiveMessages
     public void sendPacket( final Object packet )
     {
         // do nothing
+    }
+
+    @Override
+    public void setTabHeader( BaseComponent[] header, BaseComponent[] footer )
+    {
+        // do nothing
+    }
+
+    @Override
+    public String getJoinedHost()
+    {
+        throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 }

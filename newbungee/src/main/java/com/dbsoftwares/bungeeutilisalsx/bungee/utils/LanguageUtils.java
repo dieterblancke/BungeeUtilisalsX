@@ -2,7 +2,6 @@ package com.dbsoftwares.bungeeutilisalsx.bungee.utils;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.language.ILanguageManager;
-import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
@@ -73,7 +72,7 @@ public class LanguageUtils
         {
             for ( String message : config.getStringList( path ) )
             {
-                message = replacePlaceHolders( null, message, placeholders );
+                message = Utils.replacePlaceHolders( null, message, placeholders );
 
                 sender.sendMessage( Utils.format( message ) );
             }
@@ -84,7 +83,7 @@ public class LanguageUtils
             {
                 return;
             }
-            String message = replacePlaceHolders( null, config.getString( path ), placeholders );
+            String message = Utils.replacePlaceHolders( null, config.getString( path ), placeholders );
 
             sender.sendMessage( Utils.format( message ) );
         }
@@ -136,7 +135,7 @@ public class LanguageUtils
         {
             for ( String message : config.getStringList( path ) )
             {
-                message = replacePlaceHolders( user, message, placeholders );
+                message = Utils.replacePlaceHolders( user, message, placeholders );
                 user.sendMessage( Utils.format( message ) );
             }
         }
@@ -146,18 +145,8 @@ public class LanguageUtils
             {
                 return;
             }
-            String message = replacePlaceHolders( user, config.getString( path ), placeholders );
+            String message = Utils.replacePlaceHolders( user, config.getString( path ), placeholders );
             user.sendMessage( Utils.format( message ) );
         }
-    }
-
-    public static String replacePlaceHolders( User user, String message, Object... placeholders )
-    {
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
-        message = PlaceHolderAPI.formatMessage( user, message );
-        return message;
     }
 }

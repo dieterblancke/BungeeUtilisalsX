@@ -18,17 +18,17 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.announcers.tab;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 
-@Slf4j
 public class TabAnnouncer extends Announcer
 {
 
@@ -46,7 +46,7 @@ public class TabAnnouncer extends Announcer
 
             if ( group == null )
             {
-                log.warn( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
 

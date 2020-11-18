@@ -30,15 +30,15 @@ import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
 
-@Slf4j
 public abstract class AbstractLanguageManager implements ILanguageManager
 {
 
@@ -53,7 +53,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     @Getter
     protected LanguageIntegration integration;
 
-    AbstractLanguageManager( )
+    AbstractLanguageManager()
     {
         integration = uuid -> BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().getLanguage( uuid );
         ISection section = ConfigFiles.LANGUAGES_CONFIG.getConfig().getSection( "languages" );
@@ -147,7 +147,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
 
         if ( !configurations.containsKey( lang ) )
         {
-            log.warn( "The plugin " + plugin + " did not register the language " + language.getName() + " yet!" );
+            BuX.getLogger().warning( "The plugin " + plugin + " did not register the language " + language.getName() + " yet!" );
 
             File deflang = getFile( plugin, getDefaultLanguage() );
             if ( configurations.containsKey( deflang ) )
@@ -185,7 +185,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         }
         catch ( IOException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return true;
     }
@@ -205,7 +205,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
         }
         catch ( IOException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return true;
     }

@@ -8,20 +8,22 @@ public interface IScheduler
 
     void runAsync( Runnable runnable );
 
-    ScheduledFuture<?> runTaskDelayed( long delay, TimeUnit unit, Runnable runnable);
+    ScheduledFuture<?> runTaskDelayed( long delay, TimeUnit unit, Runnable runnable );
 
     ScheduledFuture<?> runTaskRepeating( long delay, long period, TimeUnit unit, Runnable runnable );
 
     default ScheduledFuture<?> runTaskDelayed( long delay,
                                                com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit unit,
-                                               Runnable runnable) {
+                                               Runnable runnable )
+    {
         return this.runTaskDelayed( delay, unit.toJavaTimeUnit(), runnable );
     }
 
     default ScheduledFuture<?> runTaskRepeating( long delay,
-                                               long period,
-                                               com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit unit,
-                                               Runnable runnable) {
+                                                 long period,
+                                                 com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit unit,
+                                                 Runnable runnable )
+    {
         return this.runTaskRepeating( delay, period, unit.toJavaTimeUnit(), runnable );
     }
 }

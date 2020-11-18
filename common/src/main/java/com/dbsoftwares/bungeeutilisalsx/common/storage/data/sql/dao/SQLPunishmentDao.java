@@ -29,7 +29,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.punishments.Mutes
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLBansDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLMutesDao;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,8 +37,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
+
 public class SQLPunishmentDao implements PunishmentDao
 {
 
@@ -98,7 +99,7 @@ public class SQLPunishmentDao implements PunishmentDao
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
         }
         else
@@ -122,7 +123,7 @@ public class SQLPunishmentDao implements PunishmentDao
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
         }
 
@@ -154,7 +155,7 @@ public class SQLPunishmentDao implements PunishmentDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return count;
     }
@@ -180,7 +181,7 @@ public class SQLPunishmentDao implements PunishmentDao
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
         }
         else
@@ -200,7 +201,7 @@ public class SQLPunishmentDao implements PunishmentDao
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
         }
     }
@@ -224,7 +225,7 @@ public class SQLPunishmentDao implements PunishmentDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
     }
 
@@ -245,7 +246,7 @@ public class SQLPunishmentDao implements PunishmentDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
     }
 }

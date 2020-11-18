@@ -43,7 +43,7 @@ public abstract class Announcement implements IAnnouncement
     {
         return receivePermission.isEmpty()
                 ? stream
-                : stream.filter( player -> player.hasPermission( receivePermission ) || player.hasPermission( "bungeeutilisals.*" ) );
+                : stream.filter( user -> user.hasPermission( receivePermission ) || user.hasPermission( "bungeeutilisals.*" ) || user.hasPermission( "*" ) );
     }
 
     public void clear()

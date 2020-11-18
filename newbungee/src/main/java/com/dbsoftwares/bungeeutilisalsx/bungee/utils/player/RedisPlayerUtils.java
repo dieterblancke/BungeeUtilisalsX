@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisalsx.bungee.utils.player;
 
-import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MojangUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
@@ -81,7 +80,7 @@ public class RedisPlayerUtils implements IPlayerUtils
 
         if ( RedisBungee.getApi().isPlayerOnline( uuid ) )
         {
-            return new BungeeServer( RedisBungee.getApi().getServerFor( uuid ) );
+            return BuX.getInstance().proxyOperations().getServerInfo( RedisBungee.getApi().getServerFor( uuid ).getName() );
         }
 
         return null;

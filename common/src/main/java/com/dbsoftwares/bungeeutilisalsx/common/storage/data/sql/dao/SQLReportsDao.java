@@ -24,7 +24,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.Report;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -32,8 +32,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLReportsDao implements ReportsDao
 {
 
@@ -56,7 +56,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
     }
 
@@ -74,7 +74,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
     }
 
@@ -99,7 +99,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return report;
     }
@@ -124,7 +124,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }
@@ -150,7 +150,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }
@@ -187,7 +187,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }
@@ -212,7 +212,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }
@@ -238,7 +238,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }
@@ -261,7 +261,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return exists;
     }
@@ -281,7 +281,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
     }
 
@@ -318,7 +318,7 @@ public class SQLReportsDao implements ReportsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
         }
         return reports;
     }

@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
  * This event will be executed upon User Chat. UserChatPreExecuteEvent is being executed AFTER this event.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class UserChatEvent extends AbstractEvent implements Cancellable
 {
 

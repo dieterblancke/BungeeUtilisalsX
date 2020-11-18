@@ -19,6 +19,7 @@
 package com.dbsoftwares.bungeeutilisalsx.common.api.utils.player;
 
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+
 import java.util.List;
 import java.util.UUID;
 

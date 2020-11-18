@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.announcers.bossbar;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.IAnnouncement;
@@ -28,11 +29,10 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 
-@Slf4j
 public class BossBarAnnouncer extends Announcer
 {
 
@@ -50,7 +50,7 @@ public class BossBarAnnouncer extends Announcer
 
             if ( group == null )
             {
-                log.info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
+                BuX.getLogger().info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
             final List<BossBarMessage> messages = Lists.newArrayList();

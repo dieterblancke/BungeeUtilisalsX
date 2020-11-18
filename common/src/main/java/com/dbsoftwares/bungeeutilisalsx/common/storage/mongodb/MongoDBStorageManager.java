@@ -52,7 +52,7 @@ public class MongoDBStorageManager extends AbstractStorageManager
         this.database = database;
     }
 
-    public MongoDBStorageManager( )
+    public MongoDBStorageManager()
     {
         this( StorageType.MONGODB, ConfigFiles.CONFIG.getConfig() );
     }

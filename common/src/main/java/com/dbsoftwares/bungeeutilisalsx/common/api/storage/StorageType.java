@@ -5,17 +5,17 @@ import lombok.Getter;
 
 public enum StorageType
 {
-    MYSQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.MySQLStorageManager" ),
+    MYSQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.hikari.MySQLStorageManager" ),
             "MySQL", "schemas/mysql.sql" ),
-    POSTGRESQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.PostgreSQLStorageManager" ),
+    POSTGRESQL( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.hikari.PostgreSQLStorageManager" ),
             "PostgreSQL", "schemas/postgresql.sql" ),
-    MARIADB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.hikari.MariaDBStorageManager" ),
+    MARIADB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.hikari.MariaDBStorageManager" ),
             "MariaDB", "schemas/mysql.sql" ),
-    SQLITE( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.SQLiteStorageManager" ),
+    SQLITE( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.file.SQLiteStorageManager" ),
             "SQLite", "schemas/sqlite.sql" ),
-    H2( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.file.H2StorageManager" ),
+    H2( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.file.H2StorageManager" ),
             "H2", "schemas/mysql.sql" ),
-    MONGODB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisals.storage.mongodb.MongoDBStorageManager" ),
+    MONGODB( ReflectionUtils.getClass( "com.dbsoftwares.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager" ),
             "MongoDB", null );
 
     @Getter

@@ -21,13 +21,12 @@ package com.dbsoftwares.bungeeutilisalsx.common.updater.migration;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.StorageType;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-@Slf4j
 public class UpdateTo1_0_5_0 implements Update
 {
 
@@ -38,7 +37,7 @@ public class UpdateTo1_0_5_0 implements Update
         {
             return;
         }
-        log.info( "Updating bans table ..." );
+        BuX.getLogger().info( "Updating bans table ..." );
 
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
@@ -53,8 +52,8 @@ public class UpdateTo1_0_5_0 implements Update
             e.printStackTrace();
         }
 
-        log.info( "Successfully updated bans table ..." );
-        log.info( "Updating mutes table ..." );
+        BuX.getLogger().info( "Successfully updated bans table ..." );
+        BuX.getLogger().info( "Updating mutes table ..." );
 
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
@@ -69,6 +68,6 @@ public class UpdateTo1_0_5_0 implements Update
             e.printStackTrace();
         }
 
-        log.info( "Successfully updated mutes table ..." );
+        BuX.getLogger().info( "Successfully updated mutes table ..." );
     }
 }

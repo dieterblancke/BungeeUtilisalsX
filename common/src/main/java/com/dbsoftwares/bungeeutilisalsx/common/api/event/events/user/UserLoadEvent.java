@@ -28,7 +28,7 @@ import lombok.Getter;
  * This event is being executed when a User has successfully been loaded in.
  */
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class UserLoadEvent extends AbstractEvent
 {
 

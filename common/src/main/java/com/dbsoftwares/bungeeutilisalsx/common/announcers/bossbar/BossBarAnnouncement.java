@@ -93,7 +93,6 @@ public class BossBarAnnouncement extends Announcement
                 bar.setStyle( message.getStyle() );
 
                 bar.addUser( user );
-
                 bars.add( bar );
             } );
         } );

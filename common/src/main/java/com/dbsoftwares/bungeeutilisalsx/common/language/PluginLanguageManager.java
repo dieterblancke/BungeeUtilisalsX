@@ -18,15 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.language;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.io.ByteStreams;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.*;
+import java.util.logging.Level;
 
-@Slf4j
 public class PluginLanguageManager extends AbstractLanguageManager
 {
 
@@ -42,11 +43,11 @@ public class PluginLanguageManager extends AbstractLanguageManager
 
             if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
             {
-                lang = loadResource( resourceClass, pluginName, "languages/" + name + ".json", new File( folder, name + ".json" ) );
+                lang = loadResource( resourceClass, pluginName, "/languages/" + name + ".json", new File( folder, name + ".json" ) );
             }
             else
             {
-                lang = loadResource( resourceClass, pluginName, "languages/" + name + ".yml", new File( folder, name + ".yml" ) );
+                lang = loadResource( resourceClass, pluginName, "/languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
 
             if ( !lang.exists() )
@@ -60,12 +61,12 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
                 {
                     configuration = IConfiguration.loadJsonConfiguration( lang );
-                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "languages/" + name + ".json" ) ) );
+                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
                 }
                 else
                 {
                     configuration = IConfiguration.loadYamlConfiguration( lang );
-                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration( resourceClass.getResourceAsStream( "languages/" + name + ".yml" ) ) );
+                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ) ) );
                 }
 
                 configurations.put( lang, configuration );
@@ -73,7 +74,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
             }
             catch ( IOException e )
             {
-                log.error( "An error occured: ", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -98,21 +99,21 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 {
                     if ( in == null )
                     {
-                        log.info( "Could not find default language configuration configuration for " +
-                                source.replace( "languages/", "" ).replace( ".json", "" ) +
+                        BuX.getLogger().info( "Could not find default language configuration configuration for " +
+                                source.replace( "/languages/", "" ).replace( ".json", "" ) +
                                 " for plugin " + pluginName );
                         return null;
                     }
                     ByteStreams.copy( in, out );
-                    log.info( "Loading default language configuration for "
-                            + source.replace( "languages/", "" ).replace( ".json", "" ) + " for plugin "
+                    BuX.getLogger().info( "Loading default language configuration for "
+                            + source.replace( "/languages/", "" ).replace( ".json", "" ) + " for plugin "
                             + pluginName );
                 }
             }
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return target;
     }

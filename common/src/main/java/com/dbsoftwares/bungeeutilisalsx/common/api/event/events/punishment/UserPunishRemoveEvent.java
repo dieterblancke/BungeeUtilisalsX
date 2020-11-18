@@ -28,7 +28,7 @@ import java.util.Date;
 import java.util.Optional;
 import java.util.UUID;
 
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 @Data
 public class UserPunishRemoveEvent extends AbstractEvent implements Cancellable
 {

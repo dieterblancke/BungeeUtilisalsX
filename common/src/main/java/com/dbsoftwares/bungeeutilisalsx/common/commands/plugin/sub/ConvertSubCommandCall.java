@@ -31,12 +31,11 @@ import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.MongoToSQLCo
 import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.SQLtoMongoConverter;
 import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.SQLtoSQLConverter;
 import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 public class ConvertSubCommandCall implements CommandCall, TabCall
 {
 
@@ -87,7 +86,7 @@ public class ConvertSubCommandCall implements CommandCall, TabCall
                 {
                     if ( status.getConvertedEntries() % 100 == 0 )
                     {
-                        log.info(
+                        BuX.getLogger().info(
                                 "Converted " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                         + " entries (" + MathUtils.formatNumber( status.getProgressionPercent(), 2 ) + " %)"
                         );
@@ -97,7 +96,7 @@ public class ConvertSubCommandCall implements CommandCall, TabCall
                 @Override
                 public void done( Converter.ConverterStatus status, Throwable throwable )
                 {
-                    log.info(
+                    BuX.getLogger().info(
                             "Finished converting " + status.getConvertedEntries() + " out of " + status.getTotalEntries()
                                     + ". " + status.getRemainingEntries() + " could not be converted ("
                                     + status.getProgressionPercent() + " %)"

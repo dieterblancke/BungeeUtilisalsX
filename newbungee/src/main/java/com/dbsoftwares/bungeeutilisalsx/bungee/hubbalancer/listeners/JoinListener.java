@@ -18,7 +18,7 @@ import java.util.Optional;
 public class JoinListener implements Listener
 {
 
-    @EventHandler(priority = EventPriority.HIGHEST)
+    @EventHandler( priority = EventPriority.HIGHEST )
     public void onLogin( ServerConnectEvent event )
     {
         final ProxiedPlayer player = event.getPlayer();

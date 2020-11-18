@@ -18,14 +18,14 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection;
 
-import lombok.extern.slf4j.Slf4j;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import lombok.extern.java.Log;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
 
-@Slf4j
 public class ReflectionUtils
 {
 
@@ -74,7 +74,7 @@ public class ReflectionUtils
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return null;
     }
@@ -137,7 +137,7 @@ public class ReflectionUtils
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return null;
     }

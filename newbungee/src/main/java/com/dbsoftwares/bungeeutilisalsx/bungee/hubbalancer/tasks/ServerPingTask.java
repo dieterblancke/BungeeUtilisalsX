@@ -2,9 +2,8 @@ package com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.tasks;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
-@Slf4j
 public class ServerPingTask implements Runnable
 {
 
@@ -17,7 +16,7 @@ public class ServerPingTask implements Runnable
 
             if ( bungeeServer == null )
             {
-                log.warn( "Could not find server " + server.getName() + ". Please check if this is the correct name!" );
+                BuX.getLogger().warning( "Could not find server " + server.getName() + ". Please check if this is the correct name!" );
             }
             else
             {

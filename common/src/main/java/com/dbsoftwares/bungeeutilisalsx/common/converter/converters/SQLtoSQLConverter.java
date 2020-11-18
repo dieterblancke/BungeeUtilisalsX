@@ -28,13 +28,13 @@ import com.dbsoftwares.bungeeutilisalsx.common.converter.Converter;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.file.SQLiteStorageManager;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.*;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLtoSQLConverter extends Converter
 {
 
@@ -48,7 +48,7 @@ public class SQLtoSQLConverter extends Converter
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             return;
         }
 
@@ -83,7 +83,7 @@ public class SQLtoSQLConverter extends Converter
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         try ( final Connection connection = storageManager.getConnection();
@@ -110,7 +110,7 @@ public class SQLtoSQLConverter extends Converter
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         for ( PunishmentType type : PunishmentType.values() )
@@ -139,7 +139,7 @@ public class SQLtoSQLConverter extends Converter
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured:", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
         }
     }

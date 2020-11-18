@@ -18,12 +18,12 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.motd.handlers;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Version;
 import com.dbsoftwares.bungeeutilisalsx.common.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.motd.MotdConnection;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
-@Slf4j
 public class VersionConditionHandler extends ConditionHandler
 {
 
@@ -71,9 +71,9 @@ public class VersionConditionHandler extends ConditionHandler
         }
         catch ( IllegalArgumentException e )
         {
-            log.warn( "Found an invalid version in condition 'version " + condition + "'!" );
-            log.warn( "Available versions:" );
-            log.warn( listVersions() );
+            BuX.getLogger().warning( "Found an invalid version in condition 'version " + condition + "'!" );
+            BuX.getLogger().warning( "Available versions:" );
+            BuX.getLogger().warning( listVersions() );
             return null;
         }
     }

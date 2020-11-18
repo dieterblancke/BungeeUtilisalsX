@@ -28,7 +28,7 @@ import lombok.EqualsAndHashCode;
  * This event is being executed upon User Command execute.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class UserCommandEvent extends AbstractEvent implements Cancellable
 {
 

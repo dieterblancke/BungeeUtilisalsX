@@ -19,9 +19,8 @@
 package com.dbsoftwares.bungeeutilisalsx.common.storage.data.mongo;
 
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.*;
-import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.storage.data.mongo.dao.*;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
+import com.dbsoftwares.bungeeutilisalsx.common.storage.data.mongo.dao.*;
 import lombok.Getter;
 
 import java.util.UUID;

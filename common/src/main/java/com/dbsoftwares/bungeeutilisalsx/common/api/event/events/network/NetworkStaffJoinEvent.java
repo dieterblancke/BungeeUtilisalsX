@@ -29,7 +29,7 @@ import java.util.UUID;
 /**
  * This event will be executed upon network join
  */
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class NetworkStaffJoinEvent extends AbstractEvent implements Cancellable
 {
 

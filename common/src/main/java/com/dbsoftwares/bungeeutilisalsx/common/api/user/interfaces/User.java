@@ -359,9 +359,21 @@ public interface User
 
     /**
      * Sends a packet to this user.
+     *
      * @param packet the packet to be sent.
      */
-    void sendPacket(final Object packet);
+    void sendPacket( final Object packet );
 
+    /**
+     * Sets the tab header and footer for this user.
+     *
+     * @param header the header to be set.
+     * @param footer the footer to be set.
+     */
     void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer );
+
+    /**
+     * @return the host the user joined with.
+     */
+    String getJoinedHost();
 }

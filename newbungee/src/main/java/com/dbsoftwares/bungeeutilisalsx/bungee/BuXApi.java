@@ -1,9 +1,6 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.bossbar.BossBar;
-import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserAction;
-import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.types.UserActionType;
-import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.bungee.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisalsx.bungee.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
@@ -23,6 +20,9 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserAction;
+import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserActionType;
+import com.dbsoftwares.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -33,6 +33,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.logging.Logger;
 
 @Getter
 @RequiredArgsConstructor
@@ -297,7 +298,7 @@ public class BuXApi implements IBuXApi
     @Override
     public AbstractStorageManager getStorageManager()
     {
-        return BuX.getApi().getStorageManager();
+        return BuX.getInstance().getAbstractStorageManager();
     }
 
     @Override

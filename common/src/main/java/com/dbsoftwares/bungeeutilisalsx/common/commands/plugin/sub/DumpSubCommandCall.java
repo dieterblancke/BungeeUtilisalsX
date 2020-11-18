@@ -35,7 +35,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sun.management.OperatingSystemMXBean;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -51,8 +51,8 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
-@Slf4j
 public class DumpSubCommandCall implements CommandCall, TabCall
 {
 
@@ -102,7 +102,7 @@ public class DumpSubCommandCall implements CommandCall, TabCall
             catch ( IOException e )
             {
                 user.sendMessage( "Could not create dump. Please check the console for errors." );
-                log.error( "Could not create dump request:", e );
+                BuX.getLogger().log( Level.SEVERE, "Could not create dump request:", e );
             }
         } );
     }

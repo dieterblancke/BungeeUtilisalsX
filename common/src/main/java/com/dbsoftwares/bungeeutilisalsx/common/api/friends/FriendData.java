@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.friends;
 
-import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import lombok.Data;
 

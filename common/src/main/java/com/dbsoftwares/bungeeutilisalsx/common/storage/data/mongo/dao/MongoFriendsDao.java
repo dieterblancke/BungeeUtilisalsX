@@ -24,7 +24,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendSettingType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendSettings;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-import com.dbsoftwares.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;

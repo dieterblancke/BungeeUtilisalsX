@@ -22,22 +22,22 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.StorageType;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.sql.SQLStorageManager;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.logging.Level;
 
-@Slf4j
 public class H2StorageManager extends SQLStorageManager
 {
 
-    private UnclosableConnection connection;
     private final File database;
+    private UnclosableConnection connection;
 
-    public H2StorageManager( ) throws SQLException
+    public H2StorageManager() throws SQLException
     {
         super( StorageType.H2, new SQLDao() );
         database = new File( BuX.getInstance().getDataFolder(), "h2-storage.db" );
@@ -51,7 +51,7 @@ public class H2StorageManager extends SQLStorageManager
         }
         catch ( IOException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         try
         {

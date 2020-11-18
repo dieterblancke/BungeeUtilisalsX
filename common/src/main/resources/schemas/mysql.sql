@@ -67,7 +67,7 @@ CREATE TABLE IF NOT EXISTS `{bans-table}`
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
-    removed_at              TIMESTAMP   NULL DEFAULT NULL,
+    removed_at              TIMESTAMP   NULL     DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
     INDEX idx_bans (id, uuid, user, ip, active, server)
@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `{mutes-table}`
     type                    VARCHAR(16) NOT NULL,
     removed                 BOOLEAN     NOT NULL DEFAULT 0,
     removed_by              VARCHAR(32),
-    removed_at              TIMESTAMP   NULL DEFAULT NULL,
+    removed_at              TIMESTAMP   NULL     DEFAULT NULL,
     punishmentaction_status BOOLEAN     NOT NULL DEFAULT 0,
     FOREIGN KEY (uuid) REFERENCES `{users-table}` (uuid),
     INDEX idx_mutes (id, uuid, user, ip, active, server)

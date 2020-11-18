@@ -18,7 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.bridge;
 
-import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.IBuXApi;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
@@ -74,9 +74,9 @@ public abstract class Bridge implements EventExecutor
         entry.getValue().accept( event.asCasted( entry.getKey() ) );
     }
 
-    public boolean setup()
+    public boolean setup( final IBuXApi api )
     {
-        eventHandlers = BuX.getApi().getEventLoader().register( BridgeResponseEvent.class, this );
+        eventHandlers = api.getEventLoader().register( BridgeResponseEvent.class, this );
         return true;
     }
 

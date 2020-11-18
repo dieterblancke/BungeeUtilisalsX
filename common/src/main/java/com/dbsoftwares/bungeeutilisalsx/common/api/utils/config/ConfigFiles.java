@@ -27,21 +27,21 @@ import java.util.List;
 public class ConfigFiles
 {
 
-    public static MainConfig CONFIG = new MainConfig( "config.yml" );
-    public static ServerGroupsConfig SERVERGROUPS = new ServerGroupsConfig( "servergroups.yml" );
-    public static MotdConfig MOTD = new MotdConfig( "motd.yml" );
-    public static Config CUSTOMCOMMANDS = new Config( "commands/customcommands.yml" );
-    public static Config GENERALCOMMANDS = new Config( "commands/generalcommands.yml" );
-    public static Config ANTISWEAR = new Config( "chat/protection/antiswear.yml" );
-    public static Config ANTICAPS = new Config( "chat/protection/anticaps.yml" );
-    public static Config ANTIAD = new Config( "chat/protection/antiadvertise.yml" );
-    public static Config ANTISPAM = new Config( "chat/protection/antispam.yml" );
-    public static Config UTFSYMBOLS = new Config( "chat/utfsymbols.yml" );
-    public static Config FRIENDS_CONFIG = new Config( "friends.yml" );
-    public static PunishmentsConfig PUNISHMENTS = new PunishmentsConfig( "punishments.yml" );
-    public static Config LANGUAGES_CONFIG = new Config( "languages/config.yml" );
-    public static RanksConfig RANKS = new RanksConfig( "chat/ranks.yml" );
-    public static Config HUBBALANCER = new Config( "hubbalancer.yml" );
+    public static MainConfig CONFIG = new MainConfig( "/config.yml" );
+    public static ServerGroupsConfig SERVERGROUPS = new ServerGroupsConfig( "/servergroups.yml" );
+    public static MotdConfig MOTD = new MotdConfig( "/motd.yml" );
+    public static Config CUSTOMCOMMANDS = new Config( "/commands/customcommands.yml" );
+    public static Config GENERALCOMMANDS = new Config( "/commands/generalcommands.yml" );
+    public static Config ANTISWEAR = new Config( "/chat/protection/antiswear.yml" );
+    public static Config ANTICAPS = new Config( "/chat/protection/anticaps.yml" );
+    public static Config ANTIAD = new Config( "/chat/protection/antiadvertise.yml" );
+    public static Config ANTISPAM = new Config( "/chat/protection/antispam.yml" );
+    public static Config UTFSYMBOLS = new Config( "/chat/utfsymbols.yml" );
+    public static Config FRIENDS_CONFIG = new Config( "/friends.yml" );
+    public static PunishmentsConfig PUNISHMENTS = new PunishmentsConfig( "/punishments.yml" );
+    public static Config LANGUAGES_CONFIG = new Config( "/languages/config.yml" );
+    public static RanksConfig RANKS = new RanksConfig( "/chat/ranks.yml" );
+    public static Config HUBBALANCER = new Config( "/hubbalancer.yml" );
 
     public static void loadAllConfigs()
     {

@@ -18,16 +18,17 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.event;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.BUEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
 
-@Slf4j
 @RequiredArgsConstructor
 public class EventHandler<T extends BUEvent> implements IEventHandler<T>
 {
@@ -74,7 +75,8 @@ public class EventHandler<T extends BUEvent> implements IEventHandler<T>
         }
         catch ( Exception e )
         {
-            log.error(
+            BuX.getLogger().log(
+                    Level.SEVERE,
                     "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() + ": ",
                     e
             );

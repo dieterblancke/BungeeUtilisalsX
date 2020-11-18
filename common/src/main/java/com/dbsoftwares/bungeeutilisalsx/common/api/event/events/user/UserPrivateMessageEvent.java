@@ -27,7 +27,7 @@ import lombok.EqualsAndHashCode;
  * This event is being executed upon User Private Message.
  */
 @Data
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class UserPrivateMessageEvent extends AbstractEvent
 {
 

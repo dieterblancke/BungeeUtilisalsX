@@ -28,13 +28,14 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
 import java.util.List;
 import java.util.stream.Stream;
 
 @Getter
 @Setter
 @ToString
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode( callSuper = false )
 public class TabAnnouncement extends Announcement
 {
 

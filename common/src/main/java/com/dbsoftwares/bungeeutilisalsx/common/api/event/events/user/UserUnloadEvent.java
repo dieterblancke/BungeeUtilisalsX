@@ -28,7 +28,7 @@ import lombok.Getter;
  * This event gets called if an User was successfully saved and logged out.
  */
 @AllArgsConstructor
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode( callSuper = true )
 public class UserUnloadEvent extends AbstractEvent
 {
 

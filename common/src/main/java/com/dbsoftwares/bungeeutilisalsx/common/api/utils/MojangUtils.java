@@ -21,7 +21,7 @@ package com.dbsoftwares.bungeeutilisalsx.common.api.utils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,8 +29,8 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
 public class MojangUtils
 {
 
@@ -58,7 +58,7 @@ public class MojangUtils
         }
         catch ( final IOException e )
         {
-            log.error( "Could not retrieve uuid of " + name + ": ", e );
+            BuX.getLogger().log( Level.SEVERE, "Could not retrieve uuid of " + name + ": ", e );
         }
         return null;
     }
@@ -85,7 +85,7 @@ public class MojangUtils
         }
         catch ( final IOException e )
         {
-            log.error( "Could not retrieve name of " + uuid.toString() + ": ", e );
+            BuX.getLogger().log( Level.SEVERE, "Could not retrieve name of " + uuid.toString() + ": ", e );
         }
         return null;
     }

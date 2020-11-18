@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import com.dbsoftwares.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
@@ -26,12 +27,11 @@ import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.Map;
 
-@Slf4j
 public class PunishmentsConfig extends Config
 {
 
@@ -76,17 +76,17 @@ public class PunishmentsConfig extends Config
                     }
                     else
                     {
-                        log.warn( "An invalid number has been entered (" + section.getString( "time.amount" ) + ")." );
+                        BuX.getLogger().warning( "An invalid number has been entered (" + section.getString( "time.amount" ) + ")." );
                     }
                 }
                 catch ( IllegalArgumentException e )
                 {
-                    log.warn( "An invalid time unit has been entered (" + section.getString( "time.unit" ) + ")." );
+                    BuX.getLogger().warning( "An invalid time unit has been entered (" + section.getString( "time.unit" ) + ")." );
                 }
             }
             catch ( IllegalArgumentException e )
             {
-                log.warn( "An invalid punishment type has been entered (" + section.getString( "type" ) + ")." );
+                BuX.getLogger().warning( "An invalid punishment type has been entered (" + section.getString( "type" ) + ")." );
             }
         }
     }

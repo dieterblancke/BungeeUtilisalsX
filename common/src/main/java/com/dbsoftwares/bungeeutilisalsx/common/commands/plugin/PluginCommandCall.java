@@ -22,7 +22,10 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandBuilder;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.ParentCommand;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.sub.*;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.sub.ConvertSubCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.sub.DumpSubCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.sub.ReloadSubCommandCall;
+import com.dbsoftwares.bungeeutilisalsx.common.commands.plugin.sub.VersionSubCommandCall;
 
 public class PluginCommandCall extends ParentCommand implements CommandCall
 {

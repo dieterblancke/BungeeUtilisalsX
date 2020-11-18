@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisalsx.common.announcers.title;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcement;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.EqualsAndHashCode;

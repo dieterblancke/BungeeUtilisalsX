@@ -22,12 +22,12 @@ import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
-@Slf4j
 public class Config
 {
 
@@ -63,12 +63,12 @@ public class Config
             }
             catch ( IOException e )
             {
-                log.error( "Could not update configurations: ", e );
+                BuX.getLogger().log( Level.SEVERE, "Could not update configurations: ", e );
             }
         }
 
         this.setup();
-        log.info( "Successfully loaded config file: " + location );
+        BuX.getLogger().info( "Successfully loaded config file: " + location.substring( 1 ) );
     }
 
     public void reload()

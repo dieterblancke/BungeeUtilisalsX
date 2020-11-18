@@ -18,7 +18,6 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.converter;
 
-import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Callback;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.ImportUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.ProgressableCallback;
 import lombok.Data;

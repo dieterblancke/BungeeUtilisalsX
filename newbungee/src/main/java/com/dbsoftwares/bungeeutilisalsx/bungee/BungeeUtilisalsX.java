@@ -1,8 +1,11 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee;
 
-import com.dbsoftwares.bungeeutilisalsx.bungee.bridging.BridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.bungee.commands.BungeeCommandManager;
 import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
+import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.MotdPingListener;
+import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.PunishmentListener;
+import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.UserChatListener;
+import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
@@ -11,6 +14,7 @@ import com.dbsoftwares.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.IBuXApi;
+import com.dbsoftwares.bungeeutilisalsx.common.IPluginDescription;
 import com.dbsoftwares.bungeeutilisalsx.common.ProxyOperationsApi;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
@@ -18,21 +22,27 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import com.dbsoftwares.bungeeutilisalsx.common.bridge.BridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.event.EventLoader;
 import com.dbsoftwares.bungeeutilisalsx.common.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
 import com.dbsoftwares.configuration.api.FileStorageType;
+import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final ProxyOperationsApi proxyOperationsApi = new BungeeOperationsApi();
     private final CommandManager commandManager = new BungeeCommandManager();
+    private final IPluginDescription pluginDescription = new BungeePluginDescription();
+    private final List<StaffUser> staffMembers = new ArrayList<>();
 
     @Override
     public void initialize()
@@ -46,17 +56,18 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     protected IBuXApi createBuXApi()
     {
         final IBridgeManager bridgeManager = new BridgeManager();
-        bridgeManager.setup();
-
-        return new BuXApi(
+        final IBuXApi api = new BuXApi(
                 bridgeManager,
                 new PluginLanguageManager(),
                 new EventLoader(),
-                new HubBalancer(),
+                ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentExecutor(),
                 bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils(),
                 new ChatManager()
         );
+        bridgeManager.setup( api );
+
+        return api;
     }
 
     @Override
@@ -83,7 +94,18 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void registerListeners()
     {
+        ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new UserChatListener() );
+        ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new UserConnectionListener() );
 
+        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new PunishmentListener() );
+        }
+
+        if ( ConfigFiles.MOTD.isEnabled() )
+        {
+            ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new MotdPingListener() );
+        }
     }
 
     @Override
@@ -107,7 +129,19 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     public List<StaffUser> getStaffMembers()
     {
-        return null;
+        return staffMembers;
+    }
+
+    @Override
+    public IPluginDescription getDescription()
+    {
+        return pluginDescription;
+    }
+
+    @Override
+    public Logger getLogger()
+    {
+        return Bootstrap.getInstance().getLogger();
     }
 
     private void registerMetrics()

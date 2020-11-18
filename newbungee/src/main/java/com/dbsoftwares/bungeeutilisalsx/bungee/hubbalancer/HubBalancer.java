@@ -1,13 +1,13 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.Bootstrap;
+import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.listeners.JoinListener;
+import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.listeners.KickListener;
+import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.tasks.ServerPingTask;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.ServerData;
-import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.listeners.JoinListener;
-import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.listeners.KickListener;
-import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.tasks.ServerPingTask;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -43,7 +43,7 @@ public class HubBalancer implements IHubBalancer
         }
 
         BuX.getInstance().getScheduler().runTaskRepeating(
-                1, configuration.getInteger( "ping-delay" ), TimeUnit.SECONDS, new ServerPingTask()
+                5, configuration.getInteger( "ping-delay" ), TimeUnit.SECONDS, new ServerPingTask()
         );
 
         ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new JoinListener() );

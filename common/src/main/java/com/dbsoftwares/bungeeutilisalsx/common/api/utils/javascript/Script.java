@@ -6,7 +6,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.hash.Hashing;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptEngineManager;
@@ -15,9 +15,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.logging.Level;
 
 @Data
-@Slf4j
 public class Script
 {
 
@@ -83,7 +83,7 @@ public class Script
         }
         catch ( ScriptException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             return "SCRIPT ERROR";
         }
     }
@@ -100,7 +100,7 @@ public class Script
             }
             catch ( IOException e )
             {
-                log.warn( "Could not remove empty script storage.", e );
+                BuX.getLogger().log( Level.WARNING, "Could not remove empty script storage.", e );
             }
         }
     }

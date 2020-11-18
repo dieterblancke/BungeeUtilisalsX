@@ -18,6 +18,7 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.api.placeholder;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.event.handler.PlaceHolderEventHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.placeholders.ClassPlaceHolder;
@@ -26,11 +27,11 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.placeholders.Inpu
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
+import java.util.logging.Level;
 
-@Slf4j
 public class PlaceHolderAPI
 {
 
@@ -56,7 +57,7 @@ public class PlaceHolderAPI
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return message;
         }
     }
@@ -81,7 +82,7 @@ public class PlaceHolderAPI
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return message;
         }
     }

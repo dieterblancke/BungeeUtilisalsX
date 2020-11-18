@@ -18,12 +18,11 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.library;
 
-import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,7 +35,6 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Slf4j
 public class Library
 {
 
@@ -85,7 +83,7 @@ public class Library
         // Download libary if not present
         if ( !path.exists() )
         {
-            log.info( "Downloading libary for " + toString() );
+            BuX.getLogger().info( "Downloading libary for " + toString() );
 
             try ( final InputStream input = new URL( downloadURL ).openStream();
                   final ReadableByteChannel channel = Channels.newChannel( input );
@@ -93,11 +91,11 @@ public class Library
             {
 
                 output.getChannel().transferFrom( channel, 0, Long.MAX_VALUE );
-                log.info( "Successfully downloaded libary for " + toString() );
+                BuX.getLogger().info( "Successfully downloaded libary for " + toString() );
 
-                log.info( "Removing older versions of " + toString() );
+                BuX.getLogger().info( "Removing older versions of " + toString() );
                 getOutdatedFiles( folder ).forEach( File::delete );
-                log.info( "Successfully removed older versions of " + toString() );
+                BuX.getLogger().info( "Successfully removed older versions of " + toString() );
             }
             catch ( IOException e )
             {
@@ -106,7 +104,7 @@ public class Library
         }
 
         BuX.getInstance().getJarClassLoader().loadJar( path );
-        log.info( "Loaded " + name + " libary!" );
+        BuX.getLogger().info( "Loaded " + name + " libary!" );
     }
 
     private Collection<File> getOutdatedFiles( final File folder )

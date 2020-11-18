@@ -34,15 +34,15 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 import org.bson.Document;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Map;
+import java.util.logging.Level;
 
-@Slf4j
 public class MongoToSQLConverter extends Converter
 {
 
@@ -80,7 +80,7 @@ public class MongoToSQLConverter extends Converter
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         for ( PunishmentType type : PunishmentType.values() )
         {
@@ -103,7 +103,7 @@ public class MongoToSQLConverter extends Converter
             }
             catch ( SQLException e )
             {
-                log.error( "An error occured: ", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }

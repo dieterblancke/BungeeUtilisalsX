@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -35,8 +35,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLFriendsDao implements FriendsDao
 {
 
@@ -55,7 +55,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -74,7 +74,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -107,7 +107,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friends;
@@ -135,7 +135,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return count;
@@ -156,7 +156,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -175,7 +175,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -209,7 +209,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friendRequests;
@@ -245,7 +245,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return friendRequests;
@@ -274,7 +274,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return found;
@@ -303,7 +303,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return found;
@@ -357,7 +357,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -388,7 +388,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return setting;
@@ -419,7 +419,7 @@ public class SQLFriendsDao implements FriendsDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return settings == null ? new FriendSettings() : settings;

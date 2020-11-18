@@ -19,6 +19,6 @@ public class MsgToggleCommandCall implements CommandCall
         }
 
         user.setMsgToggled( !user.isMsgToggled() );
-        user.sendLangMessage( "general-commands.msgtoggle." + (user.isMsgToggled() ? "enabled" : "disabled") );
+        user.sendLangMessage( "general-commands.msgtoggle." + ( user.isMsgToggled() ? "enabled" : "disabled" ) );
     }
 }

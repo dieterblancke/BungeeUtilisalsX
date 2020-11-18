@@ -22,8 +22,8 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 

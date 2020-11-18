@@ -19,7 +19,8 @@
 package com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection;
 
 import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import lombok.extern.slf4j.Slf4j;
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import lombok.extern.java.Log;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;
@@ -27,8 +28,8 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.logging.Level;
 
-@Slf4j
 public class JarClassLoader
 {
 
@@ -63,7 +64,7 @@ public class JarClassLoader
         }
         catch ( IllegalAccessException | InvocationTargetException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -75,7 +76,7 @@ public class JarClassLoader
         }
         catch ( MalformedURLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 }

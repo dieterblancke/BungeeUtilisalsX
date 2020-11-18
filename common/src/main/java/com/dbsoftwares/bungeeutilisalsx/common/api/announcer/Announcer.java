@@ -28,7 +28,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
@@ -39,13 +38,14 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.logging.Level;
 
 @Data
-@Slf4j
 public abstract class Announcer
 {
 
     private static final File folder;
+    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool( 2 );
     @Getter
     private static Map<AnnouncementType, Announcer> announcers = Maps.newHashMap();
 
@@ -58,7 +58,6 @@ public abstract class Announcer
         }
     }
 
-    private static final ScheduledExecutorService SCHEDULED_EXECUTOR_SERVICE = Executors.newScheduledThreadPool( 2 );
     protected IConfiguration configuration;
     private ScheduledFuture task;
     private AnnouncementType type;
@@ -75,7 +74,7 @@ public abstract class Announcer
         this(
                 type,
                 new File( folder, type.toString().toLowerCase() + ".yml" ),
-                AbstractBungeeUtilisalsX.class.getResourceAsStream( "announcers/" + type.toString().toLowerCase() + ".yml" )
+                AbstractBungeeUtilisalsX.class.getResourceAsStream( "/announcers/" + type.toString().toLowerCase() + ".yml" )
         );
     }
 
@@ -106,14 +105,14 @@ public abstract class Announcer
                     announcer.loadAnnouncements();
                     announcer.start();
 
-                    log.info( "Loading " + announcer.getType().toString().toLowerCase() + " announcements ..." );
+                    BuX.getLogger().info( "Loading " + announcer.getType().toString().toLowerCase() + " announcements ..." );
                 }
 
                 announcers.put( announcer.getType(), announcer );
             }
             catch ( InstantiationException | IllegalAccessException e )
             {
-                log.error( "An error occured: ", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         }
     }
@@ -168,7 +167,7 @@ public abstract class Announcer
         {
             return;
         }
-        task.cancel(true);
+        task.cancel( true );
         task = null;
     }
 
@@ -228,7 +227,7 @@ public abstract class Announcer
         }
         catch ( IOException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             return;
         }
         stop();

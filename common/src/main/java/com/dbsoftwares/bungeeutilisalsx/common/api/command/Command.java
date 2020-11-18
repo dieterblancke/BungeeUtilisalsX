@@ -23,12 +23,13 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
+import java.util.logging.Level;
 
 @Data
-@Slf4j
+
 public class Command
 {
 
@@ -118,7 +119,7 @@ public class Command
             }
             catch ( Exception e )
             {
-                log.error( "An error occured: ", e );
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         } );
     }

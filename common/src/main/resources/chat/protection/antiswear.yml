@@ -1,0 +1,19 @@
+enabled: true
+
+# If set to true, BungeeUtilisals will cancel the chat message sent, if false, BungeeUtilisals will replace the word.
+cancel: true
+
+# What do you want to words to be replaced with? This is ignored is cancel is true.
+replace: '*****'
+
+# The permission to bypass the antiswear system
+bypass: 'bungeeutilisals.bypass.antiswear'
+
+# The words you want to be blocked by antiswear.
+words:
+  - word1
+  - word2
+
+# Commands that have to be executed when someone advertises (will be executed by console)
+commands: [ ]
+# - 'warn {user} Please do not swear.'

@@ -27,7 +27,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -37,8 +37,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLUserDao implements UserDao
 {
 
@@ -85,7 +85,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -105,7 +105,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -127,7 +127,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return present;
@@ -151,7 +151,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return present;
@@ -175,7 +175,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return present;
@@ -214,7 +214,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return storage;
     }
@@ -252,7 +252,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return storage;
     }
@@ -298,7 +298,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return users;
     }
@@ -324,7 +324,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return language;
     }
@@ -342,7 +342,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -359,7 +359,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -376,7 +376,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -393,7 +393,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -410,7 +410,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -439,7 +439,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return map;
@@ -471,7 +471,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         return map;
@@ -492,7 +492,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -511,7 +511,7 @@ public class SQLUserDao implements UserDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 

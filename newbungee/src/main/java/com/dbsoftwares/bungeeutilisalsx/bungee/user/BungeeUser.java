@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee.user;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
-import com.dbsoftwares.bungeeutilisalsx.bungee.utils.UserUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
@@ -45,7 +44,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.Title;
@@ -63,7 +62,6 @@ import java.util.UUID;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Setter
 @Getter
 public class BungeeUser implements User, CanReceiveMessages
@@ -111,7 +109,7 @@ public class BungeeUser implements User, CanReceiveMessages
 
             if ( storage.getJoinedHost() == null )
             {
-                final String joinedHost = UserUtils.getJoinedHost( parent );
+                final String joinedHost = this.getJoinedHost();
 
                 storage.setJoinedHost( joinedHost );
                 dao.getUserDao().setJoinedHost( uuid, joinedHost );
@@ -121,7 +119,7 @@ public class BungeeUser implements User, CanReceiveMessages
         {
             final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
             final Date date = new Date( System.currentTimeMillis() );
-            final String joinedHost = UserUtils.getJoinedHost( parent );
+            final String joinedHost = this.getJoinedHost();
 
             dao.getUserDao().createUser(
                     uuid,
@@ -512,17 +510,19 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
-        final boolean hasPermission = parent.hasPermission( permission );
+        final boolean hasPermission = parent.hasPermission( permission )
+                || parent.hasPermission( "*" )
+                || parent.hasPermission( "bungeeutilisalsx.*" );
 
         if ( ConfigFiles.CONFIG.isDebug() )
         {
             if ( hasPermission )
             {
-                log.info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
             }
             else
             {
-                log.info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
             }
         }
 
@@ -581,6 +581,28 @@ public class BungeeUser implements User, CanReceiveMessages
     public void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer )
     {
         parent.setTabHeader( header, footer );
+    }
+
+    @Override
+    public String getJoinedHost()
+    {
+        final String joinedHost;
+        if ( parent.getPendingConnection().getVirtualHost() == null )
+        {
+            joinedHost = null;
+        }
+        else
+        {
+            if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
+            {
+                joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
+            }
+            else
+            {
+                joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
+            }
+        }
+        return joinedHost;
     }
 
     @Override

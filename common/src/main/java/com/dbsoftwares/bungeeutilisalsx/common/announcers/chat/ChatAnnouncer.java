@@ -18,16 +18,16 @@
 
 package com.dbsoftwares.bungeeutilisalsx.common.announcers.chat;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.util.List;
 
-@Slf4j
 public class ChatAnnouncer extends Announcer
 {
 
@@ -45,7 +45,7 @@ public class ChatAnnouncer extends Announcer
 
             if ( group == null )
             {
-                log.warn(
+                BuX.getLogger().warning(
                         "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
                 );
                 return;

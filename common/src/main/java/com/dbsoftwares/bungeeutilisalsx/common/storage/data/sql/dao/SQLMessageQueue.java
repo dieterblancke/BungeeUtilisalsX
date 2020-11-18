@@ -23,7 +23,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.gson.Gson;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -31,8 +31,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
+
 public class SQLMessageQueue extends LinkedList<QueuedMessage> implements MessageQueue<QueuedMessage>
 {
 
@@ -173,7 +174,7 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
     }
 

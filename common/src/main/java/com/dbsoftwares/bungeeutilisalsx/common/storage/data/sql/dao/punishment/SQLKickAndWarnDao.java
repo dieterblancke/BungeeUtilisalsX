@@ -25,7 +25,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import com.google.common.collect.Lists;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -34,8 +34,8 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.logging.Level;
 
-@Slf4j
 public class SQLKickAndWarnDao implements KickAndWarnDao
 {
 
@@ -60,7 +60,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         return PunishmentDao.buildPunishmentInfo( PunishmentType.WARN, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
     }
@@ -86,7 +86,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         return PunishmentDao.buildPunishmentInfo( PunishmentType.KICK, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
     }
@@ -124,7 +124,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return punishments;
@@ -163,7 +163,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return punishments;
@@ -203,7 +203,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return punishments;
@@ -243,7 +243,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return punishments;
@@ -282,7 +282,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return info;
@@ -321,7 +321,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured:", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
 
         return info;

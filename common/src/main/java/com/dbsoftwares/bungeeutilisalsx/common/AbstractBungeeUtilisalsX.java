@@ -7,6 +7,10 @@ import com.dbsoftwares.bungeeutilisalsx.common.announcers.tab.TabAnnouncer;
 import com.dbsoftwares.bungeeutilisalsx.common.announcers.title.TitleAnnouncer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.*;
 import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
 import com.dbsoftwares.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
@@ -18,17 +22,19 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.javascript.Script;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection.JarClassLoader;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.executors.*;
 import com.dbsoftwares.bungeeutilisalsx.common.library.Library;
 import com.dbsoftwares.bungeeutilisalsx.common.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
 import com.dbsoftwares.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
+import com.dbsoftwares.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.Updater;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.migration.Update;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.java.Log;
 
 import javax.script.ScriptException;
 import java.io.File;
@@ -39,9 +45,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Data
-@Slf4j
+@Updatable( url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/" )
 public abstract class AbstractBungeeUtilisalsX
 {
 
@@ -68,9 +76,9 @@ public abstract class AbstractBungeeUtilisalsX
     {
         if ( ReflectionUtils.getJavaVersion() < 8 )
         {
-            log.warn( "You are running a Java version lower then Java 8." );
-            log.warn( "Please upgrade to Java 8 or newer." );
-            log.warn( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
+            BuX.getLogger().warning( "You are running a Java version lower then Java 8." );
+            BuX.getLogger().warning( "Please upgrade to Java 8 or newer." );
+            BuX.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
             return;
         }
 
@@ -90,6 +98,7 @@ public abstract class AbstractBungeeUtilisalsX
 
         this.registerLanguages();
         this.registerListeners();
+        this.registerExecutors();
         this.registerCommands();
 
         Announcer.registerAnnouncers(
@@ -116,6 +125,42 @@ public abstract class AbstractBungeeUtilisalsX
     protected abstract void registerLanguages();
 
     protected abstract void registerListeners();
+
+    protected void registerExecutors()
+    {
+        final UserExecutor userExecutor = new UserExecutor();
+        this.getApi().getEventLoader().register( UserLoadEvent.class, userExecutor );
+        this.getApi().getEventLoader().register( UserUnloadEvent.class, userExecutor );
+
+        this.getApi().getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
+        this.getApi().getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
+
+        final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
+        this.getApi().getEventLoader().register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
+        this.getApi().getEventLoader().register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
+
+        final SpyEventExecutor spyEventExecutor = new SpyEventExecutor();
+        this.getApi().getEventLoader().register( UserPrivateMessageEvent.class, spyEventExecutor );
+        this.getApi().getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
+
+        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        {
+            this.getApi().getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
+
+            final MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
+            this.getApi().getEventLoader().register( UserChatEvent.class, muteCheckExecutor );
+            this.getApi().getEventLoader().register( UserCommandEvent.class, muteCheckExecutor );
+        }
+
+        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
+        {
+            final FriendsExecutor friendsExecutor = new FriendsExecutor();
+
+            this.getApi().getEventLoader().register( UserLoadEvent.class, friendsExecutor );
+            this.getApi().getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
+            this.getApi().getEventLoader().register( UserServerConnectEvent.class, friendsExecutor );
+        }
+    }
 
     protected void setupTasks()
     {
@@ -155,11 +200,11 @@ public abstract class AbstractBungeeUtilisalsX
             scriptsFolder.mkdir();
 
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "scripts/hello.js" ),
+                    this.getClass().getResourceAsStream( "/scripts/hello.js" ),
                     new File( scriptsFolder, "hello.js" )
             );
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "scripts/coins.js" ),
+                    this.getClass().getResourceAsStream( "/scripts/coins.js" ),
                     new File( scriptsFolder, "coins.js" )
             );
         }
@@ -179,7 +224,7 @@ public abstract class AbstractBungeeUtilisalsX
             }
             catch ( IOException | ScriptException e )
             {
-                log.error( "Could not load script " + file.getName(), e );
+                BuX.getLogger().log( Level.SEVERE, "Could not load script " + file.getName(), e );
             }
         }
     }
@@ -191,7 +236,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     private void loadLibraries()
     {
-        log.info( "Loading libraries ..." );
+        BuX.getLogger().info( "Loading libraries ..." );
         jarClassLoader = new JarClassLoader();
 
         for ( StandardLibrary standardLibrary : StandardLibrary.values() )
@@ -203,7 +248,7 @@ public abstract class AbstractBungeeUtilisalsX
                 library.load();
             }
         }
-        log.info( "Libraries have been loaded." );
+        BuX.getLogger().info( "Libraries have been loaded." );
     }
 
     private void loadDatabase()
@@ -224,7 +269,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
         catch ( Exception e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
     }
 
@@ -277,9 +322,9 @@ public abstract class AbstractBungeeUtilisalsX
                         "com.dbsoftwares.bungeeutilisals.updater.UpdateTo" + this.getVersion().replace( ".", "_" )
                 );
 
-                log.info( "Updating data to support BungeeUtilisalsX v" + this.getVersion() + " ..." );
+                BuX.getLogger().info( "Updating data to support BungeeUtilisalsX v" + this.getVersion() + " ..." );
                 updater.newInstance().update();
-                log.info( "Finished updating data!" );
+                BuX.getLogger().info( "Finished updating data!" );
 
                 final String encrypted = EncryptionUtils.encrypt( this.getVersion(), key );
                 Files.write( file.toPath(), encrypted.getBytes(), StandardOpenOption.TRUNCATE_EXISTING );
@@ -299,6 +344,10 @@ public abstract class AbstractBungeeUtilisalsX
 
     public abstract List<StaffUser> getStaffMembers();
 
+    public abstract IPluginDescription getDescription();
+
+    public abstract Logger getLogger();
+
     public void shutdown()
     {
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
@@ -308,7 +357,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
         catch ( SQLException e )
         {
-            log.error( "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
         scripts.forEach( Script::unload );

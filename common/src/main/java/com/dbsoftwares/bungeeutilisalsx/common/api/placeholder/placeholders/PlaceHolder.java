@@ -33,7 +33,7 @@ public abstract class PlaceHolder
 {
 
     protected String placeHolderName;
-    @Accessors(fluent = true)
+    @Accessors( fluent = true )
     protected boolean requiresUser;
     @Setter
     protected PlaceHolderEventHandler eventHandler;

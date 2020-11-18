@@ -41,6 +41,6 @@ public class BungeeServer implements IProxyServer
         return BuX.getApi().getUsers()
                 .stream()
                 .filter( u -> players.contains( u.getName() ) )
-                .collect( Collectors.toList());
+                .collect( Collectors.toList() );
     }
 }
