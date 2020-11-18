@@ -30,7 +30,7 @@
 
     <modules>
         <module>common</module>
-        <module>newbungee</module>
+        <module>bungee</module>
     </modules>
 
     <developers>

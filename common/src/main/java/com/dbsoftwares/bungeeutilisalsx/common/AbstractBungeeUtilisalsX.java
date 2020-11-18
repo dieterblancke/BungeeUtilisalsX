@@ -34,7 +34,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.updater.migration.Update;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 import javax.script.ScriptException;
 import java.io.File;
@@ -60,7 +59,6 @@ public abstract class AbstractBungeeUtilisalsX
     private IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
     private JarClassLoader jarClassLoader;
-    private CommandManager commandManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -171,19 +169,18 @@ public abstract class AbstractBungeeUtilisalsX
     {
         ConfigFiles.reloadAllConfigs();
 
+        for ( Language language : this.getApi().getLanguageManager().getLanguages() )
+        {
+            this.getApi().getLanguageManager().reloadConfig( this.getName(), language );
+        }
+
         if ( this.getApi().getHubBalancer() != null )
         {
             this.getApi().getHubBalancer().reload();
         }
 
-        commandManager.load();
-
+        this.getCommandManager().load();
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
-
-        for ( Language language : this.getApi().getLanguageManager().getLanguages() )
-        {
-            this.getApi().getLanguageManager().reloadConfig( this.getName(), language );
-        }
 
         loadScripts();
         api.getChatManager().reload();

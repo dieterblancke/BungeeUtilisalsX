@@ -56,7 +56,7 @@ public class ClearChatCommandCall implements CommandCall, TabCall
     {
         for ( int i = 0; i < 250; i++ )
         {
-            user.sendMessage( Utils.format( "&e" ) );
+            user.sendMessage( Utils.format( "&e  " ) );
         }
 
         user.sendLangMessage( "general-commands.clearchat.cleared", "{user}", by );
