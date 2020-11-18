@@ -85,7 +85,12 @@ public class DefaultPlaceHolders implements PlaceHolderPack
         {
             return "";
         }
-        final SimpleDateFormat dateFormat = new SimpleDateFormat( configuration.getString( "placeholders.format." + type ) );
+        final String format = configuration.getString( "placeholders.format." + type );
+        if ( format == null )
+        {
+            return "";
+        }
+        final SimpleDateFormat dateFormat = new SimpleDateFormat( format );
 
         return dateFormat.format( new Date() );
     }
