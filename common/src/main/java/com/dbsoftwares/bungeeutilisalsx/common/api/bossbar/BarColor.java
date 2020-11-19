@@ -50,7 +50,7 @@ public class BarColor
     }
 
     @Getter
-    private int id;
+    private final int id;
 
     public BarColor( int id )
     {

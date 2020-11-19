@@ -1,4 +1,4 @@
-package com.dbsoftwares.bungeeutilisalsx.bungee.commands;
+package com.dbsoftwares.bungeeutilisalsx.bungee.command;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.commands.HubCommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;

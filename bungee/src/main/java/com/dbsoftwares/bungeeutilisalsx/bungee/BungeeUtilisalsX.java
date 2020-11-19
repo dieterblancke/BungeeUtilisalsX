@@ -1,6 +1,6 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee;
 
-import com.dbsoftwares.bungeeutilisalsx.bungee.commands.BungeeCommandManager;
+import com.dbsoftwares.bungeeutilisalsx.bungee.command.BungeeCommandManager;
 import com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.MotdPingListener;
 import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.PunishmentListener;
