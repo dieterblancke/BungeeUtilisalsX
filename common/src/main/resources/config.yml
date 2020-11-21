@@ -62,6 +62,9 @@ storage:
   # Should BungeeUtilisals try to establish a SSL connection? (only for SQL)
   useSSL: true
 
+  # This is only used for MySQL. Change to your server's time zone as you like.
+  server-timezone: 'Europe/Brussels'
+
   pool:
     # How many connections are allowed to be made?
     # Find more information at:

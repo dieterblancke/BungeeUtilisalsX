@@ -124,7 +124,7 @@ public class Command
         } );
     }
 
-    public Iterable<String> onTabComplete( final User user, final String[] args )
+    public List<String> onTabComplete( final User user, final String[] args )
     {
         if ( user.isConsole() || user == null )
         {

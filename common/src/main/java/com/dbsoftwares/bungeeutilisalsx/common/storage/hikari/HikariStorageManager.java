@@ -39,13 +39,16 @@ public abstract class HikariStorageManager extends SQLStorageManager
     {
         super( type, new SQLDao() );
         config = cfg == null ? new HikariConfig() : cfg;
-        config.setDataSourceClassName( getDataSourceClass() );
-        config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
-        config.addDataSourceProperty( "port" + ( type.equals( StorageType.POSTGRESQL ) ? "Number" : "" ),
-                configuration.getInteger( "storage.port" ) );
-        config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
-        config.addDataSourceProperty( "user", configuration.getString( "storage.username" ) );
-        config.addDataSourceProperty( "password", configuration.getString( "storage.password" ) );
+        if ( getDataSourceClass() != null )
+        {
+            config.setDataSourceClassName( getDataSourceClass() );
+            config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
+            config.addDataSourceProperty( "port" + ( type.equals( StorageType.POSTGRESQL ) ? "Number" : "" ),
+                    configuration.getInteger( "storage.port" ) );
+            config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
+        }
+        config.setUsername( configuration.getString( "storage.username" ) );
+        config.setPassword( configuration.getString( "storage.password" ) );
 
         if ( !type.equals( StorageType.MARIADB ) )
         {

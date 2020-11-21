@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -64,7 +63,7 @@ public class Library
 
     public boolean isPresent()
     {
-        return Utils.classFound( className );
+        return this.classFound( className );
     }
 
     public void load()
@@ -123,6 +122,19 @@ public class Library
         }
 
         return outdatedFiles;
+    }
+
+    private boolean classFound( final String clazz )
+    {
+        try
+        {
+            Class.forName( clazz );
+            return true;
+        }
+        catch ( ClassNotFoundException e )
+        {
+            return false;
+        }
     }
 
     @Override

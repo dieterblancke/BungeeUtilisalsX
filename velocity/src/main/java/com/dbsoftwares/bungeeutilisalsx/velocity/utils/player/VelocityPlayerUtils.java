@@ -16,85 +16,78 @@
  *
  */
 
-package com.dbsoftwares.bungeeutilisalsx.bungee.utils.player;
+package com.dbsoftwares.bungeeutilisalsx.velocity.utils.player;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MojangUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import com.google.common.collect.Lists;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.connection.ProxiedPlayer;
+import com.dbsoftwares.bungeeutilisalsx.velocity.Bootstrap;
+import com.velocitypowered.api.proxy.Player;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
-public class BungeePlayerUtils implements IPlayerUtils
+public class VelocityPlayerUtils implements IPlayerUtils
 {
 
     @Override
     public int getPlayerCount( String server )
     {
-        ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
-
-        return info == null ? 0 : info.getPlayers().size();
+        return Bootstrap.getInstance().getProxyServer().getServer( server )
+                .map( s -> s.getPlayersConnected().size() )
+                .orElse( 0 );
     }
 
     @Override
     public List<String> getPlayers( String server )
     {
-        List<String> players = Lists.newArrayList();
-        ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
-
-        if ( info != null )
-        {
-            info.getPlayers().forEach( player -> players.add( player.getName() ) );
-        }
-
-        return players;
+        return Bootstrap.getInstance().getProxyServer().getServer( server )
+                .map( s -> s.getPlayersConnected()
+                        .stream()
+                        .map( Player::getUsername )
+                        .collect( Collectors.toList() )
+                )
+                .orElse( new ArrayList<>() );
     }
 
     @Override
     public int getTotalCount()
     {
-        return ProxyServer.getInstance().getPlayers().size();
+        return Bootstrap.getInstance().getProxyServer().getPlayerCount();
     }
 
     @Override
     public List<String> getPlayers()
     {
-        List<String> players = Lists.newArrayList();
-
-        ProxyServer.getInstance().getPlayers().forEach( player -> players.add( player.getName() ) );
-
-        return players;
+        return Bootstrap.getInstance().getProxyServer().getAllPlayers()
+                .stream()
+                .map( Player::getUsername )
+                .collect( Collectors.toList() );
     }
 
     @Override
     public IProxyServer findPlayer( String name )
     {
-        ProxiedPlayer player = ProxyServer.getInstance().getPlayer( name );
-
-        if ( player != null )
-        {
-            return BuX.getInstance().proxyOperations().getServerInfo( player.getServer().getInfo().getName() );
-        }
-
-        return null;
+        return Bootstrap.getInstance().getProxyServer().getPlayer( name )
+                .flatMap( value -> value.getCurrentServer()
+                        .map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ) )
+                .orElse( null );
     }
 
     @Override
     public boolean isOnline( String name )
     {
-        return ProxyServer.getInstance().getPlayer( name ) != null;
+        return Bootstrap.getInstance().getProxyServer().getPlayer( name ).isPresent();
     }
 
     @Override
     public UUID getUuid( String targetName )
     {
-        final ProxiedPlayer player = ProxyServer.getInstance().getPlayer( targetName );
+        final Player player = Bootstrap.getInstance().getProxyServer().getPlayer( targetName ).orElse( null );
 
         if ( player != null )
         {

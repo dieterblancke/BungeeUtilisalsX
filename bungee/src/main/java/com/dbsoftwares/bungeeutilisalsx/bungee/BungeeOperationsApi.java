@@ -53,11 +53,6 @@ public class BungeeOperationsApi implements ProxyOperationsApi
 
             ProxyServer.getInstance().getPluginManager().registerCommand( Bootstrap.getInstance(), commandHolder );
 
-            if ( command instanceof Listener )
-            {
-                ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), (Listener) command );
-            }
-
             commandHolders.put( command, commandHolder );
         }
     }
@@ -68,11 +63,6 @@ public class BungeeOperationsApi implements ProxyOperationsApi
         if ( commandHolders.containsKey( command ) )
         {
             ProxyServer.getInstance().getPluginManager().unregisterCommand( this.commandHolders.remove( command ) );
-
-            if ( command instanceof Listener )
-            {
-                ProxyServer.getInstance().getPluginManager().unregisterListener( (Listener) command );
-            }
         }
     }
 

@@ -54,6 +54,12 @@ public enum StandardLibrary
             "3.12.1",
             checkType( "MONGODB" )
     ),
+    MYSQL(
+            "com.mysql.cj.jdbc.Driver",
+            "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
+            "8.0.22",
+            checkType( "MYSQL" )
+    ),
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
