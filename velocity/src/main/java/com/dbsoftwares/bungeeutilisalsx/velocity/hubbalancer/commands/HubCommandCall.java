@@ -1,6 +1,5 @@
 package com.dbsoftwares.bungeeutilisalsx.velocity.hubbalancer.commands;
 
-import com.dbsoftwares.bungeeutilisalsx.velocity.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.CommandCall;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.TabCall;
@@ -8,6 +7,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.MathUtils;
+import com.dbsoftwares.bungeeutilisalsx.velocity.user.ConsoleUser;
 
 import java.util.List;
 import java.util.stream.Collectors;

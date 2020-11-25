@@ -53,7 +53,6 @@ public class UserChatListener implements Listener
         }
 
         event.setMessage( chatEvent.getMessage() );
-
     }
 
     @EventHandler

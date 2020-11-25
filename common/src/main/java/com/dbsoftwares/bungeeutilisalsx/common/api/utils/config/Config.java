@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
-import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;

@@ -1,11 +1,11 @@
 package com.dbsoftwares.bungeeutilisalsx.velocity;
 
-import com.dbsoftwares.bungeeutilisalsx.velocity.utils.CommandHolder;
-import com.dbsoftwares.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.dbsoftwares.bungeeutilisalsx.common.ProxyOperationsApi;
 import com.dbsoftwares.bungeeutilisalsx.common.api.command.Command;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import com.dbsoftwares.bungeeutilisalsx.velocity.utils.CommandHolder;
+import com.dbsoftwares.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;

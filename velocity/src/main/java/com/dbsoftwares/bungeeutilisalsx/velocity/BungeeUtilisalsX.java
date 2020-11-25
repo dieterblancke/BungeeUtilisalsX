@@ -22,6 +22,7 @@ import com.dbsoftwares.bungeeutilisalsx.velocity.listeners.UserConnectionListene
 import com.dbsoftwares.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
+import com.dbsoftwares.bungeeutilisalsx.velocity.placeholder.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisalsx.velocity.utils.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
@@ -75,6 +76,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
+
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" ) )
+        {
+            new JavaScriptPlaceHolder().register();
+        }
     }
 
     @Override

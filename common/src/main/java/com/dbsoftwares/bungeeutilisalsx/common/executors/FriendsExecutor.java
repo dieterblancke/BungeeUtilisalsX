@@ -23,6 +23,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.Event;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendRequest;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -66,7 +67,7 @@ public class FriendsExecutor implements EventExecutor
     }
 
     @Event
-    public void onSwitch( final UserServerConnectEvent event )
+    public void onSwitch( final UserServerConnectedEvent event )
     {
         final User user = event.getUser();
 

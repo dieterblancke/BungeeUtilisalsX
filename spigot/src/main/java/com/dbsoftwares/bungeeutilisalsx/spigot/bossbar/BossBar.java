@@ -89,7 +89,7 @@ public class BossBar implements IBossBar
 
         for ( User user : users )
         {
-            this.bossBar.addPlayer( ((SpigotUser) user).getPlayer() );
+            this.bossBar.addPlayer( ( (SpigotUser) user ).getPlayer() );
         }
         this.bossBar.setVisible( true );
     }

@@ -23,11 +23,13 @@ public class BuX
         return GSON;
     }
 
-    public static Logger getLogger(final String name) {
+    public static Logger getLogger( final String name )
+    {
         return getLogger();
     }
 
-    public static Logger getLogger() {
+    public static Logger getLogger()
+    {
         return getInstance().getLogger();
     }
 }

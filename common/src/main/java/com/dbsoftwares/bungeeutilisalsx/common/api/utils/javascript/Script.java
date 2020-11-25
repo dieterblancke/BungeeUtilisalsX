@@ -5,11 +5,10 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.hash.Hashing;
+import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 import java.io.File;
 import java.io.IOException;
@@ -22,6 +21,7 @@ public class Script
 {
 
     private static final File cacheFolder;
+    private static final RhinoScriptEngineFactory ENGINE_FACTORY = new RhinoScriptEngineFactory();
 
     static
     {
@@ -61,7 +61,7 @@ public class Script
 
     private ScriptEngine loadEngine() throws ScriptException
     {
-        final ScriptEngine engine = new ScriptEngineManager().getEngineByName( "nashorn" );
+        final ScriptEngine engine = ENGINE_FACTORY.getScriptEngine();
 
         engine.put( "storage", storage );
         engine.put( "api", BuX.getApi() );

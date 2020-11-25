@@ -22,11 +22,13 @@ import com.dbsoftwares.bungeeutilisalsx.bungee.user.BungeeUser;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
+import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -76,5 +78,21 @@ public class UserConnectionListener implements Listener
             event.setCancelled( true );
         }
         event.setTarget( ( (BungeeServer) userServerConnectEvent.getTarget() ).getServerInfo() );
+    }
+
+    @EventHandler
+    public void onConnect( final ServerConnectedEvent event )
+    {
+        final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
+
+        if ( !optional.isPresent() )
+        {
+            return;
+        }
+        final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
+                optional.get(),
+                BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getInfo().getName() )
+        );
+        BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
     }
 }

@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.gson.Gson;
-import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

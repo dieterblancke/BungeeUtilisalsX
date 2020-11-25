@@ -1,6 +1,9 @@
 # Enable to get debug messages (where they are enabled)
 debug: false
 
+# Should JavaScript placeholders be loaded and enabled?
+scripting: false
+
 bridging:
   enabled: true
   # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!

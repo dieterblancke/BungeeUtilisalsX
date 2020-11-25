@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisalsx.common.api.utils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.gson.Gson;
-import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.io.InputStream;

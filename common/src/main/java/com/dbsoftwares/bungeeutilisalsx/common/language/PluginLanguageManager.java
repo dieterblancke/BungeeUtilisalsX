@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.language.Language;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.io.ByteStreams;
-import lombok.extern.java.Log;
 
 import java.io.*;
 import java.util.logging.Level;

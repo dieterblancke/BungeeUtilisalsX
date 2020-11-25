@@ -12,7 +12,9 @@ import com.dbsoftwares.bungeeutilisalsx.common.bridge.handlers.BungeeBridgeRespo
 import com.dbsoftwares.bungeeutilisalsx.common.event.EventLoader;
 import com.dbsoftwares.bungeeutilisalsx.common.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
+import com.dbsoftwares.bungeeutilisalsx.spigot.gui.GuiManager;
 import com.dbsoftwares.configuration.api.FileStorageType;
+import lombok.Getter;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -23,12 +25,16 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final IPluginDescription pluginDescription = new SpigotPluginDescription();
+    @Getter
+    private GuiManager guiManager;
 
     @Override
     public void initialize()
     {
         // Overriding initialize method to avoid the proxy-specific features to boot up.
         super.initialize();
+
+        this.guiManager = new GuiManager();
 
         this.getApi().getEventLoader().register( BridgeResponseEvent.class, new BungeeBridgeResponseHandler() );
     }

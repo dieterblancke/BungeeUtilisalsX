@@ -35,6 +35,18 @@
             <version>1.16-R0.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.mozilla</groupId>
+            <artifactId>rhino</artifactId>
+            <version>1.7.13</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>de.christophkraemer</groupId>
+            <artifactId>rhino-script-engine</artifactId>
+            <version>1.1.1</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

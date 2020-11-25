@@ -33,6 +33,8 @@ import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.InboundConnection;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.List;
 import java.util.UUID;
@@ -69,7 +71,9 @@ public class MotdPingListener
         }
         final ServerPing orig = event.getPing();
         final String message = formatMessage( motd.getMotd(), event, motdConnection );
-        final Component component = Component.text( Utils.c( message ) );
+        final Component component = GsonComponentSerializer.gson().deserialize(
+                ComponentSerializer.toString( Utils.format( message ) )
+        );
 
         final List<ServerPing.SamplePlayer> hoverMessages = Lists.newArrayList();
         for ( String hoverMessage : motd.getHoverMessages() )

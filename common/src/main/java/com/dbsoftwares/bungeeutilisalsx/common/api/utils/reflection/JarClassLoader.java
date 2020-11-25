@@ -20,7 +20,6 @@ package com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection;
 
 import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
-import lombok.extern.java.Log;
 
 import java.io.File;
 import java.lang.reflect.InvocationTargetException;

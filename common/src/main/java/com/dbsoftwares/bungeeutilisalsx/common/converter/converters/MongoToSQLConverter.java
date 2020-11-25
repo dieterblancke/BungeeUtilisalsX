@@ -34,7 +34,6 @@ import com.mongodb.MongoCredential;
 import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
-import lombok.extern.java.Log;
 import org.bson.Document;
 
 import java.sql.Connection;

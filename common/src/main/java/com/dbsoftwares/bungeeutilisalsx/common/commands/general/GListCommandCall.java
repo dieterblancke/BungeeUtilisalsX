@@ -33,7 +33,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;

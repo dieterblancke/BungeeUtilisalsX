@@ -41,7 +41,7 @@ public class MySQLStorageManager extends HikariStorageManager
         final String timezone = ConfigFiles.CONFIG.getConfig().getString( "storage.server-timezone" );
 
         final HikariConfig config = new HikariConfig();
-        config.setDriverClassName("com.mysql.cj.jdbc.Driver");
+        config.setDriverClassName( "com.mysql.cj.jdbc.Driver" );
         config.setJdbcUrl( "jdbc:mysql://" + hostname + ":" + port + "/" + database + "?serverTimezone=" + timezone );
         config.addDataSourceProperty( "cachePrepStmts", "true" );
         config.addDataSourceProperty( "alwaysSendSetIsolation", "false" );

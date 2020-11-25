@@ -29,7 +29,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.punishments.Mutes
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLBansDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLMutesDao;
-import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

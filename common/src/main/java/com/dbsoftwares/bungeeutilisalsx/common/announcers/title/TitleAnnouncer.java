@@ -24,7 +24,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
-import lombok.extern.java.Log;
 
 public class TitleAnnouncer extends Announcer
 {

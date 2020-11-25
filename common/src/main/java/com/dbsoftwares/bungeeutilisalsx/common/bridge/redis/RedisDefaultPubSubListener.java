@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEv
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.message.BridgedMessage;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import io.lettuce.core.pubsub.RedisPubSubAdapter;
-import lombok.extern.java.Log;
 
 public class RedisDefaultPubSubListener extends RedisPubSubAdapter<String, String>
 {

@@ -101,6 +101,18 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/{version}/bungeecord-chat-{version}.jar",
             "1.16-R0.3",
             true
+    ),
+    RHINO(
+            "org.mozilla.javascript.Context",
+            "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
+            "1.7.13",
+            ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" )
+    ),
+    RHINO_SCRIPT_ENGINE(
+            "de.christophkraemer.rhino.javascript.RhinoScriptEngine",
+            "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
+            "1.1.1",
+            ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" )
     );
 
     @Getter

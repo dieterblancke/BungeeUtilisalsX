@@ -19,7 +19,6 @@
 package com.dbsoftwares.bungeeutilisalsx.common.library;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
-import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 import lombok.Data;
 

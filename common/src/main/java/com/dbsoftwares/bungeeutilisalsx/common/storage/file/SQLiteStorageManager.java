@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.StorageType;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.sql.SQLStorageManager;
-import lombok.extern.java.Log;
 
 import java.io.File;
 import java.io.IOException;

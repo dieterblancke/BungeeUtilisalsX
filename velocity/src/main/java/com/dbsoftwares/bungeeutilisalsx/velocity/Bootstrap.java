@@ -1,7 +1,7 @@
 package com.dbsoftwares.bungeeutilisalsx.velocity;
 
-import com.dbsoftwares.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import com.dbsoftwares.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import com.dbsoftwares.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;

@@ -22,7 +22,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Version;
 import com.dbsoftwares.bungeeutilisalsx.common.motd.ConditionHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.motd.MotdConnection;
-import lombok.extern.java.Log;
 
 public class VersionConditionHandler extends ConditionHandler
 {

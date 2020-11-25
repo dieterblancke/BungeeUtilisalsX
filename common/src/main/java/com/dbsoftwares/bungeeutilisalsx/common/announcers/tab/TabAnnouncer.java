@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 
 import java.util.List;
 

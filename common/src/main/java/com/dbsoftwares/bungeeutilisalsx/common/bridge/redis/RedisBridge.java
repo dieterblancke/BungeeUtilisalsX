@@ -31,7 +31,6 @@ import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import lombok.Getter;
-import lombok.extern.java.Log;
 
 import java.util.AbstractMap.SimpleEntry;
 import java.util.List;

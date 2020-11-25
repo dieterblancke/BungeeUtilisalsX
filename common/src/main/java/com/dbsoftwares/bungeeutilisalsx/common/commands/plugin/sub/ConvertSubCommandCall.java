@@ -31,7 +31,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.MongoToSQLCo
 import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.SQLtoMongoConverter;
 import com.dbsoftwares.bungeeutilisalsx.common.converter.converters.SQLtoSQLConverter;
 import com.google.common.collect.Maps;
-import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.Map;

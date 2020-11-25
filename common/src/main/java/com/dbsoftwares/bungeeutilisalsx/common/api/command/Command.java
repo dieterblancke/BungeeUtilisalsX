@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
 import com.google.common.collect.Lists;
 import lombok.Data;
-import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.logging.Level;

@@ -25,7 +25,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.Dao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

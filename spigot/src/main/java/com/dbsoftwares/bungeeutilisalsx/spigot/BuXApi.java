@@ -1,6 +1,5 @@
 package com.dbsoftwares.bungeeutilisalsx.spigot;
 
-import com.dbsoftwares.bungeeutilisalsx.spigot.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.IBuXApi;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
@@ -22,6 +21,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserAction;
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserActionType;
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
+import com.dbsoftwares.bungeeutilisalsx.spigot.bossbar.BossBar;
 import com.dbsoftwares.bungeeutilisalsx.spigot.user.ConsoleUser;
 import com.dbsoftwares.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import com.google.common.collect.Lists;
@@ -97,7 +97,7 @@ public class BuXApi implements IBuXApi
     @Override
     public ChatManager getChatManager()
     {
-        throw new UnsupportedOperationException("The ChatManager is currently only supported in the proxy versions of BungeeUtilisalsX!");
+        throw new UnsupportedOperationException( "The ChatManager is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override
@@ -109,13 +109,13 @@ public class BuXApi implements IBuXApi
     @Override
     public IPunishmentExecutor getPunishmentExecutor()
     {
-        throw new UnsupportedOperationException("The PunishmentExecutor is currently only supported in the proxy versions of BungeeUtilisalsX!");
+        throw new UnsupportedOperationException( "The PunishmentExecutor is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override
     public IHubBalancer getHubBalancer()
     {
-        throw new UnsupportedOperationException("The HubBalancer is currently only supported in the proxy versions of BungeeUtilisalsX!");
+        throw new UnsupportedOperationException( "The HubBalancer is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override
@@ -311,7 +311,7 @@ public class BuXApi implements IBuXApi
     @Override
     public IPlayerUtils getPlayerUtils()
     {
-        throw new UnsupportedOperationException("The PlayerUtils is currently only supported in the proxy versions of BungeeUtilisalsX!");
+        throw new UnsupportedOperationException( "The PlayerUtils is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override

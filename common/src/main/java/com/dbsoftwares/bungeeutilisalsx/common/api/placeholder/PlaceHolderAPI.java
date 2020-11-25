@@ -27,7 +27,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.placeholders.Inpu
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.placeholders.PlaceHolder;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 
 import java.util.List;
 import java.util.logging.Level;

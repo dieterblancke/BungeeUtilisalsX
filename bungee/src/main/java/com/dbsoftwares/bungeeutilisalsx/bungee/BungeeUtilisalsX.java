@@ -9,6 +9,7 @@ import com.dbsoftwares.bungeeutilisalsx.bungee.listeners.UserConnectionListener;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
+import com.dbsoftwares.bungeeutilisalsx.bungee.placeholder.javascript.JavaScriptPlaceHolder;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.PunishmentExecutor;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
@@ -82,6 +83,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
+
+        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" ) )
+        {
+            new JavaScriptPlaceHolder().register();
+        }
     }
 
     @Override

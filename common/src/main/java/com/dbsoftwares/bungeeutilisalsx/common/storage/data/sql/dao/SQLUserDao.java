@@ -27,7 +27,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.UserStorage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

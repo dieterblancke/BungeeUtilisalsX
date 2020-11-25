@@ -2,7 +2,6 @@ package com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.tasks;
 
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
-import lombok.extern.java.Log;
 
 public class ServerPingTask implements Runnable
 {

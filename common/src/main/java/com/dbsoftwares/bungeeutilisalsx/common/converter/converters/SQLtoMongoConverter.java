@@ -29,7 +29,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.converter.Converter;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import com.dbsoftwares.bungeeutilisalsx.common.storage.file.SQLiteStorageManager;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 
 import java.sql.*;
 import java.util.Collection;

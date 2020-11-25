@@ -22,7 +22,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
 import org.apache.logging.log4j.Logger;
 
 import java.lang.reflect.Field;
@@ -218,7 +217,7 @@ public class ConsoleUser implements User, CanReceiveMessages
             return;
         }
 
-        getConsoleOutput().info( ComponentSerializer.toString( component ) );
+        getConsoleOutput().info( BaseComponent.toLegacyText( component ) );
     }
 
     @Override
@@ -228,7 +227,7 @@ public class ConsoleUser implements User, CanReceiveMessages
         {
             return;
         }
-        getConsoleOutput().info( ComponentSerializer.toString( components ) );
+        getConsoleOutput().info( BaseComponent.toLegacyText( components ) );
     }
 
     @Override

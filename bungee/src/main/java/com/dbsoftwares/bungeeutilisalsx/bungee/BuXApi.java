@@ -33,7 +33,6 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.logging.Logger;
 
 @Getter
 @RequiredArgsConstructor

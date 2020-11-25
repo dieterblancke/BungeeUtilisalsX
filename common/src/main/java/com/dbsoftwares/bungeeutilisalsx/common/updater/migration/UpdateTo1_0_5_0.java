@@ -21,7 +21,6 @@ package com.dbsoftwares.bungeeutilisalsx.common.updater.migration;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.storage.StorageType;
-import lombok.extern.java.Log;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

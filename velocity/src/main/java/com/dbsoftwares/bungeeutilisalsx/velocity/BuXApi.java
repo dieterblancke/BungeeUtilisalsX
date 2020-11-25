@@ -1,8 +1,5 @@
 package com.dbsoftwares.bungeeutilisalsx.velocity;
 
-import com.dbsoftwares.bungeeutilisalsx.velocity.bossbar.BossBar;
-import com.dbsoftwares.bungeeutilisalsx.velocity.user.ConsoleUser;
-import com.dbsoftwares.bungeeutilisalsx.velocity.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.IBuXApi;
 import com.dbsoftwares.bungeeutilisalsx.common.api.announcer.Announcer;
@@ -24,6 +21,9 @@ import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserAction;
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.types.UserActionType;
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
+import com.dbsoftwares.bungeeutilisalsx.velocity.bossbar.BossBar;
+import com.dbsoftwares.bungeeutilisalsx.velocity.user.ConsoleUser;
+import com.dbsoftwares.bungeeutilisalsx.velocity.utils.LanguageUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;

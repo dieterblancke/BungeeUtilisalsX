@@ -23,7 +23,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.BUEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 
 import java.lang.reflect.Method;
 import java.util.concurrent.atomic.AtomicInteger;

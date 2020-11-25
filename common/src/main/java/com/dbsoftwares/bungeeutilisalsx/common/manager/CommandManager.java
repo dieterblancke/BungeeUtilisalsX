@@ -44,7 +44,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.commands.report.ReportCommandCall
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import lombok.extern.java.Log;
 
 import java.util.List;
 

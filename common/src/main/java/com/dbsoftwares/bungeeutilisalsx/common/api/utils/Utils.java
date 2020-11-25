@@ -25,8 +25,9 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
+import net.md_5.bungee.api.ChatColor;
 
-import java.awt.Color;
+import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -161,23 +162,20 @@ public class Utils
             bStep = -bStep;
         }
         final IntegerRange integerRange = new IntegerRange( 0, 255 );
-        Color textColor = new Color( startColor.getRGB() );
-        boolean previousTimeWasColor = false;
-        boolean skipNext = false;
         final StringBuilder resultBuilder = new StringBuilder();
+        Color textColor = new Color( startColor.getRGB() );
+        StringBuilder formatColors = new StringBuilder();
 
         for ( int i = 0; i < length; i++ )
         {
-            if ( skipNext )
-            {
-                resultBuilder.append( characters[i] );
-                skipNext = false;
-                continue;
-            }
-            if ( previousTimeWasColor && isColor( characters, i ) )
-            {
-                resultBuilder.append( characters[i] );
-                skipNext = true;
+            if (isColor( characters, i )) {
+                i++;
+                if (ChatColor.getByChar( characters[i] ) == ChatColor.RESET) {
+                    // clearing stringbuilderzz
+                    formatColors.setLength( 0 );
+                } else {
+                    formatColors.append( "&" ).append( characters[i] );
+                }
                 continue;
             }
             final int red = integerRange.keepWithinRange( Math.round( textColor.getRed() + rStep ) );
@@ -188,17 +186,8 @@ public class Utils
             final net.md_5.bungee.api.ChatColor chatColor = net.md_5.bungee.api.ChatColor.of( textColor );
 
             resultBuilder.append( chatColor.toString() )
+                    .append( formatColors )
                     .append( characters[i] );
-
-            if ( isColor( characters, i ) )
-            {
-                skipNext = true;
-                previousTimeWasColor = true;
-            }
-            else
-            {
-                previousTimeWasColor = false;
-            }
         }
 
         return resultBuilder.toString();
@@ -210,7 +199,19 @@ public class Utils
         {
             return false;
         }
-        return chars[idx] == net.md_5.bungee.api.ChatColor.COLOR_CHAR && net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) != null;
+        return ( chars[idx] == net.md_5.bungee.api.ChatColor.COLOR_CHAR || chars[idx] == '&' )
+                && net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) != null
+                && isFormattingColor( net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) );
+    }
+
+    private static boolean isFormattingColor( final net.md_5.bungee.api.ChatColor color )
+    {
+        return color == ChatColor.BOLD
+                || color == ChatColor.ITALIC
+                || color == ChatColor.MAGIC
+                || color == ChatColor.STRIKETHROUGH
+                || color == ChatColor.UNDERLINE
+                || color == ChatColor.RESET;
     }
 
     public static String formatString( final User user, final String message )

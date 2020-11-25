@@ -190,6 +190,10 @@ public abstract class AbstractBungeeUtilisalsX
     {
         scripts.forEach( Script::unload );
         scripts.clear();
+        if ( !ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" ) )
+        {
+            return;
+        }
         final File scriptsFolder = new File( getDataFolder(), "scripts" );
 
         if ( !scriptsFolder.exists() )

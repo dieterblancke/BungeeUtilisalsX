@@ -20,12 +20,14 @@ package com.dbsoftwares.bungeeutilisalsx.velocity.listeners;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.velocity.user.BungeeUser;
 import com.dbsoftwares.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
@@ -79,5 +81,21 @@ public class UserConnectionListener
         event.setResult( ServerPreConnectEvent.ServerResult.allowed(
                 ( (VelocityServer) userServerConnectEvent.getTarget() ).getRegisteredServer()
         ) );
+    }
+
+    @Subscribe
+    public void onConnect( final ServerConnectedEvent event )
+    {
+        final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
+
+        if ( !optional.isPresent() )
+        {
+            return;
+        }
+        final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
+                optional.get(),
+                BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
+        );
+        BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
     }
 }
