@@ -1,31 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!--
-  ~ Copyright (C) 2018 DBSoftwares - Dieter Blancke
-  ~  *
-  ~ This program is free software: you can redistribute it and/or modify
-  ~ it under the terms of the GNU General Public License as published by
-  ~ the Free Software Foundation, either version 3 of the License, or
-  ~ (at your option) any later version.
-  ~  *
-  ~ This program is distributed in the hope that it will be useful,
-  ~ but WITHOUT ANY WARRANTY; without even the implied warranty of
-  ~ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-  ~ GNU General Public License for more details.
-  ~  *
-  ~ You should have received a copy of the GNU General Public License
-  ~ along with this program. If not, see <http://www.gnu.org/licenses/>.
-  ~
-  -->
-
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
-        <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-        <version>1.1.0</version>
+        <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
+        <version>1.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
+
     <artifactId>bungee</artifactId>
 
     <repositories>
@@ -37,43 +20,38 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-            <artifactId>api</artifactId>
-            <version>1.1.0</version>
+            <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
+            <artifactId>common</artifactId>
+            <version>1.2.0</version>
         </dependency>
         <dependency>
-            <groupId>com.dbsoftwares.bungeeutilisals</groupId>
-            <artifactId>updater</artifactId>
-            <version>1.1.0</version>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-api</artifactId>
+            <version>1.16-R0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>net.md-5</groupId>
+            <artifactId>bungeecord-protocol</artifactId>
+            <version>1.16-R0.3</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.imaginarycode.minecraft</groupId>
+            <artifactId>RedisBungee</artifactId>
+            <version>0.3.8-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bungeecord</artifactId>
-            <version>1.5</version>
+            <version>1.7</version>
             <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>de.flapdoodle.embed</groupId>
-            <artifactId>de.flapdoodle.embed.mongo</artifactId>
-            <version>2.2.0</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.h2database</groupId>
-            <artifactId>h2</artifactId>
-            <version>1.4.200</version>
-            <scope>test</scope>
         </dependency>
     </dependencies>
 
     <build>
-        <finalName>BungeeUtilisalsX v${project.version}</finalName>
+        <finalName>BungeeUtilisalsX v${project.version}-bungee</finalName>
 
         <plugins>
             <plugin>
@@ -87,20 +65,12 @@
                             <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.metrics</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>io.lettuce.core</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.lettuce</shadedPattern>
+                            <pattern>org.slf4j</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.slf4j</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>reactor</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactor</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>org.reactivestreams</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.reactivestreams</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>io.netty</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.netty</shadedPattern>
+                            <pattern>com.dbsoftwares.configuration</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.configuration</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -121,19 +91,6 @@
                     <source>8</source>
                     <target>8</target>
                     <encoding>UTF-8</encoding>
-                </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.1.0</version>
-                <configuration>
-                    <archive>
-                        <addMavenDescriptor>false</addMavenDescriptor>
-                        <manifestEntries>
-                            <Built-By>DBSoftwares</Built-By>
-                        </manifestEntries>
-                    </archive>
                 </configuration>
             </plugin>
         </plugins>

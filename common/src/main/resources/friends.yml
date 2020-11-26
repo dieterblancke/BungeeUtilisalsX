@@ -1,0 +1,59 @@
+# Set to true if you want to use the BungeeUtilisals friend system.
+enabled: false
+
+friendlimits:
+  # With what the limit permission should start, by default an example would be: "bungeeutilisals.friends.limit.default", ...
+  permission: 'bungeeutilisals.friends.limit.'
+  # Allows you to use "bungeeutilisals.friends.limit.vip" (if the option above is the default one), which will equal to 15 friends.
+  # This is very useful if you are ever to change the friend limit someone should have.
+  limits:
+    # The default limit is not required
+    - name: 'default'
+      limit: 10
+    - name: 'vip'
+      limit: 15
+    - name: 'mvp'
+      limit: 20
+    - name: 'helper'
+      limit: 25
+
+# The settings that will be given to players by default.
+settings:
+  requests: true
+  messages: true
+
+command:
+  aliases: 'friend, bfriends'
+  permission: bungeeutilisals.friends
+
+subcommands:
+  add:
+    aliases: 'send, request'
+    permission: bungeeutilisals.friends.add
+  remove:
+    aliases: 'delete, del'
+    permission: bungeeutilisals.friends.remove
+  accept:
+    aliases: 'approve'
+    permission: bungeeutilisals.friends.accept
+  deny:
+    aliases: ''
+    permission: bungeeutilisals.friends.deny
+  removerequest:
+    aliases: 'rr'
+    permission: bungeeutilisals.friends.removerequest
+  list:
+    aliases: 'fl'
+    permission: bungeeutilisals.friends.list
+  requests:
+    aliases: 'req'
+    permission: bungeeutilisals.friends.requests
+  msg:
+    aliases: 'm, tell, w, whisper, message'
+    permission: bungeeutilisals.friends.msg
+  reply:
+    aliases: 'r'
+    permission: bungeeutilisals.friends.reply
+  settings:
+    aliases: ''
+    permission: bungeeutilisals.friends.settings
