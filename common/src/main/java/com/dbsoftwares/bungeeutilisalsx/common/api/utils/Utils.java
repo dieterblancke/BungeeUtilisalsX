@@ -760,6 +760,23 @@ public class Utils
     }
 
     /**
+     * Replaces placeholders in a string.
+     *
+     * @param message      the message to replace in
+     * @param placeholders the placeholders with their values to be replaced
+     * @return the message with the replaced placeholders.
+     */
+    public static String replacePlaceHolders( String message, Object... placeholders )
+    {
+        for ( int i = 0; i < placeholders.length - 1; i += 2 )
+        {
+            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
+        }
+        message = PlaceHolderAPI.formatMessage( message );
+        return message;
+    }
+
+    /**
      * Replaces placeholders in a string and formats using the placeholder api.
      *
      * @param user         the user to format placeholders for

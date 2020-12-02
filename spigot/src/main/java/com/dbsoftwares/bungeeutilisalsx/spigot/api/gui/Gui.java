@@ -3,6 +3,7 @@ package com.dbsoftwares.bungeeutilisalsx.spigot.api.gui;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.spigot.BungeeUtilisalsX;
+import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.utils.UuidInventoryHolder;
 import com.google.common.collect.Lists;
 import lombok.AccessLevel;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -25,26 +27,24 @@ public class Gui
     private final UUID uuid = UUID.randomUUID();
     private final String title;
     private final int rows;
-    private final ItemProvider itemProvider;
+    private final PageableItemProvider pageableItemProvider;
     private final List<Player> players;
     private long lastActivity = System.currentTimeMillis();
     private Inventory inventory;
     private boolean opened;
+    private int page = 1;
 
     public static Builder builder()
     {
         return new Builder();
     }
 
-    public void hancleInventoryClick( final InventoryClickEvent event )
+    public void handleInventoryClick( final InventoryClickEvent event )
     {
         lastActivity = System.currentTimeMillis();
-        final GuiItem item = itemProvider.getItemAtSlot( event.getRawSlot() );
+        final Optional<GuiItem> item = pageableItemProvider.getItemAtSlot( event.getRawSlot() );
 
-        if ( item != null )
-        {
-            item.onClick( this, (Player) event.getWhoClicked() );
-        }
+        item.ifPresent( i -> i.onClick( this, (Player) event.getWhoClicked(), event ) );
     }
 
     public void open()
@@ -91,8 +91,26 @@ public class Gui
             inventory = Bukkit.createInventory( inventoryHolder, rows * 9, Utils.c( title ) );
             inventoryHolder.setInventory( inventory );
 
-            // TODO: fill inventory
+            this.refill();
         }
+    }
+
+    public void setPage( final int page )
+    {
+        if ( page < 1 )
+        {
+            this.page = 1;
+        }
+        else
+        {
+            this.page = Math.min( page, pageableItemProvider.getPageAmount() );
+        }
+    }
+
+    public void refill()
+    {
+        final ItemPage itemPage = pageableItemProvider.getItemContents( page );
+        itemPage.populateTo( inventory );
     }
 
     public void addPlayer( final Player player )
@@ -116,7 +134,7 @@ public class Gui
         private String title;
         private int rows = 6;
         private List<Player> players = new ArrayList<>();
-        private ItemProvider itemProvider;
+        private PageableItemProvider pageableItemProvider;
 
         private Builder()
         {
@@ -147,15 +165,15 @@ public class Gui
             return this;
         }
 
-        public Builder itemProvider( final ItemProvider itemProvider )
+        public Builder itemProvider( final PageableItemProvider pageableItemProvider )
         {
-            this.itemProvider = itemProvider;
+            this.pageableItemProvider = pageableItemProvider;
             return this;
         }
 
         public Gui build()
         {
-            final Gui gui = new Gui( title, rows, itemProvider, players );
+            final Gui gui = new Gui( title, rows, pageableItemProvider, players );
             ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().add( gui );
             return gui;
         }

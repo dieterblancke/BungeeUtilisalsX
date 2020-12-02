@@ -31,7 +31,6 @@ public class FriendData
     private UUID uuid;
     private String friend;
     private Date friendSince;
-    private boolean online;
     private Date lastOnline;
 
     public FriendData()
@@ -43,7 +42,11 @@ public class FriendData
         this.uuid = uuid;
         this.friend = friend;
         this.friendSince = friendSince;
-        this.online = BuX.getApi().getPlayerUtils().isOnline( friend );
         this.lastOnline = lastSeen;
+    }
+
+    public boolean isOnline()
+    {
+        return BuX.getApi().getPlayerUtils().isOnline( friend );
     }
 }

@@ -13,6 +13,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.event.EventLoader;
 import com.dbsoftwares.bungeeutilisalsx.common.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.ChatManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
+import com.dbsoftwares.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.bungeeutilisalsx.velocity.command.BungeeCommandManager;
 import com.dbsoftwares.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
 import com.dbsoftwares.bungeeutilisalsx.velocity.listeners.MotdPingListener;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
+@Updatable( url = "https://api.dbsoftwares.eu/plugin/bungeeutilisalsx-velocity/" )
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 

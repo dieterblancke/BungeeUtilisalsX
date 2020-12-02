@@ -19,9 +19,20 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>io.lettuce</groupId>
+            <artifactId>lettuce-core</artifactId>
+            <version>6.0.1.RELEASE</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
             <version>1.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>1.7.30</version>
         </dependency>
     </dependencies>
 
@@ -29,6 +40,39 @@
         <finalName>BungeeUtilisalsX v${project.version}-spigot</finalName>
 
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.1</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.metrics</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.dbsoftwares.configuration</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.configuration</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.lettuce</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.lettuce</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.netty</pattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.netty</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>

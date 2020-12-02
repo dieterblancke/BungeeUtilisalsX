@@ -69,7 +69,7 @@ public enum StandardLibrary
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
-            "6.0.0.RELEASE",
+            "6.0.1.RELEASE",
             ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     ),
     REACTOR_CORE(
@@ -106,13 +106,13 @@ public enum StandardLibrary
             "org.mozilla.javascript.Context",
             "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
             "1.7.13",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" )
+            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
     ),
     RHINO_SCRIPT_ENGINE(
             "de.christophkraemer.rhino.javascript.RhinoScriptEngine",
             "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
             "1.1.1",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" )
+            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
     );
 
     @Getter

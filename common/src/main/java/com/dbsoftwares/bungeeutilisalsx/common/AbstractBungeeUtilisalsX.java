@@ -48,7 +48,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 @Data
-@Updatable( url = "https://api.dbsoftwares.eu/plugin/BungeeUtilisals/" )
 public abstract class AbstractBungeeUtilisalsX
 {
 
@@ -56,7 +55,7 @@ public abstract class AbstractBungeeUtilisalsX
     private final IScheduler scheduler = new Scheduler();
     private final String name = "BungeeUtilisalsX";
     private final List<Script> scripts = new ArrayList<>();
-    private IBuXApi api;
+    protected IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
     private JarClassLoader jarClassLoader;
 
@@ -85,7 +84,7 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
-        ConfigFiles.loadAllConfigs();
+        this.loadConfigs();
 
         this.loadLibraries();
         this.loadPlaceHolders();
@@ -112,6 +111,11 @@ public abstract class AbstractBungeeUtilisalsX
             Updater.initialize( this );
         }
         this.setupTasks();
+    }
+
+    protected void loadConfigs()
+    {
+        ConfigFiles.loadAllConfigs();
     }
 
     protected abstract IBuXApi createBuXApi();
@@ -235,7 +239,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    private void loadLibraries()
+    protected void loadLibraries()
     {
         BuX.getLogger().info( "Loading libraries ..." );
         jarClassLoader = new JarClassLoader();
@@ -252,7 +256,7 @@ public abstract class AbstractBungeeUtilisalsX
         BuX.getLogger().info( "Libraries have been loaded." );
     }
 
-    private void loadDatabase()
+    protected void loadDatabase()
     {
         StorageType type;
         try
@@ -274,7 +278,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
     }
 
-    private void checkPreviousVersion()
+    protected void checkPreviousVersion()
     {
         final String key = ";l-,-s`YZetApB!$}r|*<[84z9nLG06PoJtN,g877*D9ImW~|d9|Ax^lC+JTOsL";
         final File file = new File( getDataFolder(), "libraries/.update_util.data" );

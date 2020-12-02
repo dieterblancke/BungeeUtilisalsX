@@ -49,6 +49,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.net.InetAddress;
 import java.sql.Date;
 import java.util.Arrays;
 import java.util.List;
@@ -81,12 +82,17 @@ public class SpigotUser implements User, CanReceiveMessages
     @Override
     public void load( UUID uuid )
     {
+        this.player = Bukkit.getPlayer( uuid );
+        this.load( player, player.getAddress().getAddress() );
+    }
+
+    public void load( final Player player, final InetAddress address )
+    {
         final Dao dao = BuX.getInstance().getAbstractStorageManager().getDao();
 
-        this.player = Bukkit.getPlayer( uuid );
         this.name = player.getName();
         this.uuid = player.getUniqueId();
-        this.ip = Utils.getIP( player.getAddress() );
+        this.ip = Utils.getIP( address );
         this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
 

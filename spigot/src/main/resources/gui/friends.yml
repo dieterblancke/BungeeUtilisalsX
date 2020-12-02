@@ -1,0 +1,74 @@
+# The title that should be given to the gui
+title: '&2&lYour Friends &8({page} of {max})'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  # Borders will automatically select the "border slots" of the GUI as slot list that should be filled.
+  - slots: 'borders'
+    # True if these slots represent friends, false if not.
+    friend-slots: false
+    item:
+      # In 1.13 and higher, this should be GRAY_STAINED_GLASS_PANE and the "data" key should be removed.
+      material: STAINED_GLASS_PANE
+      data: 7
+      name: ''
+    action: nothing
+  - slots: '10..16,19..25,28..34,37..43'
+    # True if these slots represent friends, false if not.
+    friend-slots: true
+    offlineitem:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&e{friend-name} &8- &c&lOFFLINE'
+      lores:
+        - ''
+        - '&c» Offline'
+        - '&7Last online: &b{last-online}'
+    onlineitem:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&e{friend-name} &8- &a&lONLINE'
+      lores:
+        - ''
+        - '&a» Online'
+        - '&7Server: &b{server}'
+    action: open:friendactions {friend-name}
+  - slots: '45'
+    friend-slots: false
+    item:
+      material: EMERALD
+      name: '&e&lFriend Requests'
+    action: open:friendrequests
+  - slots: '46'
+    friend-slots: false
+    show-if: has-previous-page
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&aPrevious Page'
+      owner: 'bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9'
+    action: previous-page
+  - slots: '52'
+    friend-slots: false
+    show-if: has-next-page
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&aNext Page'
+      owner: '19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf'
+    action: next-page
+  - slots: '53'
+    friend-slots: false
+    item:
+      # In 1.13 and higher, this should be RED_BED and the "data" key should be removed.
+      material: BED
+      data: 14
+      name: '&c&lClose'
+    action: close

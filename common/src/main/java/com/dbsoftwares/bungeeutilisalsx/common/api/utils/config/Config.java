@@ -96,6 +96,10 @@ public class Config
 
     public boolean isEnabled()
     {
+        if ( config == null )
+        {
+            return false;
+        }
         if ( config.exists( "enabled" ) )
         {
             return config.getBoolean( "enabled" );
