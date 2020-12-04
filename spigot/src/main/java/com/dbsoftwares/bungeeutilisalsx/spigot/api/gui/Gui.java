@@ -87,10 +87,6 @@ public class Gui
     {
         if ( inventory == null )
         {
-            final UuidInventoryHolder inventoryHolder = new UuidInventoryHolder( uuid );
-            inventory = Bukkit.createInventory( inventoryHolder, rows * 9, Utils.c( title ) );
-            inventoryHolder.setInventory( inventory );
-
             this.refill();
         }
     }
@@ -109,6 +105,12 @@ public class Gui
 
     public void refill()
     {
+        final UuidInventoryHolder inventoryHolder = new UuidInventoryHolder( uuid );
+        inventory = Bukkit.createInventory( inventoryHolder, rows * 9, Utils.c(
+                Utils.replacePlaceHolders( title, "{page}", page, "{max}", pageableItemProvider.getPageAmount() )
+        ) );
+        inventoryHolder.setInventory( inventory );
+
         final ItemPage itemPage = pageableItemProvider.getItemContents( page );
         itemPage.populateTo( inventory );
     }

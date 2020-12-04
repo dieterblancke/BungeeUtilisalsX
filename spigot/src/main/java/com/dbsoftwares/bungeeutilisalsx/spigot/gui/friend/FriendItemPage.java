@@ -14,7 +14,7 @@ import java.util.List;
 public class FriendItemPage extends ItemPage
 {
 
-    public FriendItemPage( final FriendGuiConfig guiConfig, final List<FriendData> friendData )
+    public FriendItemPage( final int page, final int max, final FriendGuiConfig guiConfig, final List<FriendData> friendData )
     {
         super( guiConfig.getRows() * 9 );
 
@@ -24,8 +24,10 @@ public class FriendItemPage extends ItemPage
             {
                 continue;
             }
-            final ItemStack itemStack = item.getItem().buildItem();
-
+            if ( !this.shouldShow( page, max, item ) )
+            {
+                continue;
+            }
             for ( int slot : item.getSlots() )
             {
                 super.setItem( slot, this.getGuiItem( item ) );
@@ -75,43 +77,5 @@ public class FriendItemPage extends ItemPage
         }
 
         return this.getGuiItem( action, itemStack );
-    }
-
-    private GuiItem getGuiItem( final GuiConfigItem item, final Object... placeholders )
-    {
-        final String action = item.getAction().toLowerCase().trim();
-        final ItemStack itemStack = item.getItem().buildItem( placeholders );
-
-        return this.getGuiItem( action, itemStack );
-    }
-
-    private GuiItem getGuiItem( final String action, final ItemStack itemStack )
-    {
-        if ( action.contains( "close" ) )
-        {
-            return new ClosingGuiItem( itemStack );
-        }
-        else if ( action.equalsIgnoreCase( "previous-page" ) )
-        {
-            return new PreviousPageGuiItem( itemStack );
-        }
-        else if ( action.equalsIgnoreCase( "next-page" ) )
-        {
-            return new NextPageGuiItem( itemStack );
-        }
-        else if ( action.contains( "open:" ) )
-        {
-            final String[] args = action.replace( "open:", "" ).trim().split( " " );
-            final String guiName = args[0];
-
-            return new ClickableGuiItem( itemStack, ( gui, player, event ) ->
-            {
-                // TODO: open other inventories
-            } );
-        }
-        else
-        {
-            return new CancelledGuiItem( itemStack );
-        }
     }
 }

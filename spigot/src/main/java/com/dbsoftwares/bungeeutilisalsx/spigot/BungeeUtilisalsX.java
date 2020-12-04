@@ -3,6 +3,8 @@ package com.dbsoftwares.bungeeutilisalsx.spigot;
 import com.dbsoftwares.bungeeutilisalsx.common.*;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
+import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -10,6 +12,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.utils.reflection.ReflectionUt
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.BridgeManager;
 import com.dbsoftwares.bungeeutilisalsx.common.bridge.handlers.BungeeBridgeResponseHandler;
 import com.dbsoftwares.bungeeutilisalsx.common.event.EventLoader;
+import com.dbsoftwares.bungeeutilisalsx.common.executors.UserExecutor;
 import com.dbsoftwares.bungeeutilisalsx.common.language.PluginLanguageManager;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.Updatable;
@@ -71,6 +74,14 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 
         this.guiManager = new GuiManager();
         this.getApi().getEventLoader().register( BridgeResponseEvent.class, new BungeeBridgeResponseHandler() );
+    }
+
+    @Override
+    protected void registerExecutors()
+    {
+        final UserExecutor userExecutor = new UserExecutor();
+        this.getApi().getEventLoader().register( UserLoadEvent.class, userExecutor );
+        this.getApi().getEventLoader().register( UserUnloadEvent.class, userExecutor );
     }
 
     @Override
