@@ -42,7 +42,7 @@ public class ItemPage
 
     public Optional<GuiItem> getItem( final int slot )
     {
-        if ( slot >= items.length )
+        if ( slot < 0 || slot >= items.length )
         {
             return Optional.empty();
         }
