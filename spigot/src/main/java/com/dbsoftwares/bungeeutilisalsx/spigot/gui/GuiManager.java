@@ -73,4 +73,9 @@ public class GuiManager
     {
         return this.activeGuis.stream().filter( gui -> gui.getUuid().equals( uuid ) ).findAny();
     }
+
+    public void openGui( final Player player, final String guiName, final String[] args )
+    {
+        // TODO: open other inventories
+    }
 }

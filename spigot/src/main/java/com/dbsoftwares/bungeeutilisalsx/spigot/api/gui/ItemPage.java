@@ -1,5 +1,7 @@
 package com.dbsoftwares.bungeeutilisalsx.spigot.api.gui;
 
+import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.*;
 import org.bukkit.inventory.Inventory;
@@ -100,10 +102,10 @@ public class ItemPage
             final String[] args = action.replace( "open:", "" ).trim().split( " " );
             final String guiName = args[0];
 
-            return new ClickableGuiItem( itemStack, ( gui, player, event ) ->
-            {
-                // TODO: open other inventories
-            } );
+            return new ClickableGuiItem(
+                    itemStack,
+                    ( gui, player, event ) -> ((BungeeUtilisalsX) BuX.getInstance()).getGuiManager().openGui(player, guiName, args)
+            );
         }
         else
         {
