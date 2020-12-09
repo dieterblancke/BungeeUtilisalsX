@@ -8,6 +8,7 @@ rows: 5
 # would override the "borders" slot as long as it's lower in the content list
 contents:
   - slots: 13
+    friend-slots: true
     offlineitem:
       # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
       material: SKULL_ITEM
@@ -30,25 +31,18 @@ contents:
       owner: '{friend-name}'
   - slots: 29
     item:
-      material: PAPER
-      name: '&a&lMESSAGE'
-      lores:
-        - '&7Click to send &a{friend-name} &7a message.'
-    action: 'suggest:friend msg {friend-name} '
-  - slots: 31
-    item:
       material: REDSTONE_BLOCK
       name: '&c&lIGNORE'
       lores:
         - '&7Click to ignore &a{friend-name}&7.'
-    action: 'suggest:ignore add {friend-name}'
+    action: 'execute:ignore add {friend-name}'
   - slots: 33
     item:
       material: BARRIER
       name: '&4&lREMOVE'
       lores:
         - '&7Click to remove &a{friend-name} &7from your friend list.'
-    action: friend:remove {friend-name}
+    action: 'execute:friend remove {friend-name}'
   - slots: 36
     item:
       # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.

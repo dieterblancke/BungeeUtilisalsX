@@ -3,20 +3,24 @@ package com.dbsoftwares.bungeeutilisalsx.spigot.gui;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.Gui;
+import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import com.dbsoftwares.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
+import com.dbsoftwares.bungeeutilisalsx.spigot.gui.friendactions.FriendActionsGuiConfig;
+import com.dbsoftwares.bungeeutilisalsx.spigot.gui.opener.FriendActionsGuiOpener;
+import com.dbsoftwares.bungeeutilisalsx.spigot.gui.opener.FriendGuiOpener;
 import lombok.Data;
+import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 public class GuiManager
 {
 
     private final List<Gui> activeGuis = new ArrayList<>();
+    private final List<GuiOpener> guiOpeners = new ArrayList<>();
     private FriendGuiConfig friendGuiConfig;
+    private FriendActionsGuiConfig friendActionsGuiConfig;
 
     public GuiManager()
     {
@@ -37,6 +41,21 @@ public class GuiManager
                 } )
         );
         this.friendGuiConfig = new FriendGuiConfig();
+        this.friendActionsGuiConfig = new FriendActionsGuiConfig();
+        this.registerGuiOpeners(
+                new FriendGuiOpener(),
+                new FriendActionsGuiOpener()
+        );
+    }
+
+    public Optional<GuiOpener> findGuiOpener( final String name )
+    {
+        return this.guiOpeners.stream().filter( opener -> opener.getName().equalsIgnoreCase( name ) ).findFirst();
+    }
+
+    public void registerGuiOpeners( final GuiOpener... guiOpeners )
+    {
+        this.guiOpeners.addAll( Arrays.asList( guiOpeners ) );
     }
 
     public void reload()
@@ -76,6 +95,6 @@ public class GuiManager
 
     public void openGui( final Player player, final String guiName, final String[] args )
     {
-        // TODO: open other inventories
+        this.findGuiOpener( guiName ).ifPresent( opener -> opener.openGui( player, args ) );
     }
 }

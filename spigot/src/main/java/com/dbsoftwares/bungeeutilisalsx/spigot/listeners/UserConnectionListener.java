@@ -22,9 +22,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.spigot.Bootstrap;
 import com.dbsoftwares.bungeeutilisalsx.spigot.BungeeUtilisalsX;
-import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.Gui;
-import com.dbsoftwares.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
-import com.dbsoftwares.bungeeutilisalsx.spigot.gui.friend.FriendGuiItemProvider;
 import com.dbsoftwares.bungeeutilisalsx.spigot.user.SpigotUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -51,16 +48,7 @@ public class UserConnectionListener implements Listener
             @Override
             public void run()
             {
-                final FriendGuiConfig config = ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().getFriendGuiConfig();
-
-                final Gui gui = Gui.builder()
-                        .itemProvider( new FriendGuiItemProvider( config, user.getFriends()) )
-                        .rows( config.getRows() )
-                        .title( config.getTitle() )
-                        .players( event.getPlayer() )
-                        .build();
-
-                gui.open();
+                ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().openGui( event.getPlayer(), "friend", new String[0] );
             }
         }.runTaskLater( Bootstrap.getInstance(), 100 );
     }

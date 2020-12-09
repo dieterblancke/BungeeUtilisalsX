@@ -83,7 +83,7 @@ public class ItemPage
         return this.getGuiItem( action, itemStack );
     }
 
-    protected GuiItem getGuiItem( final String action, final ItemStack itemStack )
+    protected GuiItem getGuiItem( final String action, final ItemStack itemStack, final String... placeholders )
     {
         if ( action.contains( "close" ) )
         {
@@ -105,6 +105,17 @@ public class ItemPage
             return new ClickableGuiItem(
                     itemStack,
                     ( gui, player, event ) -> ((BungeeUtilisalsX) BuX.getInstance()).getGuiManager().openGui(player, guiName, args)
+            );
+        }
+        else if (action.contains( "execute:" )) {
+            final String command = action.replace( "execute:", "" ).trim();
+
+            return new ClickableGuiItem(
+                    itemStack,
+                    ( gui, player, event ) -> {
+                        // TODO: send redis pubsub message to bungeecord to execute this command as the player
+                        player.closeInventory();
+                    }
             );
         }
         else
