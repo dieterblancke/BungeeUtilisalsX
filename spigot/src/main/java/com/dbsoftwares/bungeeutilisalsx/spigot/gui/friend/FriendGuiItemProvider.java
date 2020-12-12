@@ -1,7 +1,6 @@
 package com.dbsoftwares.bungeeutilisalsx.spigot.gui.friend;
 
 import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendData;
-import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.Gui;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.PageableItemProvider;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
@@ -21,14 +20,15 @@ public class FriendGuiItemProvider implements PageableItemProvider
                 .mapToInt( item -> item.getSlots().size() )
                 .sum();
         int pages = (int) Math.ceil( (double) friends.size() / (double) itemsPerPage );
-        if (pages == 0) {
+        if ( pages == 0 )
+        {
             pages = 1;
         }
         this.pages = new ItemPage[pages];
 
         for ( int i = 0; i < pages; i++ )
         {
-            final int max = (i + 1) * itemsPerPage;
+            final int max = ( i + 1 ) * itemsPerPage;
 
             this.pages[i] = new FriendItemPage(
                     i,

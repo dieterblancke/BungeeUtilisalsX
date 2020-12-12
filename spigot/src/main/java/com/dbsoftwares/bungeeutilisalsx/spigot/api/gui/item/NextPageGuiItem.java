@@ -9,6 +9,7 @@ public class NextPageGuiItem extends ClickableGuiItem
     {
         super( itemStack, ( gui, player, event ) ->
         {
+            event.setCancelled( true );
             gui.setPage( gui.getPage() + 1 );
             gui.refill();
         } );

@@ -4,7 +4,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.friends.FriendData;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
-import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.*;
+import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -63,7 +63,7 @@ public class FriendItemPage extends ItemPage
 
     private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final Object... placeholders )
     {
-        final String action = item.getAction().toLowerCase().trim();
+        final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
         final boolean online = false; // TODO: online check
         final ItemStack itemStack = online
                 ? item.getOnlineItem().buildItem( placeholders )

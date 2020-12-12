@@ -41,7 +41,7 @@ public class FriendActionsGuiOpener extends GuiOpener
                                 friendData
                         ) )
                         .rows( config.getRows() )
-                        .title( config.getTitle() )
+                        .title( config.getTitle().replace( "{friend-name}", friendData.getFriend() ) )
                         .players( player )
                         .build();
 

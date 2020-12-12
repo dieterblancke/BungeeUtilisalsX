@@ -1,12 +1,14 @@
 package com.dbsoftwares.bungeeutilisalsx.spigot.api.gui;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import com.dbsoftwares.bungeeutilisalsx.spigot.api.gui.item.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.Arrays;
 import java.util.Optional;
 
 public class ItemPage
@@ -77,13 +79,13 @@ public class ItemPage
 
     protected GuiItem getGuiItem( final GuiConfigItem item, final Object... placeholders )
     {
-        final String action = item.getAction().toLowerCase().trim();
+        final String action = Utils.replacePlaceHolders(item.getAction().toLowerCase().trim(), placeholders);
         final ItemStack itemStack = item.getItem().buildItem( placeholders );
 
         return this.getGuiItem( action, itemStack );
     }
 
-    protected GuiItem getGuiItem( final String action, final ItemStack itemStack, final String... placeholders )
+    protected GuiItem getGuiItem( final String action, final ItemStack itemStack )
     {
         if ( action.contains( "close" ) )
         {
@@ -104,15 +106,24 @@ public class ItemPage
 
             return new ClickableGuiItem(
                     itemStack,
-                    ( gui, player, event ) -> ((BungeeUtilisalsX) BuX.getInstance()).getGuiManager().openGui(player, guiName, args)
+                    ( gui, player, event ) ->
+                    {
+                        event.setCancelled( true );
+                        ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().openGui(
+                                player, guiName, Arrays.copyOfRange( args, 1, args.length )
+                        );
+                    }
             );
         }
-        else if (action.contains( "execute:" )) {
+        else if ( action.contains( "execute:" ) )
+        {
             final String command = action.replace( "execute:", "" ).trim();
 
             return new ClickableGuiItem(
                     itemStack,
-                    ( gui, player, event ) -> {
+                    ( gui, player, event ) ->
+                    {
+                        event.setCancelled( true );
                         // TODO: send redis pubsub message to bungeecord to execute this command as the player
                         player.closeInventory();
                     }

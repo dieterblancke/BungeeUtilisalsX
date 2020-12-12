@@ -28,7 +28,6 @@ import com.dbsoftwares.bungeeutilisalsx.common.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
 import com.dbsoftwares.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
-import com.dbsoftwares.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.Updater;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.migration.Update;
 import com.dbsoftwares.configuration.api.IConfiguration;

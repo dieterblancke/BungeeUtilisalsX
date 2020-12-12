@@ -168,12 +168,16 @@ public class Utils
 
         for ( int i = 0; i < length; i++ )
         {
-            if (isColor( characters, i )) {
+            if ( isColor( characters, i ) )
+            {
                 i++;
-                if (ChatColor.getByChar( characters[i] ) == ChatColor.RESET) {
+                if ( ChatColor.getByChar( characters[i] ) == ChatColor.RESET )
+                {
                     // clearing stringbuilderzz
                     formatColors.setLength( 0 );
-                } else {
+                }
+                else
+                {
                     formatColors.append( "&" ).append( characters[i] );
                 }
                 continue;

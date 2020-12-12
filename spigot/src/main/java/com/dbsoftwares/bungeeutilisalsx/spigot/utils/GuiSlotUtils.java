@@ -59,7 +59,8 @@ public class GuiSlotUtils
 
         for ( String range : slotRanges.split( "," ) )
         {
-            if (range.contains( ".." )) {
+            if ( range.contains( ".." ) )
+            {
                 final int begin = Integer.parseInt( range.split( "\\.\\." )[0] );
                 final int end = Integer.parseInt( range.split( "\\.\\." )[1] );
 

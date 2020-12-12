@@ -29,7 +29,8 @@ public class ItemUtils
             throw new IllegalStateException( "Profile doesn't contain a property map" );
         }
 
-        if (!url.startsWith( "https://textures.minecraft.net/" )) {
+        if ( !url.startsWith( "https://textures.minecraft.net/" ) )
+        {
             url = "https://textures.minecraft.net/texture/" + url;
         }
 

@@ -9,14 +9,18 @@ import com.dbsoftwares.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfigItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
-import java.util.Iterator;
-
 public class FriendActionsItemPage extends ItemPage
 {
 
     public FriendActionsItemPage( final FriendActionsGuiConfig guiConfig, final FriendData friendData )
     {
         super( guiConfig.getRows() * 9 );
+
+        final Object[] placeholders = new Object[]{
+                "{friend-name}", friendData.getFriend(),
+                "{last-online}", Utils.formatDate( friendData.getLastOnline() ),
+                "{server}", "UNKNOWN" // TODO
+        };
 
         for ( GuiConfigItem item : guiConfig.getItems() )
         {
@@ -27,14 +31,15 @@ public class FriendActionsItemPage extends ItemPage
                     super.setItem( slot, this.getFriendGuiItem(
                             (FriendGuiConfigItem) item,
                             friendData,
-                            "{friend-name}", friendData.getFriend(),
-                            "{last-online}", Utils.formatDate( friendData.getLastOnline() ),
-                            "{server}", "UNKNOWN" // TODO
+                            placeholders
                     ) );
                 }
                 else
                 {
-                    super.setItem( slot, this.getGuiItem( item ) );
+                    super.setItem( slot, this.getGuiItem(
+                            item,
+                            placeholders
+                    ) );
                 }
             }
         }
@@ -42,7 +47,7 @@ public class FriendActionsItemPage extends ItemPage
 
     private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final Object... placeholders )
     {
-        final String action = item.getAction().toLowerCase().trim();
+        final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
         final boolean online = false; // TODO: online check
         final ItemStack itemStack = online
                 ? item.getOnlineItem().buildItem( placeholders )
