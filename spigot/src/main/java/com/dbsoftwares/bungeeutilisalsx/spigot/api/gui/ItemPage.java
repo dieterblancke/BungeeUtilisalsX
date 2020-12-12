@@ -50,7 +50,7 @@ public class ItemPage
         {
             return Optional.empty();
         }
-        return Optional.of( items[slot] );
+        return Optional.ofNullable( items[slot] );
     }
 
     public void populateTo( final Inventory inventory )
