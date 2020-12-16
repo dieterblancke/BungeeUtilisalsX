@@ -20,12 +20,16 @@ package com.dbsoftwares.bungeeutilisalsx.common.api.command;
 
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.StaffUtils;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class CommandBuilder
 {
@@ -41,6 +45,7 @@ public class CommandBuilder
     private CommandCall call;
     private TabCall tab;
     private List<String> parameters;
+    private List<ServerGroup> disabledServers = new ArrayList<>();
 
     public static CommandBuilder builder()
     {
@@ -68,6 +73,12 @@ public class CommandBuilder
     public CommandBuilder aliases( final List<String> aliases )
     {
         return this.aliases( aliases.toArray( new String[0] ) );
+    }
+
+    public CommandBuilder disabledServers( final List<ServerGroup> disabledServers )
+    {
+        this.disabledServers = disabledServers;
+        return this;
     }
 
     public CommandBuilder cooldown( final int cooldown )
@@ -116,6 +127,15 @@ public class CommandBuilder
         this.permission = section.getString( "permission" );
         this.cooldown = section.exists( "cooldown" ) ? section.getInteger( "cooldown" ) : -1;
 
+        if ( section.exists( "disabled-servers" ) )
+        {
+            this.disabledServers = section.getStringList( "disabled-servers" )
+                    .stream()
+                    .filter( server -> ConfigFiles.SERVERGROUPS.getServers().containsKey( server ) )
+                    .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
+                    .collect( Collectors.toList() );
+        }
+
         return this;
     }
 
@@ -161,6 +181,6 @@ public class CommandBuilder
             tab = DEFAULT_TAB_CALL;
         }
 
-        return new Command( name, aliases, permission, parameters, cooldown, call, tab );
+        return new Command( name, aliases, permission, parameters, cooldown, call, tab, disabledServers );
     }
 }

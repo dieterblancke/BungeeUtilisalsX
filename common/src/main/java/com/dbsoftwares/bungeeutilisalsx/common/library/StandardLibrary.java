@@ -66,6 +66,12 @@ public enum StandardLibrary
             "3.4.2",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
+    SLF4J(
+            "org.slf4j.LoggerFactory",
+            "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/{version}/slf4j-api-{version}.jar",
+            "1.7.30",
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
+    ),
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",

@@ -22,7 +22,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.bungeeutilisalsx.velocity.user.BungeeUser;
+import com.dbsoftwares.bungeeutilisalsx.velocity.user.VelocityUser;
 import com.dbsoftwares.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -40,7 +40,7 @@ public class UserConnectionListener
     @Subscribe
     public void onConnect( final PostLoginEvent event )
     {
-        final BungeeUser user = new BungeeUser();
+        final VelocityUser user = new VelocityUser();
 
         user.load( event.getPlayer().getUniqueId() );
     }

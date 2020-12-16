@@ -64,7 +64,7 @@ import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class BungeeUser implements User, CanReceiveMessages
+public class VelocityUser implements User, CanReceiveMessages
 {
 
     private Player player;
@@ -618,7 +618,7 @@ public class BungeeUser implements User, CanReceiveMessages
             return false;
         }
 
-        BungeeUser user = (BungeeUser) o;
+        VelocityUser user = (VelocityUser) o;
         return user.name.equalsIgnoreCase( name ) && user.uuid.equals( uuid );
     }
 

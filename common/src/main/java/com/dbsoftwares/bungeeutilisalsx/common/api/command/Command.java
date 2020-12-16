@@ -21,9 +21,11 @@ package com.dbsoftwares.bungeeutilisalsx.common.api.command;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.common.api.utils.TimeUnit;
+import com.dbsoftwares.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -39,6 +41,7 @@ public class Command
     private final int cooldown;
     private final CommandCall command;
     private final TabCall tab;
+    private final List<ServerGroup> disabledServers;
 
     Command( final String name,
              final String[] aliases,
@@ -46,7 +49,8 @@ public class Command
              List<String> parameters,
              final int cooldown,
              final CommandCall command,
-             final TabCall tab )
+             final TabCall tab,
+             final List<ServerGroup> disabledServers )
     {
         if ( parameters == null )
         {
@@ -60,6 +64,7 @@ public class Command
         this.cooldown = cooldown;
         this.command = command;
         this.tab = tab;
+        this.disabledServers = disabledServers == null ? new ArrayList<>() : disabledServers;
     }
 
     public void execute( final User user, final String[] argList )
@@ -84,6 +89,11 @@ public class Command
 
     public void execute( final User user, final List<String> arguments, final List<String> parameters )
     {
+        if ( this.isDisabledInServer( user.getServerName() ) )
+        {
+            user.sendLangMessage( "command-disabled-in-this-server" );
+            return;
+        }
         if ( permission != null
                 && !permission.isEmpty()
                 && !user.hasPermission( permission )
@@ -121,6 +131,22 @@ public class Command
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
         } );
+    }
+
+    private boolean isDisabledInServer( final String serverName )
+    {
+        if ( serverName == null )
+        {
+            return false;
+        }
+        for ( ServerGroup server : this.disabledServers )
+        {
+            if ( server.isInGroup( serverName ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     public List<String> onTabComplete( final User user, final String[] args )
