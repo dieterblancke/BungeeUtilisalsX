@@ -26,6 +26,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.executors.*;
 import com.dbsoftwares.bungeeutilisalsx.common.library.Library;
 import com.dbsoftwares.bungeeutilisalsx.common.library.StandardLibrary;
 import com.dbsoftwares.bungeeutilisalsx.common.manager.CommandManager;
+import com.dbsoftwares.bungeeutilisalsx.common.migration.MigrationManager;
 import com.dbsoftwares.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
 import com.dbsoftwares.bungeeutilisalsx.common.updater.Updater;
@@ -89,6 +90,10 @@ public abstract class AbstractBungeeUtilisalsX
         this.loadPlaceHolders();
         this.loadScripts();
         this.loadDatabase();
+
+        final MigrationManager migrationManager = new MigrationManager();
+        migrationManager.initialize();
+        migrationManager.migrate();
 
         this.api = this.createBuXApi();
 
@@ -269,7 +274,6 @@ public abstract class AbstractBungeeUtilisalsX
         try
         {
             abstractStorageManager = type.getManager().newInstance();
-            abstractStorageManager.initialize();
         }
         catch ( Exception e )
         {
