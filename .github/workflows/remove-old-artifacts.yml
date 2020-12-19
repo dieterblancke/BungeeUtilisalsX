@@ -1,18 +1,8 @@
 name: Remove old artifacts
 
 on:
-  # Trigger the workflow on push or pull request,
-  # but only for the master branch
-  push:
-    branches:
-      - master
-      - development
-      - 31-friends-gui
-  pull_request:
-    branches:
-      - master
-      - development
-      - 31-friends-gui
+  schedule:
+    - cron: '0 1 * * *'
 
 jobs:
   remove-old-artifacts:
