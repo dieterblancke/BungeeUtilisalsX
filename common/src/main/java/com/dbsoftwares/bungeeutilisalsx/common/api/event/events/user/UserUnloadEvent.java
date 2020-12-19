@@ -33,6 +33,6 @@ public class UserUnloadEvent extends AbstractEvent
 {
 
     @Getter
-    private User user;
+    private final User user;
 
 }

@@ -23,7 +23,7 @@ announcements:
     # If set to true, the Prefix installed in Languages will be used in the announcements.
     use-prefix: true
     # Permission you need in order to receive the announcement, leave empty if no permission.
-    permission: 'bungeeutilisals.announcements.receive'
+    permission: 'bungeeutilisalsx.announcements.receive'
     messages:
       - '&eThis server is using BungeeUtilisals:'
       - '&6BungeeUtilisals has been coded by &bdidjee2&6.'

@@ -280,7 +280,7 @@ public class BuXApi implements IBuXApi
     {
         for ( User user : users )
         {
-            if ( user.hasPermission( permission ) || user.hasPermission( "bungeeutilisals.*" ) )
+            if ( user.hasPermission( permission ) || user.hasPermission( "bungeeutilisalsx.*" ) )
             {
                 LanguageUtils.sendLangMessage( manager, BuX.getInstance().getName(), user, message, placeholders );
             }

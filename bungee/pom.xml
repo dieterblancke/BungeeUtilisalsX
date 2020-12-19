@@ -62,11 +62,11 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.metrics</shadedPattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.metrics</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.dbsoftwares.configuration</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.configuration</shadedPattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.configuration</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

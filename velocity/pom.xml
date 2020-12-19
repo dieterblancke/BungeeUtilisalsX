@@ -56,7 +56,7 @@
                     <relocations>
                         <relocation>
                             <pattern>com.dbsoftwares.configuration</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisals.internal.configuration</shadedPattern>
+                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.configuration</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

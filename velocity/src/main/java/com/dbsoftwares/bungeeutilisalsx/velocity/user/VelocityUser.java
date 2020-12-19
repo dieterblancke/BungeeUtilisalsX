@@ -171,11 +171,11 @@ public class VelocityUser implements User, CanReceiveMessages
     @Override
     public void unload()
     {
-        save();
-        cooldowns.remove();
-
         final UserUnloadEvent event = new UserUnloadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( event );
+
+        save();
+        cooldowns.remove();
 
         player = null;
         storage.getData().clear();
@@ -512,23 +512,30 @@ public class VelocityUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
-        final boolean hasPermission = player.hasPermission( permission )
-                || player.hasPermission( "*" )
-                || player.hasPermission( "bungeeutilisalsx.*" );
+        try {
+            final boolean hasPermission = player.hasPermission( permission )
+                    || player.hasPermission( "*" )
+                    || player.hasPermission( "bungeeutilisalsx.*" );
 
-        if ( ConfigFiles.CONFIG.isDebug() )
-        {
-            if ( hasPermission )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
-                BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                if ( hasPermission )
+                {
+                    BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                }
+                else
+                {
+                    BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                }
             }
-            else
-            {
-                BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
-            }
+
+            return hasPermission;
         }
-
-        return hasPermission;
+        catch ( Exception e )
+        {
+            BuX.getLogger().info( "Failed to check permission " + permission + " for " + name + " due to an error that occured!" );
+            return false;
+        }
     }
 
     @Override

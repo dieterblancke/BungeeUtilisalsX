@@ -168,11 +168,11 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public void unload()
     {
-        save();
-        cooldowns.remove();
-
         final UserUnloadEvent event = new UserUnloadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( event );
+
+        save();
+        cooldowns.remove();
 
         parent = null;
         storage.getData().clear();
@@ -509,23 +509,30 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
-        final boolean hasPermission = parent.hasPermission( permission )
-                || parent.hasPermission( "*" )
-                || parent.hasPermission( "bungeeutilisalsx.*" );
+        try {
+            final boolean hasPermission = parent.hasPermission( permission )
+                    || parent.hasPermission( "*" )
+                    || parent.hasPermission( "bungeeutilisalsx.*" );
 
-        if ( ConfigFiles.CONFIG.isDebug() )
-        {
-            if ( hasPermission )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
-                BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                if ( hasPermission )
+                {
+                    BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                }
+                else
+                {
+                    BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                }
             }
-            else
-            {
-                BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
-            }
+
+            return hasPermission;
         }
-
-        return hasPermission;
+        catch ( Exception e )
+        {
+            BuX.getLogger().info( "Failed to check permission " + permission + " for " + name + " due to an error that occured!" );
+            return false;
+        }
     }
 
     @Override

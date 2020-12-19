@@ -327,7 +327,7 @@ public abstract class AbstractBungeeUtilisalsX
             try
             {
                 final Class<? extends Update> updater = (Class<? extends Update>) Class.forName(
-                        "com.dbsoftwares.bungeeutilisals.updater.UpdateTo" + this.getVersion().replace( ".", "_" )
+                        "com.dbsoftwares.bungeeutilisalsx.common.updater.migration.UpdateTo" + this.getVersion().replace( ".", "_" )
                 );
 
                 BuX.getLogger().info( "Updating data to support BungeeUtilisalsX v" + this.getVersion() + " ..." );

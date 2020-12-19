@@ -50,7 +50,6 @@ public class UserConnectionListener implements Listener
     @EventHandler(priority = EventPriority.LOWEST)
     public void onDisconnect( final PlayerDisconnectEvent event )
     {
-        final ProxiedPlayer player = event.getPlayer();
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
 
         if ( !optional.isPresent() )
