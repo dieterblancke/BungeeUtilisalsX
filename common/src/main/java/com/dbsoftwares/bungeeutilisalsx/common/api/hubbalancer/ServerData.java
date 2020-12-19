@@ -17,9 +17,9 @@ public class ServerData
     private String name;
     private boolean online;
 
-    public <T extends IProxyServer> T getServerInfo()
+    public IProxyServer getServerInfo()
     {
-        return (T) BuX.getInstance().proxyOperations().getServerInfo( name );
+        return BuX.getInstance().proxyOperations().getServerInfo( name );
     }
 
     public int getCount()

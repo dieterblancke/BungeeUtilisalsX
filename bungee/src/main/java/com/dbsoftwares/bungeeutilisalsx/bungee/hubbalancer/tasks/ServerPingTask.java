@@ -11,7 +11,7 @@ public class ServerPingTask implements Runnable
     {
         BuX.getApi().getHubBalancer().getServers().forEach( server ->
         {
-            final BungeeServer bungeeServer = server.getServerInfo();
+            final BungeeServer bungeeServer = (BungeeServer) server.getServerInfo();
 
             if ( bungeeServer == null )
             {

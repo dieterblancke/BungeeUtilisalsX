@@ -1,5 +1,6 @@
 package com.dbsoftwares.bungeeutilisalsx.bungee.hubbalancer.listeners;
 
+import com.dbsoftwares.bungeeutilisalsx.bungee.utils.BungeeServer;
 import com.dbsoftwares.bungeeutilisalsx.bungee.utils.LanguageUtils;
 import com.dbsoftwares.bungeeutilisalsx.common.BuX;
 import com.dbsoftwares.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
@@ -50,7 +51,7 @@ public class JoinListener implements Listener
         }
         else
         {
-            event.setTarget( optimal.getServerInfo() );
+            event.setTarget( ((BungeeServer) optimal.getServerInfo()).getServerInfo() );
         }
     }
 }

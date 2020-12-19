@@ -164,7 +164,7 @@ public abstract class AbstractBungeeUtilisalsX
 
             this.getApi().getEventLoader().register( UserLoadEvent.class, friendsExecutor );
             this.getApi().getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
-            this.getApi().getEventLoader().register( UserServerConnectEvent.class, friendsExecutor );
+            this.getApi().getEventLoader().register( UserServerConnectedEvent.class, friendsExecutor );
         }
     }
 
