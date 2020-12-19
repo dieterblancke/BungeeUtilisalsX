@@ -116,7 +116,7 @@ public class KickListener implements Listener
                 return;
             }
 
-            event.setCancelServer( data.getServerInfo() );
+            event.setCancelServer( ( (BungeeServer) data.getServerInfo() ).getServerInfo() );
             event.setCancelled( true );
         }
         else

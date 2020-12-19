@@ -24,6 +24,7 @@ import com.dbsoftwares.bungeeutilisalsx.common.api.event.events.user.UserServerC
 import com.dbsoftwares.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.bungeeutilisalsx.velocity.user.VelocityUser;
 import com.dbsoftwares.bungeeutilisalsx.velocity.utils.VelocityServer;
+import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -45,7 +46,8 @@ public class UserConnectionListener
         user.load( event.getPlayer().getUniqueId() );
     }
 
-    @Subscribe
+    // Executing on FIRST to get it to execute early on in the quit procedure
+    @Subscribe(order = PostOrder.FIRST )
     public void onDisconnect( final DisconnectEvent event )
     {
         final Player player = event.getPlayer();

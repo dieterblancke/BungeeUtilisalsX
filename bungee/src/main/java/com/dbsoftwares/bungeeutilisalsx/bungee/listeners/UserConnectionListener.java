@@ -31,6 +31,7 @@ import net.md_5.bungee.api.event.ServerConnectEvent;
 import net.md_5.bungee.api.event.ServerConnectedEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
+import net.md_5.bungee.event.EventPriority;
 
 import java.util.Optional;
 
@@ -45,7 +46,8 @@ public class UserConnectionListener implements Listener
         user.load( event.getPlayer().getUniqueId() );
     }
 
-    @EventHandler
+    // Executing on LOWEST priority to get it to execute early on in the quit procedure
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onDisconnect( final PlayerDisconnectEvent event )
     {
         final ProxiedPlayer player = event.getPlayer();
