@@ -111,7 +111,8 @@ public class MigrationManager
     {
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
               PreparedStatement ps = connection.prepareStatement(
-                      "INSERT INTO bu_migrations(migration_id, type, script, created_at, success) VALUES (?, ?, ?, ?, ?);"
+                      "INSERT INTO bu_migrations(migration_id, type, script, created_at, success)" +
+                              " VALUES (?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               )
         )
         {

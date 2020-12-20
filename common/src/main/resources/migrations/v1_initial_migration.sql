@@ -17,40 +17,40 @@ CREATE INDEX idx_users_i ON {users-table} (ip);
 
 CREATE TABLE IF NOT EXISTS {ignoredusers-table}
 (
-    user    DATA_TYPE_VARCHAR NOT NULL,
+    `user`  DATA_TYPE_VARCHAR NOT NULL,
     ignored DATA_TYPE_VARCHAR NOT NULL,
-    PRIMARY KEY (user, ignored)
+    PRIMARY KEY (`user`, `ignored`)
 );
 
 CREATE TABLE IF NOT EXISTS {friendsettings-table}
 (
-    user     DATA_TYPE_VARCHAR NOT NULL,
+    `user`   DATA_TYPE_VARCHAR NOT NULL,
     requests DATA_TYPE_BOOLEAN NOT NULL,
     messages DATA_TYPE_BOOLEAN NOT NULL,
-    PRIMARY KEY (user)
+    PRIMARY KEY (`user`)
 );
 
 CREATE TABLE IF NOT EXISTS {friends-table}
 (
-    user    DATA_TYPE_VARCHAR NOT NULL,
+    `user`  DATA_TYPE_VARCHAR NOT NULL,
     friend  DATA_TYPE_VARCHAR NOT NULL,
     created DATA_TYPE_DATETIME,
-    PRIMARY KEY (user, friend)
+    PRIMARY KEY (`user`, friend)
 );
 
 CREATE TABLE IF NOT EXISTS {friendrequests-table}
 (
-    user         DATA_TYPE_VARCHAR NOT NULL,
+    `user`       DATA_TYPE_VARCHAR NOT NULL,
     friend       DATA_TYPE_VARCHAR NOT NULL,
     requested_at DATA_TYPE_DATETIME,
-    PRIMARY KEY (user, friend)
+    PRIMARY KEY (`user`, friend)
 );
 
 CREATE TABLE IF NOT EXISTS {bans-table}
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
-    user                    DATA_TYPE_VARCHAR  NOT NULL,
+    `user`                  DATA_TYPE_VARCHAR  NOT NULL,
     ip                      DATA_TYPE_VARCHAR  NOT NULL,
     reason                  TEXT               NOT NULL,
     server                  DATA_TYPE_VARCHAR  NOT NULL,
@@ -59,10 +59,10 @@ CREATE TABLE IF NOT EXISTS {bans-table}
     executed_by             DATA_TYPE_VARCHAR  NOT NULL,
     duration                DATA_TYPE_BIGINT   NOT NULL,
     type                    DATA_TYPE_VARCHAR  NOT NULL,
-    removed                 DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    removed                 DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     removed_by              DATA_TYPE_VARCHAR,
     removed_at              DATA_TYPE_DATETIME NULL DEFAULT NULL,
-    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     PRIMARY KEY (id)
 );
 
@@ -80,7 +80,7 @@ CREATE TABLE IF NOT EXISTS {mutes-table}
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
-    user                    DATA_TYPE_VARCHAR  NOT NULL,
+    `user`                  DATA_TYPE_VARCHAR  NOT NULL,
     ip                      DATA_TYPE_VARCHAR  NOT NULL,
     reason                  TEXT               NOT NULL,
     server                  DATA_TYPE_VARCHAR  NOT NULL,
@@ -89,10 +89,10 @@ CREATE TABLE IF NOT EXISTS {mutes-table}
     executed_by             DATA_TYPE_VARCHAR  NOT NULL,
     duration                DATA_TYPE_BIGINT   NOT NULL,
     type                    DATA_TYPE_VARCHAR  NOT NULL,
-    removed                 DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    removed                 DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     removed_by              DATA_TYPE_VARCHAR,
     removed_at              DATA_TYPE_DATETIME NULL DEFAULT NULL,
-    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     PRIMARY KEY (id)
 );
 
@@ -110,13 +110,13 @@ CREATE TABLE IF NOT EXISTS {kicks-table}
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
-    user                    DATA_TYPE_VARCHAR  NOT NULL,
+    `user`                  DATA_TYPE_VARCHAR  NOT NULL,
     ip                      DATA_TYPE_VARCHAR  NOT NULL,
     reason                  TEXT               NOT NULL,
     server                  DATA_TYPE_VARCHAR  NOT NULL,
     date                    DATA_TYPE_DATETIME NOT NULL,
     executed_by             DATA_TYPE_VARCHAR  NOT NULL,
-    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     PRIMARY KEY (id)
 );
 
@@ -127,13 +127,13 @@ CREATE TABLE IF NOT EXISTS {warns-table}
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
-    user                    DATA_TYPE_VARCHAR  NOT NULL,
+    `user`                  DATA_TYPE_VARCHAR  NOT NULL,
     ip                      DATA_TYPE_VARCHAR  NOT NULL,
     reason                  TEXT               NOT NULL,
     server                  DATA_TYPE_VARCHAR  NOT NULL,
     date                    DATA_TYPE_DATETIME NOT NULL,
     executed_by             DATA_TYPE_VARCHAR  NOT NULL,
-    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT 0,
+    punishmentaction_status DATA_TYPE_BOOLEAN  NOT NULL DEFAULT_VALUE_BOOLEAN_FALSE,
     PRIMARY KEY (id)
 );
 
@@ -144,7 +144,7 @@ CREATE TABLE IF NOT EXISTS {punishmentactions-table}
 (
     id       DATA_TYPE_SERIAL,
     uuid     DATA_TYPE_VARCHAR  NOT NULL,
-    user     DATA_TYPE_VARCHAR  NOT NULL,
+    `user`   DATA_TYPE_VARCHAR  NOT NULL,
     ip       DATA_TYPE_VARCHAR  NOT NULL,
     actionid DATA_TYPE_VARCHAR  NOT NULL,
     date     DATA_TYPE_DATETIME NOT NULL,
@@ -171,7 +171,7 @@ CREATE INDEX idx_reports_urb ON {reports-table} (uuid, reported_by);
 CREATE TABLE IF NOT EXISTS {messagequeue-table}
 (
     id      DATA_TYPE_SERIAL,
-    user    DATA_TYPE_VARCHAR  NOT NULL,
+    `user`  DATA_TYPE_VARCHAR  NOT NULL,
     message TEXT               NOT NULL,
     date    DATA_TYPE_DATETIME NOT NULL,
     type    DATA_TYPE_VARCHAR  NOT NULL,
@@ -179,4 +179,4 @@ CREATE TABLE IF NOT EXISTS {messagequeue-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_messagequeue_u ON {messagequeue-table} (user, type);
+CREATE INDEX idx_messagequeue_u ON {messagequeue-table} (`user`, type);

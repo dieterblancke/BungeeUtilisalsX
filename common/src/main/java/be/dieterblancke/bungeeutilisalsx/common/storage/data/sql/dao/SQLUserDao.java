@@ -41,17 +41,7 @@ import java.util.logging.Level;
 public class SQLUserDao implements UserDao
 {
 
-    private static final String INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
-
-    private static final String OTHER_INSERT_USER = "INSERT INTO {users-table} " +
-            "(uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;";
-
     private static final String SELECT_USER = "SELECT %s FROM {users-table} WHERE %s;";
-    private static final String UPDATE_USER = "UPDATE {users-table} " +
-            "SET username = ?, ip = ?, language = ?, lastlogout = ? " +
-            "WHERE uuid = ?;";
-
     private static final String UPDATE_USER_COLUMN = "UPDATE {users-table} SET %s = ? WHERE uuid = ?;";
 
     @Override
@@ -66,7 +56,9 @@ public class SQLUserDao implements UserDao
     public void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost )
     {
         final StorageType type = BuX.getInstance().getAbstractStorageManager().getType();
-        final String statement = type == StorageType.SQLITE || type == StorageType.POSTGRESQL ? OTHER_INSERT_USER : INSERT_USER;
+        final String statement = type == StorageType.SQLITE || type == StorageType.POSTGRESQL
+                ? "INSERT INTO {users-table} (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", " + Dao.getInsertDateParameter() + ", ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;"
+                : "INSERT INTO {users-table} (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format( statement ) ) )
@@ -92,7 +84,9 @@ public class SQLUserDao implements UserDao
     public void updateUser( UUID uuid, String name, String ip, Language language, Date logout )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER ) ) )
+              PreparedStatement pstmt = connection.prepareStatement( format(
+                      "UPDATE {users-table} SET username = ?, ip = ?, language = ?, lastlogout = " + Dao.getInsertDateParameter() + " WHERE uuid = ?;"
+              ) ) )
         {
             pstmt.setString( 1, name );
             pstmt.setString( 2, ip );
@@ -383,7 +377,9 @@ public class SQLUserDao implements UserDao
     public void setLogout( UUID uuid, Date logout )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( format( UPDATE_USER_COLUMN, "lastlogout" ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format("UPDATE {users-table} SET lastlogout = "+Dao.getInsertDateParameter()+" WHERE uuid = ?;")
+              ) )
         {
             pstmt.setString( 1, Dao.formatDateToString( logout ) );
             pstmt.setString( 2, uuid.toString() );

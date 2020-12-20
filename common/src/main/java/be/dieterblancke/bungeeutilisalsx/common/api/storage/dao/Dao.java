@@ -18,6 +18,9 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 
 import java.text.ParseException;
@@ -45,6 +48,12 @@ public interface Dao
         {
             return new Date();
         }
+    }
+
+    static String getInsertDateParameter() {
+        return BuX.getInstance().getAbstractStorageManager().getType() == StorageType.POSTGRESQL
+                ? "TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')"
+                : "?";
     }
 
     UserDao getUserDao();

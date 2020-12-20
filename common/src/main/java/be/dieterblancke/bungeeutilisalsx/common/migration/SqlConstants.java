@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 public enum SqlConstants
@@ -15,12 +16,14 @@ public enum SqlConstants
     DATA_TYPE_DECIMAL( "DECIMAL", "DECIMAL", "REAL" ),
     DATA_TYPE_NUMERIC( "NUMERIC", "NUMERIC", "REAL" ),
     DATA_TYPE_BOOLEAN( "BOOLEAN", "BOOLEAN", "INTEGER" ),
+    DATA_TYPE_DATETIME( "DATETIME", "TIMESTAMP", "TEXT" ),
     DATA_TYPE_DATE( "DATE", "DATE", "TEXT" ),
     DATA_TYPE_TIME( "TIME", "TIME", "TEXT" ),
-    DATA_TYPE_DATETIME( "DATETIME", "TIMESTAMP", "TEXT" ),
     DATA_TYPE_LONGTEXT( "LONGTEXT", "TEXT", "TEXT" ),
-    DATA_TYPE_VARCHAR( "VARCHAR(255)", "VARCHAR(255)", "TEXT" ),
-    DATA_TYPE_SERIAL( "SERIAL", "BIGSERIAL", "INTEGER UNSIGNED NOT NULL AUTOINCREMENT" );
+    DATA_TYPE_VARCHAR( "VARCHAR(255)", "VARCHAR(255)", "VARCHAR(255)" ),
+    DATA_TYPE_SERIAL( "SERIAL", "BIGSERIAL", "INTEGER PRIMARY KEY AUTOINCREMENT" ),
+    DEFAULT_VALUE_BOOLEAN_FALSE("DEFAULT 0", "DEFAULT FALSE", "DEFAULT 0"),
+    DEFAULT_VALUE_BOOLEAN_TRUE("DEFAULT 1", "DEFAULT TRUE", "DEFAULT 1");
 
     private final String mysql;
     private final String postgresql;
@@ -35,11 +38,31 @@ public enum SqlConstants
 
     public static String replaceConstants( String text )
     {
-        final String storageType = ConfigFiles.CONFIG.getConfig().getString( "storage.type" ).toLowerCase();
+        final String storageType = ConfigFiles.CONFIG.getConfig().getString( "storage.type" );
+
+        text = fixStatementForType( storageType, text );
 
         for ( SqlConstants constant : values() )
         {
             text = text.replace( constant.toString(), constant.getReplacement( storageType ) );
+        }
+        return text;
+    }
+
+    private static String fixStatementForType( final String storageType, String text )
+    {
+        if ( storageType.equalsIgnoreCase( "postgresql" ) )
+        {
+            text = text.replace( "`", "\"" );
+        }
+        if ( storageType.equalsIgnoreCase( "sqlite" ) )
+        {
+            // messy solution, but works for now
+
+            if (text.contains("PRIMARY KEY (id)")) {
+                text = text.replace( "PRIMARY KEY (id)", "" );
+                text = Utils.replaceLast(text, ",", "");
+            }
         }
         return text;
     }

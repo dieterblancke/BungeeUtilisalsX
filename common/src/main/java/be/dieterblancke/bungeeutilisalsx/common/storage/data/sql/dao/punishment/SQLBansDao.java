@@ -229,7 +229,7 @@ public class SQLBansDao implements BansDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -258,7 +258,7 @@ public class SQLBansDao implements BansDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -287,7 +287,7 @@ public class SQLBansDao implements BansDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -316,7 +316,7 @@ public class SQLBansDao implements BansDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -454,12 +454,12 @@ public class SQLBansDao implements BansDao
 
         if ( useServerPunishments() )
         {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
         }
         else
         {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
         }
 
@@ -493,12 +493,12 @@ public class SQLBansDao implements BansDao
 
         if ( useServerPunishments() )
         {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
         }
         else
         {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
         }
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();

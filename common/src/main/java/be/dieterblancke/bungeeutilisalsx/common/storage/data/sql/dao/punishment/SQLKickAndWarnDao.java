@@ -44,7 +44,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                              " VALUES (?, ?, ?, ?, ?, ?, ?);"
+                              " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -70,7 +70,7 @@ public class SQLKickAndWarnDao implements KickAndWarnDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                              " VALUES (?, ?, ?, ?, ?, ?, ?);"
+                              " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );

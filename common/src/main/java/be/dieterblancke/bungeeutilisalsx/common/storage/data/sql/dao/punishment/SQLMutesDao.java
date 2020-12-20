@@ -228,7 +228,7 @@ public class SQLMutesDao implements MutesDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -257,7 +257,7 @@ public class SQLMutesDao implements MutesDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -286,7 +286,7 @@ public class SQLMutesDao implements MutesDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -315,7 +315,7 @@ public class SQLMutesDao implements MutesDao
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
+                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -450,12 +450,12 @@ public class SQLMutesDao implements MutesDao
         final String query;
         if ( BansDao.useServerPunishments() )
         {
-            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
         }
         else
         {
-            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
         }
 
@@ -488,12 +488,12 @@ public class SQLMutesDao implements MutesDao
         final String query;
         if ( BansDao.useServerPunishments() )
         {
-            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
         }
         else
         {
-            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = ?" +
+            query = "UPDATE " + PunishmentType.MUTE.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
                     " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
         }
 

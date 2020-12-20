@@ -110,7 +110,8 @@ public class MongoToSQLConverter extends Converter
     private void createUser( Connection connection, Document document ) throws SQLException
     {
         try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                PlaceHolderAPI.formatMessage( "INSERT INTO {users-table}(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);" )
+                PlaceHolderAPI.formatMessage( "INSERT INTO {users-table}(uuid, username, ip, language, firstlogin, lastlogout) " +
+                        "VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", " + Dao.getInsertDateParameter() + ");" )
         ) )
         {
             preparedStatement.setString( 1, document.getString( "uuid" ) );
@@ -129,7 +130,8 @@ public class MongoToSQLConverter extends Converter
         if ( !type.isActivatable() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, executed_by) VALUES (?, ?, ?, ?, ?, ?, ?);" )
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, executed_by)" +
+                            " VALUES (?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+", ?);" )
             ) )
             {
                 preparedStatement.setString( 1, document.getString( "uuid" ) );
@@ -146,7 +148,8 @@ public class MongoToSQLConverter extends Converter
         else if ( type.isTemporary() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by)" +
+                            " VALUES (?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+", ?, ?, ?);" )
             ) )
             {
                 preparedStatement.setString( 1, document.getString( "uuid" ) );
@@ -166,7 +169,8 @@ public class MongoToSQLConverter extends Converter
         else
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) " +
+                            "VALUES (?, ?, ?, ?, ?, " + Dao.getInsertDateParameter()+", ?, ?, ?);" )
             ) )
             {
                 preparedStatement.setString( 1, document.getString( "uuid" ) );

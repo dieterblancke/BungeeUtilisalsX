@@ -50,7 +50,7 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config.setUsername( configuration.getString( "storage.username" ) );
         config.setPassword( configuration.getString( "storage.password" ) );
 
-        if ( !type.equals( StorageType.MARIADB ) )
+        if ( type != StorageType.POSTGRESQL )
         {
             config.addDataSourceProperty( "useSSL", configuration.getBoolean( "storage.useSSL" ) );
         }

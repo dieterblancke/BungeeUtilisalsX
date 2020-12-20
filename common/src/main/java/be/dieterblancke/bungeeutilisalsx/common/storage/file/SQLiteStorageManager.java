@@ -38,12 +38,17 @@ public class SQLiteStorageManager extends SQLStorageManager
 
     public SQLiteStorageManager() throws SQLException
     {
+        this( new File( BuX.getInstance().getDataFolder(), "data.db" ) );
+    }
+
+    public SQLiteStorageManager( final File database ) throws SQLException
+    {
         super( StorageType.SQLITE, new SQLDao() );
-        database = new File( BuX.getInstance().getDataFolder(), "data.db" );
+        this.database = database;
 
         try
         {
-            if ( !database.exists() && !database.createNewFile() )
+            if ( database != null && !database.exists() && !database.createNewFile() )
             {
                 return;
             }
@@ -66,7 +71,11 @@ public class SQLiteStorageManager extends SQLStorageManager
 
     private UnclosableConnection initializeConnection() throws SQLException
     {
-        return UnclosableConnection.wrap( DriverManager.getConnection( "jdbc:sqlite:" + database.getPath() ) );
+        return UnclosableConnection.wrap( DriverManager.getConnection(
+                database == null
+                        ? "jdbc:sqlite::memory:"
+                        : "jdbc:sqlite:" + database.getPath()
+        ) );
     }
 
     @Override
