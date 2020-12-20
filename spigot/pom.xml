@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
-        <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
+        <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
         <version>1.2.0</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
@@ -32,7 +32,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
+            <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
             <version>1.2.0</version>
         </dependency>
@@ -60,19 +60,19 @@
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.metrics</shadedPattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.metrics</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.dbsoftwares.configuration</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.configuration</shadedPattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.configuration</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>io.lettuce</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.lettuce</shadedPattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.lettuce</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>io.netty</pattern>
-                            <shadedPattern>com.dbsoftwares.bungeeutilisalsx.internal.netty</shadedPattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.netty</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
