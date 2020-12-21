@@ -825,4 +825,9 @@ public class Utils
 
         return sb.toString();
     }
+
+    public static boolean isSpigot()
+    {
+        return classFound( "org.bukkit.Bukkit" );
+    }
 }

@@ -579,6 +579,51 @@ public class SQLUserDao implements UserDao
         }
     }
 
+    @Override
+    public Map<String, String> getCurrentServersBulk( final List<String> users )
+    {
+        final Map<String, String> userServers = Maps.newHashMap();
+
+        if ( users.isEmpty() )
+        {
+            return userServers;
+        }
+        final StringBuilder paramsBuilder = new StringBuilder();
+
+        for ( int i = 0; i < users.size(); i++ )
+        {
+            if ( i > 0 )
+            {
+                paramsBuilder.append( ", " );
+            }
+            paramsBuilder.append( "?" );
+        }
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT username, current_server FROM {users-table} WHERE username IN (" + paramsBuilder.toString() + ");" )
+              ) )
+        {
+            for ( int i = 0; i < users.size(); i++ )
+            {
+                pstmt.setString( i + 1, users.get( i ) );
+            }
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    userServers.put( rs.getString( "username" ), rs.getString( "current_server" ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+        }
+        return userServers;
+    }
+
     private String format( String line )
     {
         return PlaceHolderAPI.formatMessage( line );

@@ -1,7 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.gui.friendactions;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
@@ -15,11 +17,14 @@ public class FriendActionsItemPage extends ItemPage
     public FriendActionsItemPage( final FriendActionsGuiConfig guiConfig, final FriendData friendData )
     {
         super( guiConfig.getRows() * 9 );
+        final String currentServer = (( BungeeUtilisalsX ) BuX.getInstance()).getUserServerHelper().getCurrentServer(
+                friendData.getFriend()
+        ).orElse( null );
 
         final Object[] placeholders = new Object[]{
                 "{friend-name}", friendData.getFriend(),
                 "{last-online}", Utils.formatDate( friendData.getLastOnline() ),
-                "{server}", "UNKNOWN" // TODO
+                "{server}", currentServer == null ? "Unknown" : currentServer
         };
 
         for ( GuiConfigItem item : guiConfig.getItems() )
@@ -31,6 +36,7 @@ public class FriendActionsItemPage extends ItemPage
                     super.setItem( slot, this.getFriendGuiItem(
                             (FriendGuiConfigItem) item,
                             friendData,
+                            currentServer,
                             placeholders
                     ) );
                 }
@@ -45,10 +51,10 @@ public class FriendActionsItemPage extends ItemPage
         }
     }
 
-    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final Object... placeholders )
+    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final String currentServer, final Object... placeholders )
     {
         final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
-        final boolean online = false; // TODO: online check
+        final boolean online = currentServer != null;
         final ItemStack itemStack = online
                 ? item.getOnlineItem().buildItem( placeholders )
                 : item.getOfflineItem().buildItem( placeholders );

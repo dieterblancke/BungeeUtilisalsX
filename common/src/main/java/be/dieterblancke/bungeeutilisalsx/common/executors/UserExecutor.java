@@ -27,6 +27,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEv
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 
@@ -86,10 +87,13 @@ public class UserExecutor implements EventExecutor
     @Event
     public void updateServerOnUserDisconnect( final UserUnloadEvent event )
     {
-        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
-                event.getUser().getUuid(),
-                null
-        );
+        if ( !Utils.isSpigot() )
+        {
+            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
+                    event.getUser().getUuid(),
+                    null
+            );
+        }
     }
 
     private StaffRankData findStaffRank( final User user )

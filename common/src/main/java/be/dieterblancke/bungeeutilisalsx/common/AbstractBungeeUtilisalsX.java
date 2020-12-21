@@ -16,6 +16,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -301,10 +302,13 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void shutdown()
     {
-        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
-                this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
-                null
-        );
+        if ( !Utils.isSpigot() )
+        {
+            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
+                    this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
+                    null
+            );
+        }
 
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
         try

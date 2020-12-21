@@ -17,13 +17,16 @@ import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updater;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.user.UserServerHelper;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.GuiManager;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.InventoryListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserChatListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserConnectionListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.placeholders.DefaultPlaceHolders;
+import be.dieterblancke.bungeeutilisalsx.spigot.user.DataStorageUserServerHelper;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Bukkit;
 
 import java.io.File;
@@ -38,6 +41,10 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     private final IPluginDescription pluginDescription = new SpigotPluginDescription();
     @Getter
     private GuiManager guiManager;
+
+    @Getter
+    @Setter
+    private UserServerHelper userServerHelper;
 
     @Override
     public void initialize()
@@ -61,6 +68,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         this.loadDatabase();
 
         this.api = this.createBuXApi();
+        this.userServerHelper = new DataStorageUserServerHelper();
 
         this.registerLanguages();
         this.registerListeners();

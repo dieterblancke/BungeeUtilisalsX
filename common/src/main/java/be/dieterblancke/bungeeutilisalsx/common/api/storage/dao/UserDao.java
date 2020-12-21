@@ -72,4 +72,6 @@ public interface UserDao
     String getCurrentServer( UUID user );
 
     void setCurrentServerBulk( List<UUID> users, String server );
+
+    Map<String, String> getCurrentServersBulk( List<String> users );
 }

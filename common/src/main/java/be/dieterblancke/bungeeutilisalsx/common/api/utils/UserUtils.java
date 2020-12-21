@@ -18,6 +18,7 @@ public class UserUtils
             }
         }
         // TODO: find a solution to reliably get online players on domain on other redis servers
+        // preferably use a hset (similar to ProxySync) and use ProxySync to detect if a player needs to be cleaned.
 
         return amount;
     }

@@ -1,7 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.gui.friend;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
@@ -10,6 +12,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class FriendItemPage extends ItemPage
 {
@@ -34,6 +39,10 @@ public class FriendItemPage extends ItemPage
             }
         }
 
+        final Map<String, Optional<String>> userServers = ( (BungeeUtilisalsX) BuX.getInstance() ).getUserServerHelper().getCurrentServer(
+                friendData.stream().map( FriendData::getFriend ).collect( Collectors.toList() )
+        );
+
         for ( GuiConfigItem item : guiConfig.getItems() )
         {
             if ( !( (FriendGuiConfigItem) item ).isFriendItem() )
@@ -49,22 +58,24 @@ public class FriendItemPage extends ItemPage
                     break;
                 }
                 final FriendData data = friendDataIterator.next();
+                final String currentServer = userServers.get( data.getFriend() ).orElse( null );
 
                 super.setItem( slot, this.getFriendGuiItem(
                         (FriendGuiConfigItem) item,
                         data,
+                        currentServer,
                         "{friend-name}", data.getFriend(),
                         "{last-online}", Utils.formatDate( data.getLastOnline() ),
-                        "{server}", "UNKNOWN" // TODO
+                        "{server}", currentServer == null ? "Unknown" : currentServer
                 ) );
             }
         }
     }
 
-    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final Object... placeholders )
+    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final String currentServer, final Object... placeholders )
     {
         final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
-        final boolean online = false; // TODO: online check
+        final boolean online = currentServer != null;
         final ItemStack itemStack = online
                 ? item.getOnlineItem().buildItem( placeholders )
                 : item.getOfflineItem().buildItem( placeholders );

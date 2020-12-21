@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Accumulators;
@@ -333,12 +334,32 @@ public class MongoUserDao implements UserDao
     }
 
     @Override
-    public void setCurrentServerBulk( List<UUID> users, String server )
+    public void setCurrentServerBulk( final List<UUID> users, final String server )
     {
         db().getCollection( format( "{users-table}" ) ).updateMany(
                 Filters.in( "uuid", users.stream().map( UUID::toString ).collect( Collectors.toList() ) ),
                 Updates.set( "current_server", server )
         );
+    }
+
+    @Override
+    public Map<String, String> getCurrentServersBulk( final List<String> users )
+    {
+        final Map<String, String> userServers = new HashMap<>();
+
+        if ( users.isEmpty() )
+        {
+            return userServers;
+        }
+        final FindIterable<Document> documents = db().getCollection( format( "{users-table}" ) )
+                .find( Filters.in( "username", users ) );
+
+        for ( Document document : documents )
+        {
+            userServers.put( document.getString( "username" ), document.getString( "current_server" ) );
+        }
+
+        return userServers;
     }
 
     private String format( String line )
