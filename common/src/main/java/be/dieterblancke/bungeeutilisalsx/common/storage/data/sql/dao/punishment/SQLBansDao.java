@@ -25,6 +25,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
@@ -226,10 +227,12 @@ public class SQLBansDao implements BansDao
     @Override
     public PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueBanId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -242,6 +245,7 @@ public class SQLBansDao implements BansDao
             pstmt.setLong( 8, -1 );
             pstmt.setString( 9, PunishmentType.BAN.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -249,16 +253,18 @@ public class SQLBansDao implements BansDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueBanId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -271,6 +277,7 @@ public class SQLBansDao implements BansDao
             pstmt.setLong( 8, -1 );
             pstmt.setString( 9, PunishmentType.IPBAN.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -278,16 +285,18 @@ public class SQLBansDao implements BansDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueBanId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -300,6 +309,7 @@ public class SQLBansDao implements BansDao
             pstmt.setLong( 8, duration );
             pstmt.setString( 9, PunishmentType.TEMPBAN.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -307,16 +317,18 @@ public class SQLBansDao implements BansDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueBanId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -329,6 +341,7 @@ public class SQLBansDao implements BansDao
             pstmt.setLong( 8, duration );
             pstmt.setString( 9, PunishmentType.IPTEMPBAN.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -336,7 +349,7 @@ public class SQLBansDao implements BansDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
@@ -380,8 +393,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -434,8 +448,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -552,8 +567,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -594,8 +610,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -636,8 +653,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -677,8 +695,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -719,8 +738,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -760,8 +780,9 @@ public class SQLBansDao implements BansDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -771,5 +792,32 @@ public class SQLBansDao implements BansDao
         }
 
         return info;
+    }
+
+    @Override
+    public boolean isPunishmentUidFound( final String punishmentUid )
+    {
+        boolean uidFound = false;
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ?;"
+              ) )
+        {
+            pstmt.setString( 1, punishmentUid );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    uidFound = true;
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
+        return uidFound;
     }
 }

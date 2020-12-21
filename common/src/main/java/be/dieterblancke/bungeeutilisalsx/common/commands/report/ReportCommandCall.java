@@ -23,7 +23,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.commands.report.sub.*;
-import be.dieterblancke.bungeeutilisalsx.common.commands.report.sub.*;
 
 public class ReportCommandCall extends ParentCommand implements CommandCall
 {

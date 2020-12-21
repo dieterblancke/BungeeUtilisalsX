@@ -138,6 +138,7 @@ public class MongoMutesDao implements MutesDao
     @Override
     public PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueMuteId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.MUTE.toString() );
         data.put( "uuid", uuid.toString() );
@@ -152,14 +153,16 @@ public class MongoMutesDao implements MutesDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.MUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueMuteId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.IPMUTE.toString() );
         data.put( "uuid", uuid.toString() );
@@ -174,14 +177,16 @@ public class MongoMutesDao implements MutesDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.IPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueMuteId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.TEMPMUTE.toString() );
         data.put( "uuid", uuid.toString() );
@@ -196,14 +201,16 @@ public class MongoMutesDao implements MutesDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.TEMPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueMuteId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.IPTEMPMUTE.toString() );
         data.put( "uuid", uuid.toString() );
@@ -218,9 +225,10 @@ public class MongoMutesDao implements MutesDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.IPTEMPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
@@ -252,8 +260,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return new PunishmentInfo();
@@ -288,8 +297,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return new PunishmentInfo();
@@ -371,8 +381,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -402,8 +413,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -430,8 +442,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -460,8 +473,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -491,8 +505,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -517,8 +532,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return null;
@@ -549,8 +565,9 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -580,10 +597,20 @@ public class MongoMutesDao implements MutesDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
+    }
+
+    @Override
+    public boolean isPunishmentUidFound( final String puid )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final Document document = collection.find( Filters.eq( "punishment_uid", puid ) ).first();
+
+        return document != null;
     }
 
     private MongoDatabase db()

@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -73,10 +74,28 @@ public class UserExecutor implements EventExecutor
         );
     }
 
+    @Event
+    public void onServerConnected( final UserServerConnectedEvent event )
+    {
+        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
+                event.getUser().getUuid(),
+                event.getTarget().getName()
+        );
+    }
+
+    @Event
+    public void updateServerOnUserDisconnect( final UserUnloadEvent event )
+    {
+        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
+                event.getUser().getUuid(),
+                null
+        );
+    }
+
     private StaffRankData findStaffRank( final User user )
     {
         return ConfigFiles.RANKS.getRanks().stream()
-                .filter( rank -> user.hasPermission( rank.getPermission() ) )
+                .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
                 .max( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .orElse( null );
     }

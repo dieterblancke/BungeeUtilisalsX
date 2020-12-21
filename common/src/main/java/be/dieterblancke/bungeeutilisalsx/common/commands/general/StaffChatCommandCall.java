@@ -21,11 +21,11 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserAction;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserActionType;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 

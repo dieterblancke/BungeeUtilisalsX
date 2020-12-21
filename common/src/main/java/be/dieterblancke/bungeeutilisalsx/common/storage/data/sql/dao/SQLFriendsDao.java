@@ -45,7 +45,7 @@ public class SQLFriendsDao implements FriendsDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      format( "INSERT INTO {friends-table}(user, friend, created) VALUES(?, ?, " +Dao.getInsertDateParameter() + ");" )
+                      format( "INSERT INTO {friends-table}(user, friend, created) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");" )
               ) )
         {
             pstmt.setString( 1, user.toString() );
@@ -147,7 +147,7 @@ public class SQLFriendsDao implements FriendsDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      format( "INSERT INTO {friendrequests-table}(user, friend, requested_at) VALUES(?, ?, "+Dao.getInsertDateParameter()+");" )
+                      format( "INSERT INTO {friendrequests-table}(user, friend, requested_at) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");" )
               ) )
         {
             pstmt.setString( 1, user.toString() );

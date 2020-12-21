@@ -18,8 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.command;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;

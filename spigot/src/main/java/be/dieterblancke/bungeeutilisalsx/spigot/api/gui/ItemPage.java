@@ -5,7 +5,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.*;
-import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 

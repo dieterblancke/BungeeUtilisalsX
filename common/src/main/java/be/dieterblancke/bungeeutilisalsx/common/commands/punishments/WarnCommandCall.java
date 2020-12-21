@@ -20,14 +20,14 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
@@ -64,7 +64,7 @@ public class WarnCommandCall implements CommandCall
             user.sendLangMessage( "punishments.cancelled" );
             return;
         }
-        final IPunishmentExecutor executor = BuX.getApi().getPunishmentExecutor();
+        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
 
         final PunishmentInfo info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().insertWarn(
                 storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), user.getName()

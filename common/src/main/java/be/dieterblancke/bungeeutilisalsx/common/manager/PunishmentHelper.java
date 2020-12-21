@@ -1,24 +1,6 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
+package be.dieterblancke.bungeeutilisalsx.common.manager;
 
-package be.dieterblancke.bungeeutilisalsx.velocity.utils;
-
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -30,7 +12,7 @@ import com.google.common.collect.Lists;
 import java.util.Date;
 import java.util.List;
 
-public class PunishmentExecutor implements IPunishmentExecutor
+public class PunishmentHelper implements IPunishmentHelper
 {
 
     @Override
@@ -129,6 +111,7 @@ public class PunishmentExecutor implements IPunishmentExecutor
         line = line.replace( "{user}", info.getUser() );
         line = line.replace( "{id}", info.getId() );
         line = line.replace( "{type}", info.getType().toString().toLowerCase() );
+        line = line.replace( "{punishment_uid}", info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
 
         if ( info.getExpireTime() == null )
         {
@@ -225,6 +208,9 @@ public class PunishmentExecutor implements IPunishmentExecutor
         {
             placeholders.add( "Unknown" );
         }
+
+        placeholders.add( "{punishment_uid}" );
+        placeholders.add( info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
 
         return placeholders;
     }

@@ -798,14 +798,31 @@ public class Utils
         return message;
     }
 
-    public static String replaceLast(final String string, final String toReplace, final String replacement) {
-        int pos = string.lastIndexOf(toReplace);
-        if (pos > -1) {
-            return string.substring(0, pos)
+    public static String replaceLast( final String string, final String toReplace, final String replacement )
+    {
+        int pos = string.lastIndexOf( toReplace );
+        if ( pos > -1 )
+        {
+            return string.substring( 0, pos )
                     + replacement
-                    + string.substring(pos + toReplace.length());
-        } else {
+                    + string.substring( pos + toReplace.length() );
+        }
+        else
+        {
             return string;
         }
+    }
+
+    public static String createRandomString( final String chars, final int length )
+    {
+        final StringBuilder sb = new StringBuilder();
+        final Random random = new Random();
+
+        for ( int i = 0; i < length; i++ )
+        {
+            sb.append( chars.charAt( random.nextInt( chars.length() ) ) );
+        }
+
+        return sb.toString();
     }
 }

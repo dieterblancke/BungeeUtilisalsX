@@ -18,8 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.placeholders.PlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

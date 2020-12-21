@@ -378,7 +378,7 @@ public class SQLUserDao implements UserDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      format("UPDATE {users-table} SET lastlogout = "+Dao.getInsertDateParameter()+" WHERE uuid = ?;")
+                      format( "UPDATE {users-table} SET lastlogout = " + Dao.getInsertDateParameter() + " WHERE uuid = ?;" )
               ) )
         {
             pstmt.setString( 1, Dao.formatDateToString( logout ) );
@@ -503,6 +503,75 @@ public class SQLUserDao implements UserDao
             pstmt.setString( 2, unignore.toString() );
 
             pstmt.executeUpdate();
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+        }
+    }
+
+    @Override
+    public void setCurrentServer( final UUID uuid, final String server )
+    {
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "UPDATE {users-table} SET current_server = ? WHERE uuid = ?;" )
+              ) )
+        {
+            pstmt.setString( 1, server );
+            pstmt.setString( 2, uuid.toString() );
+
+            pstmt.executeUpdate();
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+        }
+    }
+
+    @Override
+    public String getCurrentServer( final UUID uuid )
+    {
+        String server = null;
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "SELECT current_server FROM {users-table} WHERE uuid = ?;" )
+              ) )
+        {
+            pstmt.setString( 1, uuid.toString() );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    server = rs.getString( "language" );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+        }
+        return server;
+    }
+
+    @Override
+    public void setCurrentServerBulk( final List<UUID> users, final String server )
+    {
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      format( "UPDATE {users-table} SET current_server = ? WHERE uuid = ?;" )
+              ) )
+        {
+            for ( UUID user : users )
+            {
+                pstmt.setString( 1, server );
+                pstmt.setString( 2, user.toString() );
+                pstmt.addBatch();
+            }
+
+            pstmt.executeBatch();
         }
         catch ( SQLException e )
         {

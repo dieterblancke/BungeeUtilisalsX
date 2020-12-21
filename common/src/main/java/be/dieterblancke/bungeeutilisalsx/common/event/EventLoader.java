@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.event;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.*;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.event.*;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;

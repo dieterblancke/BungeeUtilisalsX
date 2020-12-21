@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -85,7 +85,7 @@ public interface IBuXApi
     /**
      * @return The BungeeUtilisals punishment API.
      */
-    IPunishmentExecutor getPunishmentExecutor();
+    IPunishmentHelper getPunishmentExecutor();
 
     /**
      * @return An either the active HubBalancer or null in case it's disabled.

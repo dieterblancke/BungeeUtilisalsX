@@ -1,9 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.utils.UuidInventoryHolder;
-import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryClickEvent;

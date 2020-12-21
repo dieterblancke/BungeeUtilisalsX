@@ -22,8 +22,8 @@ public enum SqlConstants
     DATA_TYPE_LONGTEXT( "LONGTEXT", "TEXT", "TEXT" ),
     DATA_TYPE_VARCHAR( "VARCHAR(255)", "VARCHAR(255)", "VARCHAR(255)" ),
     DATA_TYPE_SERIAL( "SERIAL", "BIGSERIAL", "INTEGER PRIMARY KEY AUTOINCREMENT" ),
-    DEFAULT_VALUE_BOOLEAN_FALSE("DEFAULT 0", "DEFAULT FALSE", "DEFAULT 0"),
-    DEFAULT_VALUE_BOOLEAN_TRUE("DEFAULT 1", "DEFAULT TRUE", "DEFAULT 1");
+    DEFAULT_VALUE_BOOLEAN_FALSE( "DEFAULT 0", "DEFAULT FALSE", "DEFAULT 0" ),
+    DEFAULT_VALUE_BOOLEAN_TRUE( "DEFAULT 1", "DEFAULT TRUE", "DEFAULT 1" );
 
     private final String mysql;
     private final String postgresql;
@@ -59,9 +59,10 @@ public enum SqlConstants
         {
             // messy solution, but works for now
 
-            if (text.contains("PRIMARY KEY (id)")) {
+            if ( text.contains( "PRIMARY KEY (id)" ) )
+            {
                 text = text.replace( "PRIMARY KEY (id)", "" );
-                text = Utils.replaceLast(text, ",", "");
+                text = Utils.replaceLast( text, ",", "" );
             }
         }
         return text;

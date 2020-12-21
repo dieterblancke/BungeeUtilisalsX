@@ -4,9 +4,11 @@ import be.dieterblancke.bungeeutilisalsx.common.storage.file.SQLiteStorageManage
 
 import java.sql.SQLException;
 
-public class TestSQLiteStorageManager extends SQLiteStorageManager {
+public class TestSQLiteStorageManager extends SQLiteStorageManager
+{
 
-    public TestSQLiteStorageManager() throws SQLException {
+    public TestSQLiteStorageManager() throws SQLException
+    {
         super( null );
     }
 }

@@ -28,8 +28,6 @@ import be.dieterblancke.bungeeutilisalsx.common.commands.CustomCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
-import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.*;
-import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;

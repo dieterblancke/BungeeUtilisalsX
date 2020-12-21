@@ -11,7 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -21,8 +21,8 @@ import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserAction;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserActionType;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
 import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
-import be.dieterblancke.bungeeutilisalsx.spigot.user.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.spigot.bossbar.BossBar;
+import be.dieterblancke.bungeeutilisalsx.spigot.user.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -107,7 +107,7 @@ public class BuXApi implements IBuXApi
     }
 
     @Override
-    public IPunishmentExecutor getPunishmentExecutor()
+    public IPunishmentHelper getPunishmentExecutor()
     {
         throw new UnsupportedOperationException( "The PunishmentExecutor is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }

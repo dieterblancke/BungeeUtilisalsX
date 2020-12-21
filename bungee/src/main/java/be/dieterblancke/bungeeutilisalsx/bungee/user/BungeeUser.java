@@ -509,11 +509,26 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
+        return hasPermission( permission, false );
+    }
+
+    @Override
+    public boolean hasPermission( String permission, boolean specific )
+    {
         try
         {
-            final boolean hasPermission = parent.hasPermission( permission )
-                    || parent.hasPermission( "*" )
-                    || parent.hasPermission( "bungeeutilisalsx.*" );
+            final boolean hasPermission;
+
+            if ( specific )
+            {
+                hasPermission = parent.hasPermission( permission );
+            }
+            else
+            {
+                hasPermission = parent.hasPermission( permission )
+                        || parent.hasPermission( "*" )
+                        || parent.hasPermission( "bungeeutilisalsx.*" );
+            }
 
             if ( ConfigFiles.CONFIG.isDebug() )
             {

@@ -366,6 +366,12 @@ public class ConsoleUser implements User, CanReceiveMessages
     }
 
     @Override
+    public boolean hasPermission( String permission, boolean specific )
+    {
+        return Bukkit.getConsoleSender().hasPermission( permission );
+    }
+
+    @Override
     public MessageQueue<QueuedMessage> getMessageQueue()
     {
         return null;

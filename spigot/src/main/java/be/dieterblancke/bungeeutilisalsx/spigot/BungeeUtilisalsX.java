@@ -1,12 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.spigot;
 
 import be.dieterblancke.bungeeutilisalsx.common.*;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.GuiManager;
-import be.dieterblancke.bungeeutilisalsx.spigot.listeners.InventoryListener;
-import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserChatListener;
-import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserConnectionListener;
-import be.dieterblancke.bungeeutilisalsx.spigot.placeholders.DefaultPlaceHolders;
-import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
@@ -23,6 +17,11 @@ import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updater;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.GuiManager;
+import be.dieterblancke.bungeeutilisalsx.spigot.listeners.InventoryListener;
+import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserChatListener;
+import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserConnectionListener;
+import be.dieterblancke.bungeeutilisalsx.spigot.placeholders.DefaultPlaceHolders;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import lombok.Getter;
 import org.bukkit.Bukkit;

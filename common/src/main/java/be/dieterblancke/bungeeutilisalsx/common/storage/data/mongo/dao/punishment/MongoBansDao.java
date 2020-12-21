@@ -140,6 +140,7 @@ public class MongoBansDao implements BansDao
     @Override
     public PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueBanId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.BAN.toString() );
         data.put( "uuid", uuid.toString() );
@@ -154,14 +155,16 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.BAN.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueBanId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.IPBAN.toString() );
         data.put( "uuid", uuid.toString() );
@@ -176,14 +179,16 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.IPBAN.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueBanId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.TEMPBAN.toString() );
         data.put( "uuid", uuid.toString() );
@@ -198,14 +203,16 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.TEMPBAN.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueBanId();
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "type", PunishmentType.IPTEMPBAN.toString() );
         data.put( "uuid", uuid.toString() );
@@ -220,9 +227,10 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
+        data.put( "punishment_uid",  punishmentUid);
 
         db().getCollection( PunishmentType.IPTEMPBAN.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
@@ -253,8 +261,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return new PunishmentInfo();
@@ -289,8 +298,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return new PunishmentInfo();
@@ -372,8 +382,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -400,8 +411,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -431,8 +443,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -461,8 +474,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -492,8 +506,9 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
         }
         return punishments;
     }
@@ -518,11 +533,21 @@ public class MongoBansDao implements BansDao
             final long time = ( (Number) document.get( "duration" ) ).longValue();
             final boolean active = document.getBoolean( "active" );
             final String removedby = document.getString( "removed_by" );
+            final String punishmentUid = document.getString( "punishment_uid" );
 
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
         }
 
         return null;
+    }
+
+    @Override
+    public boolean isPunishmentUidFound( final String puid )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final Document document = collection.find( Filters.eq( "punishment_uid", puid ) ).first();
+
+        return document != null;
     }
 
     private MongoDatabase db()

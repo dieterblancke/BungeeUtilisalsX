@@ -19,8 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.placeholder.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.InputPlaceHolderEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.handler.InputPlaceHolderEventHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.EqualsAndHashCode;
 
 import java.util.regex.Matcher;

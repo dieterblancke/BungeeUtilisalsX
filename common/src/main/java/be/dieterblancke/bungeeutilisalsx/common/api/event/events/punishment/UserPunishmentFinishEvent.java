@@ -59,7 +59,7 @@ public class UserPunishmentFinishEvent extends AbstractEvent
     public PunishmentInfo getInfo()
     {
         return new PunishmentInfo( type, "0", name, ip, uuid, executor.getName(),
-                executionServer, reason, date, expire, true, null );
+                executionServer, reason, date, expire, true, null, null );
     }
 
     public boolean isActivatable()

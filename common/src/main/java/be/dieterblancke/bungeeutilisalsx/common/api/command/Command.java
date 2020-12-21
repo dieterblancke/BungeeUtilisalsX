@@ -19,8 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.command;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.google.common.collect.Lists;
 import lombok.Data;

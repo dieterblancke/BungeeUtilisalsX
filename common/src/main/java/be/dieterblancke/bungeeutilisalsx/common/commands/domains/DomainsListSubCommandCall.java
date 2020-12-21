@@ -20,8 +20,8 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.domains;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 
 import java.util.List;
 import java.util.Map;

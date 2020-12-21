@@ -105,7 +105,7 @@ public class SQLPunishmentDao implements PunishmentDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= "+Dao.getInsertDateParameter()+" AND punishmentaction_status = ?;"
+                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -136,7 +136,7 @@ public class SQLPunishmentDao implements PunishmentDao
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= "+Dao.getInsertDateParameter()+" AND type = ? AND punishmentaction_status = ?;"
+                      "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ?;"
               ) )
         {
             pstmt.setString( 1, ip );
@@ -166,7 +166,7 @@ public class SQLPunishmentDao implements PunishmentDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= "+Dao.getInsertDateParameter()+" AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, true );
@@ -187,7 +187,7 @@ public class SQLPunishmentDao implements PunishmentDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= "+Dao.getInsertDateParameter()+" AND punishmentaction_status = ? LIMIT ?;"
+                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ? LIMIT ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, true );
@@ -210,7 +210,7 @@ public class SQLPunishmentDao implements PunishmentDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= "+Dao.getInsertDateParameter()+" AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+                      "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
               ) )
         {
             pstmt.setBoolean( 1, true );
@@ -233,7 +233,7 @@ public class SQLPunishmentDao implements PunishmentDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage(
-                      "INSERT INTO {punishmentactions-table} (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, "+Dao.getInsertDateParameter()+");"
+                      "INSERT INTO {punishmentactions-table} (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
               ) ) )
         {
             pstmt.setString( 1, uuid.toString() );

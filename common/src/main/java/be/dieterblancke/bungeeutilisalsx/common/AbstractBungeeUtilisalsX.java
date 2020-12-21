@@ -43,6 +43,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 @Data
 public abstract class AbstractBungeeUtilisalsX
@@ -141,6 +142,7 @@ public abstract class AbstractBungeeUtilisalsX
         final UserExecutor userExecutor = new UserExecutor();
         this.getApi().getEventLoader().register( UserLoadEvent.class, userExecutor );
         this.getApi().getEventLoader().register( UserUnloadEvent.class, userExecutor );
+        this.getApi().getEventLoader().register( UserServerConnectedEvent.class, userExecutor );
 
         this.getApi().getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
         this.getApi().getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
@@ -299,6 +301,11 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void shutdown()
     {
+        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
+                this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
+                null
+        );
+
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
         try
         {

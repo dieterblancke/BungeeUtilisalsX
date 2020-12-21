@@ -3,7 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.storage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.hikari.PostgreSQLStorageManager;
 import org.testcontainers.containers.GenericContainer;
 
-public class TestPostgreSQLStorageManager extends PostgreSQLStorageManager {
+public class TestPostgreSQLStorageManager extends PostgreSQLStorageManager
+{
 
     private static GenericContainer<?> postgresSqlContainer;
 

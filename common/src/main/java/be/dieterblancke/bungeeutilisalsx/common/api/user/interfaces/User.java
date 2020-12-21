@@ -21,10 +21,10 @@ package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -309,6 +309,14 @@ public interface User
      * @return This simply calls the parent.hasPermission() method
      */
     boolean hasPermission( String permission );
+
+    /**
+     * @param permission The permission to check
+     * @param specific   if true, only the permission specifically will be checked, if false, permissions like "*" and "bungeeutilisalsx.*" will be checked too.
+     * @return This simply calls the parent.hasPermission() method
+     */
+    boolean hasPermission( String permission, boolean specific );
+
 
     /**
      * @return the list of queued messages for this user.

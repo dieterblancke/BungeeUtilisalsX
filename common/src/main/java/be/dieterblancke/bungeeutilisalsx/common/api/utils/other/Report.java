@@ -19,8 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.other;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

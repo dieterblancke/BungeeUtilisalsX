@@ -13,6 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.manager.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
@@ -24,7 +25,6 @@ import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolder
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.javascript.JavaScriptPlaceHolder;
-import be.dieterblancke.bungeeutilisalsx.velocity.utils.PunishmentExecutor;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 
@@ -57,7 +57,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new PluginLanguageManager(),
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
-                new PunishmentExecutor(),
+                new PunishmentHelper(),
                 new VelocityPlayerUtils(),
                 new ChatManager()
         );

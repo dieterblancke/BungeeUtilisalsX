@@ -19,11 +19,11 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
@@ -61,7 +61,7 @@ public class IPMuteCommandCall extends PunishmentCommand
         {
             return;
         }
-        final IPunishmentExecutor executor = BuX.getApi().getPunishmentExecutor();
+        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertMute(
                 storage.getUuid(),
                 storage.getUserName(),

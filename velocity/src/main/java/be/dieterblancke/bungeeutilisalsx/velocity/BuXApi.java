@@ -11,7 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -43,7 +43,7 @@ public class BuXApi implements IBuXApi
     private final ILanguageManager languageManager;
     private final IEventLoader eventLoader;
     private final IHubBalancer hubBalancer;
-    private final IPunishmentExecutor punishmentExecutor;
+    private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
     private final ChatManager chatManager;
 

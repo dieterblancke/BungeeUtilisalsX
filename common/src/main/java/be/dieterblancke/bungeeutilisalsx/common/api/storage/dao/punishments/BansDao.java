@@ -20,6 +20,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
@@ -75,4 +77,25 @@ public interface BansDao
     List<PunishmentInfo> getIPBans( String ip, String server );
 
     PunishmentInfo getById( String id );
+
+    boolean isPunishmentUidFound( String puid );
+
+    default String createUniqueBanId()
+    {
+        String uid = Utils.createRandomString(
+                PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+        );
+
+        // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
+        while ( this.isPunishmentUidFound( uid ) )
+        {
+            uid = Utils.createRandomString(
+                    PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                    ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+            );
+        }
+
+        return uid;
+    }
 }

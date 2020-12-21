@@ -23,7 +23,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub.*;
-import be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub.*;
 
 public class FriendsCommandCall extends ParentCommand implements CommandCall
 {

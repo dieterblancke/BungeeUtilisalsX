@@ -38,9 +38,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
+import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
-import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -512,11 +512,26 @@ public class VelocityUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
+        return hasPermission( permission, false );
+    }
+
+    @Override
+    public boolean hasPermission( String permission, boolean specific )
+    {
         try
         {
-            final boolean hasPermission = player.hasPermission( permission )
-                    || player.hasPermission( "*" )
-                    || player.hasPermission( "bungeeutilisalsx.*" );
+            final boolean hasPermission;
+
+            if ( specific )
+            {
+                hasPermission = player.hasPermission( permission );
+            }
+            else
+            {
+                hasPermission = player.hasPermission( permission )
+                        || player.hasPermission( "*" )
+                        || player.hasPermission( "bungeeutilisalsx.*" );
+            }
 
             if ( ConfigFiles.CONFIG.isDebug() )
             {

@@ -37,6 +37,7 @@ import org.bson.conversions.Bson;
 
 import java.util.*;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class MongoUserDao implements UserDao
 {
@@ -61,6 +62,7 @@ public class MongoUserDao implements UserDao
         data.put( "firstlogin", login );
         data.put( "lastlogout", logout );
         data.put( "joined_host", joinedHost );
+        data.put( "current_server", null );
 
         db().getCollection( format( "{users-table}" ) ).insertOne( new Document( data ) );
     }
@@ -305,6 +307,37 @@ public class MongoUserDao implements UserDao
                         Filters.eq( "user", user.toString() ),
                         Filters.eq( "ignored", unignore.toString() )
                 )
+        );
+    }
+
+    @Override
+    public void setCurrentServer( final UUID uuid, final String server )
+    {
+        db().getCollection( format( "{users-table}" ) )
+                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "current_server", server ) );
+    }
+
+    @Override
+    public String getCurrentServer( final UUID uuid )
+    {
+        Document document = db().getCollection( format( "{users-table}" ) )
+                .find( Filters.eq( "uuid", uuid.toString() ) )
+                .first();
+
+        if ( document != null )
+        {
+            return document.getString( "current_server" );
+        }
+
+        return null;
+    }
+
+    @Override
+    public void setCurrentServerBulk( List<UUID> users, String server )
+    {
+        db().getCollection( format( "{users-table}" ) ).updateMany(
+                Filters.in( "uuid", users.stream().map( UUID::toString ).collect( Collectors.toList() ) ),
+                Updates.set( "current_server", server )
         );
     }
 

@@ -3,8 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.spigot.gui.friend;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
-import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 

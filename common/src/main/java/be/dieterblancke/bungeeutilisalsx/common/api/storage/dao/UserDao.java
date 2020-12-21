@@ -66,4 +66,10 @@ public interface UserDao
     void ignoreUser( UUID user, UUID ignore );
 
     void unignoreUser( UUID user, UUID unignore );
+
+    void setCurrentServer( UUID user, String server );
+
+    String getCurrentServer( UUID user );
+
+    void setCurrentServerBulk( List<UUID> users, String server );
 }

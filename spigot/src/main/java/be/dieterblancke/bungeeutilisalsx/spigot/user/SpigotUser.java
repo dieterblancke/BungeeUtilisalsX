@@ -495,9 +495,24 @@ public class SpigotUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( final String permission )
     {
-        final boolean hasPermission = player.hasPermission( permission )
-                || player.hasPermission( "*" )
-                || player.hasPermission( "bungeeutilisalsx.*" );
+        return hasPermission( permission, false );
+    }
+
+    @Override
+    public boolean hasPermission( String permission, boolean specific )
+    {
+        final boolean hasPermission;
+
+        if ( specific )
+        {
+            hasPermission = player.hasPermission( permission );
+        }
+        else
+        {
+            hasPermission = player.hasPermission( permission )
+                    || player.hasPermission( "*" )
+                    || player.hasPermission( "bungeeutilisalsx.*" );
+        }
 
         if ( ConfigFiles.CONFIG.isDebug() )
         {

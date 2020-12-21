@@ -46,6 +46,7 @@ public class PunishmentInfo
     private Long expireTime;
     private boolean active;
     private String removedBy;
+    private String punishmentUid;
 
     public boolean isActivatable()
     {

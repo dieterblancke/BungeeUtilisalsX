@@ -20,7 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments.removal;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -59,7 +59,7 @@ public class UnbanCommandCall extends PunishmentCommand
             return;
         }
 
-        final IPunishmentExecutor executor = BuX.getApi().getPunishmentExecutor();
+        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getBansDao().removeCurrentBan(
                 storage.getUuid(),
                 user.getName(),

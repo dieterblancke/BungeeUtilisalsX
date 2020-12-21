@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
@@ -225,10 +226,12 @@ public class SQLMutesDao implements MutesDao
     @Override
     public PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueMuteId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -241,6 +244,7 @@ public class SQLMutesDao implements MutesDao
             pstmt.setLong( 8, -1 );
             pstmt.setString( 9, PunishmentType.MUTE.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -248,16 +252,18 @@ public class SQLMutesDao implements MutesDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
     {
+        final String punishmentUid = this.createUniqueMuteId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -270,6 +276,7 @@ public class SQLMutesDao implements MutesDao
             pstmt.setLong( 8, -1 );
             pstmt.setString( 9, PunishmentType.IPMUTE.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -277,16 +284,18 @@ public class SQLMutesDao implements MutesDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueMuteId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -299,6 +308,7 @@ public class SQLMutesDao implements MutesDao
             pstmt.setLong( 8, duration );
             pstmt.setString( 9, PunishmentType.TEMPMUTE.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -306,16 +316,18 @@ public class SQLMutesDao implements MutesDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
     public PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
     {
+        final String punishmentUid = this.createUniqueMuteId();
+
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
                       "INSERT INTO " + PunishmentType.MUTE.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
@@ -328,6 +340,7 @@ public class SQLMutesDao implements MutesDao
             pstmt.setLong( 8, duration );
             pstmt.setString( 9, PunishmentType.IPTEMPMUTE.toString() );
             pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 11, punishmentUid );
 
             pstmt.executeUpdate();
         }
@@ -335,7 +348,7 @@ public class SQLMutesDao implements MutesDao
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null );
+        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
     }
 
     @Override
@@ -378,8 +391,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -431,8 +445,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -548,8 +563,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -590,8 +606,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -632,8 +649,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -673,8 +691,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -715,8 +734,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -756,8 +776,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby );
+                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
                 }
             }
         }
@@ -798,8 +819,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -840,8 +862,9 @@ public class SQLMutesDao implements MutesDao
                     final long time = rs.getLong( "duration" );
                     final boolean active = rs.getBoolean( "active" );
                     final String removedby = rs.getString( "removed_by" );
+                    final String punishmentUid = rs.getString( "punishment_uid" );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby ) );
+                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
                 }
             }
         }
@@ -851,5 +874,32 @@ public class SQLMutesDao implements MutesDao
         }
 
         return punishments;
+    }
+
+    @Override
+    public boolean isPunishmentUidFound( final String punishmentUid )
+    {
+        boolean uidFound = false;
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.MUTE.getTable() + " WHERE punishment_uid = ?;"
+              ) )
+        {
+            pstmt.setString( 1, punishmentUid );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    uidFound = true;
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
+        return uidFound;
     }
 }

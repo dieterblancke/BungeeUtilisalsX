@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage;
 
 import be.dieterblancke.bungeeutilisalsx.common.storage.hikari.MySQLStorageManager;
-import org.testcontainers.containers.*;
+import org.testcontainers.containers.GenericContainer;
 
 public class TestMySQLStorageManager extends MySQLStorageManager
 {

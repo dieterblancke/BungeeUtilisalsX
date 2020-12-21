@@ -20,9 +20,9 @@ package be.dieterblancke.bungeeutilisalsx.spigot.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.spigot.user.SpigotUser;
 import be.dieterblancke.bungeeutilisalsx.spigot.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.spigot.user.SpigotUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

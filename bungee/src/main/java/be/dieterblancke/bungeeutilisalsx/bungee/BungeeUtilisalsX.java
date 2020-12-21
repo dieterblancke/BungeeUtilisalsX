@@ -10,7 +10,6 @@ import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.javascript.JavaScriptPlaceHolder;
-import be.dieterblancke.bungeeutilisalsx.bungee.utils.PunishmentExecutor;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
@@ -28,6 +27,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
 import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.manager.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import net.md_5.bungee.api.ProxyServer;
@@ -64,7 +64,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new PluginLanguageManager(),
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
-                new PunishmentExecutor(),
+                new PunishmentHelper(),
                 bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils(),
                 new ChatManager()
         );

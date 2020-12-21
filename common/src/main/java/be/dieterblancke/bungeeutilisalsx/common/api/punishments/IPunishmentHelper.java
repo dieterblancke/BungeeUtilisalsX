@@ -22,7 +22,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.util.List;
 
-public interface IPunishmentExecutor
+public interface IPunishmentHelper
 {
 
     boolean isTemplateReason( final String reason );

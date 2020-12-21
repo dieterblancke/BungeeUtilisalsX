@@ -2,11 +2,11 @@ package be.dieterblancke.bungeeutilisalsx.spigot.gui.opener;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiItemProvider;
-import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;

@@ -145,4 +145,31 @@ class MigrationManagerTest extends BuXTest
             Assertions.fail();
         }
     }
+
+    @Test
+    void testMultipleMigrationRunsOnSQLite()
+    {
+        try
+        {
+            ConfigFiles.CONFIG.getConfig().set( "storage.type", "SQLITE" );
+            TestInjectionUtil.injectStorageManager( new TestSQLiteStorageManager() );
+
+            final MigrationManager migrationManager = new MigrationManager();
+            migrationManager.initialize();
+            migrationManager.migrate();
+
+            // this is essentially what happens on restart, migrations are ran again, this is to make sure the migrations don't run multiple times.
+            // if they do, it will throw an SQLException and fail
+            migrationManager.initialize();
+            migrationManager.migrate();
+
+            migrationManager.initialize();
+            migrationManager.migrate();
+        }
+        catch ( Exception e )
+        {
+            e.printStackTrace();
+            Assertions.fail();
+        }
+    }
 }

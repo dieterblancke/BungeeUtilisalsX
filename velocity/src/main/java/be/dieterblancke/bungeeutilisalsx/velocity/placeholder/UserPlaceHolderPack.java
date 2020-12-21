@@ -26,8 +26,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
-import be.dieterblancke.bungeeutilisalsx.velocity.user.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
+import be.dieterblancke.bungeeutilisalsx.velocity.user.ConsoleUser;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.Comparator;
