@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.listeners.JoinListener;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.listeners.KickListener;
@@ -14,9 +15,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,7 +24,9 @@ public class HubBalancer implements IHubBalancer
 {
 
     @Getter
-    private Set<ServerData> servers = Sets.newHashSet();
+    private final Set<ServerData> triggerServers = new HashSet<>();
+    @Getter
+    private Set<ServerData> servers = new HashSet<>();
 
     public HubBalancer()
     {
@@ -33,12 +34,17 @@ public class HubBalancer implements IHubBalancer
 
         for ( String lobby : configuration.getStringList( "lobbies" ) )
         {
-            servers.add( createServerData( HubServerType.LOBBY, lobby ) );
+            servers.addAll( createServerData( HubServerType.LOBBY, lobby ) );
         }
 
         for ( String fallback : configuration.getStringList( "fallback-servers" ) )
         {
-            servers.add( createServerData( HubServerType.FALLBACK, fallback ) );
+            servers.addAll( createServerData( HubServerType.FALLBACK, fallback ) );
+        }
+
+        for ( String trigger : configuration.getStringList( "triggers" ) )
+        {
+            triggerServers.addAll( createServerData( HubServerType.TRIGGER, trigger ) );
         }
 
         BuX.getInstance().getScheduler().runTaskRepeating(
@@ -56,31 +62,65 @@ public class HubBalancer implements IHubBalancer
 
         for ( String lobby : configuration.getStringList( "lobbies" ) )
         {
-            tempServers.add( createServerData( HubServerType.LOBBY, lobby ) );
+            tempServers.addAll( createServerData( HubServerType.LOBBY, lobby ) );
         }
 
         for ( String fallback : configuration.getStringList( "fallback-servers" ) )
         {
-            tempServers.add( createServerData( HubServerType.FALLBACK, fallback ) );
+            tempServers.addAll( createServerData( HubServerType.FALLBACK, fallback ) );
         }
 
         this.servers = tempServers;
+
+        triggerServers.clear();
+        for ( String trigger : configuration.getStringList( "triggers" ) )
+        {
+            triggerServers.addAll( createServerData( HubServerType.TRIGGER, trigger ) );
+        }
         BuX.getInstance().getScheduler().runAsync( new ServerPingTask() );
     }
 
-    private ServerData createServerData( final HubServerType type, final String server )
+    private List<ServerData> createServerData( final HubServerType type, final String server )
     {
-        final ServerData data = this.servers.stream()
-                .filter( serverData -> serverData.getName().equals( server ) )
-                .findFirst()
-                .orElse( new ServerData( Sets.newHashSet(), server, false ) );
-
-        if ( !data.isType( type ) )
+        if ( server.startsWith( "*" ) )
         {
-            data.getTypes().add( type );
+            final List<ServerData> servers = new ArrayList<>();
+            for ( IProxyServer proxyServer : BuX.getInstance().proxyOperations().getServers() )
+            {
+                if ( proxyServer.getName().toLowerCase().endsWith( server.substring( 1 ).toLowerCase() ) )
+                {
+                    servers.addAll( this.createServerData( type, proxyServer.getName() ) );
+                }
+            }
+            return servers;
         }
+        else if ( server.endsWith( "*" ) )
+        {
+            final List<ServerData> servers = new ArrayList<>();
 
-        return data;
+            for ( IProxyServer proxyServer : BuX.getInstance().proxyOperations().getServers() )
+            {
+                if ( proxyServer.getName().toLowerCase().startsWith( server.substring( 0, server.length() - 1 ).toLowerCase() ) )
+                {
+                    servers.addAll( this.createServerData( type, proxyServer.getName() ) );
+                }
+            }
+            return servers;
+        }
+        else
+        {
+            final ServerData data = this.servers.stream()
+                    .filter( serverData -> serverData.getName().equals( server ) )
+                    .findFirst()
+                    .orElse( new ServerData( Sets.newHashSet(), server, false ) );
+
+            if ( !data.isType( type ) )
+            {
+                data.getTypes().add( type );
+            }
+
+            return Collections.singletonList( data );
+        }
     }
 
     public ServerData findBestServer( HubServerType type )
@@ -108,5 +148,12 @@ public class HubBalancer implements IHubBalancer
 
         servers.sort( Comparator.comparingInt( ServerData::getCount ) );
         return servers.get( 0 );
+    }
+
+    @Override
+    public boolean isTrigger( String name )
+    {
+        return this.triggerServers.stream()
+                .anyMatch( trigger -> trigger.getName().equalsIgnoreCase( name ) );
     }
 }

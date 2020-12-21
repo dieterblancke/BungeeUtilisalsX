@@ -6,7 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.api.event.ServerConnectEvent;
@@ -25,7 +24,7 @@ public class JoinListener implements Listener
         final ProxiedPlayer player = event.getPlayer();
         final ServerInfo target = event.getTarget();
 
-        if ( !ConfigFiles.HUBBALANCER.getConfig().getStringList( "triggers" ).contains( target.getName() ) )
+        if ( !BuX.getApi().getHubBalancer().isTrigger( target.getName() ) )
         {
             return;
         }

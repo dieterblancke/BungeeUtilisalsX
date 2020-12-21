@@ -14,4 +14,7 @@ public interface IHubBalancer
     ServerData findBestServer( HubServerType type );
 
     ServerData findBestServer( HubServerType type, Stream<ServerData> stream );
+
+    boolean isTrigger( String name );
+
 }

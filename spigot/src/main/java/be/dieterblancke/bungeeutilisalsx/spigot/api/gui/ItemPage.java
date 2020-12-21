@@ -124,7 +124,8 @@ public class ItemPage
                     ( gui, player, event ) ->
                     {
                         event.setCancelled( true );
-                        // TODO: send redis pubsub message to bungeecord to execute this command as the player
+                        // TODO: send plugin channel message to bungeecord to execute this command as the player
+                        // TODO: best to limit this only (in receiver side on bungee / velocity) to friend & server commands.
                         player.closeInventory();
                     }
             );
