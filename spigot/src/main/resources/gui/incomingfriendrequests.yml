@@ -27,7 +27,11 @@ contents:
         - ''
         - '&bRequested at:'
         - '&7» {requested-at}'
-    action: open:friendrequestactions {user-name}
+        - ''
+        - '&aLeft click to accept this request!'
+        - '&cRight click to deny this request!'
+    action: execute:friend accept {user-name}
+    right-action: execute:friend deny {user-name}
   - slots: '45'
     item:
       material: ARROW

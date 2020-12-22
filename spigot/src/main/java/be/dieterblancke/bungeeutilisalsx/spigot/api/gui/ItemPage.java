@@ -4,7 +4,16 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
-import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.*;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.CancelClickHandler;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.CloseClickHandler;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.NextPageClickHandler;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.PreviousPageClickHandler;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.ClickableGuiItem;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
+import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -88,64 +97,60 @@ public class ItemPage
 
     protected GuiItem getGuiItem( final String action, final String rightAction, final ItemStack itemStack )
     {
-        if ( action != null && !action.isEmpty() && rightAction != null && !rightAction.isEmpty() )
+        final ClickableGuiItem clickableGuiItem = new ClickableGuiItem( itemStack )
+                .addHandler( ClickType.LEFT, this.getClickHandler( action ) );
+
+        if ( rightAction != null && !rightAction.isEmpty() )
         {
-            return null;
+            clickableGuiItem.addHandler( ClickType.RIGHT, this.getClickHandler( rightAction ) );
         }
-        else
-        {
-            return this.getGuiItem( action, itemStack );
-        }
+
+        return clickableGuiItem;
     }
 
-    private GuiItem getGuiItem( final String action, final ItemStack itemStack )
+    private TriConsumer<Gui, Player, InventoryClickEvent> getClickHandler( final String action )
     {
         if ( action.contains( "close" ) )
         {
-            return new ClosingGuiItem( itemStack );
+            return new CloseClickHandler();
         }
         else if ( action.equalsIgnoreCase( "previous-page" ) )
         {
-            return new PreviousPageGuiItem( itemStack );
+            return new PreviousPageClickHandler();
         }
         else if ( action.equalsIgnoreCase( "next-page" ) )
         {
-            return new NextPageGuiItem( itemStack );
+            return new NextPageClickHandler();
         }
         else if ( action.contains( "open:" ) )
         {
             final String[] args = action.replace( "open:", "" ).trim().split( " " );
             final String guiName = args[0];
 
-            return new ClickableGuiItem(
-                    itemStack,
-                    ( gui, player, event ) ->
-                    {
-                        event.setCancelled( true );
-                        ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().openGui(
-                                player, guiName, Arrays.copyOfRange( args, 1, args.length )
-                        );
-                    }
-            );
+            return ( gui, player, event ) ->
+            {
+                event.setCancelled( true );
+                ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().openGui(
+                        player, guiName, Arrays.copyOfRange( args, 1, args.length )
+                );
+            };
         }
         else if ( action.contains( "execute:" ) )
         {
             final String command = action.replace( "execute:", "" ).trim();
 
-            return new ClickableGuiItem(
-                    itemStack,
-                    ( gui, player, event ) ->
-                    {
-                        event.setCancelled( true );
-                        // TODO: send plugin channel message to bungeecord to execute this command as the player
-                        // TODO: best to limit this only (in receiver side on bungee / velocity) to friend & server commands.
-                        player.closeInventory();
-                    }
-            );
+            return ( gui, player, event ) ->
+            {
+                event.setCancelled( true );
+                // TODO: send plugin channel message to bungeecord to execute this command as the player
+                // TODO: best to limit this only (in receiver side on bungee / velocity) to friend & server commands.
+                player.closeInventory();
+                System.out.println("clicked on: " + command);
+            };
         }
         else
         {
-            return new CancelledGuiItem( itemStack );
+            return new CancelClickHandler();
         }
     }
 }
