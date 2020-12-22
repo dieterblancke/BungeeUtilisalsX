@@ -145,7 +145,6 @@ public class ItemPage
                 // TODO: send plugin channel message to bungeecord to execute this command as the player
                 // TODO: best to limit this only (in receiver side on bungee / velocity) to friend & server commands.
                 player.closeInventory();
-                System.out.println("clicked on: " + command);
             };
         }
         else

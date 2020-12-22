@@ -76,19 +76,19 @@ public enum StandardLibrary
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
             "6.0.1.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     ),
     REACTOR_CORE(
             "reactor.core.scheduler.Schedulers",
             "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
             "3.3.10.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     ),
     REACTIVE_STREAMS(
             "org.reactivestreams.Processor",
             "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
             "1.0.3",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     ),
     GUAVA(
             "com.google.common.collect.Lists",

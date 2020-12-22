@@ -1,16 +1,12 @@
 package be.dieterblancke.bungeeutilisalsx.spigot;
 
 import be.dieterblancke.bungeeutilisalsx.common.*;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.handlers.BungeeBridgeResponseHandler;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.executors.UserExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
@@ -81,7 +77,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         this.setupTasks();
 
         this.guiManager = new GuiManager();
-        this.getApi().getEventLoader().register( BridgeResponseEvent.class, new BungeeBridgeResponseHandler() );
     }
 
     @Override
@@ -110,15 +105,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
-        final IBridgeManager bridgeManager = new BridgeManager();
-        final IBuXApi api = new BuXApi(
-                bridgeManager,
-                new PluginLanguageManager(),
-                new EventLoader()
-        );
-        bridgeManager.setup( api );
-
-        return api;
+        return new BuXApi( new PluginLanguageManager(), new EventLoader() );
     }
 
     @Override

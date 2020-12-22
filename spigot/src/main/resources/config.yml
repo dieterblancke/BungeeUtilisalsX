@@ -1,23 +1,6 @@
 # Enable to get debug messages (where they are enabled)
 debug: false
 
-bridging:
-  enabled: true
-  # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
-  name: 'spigot1'
-
-  bungee:
-    # Keep this disabled on Spigot servers
-    enabled: false
-  spigot:
-    # For syncing between Spigot and BungeeCord servers, this will use redis (see below for credentials)
-    enabled: true
-
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    password: ''
-
 updater:
   # Set to true to enable updater checks.
   enabled: true
