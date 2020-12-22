@@ -6,17 +6,17 @@ import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiItemProvider;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.friendrequests.MainFriendRequestsGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.friendrequests.MainFriendRequestsGuiItemProvider;
 import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
-public class FriendGuiOpener extends GuiOpener
+public class MainFriendRequestsGuiOpener extends GuiOpener
 {
-    public FriendGuiOpener()
+    public MainFriendRequestsGuiOpener()
     {
-        super( "friend" );
+        super( "friendrequests" );
     }
 
     @Override
@@ -27,10 +27,9 @@ public class FriendGuiOpener extends GuiOpener
         if ( optionalUser.isPresent() )
         {
             final User user = optionalUser.get();
-
-            final FriendGuiConfig config = DefaultGui.FRIEND.getConfig();
+            final MainFriendRequestsGuiConfig config = DefaultGui.FRIENDREQUESTS.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new FriendGuiItemProvider( config, user.getFriends() ) )
+                    .itemProvider( new MainFriendRequestsGuiItemProvider( config ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
                     .players( player )

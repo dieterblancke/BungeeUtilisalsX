@@ -4,10 +4,10 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.friendactions.FriendActionsGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.FriendActionsGuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.FriendGuiOpener;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.MainFriendRequestsGuiOpener;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.OutgoingFriendRequestsGuiOpener;
 import lombok.Data;
 import org.bukkit.entity.Player;
 
@@ -19,8 +19,6 @@ public class GuiManager
 
     private final List<Gui> activeGuis = new ArrayList<>();
     private final List<GuiOpener> guiOpeners = new ArrayList<>();
-    private FriendGuiConfig friendGuiConfig;
-    private FriendActionsGuiConfig friendActionsGuiConfig;
 
     public GuiManager()
     {
@@ -40,12 +38,12 @@ public class GuiManager
                     return false;
                 } )
         );
-        this.friendGuiConfig = new FriendGuiConfig();
-        this.friendActionsGuiConfig = new FriendActionsGuiConfig();
-        this.registerGuiOpeners(
-                new FriendGuiOpener(),
-                new FriendActionsGuiOpener()
-        );
+
+        for ( DefaultGui gui : DefaultGui.values() )
+        {
+            gui.loadConfig();
+            this.registerGuiOpeners( gui.getGuiOpenerSupplier().get() );
+        }
     }
 
     public Optional<GuiOpener> findGuiOpener( final String name )
@@ -61,7 +59,11 @@ public class GuiManager
     public void reload()
     {
         this.closeAll();
-        this.friendGuiConfig = new FriendGuiConfig();
+
+        for ( DefaultGui gui : DefaultGui.values() )
+        {
+            gui.loadConfig();
+        }
     }
 
     public void closeAll()

@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
+import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friendactions.FriendActionsGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friendactions.FriendActionsGuiItemProvider;
 import org.bukkit.entity.Player;
@@ -34,7 +35,7 @@ public class FriendActionsGuiOpener extends GuiOpener
 
             if ( friendData != null )
             {
-                final FriendActionsGuiConfig config = ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().getFriendActionsGuiConfig();
+                final FriendActionsGuiConfig config = DefaultGui.FRIENDACTIONS.getConfig();
                 final Gui gui = Gui.builder()
                         .itemProvider( new FriendActionsGuiItemProvider(
                                 config,

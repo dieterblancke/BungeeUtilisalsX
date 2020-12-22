@@ -45,9 +45,14 @@ contents:
     action: 'execute:friend remove {friend-name}'
   - slots: 36
     item:
-      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
-      material: SKULL_ITEM
-      data: 3
+      material: ARROW
       name: '&aGo back'
-      owner: 'bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9'
     action: open:friend
+  - slots: '44'
+    friend-slots: false
+    item:
+      # In 1.13 and higher, this should be RED_BED and the "data" key should be removed.
+      material: BED
+      data: 14
+      name: '&c&lClose'
+    action: close

@@ -80,12 +80,25 @@ public class ItemPage
     protected GuiItem getGuiItem( final GuiConfigItem item, final Object... placeholders )
     {
         final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
+        final String rightAction = Utils.replacePlaceHolders( item.getRightAction().toLowerCase().trim(), placeholders );
         final ItemStack itemStack = item.getItem().buildItem( placeholders );
 
-        return this.getGuiItem( action, itemStack );
+        return this.getGuiItem( action, rightAction, itemStack );
     }
 
-    protected GuiItem getGuiItem( final String action, final ItemStack itemStack )
+    protected GuiItem getGuiItem( final String action, final String rightAction, final ItemStack itemStack )
+    {
+        if ( action != null && !action.isEmpty() && rightAction != null && !rightAction.isEmpty() )
+        {
+            return null;
+        }
+        else
+        {
+            return this.getGuiItem( action, itemStack );
+        }
+    }
+
+    private GuiItem getGuiItem( final String action, final ItemStack itemStack )
     {
         if ( action.contains( "close" ) )
         {
