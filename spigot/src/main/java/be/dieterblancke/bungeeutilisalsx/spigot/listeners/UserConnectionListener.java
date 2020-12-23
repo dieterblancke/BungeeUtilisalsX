@@ -20,15 +20,12 @@ package be.dieterblancke.bungeeutilisalsx.spigot.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.spigot.Bootstrap;
-import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.user.SpigotUser;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.Optional;
 
@@ -41,16 +38,6 @@ public class UserConnectionListener implements Listener
         final SpigotUser user = new SpigotUser();
 
         user.load( event.getPlayer(), event.getAddress() );
-
-        // TODO: remove, this is as a test =)
-        new BukkitRunnable()
-        {
-            @Override
-            public void run()
-            {
-                ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().openGui( event.getPlayer(), "friend", new String[0] );
-            }
-        }.runTaskLater( Bootstrap.getInstance(), 100 );
     }
 
     @EventHandler
