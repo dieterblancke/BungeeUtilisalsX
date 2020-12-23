@@ -17,10 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.manager.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
-import be.dieterblancke.bungeeutilisalsx.velocity.listeners.MotdPingListener;
-import be.dieterblancke.bungeeutilisalsx.velocity.listeners.PunishmentListener;
-import be.dieterblancke.bungeeutilisalsx.velocity.listeners.UserChatListener;
-import be.dieterblancke.bungeeutilisalsx.velocity.listeners.UserConnectionListener;
+import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
@@ -100,6 +97,9 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         );
         Bootstrap.getInstance().getProxyServer().getEventManager().register(
                 Bootstrap.getInstance(), new UserConnectionListener()
+        );
+        Bootstrap.getInstance().getProxyServer().getEventManager().register(
+                Bootstrap.getInstance(), new PluginMessageListener()
         );
 
         if ( ConfigFiles.PUNISHMENTS.isEnabled() )

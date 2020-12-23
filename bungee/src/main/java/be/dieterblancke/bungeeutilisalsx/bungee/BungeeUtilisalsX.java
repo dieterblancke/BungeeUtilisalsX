@@ -2,10 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.bungee;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
-import be.dieterblancke.bungeeutilisalsx.bungee.listeners.MotdPingListener;
-import be.dieterblancke.bungeeutilisalsx.bungee.listeners.PunishmentListener;
-import be.dieterblancke.bungeeutilisalsx.bungee.listeners.UserChatListener;
-import be.dieterblancke.bungeeutilisalsx.bungee.listeners.UserConnectionListener;
+import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
@@ -104,6 +101,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new UserChatListener() );
         ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new UserConnectionListener() );
+        ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new PluginMessageListener() );
 
         if ( ConfigFiles.PUNISHMENTS.isEnabled() )
         {
