@@ -14,12 +14,12 @@ import java.util.Optional;
 public class PluginMessageListener implements Listener {
 
     public PluginMessageListener() {
-        ProxyServer.getInstance().registerChannel("bungeeutilisalsx:main");
+        ProxyServer.getInstance().registerChannel("bux:main");
     }
 
     @EventHandler
     public void onMainPluginMessage(final PluginMessageEvent event) {
-        if (!event.getTag().equalsIgnoreCase("bungeeutilisalsx:main")) {
+        if (!event.getTag().equalsIgnoreCase("bux:main")) {
             return;
         }
         if (!(event.getReceiver() instanceof ProxiedPlayer)) {

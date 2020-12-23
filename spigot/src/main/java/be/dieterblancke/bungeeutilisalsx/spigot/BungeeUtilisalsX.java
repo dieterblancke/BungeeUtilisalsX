@@ -18,6 +18,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.gui.GuiManager;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.InventoryListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserChatListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.UserConnectionListener;
+import be.dieterblancke.bungeeutilisalsx.spigot.listeners.pluginmessage.FriendPluginMessageListener;
 import be.dieterblancke.bungeeutilisalsx.spigot.placeholders.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.spigot.user.DataStorageUserServerHelper;
 import com.dbsoftwares.configuration.api.FileStorageType;
@@ -68,6 +69,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 
         this.registerLanguages();
         this.registerListeners();
+        this.registerPluginMessageReceivers();
         this.registerExecutors();
 
         if ( ConfigFiles.CONFIG.getConfig().getBoolean( "updater.enabled" ) )
@@ -133,6 +135,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         Bukkit.getPluginManager().registerEvents( new UserChatListener(), Bootstrap.getInstance() );
         Bukkit.getPluginManager().registerEvents( new UserConnectionListener(), Bootstrap.getInstance() );
         Bukkit.getPluginManager().registerEvents( new InventoryListener(), Bootstrap.getInstance() );
+    }
+
+    private void registerPluginMessageReceivers()
+    {
+        Bukkit.getMessenger().registerOutgoingPluginChannel( Bootstrap.getInstance(), "bux:main" );
+        Bukkit.getMessenger().registerIncomingPluginChannel( Bootstrap.getInstance(), "bux:main", new FriendPluginMessageListener() );
     }
 
     @Override

@@ -43,4 +43,10 @@ public class BungeeServer implements IProxyServer
                 .filter( u -> players.contains( u.getName() ) )
                 .collect( Collectors.toList() );
     }
+
+    @Override
+    public void sendPluginMessage( final String channel, final byte[] data )
+    {
+        serverInfo.sendData( channel, data );
+    }
 }

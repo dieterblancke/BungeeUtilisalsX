@@ -13,4 +13,5 @@ public interface IProxyServer
 
     Collection<User> getUsers();
 
+    void sendPluginMessage( String channel, byte[] data );
 }

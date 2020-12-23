@@ -18,11 +18,18 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.commands.friends;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub.*;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
+
+import java.util.List;
 
 public class FriendsCommandCall extends ParentCommand implements CommandCall
 {
@@ -110,5 +117,38 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
                         .executable( new FriendSettingsSubCommandCall() )
                         .build()
         );
+    }
+
+    @Override
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        if ( args.isEmpty() )
+        {
+            if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.open-gui" ) )
+            {
+                this.sendGuiOpenPluginMessage( user, "friend" );
+            }
+        }
+
+        if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" ) )
+        {
+            super.onExecute( user, args, parameters );
+        }
+    }
+
+    private void sendGuiOpenPluginMessage( final User user, final String gui )
+    {
+        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( user.getServerName() );
+
+        if ( server != null )
+        {
+            final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+            out.writeUTF( "friends:gui" );
+            out.writeUTF( "open" );
+            out.writeUTF( gui );
+            out.writeUTF( user.getName() );
+
+            server.sendPluginMessage( "bux:main", out.toByteArray() );
+        }
     }
 }
