@@ -35,14 +35,14 @@ contents:
       name: '&c&lIGNORE'
       lores:
         - '&7Click to ignore &a{friend-name}&7.'
-    action: 'execute:ignore add {friend-name}'
+    action: 'proxy-execute:ignore add {friend-name}'
   - slots: 33
     item:
       material: BARRIER
       name: '&4&lREMOVE'
       lores:
         - '&7Click to remove &a{friend-name} &7from your friend list.'
-    action: 'execute:friend remove {friend-name}'
+    action: 'proxy-execute:friend remove {friend-name}'
   - slots: 36
     item:
       material: ARROW

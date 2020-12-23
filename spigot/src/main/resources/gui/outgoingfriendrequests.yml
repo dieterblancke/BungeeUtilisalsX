@@ -29,7 +29,7 @@ contents:
         - '&7» {requested-at}'
         - ''
         - '&cClick to remove this request!'
-    action: execute:friend removerequest {user-name}
+    action: proxy-execute:friend removerequest {user-name}
   - slots: '45'
     item:
       material: ARROW

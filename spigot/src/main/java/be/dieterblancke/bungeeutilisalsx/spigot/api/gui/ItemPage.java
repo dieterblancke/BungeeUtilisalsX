@@ -135,9 +135,9 @@ public class ItemPage
                 );
             };
         }
-        else if ( action.contains( "execute:" ) )
+        else if ( action.contains( "proxy-execute:" ) )
         {
-            final String command = action.replace( "execute:", "" ).trim();
+            final String command = action.replace( "proxy-execute:", "" ).trim();
 
             return ( gui, player, event ) ->
             {
