@@ -51,7 +51,6 @@ import org.bukkit.entity.Player;
 
 import java.net.InetAddress;
 import java.sql.Date;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -139,21 +138,7 @@ public class SpigotUser implements User, CanReceiveMessages
             dao.getUserDao().setName( uuid, name );
         }
 
-        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
-        {
-            friends = dao.getFriendsDao().getFriends( uuid );
-            friendSettings = dao.getFriendsDao().getSettings( uuid );
-
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                System.out.println( "Friend list of " + name );
-                System.out.println( Arrays.toString( friends.toArray() ) );
-            }
-        }
-        else
-        {
-            friendSettings = new FriendSettings();
-        }
+        friendSettings = ConfigFiles.FRIENDS_CONFIG.isEnabled() ? dao.getFriendsDao().getSettings( uuid ) : new FriendSettings();
 
         BuX.getInstance().getScheduler().runAsync( () ->
         {
