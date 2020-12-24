@@ -58,7 +58,10 @@ contents:
       data: 3
       name: '&aAdd Friend'
       owner: 'b056bc1244fcff99344f12aba42ac23fee6ef6e3351d27d273c1572531f'
-    action: open:addfriend
+    action:
+      type: input
+      title: 'Enter name'
+      action: proxy-execute:friend add {output}
   - slots: '52'
     show-if: has-next-page
     item:

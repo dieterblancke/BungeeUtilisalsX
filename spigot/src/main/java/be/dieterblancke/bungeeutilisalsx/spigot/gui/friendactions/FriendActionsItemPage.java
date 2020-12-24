@@ -53,8 +53,6 @@ public class FriendActionsItemPage extends ItemPage
 
     private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final String currentServer, final Object... placeholders )
     {
-        final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
-        final String rightAction = Utils.replacePlaceHolders( item.getRightAction().toLowerCase().trim(), placeholders );
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
                 ? item.getOnlineItem().buildItem( placeholders )
@@ -67,6 +65,6 @@ public class FriendActionsItemPage extends ItemPage
             itemStack.setItemMeta( itemMeta );
         }
 
-        return this.getGuiItem( action, rightAction, itemStack );
+        return this.getGuiItem( item.getAction(), item.getRightAction(), itemStack, placeholders );
     }
 }

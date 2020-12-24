@@ -11,8 +11,8 @@ public class GuiConfigItem
 {
 
     private final Collection<Integer> slots;
-    private final String action;
-    private final String rightAction;
+    private final GuiAction action;
+    private final GuiAction rightAction;
     private final GuiConfigItemStack item;
     private final String showIf;
 
@@ -24,9 +24,34 @@ public class GuiConfigItem
                         ? String.valueOf( section.getInteger( "slots" ) )
                         : section.getString( "slots" ).trim()
         );
-        this.action = section.exists( "action" ) ? section.getString( "action" ) : "";
-        this.rightAction = section.exists( "right-action" ) ? section.getString( "right-action" ) : "";
+        this.action = this.asAction( section, "action" );
+        this.rightAction = this.asAction( section, "right-action" );
         this.item = section.exists( "item" ) ? new GuiConfigItemStack( section.getSection( "item" ) ) : null;
         this.showIf = section.exists( "show-if" ) ? section.getString( "show-if" ) : "";
+    }
+
+    private GuiAction asAction( final ISection section, final String key )
+    {
+        if ( section.exists( key ) )
+        {
+            if ( section.isSection( key ) )
+            {
+                final ISection actionSection = section.getSection( key );
+
+                return new GuiAction(
+                        GuiActionType.valueOf( actionSection.getString( "type" ).toUpperCase() ),
+                        actionSection.getString( "action" ),
+                        actionSection
+                );
+            }
+            else
+            {
+                return new GuiAction( GuiActionType.COMMAND, section.getString( key ) );
+            }
+        }
+        else
+        {
+            return new GuiAction( GuiActionType.COMMAND, "" );
+        }
     }
 }

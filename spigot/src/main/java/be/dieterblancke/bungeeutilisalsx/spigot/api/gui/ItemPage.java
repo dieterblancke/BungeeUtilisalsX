@@ -4,6 +4,8 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.spigot.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiAction;
+import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiActionType;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.CancelClickHandler;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.CloseClickHandler;
@@ -14,6 +16,8 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
+import net.wesjd.anvilgui.AnvilGUI;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -91,27 +95,39 @@ public class ItemPage
 
     protected GuiItem getGuiItem( final GuiConfigItem item, final Object... placeholders )
     {
-        final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
-        final String rightAction = Utils.replacePlaceHolders( item.getRightAction().toLowerCase().trim(), placeholders );
         final ItemStack itemStack = item.getItem().buildItem( placeholders );
 
-        return this.getGuiItem( action, rightAction, itemStack );
+        return this.getGuiItem( item.getAction(), item.getRightAction(), itemStack, placeholders );
     }
 
-    protected GuiItem getGuiItem( final String action, final String rightAction, final ItemStack itemStack )
+    protected GuiItem getGuiItem( final GuiAction action, final GuiAction rightAction, final ItemStack itemStack, final Object... placeholders )
     {
         final ClickableGuiItem clickableGuiItem = new ClickableGuiItem( itemStack )
-                .addHandler( ClickType.LEFT, this.getClickHandler( action ) );
+                .addHandler( ClickType.LEFT, this.getClickHandler( action, placeholders ) );
 
-        if ( rightAction != null && !rightAction.isEmpty() )
+        if ( rightAction != null && rightAction.isSet() )
         {
-            clickableGuiItem.addHandler( ClickType.RIGHT, this.getClickHandler( rightAction ) );
+            clickableGuiItem.addHandler( ClickType.RIGHT, this.getClickHandler( rightAction, placeholders ) );
         }
 
         return clickableGuiItem;
     }
 
-    private TriConsumer<Gui, Player, InventoryClickEvent> getClickHandler( final String action )
+    private TriConsumer<Gui, Player, InventoryClickEvent> getClickHandler( final GuiAction guiAction, final Object... placeholders )
+    {
+        final String action = Utils.replacePlaceHolders( guiAction.getAction().trim(), placeholders );
+
+        if ( guiAction.getType() == GuiActionType.INPUT )
+        {
+            return this.getInputClickHandler( guiAction, action );
+        }
+        else
+        {
+            return this.getCommandClickHandler( action );
+        }
+    }
+
+    private TriConsumer<Gui, Player, InventoryClickEvent> getCommandClickHandler( final String action )
     {
         if ( action.contains( "close" ) )
         {
@@ -153,6 +169,32 @@ public class ItemPage
         {
             return new CancelClickHandler();
         }
+    }
+
+    private TriConsumer<Gui, Player, InventoryClickEvent> getInputClickHandler( final GuiAction guiAction, final String action )
+    {
+        return ( gui, player, event ) -> {
+            event.setCancelled( true );
+
+            Bukkit.getScheduler().runTaskLater(
+                    Bootstrap.getInstance(),
+                    () -> new AnvilGUI.Builder()
+                            .title( guiAction.getConfigSection().getString( "title" ) )
+                            .onComplete( ( p, output ) ->
+                            {
+
+                                final TriConsumer<Gui, Player, InventoryClickEvent> handler = this.getCommandClickHandler(
+                                        action.replace( "{output}", output )
+                                );
+
+                                handler.accept( gui, p, event );
+                                return AnvilGUI.Response.close();
+                            } )
+                            .plugin( Bootstrap.getInstance() )
+                            .open( player ),
+                    3
+            );
+        };
     }
 
     private void sendProxyExecuteCommandPluginMessage( final Player player, final String command )

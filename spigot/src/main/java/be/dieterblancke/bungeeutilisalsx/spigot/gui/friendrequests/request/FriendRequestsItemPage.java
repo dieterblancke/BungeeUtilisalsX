@@ -71,8 +71,6 @@ public class FriendRequestsItemPage extends ItemPage
                                       final FriendRequest requestData,
                                       final Object... placeholders )
     {
-        final String action = Utils.replacePlaceHolders( item.getAction().toLowerCase().trim(), placeholders );
-        final String rightAction = Utils.replacePlaceHolders( item.getRightAction().toLowerCase().trim(), placeholders );
         final ItemStack itemStack = item.getItem().buildItem( placeholders );
 
         if ( itemStack.getItemMeta() instanceof SkullMeta )
@@ -82,6 +80,6 @@ public class FriendRequestsItemPage extends ItemPage
             itemStack.setItemMeta( itemMeta );
         }
 
-        return this.getGuiItem( action, rightAction, itemStack );
+        return this.getGuiItem( item.getAction(), item.getRightAction(), itemStack, placeholders );
     }
 }
