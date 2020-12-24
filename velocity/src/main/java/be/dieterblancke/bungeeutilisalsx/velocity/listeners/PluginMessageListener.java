@@ -11,24 +11,30 @@ import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 
 import java.util.Optional;
 
-public class PluginMessageListener {
+public class PluginMessageListener
+{
 
-    private static final MinecraftChannelIdentifier MAIN_CHANNEL = MinecraftChannelIdentifier.create("bungeeutilisalsx", "main");
+    private static final MinecraftChannelIdentifier MAIN_CHANNEL = MinecraftChannelIdentifier.create( "bux", "main" );
 
-    public PluginMessageListener() {
-        Bootstrap.getInstance().getProxyServer().getChannelRegistrar().register(MAIN_CHANNEL);
+    public PluginMessageListener()
+    {
+        Bootstrap.getInstance().getProxyServer().getChannelRegistrar().register( MAIN_CHANNEL );
     }
 
     @Subscribe
-    public void onMainPluginMessage(final PluginMessageEvent event) {
-        if (!event.getIdentifier().equals(MAIN_CHANNEL)) {
+    public void onMainPluginMessage( final PluginMessageEvent event )
+    {
+        if ( !event.getIdentifier().equals( MAIN_CHANNEL ) )
+        {
             return;
         }
-        if (!(event.getTarget() instanceof Player)) {
+        if ( !( event.getTarget() instanceof Player ) )
+        {
             return;
         }
-        final Optional<User> optionalUser = BuX.getApi().getUser(((Player) event.getTarget()).getUniqueId());
-        if (!optionalUser.isPresent()) {
+        final Optional<User> optionalUser = BuX.getApi().getUser( ( (Player) event.getTarget() ).getUniqueId() );
+        if ( !optionalUser.isPresent() )
+        {
             return;
         }
         final UserPluginMessageReceiveEvent userPluginMessageReceiveEvent = new UserPluginMessageReceiveEvent(
@@ -36,6 +42,6 @@ public class PluginMessageListener {
                 event.getIdentifier().getId(),
                 event.getData().clone()
         );
-        BuX.getApi().getEventLoader().launchEventAsync(userPluginMessageReceiveEvent);
+        BuX.getApi().getEventLoader().launchEventAsync( userPluginMessageReceiveEvent );
     }
 }

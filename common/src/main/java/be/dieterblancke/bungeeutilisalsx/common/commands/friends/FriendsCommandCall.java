@@ -36,7 +36,14 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
 
     public FriendsCommandCall()
     {
-        super( "friends.help.message" );
+        super( user ->
+                {
+                    if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" ) )
+                    {
+                        user.sendLangMessage( "friends.help.message" );
+                    }
+                }
+        );
 
         super.registerSubCommand(
                 CommandBuilder.builder()
@@ -130,10 +137,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
             }
         }
 
-        if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" ) )
-        {
-            super.onExecute( user, args, parameters );
-        }
+        super.onExecute( user, args, parameters );
     }
 
     private void sendGuiOpenPluginMessage( final User user, final String gui )

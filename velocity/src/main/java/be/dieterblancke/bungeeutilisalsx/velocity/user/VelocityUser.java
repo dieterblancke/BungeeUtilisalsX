@@ -135,7 +135,8 @@ public class VelocityUser implements User, CanReceiveMessages
         }
 
         if ( !storage.getUserName().equals( name ) )
-        { // Stored name != user current name | Name changed?
+        {
+            // Stored name != user current name | Name changed?
             storage.setUserName( name );
             dao.getUserDao().setName( uuid, name );
         }
@@ -570,7 +571,7 @@ public class VelocityUser implements User, CanReceiveMessages
     @Override
     public void executeCommand( final String command )
     {
-        Bootstrap.getInstance().getProxyServer().getCommandManager().executeAsync( player, command );
+        Bootstrap.getInstance().getProxyServer().getCommandManager().executeImmediatelyAsync( player, command );
     }
 
     @Override

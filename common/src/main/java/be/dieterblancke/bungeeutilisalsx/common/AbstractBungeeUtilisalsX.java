@@ -141,37 +141,39 @@ public abstract class AbstractBungeeUtilisalsX
     protected void registerExecutors()
     {
         final UserExecutor userExecutor = new UserExecutor();
-        this.getApi().getEventLoader().register( UserLoadEvent.class, userExecutor );
-        this.getApi().getEventLoader().register( UserUnloadEvent.class, userExecutor );
-        this.getApi().getEventLoader().register( UserServerConnectedEvent.class, userExecutor );
+        this.api.getEventLoader().register( UserLoadEvent.class, userExecutor );
+        this.api.getEventLoader().register( UserUnloadEvent.class, userExecutor );
+        this.api.getEventLoader().register( UserServerConnectedEvent.class, userExecutor );
 
-        this.getApi().getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
-        this.getApi().getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
+        this.api.getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
+        this.api.getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
 
         final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
-        this.getApi().getEventLoader().register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
-        this.getApi().getEventLoader().register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
+        this.api.getEventLoader().register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
+        this.api.getEventLoader().register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
 
         final SpyEventExecutor spyEventExecutor = new SpyEventExecutor();
-        this.getApi().getEventLoader().register( UserPrivateMessageEvent.class, spyEventExecutor );
-        this.getApi().getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
+        this.api.getEventLoader().register( UserPrivateMessageEvent.class, spyEventExecutor );
+        this.api.getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
+
+        this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
 
         if ( ConfigFiles.PUNISHMENTS.isEnabled() )
         {
-            this.getApi().getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
+            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
 
             final MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-            this.getApi().getEventLoader().register( UserChatEvent.class, muteCheckExecutor );
-            this.getApi().getEventLoader().register( UserCommandEvent.class, muteCheckExecutor );
+            this.api.getEventLoader().register( UserChatEvent.class, muteCheckExecutor );
+            this.api.getEventLoader().register( UserCommandEvent.class, muteCheckExecutor );
         }
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
             final FriendsExecutor friendsExecutor = new FriendsExecutor();
 
-            this.getApi().getEventLoader().register( UserLoadEvent.class, friendsExecutor );
-            this.getApi().getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
-            this.getApi().getEventLoader().register( UserServerConnectedEvent.class, friendsExecutor );
+            this.api.getEventLoader().register( UserLoadEvent.class, friendsExecutor );
+            this.api.getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
+            this.api.getEventLoader().register( UserServerConnectedEvent.class, friendsExecutor );
         }
     }
 
@@ -184,14 +186,14 @@ public abstract class AbstractBungeeUtilisalsX
     {
         ConfigFiles.reloadAllConfigs();
 
-        for ( Language language : this.getApi().getLanguageManager().getLanguages() )
+        for ( Language language : this.api.getLanguageManager().getLanguages() )
         {
-            this.getApi().getLanguageManager().reloadConfig( this.getName(), language );
+            this.api.getLanguageManager().reloadConfig( this.getName(), language );
         }
 
-        if ( this.getApi().getHubBalancer() != null )
+        if ( this.api.getHubBalancer() != null )
         {
-            this.getApi().getHubBalancer().reload();
+            this.api.getHubBalancer().reload();
         }
 
         this.getCommandManager().load();

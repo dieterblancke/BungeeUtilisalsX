@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.spigot.api.gui;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.spigot.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.CancelClickHandler;
@@ -11,6 +12,8 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.PreviousPageCli
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.ClickableGuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
+import com.google.common.io.ByteArrayDataOutput;
+import com.google.common.io.ByteStreams;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -142,14 +145,23 @@ public class ItemPage
             return ( gui, player, event ) ->
             {
                 event.setCancelled( true );
-                // TODO: send plugin channel message to bungeecord to execute this command as the player
-                // TODO: best to limit this only (in receiver side on bungee / velocity) to friend & server commands.
                 player.closeInventory();
+                this.sendProxyExecuteCommandPluginMessage( player, command );
             };
         }
         else
         {
             return new CancelClickHandler();
         }
+    }
+
+    private void sendProxyExecuteCommandPluginMessage( final Player player, final String command )
+    {
+        final ByteArrayDataOutput out = ByteStreams.newDataOutput();
+        out.writeUTF( "commands" );
+        out.writeUTF( "proxy-execute" );
+        out.writeUTF( command );
+
+        player.sendPluginMessage( Bootstrap.getInstance(), "bux:main", out.toByteArray() );
     }
 }
