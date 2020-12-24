@@ -23,7 +23,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.dbsoftwares.bungeeutilisalsx</groupId>
+    <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
     <artifactId>BungeeUtilisalsX</artifactId>
     <packaging>pom</packaging>
     <version>1.2.0</version>
@@ -86,7 +86,7 @@
         <dependency>
             <groupId>io.lettuce</groupId>
             <artifactId>lettuce-core</artifactId>
-            <version>5.2.2.RELEASE</version>
+            <version>6.0.1.RELEASE</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

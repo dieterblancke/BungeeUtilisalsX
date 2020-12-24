@@ -6,6 +6,10 @@ enabled: false
 # Example of default format: 31-01-2018 08:13:34
 date-format: 'dd-MM-yyyy kk:mm:ss'
 
+# The length of the unique punishment id (only guaranteed to be unique per type, a puid of bans can be the same as the puid of mute)
+# This punishment uid is mostly useful if you do not want to show a numeric id in the ban / mute message.
+puid-length: 6
+
 # By enabling this, all punishment commands will need an additional argument specifying the server.
 # For example:
 # - /ban didjee2 ALL Testing

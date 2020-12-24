@@ -5,6 +5,7 @@ offline: '&fThat user is not online!'
 no-number: '&ePlease enter a valid number!'
 date-format: 'dd-MM-yyyy kk:mm:ss'
 not-for-console: '&eThis action is currently only supported for usage by players.'
+command-disabled-in-this-server: '&eThis command is &cdisabled &ein the &b{server} &eserver!'
 
 updater:
   update-found:

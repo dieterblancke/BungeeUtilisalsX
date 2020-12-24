@@ -13,7 +13,7 @@ random: true
 triggers:
   - Lobby1
 
-lobbies: # TODO: support regex
+lobbies:
   - Lobby1
   - Lobby2
 
