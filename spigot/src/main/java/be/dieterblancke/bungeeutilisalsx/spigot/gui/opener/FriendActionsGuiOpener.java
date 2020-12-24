@@ -38,6 +38,7 @@ public class FriendActionsGuiOpener extends GuiOpener
                 final FriendActionsGuiConfig config = DefaultGui.FRIENDACTIONS.getConfig();
                 final Gui gui = Gui.builder()
                         .itemProvider( new FriendActionsGuiItemProvider(
+                                player,
                                 config,
                                 friendData
                         ) )

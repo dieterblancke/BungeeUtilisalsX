@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -15,7 +16,8 @@ import java.util.List;
 public class FriendRequestsItemPage extends ItemPage
 {
 
-    public FriendRequestsItemPage( final int page,
+    public FriendRequestsItemPage( final Player player,
+                                   final int page,
                                    final int max,
                                    final FriendRequestsGuiConfig guiConfig,
                                    final FriendRequestType type,
@@ -35,7 +37,7 @@ public class FriendRequestsItemPage extends ItemPage
             }
             for ( int slot : item.getSlots() )
             {
-                super.setItem( slot, this.getGuiItem( item ) );
+                super.setItem( slot, this.getGuiItem( player, item ) );
             }
         }
 
@@ -56,6 +58,7 @@ public class FriendRequestsItemPage extends ItemPage
                 final FriendRequest data = friendRequestIterator.next();
 
                 super.setItem( slot, this.getFriendGuiItem(
+                        player,
                         type,
                         (FriendRequestGuiConfigItem) item,
                         data,
@@ -66,12 +69,13 @@ public class FriendRequestsItemPage extends ItemPage
         }
     }
 
-    private GuiItem getFriendGuiItem( final FriendRequestType type,
+    private GuiItem getFriendGuiItem( final Player player,
+                                      final FriendRequestType type,
                                       final FriendRequestGuiConfigItem item,
                                       final FriendRequest requestData,
                                       final Object... placeholders )
     {
-        final ItemStack itemStack = item.getItem().buildItem( placeholders );
+        final ItemStack itemStack = item.getItem().buildItem( player, placeholders );
 
         if ( itemStack.getItemMeta() instanceof SkullMeta )
         {

@@ -10,6 +10,9 @@ import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.Collections;
+import java.util.List;
+
 public class LanguageUtils
 {
 
@@ -148,5 +151,35 @@ public class LanguageUtils
             String message = Utils.replacePlaceHolders( user, config.getString( path ), placeholders );
             user.sendMessage( Utils.format( message ) );
         }
+    }
+
+    public static String getLanguageString( final String path, final Player player )
+    {
+        final IConfiguration config = BuX.getApi().getLanguageManager().getLanguageConfiguration(
+                BuX.getInstance().getName(),
+                player.getName()
+        );
+
+        if ( config == null )
+        {
+            return path;
+        }
+
+        return config.exists( path ) ? config.getString( path ) : path;
+    }
+
+    public static List<String> getLanguageStringList( final String path, final Player player )
+    {
+        final IConfiguration config = BuX.getApi().getLanguageManager().getLanguageConfiguration(
+                BuX.getInstance().getName(),
+                player.getName()
+        );
+
+        if ( config == null )
+        {
+            return Collections.singletonList( path );
+        }
+
+        return config.exists( path ) ? config.getStringList( path ) : Collections.singletonList( path );
     }
 }

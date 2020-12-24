@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.PageableItemProvider;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
@@ -12,9 +13,10 @@ public class FriendActionsGuiItemProvider implements PageableItemProvider
 
     private final ItemPage page;
 
-    public FriendActionsGuiItemProvider( final FriendActionsGuiConfig config, final FriendData friendData )
+    public FriendActionsGuiItemProvider( final Player player, final FriendActionsGuiConfig config, final FriendData friendData )
     {
         this.page = new FriendActionsItemPage(
+                player,
                 config,
                 friendData
         );

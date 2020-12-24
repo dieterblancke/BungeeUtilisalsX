@@ -2,7 +2,6 @@ package be.dieterblancke.bungeeutilisalsx.spigot.gui.opener;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;
@@ -30,7 +29,7 @@ public class FriendGuiOpener extends GuiOpener
 
             final FriendGuiConfig config = DefaultGui.FRIEND.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new FriendGuiItemProvider( config, user.getFriends() ) )
+                    .itemProvider( new FriendGuiItemProvider( player, config, user.getFriends() ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
                     .players( player )

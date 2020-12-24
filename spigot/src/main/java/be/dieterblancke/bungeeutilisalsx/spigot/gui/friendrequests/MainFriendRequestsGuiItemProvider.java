@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.spigot.gui.friendrequests;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.PageableItemProvider;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import org.bukkit.entity.Player;
 
 import java.util.Optional;
 
@@ -11,9 +12,9 @@ public class MainFriendRequestsGuiItemProvider implements PageableItemProvider
 
     private final ItemPage page;
 
-    public MainFriendRequestsGuiItemProvider( final MainFriendRequestsGuiConfig config )
+    public MainFriendRequestsGuiItemProvider( final Player player, final MainFriendRequestsGuiConfig config )
     {
-        this.page = new MainFriendRequestsItemPage( config );
+        this.page = new MainFriendRequestsItemPage( player, config );
     }
 
     @Override

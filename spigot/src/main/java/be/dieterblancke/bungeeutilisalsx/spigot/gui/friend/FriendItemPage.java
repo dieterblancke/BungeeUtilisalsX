@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -19,7 +20,11 @@ import java.util.stream.Collectors;
 public class FriendItemPage extends ItemPage
 {
 
-    public FriendItemPage( final int page, final int max, final FriendGuiConfig guiConfig, final List<FriendData> friendData )
+    public FriendItemPage( final Player player,
+                           final int page,
+                           final int max,
+                           final FriendGuiConfig guiConfig,
+                           final List<FriendData> friendData )
     {
         super( guiConfig.getRows() * 9 );
 
@@ -35,7 +40,7 @@ public class FriendItemPage extends ItemPage
             }
             for ( int slot : item.getSlots() )
             {
-                super.setItem( slot, this.getGuiItem( item ) );
+                super.setItem( slot, this.getGuiItem( player, item ) );
             }
         }
 
@@ -61,6 +66,7 @@ public class FriendItemPage extends ItemPage
                 final String currentServer = userServers.get( data.getFriend() ).orElse( null );
 
                 super.setItem( slot, this.getFriendGuiItem(
+                        player,
                         (FriendGuiConfigItem) item,
                         data,
                         currentServer,
@@ -72,12 +78,16 @@ public class FriendItemPage extends ItemPage
         }
     }
 
-    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final String currentServer, final Object... placeholders )
+    private GuiItem getFriendGuiItem( final Player player,
+                                      final FriendGuiConfigItem item,
+                                      final FriendData friendData,
+                                      final String currentServer,
+                                      final Object... placeholders )
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
-                ? item.getOnlineItem().buildItem( placeholders )
-                : item.getOfflineItem().buildItem( placeholders );
+                ? item.getOnlineItem().buildItem( player, placeholders )
+                : item.getOfflineItem().buildItem( player, placeholders );
 
         if ( itemStack.getItemMeta() instanceof SkullMeta )
         {

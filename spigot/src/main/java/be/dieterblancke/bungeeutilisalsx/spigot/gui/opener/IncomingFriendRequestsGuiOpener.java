@@ -33,7 +33,7 @@ public class IncomingFriendRequestsGuiOpener extends GuiOpener
             final List<FriendRequest> incomingRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() );
             final FriendRequestsGuiConfig config = DefaultGui.INCOMINGFRIENDREQUESTS.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new FriendRequestsGuiItemProvider( FriendRequestType.INCOMING, config, incomingRequests ) )
+                    .itemProvider( new FriendRequestsGuiItemProvider( player, FriendRequestType.INCOMING, config, incomingRequests ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
                     .players( player )

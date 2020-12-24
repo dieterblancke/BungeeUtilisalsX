@@ -32,7 +32,7 @@ public class OutgoingFriendRequestsGuiOpener extends GuiOpener
             final List<FriendRequest> outgoingRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( user.getUuid() );
             final FriendRequestsGuiConfig config = DefaultGui.OUTGOINGFRIENDREQUESTS.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new FriendRequestsGuiItemProvider( FriendRequestType.OUTGOING, config, outgoingRequests ) )
+                    .itemProvider( new FriendRequestsGuiItemProvider( player, FriendRequestType.OUTGOING, config, outgoingRequests ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
                     .players( player )

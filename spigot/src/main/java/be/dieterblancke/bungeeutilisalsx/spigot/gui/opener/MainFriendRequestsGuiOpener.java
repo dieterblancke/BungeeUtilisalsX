@@ -29,7 +29,7 @@ public class MainFriendRequestsGuiOpener extends GuiOpener
             final User user = optionalUser.get();
             final MainFriendRequestsGuiConfig config = DefaultGui.FRIENDREQUESTS.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new MainFriendRequestsGuiItemProvider( config ) )
+                    .itemProvider( new MainFriendRequestsGuiItemProvider( player, config ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
                     .players( player )

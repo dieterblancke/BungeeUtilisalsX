@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequestType;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.PageableItemProvider;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,7 +15,8 @@ public class FriendRequestsGuiItemProvider implements PageableItemProvider
 
     private final ItemPage[] pages;
 
-    public FriendRequestsGuiItemProvider( final FriendRequestType type,
+    public FriendRequestsGuiItemProvider( final Player player,
+                                          final FriendRequestType type,
                                           final FriendRequestsGuiConfig config,
                                           final List<FriendRequest> friendRequests )
     {
@@ -34,6 +36,7 @@ public class FriendRequestsGuiItemProvider implements PageableItemProvider
             final int max = ( i + 1 ) * itemsPerPage;
 
             this.pages[i] = new FriendRequestsItemPage(
+                    player,
                     i,
                     pages,
                     config,

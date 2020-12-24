@@ -13,6 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.NextPageClickHa
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.PreviousPageClickHandler;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.ClickableGuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
+import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -93,9 +94,9 @@ public class ItemPage
         }
     }
 
-    protected GuiItem getGuiItem( final GuiConfigItem item, final Object... placeholders )
+    protected GuiItem getGuiItem( final Player player, final GuiConfigItem item, final Object... placeholders )
     {
-        final ItemStack itemStack = item.getItem().buildItem( placeholders );
+        final ItemStack itemStack = item.getItem().buildItem( player, placeholders );
 
         return this.getGuiItem( item.getAction(), item.getRightAction(), itemStack, placeholders );
     }
@@ -173,13 +174,14 @@ public class ItemPage
 
     private TriConsumer<Gui, Player, InventoryClickEvent> getInputClickHandler( final GuiAction guiAction, final String action )
     {
-        return ( gui, player, event ) -> {
+        return ( gui, player, event ) ->
+        {
             event.setCancelled( true );
 
             Bukkit.getScheduler().runTaskLater(
                     Bootstrap.getInstance(),
                     () -> new AnvilGUI.Builder()
-                            .title( guiAction.getConfigSection().getString( "title" ) )
+                            .title( LanguageUtils.getLanguageString( guiAction.getConfigSection().getString( "title" ), player ) )
                             .onComplete( ( p, output ) ->
                             {
 

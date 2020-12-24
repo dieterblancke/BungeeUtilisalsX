@@ -8,16 +8,17 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfigItem;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
 public class FriendActionsItemPage extends ItemPage
 {
 
-    public FriendActionsItemPage( final FriendActionsGuiConfig guiConfig, final FriendData friendData )
+    public FriendActionsItemPage( final Player player, final FriendActionsGuiConfig guiConfig, final FriendData friendData )
     {
         super( guiConfig.getRows() * 9 );
-        final String currentServer = (( BungeeUtilisalsX ) BuX.getInstance()).getUserServerHelper().getCurrentServer(
+        final String currentServer = ( (BungeeUtilisalsX) BuX.getInstance() ).getUserServerHelper().getCurrentServer(
                 friendData.getFriend()
         ).orElse( null );
 
@@ -34,6 +35,7 @@ public class FriendActionsItemPage extends ItemPage
                 if ( ( (FriendGuiConfigItem) item ).isFriendItem() )
                 {
                     super.setItem( slot, this.getFriendGuiItem(
+                            player,
                             (FriendGuiConfigItem) item,
                             friendData,
                             currentServer,
@@ -43,6 +45,7 @@ public class FriendActionsItemPage extends ItemPage
                 else
                 {
                     super.setItem( slot, this.getGuiItem(
+                            player,
                             item,
                             placeholders
                     ) );
@@ -51,12 +54,16 @@ public class FriendActionsItemPage extends ItemPage
         }
     }
 
-    private GuiItem getFriendGuiItem( final FriendGuiConfigItem item, final FriendData friendData, final String currentServer, final Object... placeholders )
+    private GuiItem getFriendGuiItem( final Player player,
+                                      final FriendGuiConfigItem item,
+                                      final FriendData friendData,
+                                      final String currentServer,
+                                      final Object... placeholders )
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
-                ? item.getOnlineItem().buildItem( placeholders )
-                : item.getOfflineItem().buildItem( placeholders );
+                ? item.getOnlineItem().buildItem( player, placeholders )
+                : item.getOfflineItem().buildItem( player, placeholders );
 
         if ( itemStack.getItemMeta() instanceof SkullMeta )
         {
