@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiItemProvider;
+import be.dieterblancke.bungeeutilisalsx.spigot.utils.friend.FriendGuiUtils;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 import org.bukkit.entity.Player;
@@ -22,20 +23,6 @@ import java.util.concurrent.TimeUnit;
 public class FriendGuiOpener extends GuiOpener
 {
 
-    // This cache is really just to avoid people spamming the database by spam opening the friends gui
-    private static final LoadingCache<UUID, List<FriendData>> USER_FRIENDS_CACHE = CacheHelper.<UUID, List<FriendData>>builder()
-            .build(
-                    builder -> builder.expireAfterWrite( 15, TimeUnit.SECONDS ),
-                    new CacheLoader<UUID, List<FriendData>>()
-                    {
-                        @Override
-                        public List<FriendData> load( final UUID uuid )
-                        {
-                            return BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( uuid );
-                        }
-                    }
-            );
-
     public FriendGuiOpener()
     {
         super( "friend" );
@@ -45,16 +32,7 @@ public class FriendGuiOpener extends GuiOpener
     public void openGui( final Player player, final String[] args )
     {
         final Optional<User> optionalUser = BuX.getApi().getUser( player.getName() );
-        List<FriendData> friends;
-
-        try
-        {
-            friends = USER_FRIENDS_CACHE.get( player.getUniqueId() );
-        }
-        catch ( ExecutionException e )
-        {
-            friends = BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( player.getUniqueId() );
-        }
+        final List<FriendData> friends = FriendGuiUtils.getFriendData( player.getUniqueId() );
 
         if ( optionalUser.isPresent() )
         {
