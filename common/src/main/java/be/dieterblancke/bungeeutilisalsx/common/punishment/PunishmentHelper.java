@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.manager;
+package be.dieterblancke.bungeeutilisalsx.common.punishment;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;

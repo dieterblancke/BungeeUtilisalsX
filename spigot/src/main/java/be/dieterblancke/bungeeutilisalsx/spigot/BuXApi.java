@@ -15,7 +15,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManag
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.spigot.bossbar.BossBar;
 import be.dieterblancke.bungeeutilisalsx.spigot.user.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
@@ -90,12 +90,6 @@ public class BuXApi implements IBuXApi
             }
         }
         return result;
-    }
-
-    @Override
-    public ChatManager getChatManager()
-    {
-        throw new UnsupportedOperationException( "The ChatManager is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override

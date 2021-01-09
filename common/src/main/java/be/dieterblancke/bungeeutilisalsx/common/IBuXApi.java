@@ -13,7 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManag
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.sql.Connection;
@@ -70,11 +70,6 @@ public interface IBuXApi
      * @return A list containing all online users WITH the given permission.
      */
     List<User> getUsers( String permission );
-
-    /**
-     * @return The BungeeUtilisals chat utility class.
-     */
-    ChatManager getChatManager();
 
     /**
      * @return A new ProxyConnection instance.

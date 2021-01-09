@@ -22,9 +22,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.PunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import net.md_5.bungee.api.ProxyServer;
@@ -62,8 +62,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
-                bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils(),
-                new ChatManager()
+                bridgeManager.useBridging() ? new RedisPlayerUtils() : new BungeePlayerUtils()
         );
         bridgeManager.setup( api );
 
