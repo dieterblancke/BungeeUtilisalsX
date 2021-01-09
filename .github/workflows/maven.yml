@@ -24,8 +24,6 @@ jobs:
           java-version: 1.8
       - name: Build with Maven
         run: mvn -B package --file pom.xml
-      - id: getfilename
-        run: ls -r
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
