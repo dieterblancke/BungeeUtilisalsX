@@ -25,9 +25,12 @@ jobs:
       - name: Build with Maven
         run: mvn -B package --file pom.xml
       - id: getfilename
-        run: ls
+        run: ls -r
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
           name: BungeeUtilisalsX
-          path: '/'
+          path: |
+            bungee/target/BungeeUtilisalsX*.jar
+            velocity/target/BungeeUtilisalsX*.jar
+            spigot/target/BungeeUtilisalsX*.jar
