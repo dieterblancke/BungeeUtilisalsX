@@ -16,7 +16,7 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.manager;
+package be.dieterblancke.bungeeutilisalsx.common.commands;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;

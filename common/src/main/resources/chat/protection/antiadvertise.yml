@@ -1,7 +1,14 @@
 enabled: true
 
 # The permission to bypass the antiadvertise system
-bypass: 'bungeeutilisals.bypass.antiad'
+bypass: 'bungeeutilisalsx.chat.protection.advertising.bypass'
+
+# This is the regex pattern to detect IP's and / or domains, ONLY EDIT IF YOU KNOW WHAT YOU ARE DOING
+patterns:
+  # This is the default pattern for IP addresses used by BuX
+  - '^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$'
+  # This is the default pattern for web addresses used by BuX
+  - '^((https?|ftp)://|(www|ftp)\.)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+([/?].*)?$'
 
 # Please type these addresses in lowercase (= NO CAPS)
 allowed:

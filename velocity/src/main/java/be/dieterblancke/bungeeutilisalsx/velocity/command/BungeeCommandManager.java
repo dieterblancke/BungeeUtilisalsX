@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.command;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.commands.HubCommandCall;
 
 public class BungeeCommandManager extends CommandManager

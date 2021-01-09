@@ -1,7 +1,7 @@
 enabled: true
 
 # The permission to bypass the antispam system
-bypass: 'bungeeutilisals.bypass.antispam'
+bypass: 'bungeeutilisalsx.chat.protection.spam.bypass'
 
 delay:
   # Possible units: MILLISECONDS, SECONDS, MINUTES

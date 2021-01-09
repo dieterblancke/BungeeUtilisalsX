@@ -1,6 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
-import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Priority;
@@ -8,6 +7,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEv
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
+import be.dieterblancke.bungeeutilisalsx.common.chat.protections.SwearValidationResult;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.ChatLockCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
@@ -42,7 +44,7 @@ public class UserChatExecutor implements EventExecutor
         if ( config.getBoolean( "fancychat.enabled" )
                 && event.getUser().hasPermission( config.getString( "fancychat.permission" ) ) )
         {
-            event.setMessage( BuX.getApi().getChatManager().fancyFont( message ) );
+            event.setMessage( ChatHelper.changeToFancyFont( message ) );
         }
     }
 
@@ -53,7 +55,7 @@ public class UserChatExecutor implements EventExecutor
 
         if ( config.getBoolean( "symbols.enabled" ) && event.getUser().hasPermission( config.getString( "symbols.permission" ) ) )
         {
-            event.setMessage( event.getApi().getChatManager().replaceSymbols( event.getMessage() ) );
+            event.setMessage( ChatHelper.replaceSymbols( event.getMessage() ) );
         }
     }
 
@@ -63,8 +65,9 @@ public class UserChatExecutor implements EventExecutor
         final User user = event.getUser();
         final String message = event.getMessage();
         final IConfiguration config = ConfigFiles.ANTISWEAR.getConfig();
+        final SwearValidationResult swearValidationResult = ChatProtections.SWEAR_PROTECTION.validateMessage( user, message );
 
-        if ( BuX.getApi().getChatManager().checkForSwear( event.getUser(), message ) )
+        if ( !swearValidationResult.isValid() )
         {
             if ( config.getBoolean( "cancel" ) )
             {
@@ -72,7 +75,7 @@ public class UserChatExecutor implements EventExecutor
             }
             else
             {
-                event.setMessage( BuX.getApi().getChatManager().replaceSwearWords( user, message, config.getString( "replace" ) ) );
+                event.setMessage( swearValidationResult.getResultMessage() );
             }
             user.sendLangMessage( "chat-protection.swear" );
 
@@ -95,7 +98,7 @@ public class UserChatExecutor implements EventExecutor
         final String message = event.getMessage();
         final IConfiguration config = ConfigFiles.ANTICAPS.getConfig();
 
-        if ( BuX.getApi().getChatManager().checkForCaps( user, message ) )
+        if ( !ChatProtections.CAPS_PROTECTION.validateMessage( user, message ).isValid() )
         {
             if ( config.getBoolean( "cancel" ) )
             {
@@ -125,10 +128,9 @@ public class UserChatExecutor implements EventExecutor
         final User user = event.getUser();
         final IConfiguration config = ConfigFiles.ANTISPAM.getConfig();
 
-        if ( BuX.getApi().getChatManager().checkForSpam( user ) )
+        if ( !ChatProtections.SPAM_PROTECTION.validateMessage( user, event.getMessage() ).isValid() )
         {
             event.setCancelled( true );
-
             user.sendLangMessage( "chat-protection.spam", "%time%", user.getCooldowns().getLeftTime( "CHATSPAM" ) / 1000 );
 
             if ( config.exists( "commands" ) )
@@ -150,7 +152,7 @@ public class UserChatExecutor implements EventExecutor
         final String message = event.getMessage();
         final IConfiguration config = ConfigFiles.ANTIAD.getConfig();
 
-        if ( BuX.getApi().getChatManager().checkForAdvertisement( user, message ) )
+        if ( !ChatProtections.ADVERTISEMENT_PROTECTION.validateMessage( user, message ).isValid() )
         {
             event.setCancelled( true );
 

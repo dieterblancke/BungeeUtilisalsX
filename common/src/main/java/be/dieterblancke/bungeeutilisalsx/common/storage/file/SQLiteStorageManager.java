@@ -36,12 +36,12 @@ public class SQLiteStorageManager extends SQLStorageManager
     private final File database;
     private UnclosableConnection connection;
 
-    public SQLiteStorageManager() throws SQLException
+    public SQLiteStorageManager()
     {
         this( new File( BuX.getInstance().getDataFolder(), "data.db" ) );
     }
 
-    public SQLiteStorageManager( final File database ) throws SQLException
+    public SQLiteStorageManager( final File database )
     {
         super( StorageType.SQLITE, new SQLDao() );
         this.database = database;
@@ -66,7 +66,14 @@ public class SQLiteStorageManager extends SQLStorageManager
         {
             throw new RuntimeException( e );
         }
-        initializeConnection();
+        try
+        {
+            initializeConnection();
+        }
+        catch ( SQLException e )
+        {
+            throw new RuntimeException( e );
+        }
     }
 
     private UnclosableConnection initializeConnection() throws SQLException

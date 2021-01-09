@@ -11,9 +11,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
-import be.dieterblancke.bungeeutilisalsx.common.manager.PunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
@@ -55,8 +55,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
-                new VelocityPlayerUtils(),
-                new ChatManager()
+                new VelocityPlayerUtils()
         );
         bridgeManager.setup( api );
 

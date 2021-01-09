@@ -22,10 +22,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.JarClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
+import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
 import be.dieterblancke.bungeeutilisalsx.common.library.Library;
 import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
-import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
@@ -84,6 +85,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
 
         this.loadConfigs();
+        ChatProtections.reloadAllProtections();
 
         this.loadLibraries();
         this.loadPlaceHolders();
@@ -200,7 +202,7 @@ public abstract class AbstractBungeeUtilisalsX
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
 
         loadScripts();
-        api.getChatManager().reload();
+        ChatProtections.reloadAllProtections();
     }
 
     private void loadScripts()
@@ -282,11 +284,11 @@ public abstract class AbstractBungeeUtilisalsX
         }
         try
         {
-            abstractStorageManager = type.getManager().newInstance();
+            this.abstractStorageManager = type.getStorageManagerSupplier().get();
         }
         catch ( Exception e )
         {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            BuX.getLogger().log( Level.SEVERE, "An error occured while initializing the storage manager: ", e );
         }
     }
 

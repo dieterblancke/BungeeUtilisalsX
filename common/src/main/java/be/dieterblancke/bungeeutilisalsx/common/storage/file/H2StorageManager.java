@@ -36,7 +36,7 @@ public class H2StorageManager extends SQLStorageManager
     private final File database;
     private UnclosableConnection connection;
 
-    public H2StorageManager() throws SQLException
+    public H2StorageManager()
     {
         super( StorageType.H2, new SQLDao() );
         database = new File( BuX.getInstance().getDataFolder(), "h2-storage.db" );
@@ -60,7 +60,14 @@ public class H2StorageManager extends SQLStorageManager
         {
             throw new RuntimeException( e );
         }
-        initializeConnection();
+        try
+        {
+            initializeConnection();
+        }
+        catch ( SQLException e )
+        {
+            throw new RuntimeException( e );
+        }
     }
 
     private UnclosableConnection initializeConnection() throws SQLException

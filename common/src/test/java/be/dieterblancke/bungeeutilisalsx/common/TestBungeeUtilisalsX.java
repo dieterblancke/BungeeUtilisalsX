@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.manager.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 
 import java.io.File;
 import java.util.List;

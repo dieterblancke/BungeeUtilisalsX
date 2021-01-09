@@ -23,7 +23,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserAction;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserActionType;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
-import be.dieterblancke.bungeeutilisalsx.common.manager.ChatManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -45,10 +44,7 @@ public class BuXApi implements IBuXApi
     private final IHubBalancer hubBalancer;
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
-    private final ChatManager chatManager;
-
     private final User consoleUser = new ConsoleUser();
-
     private final List<User> users = Collections.synchronizedList( Lists.newArrayList() );
 
     @Override
