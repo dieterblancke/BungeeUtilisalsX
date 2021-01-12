@@ -28,6 +28,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: BungeeUtilisalsX
+          retention-days: 45
           path: |
             bungee/target/BungeeUtilisalsX*.jar
             velocity/target/BungeeUtilisalsX*.jar
