@@ -396,6 +396,19 @@ public class ConsoleUser implements User, CanReceiveMessages
     }
 
     @Override
+    public boolean hasAnyPermission( String... permissions )
+    {
+        for ( String permission : permissions )
+        {
+            if ( Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
     public MessageQueue<QueuedMessage> getMessageQueue()
     {
         return null;

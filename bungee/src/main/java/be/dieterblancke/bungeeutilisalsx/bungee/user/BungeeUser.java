@@ -515,40 +515,41 @@ public class BungeeUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( String permission, boolean specific )
     {
+        return specific
+                ? this.hasAnyPermission( permission )
+                : this.hasAnyPermission( permission, "*", "bungeeutilisalsx.*" );
+    }
+
+    @Override
+    public boolean hasAnyPermission( final String... permissions )
+    {
         try
         {
-            final boolean hasPermission;
-
-            if ( specific )
+            for ( String permission : permissions )
             {
-                hasPermission = parent.hasPermission( permission );
-            }
-            else
-            {
-                hasPermission = parent.hasPermission( permission )
-                        || parent.hasPermission( "*" )
-                        || parent.hasPermission( "bungeeutilisalsx.*" );
-            }
-
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                if ( hasPermission )
+                if ( parent.hasPermission( permission ) )
                 {
-                    BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                    if ( ConfigFiles.CONFIG.isDebug() )
+                    {
+                        BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                    }
+                    return true;
                 }
                 else
                 {
-                    BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                    if ( ConfigFiles.CONFIG.isDebug() )
+                    {
+                        BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                    }
                 }
             }
-
-            return hasPermission;
         }
         catch ( Exception e )
         {
-            BuX.getLogger().info( "Failed to check permission " + permission + " for " + name + " due to an error that occured!" );
+            BuX.getLogger().info( "Failed to check permission " + Arrays.toString( permissions ) + " for " + name + " due to an error that occured!" );
             return false;
         }
+        return false;
     }
 
     @Override
@@ -577,7 +578,8 @@ public class BungeeUser implements User, CanReceiveMessages
     }
 
     @Override
-    public void sendTitle( final String title, final String subtitle, final int fadein, final int stay, final int fadeout )
+    public void sendTitle( final String title, final String subtitle, final int fadein, final int stay,
+                           final int fadeout )
     {
         final Title bungeeTitle = ProxyServer.getInstance().createTitle();
 

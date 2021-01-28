@@ -60,7 +60,7 @@ public class UserPlaceHolderPack implements PlaceHolderPack
     private String getUserPrefix( final PlaceHolderEvent event )
     {
         return ConfigFiles.RANKS.getRanks().stream()
-                .filter( rank -> event.getUser().hasPermission( rank.getPermission() ) )
+                .filter( rank -> event.getUser().hasPermission( rank.getPermission(), true ) )
                 .max( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .map( rank -> Utils.c( rank.getDisplay() ) )
                 .orElse( "" );

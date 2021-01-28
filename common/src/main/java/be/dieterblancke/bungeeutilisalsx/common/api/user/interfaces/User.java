@@ -317,6 +317,11 @@ public interface User
      */
     boolean hasPermission( String permission, boolean specific );
 
+    /**
+     * @param permissions The permissions to check
+     * @return This simply calls the parent.hasPermission() method
+     */
+    boolean hasAnyPermission( String... permissions );
 
     /**
      * @return the list of queued messages for this user.

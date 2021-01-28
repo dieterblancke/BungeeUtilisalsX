@@ -51,6 +51,7 @@ import org.bukkit.entity.Player;
 
 import java.net.InetAddress;
 import java.sql.Date;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -486,32 +487,35 @@ public class SpigotUser implements User, CanReceiveMessages
     @Override
     public boolean hasPermission( String permission, boolean specific )
     {
-        final boolean hasPermission;
+        return specific
+                ? this.hasAnyPermission( permission )
+                : this.hasAnyPermission( permission, "*", "bungeeutilisalsx.*" );
+    }
 
-        if ( specific )
+    @Override
+    public boolean hasAnyPermission( final String... permissions )
+    {
+        try
         {
-            hasPermission = player.hasPermission( permission );
-        }
-        else
-        {
-            hasPermission = player.hasPermission( permission )
-                    || player.hasPermission( "*" )
-                    || player.hasPermission( "bungeeutilisalsx.*" );
-        }
-
-        if ( ConfigFiles.CONFIG.isDebug() )
-        {
-            if ( hasPermission )
+            for ( String permission : permissions )
             {
-                BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
-            }
-            else
-            {
-                BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                if ( player.hasPermission( permission ) )
+                {
+                    BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                    return true;
+                }
+                else
+                {
+                    BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                }
             }
         }
-
-        return hasPermission;
+        catch ( Exception e )
+        {
+            BuX.getLogger().info( "Failed to check permission " + Arrays.toString( permissions ) + " for " + name + " due to an error that occured!" );
+            return false;
+        }
+        return false;
     }
 
     @Override
