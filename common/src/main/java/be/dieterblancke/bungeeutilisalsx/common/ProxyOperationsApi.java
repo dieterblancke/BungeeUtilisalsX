@@ -5,13 +5,14 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ProxyOperationsApi
 {
 
-    void registerCommand( final Command command );
+    void registerCommand( Command command );
 
-    void unregisterCommand( final Command command );
+    void unregisterCommand( Command command );
 
     List<IProxyServer> getServers();
 
@@ -20,5 +21,7 @@ public interface ProxyOperationsApi
     String getProxyIdentifier();
 
     List<PluginInfo> getPlugins();
+
+    Optional<PluginInfo> getPlugin( String pluginName );
 
 }

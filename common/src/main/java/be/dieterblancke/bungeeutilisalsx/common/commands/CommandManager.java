@@ -24,7 +24,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.commands.CustomCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;

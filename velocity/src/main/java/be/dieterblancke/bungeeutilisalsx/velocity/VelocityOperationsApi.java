@@ -12,6 +12,7 @@ import com.google.common.cache.LoadingCache;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.plugin.PluginContainer;
+import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
@@ -20,11 +21,12 @@ import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-public class BungeeOperationsApi implements ProxyOperationsApi
+public class VelocityOperationsApi implements ProxyOperationsApi
 {
 
     private final LoadingCache<String, IProxyServer> proxyServerCache = CacheBuilder.newBuilder()
@@ -109,20 +111,33 @@ public class BungeeOperationsApi implements ProxyOperationsApi
         return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugins()
                 .stream()
                 .map( PluginContainer::getDescription )
-                .map( desc -> new PluginInfo(
-                        desc.getName().orElse( "" ),
-                        desc.getVersion().orElse( "" ),
-                        String.join( ", ", desc.getAuthors() ),
-                        desc.getDependencies().stream()
-                                .filter( dep -> !dep.isOptional() )
-                                .map( PluginDependency::getId )
-                                .collect( Collectors.toSet() ),
-                        desc.getDependencies().stream()
-                                .filter( PluginDependency::isOptional )
-                                .map( PluginDependency::getId )
-                                .collect( Collectors.toSet() ),
-                        desc.getDescription().orElse( "" )
-                ) )
+                .map( this::getPluginInfo )
                 .collect( Collectors.toList() );
+    }
+
+    @Override
+    public Optional<PluginInfo> getPlugin( final String pluginName )
+    {
+        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugin( pluginName )
+                .map( PluginContainer::getDescription )
+                .map( this::getPluginInfo );
+    }
+
+    private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
+    {
+        return new PluginInfo(
+                pluginDescription.getName().orElse( "" ),
+                pluginDescription.getVersion().orElse( "" ),
+                String.join( ", ", pluginDescription.getAuthors() ),
+                pluginDescription.getDependencies().stream()
+                        .filter( dep -> !dep.isOptional() )
+                        .map( PluginDependency::getId )
+                        .collect( Collectors.toSet() ),
+                pluginDescription.getDependencies().stream()
+                        .filter( PluginDependency::isOptional )
+                        .map( PluginDependency::getId )
+                        .collect( Collectors.toSet() ),
+                pluginDescription.getDescription().orElse( "" )
+        );
     }
 }

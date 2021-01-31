@@ -18,6 +18,9 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.player;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MojangUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 
 import java.util.List;
@@ -38,5 +41,30 @@ public interface IPlayerUtils
 
     boolean isOnline( String name );
 
-    UUID getUuid( String targetName );
+    UUID getUuidNoFallback( String targetName );
+
+    default UUID getUuid( final String targetName )
+    {
+        UUID uuid = this.getUuidNoFallback( targetName );
+
+        if ( uuid != null )
+        {
+            return uuid;
+        }
+        uuid = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( targetName ).getUuid();
+
+        if ( uuid != null )
+        {
+            return uuid;
+        }
+
+        try
+        {
+            return Utils.readUUIDFromString( MojangUtils.getUuid( targetName ) );
+        }
+        catch ( Exception e )
+        {
+            return null;
+        }
+    }
 }

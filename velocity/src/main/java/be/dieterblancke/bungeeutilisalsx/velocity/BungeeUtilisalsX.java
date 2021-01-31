@@ -9,10 +9,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
+import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
-import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.BungeeCommandManager;
@@ -34,9 +34,9 @@ import java.util.logging.Logger;
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
-    private final ProxyOperationsApi proxyOperationsApi = new BungeeOperationsApi();
+    private final ProxyOperationsApi proxyOperationsApi = new VelocityOperationsApi();
     private final CommandManager commandManager = new BungeeCommandManager();
-    private final IPluginDescription pluginDescription = new BungeePluginDescription();
+    private final IPluginDescription pluginDescription = new VelocityPluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
 
     @Override
@@ -55,7 +55,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
-                new VelocityPlayerUtils()
+                bridgeManager.useBridging() ? new ProxySyncPlayerUtils() : new VelocityPlayerUtils()
         );
         bridgeManager.setup( api );
 

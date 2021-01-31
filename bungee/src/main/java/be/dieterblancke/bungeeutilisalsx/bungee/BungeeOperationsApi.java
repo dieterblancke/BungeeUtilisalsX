@@ -12,10 +12,12 @@ import com.google.common.cache.LoadingCache;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
+import net.md_5.bungee.api.plugin.PluginDescription;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -103,14 +105,29 @@ public class BungeeOperationsApi implements ProxyOperationsApi
         return ProxyServer.getInstance().getPluginManager().getPlugins()
                 .stream()
                 .map( Plugin::getDescription )
-                .map( desc -> new PluginInfo(
-                        desc.getName(),
-                        desc.getVersion(),
-                        desc.getAuthor(),
-                        desc.getDepends(),
-                        desc.getSoftDepends(),
-                        desc.getDescription()
-                ) )
+                .map( this::getPluginInfo )
                 .collect( Collectors.toList() );
+    }
+
+    @Override
+    public Optional<PluginInfo> getPlugin( final String pluginName )
+    {
+        final Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin( pluginName );
+
+        return Optional.ofNullable( plugin )
+                .map( Plugin::getDescription )
+                .map( this::getPluginInfo );
+    }
+
+    private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
+    {
+        return new PluginInfo(
+                pluginDescription.getName(),
+                pluginDescription.getVersion(),
+                pluginDescription.getAuthor(),
+                pluginDescription.getDepends(),
+                pluginDescription.getSoftDepends(),
+                pluginDescription.getDescription()
+        );
     }
 }

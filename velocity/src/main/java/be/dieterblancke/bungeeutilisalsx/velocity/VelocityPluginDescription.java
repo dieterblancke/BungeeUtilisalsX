@@ -8,7 +8,7 @@ import java.io.File;
 import java.nio.file.Path;
 import java.util.function.Function;
 
-public class BungeePluginDescription implements IPluginDescription
+public class VelocityPluginDescription implements IPluginDescription
 {
     @Override
     public String getName()

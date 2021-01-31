@@ -19,8 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MojangUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
@@ -92,7 +90,7 @@ public class BungeePlayerUtils implements IPlayerUtils
     }
 
     @Override
-    public UUID getUuid( String targetName )
+    public UUID getUuidNoFallback( String targetName )
     {
         final ProxiedPlayer player = ProxyServer.getInstance().getPlayer( targetName );
 
@@ -100,20 +98,6 @@ public class BungeePlayerUtils implements IPlayerUtils
         {
             return player.getUniqueId();
         }
-        final UUID uuid = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( targetName ).getUuid();
-
-        if ( uuid != null )
-        {
-            return uuid;
-        }
-
-        try
-        {
-            return Utils.readUUIDFromString( MojangUtils.getUuid( targetName ) );
-        }
-        catch ( Exception e )
-        {
-            return null;
-        }
+        return null;
     }
 }

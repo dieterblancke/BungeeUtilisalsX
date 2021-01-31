@@ -49,26 +49,15 @@ public class BridgeManager implements IBridgeManager
         {
             return;
         }
-        boolean redisBridgeSetup = false;
-        if ( config.getBoolean( "bungee.enabled" ) )
-        {
-            redisBridge = new RedisBridge();
-            redisBridgeSetup = redisBridge.setup( api );
 
-        }
-        if ( config.getBoolean( "spigot.enabled" ) && redisBridge == null )
-        {
-            redisBridge = new RedisBridge();
-            redisBridgeSetup = redisBridge.setup( api );
-        }
+        this.redisBridge = new RedisBridge();
+        final boolean redisBridgeSetup = redisBridge.setup( api );
 
         if ( redisBridge != null && !redisBridgeSetup )
         {
             BuX.getLogger().warning(
-                    "Could not set up the Redis Bridge! Please check your configuration."
-            );
-            BuX.getLogger().warning(
-                    "Bungee bridging will not work without the 'Redis Bridge' functioning!!"
+                    "Could not set up the Redis Bridge! Please check your configuration." +
+                            "\nThe bridging system will not work without a proper redis configuration."
             );
         }
 
@@ -81,7 +70,9 @@ public class BridgeManager implements IBridgeManager
 
     public boolean useBridging()
     {
-        return redisBridge != null;
+        final ISection config = ConfigFiles.CONFIG.getConfig().getSection( "bridging" );
+
+        return config.getBoolean( "enabled" );
     }
 
     public RedisBridge getBridge()

@@ -9,13 +9,6 @@ bridging:
   # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
   name: 'bungee'
 
-  bungee:
-    # Enable this ONLY IF YOU HAVE MULTIPLE BUNGEECORDS, this will use redis (see below for credentials)
-    enabled: false
-  spigot:
-    # For syncing between Spigot and BungeeCord servers, this will use redis (see below for credentials)
-    enabled: true
-
   redis:
     host: 127.0.0.1
     port: 6379
