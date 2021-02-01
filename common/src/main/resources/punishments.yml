@@ -10,6 +10,9 @@ date-format: 'dd-MM-yyyy kk:mm:ss'
 # This punishment uid is mostly useful if you do not want to show a numeric id in the ban / mute message.
 puid-length: 6
 
+# The characters to be used for punishment uid's. It's recommended to leave this on the default setting.
+puid-characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
 # By enabling this, all punishment commands will need an additional argument specifying the server.
 # For example:
 # - /ban didjee2 ALL Testing

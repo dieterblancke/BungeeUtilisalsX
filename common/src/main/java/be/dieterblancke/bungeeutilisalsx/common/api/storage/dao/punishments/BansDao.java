@@ -83,7 +83,7 @@ public interface BansDao
     default String createUniqueBanId()
     {
         String uid = Utils.createRandomString(
-                PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                PunishmentDao.getPunishmentIdCharacters(),
                 ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
         );
 
@@ -91,7 +91,7 @@ public interface BansDao
         while ( this.isPunishmentUidFound( uid ) )
         {
             uid = Utils.createRandomString(
-                    PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                    PunishmentDao.getPunishmentIdCharacters(),
                     ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
             );
         }

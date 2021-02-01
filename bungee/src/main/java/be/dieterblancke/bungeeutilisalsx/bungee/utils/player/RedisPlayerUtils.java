@@ -35,7 +35,7 @@ public class RedisPlayerUtils implements IPlayerUtils
     @Override
     public int getPlayerCount( String server )
     {
-        final ServerInfo info = ProxyServer.getInstance().getServerInfo( server ); // checking if server really exists
+        final ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
 
         return info == null ? 0 : RedisBungee.getApi().getPlayersOnServer( server ).size();
     }

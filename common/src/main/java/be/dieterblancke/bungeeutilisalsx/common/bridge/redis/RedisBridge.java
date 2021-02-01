@@ -23,13 +23,11 @@ import be.dieterblancke.bungeeutilisalsx.common.IBuXApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.Bridge;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.message.BridgedMessage;
+import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.redis.RedisMessageEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
-import io.lettuce.core.RedisClient;
-import io.lettuce.core.RedisURI;
-import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import lombok.Getter;
 
 import java.util.AbstractMap.SimpleEntry;
@@ -41,9 +39,7 @@ public class RedisBridge extends Bridge
 {
 
     @Getter
-    private RedisClient redisClient;
-    private StatefulRedisPubSubConnection<String, String> pubSubConnection;
-    private StatefulRedisPubSubConnection<String, String> pubSubSubscriberConnection;
+    private RedisManager redisManager;
 
     @Override
     public boolean setup( final IBuXApi api )
@@ -51,24 +47,9 @@ public class RedisBridge extends Bridge
         super.setup( api );
         try
         {
-            // Getting credentials from configuration
-            final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "bridging.redis" );
-
-            final String host = section.getString( "host", "localhost" );
-            final int port = section.getInteger( "port", 6379 );
-            final String password = section.getString( "password" );
-
-            final RedisURI uri = RedisURI.builder()
-                    .withHost( host )
-                    .withPort( port )
-                    .withPassword( password )
-                    .build();
-            this.redisClient = RedisClient.create( uri );
-            this.pubSubConnection = this.redisClient.connectPubSub();
-            this.pubSubSubscriberConnection = this.redisClient.connectPubSub();
-
-            this.pubSubSubscriberConnection.sync().subscribe( "BUX_DEFAULT_CHANNEL" );
-            this.pubSubSubscriberConnection.addListener( new RedisDefaultPubSubListener( this ) );
+            this.redisManager = RedisManagerFactory.create();
+            this.redisManager.subscribeToChannels( "BUX_DEFAULT_CHANNEL" );
+            BuX.getApi().getEventLoader().register( RedisMessageEvent.class, new RedisDefaultPubSubListener( this ) );
 
             BuX.getLogger().info( "Successfully connected to Redis server." );
             setup = true;
@@ -89,10 +70,13 @@ public class RedisBridge extends Bridge
             BuX.getLogger().info( "Sending message on BUX_DEFAULT_CHANNEL (redis):" );
             BuX.getLogger().info( message.toString() );
         }
-        if ( message.getIgnoredTargets() == null ) message.setIgnoredTargets( Lists.newArrayList() );
+        if ( message.getIgnoredTargets() == null )
+        {
+            message.setIgnoredTargets( Lists.newArrayList() );
+        }
         message.getIgnoredTargets().add( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) );
 
-        pubSubConnection.sync().publish( "BUX_DEFAULT_CHANNEL", BuX.getGson().toJson( message ) );
+        this.redisManager.publishToChannel( "BUX_DEFAULT_CHANNEL", BuX.getGson().toJson( message ) );
     }
 
     @Override
@@ -168,13 +152,13 @@ public class RedisBridge extends Bridge
     @Override
     public void shutdownBridge()
     {
-        redisClient.shutdown();
-        consumersMap.clear();
+        this.redisManager.closeConnections();
+        this.consumersMap.clear();
 
-        if ( eventHandlers != null )
+        if ( this.eventHandlers != null )
         {
-            eventHandlers.forEach( IEventHandler::unregister );
-            eventHandlers.clear();
+            this.eventHandlers.forEach( IEventHandler::unregister );
+            this.eventHandlers.clear();
         }
     }
 }

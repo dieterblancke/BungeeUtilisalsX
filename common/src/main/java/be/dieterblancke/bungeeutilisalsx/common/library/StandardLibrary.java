@@ -75,7 +75,7 @@ public enum StandardLibrary
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
-            "6.0.1.RELEASE",
+            "6.0.2.RELEASE",
             ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     ),
     REACTOR_CORE(

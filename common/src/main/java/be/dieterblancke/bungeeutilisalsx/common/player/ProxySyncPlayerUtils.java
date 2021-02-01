@@ -18,7 +18,6 @@ public class ProxySyncPlayerUtils implements IPlayerUtils
     {
         final IProxyServer proxyServer = BuX.getInstance().proxyOperations().getServerInfo( server );
 
-        // checking if server really exists
         return proxyServer == null ? 0 : ProxySyncApiProvider.getApi().getProxyManager().getProxyUserCount( server );
     }
 

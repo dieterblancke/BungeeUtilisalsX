@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.Bans
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Validate;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.Date;
 import java.util.UUID;
@@ -31,7 +32,9 @@ import java.util.UUID;
 public interface PunishmentDao
 {
 
-    String PUNISHMENT_ID_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    static String getPunishmentIdCharacters() {
+        return ConfigFiles.PUNISHMENTS.getConfig().getString( "puid-characters" );
+    }
 
     static PunishmentInfo buildPunishmentInfo( final String id, final PunishmentType type, final UUID uuid, final String user,
                                                final String ip, final String reason, final String server,

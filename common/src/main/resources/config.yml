@@ -9,6 +9,11 @@ bridging:
   # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
   name: 'bungee'
 
+  pooling:
+    min-idle: 4
+    max-idle: 8
+    max-total: 12
+
   redis:
     host: 127.0.0.1
     port: 6379

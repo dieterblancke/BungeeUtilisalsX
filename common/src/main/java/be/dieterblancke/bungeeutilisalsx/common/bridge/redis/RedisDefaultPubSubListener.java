@@ -21,10 +21,12 @@ package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.event.BridgeResponseEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.message.BridgedMessage;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.redis.RedisMessageEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import io.lettuce.core.pubsub.RedisPubSubAdapter;
 
-public class RedisDefaultPubSubListener extends RedisPubSubAdapter<String, String>
+public class RedisDefaultPubSubListener implements EventExecutor
 {
 
     private final RedisBridge bridge;
@@ -34,14 +36,14 @@ public class RedisDefaultPubSubListener extends RedisPubSubAdapter<String, Strin
         this.bridge = bridge;
     }
 
-    @Override
-    public void message( final String channel, final String data )
+    @Event
+    public void message( final RedisMessageEvent event )
     {
-        if ( !channel.equals( "BUX_DEFAULT_CHANNEL" ) )
+        if ( !event.getChannel().equals( "BUX_DEFAULT_CHANNEL" ) )
         {
             return;
         }
-        final BridgedMessage message = BuX.getGson().fromJson( data, BridgedMessage.class );
+        final BridgedMessage message = BuX.getGson().fromJson( event.getMessage(), BridgedMessage.class );
 
         if ( ConfigFiles.CONFIG.isDebug() )
         {

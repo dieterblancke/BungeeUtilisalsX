@@ -75,7 +75,7 @@ public interface MutesDao
     default String createUniqueMuteId()
     {
         String uid = Utils.createRandomString(
-                PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                PunishmentDao.getPunishmentIdCharacters(),
                 ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
         );
 
@@ -83,7 +83,7 @@ public interface MutesDao
         while ( this.isPunishmentUidFound( uid ) )
         {
             uid = Utils.createRandomString(
-                    PunishmentDao.PUNISHMENT_ID_CHARACTERS,
+                    PunishmentDao.getPunishmentIdCharacters(),
                     ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
             );
         }
