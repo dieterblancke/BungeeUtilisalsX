@@ -51,8 +51,8 @@
 
     <repositories>
         <repository>
-            <id>dbsoftwares</id>
-            <url>http://nexus.diviwork.nl/repository/dbsoftwares/</url>
+            <id>minerift</id>
+            <url>https://minerift.jfrog.io/artifactory/minerift-public/</url>
         </repository>
         <repository>
             <id>bungeecord-repo</id>
