@@ -85,7 +85,7 @@ public class VelocityPlayerUtils implements IPlayerUtils
     }
 
     @Override
-    public UUID getUuid( String targetName )
+    public UUID getUuidNoFallback( String targetName )
     {
         final Player player = Bootstrap.getInstance().getProxyServer().getPlayer( targetName ).orElse( null );
 
@@ -93,20 +93,6 @@ public class VelocityPlayerUtils implements IPlayerUtils
         {
             return player.getUniqueId();
         }
-        final UUID uuid = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( targetName ).getUuid();
-
-        if ( uuid != null )
-        {
-            return uuid;
-        }
-
-        try
-        {
-            return Utils.readUUIDFromString( MojangUtils.getUuid( targetName ) );
-        }
-        catch ( Exception e )
-        {
-            return null;
-        }
+        return null;
     }
 }
