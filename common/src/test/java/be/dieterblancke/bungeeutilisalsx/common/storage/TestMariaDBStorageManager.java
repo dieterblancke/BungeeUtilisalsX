@@ -1,9 +1,10 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage;
 
+import be.dieterblancke.bungeeutilisalsx.common.storage.hikari.MariaDBStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.hikari.MySQLStorageManager;
 import org.testcontainers.containers.GenericContainer;
 
-public class TestMariaDBStorageManager extends MySQLStorageManager
+public class TestMariaDBStorageManager extends MariaDBStorageManager
 {
 
     private static GenericContainer<?> mariaDbContainer;

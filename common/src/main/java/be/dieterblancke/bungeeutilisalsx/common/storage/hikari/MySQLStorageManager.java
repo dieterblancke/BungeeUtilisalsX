@@ -38,11 +38,10 @@ public class MySQLStorageManager extends HikariStorageManager
         final String hostname = ConfigFiles.CONFIG.getConfig().getString( "storage.hostname" );
         final int port = ConfigFiles.CONFIG.getConfig().getInteger( "storage.port" );
         final String database = ConfigFiles.CONFIG.getConfig().getString( "storage.database" );
-        final String timezone = ConfigFiles.CONFIG.getConfig().getString( "storage.server-timezone" );
 
         final HikariConfig config = new HikariConfig();
         config.setDriverClassName( "com.mysql.cj.jdbc.Driver" );
-        config.setJdbcUrl( "jdbc:mysql://" + hostname + ":" + port + "/" + database + "?serverTimezone=" + timezone );
+        config.setJdbcUrl( "jdbc:mysql://" + hostname + ":" + port + "/" + database );
         config.addDataSourceProperty( "cachePrepStmts", "true" );
         config.addDataSourceProperty( "alwaysSendSetIsolation", "false" );
         config.addDataSourceProperty( "cacheServerConfiguration", "true" );

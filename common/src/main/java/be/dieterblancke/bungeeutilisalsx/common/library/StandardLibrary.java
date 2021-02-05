@@ -27,7 +27,7 @@ public enum StandardLibrary
     SQLITE(
             "org.sqlite.JDBC",
             "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
-            "3.30.1",
+            "3.34.0",
             checkType( "SQLITE" )
     ),
     H2(
@@ -39,31 +39,31 @@ public enum StandardLibrary
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
-            "2.5.4",
+            "2.7.2",
             checkType( "MARIADB" )
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.9",
+            "42.2.18",
             checkType( "POSTGRESQL" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.12.1",
+            "3.12.7",
             checkType( "MONGODB" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
-            "8.0.22",
+            "8.0.23",
             checkType( "MYSQL" )
     ),
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
-            "3.4.2",
+            "4.0.1",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     SLF4J(
@@ -119,6 +119,12 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
             "1.1.1",
             ConfigFiles.CONFIG.getConfig().get( "scripting", false )
+    ),
+    APACHE_COMMONS_POOL2(
+            "org.apache.commons.pool2.impl.GenericObjectPool",
+            "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
+            "2.0.9",
+            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     );
 
     @Getter

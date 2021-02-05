@@ -22,9 +22,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.SQLDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.sql.SQLStorageManager;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import lombok.Getter;
+
+import java.util.Arrays;
+import java.util.Locale;
 
 public abstract class HikariStorageManager extends SQLStorageManager
 {
@@ -50,9 +54,26 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config.setUsername( configuration.getString( "storage.username" ) );
         config.setPassword( configuration.getString( "storage.password" ) );
 
-        if ( type != StorageType.POSTGRESQL )
+        final ISection propertySection = configuration.getSection( "storage.properties" );
+        for ( String key : propertySection.getKeys() )
         {
-            config.addDataSourceProperty( "useSSL", configuration.getBoolean( "storage.useSSL" ) );
+            if ( config.getDataSourceClassName() == null )
+            {
+                continue;
+            }
+            try
+            {
+                final Class<?> clazz = Class.forName( config.getDataSourceClassName() );
+
+                if ( this.hasProperty( clazz, key ) )
+                {
+                    config.addDataSourceProperty( key, propertySection.get( key ) );
+                }
+            }
+            catch ( ClassNotFoundException e )
+            {
+                // continue
+            }
         }
 
         config.setMaximumPoolSize( configuration.getInteger( "storage.pool.max-pool-size" ) );
@@ -66,6 +87,14 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config.setInitializationFailTimeout( -1 );
 
         dataSource = new HikariDataSource( config );
+    }
+
+    private boolean hasProperty( final Class<?> clazz, final String key )
+    {
+        final String methodName = "set" + key.substring( 0, 1 ).toUpperCase( Locale.ENGLISH ) + key.substring( 1 );
+
+        return Arrays.stream( clazz.getDeclaredMethods() )
+                .anyMatch( method -> method.getName().equalsIgnoreCase( methodName ) );
     }
 
     protected abstract String getDataSourceClass();
