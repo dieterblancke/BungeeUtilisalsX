@@ -123,7 +123,7 @@ public enum StandardLibrary
     APACHE_COMMONS_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
-            "2.0.9",
+            "2.9.0",
             ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
     );
 
