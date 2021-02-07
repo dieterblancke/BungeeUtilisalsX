@@ -49,7 +49,7 @@ public class RedisBridge extends Bridge
         {
             this.redisManager = RedisManagerFactory.create();
             this.redisManager.subscribeToChannels( "BUX_DEFAULT_CHANNEL" );
-            BuX.getApi().getEventLoader().register( RedisMessageEvent.class, new RedisDefaultPubSubListener( this ) );
+            api.getEventLoader().register( RedisMessageEvent.class, new RedisDefaultPubSubListener( this ) );
 
             BuX.getLogger().info( "Successfully connected to Redis server." );
             setup = true;
