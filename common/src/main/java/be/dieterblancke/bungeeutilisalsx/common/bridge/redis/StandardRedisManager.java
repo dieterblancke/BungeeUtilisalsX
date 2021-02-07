@@ -29,7 +29,7 @@ public class StandardRedisManager implements RedisManager
         this.redisClient = RedisClient.create( redisURI );
         this.pool = ConnectionPoolSupport.createGenericObjectPool(
                 redisClient::connect,
-                this.getObjectPoolConfig( section )
+                this.getObjectPoolConfig( section.getSection( "pooling" ) )
         );
         this.pubSubConnection = redisClient.connectPubSub();
         this.pubSubConnection.addListener( new PubSubListener() );
