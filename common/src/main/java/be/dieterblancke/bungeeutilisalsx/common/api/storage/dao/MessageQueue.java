@@ -24,4 +24,5 @@ public interface MessageQueue<T> extends Queue<T>
 {
 
     void refetch();
+
 }

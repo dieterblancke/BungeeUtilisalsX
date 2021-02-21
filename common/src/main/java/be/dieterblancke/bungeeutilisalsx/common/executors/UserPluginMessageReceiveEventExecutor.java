@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPluginMessageReceiveEvent;
@@ -31,6 +32,14 @@ public class UserPluginMessageReceiveEventExecutor implements EventExecutor
                 final String command = input.readUTF();
 
                 user.executeCommand( PlaceHolderAPI.formatMessage( user, command ) );
+            }
+            else if ( action.equalsIgnoreCase( "proxy-console-execute" ) )
+            {
+                final String command = input.readUTF();
+
+                BuX.getApi().getConsoleUser().executeCommand(
+                        PlaceHolderAPI.formatMessage( BuX.getApi().getConsoleUser(), command )
+                );
             }
         }
     }

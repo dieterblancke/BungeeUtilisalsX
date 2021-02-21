@@ -14,6 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.handlers.PreviousPageCli
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.ClickableGuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
+import be.dieterblancke.bungeeutilisalsx.spigot.utils.PluginMessageUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
@@ -163,7 +164,7 @@ public class ItemPage
             {
                 event.setCancelled( true );
                 player.closeInventory();
-                this.sendProxyExecuteCommandPluginMessage( player, command );
+                PluginMessageUtils.sendPlayerProxyExecuteCommandPluginMessage( player, command );
             };
         }
         else
@@ -197,15 +198,5 @@ public class ItemPage
                     3
             );
         };
-    }
-
-    private void sendProxyExecuteCommandPluginMessage( final Player player, final String command )
-    {
-        final ByteArrayDataOutput out = ByteStreams.newDataOutput();
-        out.writeUTF( "commands" );
-        out.writeUTF( "proxy-execute" );
-        out.writeUTF( command );
-
-        player.sendPluginMessage( Bootstrap.getInstance(), "bux:main", out.toByteArray() );
     }
 }
