@@ -16,10 +16,9 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.PluginMessageUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
-import com.google.common.io.ByteArrayDataOutput;
-import com.google.common.io.ByteStreams;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;
 import org.bukkit.event.inventory.InventoryClickEvent;
@@ -183,9 +182,9 @@ public class ItemPage
                     Bootstrap.getInstance(),
                     () -> new AnvilGUI.Builder()
                             .title( LanguageUtils.getLanguageString( guiAction.getConfigSection().getString( "title" ), player ) )
+                            .itemLeft( new ItemStack( Material.PAPER ) )
                             .onComplete( ( p, output ) ->
                             {
-
                                 final TriConsumer<Gui, Player, InventoryClickEvent> handler = this.getCommandClickHandler(
                                         action.replace( "{output}", output )
                                 );

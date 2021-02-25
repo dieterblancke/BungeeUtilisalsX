@@ -43,16 +43,15 @@
 
     <distributionManagement>
         <repository>
-            <id>github</id>
-            <name>GitHub Apache Maven Packages</name>
-            <url>https://maven.pkg.github.com/dieterblancke/BungeeUtilisalsX</url>
+            <id>minerift</id>
+            <url>https://repo.minerift.net/public-release/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>minerift</id>
-            <url>https://minerift.jfrog.io/artifactory/minerift-public/</url>
+            <url>https://repo.minerift.net/public-release/</url>
         </repository>
         <repository>
             <id>bungeecord-repo</id>

@@ -12,6 +12,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.Network
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
@@ -28,6 +30,7 @@ import be.dieterblancke.bungeeutilisalsx.common.library.Library;
 import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
+import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updater;
@@ -134,7 +137,13 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract CommandManager getCommandManager();
 
-    protected abstract void loadPlaceHolders();
+    protected void loadPlaceHolders() {
+        final XMLPlaceHolders xmlPlaceHolders = new XMLPlaceHolders();
+
+        xmlPlaceHolders.addXmlPlaceHolder( new CenterPlaceHolder() );
+
+        PlaceHolderAPI.addPlaceHolder( xmlPlaceHolders );
+    }
 
     protected abstract void registerLanguages();
 

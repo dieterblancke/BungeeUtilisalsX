@@ -164,7 +164,7 @@ public class MessageBuilder
 
     private static String formatLine( final String line )
     {
-        final String newLine = System.lineSeparator();
+        final String newLine = "\n";
 
         return line.replace( "%nl%", newLine )
                 .replace( "%newline%", newLine )

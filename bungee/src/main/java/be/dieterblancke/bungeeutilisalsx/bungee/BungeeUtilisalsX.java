@@ -82,6 +82,8 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void loadPlaceHolders()
     {
+        super.loadPlaceHolders();
+
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );

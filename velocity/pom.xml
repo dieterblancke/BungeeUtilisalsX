@@ -11,6 +11,13 @@
 
     <artifactId>velocity</artifactId>
 
+    <repositories>
+        <repository>
+            <id>minerift</id>
+            <url>https://repo.minerift.net/public-release/</url>
+        </repository>
+    </repositories>
+
     <dependencies>
         <dependency>
             <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
