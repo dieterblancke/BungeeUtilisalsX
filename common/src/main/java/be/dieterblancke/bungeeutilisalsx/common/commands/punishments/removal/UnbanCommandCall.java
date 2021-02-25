@@ -88,7 +88,7 @@ public class UnbanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unban.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.unban.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

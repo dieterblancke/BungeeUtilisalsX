@@ -104,7 +104,7 @@ public class IPMuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.ipmute.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.ipmute.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ipmute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

@@ -96,7 +96,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.iptempban.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.iptempban.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.iptempban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

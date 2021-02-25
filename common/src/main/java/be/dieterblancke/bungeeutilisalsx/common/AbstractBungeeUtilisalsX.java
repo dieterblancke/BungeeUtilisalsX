@@ -172,7 +172,7 @@ public abstract class AbstractBungeeUtilisalsX
 
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
 
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
             this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
 

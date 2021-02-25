@@ -18,18 +18,18 @@ public class PunishmentHelper implements IPunishmentHelper
     @Override
     public boolean isTemplateReason( final String reason )
     {
-        if ( !ConfigFiles.PUNISHMENTS.getConfig().getBoolean( "templates.enabled" ) )
+        if ( !ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "templates.enabled" ) )
         {
             return false;
         }
-        return reason.startsWith( ConfigFiles.PUNISHMENTS.getConfig().getString( "templates.detect" ) );
+        return reason.startsWith( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "templates.detect" ) );
     }
 
     @Override
     public List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template )
     {
         template = template.replaceFirst(
-                ConfigFiles.PUNISHMENTS.getConfig().getString( "templates.detect" ),
+                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "templates.detect" ),
                 ""
         );
         final List<ISection> sections = config.getSectionList( "punishments.templates" );
@@ -90,7 +90,7 @@ public class PunishmentHelper implements IPunishmentHelper
     @Override
     public String getDateFormat()
     {
-        return ConfigFiles.PUNISHMENTS.getConfig().getString( "date-format" );
+        return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" );
     }
 
     @Override

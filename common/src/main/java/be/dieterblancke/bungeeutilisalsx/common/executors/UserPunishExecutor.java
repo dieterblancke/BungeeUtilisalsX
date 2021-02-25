@@ -63,11 +63,11 @@ public class UserPunishExecutor implements EventExecutor
     @Event
     public void executeActions( UserPunishmentFinishEvent event )
     {
-        if ( !ConfigFiles.PUNISHMENTS.getPunishmentActions().containsKey( event.getType() ) )
+        if ( !ConfigFiles.PUNISHMENT_ACTIONS.getPunishmentActions().containsKey( event.getType() ) )
         {
             return;
         }
-        final List<PunishmentAction> actions = ConfigFiles.PUNISHMENTS.getPunishmentActions().get( event.getType() );
+        final List<PunishmentAction> actions = ConfigFiles.PUNISHMENT_ACTIONS.getPunishmentActions().get( event.getType() );
 
         for ( PunishmentAction action : actions )
         {

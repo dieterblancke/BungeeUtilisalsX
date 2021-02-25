@@ -76,7 +76,7 @@ public interface MutesDao
     {
         String uid = Utils.createRandomString(
                 PunishmentDao.getPunishmentIdCharacters(),
-                ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
         );
 
         // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
@@ -84,7 +84,7 @@ public interface MutesDao
         {
             uid = Utils.createRandomString(
                     PunishmentDao.getPunishmentIdCharacters(),
-                    ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
             );
         }
 

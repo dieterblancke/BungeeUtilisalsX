@@ -33,7 +33,7 @@ public interface PunishmentDao
 {
 
     static String getPunishmentIdCharacters() {
-        return ConfigFiles.PUNISHMENTS.getConfig().getString( "puid-characters" );
+        return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "puid-characters" );
     }
 
     static PunishmentInfo buildPunishmentInfo( final String id, final PunishmentType type, final UUID uuid, final String user,

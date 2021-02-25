@@ -102,7 +102,7 @@ public class KickCommandCall implements CommandCall
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.kick.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.kick.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.kick.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

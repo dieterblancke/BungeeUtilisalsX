@@ -102,7 +102,7 @@ public abstract class CommandManager
 
     protected void registerPunishmentCommands()
     {
-        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
+        final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
 
         if ( !config.getBoolean( "enabled" ) )
         {
@@ -192,7 +192,7 @@ public abstract class CommandManager
 
     protected void registerPunishmentCommand( final String name, final String section, final CommandCall call, final List<String> parameters )
     {
-        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
+        final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
 
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )

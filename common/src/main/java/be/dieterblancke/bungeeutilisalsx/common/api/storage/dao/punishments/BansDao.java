@@ -34,7 +34,7 @@ public interface BansDao
     {
         try
         {
-            return ConfigFiles.PUNISHMENTS.getConfig().getBoolean( "per-server-punishments" );
+            return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
         }
         catch ( Exception e )
         {
@@ -84,7 +84,7 @@ public interface BansDao
     {
         String uid = Utils.createRandomString(
                 PunishmentDao.getPunishmentIdCharacters(),
-                ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
         );
 
         // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
@@ -92,7 +92,7 @@ public interface BansDao
         {
             uid = Utils.createRandomString(
                     PunishmentDao.getPunishmentIdCharacters(),
-                    ConfigFiles.PUNISHMENTS.getConfig().getInteger( "puid-length" )
+                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
             );
         }
 

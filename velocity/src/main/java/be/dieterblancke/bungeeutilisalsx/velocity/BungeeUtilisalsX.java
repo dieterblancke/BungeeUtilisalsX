@@ -103,7 +103,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 Bootstrap.getInstance(), new PluginMessageListener()
         );
 
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
             Bootstrap.getInstance().getProxyServer().getEventManager().register(
                     Bootstrap.getInstance(), new PunishmentListener()

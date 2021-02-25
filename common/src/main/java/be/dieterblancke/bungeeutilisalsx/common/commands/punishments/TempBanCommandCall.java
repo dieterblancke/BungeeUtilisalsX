@@ -97,7 +97,7 @@ public class TempBanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.tempban.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.tempban.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }
