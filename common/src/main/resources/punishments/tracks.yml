@@ -1,0 +1,15 @@
+tracks:
+  - identifier: 'swearing'
+    track:
+      - count: 1
+        action:
+          type: 'MUTE'
+          duration: '5d'
+      - count: 3
+        action:
+          type: 'BAN'
+          duration: '3d'
+      - count: 5
+        action:
+          type: 'BAN'
+          duration: 'permanent'

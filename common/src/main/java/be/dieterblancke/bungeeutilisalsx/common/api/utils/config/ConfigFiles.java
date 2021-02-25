@@ -38,7 +38,9 @@ public class ConfigFiles
     public static Config ANTISPAM = new Config( "/chat/protection/antispam.yml" );
     public static Config UTFSYMBOLS = new Config( "/chat/utfsymbols.yml" );
     public static Config FRIENDS_CONFIG = new Config( "/friends.yml" );
-    public static PunishmentsConfig PUNISHMENTS = new PunishmentsConfig( "/punishments.yml" );
+    public static Config PUNISHMENT_CONFIG = new Config( "/punishments/config.yml" );
+    public static PunishmentsActionsConfig PUNISHMENT_ACTIONS = new PunishmentsActionsConfig( "/punishments/actions.yml" );
+    public static Config PUNISHMENT_TRACKS = new Config( "/punishments/tracks.yml" );
     public static Config LANGUAGES_CONFIG = new Config( "/languages/config.yml" );
     public static RanksConfig RANKS = new RanksConfig( "/chat/ranks.yml" );
     public static Config HUBBALANCER = new Config( "/hubbalancer.yml" );

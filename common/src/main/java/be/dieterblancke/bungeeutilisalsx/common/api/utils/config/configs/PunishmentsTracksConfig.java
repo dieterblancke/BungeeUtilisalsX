@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
@@ -28,16 +29,17 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public class PunishmentsConfig extends Config
+public class PunishmentsTracksConfig extends Config
 {
 
     @Getter
-    private final Map<PunishmentType, List<PunishmentAction>> punishmentActions = Maps.newHashMap();
+    private final List<PunishmentTrack> punishmentTracks = new ArrayList<>();
 
-    public PunishmentsConfig( String location )
+    public PunishmentsTracksConfig( String location )
     {
         super( location );
     }
@@ -45,13 +47,13 @@ public class PunishmentsConfig extends Config
     @Override
     public void purge()
     {
-        punishmentActions.clear();
+        punishmentTracks.clear();
     }
 
     @Override
     public void setup()
     {
-        for ( ISection section : config.getSectionList( "actions" ) )
+        for ( ISection section : config.getSectionList( "tracks" ) )
         {
             try
             {
