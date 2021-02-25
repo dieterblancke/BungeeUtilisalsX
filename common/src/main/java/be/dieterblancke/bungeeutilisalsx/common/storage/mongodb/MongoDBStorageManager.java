@@ -23,10 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.MongoDao;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.mongodb.MongoClient;
-import com.mongodb.MongoClientOptions;
-import com.mongodb.MongoCredential;
-import com.mongodb.ServerAddress;
+import com.mongodb.*;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
@@ -60,33 +57,40 @@ public class MongoDBStorageManager extends AbstractStorageManager
     public MongoDBStorageManager( StorageType type, IConfiguration configuration )
     {
         super( type, new MongoDao() );
+        final String database = configuration.getString( "storage.database" );
 
-        String user = configuration.getString( "storage.username" );
-        String password = configuration.getString( "storage.password" );
-        String database = configuration.getString( "storage.database" );
-
-        MongoCredential credential = null;
-        if ( user != null && !user.isEmpty() )
+        if ( configuration.exists( "storage.uri" ) )
         {
-            credential = MongoCredential.createCredential( user, database,
-                    ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
-        }
-        MongoClientOptions options = MongoClientOptions.builder()
-                .applicationName( "BungeeUtilisalsX" )
-                .connectionsPerHost( configuration.getInteger( "storage.pool.max-pool-size" ) )
-                .connectTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 )
-                .maxConnectionLifeTime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 )
-                .build();
-
-        if ( credential == null )
-        {
-            client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
-                    configuration.getInteger( "storage.port" ) ), options );
+            this.client = new MongoClient( new MongoClientURI( configuration.getString( "storage.uri" ) ) );
         }
         else
         {
-            client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
-                    configuration.getInteger( "storage.port" ) ), credential, options );
+            final String user = configuration.getString( "storage.username" );
+            final String password = configuration.getString( "storage.password" );
+
+            MongoCredential credential = null;
+            if ( user != null && !user.isEmpty() )
+            {
+                credential = MongoCredential.createCredential( user, database,
+                        ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
+            }
+            MongoClientOptions options = MongoClientOptions.builder()
+                    .applicationName( "BungeeUtilisalsX" )
+                    .connectionsPerHost( configuration.getInteger( "storage.pool.max-pool-size" ) )
+                    .connectTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 )
+                    .maxConnectionLifeTime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 )
+                    .build();
+
+            if ( credential == null )
+            {
+                client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
+                        configuration.getInteger( "storage.port" ) ), options );
+            }
+            else
+            {
+                client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
+                        configuration.getInteger( "storage.port" ) ), credential, options );
+            }
         }
 
         this.database = client.getDatabase( database );

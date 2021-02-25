@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 
 import java.sql.*;
@@ -128,5 +129,10 @@ public class MigrationManager
         {
             BuX.getLogger().log( Level.SEVERE, "Could not check migration status", e );
         }
+    }
+
+    public boolean canMigrate()
+    {
+        return BuX.getInstance().getAbstractStorageManager().getType() != StorageType.MONGODB;
     }
 }
