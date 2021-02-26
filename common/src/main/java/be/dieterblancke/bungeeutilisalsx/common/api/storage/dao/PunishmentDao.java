@@ -23,6 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Validate;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
@@ -107,6 +108,8 @@ public interface PunishmentDao
 
     KickAndWarnDao getKickAndWarnDao();
 
+    TracksDao getTracksDao();
+
     long getPunishmentsSince( PunishmentType type, UUID uuid, Date date );
 
     long getIPPunishmentsSince( PunishmentType type, String ip, Date date );
@@ -116,4 +119,5 @@ public interface PunishmentDao
     void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date );
 
     void savePunishmentAction( final UUID uuid, final String username, final String ip, final String uid );
+
 }

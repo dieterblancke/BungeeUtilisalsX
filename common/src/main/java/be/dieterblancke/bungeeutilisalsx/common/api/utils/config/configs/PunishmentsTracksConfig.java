@@ -18,20 +18,16 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
-import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 public class PunishmentsTracksConfig extends Config
 {
@@ -55,40 +51,29 @@ public class PunishmentsTracksConfig extends Config
     {
         for ( ISection section : config.getSectionList( "tracks" ) )
         {
-            try
-            {
-                final String uid = section.getString( "uid" );
-                final PunishmentType type = PunishmentType.valueOf( section.getString( "type" ) );
-
-                try
-                {
-                    final TimeUnit unit = TimeUnit.valueOf( section.getString( "time.unit" ) );
-
-                    if ( section.isInteger( "time.amount" ) )
+            final String identifier = section.getString( "identifier" );
+            final List<PunishmentTrackRecord> records = section.getSectionList( "track" )
+                    .stream()
+                    .map( track ->
                     {
-                        final int amount = section.getInteger( "time.amount" );
-                        final int limit = section.getInteger( "limit" );
+                        final int count = track.getInteger( "count" );
+                        final PunishmentType punishmentType = PunishmentType.valueOf( track.getString( "action.type" ).toUpperCase() );
+                        final String duration = track.getString( "action.duration" );
 
-                        final PunishmentAction action = new PunishmentAction( uid, type, unit, amount, limit, section.getStringList( "actions" ) );
-                        final List<PunishmentAction> actions = punishmentActions.getOrDefault( type, Lists.newArrayList() );
+                        return new PunishmentTrackRecord( count, punishmentType, duration );
+                    } )
+                    .collect( Collectors.toList() );
 
-                        actions.add( action );
-                        punishmentActions.put( type, actions );
-                    }
-                    else
-                    {
-                        BuX.getLogger().warning( "An invalid number has been entered (" + section.getString( "time.amount" ) + ")." );
-                    }
-                }
-                catch ( IllegalArgumentException e )
-                {
-                    BuX.getLogger().warning( "An invalid time unit has been entered (" + section.getString( "time.unit" ) + ")." );
-                }
-            }
-            catch ( IllegalArgumentException e )
-            {
-                BuX.getLogger().warning( "An invalid punishment type has been entered (" + section.getString( "type" ) + ")." );
-            }
+            this.punishmentTracks.add( new PunishmentTrack( identifier, records ) );
         }
+    }
+
+    public PunishmentTrack getPunishmentTrack( final String reason )
+    {
+        return punishmentTracks
+                .stream()
+                .filter( track -> track.getIdentifier().equalsIgnoreCase( reason ) )
+                .findFirst()
+                .orElse( null );
     }
 }

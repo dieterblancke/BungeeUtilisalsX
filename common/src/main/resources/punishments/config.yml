@@ -138,3 +138,8 @@ commands:
     enabled: true
     aliases: 'shistory'
     permission: bungeeutilisals.punishments.staffhistory
+  trackpunish:
+    enabled: true
+    aliases: 'pt, punishtrack, trackpunishment'
+    permission: bungeeutilisals.punishments.trackpunish
+    broadcast: bungeeutilisals.punishments.trackpunish.broadcast
