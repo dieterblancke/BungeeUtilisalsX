@@ -39,6 +39,7 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.Consumer;
 
 public class MongoFriendsDao implements FriendsDao
 {
@@ -48,8 +49,8 @@ public class MongoFriendsDao implements FriendsDao
     {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put( "user", user );
-        data.put( "friend", uuid );
+        data.put( "user", user.toString() );
+        data.put( "friend", uuid.toString() );
         data.put( "created", new Date( System.currentTimeMillis() ) );
 
         db().getCollection( format( "{friends-table}" ) ).insertOne( new Document( data ) );
@@ -62,8 +63,8 @@ public class MongoFriendsDao implements FriendsDao
 
         coll.deleteOne(
                 Filters.and(
-                        Filters.eq( "user", user ),
-                        Filters.eq( "friend", uuid )
+                        Filters.eq( "user", user.toString() ),
+                        Filters.eq( "friend", uuid.toString() )
                 )
         );
     }
@@ -75,7 +76,7 @@ public class MongoFriendsDao implements FriendsDao
         final MongoCollection<Document> coll = db().getCollection( format( "{friends-table}" ) );
         final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
 
-        coll.find( Filters.eq( "user", uuid ) ).forEach( (Block<? super Document>) doc ->
+        coll.find( Filters.eq( "user", uuid.toString() ) ).forEach( (Consumer<? super Document>) doc ->
         {
             final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "friend" ) ) ).first();
 
@@ -95,7 +96,7 @@ public class MongoFriendsDao implements FriendsDao
     {
         final MongoCollection<Document> coll = db().getCollection( format( "{friends-table}" ) );
 
-        return coll.countDocuments( Filters.eq( "user", uuid ) );
+        return coll.countDocuments( Filters.eq( "user", uuid.toString() ) );
     }
 
     @Override
@@ -103,8 +104,8 @@ public class MongoFriendsDao implements FriendsDao
     {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-        data.put( "user", user );
-        data.put( "friend", uuid );
+        data.put( "user", user.toString() );
+        data.put( "friend", uuid.toString() );
         data.put( "requested_at", new Date( System.currentTimeMillis() ) );
 
         db().getCollection( format( "{friendrequests-table}" ) ).insertOne( new Document( data ) );
@@ -117,8 +118,8 @@ public class MongoFriendsDao implements FriendsDao
 
         coll.deleteOne(
                 Filters.and(
-                        Filters.eq( "user", uuid ),
-                        Filters.eq( "friend", user )
+                        Filters.eq( "user", uuid.toString() ),
+                        Filters.eq( "friend", user.toString() )
                 )
         );
     }
@@ -130,7 +131,7 @@ public class MongoFriendsDao implements FriendsDao
         final MongoCollection<Document> coll = db().getCollection( format( "{friendrequests-table}" ) );
         final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
 
-        coll.find( Filters.eq( "friend", uuid ) ).forEach( (Block<? super Document>) doc ->
+        coll.find( Filters.eq( "friend", uuid.toString() ) ).forEach( (Consumer<? super Document>) doc ->
         {
             final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "user" ) ) ).first();
 
@@ -153,7 +154,7 @@ public class MongoFriendsDao implements FriendsDao
         final MongoCollection<Document> coll = db().getCollection( format( "{friendrequests-table}" ) );
         final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
 
-        coll.find( Filters.eq( "user", uuid ) ).forEach( (Block<? super Document>) doc ->
+        coll.find( Filters.eq( "user", uuid.toString() ) ).forEach( (Consumer<? super Document>) doc ->
         {
             final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "friend" ) ) ).first();
             friendRequests.add( new FriendRequest(
@@ -175,7 +176,7 @@ public class MongoFriendsDao implements FriendsDao
 
         return coll.find( Filters.and(
                 Filters.eq( "user", uuid.toString() ),
-                Filters.eq( "friend", user )
+                Filters.eq( "friend", user.toString() )
         ) ).limit( 1 ).iterator().hasNext();
     }
 
@@ -185,7 +186,7 @@ public class MongoFriendsDao implements FriendsDao
         final MongoCollection<Document> coll = db().getCollection( format( "{friendrequests-table}" ) );
 
         return coll.find( Filters.and(
-                Filters.eq( "user", user ),
+                Filters.eq( "user", user.toString() ),
                 Filters.eq( "friend", uuid.toString() )
         ) ).limit( 1 ).iterator().hasNext();
     }
