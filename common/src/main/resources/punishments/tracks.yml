@@ -1,15 +1,22 @@
 tracks:
+  # The identifier of a track is the REASON of punishments on which it should filter.
   - identifier: 'swearing'
     track:
+      # After how many times should this part of the track execute
       - count: 1
         action:
+          # What type of punishment should be executed?
           type: 'MUTE'
           duration: '5d'
+      # After how many times should this part of the track execute
       - count: 3
         action:
+          # What type of punishment should be executed?
           type: 'BAN'
           duration: '3d'
+      # After how many times should this part of the track execute
       - count: 5
         action:
+          # What type of punishment should be executed?
           type: 'BAN'
           duration: 'permanent'
