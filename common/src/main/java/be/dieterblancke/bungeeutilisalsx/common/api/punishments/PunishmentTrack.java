@@ -29,6 +29,8 @@ public class PunishmentTrack
 {
 
     private final String identifier;
+    private final int maxRuns;
+    private final TrackAction limitReachedAction;
     private final List<PunishmentTrackRecord> records;
 
     @Data
@@ -37,8 +39,14 @@ public class PunishmentTrack
     {
 
         private final int count;
+        private final TrackAction action;
+
+    }
+
+    @Data
+    @AllArgsConstructor
+    public static final class TrackAction {
         private final PunishmentType typeAction;
         private final String duration;
-
     }
 }

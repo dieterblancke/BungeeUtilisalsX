@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLBansDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLMutesDao;
@@ -69,6 +70,12 @@ public class SQLPunishmentDao implements PunishmentDao
     public KickAndWarnDao getKickAndWarnDao()
     {
         return kickAndWarnDao;
+    }
+
+    @Override
+    public TracksDao getTracksDao()
+    {
+        return null; // TODO
     }
 
     @Override

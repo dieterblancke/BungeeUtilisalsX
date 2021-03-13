@@ -1,6 +1,11 @@
 tracks:
   # The identifier of a track is the REASON of punishments on which it should filter.
   - identifier: 'swearing'
+    # The maximum amount of times a track can be ran. -1 for unlimited runs.
+    max-runs: 2
+    limit-reached-action:
+      type: 'BAN'
+      duration: 'permanent'
     track:
       # After how many times should this part of the track execute
       - count: 1
@@ -9,14 +14,14 @@ tracks:
           type: 'MUTE'
           duration: '5d'
       # After how many times should this part of the track execute
-      - count: 3
+      - count: 2
         action:
           # What type of punishment should be executed?
           type: 'BAN'
           duration: '3d'
       # After how many times should this part of the track execute
-      - count: 5
+      - count: 3
         action:
           # What type of punishment should be executed?
           type: 'BAN'
-          duration: 'permanent'
+          duration: '1mo'

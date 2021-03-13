@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.TrackAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import com.dbsoftwares.configuration.api.ISection;
@@ -52,6 +53,11 @@ public class PunishmentsTracksConfig extends Config
         for ( ISection section : config.getSectionList( "tracks" ) )
         {
             final String identifier = section.getString( "identifier" );
+            final int maxRuns = section.getInteger( "max-runs" );
+            final TrackAction limitReachedAction = new TrackAction(
+                    PunishmentType.valueOf( section.getString( "limit-reached-action.type" ).toUpperCase() ),
+                    section.getString( "limit-reached-action.duration" )
+            );
             final List<PunishmentTrackRecord> records = section.getSectionList( "track" )
                     .stream()
                     .map( track ->
@@ -60,11 +66,11 @@ public class PunishmentsTracksConfig extends Config
                         final PunishmentType punishmentType = PunishmentType.valueOf( track.getString( "action.type" ).toUpperCase() );
                         final String duration = track.getString( "action.duration" );
 
-                        return new PunishmentTrackRecord( count, punishmentType, duration );
+                        return new PunishmentTrackRecord( count, new TrackAction( punishmentType, duration ) );
                     } )
                     .collect( Collectors.toList() );
 
-            this.punishmentTracks.add( new PunishmentTrack( identifier, records ) );
+            this.punishmentTracks.add( new PunishmentTrack( identifier, maxRuns, limitReachedAction, records ) );
         }
     }
 

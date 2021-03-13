@@ -21,7 +21,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
@@ -40,7 +39,7 @@ public class TrackPunishCommandCall extends PunishmentCommand
 
         if ( punishmentArgs == null )
         {
-            user.sendLangMessage( "punishments.ban.usage" + ( useServerPunishments() ? "-server" : "" ) );
+            user.sendLangMessage( "punishments.track.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
         if ( !punishmentArgs.hasJoined() )
@@ -52,62 +51,69 @@ public class TrackPunishCommandCall extends PunishmentCommand
         final String reason = punishmentArgs.getReason();
         final PunishmentTrack track = ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTrack( reason );
 
-        final UserStorage storage = punishmentArgs.getStorage();
-        if ( dao().getPunishmentDao().getTracksDao().isTrackFinished( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
+        if ( track == null )
         {
-            user.sendLangMessage( "punishments.ban.already-banned" );
+            user.sendLangMessage( "punishments.track.track-not-found" );
             return;
         }
 
-        if ( punishmentArgs.launchEvent( PunishmentType.BAN ) )
-        {
-            return;
-        }
-        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-
-        final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertBan(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                true,
-                user.getName()
-        );
-
-        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
-        super.attemptKick( storage, "punishments.ban.kick", info );
-
-        user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
-        {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.ban.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.ban.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
-
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.BAN,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                null
-        ) );
+//        final UserTrackInfo trackInfo = dao().getPunishmentDao().getTracksDao().getTrackInfo(
+//                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+//        ).orElse( new UserTrackInfo(
+//                storage.getUuid(),
+//                track.getIdentifier(),
+//                punishmentArgs.getServerOrAll()
+//        ) );
+//
+//        final UserStorage storage = punishmentArgs.getStorage();
+//        if ( trackInfo.isFinished() )
+//        {
+//            user.sendLangMessage( "punishments.track.track-already-finished" );
+//            return;
+//        }
+//        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
+//
+//
+//
+//        dao().getPunishmentDao().getTracksDao().updateTrack(
+//                storage.getUuid(),
+//                track,
+//                punishmentArgs.getServerOrAll()
+//        );
+//
+//        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+//        super.attemptKick( storage, "punishments.ban.kick", info );
+//
+//        user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+//
+//        if ( !parameters.contains( "-s" ) )
+//        {
+//            if ( parameters.contains( "-nbp" ) )
+//            {
+//                BuX.getApi().langBroadcast(
+//                        "punishments.ban.broadcast",
+//                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+//                );
+//            }
+//            else
+//            {
+//                BuX.getApi().langPermissionBroadcast(
+//                        "punishments.ban.broadcast",
+//                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
+//                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+//                );
+//            }
+//        }
+//
+//        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
+//                PunishmentType.BAN,
+//                user,
+//                storage.getUuid(),
+//                storage.getUserName(),
+//                storage.getIp(),
+//                reason,
+//                punishmentArgs.getServerOrAll(),
+//                null
+//        ) );
     }
 }

@@ -5,7 +5,7 @@ debug: false
 scripting: false
 
 bridging:
-  enabled: true
+  enabled: false
   # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
   name: 'bungee'
 
