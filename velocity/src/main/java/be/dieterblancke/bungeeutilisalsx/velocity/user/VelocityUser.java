@@ -533,12 +533,18 @@ public class VelocityUser implements User, CanReceiveMessages
             {
                 if ( player.hasPermission( permission ) )
                 {
-                    BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                    if ( ConfigFiles.CONFIG.isDebug() )
+                    {
+                        BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+                    }
                     return true;
                 }
                 else
                 {
-                    BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                    if ( ConfigFiles.CONFIG.isDebug() )
+                    {
+                        BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                    }
                 }
             }
         }
