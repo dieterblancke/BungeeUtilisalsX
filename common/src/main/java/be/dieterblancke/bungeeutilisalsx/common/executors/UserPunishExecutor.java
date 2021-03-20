@@ -125,4 +125,10 @@ public class UserPunishExecutor implements EventExecutor
             }
         }
     }
+
+    @Event
+    public void countForTrack( final UserPunishmentFinishEvent event )
+    {
+        // TODO
+    }
 }

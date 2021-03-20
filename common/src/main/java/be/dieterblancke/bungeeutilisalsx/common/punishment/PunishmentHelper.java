@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.punishment;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentTrackHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -14,6 +15,8 @@ import java.util.List;
 
 public class PunishmentHelper implements IPunishmentHelper
 {
+
+    private final IPunishmentTrackHelper punishmentTrackHelper = new PunishmentTrackHelper();
 
     @Override
     public boolean isTemplateReason( final String reason )
@@ -213,5 +216,11 @@ public class PunishmentHelper implements IPunishmentHelper
         placeholders.add( info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
 
         return placeholders;
+    }
+
+    @Override
+    public IPunishmentTrackHelper tracks()
+    {
+        return punishmentTrackHelper;
     }
 }

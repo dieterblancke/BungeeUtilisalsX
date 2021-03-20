@@ -19,6 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.CountNormalPunishments;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.TrackAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -27,6 +28,7 @@ import com.dbsoftwares.configuration.api.ISection;
 import lombok.Getter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +55,7 @@ public class PunishmentsTracksConfig extends Config
         for ( ISection section : config.getSectionList( "tracks" ) )
         {
             final String identifier = section.getString( "identifier" );
+            final CountNormalPunishments countNormalPunishments = this.getCountNormalPunishmentsSettings( section );
             final int maxRuns = section.getInteger( "max-runs" );
             final TrackAction limitReachedAction = new TrackAction(
                     PunishmentType.valueOf( section.getString( "limit-reached-action.type" ).toUpperCase() ),
@@ -70,7 +73,13 @@ public class PunishmentsTracksConfig extends Config
                     } )
                     .collect( Collectors.toList() );
 
-            this.punishmentTracks.add( new PunishmentTrack( identifier, maxRuns, limitReachedAction, records ) );
+            this.punishmentTracks.add( new PunishmentTrack(
+                    identifier,
+                    countNormalPunishments,
+                    maxRuns,
+                    limitReachedAction,
+                    records
+            ) );
         }
     }
 
@@ -81,5 +90,15 @@ public class PunishmentsTracksConfig extends Config
                 .filter( track -> track.getIdentifier().equalsIgnoreCase( reason ) )
                 .findFirst()
                 .orElse( null );
+    }
+
+    private CountNormalPunishments getCountNormalPunishmentsSettings( final ISection section )
+    {
+        return new CountNormalPunishments(
+                section.getBoolean( "count-normal-punishments.enabled" ),
+                section.isString( "count-normal-punishments.types" )
+                        ? Arrays.asList( PunishmentType.values().clone() )
+                        : section.getStringList( "count-normal-punishments.types" ).stream().map( PunishmentType::valueOf ).collect( Collectors.toList() )
+        );
     }
 }

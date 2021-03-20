@@ -18,23 +18,11 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import com.dbsoftwares.configuration.api.IConfiguration;
+import java.util.UUID;
 
-import java.util.List;
-
-public interface IPunishmentHelper
+public interface IPunishmentTrackHelper
 {
 
-    boolean isTemplateReason( final String reason );
-
-    List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template );
-
-    String getDateFormat();
-
-    String setPlaceHolders( String line, PunishmentInfo info );
-
-    List<String> getPlaceHolders( PunishmentInfo info );
-
-    IPunishmentTrackHelper tracks();
+    void addTrackPunishment( final UUID uuid, final PunishmentInfo punishmentInfo );
 
 }

@@ -1,6 +1,10 @@
 tracks:
   # The identifier of a track is the REASON of punishments on which it should filter.
   - identifier: 'swearing'
+    count-normal-punishments:
+      enabled: true
+      types:
+        - '*'
     # The maximum amount of times a track can be ran. -1 for unlimited runs.
     max-runs: 2
     limit-reached-action:
