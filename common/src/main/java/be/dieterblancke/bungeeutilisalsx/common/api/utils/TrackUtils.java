@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.TrackAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
@@ -34,7 +35,9 @@ public class TrackUtils
         return amountExecuted >= maxRuns;
     }
 
-    public static void executeStageIfNeeded( final PunishmentTrack track, final List<PunishmentTrackInfo> trackInfos, final Consumer<PunishmentTrackRecord> recordConsumer )
+    public static void executeStageIfNeeded( final PunishmentTrack track,
+                                             final List<PunishmentTrackInfo> trackInfos,
+                                             final Consumer<PunishmentTrackRecord> recordConsumer )
     {
         if ( track.getRecords().isEmpty() )
         {
@@ -52,6 +55,11 @@ public class TrackUtils
                 recordConsumer.accept( record );
             }
         }
+    }
+
+    public static void executeTrackActionFor( final UUID uuid, final String executedBy, final TrackAction trackAction )
+    {
+        // TODO: execute punishment for the specific trackAction
     }
 
     public static void addTrackPunishment( final UUID uuid, final PunishmentInfo punishmentInfo )
