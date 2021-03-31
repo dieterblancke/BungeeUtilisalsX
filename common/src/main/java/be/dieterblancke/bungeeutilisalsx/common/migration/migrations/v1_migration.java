@@ -10,6 +10,7 @@ import java.sql.SQLException;
 
 public class v1_migration extends FileMigration
 {
+
     public v1_migration()
     {
         super( "migrations/v1_initial_migration.sql" );

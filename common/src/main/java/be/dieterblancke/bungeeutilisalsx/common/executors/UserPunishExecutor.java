@@ -25,6 +25,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.User
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.ReportUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TrackUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
@@ -129,6 +130,6 @@ public class UserPunishExecutor implements EventExecutor
     @Event
     public void countForTrack( final UserPunishmentFinishEvent event )
     {
-        // TODO
+        TrackUtils.addTrackPunishment( event.getUuid(), event.getInfo() );
     }
 }

@@ -70,7 +70,7 @@ public class TrackPunishCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
 
-        dao().getPunishmentDao().getTracksDao().updateTrack( new PunishmentTrackInfo(
+        dao().getPunishmentDao().getTracksDao().addToTrack( new PunishmentTrackInfo(
                 storage.getUuid(),
                 track.getIdentifier(),
                 punishmentArgs.getServerOrAll(),
@@ -79,9 +79,12 @@ public class TrackPunishCommandCall extends PunishmentCommand
                 true
         ) );
 
-        // TODO: if canRunAgain == true, the track infos should be set to active false
+        dao().getPunishmentDao().getTracksDao().resetTrack(
+                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+        );
 
-        TrackUtils.executeStageIfNeeded( track, trackInfos, (trackRecord) -> {
+        TrackUtils.executeStageIfNeeded( track, trackInfos, ( trackRecord ) ->
+        {
             // TODO: execute punishment related to this trackRecord
         } );
         // TODO: send executed message to the user and broadcast to all staff!

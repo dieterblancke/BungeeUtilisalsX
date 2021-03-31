@@ -41,5 +41,7 @@ public interface TracksDao
 
     List<PunishmentTrackInfo> getTrackInfos(  UUID uuid, String trackId, String server );
 
-    void updateTrack( PunishmentTrackInfo punishmentTrackInfo );
+    void addToTrack( PunishmentTrackInfo punishmentTrackInfo );
+
+    void resetTrack( UUID uuid, String trackId, String server );
 }

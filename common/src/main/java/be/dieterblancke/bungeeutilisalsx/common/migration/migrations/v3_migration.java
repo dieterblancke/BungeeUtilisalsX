@@ -6,6 +6,7 @@ import java.sql.Connection;
 
 public class v3_migration extends FileMigration
 {
+
     public v3_migration()
     {
         super( "migrations/v3_add_punishment_tracks.sql" );

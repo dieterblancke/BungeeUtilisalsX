@@ -35,6 +35,4 @@ public interface IPunishmentHelper
 
     List<String> getPlaceHolders( PunishmentInfo info );
 
-    IPunishmentTrackHelper tracks();
-
 }

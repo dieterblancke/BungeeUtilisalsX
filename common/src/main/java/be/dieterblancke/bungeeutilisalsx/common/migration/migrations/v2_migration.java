@@ -6,6 +6,7 @@ import java.sql.Connection;
 
 public class v2_migration extends FileMigration
 {
+
     public v2_migration()
     {
         super( "migrations/v2_add_server_column.sql" );

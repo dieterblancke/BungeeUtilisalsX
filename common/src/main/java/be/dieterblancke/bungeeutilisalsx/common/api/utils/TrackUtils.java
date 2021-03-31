@@ -1,11 +1,14 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.function.Consumer;
 
 public class TrackUtils
@@ -47,6 +50,20 @@ public class TrackUtils
             if ( amountExecuted == record.getCount() )
             {
                 recordConsumer.accept( record );
+            }
+        }
+    }
+
+    public static void addTrackPunishment( final UUID uuid, final PunishmentInfo punishmentInfo )
+    {
+        // TODO: create test for this
+
+        for ( PunishmentTrack punishmentTrack : ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTracks() )
+        {
+            if ( punishmentTrack.getCountNormalPunishments().isEnabled()
+                    && punishmentTrack.getCountNormalPunishments().getTypes().contains( punishmentInfo.getType() ) )
+            {
+                // TODO: count this to track if the option is enabled (so call addToTrack)
             }
         }
     }
