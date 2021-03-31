@@ -30,13 +30,14 @@ public class PunishmentTrack
 
     private final String identifier;
     private final CountNormalPunishments countNormalPunishments;
-    private final int maxRuns;
+    private final boolean canRunAgain;
     private final TrackAction limitReachedAction;
     private final List<PunishmentTrackRecord> records;
 
     @Data
     @AllArgsConstructor
-    public static final class CountNormalPunishments {
+    public static final class CountNormalPunishments
+    {
 
         private final boolean enabled;
         private final List<PunishmentType> types;
@@ -55,7 +56,8 @@ public class PunishmentTrack
 
     @Data
     @AllArgsConstructor
-    public static final class TrackAction {
+    public static final class TrackAction
+    {
 
         private final PunishmentType typeAction;
         private final String duration;

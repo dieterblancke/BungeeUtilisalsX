@@ -19,14 +19,15 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TrackUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
+import java.util.Date;
 import java.util.List;
 
 public class TrackPunishCommandCall extends PunishmentCommand
@@ -50,6 +51,7 @@ public class TrackPunishCommandCall extends PunishmentCommand
 
         final String reason = punishmentArgs.getReason();
         final PunishmentTrack track = ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTrack( reason );
+        final UserStorage storage = punishmentArgs.getStorage();
 
         if ( track == null )
         {
@@ -57,63 +59,31 @@ public class TrackPunishCommandCall extends PunishmentCommand
             return;
         }
 
-//        final UserTrackInfo trackInfo = dao().getPunishmentDao().getTracksDao().getTrackInfo(
-//                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
-//        ).orElse( new UserTrackInfo(
-//                storage.getUuid(),
-//                track.getIdentifier(),
-//                punishmentArgs.getServerOrAll()
-//        ) );
-//
-//        final UserStorage storage = punishmentArgs.getStorage();
-//        if ( trackInfo.isFinished() )
-//        {
-//            user.sendLangMessage( "punishments.track.track-already-finished" );
-//            return;
-//        }
-//        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-//
-//
-//
-//        dao().getPunishmentDao().getTracksDao().updateTrack(
-//                storage.getUuid(),
-//                track,
-//                punishmentArgs.getServerOrAll()
-//        );
-//
-//        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
-//        super.attemptKick( storage, "punishments.ban.kick", info );
-//
-//        user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-//
-//        if ( !parameters.contains( "-s" ) )
-//        {
-//            if ( parameters.contains( "-nbp" ) )
-//            {
-//                BuX.getApi().langBroadcast(
-//                        "punishments.ban.broadcast",
-//                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-//                );
-//            }
-//            else
-//            {
-//                BuX.getApi().langPermissionBroadcast(
-//                        "punishments.ban.broadcast",
-//                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
-//                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-//                );
-//            }
-//        }
-//
-//        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-//                PunishmentType.BAN,
-//                user,
-//                storage.getUuid(),
-//                storage.getUserName(),
-//                storage.getIp(),
-//                reason,
-//                punishmentArgs.getServerOrAll(),
-//                null
-//        ) );
+        final List<PunishmentTrackInfo> trackInfos = dao().getPunishmentDao().getTracksDao().getTrackInfos(
+                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+        );
+
+        if ( TrackUtils.isFinished( track, trackInfos ) )
+        {
+            user.sendLangMessage( "punishments.track.track-already-finished" );
+            return;
+        }
+        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
+
+        dao().getPunishmentDao().getTracksDao().updateTrack( new PunishmentTrackInfo(
+                storage.getUuid(),
+                track.getIdentifier(),
+                punishmentArgs.getServerOrAll(),
+                user.getName(),
+                new Date(),
+                true
+        ) );
+
+        // TODO: if canRunAgain == true, the track infos should be set to active false
+
+        TrackUtils.executeStageIfNeeded( track, trackInfos, (trackRecord) -> {
+            // TODO: execute punishment related to this trackRecord
+        } );
+        // TODO: send executed message to the user and broadcast to all staff!
     }
 }

@@ -29,6 +29,7 @@ import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -56,7 +57,7 @@ public class PunishmentsTracksConfig extends Config
         {
             final String identifier = section.getString( "identifier" );
             final CountNormalPunishments countNormalPunishments = this.getCountNormalPunishmentsSettings( section );
-            final int maxRuns = section.getInteger( "max-runs" );
+            final boolean canRunAgain = section.getBoolean( "can-run-again" );
             final TrackAction limitReachedAction = new TrackAction(
                     PunishmentType.valueOf( section.getString( "limit-reached-action.type" ).toUpperCase() ),
                     section.getString( "limit-reached-action.duration" )
@@ -76,7 +77,7 @@ public class PunishmentsTracksConfig extends Config
             this.punishmentTracks.add( new PunishmentTrack(
                     identifier,
                     countNormalPunishments,
-                    maxRuns,
+                    canRunAgain,
                     limitReachedAction,
                     records
             ) );
@@ -97,8 +98,15 @@ public class PunishmentsTracksConfig extends Config
         return new CountNormalPunishments(
                 section.getBoolean( "count-normal-punishments.enabled" ),
                 section.isString( "count-normal-punishments.types" )
-                        ? Arrays.asList( PunishmentType.values().clone() )
+                        ? this.getPunishmentTypes( section.getString( "count-normal-punishments.types" ) )
                         : section.getStringList( "count-normal-punishments.types" ).stream().map( PunishmentType::valueOf ).collect( Collectors.toList() )
         );
+    }
+
+    private List<PunishmentType> getPunishmentTypes( final String str )
+    {
+        return str.equals( "*" )
+                ? Arrays.asList( PunishmentType.values().clone() )
+                : Collections.singletonList( PunishmentType.valueOf( str ) );
     }
 }

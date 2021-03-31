@@ -92,3 +92,4 @@ storage:
     punishmentactions: 'bu_punishmentactions'
     reports: 'bu_reports'
     messagequeue: 'bu_messagequeue'
+    punishmenttracks: 'bu_punishmenttracks'

@@ -16,30 +16,26 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments;
+package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
 import java.util.UUID;
 
-public interface TracksDao
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PunishmentTrackInfo
 {
 
-    static boolean useServerPunishments()
-    {
-        try
-        {
-            return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
-        }
-        catch ( Exception e )
-        {
-            return true;
-        }
-    }
+    private UUID uuid;
+    private String trackId;
+    private String server;
+    private String executedBy;
+    private Date date;
+    private boolean active;
 
-    List<PunishmentTrackInfo> getTrackInfos(  UUID uuid, String trackId, String server );
-
-    void updateTrack( PunishmentTrackInfo punishmentTrackInfo );
 }
