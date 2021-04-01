@@ -78,22 +78,20 @@ public class ChatAnnouncement extends Announcement
         {
             final IConfiguration config = user.getLanguageConfig();
 
-            final List<String> messageList;
             if ( languagePath != null )
             {
-                messageList = config.getStringList( languagePath );
+                user.sendLangMessage( languagePath );
             }
             else
             {
-                messageList = messages;
-            }
-            for ( String message : messageList )
-            {
-                if ( prefix )
+                for ( String message : messages )
                 {
-                    message = config.getString( "prefix" ) + message;
+                    if ( prefix )
+                    {
+                        message = config.getString( "prefix" ) + message;
+                    }
+                    user.sendMessage( Utils.format( user, message ) );
                 }
-                user.sendMessage( Utils.format( user, message ) );
             }
         } );
     }
