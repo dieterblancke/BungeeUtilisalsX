@@ -138,7 +138,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract IBuXApi createBuXApi();
 
-    protected abstract CommandManager getCommandManager();
+    public abstract CommandManager getCommandManager();
 
     protected void loadPlaceHolders() {
         final XMLPlaceHolders xmlPlaceHolders = new XMLPlaceHolders();

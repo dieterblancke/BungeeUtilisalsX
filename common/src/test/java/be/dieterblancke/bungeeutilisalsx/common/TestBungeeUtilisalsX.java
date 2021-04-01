@@ -25,7 +25,7 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected CommandManager getCommandManager()
+    public CommandManager getCommandManager()
     {
         throw new UnsupportedOperationException();
     }

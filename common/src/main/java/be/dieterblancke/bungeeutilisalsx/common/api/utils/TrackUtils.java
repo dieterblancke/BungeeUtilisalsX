@@ -1,15 +1,16 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.TrackAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 import java.util.function.Consumer;
 
 public class TrackUtils
@@ -57,22 +58,19 @@ public class TrackUtils
         }
     }
 
-    public static void executeTrackActionFor( final UUID uuid, final String executedBy, final TrackAction trackAction )
+    public static void executeTrackActionFor( final User user,
+                                              final UserStorage userStorage,
+                                              final String reason,
+                                              final String trackAction )
     {
-        // TODO: execute punishment for the specific trackAction
-    }
+        final String replacedTrackAction = trackAction
+                .replace( "{user}", userStorage.getUserName() )
+                .replace( "{reason}", reason );
+        final String[] args = replacedTrackAction.split( " " );
+        final String commandName = args[0];
+        final List<String> arguments = Lists.newArrayList( Arrays.copyOfRange( args, 1, args.length ) );
 
-    public static void addTrackPunishment( final UUID uuid, final PunishmentInfo punishmentInfo )
-    {
-        // TODO: create test for this
-
-        for ( PunishmentTrack punishmentTrack : ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTracks() )
-        {
-            if ( punishmentTrack.getCountNormalPunishments().isEnabled()
-                    && punishmentTrack.getCountNormalPunishments().getTypes().contains( punishmentInfo.getType() ) )
-            {
-                // TODO: count this to track if the option is enabled (so call addToTrack)
-            }
-        }
+        BuX.getInstance().getCommandManager().findCommandByName( commandName )
+                .ifPresent( command -> command.getCommand().onExecute( user, arguments, new ArrayList<>() ) );
     }
 }

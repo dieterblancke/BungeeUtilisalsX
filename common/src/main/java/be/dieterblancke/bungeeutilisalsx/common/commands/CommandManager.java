@@ -44,7 +44,9 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class CommandManager
 {
@@ -252,5 +254,14 @@ public abstract class CommandManager
             command.unload();
         }
         commands.clear();
+    }
+
+    public Optional<Command> findCommandByName( final String name )
+    {
+        return this.commands.stream()
+                .filter( command ->
+                        command.getName().equalsIgnoreCase( name )
+                                || Arrays.stream( command.getAliases() ).anyMatch( alias -> alias.equalsIgnoreCase( name ) ) )
+                .findFirst();
     }
 }

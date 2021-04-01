@@ -1,9 +1,6 @@
 tracks:
   # The identifier of a track is the REASON of punishments on which it should filter.
   - identifier: 'swearing'
-    count-normal-punishments:
-      enabled: true
-      types: '*'
     can-run-again: true
     limit-reached-action:
       type: 'BAN'
@@ -11,19 +8,10 @@ tracks:
     track:
       # After how many times should this part of the track execute
       - count: 1
-        action:
-          # What type of punishment should be executed?
-          type: 'MUTE'
-          duration: '5d'
+        action: 'tempmute {user} 5d {reason}'
       # After how many times should this part of the track execute
       - count: 2
-        action:
-          # What type of punishment should be executed?
-          type: 'BAN'
-          duration: '3d'
+        action: 'tempban {user} 5d {reason}'
       # After how many times should this part of the track execute
       - count: 3
-        action:
-          # What type of punishment should be executed?
-          type: 'BAN'
-          duration: '1mo'
+        action: 'ban {user} {reason}'

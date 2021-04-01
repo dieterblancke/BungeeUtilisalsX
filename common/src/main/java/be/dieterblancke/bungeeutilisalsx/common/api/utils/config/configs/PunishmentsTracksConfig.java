@@ -19,9 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.CountNormalPunishments;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack.TrackAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import com.dbsoftwares.configuration.api.ISection;
@@ -56,27 +54,21 @@ public class PunishmentsTracksConfig extends Config
         for ( ISection section : config.getSectionList( "tracks" ) )
         {
             final String identifier = section.getString( "identifier" );
-            final CountNormalPunishments countNormalPunishments = this.getCountNormalPunishmentsSettings( section );
             final boolean canRunAgain = section.getBoolean( "can-run-again" );
-            final TrackAction limitReachedAction = new TrackAction(
-                    PunishmentType.valueOf( section.getString( "limit-reached-action.type" ).toUpperCase() ),
-                    section.getString( "limit-reached-action.duration" )
-            );
+            final String limitReachedAction = section.getString( "limit-reached-action" );
             final List<PunishmentTrackRecord> records = section.getSectionList( "track" )
                     .stream()
                     .map( track ->
                     {
                         final int count = track.getInteger( "count" );
-                        final PunishmentType punishmentType = PunishmentType.valueOf( track.getString( "action.type" ).toUpperCase() );
-                        final String duration = track.getString( "action.duration" );
+                        final String action = track.getString( "action" );
 
-                        return new PunishmentTrackRecord( count, new TrackAction( punishmentType, duration ) );
+                        return new PunishmentTrackRecord( count, action );
                     } )
                     .collect( Collectors.toList() );
 
             this.punishmentTracks.add( new PunishmentTrack(
                     identifier,
-                    countNormalPunishments,
                     canRunAgain,
                     limitReachedAction,
                     records
@@ -91,16 +83,6 @@ public class PunishmentsTracksConfig extends Config
                 .filter( track -> track.getIdentifier().equalsIgnoreCase( reason ) )
                 .findFirst()
                 .orElse( null );
-    }
-
-    private CountNormalPunishments getCountNormalPunishmentsSettings( final ISection section )
-    {
-        return new CountNormalPunishments(
-                section.getBoolean( "count-normal-punishments.enabled" ),
-                section.isString( "count-normal-punishments.types" )
-                        ? this.getPunishmentTypes( section.getString( "count-normal-punishments.types" ) )
-                        : section.getStringList( "count-normal-punishments.types" ).stream().map( PunishmentType::valueOf ).collect( Collectors.toList() )
-        );
     }
 
     private List<PunishmentType> getPunishmentTypes( final String str )

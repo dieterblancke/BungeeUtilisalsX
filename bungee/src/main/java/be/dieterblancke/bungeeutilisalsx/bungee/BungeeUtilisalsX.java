@@ -74,7 +74,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected CommandManager getCommandManager()
+    public CommandManager getCommandManager()
     {
         return commandManager;
     }

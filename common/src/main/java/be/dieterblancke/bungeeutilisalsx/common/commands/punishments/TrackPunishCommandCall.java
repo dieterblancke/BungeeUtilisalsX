@@ -86,7 +86,12 @@ public class TrackPunishCommandCall extends PunishmentCommand
         TrackUtils.executeStageIfNeeded(
                 track,
                 trackInfos,
-                ( trackRecord ) -> TrackUtils.executeTrackActionFor( storage.getUuid(), user.getName(), trackRecord.getAction() )
+                ( trackRecord ) -> TrackUtils.executeTrackActionFor(
+                        user,
+                        storage,
+                        track.getIdentifier(),
+                        trackRecord.getAction()
+                )
         );
         // TODO: send executed message to the user and broadcast to all staff!
     }

@@ -111,7 +111,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected CommandManager getCommandManager()
+    public CommandManager getCommandManager()
     {
         throw new UnsupportedOperationException( "The CommandManager is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
