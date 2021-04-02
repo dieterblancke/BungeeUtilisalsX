@@ -42,6 +42,11 @@ public class MuteCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.mute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
+        if ( punishmentArgs.isSelfPunishment() )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );

@@ -42,6 +42,11 @@ public class IPMuteCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.ipmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
+        if ( punishmentArgs.isSelfPunishment() )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );

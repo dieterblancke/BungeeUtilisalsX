@@ -354,6 +354,11 @@ public abstract class PunishmentCommand implements CommandCall
             }
             return false;
         }
+
+        public boolean isSelfPunishment() {
+            return player.equalsIgnoreCase( executor.getName() )
+                    && ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-self-punishments" );
+        }
     }
 
     @Data

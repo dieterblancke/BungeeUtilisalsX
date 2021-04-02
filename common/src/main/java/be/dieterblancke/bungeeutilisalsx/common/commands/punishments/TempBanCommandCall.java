@@ -42,6 +42,11 @@ public class TempBanCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.tempban.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
+        if ( punishmentArgs.isSelfPunishment() )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );

@@ -43,6 +43,11 @@ public class TrackPunishCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.track.usage" + ( useServerPunishments() ? "-server" : "" ) );
             return;
         }
+        if ( punishmentArgs.isSelfPunishment() )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         if ( !punishmentArgs.hasJoined() )
         {
             user.sendLangMessage( "never-joined" );

@@ -413,6 +413,7 @@ friends:
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
+  self-punishment: '&fYou cannot punish yourself!'
 
   ban:
     usage: '&fPlease use &a/ban (user) (reason)&f!'

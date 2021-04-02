@@ -28,6 +28,9 @@ templates:
   # How should template reasons be detected? By default if a reason starts with @, it will be seen as a template reason.
   detect: '@'
 
+# Set this to false to disable people to be able to punish themselves.
+allow-self-punishments: true
+
 blocked-mute-commands:
   - msg
   - r

@@ -44,6 +44,11 @@ public class WarnCommandCall implements CommandCall
             user.sendLangMessage( "punishments.warn.usage" );
             return;
         }
+        if ( args.get( 0 ).equalsIgnoreCase( user.getName() ) )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
 
         final Optional<User> optionalUser = BuX.getApi().getUser( args.get( 0 ) );
