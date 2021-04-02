@@ -105,7 +105,7 @@ public class MuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.mute.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.mute.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.mute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

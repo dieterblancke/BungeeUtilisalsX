@@ -44,7 +44,9 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public abstract class CommandManager
 {
@@ -102,7 +104,7 @@ public abstract class CommandManager
 
     protected void registerPunishmentCommands()
     {
-        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
+        final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
 
         if ( !config.getBoolean( "enabled" ) )
         {
@@ -138,6 +140,7 @@ public abstract class CommandManager
         registerPunishmentCommand( "punishmentdata", "commands.punishmentdata", new PunishmentDataCommandCall(), null );
         registerPunishmentCommand( "checkip", "commands.checkip", new CheckIpCommandCall(), null );
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
+        registerPunishmentCommand( "trackpunish", "commands.trackpunish", new TrackPunishCommandCall(), parameters );
     }
 
     protected void registerSlashServerCommands()
@@ -192,7 +195,7 @@ public abstract class CommandManager
 
     protected void registerPunishmentCommand( final String name, final String section, final CommandCall call, final List<String> parameters )
     {
-        final IConfiguration config = ConfigFiles.PUNISHMENTS.getConfig();
+        final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
 
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( name )
@@ -252,5 +255,14 @@ public abstract class CommandManager
             command.unload();
         }
         commands.clear();
+    }
+
+    public Optional<Command> findCommandByName( final String name )
+    {
+        return this.commands.stream()
+                .filter( command ->
+                        command.getName().equalsIgnoreCase( name )
+                                || Arrays.stream( command.getAliases() ).anyMatch( alias -> alias.equalsIgnoreCase( name ) ) )
+                .findFirst();
     }
 }

@@ -89,7 +89,7 @@ public class IPBanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.ipban.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.ipban.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ipban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

@@ -74,7 +74,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected CommandManager getCommandManager()
+    public CommandManager getCommandManager()
     {
         return commandManager;
     }
@@ -108,7 +108,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new UserConnectionListener() );
         ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new PluginMessageListener() );
 
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
             ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new PunishmentListener() );
         }
@@ -161,7 +161,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 
         metrics.addCustomChart( new Metrics.SimplePie(
                 "punishments",
-                () -> ConfigFiles.PUNISHMENTS.isEnabled() ? "enabled" : "disabled"
+                () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new Metrics.SimplePie(
                 "motds",

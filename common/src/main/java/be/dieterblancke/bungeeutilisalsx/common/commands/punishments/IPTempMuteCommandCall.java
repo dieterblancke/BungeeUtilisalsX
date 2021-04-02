@@ -110,7 +110,7 @@ public class IPTempMuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.iptempmute.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.iptempmute.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.iptempmute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

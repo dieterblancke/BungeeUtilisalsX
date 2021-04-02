@@ -53,7 +53,7 @@ public class MuteCheckExecutor implements EventExecutor
             return;
         }
 
-        if ( ConfigFiles.PUNISHMENTS.getConfig().getStringList( "blocked-mute-commands" )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getStringList( "blocked-mute-commands" )
                 .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
         {
 

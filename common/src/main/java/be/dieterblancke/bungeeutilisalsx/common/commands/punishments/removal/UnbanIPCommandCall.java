@@ -87,7 +87,7 @@ public class UnbanIPCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unbanip.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.unbanip.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unbanip.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

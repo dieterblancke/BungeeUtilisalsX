@@ -25,9 +25,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao.punishment.MongoBansDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao.punishment.MongoKickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao.punishment.MongoMutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao.punishment.MongoTracksDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Maps;
 import com.mongodb.client.MongoCollection;
@@ -48,12 +50,14 @@ public class MongoPunishmentDao implements PunishmentDao
     private final BansDao bansDao;
     private final MutesDao mutesDao;
     private final KickAndWarnDao kickAndWarnDao;
+    private final TracksDao tracksDao;
 
     public MongoPunishmentDao()
     {
         this.bansDao = new MongoBansDao();
         this.mutesDao = new MongoMutesDao();
         this.kickAndWarnDao = new MongoKickAndWarnDao();
+        this.tracksDao = new MongoTracksDao();
     }
 
     @Override
@@ -72,6 +76,12 @@ public class MongoPunishmentDao implements PunishmentDao
     public KickAndWarnDao getKickAndWarnDao()
     {
         return kickAndWarnDao;
+    }
+
+    @Override
+    public TracksDao getTracksDao()
+    {
+        return tracksDao;
     }
 
     @Override

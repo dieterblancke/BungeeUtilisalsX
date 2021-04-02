@@ -15,7 +15,7 @@ import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
-import be.dieterblancke.bungeeutilisalsx.velocity.command.BungeeCommandManager;
+import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
@@ -35,7 +35,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final ProxyOperationsApi proxyOperationsApi = new VelocityOperationsApi();
-    private final CommandManager commandManager = new BungeeCommandManager();
+    private final CommandManager commandManager = new VelocityCommandManager();
     private final IPluginDescription pluginDescription = new VelocityPluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
 
@@ -63,7 +63,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected CommandManager getCommandManager()
+    public CommandManager getCommandManager()
     {
         return commandManager;
     }
@@ -103,7 +103,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 Bootstrap.getInstance(), new PluginMessageListener()
         );
 
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
             Bootstrap.getInstance().getProxyServer().getEventManager().register(
                     Bootstrap.getInstance(), new PunishmentListener()

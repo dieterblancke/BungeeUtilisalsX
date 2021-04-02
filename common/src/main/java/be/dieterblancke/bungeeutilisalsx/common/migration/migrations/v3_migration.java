@@ -4,12 +4,12 @@ import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 
 import java.sql.Connection;
 
-public class v2_migration extends FileMigration
+public class v3_migration extends FileMigration
 {
 
-    public v2_migration()
+    public v3_migration()
     {
-        super( "migrations/v2_add_server_column.sql" );
+        super( "migrations/v3_add_punishment_tracks.sql" );
     }
 
     @Override

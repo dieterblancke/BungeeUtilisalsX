@@ -90,7 +90,7 @@ public class UnmuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unmute.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.unmute.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

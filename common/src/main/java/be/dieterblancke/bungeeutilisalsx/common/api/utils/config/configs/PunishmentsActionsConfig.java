@@ -31,13 +31,13 @@ import lombok.Getter;
 import java.util.List;
 import java.util.Map;
 
-public class PunishmentsConfig extends Config
+public class PunishmentsActionsConfig extends Config
 {
 
     @Getter
     private final Map<PunishmentType, List<PunishmentAction>> punishmentActions = Maps.newHashMap();
 
-    public PunishmentsConfig( String location )
+    public PunishmentsActionsConfig( String location )
     {
         super( location );
     }

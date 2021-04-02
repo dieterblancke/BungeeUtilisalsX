@@ -90,7 +90,7 @@ public class BanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.ban.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.ban.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

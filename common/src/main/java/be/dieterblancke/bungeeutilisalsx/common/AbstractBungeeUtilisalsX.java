@@ -138,7 +138,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract IBuXApi createBuXApi();
 
-    protected abstract CommandManager getCommandManager();
+    public abstract CommandManager getCommandManager();
 
     protected void loadPlaceHolders() {
         final XMLPlaceHolders xmlPlaceHolders = new XMLPlaceHolders();
@@ -172,7 +172,7 @@ public abstract class AbstractBungeeUtilisalsX
 
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
 
-        if ( ConfigFiles.PUNISHMENTS.isEnabled() )
+        if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
             this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
 

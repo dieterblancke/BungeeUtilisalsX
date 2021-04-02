@@ -110,7 +110,7 @@ public class TempMuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.tempmute.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.tempmute.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempmute.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

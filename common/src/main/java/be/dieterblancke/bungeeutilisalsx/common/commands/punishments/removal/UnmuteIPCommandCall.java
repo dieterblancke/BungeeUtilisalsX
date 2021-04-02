@@ -90,7 +90,7 @@ public class UnmuteIPCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unmuteip.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.unmuteip.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmuteip.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }

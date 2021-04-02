@@ -18,21 +18,24 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import com.dbsoftwares.configuration.api.IConfiguration;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Date;
+import java.util.UUID;
 
-public interface IPunishmentHelper
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PunishmentTrackInfo
 {
 
-    boolean isTemplateReason( final String reason );
-
-    List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template );
-
-    String getDateFormat();
-
-    String setPlaceHolders( String line, PunishmentInfo info );
-
-    List<String> getPlaceHolders( PunishmentInfo info );
+    private UUID uuid;
+    private String trackId;
+    private String server;
+    private String executedBy;
+    private Date date;
+    private boolean active;
 
 }

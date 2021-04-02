@@ -48,7 +48,7 @@ public abstract class PunishmentCommand implements CommandCall
     // Utility methods
     protected boolean useServerPunishments()
     {
-        return ConfigFiles.PUNISHMENTS.getConfig().getBoolean( "per-server-punishments" );
+        return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
     }
 
     protected Dao dao()

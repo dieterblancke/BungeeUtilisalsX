@@ -26,9 +26,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLBansDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLMutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLTracksDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -45,12 +47,14 @@ public class SQLPunishmentDao implements PunishmentDao
     private final BansDao bansDao;
     private final MutesDao mutesDao;
     private final KickAndWarnDao kickAndWarnDao;
+    private final TracksDao tracksDao;
 
     public SQLPunishmentDao()
     {
         this.bansDao = new SQLBansDao();
         this.mutesDao = new SQLMutesDao();
         this.kickAndWarnDao = new SQLKickAndWarnDao();
+        this.tracksDao = new SQLTracksDao();
     }
 
     @Override
@@ -69,6 +73,12 @@ public class SQLPunishmentDao implements PunishmentDao
     public KickAndWarnDao getKickAndWarnDao()
     {
         return kickAndWarnDao;
+    }
+
+    @Override
+    public TracksDao getTracksDao()
+    {
+        return tracksDao;
     }
 
     @Override

@@ -5,7 +5,7 @@ debug: false
 scripting: false
 
 bridging:
-  enabled: true
+  enabled: false
   # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
   name: 'bungee'
 
@@ -92,3 +92,4 @@ storage:
     punishmentactions: 'bu_punishmentactions'
     reports: 'bu_reports'
     messagequeue: 'bu_messagequeue'
+    punishmenttracks: 'bu_punishmenttracks'

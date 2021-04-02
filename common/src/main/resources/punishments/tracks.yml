@@ -1,0 +1,14 @@
+tracks:
+  # The identifier of a track is the REASON of punishments on which it should filter.
+  - identifier: 'swearing'
+    can-run-again: true
+    track:
+      # After how many times should this part of the track execute
+      - count: 1
+        action: 'tempmute {user} 5d {reason}'
+      # After how many times should this part of the track execute
+      - count: 2
+        action: 'tempban {user} 5d {reason}'
+      # After how many times should this part of the track execute
+      - count: 3
+        action: 'ban {user} {reason}'

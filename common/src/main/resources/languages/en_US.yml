@@ -742,6 +742,15 @@ punishments:
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
 
+  track:
+    usage: '&fPlease use &a/trackpunish (user) (reason)&f!'
+    usage-server: '&fPlease use &a/trackpunish (user) (server) (reason)&f!'
+    track-not-found: '&fCould not find this track!'
+    track-already-finished: '&fThis track is already finished and cannot be ran again!'
+    executed: '&fYou have track punished &b{user} &ffor the track &b{track}&f (&b{trackCount} / {trackMax}&f)'
+    broadcast:
+      - '&b{user} &fhas been punished for the track &b{track}&f by &b{executed_by} &f(&b{trackCount} / {trackMax}&f)'
+
 hubbalancer:
   no-lobbies-found: '&eCould not find any lobbies, perhaps they are offline?'
   no-fallback:

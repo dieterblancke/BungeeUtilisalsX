@@ -99,7 +99,7 @@ public class WarnCommandCall implements CommandCall
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.warn.broadcast",
-                        ConfigFiles.PUNISHMENTS.getConfig().getString( "commands.warn.broadcast" ),
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.warn.broadcast" ),
                         executor.getPlaceHolders( info ).toArray( new Object[]{} )
                 );
             }
