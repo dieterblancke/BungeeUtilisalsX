@@ -55,7 +55,6 @@ public class PunishmentsTracksConfig extends Config
         {
             final String identifier = section.getString( "identifier" );
             final boolean canRunAgain = section.getBoolean( "can-run-again" );
-            final String limitReachedAction = section.getString( "limit-reached-action" );
             final List<PunishmentTrackRecord> records = section.getSectionList( "track" )
                     .stream()
                     .map( track ->
@@ -70,7 +69,6 @@ public class PunishmentsTracksConfig extends Config
             this.punishmentTracks.add( new PunishmentTrack(
                     identifier,
                     canRunAgain,
-                    limitReachedAction,
                     records
             ) );
         }

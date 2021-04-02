@@ -30,7 +30,6 @@ public class PunishmentTrack
 
     private final String identifier;
     private final boolean canRunAgain;
-    private final String limitReachedAction;
     private final List<PunishmentTrackRecord> records;
 
     @Data

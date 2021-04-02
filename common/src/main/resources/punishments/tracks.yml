@@ -2,9 +2,6 @@ tracks:
   # The identifier of a track is the REASON of punishments on which it should filter.
   - identifier: 'swearing'
     can-run-again: true
-    limit-reached-action:
-      type: 'BAN'
-      duration: 'permanent'
     track:
       # After how many times should this part of the track execute
       - count: 1

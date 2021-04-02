@@ -140,6 +140,7 @@ public abstract class CommandManager
         registerPunishmentCommand( "punishmentdata", "commands.punishmentdata", new PunishmentDataCommandCall(), null );
         registerPunishmentCommand( "checkip", "commands.checkip", new CheckIpCommandCall(), null );
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
+        registerPunishmentCommand( "trackpunish", "commands.trackpunish", new TrackPunishCommandCall(), parameters );
     }
 
     protected void registerSlashServerCommands()

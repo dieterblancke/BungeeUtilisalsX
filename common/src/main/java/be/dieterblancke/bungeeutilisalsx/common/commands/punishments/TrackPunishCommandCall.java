@@ -68,20 +68,16 @@ public class TrackPunishCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.track.track-already-finished" );
             return;
         }
-        final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-
-        dao().getPunishmentDao().getTracksDao().addToTrack( new PunishmentTrackInfo(
+        final PunishmentTrackInfo trackInfo = new PunishmentTrackInfo(
                 storage.getUuid(),
                 track.getIdentifier(),
                 punishmentArgs.getServerOrAll(),
                 user.getName(),
                 new Date(),
                 true
-        ) );
-
-        dao().getPunishmentDao().getTracksDao().resetTrack(
-                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
         );
+        trackInfos.add( trackInfo );
+        dao().getPunishmentDao().getTracksDao().addToTrack( trackInfo );
 
         TrackUtils.executeStageIfNeeded(
                 track,
@@ -93,6 +89,41 @@ public class TrackPunishCommandCall extends PunishmentCommand
                         trackRecord.getAction()
                 )
         );
-        // TODO: send executed message to the user and broadcast to all staff!
+
+        final Object[] messagePlaceholders = new Object[]{
+                "{user}", storage.getUserName(),
+                "{track}", track.getIdentifier(),
+                "{trackCount}", trackInfos.size(),
+                "{trackMax}", TrackUtils.getMaxRunsForTrack( track ),
+                "{executed_by}", user.getName()
+        };
+
+        user.sendLangMessage( "punishments.track.executed", messagePlaceholders );
+
+        if ( !parameters.contains( "-s" ) )
+        {
+            if ( parameters.contains( "-nbp" ) )
+            {
+                BuX.getApi().langBroadcast(
+                        "punishments.track.broadcast",
+                        messagePlaceholders
+                );
+            }
+            else
+            {
+                BuX.getApi().langPermissionBroadcast(
+                        "punishments.track.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.trackpunish.broadcast" ),
+                        messagePlaceholders
+                );
+            }
+        }
+
+        if ( TrackUtils.isFinished( track, trackInfos ) && track.isCanRunAgain() )
+        {
+            dao().getPunishmentDao().getTracksDao().resetTrack(
+                    storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+            );
+        }
     }
 }

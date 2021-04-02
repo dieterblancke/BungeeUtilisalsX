@@ -21,19 +21,23 @@ public class TrackUtils
         // empty constructor
     }
 
+    public static int getMaxRunsForTrack( final PunishmentTrack track )
+    {
+        final List<PunishmentTrackRecord> records = new ArrayList<>( track.getRecords() );
+
+        records.sort( ( o1, o2 ) -> Integer.compare( o2.getCount(), o1.getCount() ) );
+
+        return records.get( 0 ).getCount();
+    }
+
     public static boolean isFinished( final PunishmentTrack track, final List<PunishmentTrackInfo> trackInfos )
     {
         if ( track.getRecords().isEmpty() )
         {
             return true;
         }
-        final int amountExecuted = trackInfos.size();
-        final List<PunishmentTrackRecord> records = new ArrayList<>( track.getRecords() );
 
-        records.sort( ( o1, o2 ) -> Integer.compare( o2.getCount(), o1.getCount() ) );
-
-        final int maxRuns = records.get( 0 ).getCount();
-        return amountExecuted >= maxRuns;
+        return trackInfos.size() >= getMaxRunsForTrack( track );
     }
 
     public static void executeStageIfNeeded( final PunishmentTrack track,
