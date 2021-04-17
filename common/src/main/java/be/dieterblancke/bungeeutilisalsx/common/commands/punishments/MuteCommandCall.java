@@ -32,22 +32,14 @@ import java.util.List;
 public class MuteCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public MuteCommandCall( )
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+        super( "punishments.mute", false );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.mute.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         if ( dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
@@ -111,15 +103,6 @@ public class MuteCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.MUTE,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                null
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.MUTE );
     }
 }

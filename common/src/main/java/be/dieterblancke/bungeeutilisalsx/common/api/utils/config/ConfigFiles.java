@@ -18,7 +18,6 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.*;
 import com.google.common.collect.Lists;
 

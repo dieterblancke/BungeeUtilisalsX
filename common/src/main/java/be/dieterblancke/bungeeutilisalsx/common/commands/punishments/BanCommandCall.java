@@ -32,22 +32,14 @@ import java.util.List;
 public class BanCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public BanCommandCall()
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+        super( "punishments.ban", false );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.ban.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
@@ -74,7 +66,6 @@ public class BanCommandCall extends PunishmentCommand
 
         // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
         super.attemptKick( storage, "punishments.ban.kick", info );
-
         user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )
@@ -96,15 +87,6 @@ public class BanCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.BAN,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                null
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.BAN );
     }
 }

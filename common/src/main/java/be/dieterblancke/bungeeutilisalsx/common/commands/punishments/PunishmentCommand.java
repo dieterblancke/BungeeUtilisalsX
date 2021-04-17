@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -45,7 +46,46 @@ import java.util.Optional;
 public abstract class PunishmentCommand implements CommandCall
 {
 
-    // Utility methods
+    private final String messagesPath;
+    private final boolean withTime;
+
+    public PunishmentCommand( final String messagesPath, final boolean withTime )
+    {
+        this.messagesPath = messagesPath;
+        this.withTime = withTime;
+    }
+
+    public abstract void onPunishmentExecute( User user, List<String> args, List<String> parameters, PunishmentArgs punishmentArgs );
+
+    @Override
+    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    {
+        final PunishmentArgs punishmentArgs = loadArguments( user, args, withTime );
+
+        if ( punishmentArgs == null )
+        {
+            user.sendLangMessage( messagesPath + ".usage" + ( useServerPunishments() ? "-server" : "" ) );
+            return;
+        }
+        if ( punishmentArgs.isSelfPunishment() )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
+        if ( !punishmentArgs.hasJoined() )
+        {
+            user.sendLangMessage( "never-joined" );
+            return;
+        }
+        if ( punishmentArgs.isHigherPunishment() )
+        {
+            user.sendLangMessage( "punishments.higher-punishment" );
+            return;
+        }
+
+        this.onPunishmentExecute( user, args, parameters, punishmentArgs );
+    }
+
     protected boolean useServerPunishments()
     {
         return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
@@ -353,6 +393,33 @@ public abstract class PunishmentCommand implements CommandCall
                 return true;
             }
             return false;
+        }
+
+        public void launchPunishmentFinishEvent( final PunishmentType type )
+        {
+            final UserPunishmentFinishEvent event = new UserPunishmentFinishEvent(
+                    type,
+                    executor,
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    storage.getIp(),
+                    reason,
+                    this.getServerOrAll(),
+                    time
+            );
+
+            BuX.getApi().getEventLoader().launchEvent( event );
+        }
+
+        public boolean isSelfPunishment()
+        {
+            return player.equalsIgnoreCase( executor.getName() )
+                    && ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-self-punishments" );
+        }
+
+        public boolean isHigherPunishment()
+        {
+            return BuX.getApi().getPunishmentExecutor().isHigherPunishment( executor.getUuid(), this.getStorage().getUuid() );
         }
     }
 

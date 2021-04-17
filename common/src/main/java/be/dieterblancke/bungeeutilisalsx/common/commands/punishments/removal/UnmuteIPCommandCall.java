@@ -32,6 +32,17 @@ import java.util.List;
 public class UnmuteIPCommandCall extends PunishmentCommand
 {
 
+    public UnmuteIPCommandCall()
+    {
+        super( null, false );
+    }
+
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
+        // do nothing
+    }
+
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {

@@ -44,6 +44,11 @@ public class WarnCommandCall implements CommandCall
             user.sendLangMessage( "punishments.warn.usage" );
             return;
         }
+        if ( args.get( 0 ).equalsIgnoreCase( user.getName() ) )
+        {
+            user.sendLangMessage( "punishments.self-punishment" );
+            return;
+        }
         final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
 
         final Optional<User> optionalUser = BuX.getApi().getUser( args.get( 0 ) );
@@ -54,6 +59,12 @@ public class WarnCommandCall implements CommandCall
         }
         final User target = optionalUser.get();
         final UserStorage storage = target.getStorage();
+
+        if ( BuX.getApi().getPunishmentExecutor().isHigherPunishment( user.getUuid(), storage.getUuid() ) )
+        {
+            user.sendLangMessage( "punishments.higher-punishment" );
+            return;
+        }
 
         final UserPunishEvent event = new UserPunishEvent( PunishmentType.WARN, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );

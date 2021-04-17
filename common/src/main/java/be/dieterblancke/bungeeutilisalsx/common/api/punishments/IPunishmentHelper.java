@@ -18,9 +18,12 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface IPunishmentHelper
 {
@@ -35,4 +38,9 @@ public interface IPunishmentHelper
 
     List<String> getPlaceHolders( PunishmentInfo info );
 
+    default boolean isHigherPunishment( UUID executor, UUID target )
+    {
+        return BuX.getInstance().getActivePermissionIntegration().hasLowerOrEqualGroup( executor, target )
+                && !ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-higher-punishments" );
+    }
 }

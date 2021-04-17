@@ -32,22 +32,14 @@ import java.util.List;
 public class IPTempBanCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public IPTempBanCommandCall()
     {
-        final PunishmentCommand.PunishmentArgs punishmentArgs = loadArguments( user, args, true );
+        super( "punishments.iptempban", true );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.iptempban.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         final long time = punishmentArgs.getTime();
@@ -102,15 +94,6 @@ public class IPTempBanCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.IPTEMPBAN,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                time
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPBAN );
     }
 }

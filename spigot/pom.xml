@@ -5,7 +5,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>1.2.1</version>
+        <version>1.2.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -42,7 +42,7 @@
         <dependency>
             <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
-            <version>1.2.1</version>
+            <version>1.2.2</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>

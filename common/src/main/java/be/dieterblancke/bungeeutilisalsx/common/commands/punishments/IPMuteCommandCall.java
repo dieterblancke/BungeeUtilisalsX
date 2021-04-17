@@ -32,22 +32,14 @@ import java.util.List;
 public class IPMuteCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public IPMuteCommandCall( )
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+        super( "punishments.ipmute", false );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.ipmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
 
@@ -110,15 +102,6 @@ public class IPMuteCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.IPMUTE,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                null
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPMUTE );
     }
 }
