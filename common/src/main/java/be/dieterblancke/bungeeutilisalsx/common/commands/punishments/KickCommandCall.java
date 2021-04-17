@@ -60,6 +60,12 @@ public class KickCommandCall implements CommandCall
         final User target = optionalUser.get();
         final UserStorage storage = target.getStorage();
 
+        if ( BuX.getApi().getPunishmentExecutor().isHigherPunishment( user.getUuid(), storage.getUuid() ) )
+        {
+            user.sendLangMessage( "punishments.higher-punishment" );
+            return;
+        }
+
         final UserPunishEvent event = new UserPunishEvent( PunishmentType.KICK, user, storage.getUuid(),
                 storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
         BuX.getApi().getEventLoader().launchEvent( event );

@@ -30,6 +30,9 @@ import be.dieterblancke.bungeeutilisalsx.common.executors.*;
 import be.dieterblancke.bungeeutilisalsx.common.library.Library;
 import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
+import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
+import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
+import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
@@ -44,6 +47,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -61,6 +65,7 @@ public abstract class AbstractBungeeUtilisalsX
     protected IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
     private JarClassLoader jarClassLoader;
+    private PermissionIntegration activePermissionIntegration;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -111,6 +116,7 @@ public abstract class AbstractBungeeUtilisalsX
 
         this.api = this.createBuXApi();
 
+        this.detectPermissionIntegration();
         this.registerLanguages();
         this.registerListeners();
         this.registerExecutors();
@@ -131,6 +137,11 @@ public abstract class AbstractBungeeUtilisalsX
         this.setupTasks();
     }
 
+    public PermissionIntegration getActivePermissionIntegration()
+    {
+        return activePermissionIntegration;
+    }
+
     protected void loadConfigs()
     {
         ConfigFiles.loadAllConfigs();
@@ -140,7 +151,8 @@ public abstract class AbstractBungeeUtilisalsX
 
     public abstract CommandManager getCommandManager();
 
-    protected void loadPlaceHolders() {
+    protected void loadPlaceHolders()
+    {
         final XMLPlaceHolders xmlPlaceHolders = new XMLPlaceHolders();
 
         xmlPlaceHolders.addXmlPlaceHolder( new CenterPlaceHolder() );
@@ -302,6 +314,23 @@ public abstract class AbstractBungeeUtilisalsX
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured while initializing the storage manager: ", e );
         }
+    }
+
+    protected void detectPermissionIntegration()
+    {
+        final List<PermissionIntegration> integrations = Lists.newArrayList(
+                new LuckPermsPermissionIntegration()
+        );
+
+        for ( PermissionIntegration integration : integrations )
+        {
+            if ( integration.isActive() )
+            {
+                activePermissionIntegration = integration;
+                return;
+            }
+        }
+        activePermissionIntegration = new DefaultPermissionIntegration();
     }
 
     public abstract ProxyOperationsApi proxyOperations();

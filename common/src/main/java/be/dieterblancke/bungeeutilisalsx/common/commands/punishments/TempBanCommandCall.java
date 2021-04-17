@@ -32,27 +32,14 @@ import java.util.List;
 public class TempBanCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public TempBanCommandCall( )
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, true );
+        super( "punishments.tempban", true );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.tempban.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( punishmentArgs.isSelfPunishment() )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         final long time = punishmentArgs.getTime();
@@ -108,16 +95,6 @@ public class TempBanCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.TEMPBAN,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                time
-        ) );
-
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPBAN );
     }
 }

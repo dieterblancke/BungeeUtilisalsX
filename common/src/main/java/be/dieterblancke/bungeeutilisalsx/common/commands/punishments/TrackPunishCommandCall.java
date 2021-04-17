@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
@@ -33,27 +32,14 @@ import java.util.List;
 public class TrackPunishCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public TrackPunishCommandCall()
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+        super( "punishments.track", false );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.track.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( punishmentArgs.isSelfPunishment() )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( User user, List<String> args, List<String> parameters, PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final PunishmentTrack track = ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTrack( reason );
         final UserStorage storage = punishmentArgs.getStorage();

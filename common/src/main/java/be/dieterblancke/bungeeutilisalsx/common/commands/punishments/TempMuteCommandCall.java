@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -32,27 +31,14 @@ import java.util.List;
 public class TempMuteCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public TempMuteCommandCall()
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, true );
+        super( "punishments.tempmute", true );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.tempmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( punishmentArgs.isSelfPunishment() )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         final long time = punishmentArgs.getTime();
@@ -121,15 +107,6 @@ public class TempMuteCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.TEMPMUTE,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                time
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPMUTE );
     }
 }

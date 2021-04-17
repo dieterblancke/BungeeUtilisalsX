@@ -49,9 +49,9 @@ public class PageUtils
     {
 
         @Getter
-        private int page;
+        private final int page;
         @Getter
-        private int maxPages;
+        private final int maxPages;
 
         public PageNotFoundException( int page, int maxPages )
         {

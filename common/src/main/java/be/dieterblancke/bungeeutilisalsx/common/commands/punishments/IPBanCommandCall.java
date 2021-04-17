@@ -32,26 +32,14 @@ import java.util.List;
 public class IPBanCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public IPBanCommandCall()
     {
-        final PunishmentCommand.PunishmentArgs punishmentArgs = loadArguments( user, args, false );
+        super( "punishments.ipban", false );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.ipban.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( punishmentArgs.isSelfPunishment() )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         if ( dao().getPunishmentDao().getBansDao().isIPBanned( storage.getIp(), punishmentArgs.getServerOrAll() ) )
@@ -78,7 +66,6 @@ public class IPBanCommandCall extends PunishmentCommand
 
         // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
         super.attemptKick( storage, "punishments.ipban.kick", info );
-
         user.sendLangMessage( "punishments.ipban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )
@@ -100,15 +87,6 @@ public class IPBanCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.IPBAN,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                null
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPBAN );
     }
 }

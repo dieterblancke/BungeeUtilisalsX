@@ -58,4 +58,12 @@ public class RanksConfig extends Config
             ranks.add( new StaffRankData( name, display, permission, priority ) );
         }
     }
+
+    public StaffRankData getRankData( final String rankName )
+    {
+        return ranks.stream()
+                .filter( rank -> rankName.equalsIgnoreCase( rank.getName() ) )
+                .findFirst()
+                .orElse( null );
+    }
 }

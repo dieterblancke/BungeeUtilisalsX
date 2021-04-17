@@ -31,6 +31,9 @@ templates:
 # Set this to false to disable people to be able to punish themselves.
 allow-self-punishments: true
 
+# Set this to false to disable people to be able to punish people with higher ranks than them (this is based on priority in ranks.yml file).
+allow-higher-punishments: false
+
 blocked-mute-commands:
   - msg
   - r

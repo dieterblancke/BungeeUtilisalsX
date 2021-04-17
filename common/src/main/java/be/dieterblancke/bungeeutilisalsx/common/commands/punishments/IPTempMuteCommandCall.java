@@ -32,27 +32,14 @@ import java.util.List;
 public class IPTempMuteCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public IPTempMuteCommandCall( )
     {
-        final PunishmentArgs punishmentArgs = loadArguments( user, args, true );
+        super( "punishments.iptempmute", true );
+    }
 
-        if ( punishmentArgs == null )
-        {
-            user.sendLangMessage( "punishments.iptempmute.usage" + ( useServerPunishments() ? "-server" : "" ) );
-            return;
-        }
-        if ( punishmentArgs.isSelfPunishment() )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        if ( !punishmentArgs.hasJoined() )
-        {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-
+    @Override
+    public void onPunishmentExecute( final User user, final List<String> args, final List<String> parameters, final PunishmentArgs punishmentArgs )
+    {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
         final long time = punishmentArgs.getTime();
@@ -121,15 +108,6 @@ public class IPTempMuteCommandCall extends PunishmentCommand
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.IPTEMPMUTE,
-                user,
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                time
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPMUTE );
     }
 }
