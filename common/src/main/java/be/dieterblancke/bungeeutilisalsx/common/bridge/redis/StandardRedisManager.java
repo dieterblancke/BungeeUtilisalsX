@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
+import be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data.RedisDataManager;
 import com.dbsoftwares.configuration.api.ISection;
 import io.lettuce.core.RedisClient;
 import io.lettuce.core.RedisURI;
@@ -9,6 +11,7 @@ import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.support.ConnectionPoolSupport;
+import lombok.Getter;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
 import java.util.concurrent.CompletableFuture;
@@ -22,6 +25,9 @@ public class StandardRedisManager implements RedisManager
     private final GenericObjectPool<StatefulRedisConnection<String, String>> pool;
     private final StatefulRedisPubSubConnection<String, String> pubSubConnection;
 
+    @Getter
+    private final IRedisDataManager dataManager;
+
     public StandardRedisManager( final ISection section )
     {
         final RedisURI redisURI = this.getRedisURI( section.getSection( "redis" ) );
@@ -33,6 +39,7 @@ public class StandardRedisManager implements RedisManager
         );
         this.pubSubConnection = redisClient.connectPubSub();
         this.pubSubConnection.addListener( new PubSubListener() );
+        this.dataManager = new RedisDataManager( this );
     }
 
     @Override
