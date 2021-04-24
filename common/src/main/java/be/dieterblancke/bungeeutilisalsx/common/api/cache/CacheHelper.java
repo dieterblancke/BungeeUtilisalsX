@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.cache;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.SimpleCacheLoader;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
@@ -62,6 +63,20 @@ public class CacheHelper
         {
             builderConsumer.accept( builder );
             return CacheHelper.register( builder.build( cacheLoader ) );
+        }
+
+        public LoadingCache<K, V> build( final Consumer<CacheBuilder<K, V>> builderConsumer, final SimpleCacheLoader<K, V> cacheLoader )
+        {
+            builderConsumer.accept( builder );
+
+            return build( builderConsumer, new CacheLoader<K, V>()
+            {
+                @Override
+                public V load( K k ) throws Exception
+                {
+                    return cacheLoader.load( k );
+                }
+            } );
         }
     }
 }

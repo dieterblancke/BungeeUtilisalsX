@@ -19,6 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
@@ -40,12 +41,26 @@ public class UserExecutor implements EventExecutor
     public void onLoad( final UserLoadEvent event )
     {
         event.getApi().getUsers().add( event.getUser() );
+
+        if ( BuX.getApi().getBridgeManager().useBridging() )
+        {
+            final IRedisDataManager redisDataManager = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager();
+
+            redisDataManager.loadRedisUser( event.getUser() );
+        }
     }
 
     @Event
     public void onUnload( final UserUnloadEvent event )
     {
         event.getApi().getUsers().remove( event.getUser() );
+
+        if ( BuX.getApi().getBridgeManager().useBridging() )
+        {
+            final IRedisDataManager redisDataManager = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager();
+
+            redisDataManager.unloadRedisUser( event.getUser() );
+        }
     }
 
     @Event
