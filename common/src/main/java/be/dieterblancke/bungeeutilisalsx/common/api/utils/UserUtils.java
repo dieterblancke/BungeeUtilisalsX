@@ -1,24 +1,22 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
 public class UserUtils
 {
 
     public static long getOnlinePlayersOnDomain( final String domain )
     {
-        int amount = 0;
+        final long amount;
 
-        for ( User user : BuX.getApi().getUsers() )
+        if ( BuX.getApi().getBridgeManager().useBridging() )
         {
-            if ( user.getJoinedHost().equalsIgnoreCase( domain ) )
-            {
-                amount++;
-            }
+            amount = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager().getAmountOfOnlineUsersOnDomain( domain );
         }
-        // TODO: find a solution to reliably get online players on domain on other redis servers
-        // preferably use a hset (similar to ProxySync) and use ProxySync to detect if a player needs to be cleaned.
+        else
+        {
+            amount = BuX.getApi().getUsers().stream().filter( user -> user.getJoinedHost().equalsIgnoreCase( domain ) ).count();
+        }
 
         return amount;
     }

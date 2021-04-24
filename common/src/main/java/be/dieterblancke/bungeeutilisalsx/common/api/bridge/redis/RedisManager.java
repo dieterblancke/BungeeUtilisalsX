@@ -13,6 +13,8 @@ import java.util.function.Function;
 public interface RedisManager
 {
 
+    IRedisDataManager getDataManager();
+
     void execute( Consumer<RedisClusterCommands<String, String>> consumer );
 
     <R> R execute( Function<RedisClusterCommands<String, String>, R> function );
