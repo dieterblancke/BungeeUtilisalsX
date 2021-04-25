@@ -65,6 +65,12 @@ public class FriendReplySubCommandCall implements CommandCall
                     return;
                 }
 
+                if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
+                {
+                    user.sendLangMessage( "friends.reply.ignored" );
+                    return;
+                }
+
                 // only needs to be set for target, as the current user (sender) still has this target as last user
                 target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
 

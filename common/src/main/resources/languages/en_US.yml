@@ -372,6 +372,7 @@ friends:
     usage: '&ePlease use &b/friends msg (name) (message)&e!'
     not-friend: '&b{user} &eis not in your friend list!'
     disallowed: '&eThis user does not want to receive any messages!'
+    ignored: '&eYou cannot send a message to this user!'
 
     format:
       send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
@@ -381,6 +382,7 @@ friends:
     no-target: '&eThere is currently nobody to reply to!'
     not-friend: '&b{user} &eis not in your friend list anymore!'
     disallowed: '&eThis user does not want to receive any messages!'
+    ignored: '&eYou cannot send a message to this user!'
 
     format:
       send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'

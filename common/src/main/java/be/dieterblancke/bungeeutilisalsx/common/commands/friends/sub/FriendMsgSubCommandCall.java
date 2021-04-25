@@ -61,9 +61,14 @@ public class FriendMsgSubCommandCall implements CommandCall
                     return;
                 }
 
+                if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
+                {
+                    user.sendLangMessage( "friends.msg.ignored" );
+                    return;
+                }
+
                 user.getStorage().setData( "FRIEND_MSG_LAST_USER", target.getName() );
                 target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
-
 
                 target.sendLangMessage(
                         "friends.msg.format.receive",
