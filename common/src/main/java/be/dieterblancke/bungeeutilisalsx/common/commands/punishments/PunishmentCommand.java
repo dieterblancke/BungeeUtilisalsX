@@ -239,29 +239,12 @@ public abstract class PunishmentCommand implements CommandCall
 
     private void bridgedKick( final UserStorage storage, final String path, final PunishmentInfo info )
     {
-        if ( BuX.getApi().getBridgeManager().useBridging() )
-        {
-            final Map<String, Object> data = Maps.newHashMap();
-            data.put( "reason", info.getReason() );
-            data.put( "type", info.getType() );
-
-            BuX.getApi().getBridgeManager().getBridge().sendTargetedMessage(
-                    BridgeType.BUNGEE_BUNGEE,
-                    null,
-                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
-                    "USER",
-                    new UserAction(
-                            storage,
-                            info.getType().isIP() ? UserActionType.KICK_IP : UserActionType.KICK,
-                            new BridgedUserMessage(
-                                    true,
-                                    path,
-                                    data,
-                                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray()
-                            )
-                    )
-            );
-        }
+        executeBridgedAction(
+                storage,
+                path,
+                info.getType().isIP() ? UserActionType.KICK_IP : UserActionType.KICK,
+                info
+        );
     }
 
     protected void attemptMute( final UserStorage storage, final String path, final PunishmentInfo info )
@@ -312,6 +295,18 @@ public abstract class PunishmentCommand implements CommandCall
 
     private void bridgedMute( final UserStorage storage, final String path, final PunishmentInfo info )
     {
+        executeBridgedAction(
+                storage,
+                path,
+                info.getType().isIP() ? UserActionType.MUTE_IP : UserActionType.MUTE,
+                info
+        );
+    }
+
+    private void executeBridgedAction(final UserStorage storage,
+                                      final String path,
+                                      final UserActionType type,
+                                      final PunishmentInfo info) {
         if ( BuX.getApi().getBridgeManager().useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();
@@ -325,7 +320,7 @@ public abstract class PunishmentCommand implements CommandCall
                     "USER",
                     new UserAction(
                             storage,
-                            info.getType().isIP() ? UserActionType.MUTE_IP : UserActionType.MUTE,
+                            type,
                             new BridgedUserMessage(
                                     true,
                                     path,
