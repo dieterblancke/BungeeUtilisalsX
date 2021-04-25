@@ -6,6 +6,10 @@ enabled: false
 # Example of default format: 31-01-2018 08:13:34
 date-format: 'dd-MM-yyyy kk:mm:ss'
 
+# The format for the time left placeholder
+# Example of default format: 10 days, 4 hours, 34 minutes & 12 seconds
+time-left-format: '%days% days, %hours% hours, %minutes% minutes & %seconds% seconds'
+
 # The length of the unique punishment id (only guaranteed to be unique per type, a puid of bans can be the same as the puid of mute)
 # This punishment uid is mostly useful if you do not want to show a numeric id in the ban / mute message.
 puid-length: 6

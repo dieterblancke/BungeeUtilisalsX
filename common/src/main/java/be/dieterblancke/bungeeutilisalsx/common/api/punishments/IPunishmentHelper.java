@@ -34,6 +34,8 @@ public interface IPunishmentHelper
 
     String getDateFormat();
 
+    String getTimeLeftFormat();
+
     String setPlaceHolders( String line, PunishmentInfo info );
 
     List<String> getPlaceHolders( PunishmentInfo info );

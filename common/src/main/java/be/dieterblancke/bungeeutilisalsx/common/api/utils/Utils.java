@@ -798,6 +798,14 @@ public class Utils
         return message;
     }
 
+    /**
+     * Replaces the last occurence of a keyword in the given string.
+     *
+     * @param string      the string to replace in
+     * @param toReplace   the string to search on
+     * @param replacement the string that should be used to replace
+     * @return the given string with (possible) replacement done
+     */
     public static String replaceLast( final String string, final String toReplace, final String replacement )
     {
         int pos = string.lastIndexOf( toReplace );
@@ -813,6 +821,11 @@ public class Utils
         }
     }
 
+    /**
+     * @param chars  the characters to use for the random string
+     * @param length the length that the random string should be
+     * @return a random string of the requested characters and length
+     */
     public static String createRandomString( final String chars, final int length )
     {
         final StringBuilder sb = new StringBuilder();
@@ -826,8 +839,56 @@ public class Utils
         return sb.toString();
     }
 
+    /**
+     * Checks if the server is a Bukkit instance or not
+     *
+     * @return true if Bukkit instance, false if not
+     */
     public static boolean isSpigot()
     {
         return classFound( "org.bukkit.Bukkit" );
+    }
+
+    public static String getTimeLeft( final String format, final Date date )
+    {
+        return getTimeLeft( format, date.getTime() );
+    }
+
+    public static String getTimeLeft( final String format, final long millis )
+    {
+        return format
+                .replace( "%days%", String.valueOf( getDays( millis ) ) )
+                .replace( "%hours%", String.valueOf( getHours( millis ) ) )
+                .replace( "%minutes%", String.valueOf( getMinutes( millis ) ) )
+                .replace( "%seconds%", String.valueOf( getSeconds( millis ) ) );
+    }
+
+    private static long getDays( long time )
+    {
+        return TimeUnit.MILLISECONDS.toDays( time );
+    }
+
+    private static long getHours( long time )
+    {
+        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
+
+        return TimeUnit.MILLISECONDS.toHours( time );
+    }
+
+    private static long getMinutes( long time )
+    {
+        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
+        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
+
+        return TimeUnit.MILLISECONDS.toMinutes( time );
+    }
+
+    private static long getSeconds( long time )
+    {
+        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
+        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
+        time = time - TimeUnit.MINUTES.toMillis( getMinutes( time ) );
+
+        return TimeUnit.MILLISECONDS.toSeconds( time );
     }
 }

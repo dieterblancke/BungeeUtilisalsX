@@ -24,14 +24,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.InputPlaceHolderEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class InputPlaceHolders implements PlaceHolderPack
 {
@@ -44,19 +43,15 @@ public class InputPlaceHolders implements PlaceHolderPack
             @Override
             public String getReplacement( InputPlaceHolderEvent event )
             {
-                IConfiguration configuration = getLanguageConfiguration( event.getUser() );
-                SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
+                final IConfiguration configuration = getLanguageConfiguration( event.getUser() );
+                final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
 
                 try
                 {
-                    Date date = dateFormat.parse( event.getArgument() );
-                    long time = date.getTime() - System.currentTimeMillis();
-
-                    return configuration.getString( "placeholders.timeleft" )
-                            .replace( "%days%", String.valueOf( getDays( time ) ) )
-                            .replace( "%hours%", String.valueOf( getHours( time ) ) )
-                            .replace( "%minutes%", String.valueOf( getMinutes( time ) ) )
-                            .replace( "%seconds%", String.valueOf( getSeconds( time ) ) );
+                    return Utils.getTimeLeft(
+                            configuration.getString( "placeholders.timeleft" ),
+                            dateFormat.parse( event.getArgument() )
+                    );
                 }
                 catch ( ParseException e )
                 {
@@ -92,34 +87,5 @@ public class InputPlaceHolders implements PlaceHolderPack
             );
         }
         return user.getLanguageConfig();
-    }
-
-    private long getDays( long time )
-    {
-        return TimeUnit.MILLISECONDS.toDays( time );
-    }
-
-    private long getHours( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-
-        return TimeUnit.MILLISECONDS.toHours( time );
-    }
-
-    private long getMinutes( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-
-        return TimeUnit.MILLISECONDS.toMinutes( time );
-    }
-
-    private long getSeconds( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-        time = time - TimeUnit.MINUTES.toMillis( getMinutes( time ) );
-
-        return TimeUnit.MILLISECONDS.toSeconds( time );
     }
 }

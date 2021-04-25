@@ -94,6 +94,12 @@ public class PunishmentHelper implements IPunishmentHelper
     }
 
     @Override
+    public String getTimeLeftFormat()
+    {
+        return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" );
+    }
+
+    @Override
     public String setPlaceHolders( String line, PunishmentInfo info )
     {
         if ( line == null || info == null )
@@ -116,14 +122,16 @@ public class PunishmentHelper implements IPunishmentHelper
         if ( info.getExpireTime() == null )
         {
             line = line.replace( "{expire}", "Never" );
+            line = line.replace( "{timeLeft}", "Never" );
         }
         else
         {
             line = line.replace( "{expire}", Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
+            line = line.replace( "{timeLeft}", Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
         }
         if ( info.getRemovedBy() == null )
         {
-            line = line.replace( "{expire}", "Unknown" );
+            line = line.replace( "{removedBy}", "Unknown" );
         }
         else
         {
@@ -193,6 +201,16 @@ public class PunishmentHelper implements IPunishmentHelper
         if ( info.getExpireTime() != null )
         {
             placeholders.add( Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
+        }
+        else
+        {
+            placeholders.add( "Never" );
+        }
+
+        placeholders.add( "{timeLeft}" );
+        if ( info.getExpireTime() != null )
+        {
+            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
         }
         else
         {
