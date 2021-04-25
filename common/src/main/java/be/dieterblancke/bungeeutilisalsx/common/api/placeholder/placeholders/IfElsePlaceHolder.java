@@ -16,7 +16,7 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.bungee.placeholder;
+package be.dieterblancke.bungeeutilisalsx.common.api.placeholder.placeholders;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -21,6 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
@@ -71,26 +72,7 @@ public class UserPunishExecutor implements EventExecutor
 
         for ( PunishmentAction action : actions )
         {
-            final long amount;
-
-            if ( event.isUserPunishment() )
-            {
-                // uuid involved
-                amount = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                        event.getType(),
-                        event.getUuid(),
-                        new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
-                );
-            }
-            else
-            {
-                // ip involved
-                amount = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
-                        event.getType(),
-                        event.getIp(),
-                        new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
-                );
-            }
+            final long amount = this.getPunishmentAmount( event, action );
 
             if ( amount >= action.getLimit() )
             {
@@ -123,6 +105,27 @@ public class UserPunishExecutor implements EventExecutor
                         action.getUid()
                 );
             }
+        }
+    }
+
+    private long getPunishmentAmount( final UserPunishmentFinishEvent event, final PunishmentAction action ) {
+        if ( event.isUserPunishment() )
+        {
+            // uuid involved
+            return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
+                    event.getType(),
+                    event.getUuid(),
+                    new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+            );
+        }
+        else
+        {
+            // ip involved
+            return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
+                    event.getType(),
+                    event.getIp(),
+                    new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+            );
         }
     }
 }
