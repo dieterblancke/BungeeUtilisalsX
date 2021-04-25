@@ -43,15 +43,15 @@
 
     <distributionManagement>
         <repository>
-            <id>minerift</id>
-            <url>https://repo.minerift.net/public-release/</url>
+            <id>dieterblancke</id>
+            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>minerift</id>
-            <url>https://repo.minerift.net/public-release/</url>
+            <id>dieterblancke</id>
+            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
         <repository>
             <id>bungeecord-repo</id>
