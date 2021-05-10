@@ -48,7 +48,9 @@ public enum Version
     MINECRAFT_1_15_2( 578 ),
     MINECRAFT_1_16( 735 ),
     MINECRAFT_1_16_1( 736 ),
-    MINECRAFT_1_16_2( 751 );
+    MINECRAFT_1_16_2( 751 ),
+    MINECRAFT_1_16_3( 753 ),
+    MINECRAFT_1_16_4( 754 );
 
     @Getter
     private final int versionId;
