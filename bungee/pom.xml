@@ -16,6 +16,10 @@
             <id>CodeMC</id>
             <url>https://repo.codemc.org/repository/maven-public</url>
         </repository>
+        <repository>
+            <id>dieterblancke</id>
+            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
+        </repository>
     </repositories>
 
     <dependencies>

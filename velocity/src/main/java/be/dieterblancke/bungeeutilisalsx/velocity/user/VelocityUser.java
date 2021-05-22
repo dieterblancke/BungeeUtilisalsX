@@ -580,7 +580,7 @@ public class VelocityUser implements User, CanReceiveMessages
     {
         player.sendActionBar( Component.text( Utils.formatString( this, actionbar ) ) );
     }
-,
+
     @Override
     public void sendTitle( final String title, final String subtitle, final int fadein, final int stay, final int fadeout )
     {
