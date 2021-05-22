@@ -19,18 +19,6 @@ bridging:
     port: 6379
     password: ''
 
-updater:
-  # Set to true to enable updater checks.
-  enabled: true
-  # How fast should BungeeUtilisals check for new updates (in minutes)?
-  # Set to -1 to disable repeating updater checks (differently said: setting this to -1 only checks for updates on startup)
-  delay: 30
-  # Set to true to automatically install updates on shutdown
-  # Note that this automatic install may fail to install.
-  install: false
-  # Permission to get notified when an update has been found.
-  permission: 'bungeeutilisals.updater.notify'
-
 # See: https://api.minetools.eu/uuid/
 # This can be changed to any API you like, as long as the name / uuid is an URL parameter.
 # The return type also MUST BE JSON + the json response MUST contain:

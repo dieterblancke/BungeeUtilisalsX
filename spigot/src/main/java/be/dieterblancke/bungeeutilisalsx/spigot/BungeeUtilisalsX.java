@@ -11,8 +11,6 @@ import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.executors.UserExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
-import be.dieterblancke.bungeeutilisalsx.common.updater.Updater;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.user.UserServerHelper;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.GuiManager;
 import be.dieterblancke.bungeeutilisalsx.spigot.listeners.InventoryListener;
@@ -31,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Updatable( url = "https://api.dbsoftwares.eu/plugin/bungeeutilisalsx-spigot/" )
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
@@ -71,11 +68,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         this.registerListeners();
         this.registerPluginMessageReceivers();
         this.registerExecutors();
-
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "updater.enabled" ) )
-        {
-            Updater.initialize( this );
-        }
         this.setupTasks();
 
         this.guiManager = new GuiManager();

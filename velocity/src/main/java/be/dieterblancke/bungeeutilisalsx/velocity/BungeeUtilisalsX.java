@@ -14,7 +14,6 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
@@ -30,7 +29,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Updatable( url = "https://api.dbsoftwares.eu/plugin/bungeeutilisalsx-velocity/" )
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 

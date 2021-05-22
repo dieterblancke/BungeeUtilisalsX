@@ -25,7 +25,6 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.updater.Updatable;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
@@ -35,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-@Updatable( url = "https://api.dbsoftwares.eu/plugin/bungeeutilisalsx-bungee/" )
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 

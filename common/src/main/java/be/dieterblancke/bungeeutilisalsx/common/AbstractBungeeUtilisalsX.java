@@ -36,7 +36,6 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPerm
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
-import be.dieterblancke.bungeeutilisalsx.common.updater.Updater;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -47,7 +46,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -130,10 +128,6 @@ public abstract class AbstractBungeeUtilisalsX
                 TabAnnouncer.class
         );
 
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "updater.enabled" ) )
-        {
-            Updater.initialize( this );
-        }
         this.setupTasks();
     }
 
@@ -367,6 +361,5 @@ public abstract class AbstractBungeeUtilisalsX
 
         scripts.forEach( Script::unload );
         api.getEventLoader().getHandlers().forEach( IEventHandler::unregister );
-        Updater.shutdownUpdaters();
     }
 }
