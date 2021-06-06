@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Priority;
@@ -85,7 +86,7 @@ public class UserChatExecutor implements EventExecutor
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
 
-                    user.executeCommand( command );
+                    BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
             }
         }
@@ -116,7 +117,7 @@ public class UserChatExecutor implements EventExecutor
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
 
-                    user.executeCommand( command );
+                    BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
             }
         }
@@ -139,7 +140,7 @@ public class UserChatExecutor implements EventExecutor
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
 
-                    user.executeCommand( command );
+                    BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
             }
         }
@@ -164,7 +165,7 @@ public class UserChatExecutor implements EventExecutor
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
 
-                    user.executeCommand( command );
+                    BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
             }
         }
