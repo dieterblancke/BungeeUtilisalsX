@@ -64,6 +64,7 @@ public class SpyEventExecutor implements EventExecutor
         final List<User> users = BuX.getApi().getUsers()
                 .stream()
                 .filter( user -> user.isCommandSpy() && user.hasPermission( permission ) )
+                .filter( user -> !user.getUuid().equals( event.getUser().getUuid() ) )
                 .collect( Collectors.toList() );
 
         if ( users.isEmpty() )

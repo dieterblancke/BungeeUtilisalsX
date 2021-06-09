@@ -65,7 +65,7 @@ public class DumpSubCommandCall implements CommandCall, TabCall
             final Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
             try
             {
-                final HttpURLConnection con = (HttpURLConnection) new URL( "https://paste.dbsoftwares.eu/documents/" ).openConnection();
+                final HttpURLConnection con = (HttpURLConnection) new URL( "https://paste.dieterblancke.xyz/documents/" ).openConnection();
 
                 con.addRequestProperty(
                         "User-Agent", "BungeeUtilisalsX v" + BuX.getInstance().getVersion()
@@ -96,7 +96,7 @@ public class DumpSubCommandCall implements CommandCall, TabCall
                 }
 
                 user.sendMessage( "&eSuccessfully created a dump at: "
-                        + "&bhttps://paste.dbsoftwares.eu/" + jsonResponse.get( "key" ).getAsString() + ".dump" );
+                        + "&bhttps://paste.dieterblancke.xyz/" + jsonResponse.get( "key" ).getAsString() + ".dump" );
             }
             catch ( IOException e )
             {

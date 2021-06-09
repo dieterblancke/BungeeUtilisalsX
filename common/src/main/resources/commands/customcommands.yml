@@ -50,9 +50,9 @@ commands:
         - text: '&emade by '
         - text: '&aDBSoftwares'
           hover:
-            - '&ehttps://www.dbsoftwares.eu'
+            - '&ehttps://www.dieterblancke.xyz'
           click:
             # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
             # RUN_COMMAND will only work for BungeeCord commands.
             type: 'OPEN_URL'
-            action: 'https://www.dbsoftwares.eu'
+            action: 'https://www.dieterblancke.xyz'
