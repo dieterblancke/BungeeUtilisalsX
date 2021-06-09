@@ -389,4 +389,9 @@ public interface User
      * @return the host the user joined with.
      */
     String getJoinedHost();
+
+    /**
+     * @return true if user is vanished, false if not
+     */
+    boolean isVanished();
 }

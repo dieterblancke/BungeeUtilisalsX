@@ -443,4 +443,10 @@ public class ConsoleUser implements User, CanReceiveMessages
     {
         throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
+
+    @Override
+    public boolean isVanished()
+    {
+        return false;
+    }
 }

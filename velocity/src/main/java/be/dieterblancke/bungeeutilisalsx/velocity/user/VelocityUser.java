@@ -628,6 +628,12 @@ public class VelocityUser implements User, CanReceiveMessages
     }
 
     @Override
+    public boolean isVanished()
+    {
+        return false;
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

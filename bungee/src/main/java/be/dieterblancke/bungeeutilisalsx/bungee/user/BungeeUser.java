@@ -630,6 +630,13 @@ public class BungeeUser implements User, CanReceiveMessages
     }
 
     @Override
+    public boolean isVanished()
+    {
+        return BuX.getInstance().proxyOperations().getPlugin( "PremiumVanish" ).isPresent()
+                && de.myzelyam.api.vanish.BungeeVanishAPI.isInvisible( this.parent );
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

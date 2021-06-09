@@ -55,7 +55,7 @@ public class FriendReplySubCommandCall implements CommandCall
             final Optional<User> optional = BuX.getApi().getUser( name );
             final String message = String.join( " ", args );
 
-            if ( optional.isPresent() )
+            if ( optional.isPresent() && !optional.get().isVanished() )
             {
                 final User target = optional.get();
 
