@@ -44,14 +44,14 @@
     <distributionManagement>
         <repository>
             <id>dieterblancke</id>
-            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/artifactory</url>
+            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>dieterblancke</id>
-            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/artifactory</url>
+            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
     </repositories>
 
