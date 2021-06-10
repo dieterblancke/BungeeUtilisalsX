@@ -1,5 +1,5 @@
 name: BungeeUtilisalsX
-main: com.dbsoftwares.bungeeutilisals.BungeeUtilisals
+main: be.dieterblancke.bungeeutilisalsx.bungee.Bootstrap
 version: ${project.version}
 author: didjee2
-softDepends: ['RedisBungee', 'SkinsRestorer']
+softDepends: [ 'RedisBungee', 'SkinsRestorer' ]

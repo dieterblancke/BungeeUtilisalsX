@@ -1,0 +1,14 @@
+enabled: true
+
+# The permission to bypass the antispam system
+bypass: 'bungeeutilisalsx.chat.protection.spam.bypass'
+
+delay:
+  # Possible units: MILLISECONDS, SECONDS, MINUTES
+  unit: SECONDS
+  # Time in between messages
+  time: 3
+
+# Commands that have to be executed when someone advertises (will be executed by console)
+commands: [ ]
+# - 'warn {user} Please do not spam!'

@@ -1,0 +1,67 @@
+# The title that should be given to the gui
+title: '&2&lIncoming Friend Requests'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  - slots: 'borders'
+    # True if these slots represent friends, false if not.
+    friend-slots: false
+    item:
+      # In 1.13 and higher, this should be GRAY_STAINED_GLASS_PANE and the "data" key should be removed.
+      material: STAINED_GLASS_PANE
+      data: 7
+      name: ''
+    action: nothing
+  - slots: '10..16,19..25,28..34,37..43'
+    # True if these slots represent requests, false if not.
+    request-slots: true
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&e{user-name}'
+      lores:
+        - ''
+        - '&bRequested at:'
+        - '&7» {requested-at}'
+        - ''
+        - '&aLeft click to accept this request!'
+        - '&cRight click to deny this request!'
+    action: 'proxy-execute:friend accept {user-name}'
+    right-action: 'proxy-execute:friend deny {user-name}'
+  - slots: '45'
+    item:
+      material: ARROW
+      name: '&aGo back'
+    action: open:friendrequests
+  - slots: '46'
+    friend-slots: false
+    show-if: has-previous-page
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&aPrevious Page'
+      owner: 'bd69e06e5dadfd84e5f3d1c21063f2553b2fa945ee1d4d7152fdc5425bc12a9'
+    action: previous-page
+  - slots: '52'
+    friend-slots: false
+    show-if: has-next-page
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&aNext Page'
+      owner: '19bf3292e126a105b54eba713aa1b152d541a1d8938829c56364d178ed22bf'
+    action: next-page
+  - slots: '53'
+    friend-slots: false
+    item:
+      # In 1.13 and higher, this should be RED_BED and the "data" key should be removed.
+      material: BED
+      data: 14
+      name: '&c&lClose'
+    action: close

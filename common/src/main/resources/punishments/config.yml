@@ -1,0 +1,155 @@
+# Set to true if you want to use the BungeeUtilisals punishment system.
+# If disabled, all other options below will be ignored.
+enabled: false
+
+# Date format which should be used in punishment dates
+# Example of default format: 31-01-2018 08:13:34
+date-format: 'dd-MM-yyyy kk:mm:ss'
+
+# The format for the time left placeholder
+# Example of default format: 10 days, 4 hours, 34 minutes & 12 seconds
+time-left-format: '%days% days, %hours% hours, %minutes% minutes & %seconds% seconds'
+
+# The length of the unique punishment id (only guaranteed to be unique per type, a puid of bans can be the same as the puid of mute)
+# This punishment uid is mostly useful if you do not want to show a numeric id in the ban / mute message.
+puid-length: 6
+
+# The characters to be used for punishment uid's. It's recommended to leave this on the default setting.
+puid-characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+# By enabling this, all punishment commands will need an additional argument specifying the server.
+# For example:
+# - /ban didjee2 ALL Testing
+# - /tempban didjee2 1d Lobby1 Testing
+# If you disable this, punishment commands will work as they used to.
+per-server-punishments: true
+
+# Should punishment templates be enabled?
+# For example, if someone types /ban (user) @ADVERTISING (by default) it will not use the default ban message,
+# instead it will be using the template ban message (message if they get kicked / when they try to join)
+templates:
+  enabled: true
+  # How should template reasons be detected? By default if a reason starts with @, it will be seen as a template reason.
+  detect: '@'
+
+# Set this to false to disable people to be able to punish themselves.
+allow-self-punishments: true
+
+# Set this to false to disable people to be able to punish people with higher ranks than them (this is based on priority in ranks.yml file).
+allow-higher-punishments: false
+
+blocked-mute-commands:
+  - msg
+  - r
+  - reply
+  - message
+  - w
+  - whisper
+  - tell
+  - t
+
+# Here you can enable or disable parameters for punishment commands.
+# A parameter, for example nbp, is something you add to the end of the command prefixed by a -, for example -nbp
+parameters:
+  # nbp stands for no-broadcast-permission, if you use for example '/ban (user) (reason) -nbp', everyone will be able to see the broadcast message.
+  nbp: true
+  s: true
+
+commands:
+  ban:
+    # Enable this subcommand or not?
+    enabled: true
+    aliases: 'pban, gban'
+    permission: bungeeutilisals.punishments.ban
+    # Permission to receive broadcast ban messages
+    broadcast: bungeeutilisals.punishments.ban.broadcast
+  ipban:
+    enabled: true
+    aliases: 'banip, gbanip, gipban'
+    permission: bungeeutilisals.punishments.ipban
+    broadcast: bungeeutilisals.punishments.ipban.broadcast
+  tempban:
+    enabled: true
+    aliases: 'tban, gtban'
+    permission: bungeeutilisals.punishments.tempban
+    broadcast: bungeeutilisals.punishments.tempban.broadcast
+  iptempban:
+    enabled: true
+    aliases: 'iptempban, tipban, gtipban, tbanip'
+    permission: bungeeutilisals.punishments.tempbanip
+    broadcast: bungeeutilisals.punishments.tempbanip.broadcast
+  mute:
+    enabled: true
+    aliases: 'pmute, gmute'
+    permission: bungeeutilisals.punishments.mute
+    broadcast: bungeeutilisals.punishments.mute.broadcast
+  ipmute:
+    enabled: true
+    aliases: 'muteip, gmuteip, gipmute'
+    permission: bungeeutilisals.punishments.ipmute
+    broadcast: bungeeutilisals.punishments.ipmute.broadcast
+  tempmute:
+    enabled: true
+    aliases: 'tmute, gtmute'
+    permission: bungeeutilisals.punishments.tempmute
+    broadcast: bungeeutilisals.punishments.tempmute.broadcast
+  iptempmute:
+    enabled: true
+    aliases: 'iptempmute, tipmute, gtipmute, tmuteip'
+    permission: bungeeutilisals.punishments.tempmuteip
+    broadcast: bungeeutilisals.punishments.tempmuteip.broadcast
+  kick:
+    enabled: true
+    aliases: ''
+    permission: bungeeutilisals.punishments.kick
+    broadcast: bungeeutilisals.punishments.kick.broadcast
+  warn:
+    enabled: true
+    aliases: ''
+    permission: bungeeutilisals.punishments.warn
+    broadcast: bungeeutilisals.punishments.warn.broadcast
+  unban:
+    enabled: true
+    aliases: 'punban, gunban, unsetban, removeban'
+    permission: bungeeutilisals.punishments.unban
+    broadcast: bungeeutilisals.punishments.unban.broadcast
+  unbanip:
+    enabled: true
+    aliases: 'punbanip, gunbanip, unsetbanip, removebanip'
+    permission: bungeeutilisals.punishments.unbanip
+    broadcast: bungeeutilisals.punishments.unbanip.broadcast
+  unmute:
+    enabled: true
+    aliases: 'punmute, gunmute, unsetmute, removemute'
+    permission: bungeeutilisals.punishments.unmute
+    broadcast: bungeeutilisals.punishments.unmute.broadcast
+  unmuteip:
+    enabled: true
+    aliases: 'punmuteip, gunmuteip, unsetmuteip, removemuteip'
+    permission: bungeeutilisals.punishments.unmuteip
+    broadcast: bungeeutilisals.punishments.unmuteip.broadcast
+  punishmentinfo:
+    enabled: true
+    aliases: 'pinfo'
+    permission: bungeeutilisals.punishments.punishmentinfo
+  punishmenthistory:
+    enabled: true
+    aliases: 'phistory'
+    permission: bungeeutilisals.punishments.punishmenthistory
+  punishmentdata:
+    enabled: true
+    aliases: 'pdata'
+    permission: bungeeutilisals.punishments.punishmentdata
+  checkip:
+    enabled: true
+    aliases: 'dupeip, checkalts'
+    permission: bungeeutilisals.punishments.checkip
+  staffhistory:
+    enabled: true
+    aliases: 'shistory'
+    permission: bungeeutilisals.punishments.staffhistory
+  trackpunish:
+    enabled: true
+    aliases: 'pt, punishtrack, trackpunishment'
+    permission: bungeeutilisals.punishments.trackpunish
+    broadcast: bungeeutilisals.punishments.trackpunish.broadcast

@@ -1,0 +1,4 @@
+languages:
+  en_US:
+    # If default is true, this language will be default for new users, if false, users will be able to select it.
+    default: true

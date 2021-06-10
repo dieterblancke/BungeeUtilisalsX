@@ -1,0 +1,21 @@
+enabled: true
+
+# The characters that are being seen as caps.
+# (Made it configurable for non-ASCII uppercase characters)
+characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+
+# If set to true, the chat message will be cancelled, if false, BungeeUtilisals will put the message into lowercase.
+cancel: true
+
+# Minimum amount of characters required to check for caps
+min-length: 4
+
+# How many % caps can a message contain?
+percentage: 65
+
+# The permission to bypass the anticaps system
+bypass: 'bungeeutilisalsx.chat.protection.caps.bypass'
+
+# Commands that have to be executed when someone advertises (will be executed by console)
+commands: [ ]
+# - 'warn {user} Please use less caps.'

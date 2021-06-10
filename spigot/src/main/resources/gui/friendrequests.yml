@@ -1,0 +1,36 @@
+# The title that should be given to the gui
+title: '&2&lFriend Requests'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 4
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  - slots: '11'
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&a&lIncoming Requests'
+      owner: 'ff7416ce9e826e4899b284bb0ab94843a8f7586e52b71fc3125e0286f926a'
+    action: open:incomingfriendrequests
+  - slots: '15'
+    item:
+      # In 1.13 and higher, this should be PLAYER_HEAD and the "data" key should be removed.
+      material: SKULL_ITEM
+      data: 3
+      name: '&c&lOutgoing Requests'
+      owner: '2d9287616343d833e9e7317159caa2cb3e59745113962c1379052ce478884fa'
+    action: open:outgoingfriendrequests
+  - slots: '27'
+    item:
+      material: ARROW
+      name: '&aGo back'
+    action: open:friend
+  - slots: '35'
+    item:
+      # In 1.13 and higher, this should be RED_BED and the "data" key should be removed.
+      material: BED
+      data: 14
+      name: '&c&lClose'
+    action: close

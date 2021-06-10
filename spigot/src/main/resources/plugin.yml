@@ -1,0 +1,4 @@
+name: BungeeUtilisalsX
+main: be.dieterblancke.bungeeutilisalsx.spigot.Bootstrap
+version: ${project.version}
+author: didjee2
