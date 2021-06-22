@@ -50,6 +50,10 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
+        if ( user.isVanished() )
+        {
+            return;
+        }
         user.getFriends().forEach( data ->
                 BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
                         friend.sendLangMessage( "friends.join.join", "{user}", user.getName() ) ) );
@@ -60,6 +64,11 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
+        if ( user.isVanished() )
+        {
+            return;
+        }
+
         user.getFriends().forEach( data ->
                 BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
                         friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) ) );
@@ -69,6 +78,11 @@ public class FriendsExecutor implements EventExecutor
     public void onSwitch( final UserServerConnectedEvent event )
     {
         final User user = event.getUser();
+
+        if ( user.isVanished() )
+        {
+            return;
+        }
 
         user.getFriends().forEach( data ->
                 BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
