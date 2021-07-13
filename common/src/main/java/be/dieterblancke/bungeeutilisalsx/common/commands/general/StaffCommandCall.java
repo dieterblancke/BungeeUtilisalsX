@@ -134,7 +134,7 @@ public class StaffCommandCall implements CommandCall
 
                     if ( userIt.hasNext() )
                     {
-                        c.addExtra( user.buildLangMessage( "general-commands.staff.users.separator" ) );
+                        c.addExtra( Utils.c( user.buildLangMessage( "general-commands.staff.users.separator" ) ) );
                     }
                 }
             }

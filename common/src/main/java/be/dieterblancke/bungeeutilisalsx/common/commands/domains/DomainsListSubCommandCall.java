@@ -59,7 +59,7 @@ public class DomainsListSubCommandCall implements CommandCall
                     return;
                 }
             }
-            domains.compute( domain, ( key, value ) -> value + amount );
+            domains.compute( domain, ( key, value ) -> ( value == null ? 0 : value ) + amount );
         } );
 
         user.sendLangMessage( "general-commands.domains.list.header", "{total}", domains.size() );
