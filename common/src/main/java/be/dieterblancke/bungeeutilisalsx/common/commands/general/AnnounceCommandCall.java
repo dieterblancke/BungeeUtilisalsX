@@ -199,9 +199,9 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                 user.sendTitle(
                         Utils.formatString( user, title ),
                         Utils.formatString( user, subtitle ),
-                        fadein * 20,
-                        stay * 20,
-                        fadeout * 20
+                        fadein,
+                        stay,
+                        fadeout
                 );
             }
         }

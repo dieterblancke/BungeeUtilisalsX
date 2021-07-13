@@ -440,9 +440,9 @@ public class BungeeUser implements User
 
         bungeeTitle.title( Utils.format( this, title ) );
         bungeeTitle.subTitle( Utils.format( this, subtitle ) );
-        bungeeTitle.fadeIn( fadein * 20 );
-        bungeeTitle.stay( stay * 20 );
-        bungeeTitle.fadeOut( fadeout * 20 );
+        bungeeTitle.fadeIn( fadein );
+        bungeeTitle.stay( stay );
+        bungeeTitle.fadeOut( fadeout );
 
         parent.sendTitle( bungeeTitle );
     }
