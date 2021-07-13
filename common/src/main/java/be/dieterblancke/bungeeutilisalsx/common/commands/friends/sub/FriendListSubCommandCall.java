@@ -78,6 +78,7 @@ public class FriendListSubCommandCall implements CommandCall
         final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
         user.sendLangMessage(
                 "friends.list.head",
+                "{friendAmount}", allFriends.size(),
                 "{previousPage}", previous,
                 "{currentPage}", page,
                 "{nextPage}", next,
@@ -98,7 +99,14 @@ public class FriendListSubCommandCall implements CommandCall
                     "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
             );
         }
-        user.sendLangMessage( "friends.list.foot", "{friendAmount}", allFriends.size() );
+        user.sendLangMessage(
+                "friends.list.foot",
+                "{friendAmount}", allFriends.size(),
+                "{previousPage}", previous,
+                "{currentPage}", page,
+                "{nextPage}", next,
+                "{maxPages}", pages
+        );
     }
 
     private List<FriendData> filterPlayerList( final List<FriendData> orig )

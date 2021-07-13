@@ -103,7 +103,9 @@ public class FriendRequestsSubCommandCall implements CommandCall
                 "{currentPage}", page,
                 "{nextPage}", next,
                 "{maxPages}", pages,
-                "{type}", user.getLanguageConfig().getString( "friends.requests." + requestType )
+                "{requestAmount}", allRequests.size(),
+                "{type}", user.getLanguageConfig().getString( "friends.requests." + requestType ),
+                "{type_lowercase}", requestType.toLowerCase()
         );
 
         requests.forEach( request ->
@@ -114,12 +116,18 @@ public class FriendRequestsSubCommandCall implements CommandCall
             user.sendLangMessage(
                     "friends.requests.format." + requestType,
                     "{target}", targetName,
-                    "{requestDate}", Utils.formatDate( request.getRequestedAt() )
+                    "{requestDate}", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig() )
             );
         } );
         user.sendLangMessage(
                 "friends.requests.foot",
-                "{requestAmount}", allRequests.size(), "{type}", requestType, "{type_lowercase}", requestType.toLowerCase()
+                "{previousPage}", previous,
+                "{currentPage}", page,
+                "{nextPage}", next,
+                "{maxPages}", pages,
+                "{requestAmount}", allRequests.size(),
+                "{type}", requestType,
+                "{type_lowercase}", requestType.toLowerCase()
         );
     }
 }

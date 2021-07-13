@@ -359,12 +359,12 @@ friends:
         - text: '&6<- '
           click:
             type: 'RUN_COMMAND'
-            action: '/friends requests {previousPage}'
+            action: '/friends requests {type} {previousPage}'
         - text: '&e{type} Requests List &b({currentPage} of {maxPages})'
         - text: ' &6->'
           click:
             type: 'RUN_COMMAND'
-            action: '/friends requests {nextPage}'
+            action: '/friends requests {type} {nextPage}'
     format:
       incoming: '&a<- &e{target} - &b{requestDate}'
       outgoing: '&c-> &e{target} - &b{requestDate}'
