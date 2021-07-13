@@ -29,6 +29,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -41,7 +42,7 @@ public class SQLReportsDao implements ReportsDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      format( "INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason, accepted) VALUES (?, ?, ?, ?, ?, ?);" )
+                      format( "INSERT INTO {reports-table} (uuid, reported_by, handled, server, reason, accepted, date) VALUES (?, ?, ?, ?, ?, ?, ?);" )
               ) )
         {
             pstmt.setString( 1, report.getUuid().toString() );
@@ -50,6 +51,7 @@ public class SQLReportsDao implements ReportsDao
             pstmt.setString( 4, report.getServer() );
             pstmt.setString( 5, report.getReason() );
             pstmt.setBoolean( 6, report.isAccepted() );
+            pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
 
             pstmt.execute();
         }
