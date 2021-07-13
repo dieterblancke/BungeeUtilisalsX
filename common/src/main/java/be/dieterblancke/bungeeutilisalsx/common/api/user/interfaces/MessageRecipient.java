@@ -1,13 +1,15 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 
-public interface CanReceiveMessages
+public interface MessageRecipient
 {
 
     default boolean isEmpty( final BaseComponent component )
@@ -80,5 +82,68 @@ public interface CanReceiveMessages
         }
         message = PlaceHolderAPI.formatMessage( (User) this, message );
         return message;
+    }
+
+    IConfiguration getLanguageConfig();
+
+    default String buildLangMessage( final String path, final Object... placeholders )
+    {
+        return this.buildLangMessage( path, null, null, placeholders );
+    }
+
+    default String buildLangMessage(
+            final String path,
+            final Function<String, String> prePlaceholderFormatter,
+            final Function<String, String> postPlaceholderFormatter,
+            final Object... placeholders )
+    {
+        if ( !getLanguageConfig().exists( path ) )
+        {
+            return "";
+        }
+        final StringBuilder builder = new StringBuilder();
+
+        if ( getLanguageConfig().isList( path ) )
+        {
+            final List<String> messages = getLanguageConfig().getStringList( path );
+
+            if ( messages.isEmpty() )
+            {
+                return "";
+            }
+
+            for ( int i = 0; i < messages.size(); i++ )
+            {
+                final String message = replacePlaceHolders(
+                        messages.get( i ),
+                        prePlaceholderFormatter,
+                        postPlaceholderFormatter,
+                        placeholders
+                );
+                builder.append( message );
+
+                if ( i < messages.size() - 1 )
+                {
+                    builder.append( "\n" );
+                }
+            }
+        }
+        else
+        {
+            final String message = replacePlaceHolders(
+                    getLanguageConfig().getString( path ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+            );
+
+            if ( message.isEmpty() )
+            {
+                return "";
+            }
+
+            builder.append( message );
+        }
+        return builder.toString();
     }
 }

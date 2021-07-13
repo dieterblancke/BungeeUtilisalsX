@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
+import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdData;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
@@ -55,20 +56,29 @@ public class MotdPingListener implements Listener
     public void onPing( ProxyPingEvent event )
     {
         final List<MotdData> dataList = ConfigFiles.MOTD.getMotds();
+        final MotdConnection motdConnection = this.createMotdConnection( event );
 
-        insertName( event.getConnection() );
-
-        ServerPing result = loadConditionalMotd( event, dataList );
+        ServerPing result = loadConditionalMotd( event, motdConnection, dataList );
         if ( result == null )
         {
             result = loadDefaultMotd( event, dataList );
         }
 
-
         if ( result != null )
         {
             event.setResponse( result );
         }
+    }
+
+    private MotdConnection createMotdConnection( final ProxyPingEvent event )
+    {
+        final PendingConnection connection = event.getConnection();
+
+        return new BungeeMotdConnection(
+                connection.getVersion(),
+                this.getName( connection ),
+                connection.getVirtualHost()
+        );
     }
 
     private ServerPing loadMotd( final ProxyPingEvent event, final MotdData motd )
@@ -127,7 +137,7 @@ public class MotdPingListener implements Listener
         return loadMotd( event, motd );
     }
 
-    private ServerPing loadConditionalMotd( final ProxyPingEvent event, final List<MotdData> motds )
+    private ServerPing loadConditionalMotd( final ProxyPingEvent event, final MotdConnection connection, final List<MotdData> motds )
     {
         final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).collect( Collectors.toList() );
 
@@ -135,7 +145,7 @@ public class MotdPingListener implements Listener
         {
             final ConditionHandler handler = condition.getConditionHandler();
 
-            if ( handler.checkCondition( new BungeeMotdConnection( event.getConnection() ) ) )
+            if ( handler.checkCondition( connection ) )
             {
                 final List<MotdData> conditionalMotds = conditions.stream().filter(
                         data -> data.getConditionHandler().getCondition().equalsIgnoreCase( handler.getCondition() )
@@ -148,32 +158,12 @@ public class MotdPingListener implements Listener
         return null;
     }
 
-    // Name not known on serverlist ping, so we're loading the last seen name on the IP as the initial connection name.
-    private void insertName( PendingConnection connection )
+    private String getName( final PendingConnection pendingConnection )
     {
-        try
-        {
-            final String name = BuX.getApi().getStorageManager().getDao().getUserDao()
-                    .getUsersOnIP( Utils.getIP( (InetSocketAddress) connection.getSocketAddress() ) )
-                    .stream()
-                    .findFirst()
-                    .orElse( null );
-
-            if ( name == null )
-            {
-                return;
-            }
-            for ( Field field : connection.getClass().getDeclaredFields() )
-            {
-                if ( field.getName().equals( "name" ) )
-                {
-                    field.set( connection, name );
-                }
-            }
-        }
-        catch ( Exception e )
-        {
-            // do nothing
-        }
+        return BuX.getApi().getStorageManager().getDao().getUserDao()
+                .getUsersOnIP( Utils.getIP( (InetSocketAddress) pendingConnection.getSocketAddress() ) )
+                .stream()
+                .findFirst()
+                .orElse( null );
     }
 }

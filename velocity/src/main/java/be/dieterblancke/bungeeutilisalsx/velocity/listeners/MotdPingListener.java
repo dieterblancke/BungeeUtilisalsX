@@ -154,6 +154,10 @@ public class MotdPingListener
                 .findFirst()
                 .orElse( null );
 
-        return new VelocityMotdConnection( connection, name );
+        return new VelocityMotdConnection(
+                connection.getProtocolVersion().getProtocol(),
+                name,
+                connection.getVirtualHost().orElse( null )
+        );
     }
 }

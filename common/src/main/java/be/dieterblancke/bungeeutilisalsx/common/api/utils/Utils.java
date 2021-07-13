@@ -48,8 +48,7 @@ public class Utils
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
     private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
-    private static final String GRADIENT_HEX_RAW_PATTERN = "<\\$#([A-Fa-f0-9]){6}>";
-    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( GRADIENT_HEX_RAW_PATTERN );
+    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(<\\$(#[A-Fa-f0-9]{6})>)(.*)(</\\$(#[A-Fa-f0-9]{6})>)" );
     private static final boolean IS_1_16;
 
     static
@@ -100,42 +99,17 @@ public class Utils
 
     private static String colorGradients( String message )
     {
-        final List<String> hexColorCodes = Lists.newArrayList();
-
-        final Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
+        Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
         while ( matcher.find() )
         {
-            hexColorCodes.add( matcher.group().replace( "<$", "" ).replace( ">", "" ) );
+            final String startColor = matcher.group(2);
+            final String text = matcher.group(3);
+            final String endColor = matcher.group(5);
+
+            message = matcher.replaceFirst( applyGradient( text, startColor, endColor ) );
+            matcher = GRADIENT_HEX_PATTERN.matcher( message );
         }
-
-        final String[] parts = message.split( GRADIENT_HEX_RAW_PATTERN );
-        final StringBuilder stringBuilder = new StringBuilder();
-        int hexIdx = 0;
-
-        for ( int i = 0; i < parts.length; i++ )
-        {
-            final String part = parts[i];
-
-            if ( i == 0 )
-            {
-                stringBuilder.append( part );
-            }
-            else
-            {
-                if ( part.isEmpty() || hexIdx + 1 >= hexColorCodes.size() )
-                {
-                    stringBuilder.append( part );
-                }
-                else
-                {
-                    final String startColor = hexColorCodes.get( hexIdx );
-                    final String endColor = hexColorCodes.get( hexIdx + 1 );
-                    stringBuilder.append( applyGradient( part, startColor, endColor ) );
-                    hexIdx++;
-                }
-            }
-        }
-        return stringBuilder.toString();
+        return message;
     }
 
     private static String applyGradient( final String text, final String startHexColor, final String endHexColor )
@@ -173,7 +147,7 @@ public class Utils
                 i++;
                 if ( ChatColor.getByChar( characters[i] ) == ChatColor.RESET )
                 {
-                    // clearing stringbuilderzz
+                    // clearing stringbuilder
                     formatColors.setLength( 0 );
                 }
                 else

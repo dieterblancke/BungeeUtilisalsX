@@ -2,11 +2,13 @@ package be.dieterblancke.bungeeutilisalsx.velocity.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 import com.velocitypowered.api.proxy.InboundConnection;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.net.InetSocketAddress;
 
 @Data
+@AllArgsConstructor
 public class VelocityMotdConnection implements MotdConnection
 {
 
@@ -14,10 +16,4 @@ public class VelocityMotdConnection implements MotdConnection
     private final String name;
     private final InetSocketAddress virtualHost;
 
-    public VelocityMotdConnection( final InboundConnection connection, final String userName )
-    {
-        this.version = connection.getProtocolVersion().getProtocol();
-        this.name = userName;
-        this.virtualHost = connection.getVirtualHost().orElse( null );
-    }
 }

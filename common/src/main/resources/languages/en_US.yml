@@ -127,6 +127,7 @@ general-commands:
       unignored: '&eYou are not ignoring &b{user} &eanymore!'
 
     list:
+      none: '&eYou currently are not ignoring any users.'
       message: '&eList of users you are currently ignoring: &b{ignoredusers}'
       separator: ', '
   socialspy:

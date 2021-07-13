@@ -21,20 +21,24 @@ package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Function;
 
-public interface User
+public interface User extends MessageRecipient
 {
 
     /**
@@ -100,14 +104,23 @@ public interface User
      *
      * @param message The message which has to be sent. The BungeeUtilisalsX prefix will appear before.
      */
-    void sendMessage( String message );
+    default void sendMessage( String message ) {
+        if ( message.isEmpty() )
+        {
+            return;
+        }
+        sendMessage( getLanguageConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
+    }
 
     /**
      * Searches a message in the user's language configuration and sends that message.
      *
      * @param path The path to the message in the language file.
      */
-    void sendLangMessage( String path );
+    default void sendLangMessage( String path )
+    {
+        sendLangMessage( true, path );
+    }
 
     /**
      * Searches a message in the user's language configuration and sends that message.
@@ -119,7 +132,41 @@ public interface User
      * @param postPlaceholderFormatter This string formatter can be used to manipulate the string after placeholder replacement.
      * @param placeholders             The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    void sendLangMessage( String path, boolean prefix, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders );
+    default void sendLangMessage( String path, boolean prefix, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders )
+    {
+        if ( getLanguageConfig().isSection( path ) )
+        {
+            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
+            final TextComponent component = MessageBuilder.buildMessage(
+                    this, getLanguageConfig().getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
+            );
+
+            sendMessage( component );
+            return;
+        }
+
+        String message = buildLangMessage( path, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
+
+        if ( message.isEmpty() )
+        {
+            return;
+        }
+
+        if ( message.startsWith( "noprefix: " ) )
+        {
+            prefix = false;
+            message = message.replaceFirst( "noprefix: ", "" );
+        }
+
+        if ( prefix )
+        {
+            sendMessage( message );
+        }
+        else
+        {
+            sendRawColorMessage( message );
+        }
+    }
 
     /**
      * Searches a message in the user's language configuration and sends that message formatted with placeholders.
@@ -127,7 +174,10 @@ public interface User
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    void sendLangMessage( String path, Object... placeholders );
+    default void sendLangMessage( String path, Object... placeholders )
+    {
+        sendLangMessage( true, path, placeholders );
+    }
 
     /**
      * Searches a message in the user's language configuration and sends that message.
@@ -135,7 +185,10 @@ public interface User
      * @param prefix Should a prefix be added in front of the message or not?
      * @param path   The path to the message in the language file.
      */
-    void sendLangMessage( boolean prefix, String path );
+    default void sendLangMessage( boolean prefix, String path )
+    {
+        sendLangMessage( prefix, path, new Object[0] );
+    }
 
     /**
      * Searches a message in the user's language configuration and sends that message formatted with placeholders.
@@ -144,7 +197,10 @@ public interface User
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    void sendLangMessage( boolean prefix, String path, Object... placeholders );
+    default void sendLangMessage( boolean prefix, String path, Object... placeholders )
+    {
+        this.sendLangMessage( path, prefix, null, null, placeholders );
+    }
 
     /**
      * Sends a message to the User with the given prefix + colors will be replaced.
@@ -152,7 +208,9 @@ public interface User
      * @param prefix  The prefix for the message. Mostly used for plugin prefixes.
      * @param message The message which has to be sent.
      */
-    void sendMessage( String prefix, String message );
+    default void sendMessage( String prefix, String message ) {
+        sendMessage( Utils.format( prefix + message ) );
+    }
 
     /**
      * Sends a BaseComponent message to the user, colors will be formatted.
@@ -167,7 +225,6 @@ public interface User
      * @param component The component to be sent.
      */
     void sendMessage( BaseComponent[] component );
-
 
     /**
      * Synchronously kicks the User with a certain reason.
@@ -273,26 +330,6 @@ public interface User
      * @return the version the user is playing on
      */
     Version getVersion();
-
-    /**
-     * Formats a language message from the given path.
-     *
-     * @param path         The language file path to be used.
-     * @param placeholders The placeholders to be replaced.
-     * @return A language message with given placeholders replaced.
-     */
-    String buildLangMessage( String path, Object... placeholders );
-
-    /**
-     * Formats a language message from the given path.
-     *
-     * @param path                     The language file path to be used.
-     * @param prePlaceholderFormatter  This string formatter can be used to manipulate the string before placeholder replacement.
-     * @param postPlaceholderFormatter This string formatter can be used to manipulate the string after placeholder replacement.
-     * @param placeholders             The placeholders to be replaced.
-     * @return A language message with given placeholders replaced.
-     */
-    String buildLangMessage( String path, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders );
 
     /**
      * @return a list of the user's Friends

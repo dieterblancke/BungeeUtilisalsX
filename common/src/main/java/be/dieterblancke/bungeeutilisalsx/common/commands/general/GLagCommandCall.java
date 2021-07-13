@@ -22,10 +22,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 
 import java.lang.management.ManagementFactory;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -42,14 +42,12 @@ public class GLagCommandCall implements CommandCall, TabCall
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
-        final SimpleDateFormat df2 = new SimpleDateFormat( "kk:mm dd-MM-yyyy" );
-        final String date = df2.format( new Date( uptime ) );
 
         user.sendLangMessage( "general-commands.glag",
                 "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
                 "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
                 "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
-                "{onlinesince}", date
+                "{onlinesince}", Utils.formatDate( new Date( uptime ), user.getLanguageConfig() )
         );
     }
 
