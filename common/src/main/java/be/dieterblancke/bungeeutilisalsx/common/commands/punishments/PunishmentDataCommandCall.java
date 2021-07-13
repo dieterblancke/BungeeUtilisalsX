@@ -57,12 +57,20 @@ public class PunishmentDataCommandCall implements CommandCall
             case IPBAN:
             case IPTEMPBAN:
                 info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getById( id );
+
+                if (info == null) {
+                    info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( id );
+                }
                 break;
             case MUTE:
             case TEMPMUTE:
             case IPMUTE:
             case IPTEMPMUTE:
                 info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getById( id );
+
+                if (info == null) {
+                    info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( id );
+                }
                 break;
             case KICK:
                 info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKickById( id );
