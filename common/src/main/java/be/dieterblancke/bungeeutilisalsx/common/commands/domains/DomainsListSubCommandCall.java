@@ -24,9 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -46,6 +44,7 @@ public class DomainsListSubCommandCall implements CommandCall
                 ) );
 
         final Map<String, Integer> tempDomains = BuX.getApi().getStorageManager().getDao().getUserDao().getJoinedHostList();
+        final Map<String, Set<String>> domainLists = new HashMap<>();
 
         tempDomains.forEach( ( domain, amount ) ->
         {
@@ -55,11 +54,11 @@ public class DomainsListSubCommandCall implements CommandCall
 
                 if ( matcher.find() )
                 {
-                    domains.compute( entry.getValue(), ( key, value ) -> ( value == null ? 0 : value ) + amount );
+                    this.addDomain( domains, domainLists, entry.getValue(), amount );
                     return;
                 }
             }
-            domains.compute( domain, ( key, value ) -> ( value == null ? 0 : value ) + amount );
+            this.addDomain( domains, domainLists, domain, amount );
         } );
 
         user.sendLangMessage( "general-commands.domains.list.header", "{total}", domains.size() );
@@ -76,5 +75,23 @@ public class DomainsListSubCommandCall implements CommandCall
                 );
 
         user.sendLangMessage( "general-commands.domains.list.footer", "{total}", domains.size() );
+    }
+
+    private void addDomain( final Map<String, Integer> domains,
+                            final Map<String, Set<String>> domainLists,
+                            final String domain,
+                            final int amount )
+    {
+        domains.compute( domain, ( key, value ) -> ( value == null ? 0 : value ) + amount );
+        domainLists.compute( domain, ( key, value ) ->
+        {
+            if ( value == null )
+            {
+                value = new HashSet<>();
+            }
+            value.add( domain );
+
+            return value;
+        } );
     }
 }

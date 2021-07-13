@@ -127,7 +127,7 @@ public class PunishmentHelper implements IPunishmentHelper
         else
         {
             line = line.replace( "{expire}", Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
-            line = line.replace( "{timeLeft}", Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
+            line = line.replace( "{timeLeft}", Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() - System.currentTimeMillis() ) );
         }
         if ( info.getRemovedBy() == null )
         {
@@ -210,7 +210,7 @@ public class PunishmentHelper implements IPunishmentHelper
         placeholders.add( "{timeLeft}" );
         if ( info.getExpireTime() != null )
         {
-            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
+            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() - System.currentTimeMillis() ) );
         }
         else
         {

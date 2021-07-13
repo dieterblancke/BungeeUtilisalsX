@@ -825,7 +825,7 @@ public class Utils
 
     public static String getTimeLeft( final String format, final Date date )
     {
-        return getTimeLeft( format, date.getTime() );
+        return getTimeLeft( format, date.getTime() - System.currentTimeMillis() );
     }
 
     public static String getTimeLeft( final String format, final long millis )
