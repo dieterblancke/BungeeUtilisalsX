@@ -791,6 +791,48 @@ public class SQLMutesDao implements MutesDao
     }
 
     @Override
+    public PunishmentInfo getByPunishmentId( String punishmentUid )
+    {
+        PunishmentInfo info = null;
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.MUTE.getTable() + " WHERE punishment_uid = ? LIMIT 1;"
+              ) )
+        {
+            pstmt.setString( 1, punishmentUid );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                if ( rs.next() )
+                {
+                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
+
+                    final int id = rs.getInt( "id" );
+                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                    final String user = rs.getString( "user" );
+                    final String ip = rs.getString( "ip" );
+                    final String reason = rs.getString( "reason" );
+                    final String server = rs.getString( "server" );
+                    final String executedby = rs.getString( "executed_by" );
+                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                    final long time = rs.getLong( "duration" );
+                    final boolean active = rs.getBoolean( "active" );
+                    final String removedby = rs.getString( "removed_by" );
+
+                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
+
+        return info;
+    }
+
+    @Override
     public List<PunishmentInfo> getActiveMutes( UUID uuid )
     {
         final List<PunishmentInfo> punishments = Lists.newArrayList();

@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import com.google.common.collect.Lists;
 
@@ -20,18 +21,7 @@ public class StaffUtils
 
         for ( String player : players )
         {
-            boolean isHidden = false;
-
-            for ( StaffUser user : BuX.getApi().getStaffMembers() )
-            {
-                if ( user.getName().equalsIgnoreCase( player ) && user.isHidden() )
-                {
-                    isHidden = true;
-                    break;
-                }
-            }
-
-            if ( !isHidden )
+            if ( !isHidden( player ) )
             {
                 temp.add( player );
             }
@@ -48,6 +38,6 @@ public class StaffUtils
                 return true;
             }
         }
-        return false;
+        return BuX.getApi().getUser( name ).map( User::isVanished ).orElse( false );
     }
 }

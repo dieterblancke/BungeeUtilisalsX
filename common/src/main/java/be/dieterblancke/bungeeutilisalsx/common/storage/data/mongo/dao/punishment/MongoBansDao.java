@@ -542,6 +542,33 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
+    public PunishmentInfo getByPunishmentId( String punishmentUid )
+    {
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+        final Document document = collection.find( Filters.eq( "punishment_uid", punishmentUid ) ).first();
+
+        if ( document != null )
+        {
+            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.BAN );
+
+            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+            final String user = document.getString( "user" );
+            final String ip = document.getString( "ip" );
+            final String reason = document.getString( "reason" );
+            final String server = document.getString( "server" );
+            final String executedby = document.getString( "executed_by" );
+            final Date date = document.getDate( "date" );
+            final long time = ( (Number) document.get( "duration" ) ).longValue();
+            final boolean active = document.getBoolean( "active" );
+            final String removedby = document.getString( "removed_by" );
+
+            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+        }
+
+        return null;
+    }
+
+    @Override
     public boolean isPunishmentUidFound( final String puid )
     {
         final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );

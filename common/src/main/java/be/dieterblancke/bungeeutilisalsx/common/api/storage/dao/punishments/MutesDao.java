@@ -66,6 +66,8 @@ public interface MutesDao
 
     PunishmentInfo getById( String id );
 
+    PunishmentInfo getByPunishmentId( String punishmentUid );
+
     List<PunishmentInfo> getActiveMutes( UUID uuid );
 
     List<PunishmentInfo> getActiveIPMutes( String ip );

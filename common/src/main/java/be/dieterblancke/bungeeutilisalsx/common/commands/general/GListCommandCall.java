@@ -28,7 +28,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
@@ -36,7 +35,6 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
-import java.util.Optional;
 
 public class GListCommandCall implements CommandCall, TabCall
 {
@@ -55,7 +53,7 @@ public class GListCommandCall implements CommandCall, TabCall
         final String separator = config.getString( "glist.playerlist.separator" );
         final List<TextComponent> messages = Lists.newArrayList();
 
-        final int hiddenUsers = getHiddenUsers();
+        final long hiddenUsers = this.getHiddenUsers();
 
         if ( config.exists( "glist.header" ) )
         {
@@ -132,74 +130,25 @@ public class GListCommandCall implements CommandCall, TabCall
         messages.forEach( user::sendMessage );
     }
 
-    private int getHiddenUsers( final ServerGroup group )
+    private long getHiddenUsers( final ServerGroup group )
     {
-        int hidden = 0;
-        for ( StaffUser user : BuX.getInstance().getStaffMembers() )
-        {
-            if ( user.isHidden() )
-            {
-                final Optional<User> optUser = BuX.getApi().getUser( user.getUuid() );
-                if ( optUser.isPresent() )
-                {
-                    if ( group.isInGroup( optUser.get().getServerName() ) )
-                    {
-                        hidden++;
-                    }
-                }
-                else if ( BuX.getApi().getBridgeManager().useBridging() )
-                {
-                    final IProxyServer server = BuX.getApi().getPlayerUtils().findPlayer( user.getName() );
-
-                    if ( server != null && group.isInGroup( server.getName() ) )
-                    {
-                        hidden++;
-                    }
-                }
-            }
-        }
-        return hidden;
+        return this.getHiddenUsers( group.getPlayerList() );
     }
 
-    private int getHiddenUsers( final IProxyServer serverInfo )
+    private long getHiddenUsers( final IProxyServer serverInfo )
     {
-        int hidden = 0;
-        for ( StaffUser user : BuX.getInstance().getStaffMembers() )
-        {
-            if ( user.isHidden() )
-            {
-                final Optional<User> optUser = BuX.getApi().getUser( user.getUuid() );
-                if ( optUser.isPresent() )
-                {
-                    if ( serverInfo.getName().equalsIgnoreCase( optUser.get().getServerName() ) )
-                    {
-                        hidden++;
-                    }
-                }
-                else if ( BuX.getApi().getBridgeManager().useBridging() )
-                {
-                    final IProxyServer server = BuX.getApi().getPlayerUtils().findPlayer( user.getName() );
-
-                    if ( server != null && serverInfo.getName().equalsIgnoreCase( server.getName() ) )
-                    {
-                        hidden++;
-                    }
-                }
-            }
-        }
-        return hidden;
+        return this.getHiddenUsers( BuX.getApi().getPlayerUtils().getPlayers( serverInfo.getName() ) );
     }
 
-    private int getHiddenUsers()
+    private long getHiddenUsers()
     {
-        int hidden = 0;
-        for ( StaffUser user : BuX.getInstance().getStaffMembers() )
-        {
-            if ( user.isHidden() )
-            {
-                hidden++;
-            }
-        }
-        return hidden;
+        return this.getHiddenUsers( BuX.getApi().getPlayerUtils().getPlayers() );
+    }
+
+    private long getHiddenUsers( final List<String> users )
+    {
+        return users.stream()
+                .filter( StaffUtils::isHidden )
+                .count();
     }
 }

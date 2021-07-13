@@ -86,7 +86,8 @@ public class StaffHistoryCommandCall implements CommandCall
                 "{currentPage}", page,
                 "{nextPage}", next,
                 "{maxPages}", pages,
-                "{type}", action
+                "{type}", action,
+                "{user}", username
         );
 
         punishments.forEach( punishment ->
@@ -99,7 +100,8 @@ public class StaffHistoryCommandCall implements CommandCall
                 "punishments.staffhistory.foot",
                 "{punishmentAmount}", allPunishments.size(),
                 "{user}", username,
-                "{type}", action
+                "{type}", action,
+                "{user}", username
         );
     }
 

@@ -78,6 +78,8 @@ public interface BansDao
 
     PunishmentInfo getById( String id );
 
+    PunishmentInfo getByPunishmentId( String punishmentUid );
+
     boolean isPunishmentUidFound( String puid );
 
     default String createUniqueBanId()

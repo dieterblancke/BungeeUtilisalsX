@@ -84,7 +84,12 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config.setPoolName( "BungeeUtilisalsX" );
         config.setLeakDetectionThreshold( 10000 );
         config.setConnectionTestQuery( "/* BungeeUtilisalsX ping */ SELECT 1;" );
-        config.setInitializationFailTimeout( -1 );
+
+        try {
+            config.setInitializationFailTimeout( -1 );
+        } catch ( NoSuchMethodError e ) {
+            // do nothing
+        }
 
         dataSource = new HikariDataSource( config );
     }
