@@ -10,8 +10,8 @@ class UtilsTest
     void testGradientsColoring()
     {
         Assertions.assertEquals(
-                "§x§1§1§1§1§1§1t§x§2§2§2§2§2§2e§x§3§3§3§3§3§3s§x§4§4§4§4§4§4t",
-                Utils.c( "<$#000000>test</$#444444>" )
+                "§x§0§0§0§0§0§0t§x§1§6§1§6§1§6e§x§2§c§2§c§2§cs§x§4§2§4§2§4§2t",
+                Utils.c( "{#000000}test{/#444444}" )
         );
     }
 

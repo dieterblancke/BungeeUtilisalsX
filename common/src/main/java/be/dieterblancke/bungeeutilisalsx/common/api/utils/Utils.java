@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionU
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 
@@ -48,8 +49,27 @@ public class Utils
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
     private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
-    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(<\\$(#[A-Fa-f0-9]{6})>)(.*)(</\\$(#[A-Fa-f0-9]{6})>)" );
+    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(\\{(#[A-Fa-f0-9]{6})})(.+?)(\\{/(#[A-Fa-f0-9]{6})})" );
+    private static final List<String> SPECIAL_COLORS = Arrays.asList( "&l", "&n", "&o", "&k", "&m" );
     private static final boolean IS_1_16;
+
+    private static final Map<Color, ChatColor> COLORS = ImmutableMap.<Color, ChatColor>builder()
+            .put( new Color( 0 ), ChatColor.getByChar( '0' ) )
+            .put( new Color( 170 ), ChatColor.getByChar( '1' ) )
+            .put( new Color( 43520 ), ChatColor.getByChar( '2' ) )
+            .put( new Color( 43690 ), ChatColor.getByChar( '3' ) )
+            .put( new Color( 11141120 ), ChatColor.getByChar( '4' ) )
+            .put( new Color( 11141290 ), ChatColor.getByChar( '5' ) )
+            .put( new Color( 16755200 ), ChatColor.getByChar( '6' ) )
+            .put( new Color( 11184810 ), ChatColor.getByChar( '7' ) )
+            .put( new Color( 5592405 ), ChatColor.getByChar( '8' ) )
+            .put( new Color( 5592575 ), ChatColor.getByChar( '9' ) )
+            .put( new Color( 5635925 ), ChatColor.getByChar( 'a' ) )
+            .put( new Color( 5636095 ), ChatColor.getByChar( 'b' ) )
+            .put( new Color( 16733525 ), ChatColor.getByChar( 'c' ) )
+            .put( new Color( 16733695 ), ChatColor.getByChar( 'd' ) )
+            .put( new Color( 16777045 ), ChatColor.getByChar( 'e' ) )
+            .put( new Color( 16777215 ), ChatColor.getByChar( 'f' ) ).build();
 
     static
     {
@@ -102,94 +122,87 @@ public class Utils
         Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
         while ( matcher.find() )
         {
-            final String startColor = matcher.group(2);
-            final String text = matcher.group(3);
-            final String endColor = matcher.group(5);
+            final String startColor = matcher.group( 2 );
+            final String text = matcher.group( 3 );
+            final String endColor = matcher.group( 5 );
 
-            message = matcher.replaceFirst( applyGradient( text, startColor, endColor ) );
+            message = matcher.replaceFirst( applyGradient( text, startColor, endColor ).replace( "$", "\\$" ) );
             matcher = GRADIENT_HEX_PATTERN.matcher( message );
         }
         return message;
     }
 
-    private static String applyGradient( final String text, final String startHexColor, final String endHexColor )
+    private static String applyGradient( String text, final String startHexColor, final String endHexColor )
     {
-        final char[] characters = text.toCharArray();
-        final int length = characters.length;
-        final Color startColor = Color.decode( startHexColor );
-        final Color endColor = Color.decode( endHexColor );
+        final ChatColor startColor = ChatColor.of( startHexColor );
+        final ChatColor endColor = ChatColor.of( endHexColor );
 
-        double rStep = Math.abs( (double) ( startColor.getRed() - endColor.getRed() ) / length );
-        double gStep = Math.abs( (double) ( startColor.getGreen() - endColor.getGreen() ) / length );
-        double bStep = Math.abs( (double) ( startColor.getBlue() - endColor.getBlue() ) / length );
-
-        if ( startColor.getRed() > endColor.getRed() )
+        final StringBuilder specialColors = new StringBuilder();
+        for ( String color : SPECIAL_COLORS )
         {
-            rStep = -rStep;
-        }
-        if ( startColor.getGreen() > endColor.getGreen() )
-        {
-            gStep = -gStep;
-        }
-        if ( startColor.getBlue() > endColor.getBlue() )
-        {
-            bStep = -bStep;
-        }
-        final IntegerRange integerRange = new IntegerRange( 0, 255 );
-        final StringBuilder resultBuilder = new StringBuilder();
-        Color textColor = new Color( startColor.getRGB() );
-        StringBuilder formatColors = new StringBuilder();
-
-        for ( int i = 0; i < length; i++ )
-        {
-            if ( isColor( characters, i ) )
+            if ( text.contains( color ) )
             {
-                i++;
-                if ( ChatColor.getByChar( characters[i] ) == ChatColor.RESET )
-                {
-                    // clearing stringbuilder
-                    formatColors.setLength( 0 );
-                }
-                else
-                {
-                    formatColors.append( "&" ).append( characters[i] );
-                }
-                continue;
+                specialColors.append( color );
+                text = text.replace( color, "" );
             }
-            final int red = integerRange.keepWithinRange( Math.round( textColor.getRed() + rStep ) );
-            final int green = integerRange.keepWithinRange( Math.round( textColor.getGreen() + gStep ) );
-            final int blue = integerRange.keepWithinRange( Math.round( textColor.getBlue() + bStep ) );
-
-            textColor = new Color( red, green, blue );
-            final net.md_5.bungee.api.ChatColor chatColor = net.md_5.bungee.api.ChatColor.of( textColor );
-
-            resultBuilder.append( chatColor.toString() )
-                    .append( formatColors )
-                    .append( characters[i] );
         }
+        final StringBuilder stringBuilder = new StringBuilder();
+        final ChatColor[] colors = getGradientColors( startColor.getColor(), endColor.getColor(), text.length() );
+        final String[] characters = text.split( "" );
 
-        return resultBuilder.toString();
-    }
-
-    private static boolean isColor( final char[] chars, final int idx )
-    {
-        if ( idx >= chars.length )
+        for ( int i = 0; i < text.length(); i++ )
         {
-            return false;
+            stringBuilder.append( colors[i] ).append( specialColors ).append( characters[i] );
         }
-        return ( chars[idx] == net.md_5.bungee.api.ChatColor.COLOR_CHAR || chars[idx] == '&' )
-                && net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) != null
-                && isFormattingColor( net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) );
+        return stringBuilder.toString();
     }
 
-    private static boolean isFormattingColor( final net.md_5.bungee.api.ChatColor color )
+    private static ChatColor[] getGradientColors( final Color start, final Color end, final int step )
     {
-        return color == ChatColor.BOLD
-                || color == ChatColor.ITALIC
-                || color == ChatColor.MAGIC
-                || color == ChatColor.STRIKETHROUGH
-                || color == ChatColor.UNDERLINE
-                || color == ChatColor.RESET;
+        final ChatColor[] colors = new ChatColor[step];
+        final int stepR = Math.abs( start.getRed() - end.getRed() ) / ( step - 1 );
+        final int stepG = Math.abs( start.getGreen() - end.getGreen() ) / ( step - 1 );
+        final int stepB = Math.abs( start.getBlue() - end.getBlue() ) / ( step - 1 );
+        final int[] direction = new int[]{
+                start.getRed() < end.getRed() ? +1 : -1,
+                start.getGreen() < end.getGreen() ? +1 : -1,
+                start.getBlue() < end.getBlue() ? +1 : -1
+        };
+
+        for ( int i = 0; i < step; i++ )
+        {
+            final Color color = new Color(
+                    start.getRed() + ( ( stepR * i ) * direction[0] ),
+                    start.getGreen() + ( ( stepG * i ) * direction[1] ),
+                    start.getBlue() + ( ( stepB * i ) * direction[2] )
+            );
+            if ( IS_1_16 )
+            {
+                colors[i] = ChatColor.of( color );
+            }
+            else
+            {
+                colors[i] = getClosestColor( color );
+            }
+        }
+        return colors;
+    }
+
+    private static ChatColor getClosestColor( Color color )
+    {
+        Color nearestColor = null;
+        double nearestDistance = Integer.MAX_VALUE;
+
+        for ( Color constantColor : COLORS.keySet() )
+        {
+            double distance = Math.pow( color.getRed() - constantColor.getRed(), 2 ) + Math.pow( color.getGreen() - constantColor.getGreen(), 2 ) + Math.pow( color.getBlue() - constantColor.getBlue(), 2 );
+            if ( nearestDistance > distance )
+            {
+                nearestColor = constantColor;
+                nearestDistance = distance;
+            }
+        }
+        return COLORS.get( nearestColor );
     }
 
     public static String formatString( final User user, final String message )

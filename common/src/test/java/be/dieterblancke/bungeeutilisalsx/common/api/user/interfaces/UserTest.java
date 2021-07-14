@@ -23,9 +23,9 @@ class UserTest
                 this.getClass().getResourceAsStream( "/lnguages/en_US.yml" )
         );
         languageConfig.set( "general-commands.bungeeutilisals.help", Arrays.asList(
-                "<$#31BF3A>&lLOBBY</$#03FD13>",
-                "<$#F1A50C>&lSURVIVAL</$#FFE71E>",
-                "<$#2EA3BD>&lSURVIVAL</$#0CF1EE>"
+                "{#31BF3A}&lLOBBY{/#03FD13}",
+                "{#F1A50C}&lSURVIVAL{/#FFE71E}",
+                "{#2EA3BD}&lSURVIVAL{/#0CF1EE}"
         ) );
         languageConfig.set( "prefix", "[test] " );
         when( user.getLanguageConfig() ).thenReturn( languageConfig );
@@ -40,9 +40,9 @@ class UserTest
 
         final String component = TextComponent.toLegacyText( argumentCaptor.getValue() );
         Assertions.assertEquals(
-                "§f[test] §x§2§a§c§8§3§4§lL§x§2§3§d§1§2§e§lO§x§1§c§d§a§2§8§lB§x§1§5§e§3§2§2§lB§x§0§e§e§c§1§c§lY\n" +
-                        "§x§f§2§a§c§0§e§lS§x§f§3§b§3§1§0§lU§x§f§4§b§a§1§2§lR§x§f§5§c§1§1§4§lV§x§f§6§c§8§1§6§lI§x§f§7§c§f§1§8§lV§x§f§8§d§6§1§a§lA§x§f§9§d§d§1§c§lL\n" +
-                        "§x§2§b§a§b§c§2§lS§x§2§8§b§3§c§7§lU§x§2§5§b§b§c§c§lR§x§2§2§c§3§d§1§lV§x§1§f§c§b§d§6§lI§x§1§c§d§3§d§b§lV§x§1§9§d§b§e§0§lA§x§1§6§e§3§e§5§lL",
+                "§f[test] §x§3§1§b§f§3§a§lL§x§2§6§c§e§3§1§lO§x§1§b§d§d§2§8§lB§x§1§0§e§c§1§f§lB§x§0§5§f§b§1§6§lY\n" +
+                        "§x§f§1§a§5§0§c§lS§x§f§3§a§e§0§e§lU§x§f§5§b§7§1§0§lR§x§f§7§c§0§1§2§lV§x§f§9§c§9§1§4§lI§x§f§b§d§2§1§6§lV§x§f§d§d§b§1§8§lA§x§f§f§e§4§1§a§lL\n" +
+                        "§x§2§e§a§3§b§d§lS§x§2§a§a§e§c§4§lU§x§2§6§b§9§c§b§lR§x§2§2§c§4§d§2§lV§x§1§e§c§f§d§9§lI§x§1§a§d§a§e§0§lV§x§1§6§e§5§e§7§lA§x§1§2§f§0§e§e§lL",
                 component
         );
     }
