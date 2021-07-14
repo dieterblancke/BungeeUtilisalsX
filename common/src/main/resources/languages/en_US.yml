@@ -164,7 +164,10 @@ general-commands:
     list:
       wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
       header: '&eReport list (page &b{page}&e)'
+      footer: ''
       no-reports: '&eThere are no reports matching this criteria.'
+      handled: 'Handled'
+      unhandled: 'Unhandled'
       item:
         text: '&b#{id}&e: &b{reported} &efor &b{reason} &eby &b{reporter} &7&o(Hover Me!)'
         hover:
