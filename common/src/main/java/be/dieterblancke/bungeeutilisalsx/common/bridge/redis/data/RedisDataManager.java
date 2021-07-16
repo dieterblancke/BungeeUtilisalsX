@@ -22,7 +22,7 @@ public class RedisDataManager implements IRedisDataManager
     private final LoadingCache<String, Long> domainCountCache = CacheHelper.<String, Long>builder()
             .build( builder ->
             {
-                builder.maximumSize( 100 );
+                builder.maximumSize( 250 );
                 builder.expireAfterWrite( 3, TimeUnit.MINUTES );
             }, this::getAmountOfOnlineUsersOnDomainUncached );
 

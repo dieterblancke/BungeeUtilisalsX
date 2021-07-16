@@ -72,7 +72,7 @@ public class BridgeManager implements IBridgeManager
     {
         final ISection config = ConfigFiles.CONFIG.getConfig().getSection( "bridging" );
 
-        return config.getBoolean( "enabled" );
+        return config.getBoolean( "enabled" ) && redisBridge != null && redisBridge.isSetup();
     }
 
     public RedisBridge getBridge()

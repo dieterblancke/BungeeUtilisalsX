@@ -6,6 +6,7 @@ import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -67,12 +68,10 @@ public class CacheHelper
 
         public LoadingCache<K, V> build( final Consumer<CacheBuilder<K, V>> builderConsumer, final SimpleCacheLoader<K, V> cacheLoader )
         {
-            builderConsumer.accept( builder );
-
             return build( builderConsumer, new CacheLoader<K, V>()
             {
                 @Override
-                public V load( K k ) throws Exception
+                public V load( @Nullable K k ) throws Exception
                 {
                     return cacheLoader.load( k );
                 }

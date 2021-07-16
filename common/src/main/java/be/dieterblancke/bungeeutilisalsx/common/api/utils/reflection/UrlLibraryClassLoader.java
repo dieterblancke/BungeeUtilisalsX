@@ -29,19 +29,27 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.logging.Level;
 
-public class JarClassLoader
+public class UrlLibraryClassLoader implements LibraryClassLoader
 {
 
-    private static final Method ADD_URL;
+    static Method ADD_URL;
 
     static
     {
-        ADD_URL = ReflectionUtils.getMethod( URLClassLoader.class, "addURL", URL.class );
+        try
+        {
+            ADD_URL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
+            io.github.karlatemp.unsafeaccessor.Root.openAccess(ADD_URL);
+        }
+        catch ( NoSuchMethodException e )
+        {
+            e.printStackTrace();
+        }
     }
 
-    private final URLClassLoader classLoader;
+    final URLClassLoader classLoader;
 
-    public JarClassLoader()
+    public UrlLibraryClassLoader()
     {
         final ClassLoader loader = AbstractBungeeUtilisalsX.class.getClassLoader();
 
@@ -55,25 +63,14 @@ public class JarClassLoader
         }
     }
 
-    public void loadJar( URL url )
-    {
-        try
-        {
-            ADD_URL.invoke( this.classLoader, url );
-        }
-        catch ( IllegalAccessException | InvocationTargetException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
-    }
-
+    @Override
     public void loadJar( File file )
     {
         try
         {
-            loadJar( file.toURI().toURL() );
+            ADD_URL.invoke( this.classLoader, file.toURI().toURL() );
         }
-        catch ( MalformedURLException e )
+        catch ( MalformedURLException | IllegalAccessException | InvocationTargetException e )
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
