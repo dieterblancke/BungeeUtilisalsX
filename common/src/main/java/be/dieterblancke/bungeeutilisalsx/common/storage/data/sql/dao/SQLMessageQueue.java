@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.gson.Gson;
@@ -28,6 +29,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 import java.util.logging.Level;
@@ -107,13 +109,14 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement( format(
-                      "INSERT INTO {messagequeue-table}(user, message, type, active) VALUES(?, ?, ?, ?);"
+                      "INSERT INTO {messagequeue-table}(user, message, type, active, date) VALUES(?, ?, ?, ?, ?);"
               ) ) )
         {
             pstmt.setString( 1, message.getUser() );
             pstmt.setString( 2, GSON.toJson( message.getMessage() ) );
             pstmt.setString( 3, message.getType() );
             pstmt.setBoolean( 4, true );
+            pstmt.setString( 5, Dao.formatDateToString(new Date() ) );
 
             pstmt.executeUpdate();
         }
