@@ -32,4 +32,30 @@ class UtilsTest
                 Utils.c( "&1test" )
         );
     }
+
+    @Test
+    void testParseDateDiff()
+    {
+        Assertions.assertEquals(
+                Utils.parseDateDiff( "5d3h18m5s" ),
+                System.currentTimeMillis()
+                        + TimeUnit.DAYS.toMillis( 5 )
+                        + TimeUnit.HOURS.toMillis( 3 )
+                        + TimeUnit.MINUTES.toMillis( 18 )
+                        + TimeUnit.SECONDS.toMillis( 5 )
+        );
+    }
+
+    @Test
+    void testParseDateDiffInPast()
+    {
+        Assertions.assertEquals(
+                Utils.parseDateDiffInPast( "5d3h18m5s" ),
+                System.currentTimeMillis()
+                        - TimeUnit.DAYS.toMillis( 5 )
+                        - TimeUnit.HOURS.toMillis( 3 )
+                        - TimeUnit.MINUTES.toMillis( 18 )
+                        - TimeUnit.SECONDS.toMillis( 5 )
+        );
+    }
 }

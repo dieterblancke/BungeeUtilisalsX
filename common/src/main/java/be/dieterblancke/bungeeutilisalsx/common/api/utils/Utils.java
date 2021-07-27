@@ -241,7 +241,7 @@ public class Utils
      * Formats a message, translates color codes and replaces general placeholders.
      *
      * @param message The message to be formatted.
-     * @param hex Replace hex colors or not.
+     * @param hex     Replace hex colors or not.
      * @return The formatted message.
      */
     public static String formatString( final String message, final boolean hex )
@@ -389,6 +389,17 @@ public class Utils
         }
 
         return lines;
+    }
+
+    /**
+     * Attempts to parse a long time from a given string.
+     *
+     * @param time The string you want to importer to time.
+     * @return The time, in MILLIS, you requested.
+     */
+    public static long parseDateDiffInPast( final String time )
+    {
+        return System.currentTimeMillis() - ( parseDateDiff( time ) - System.currentTimeMillis() );
     }
 
     /**

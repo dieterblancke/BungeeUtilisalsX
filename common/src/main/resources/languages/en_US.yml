@@ -750,6 +750,9 @@ punishments:
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
 
+  staffrollback:
+    usage: '&ePlease use &b/staffrollback (user) (time) [-f]&e!'
+
   track:
     usage: '&fPlease use &a/trackpunish (user) (reason)&f!'
     usage-server: '&fPlease use &a/trackpunish (user) (server) (reason)&f!'

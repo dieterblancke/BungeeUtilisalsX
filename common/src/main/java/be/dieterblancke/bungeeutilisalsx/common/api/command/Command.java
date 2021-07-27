@@ -76,7 +76,11 @@ public class Command
         {
             if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
             {
-                params.add( argument );
+                if ( user.hasPermission( this.permission + ".parameters." + argument.substring( 1 ) )
+                        || user.hasPermission( this.permission + ".parameters.*" ) )
+                {
+                    params.add( argument );
+                }
             }
             else
             {
