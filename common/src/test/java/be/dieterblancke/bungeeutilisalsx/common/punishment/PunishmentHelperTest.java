@@ -3,11 +3,9 @@ package be.dieterblancke.bungeeutilisalsx.common.punishment;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -43,7 +41,7 @@ class PunishmentHelperTest
                 "testserver",
                 "test reason",
                 date,
-                date.getTime() + TimeUnit.DAYS.toMillis( 5 ),
+                date.getTime() + TimeUnit.DAYS.toMillis( 4 ) + TimeUnit.HOURS.toMillis( 5 ),
                 true,
                 null,
                 "abc"
@@ -59,8 +57,6 @@ class PunishmentHelperTest
         );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
-        Thread.sleep( 3000 );
-
         final List<String> placeHolders = punishmentHelper.getPlaceHolders( punishmentInfo );
 
         assertEquals( Arrays.asList(
@@ -73,7 +69,7 @@ class PunishmentHelperTest
                 "{user}", "testuser",
                 "{id}", "1",
                 "{type}", "ban",
-                "{expire}", "03-08-2021 08:48:48",
+                "{expire}", "02-08-2021 13:48:48",
                 "{timeLeft}", "4d",
                 "{removedBy}", "Unknown",
                 "{punishment_uid}", "abc"
@@ -90,15 +86,13 @@ class PunishmentHelperTest
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
 
-        Thread.sleep( 3000 );
-
         final String text = punishmentHelper.setPlaceHolders(
                 "{reason} {date} {by} {server} {uuid} {ip} {user} {id} {type} {expire} {timeLeft} {removedBy} {punishment_uid}",
                 punishmentInfo
         );
 
         assertEquals(
-                "test reason 29-07-2021 08:48:48 testexec testserver e7e5216f-c419-43b8-a5e7-525386c56e9b 127.0.0.1 testuser 1 ban 03-08-2021 08:48:48 4d Unknown abc",
+                "test reason 29-07-2021 08:48:48 testexec testserver e7e5216f-c419-43b8-a5e7-525386c56e9b 127.0.0.1 testuser 1 ban 02-08-2021 13:48:48 4d Unknown abc",
                 text
         );
     }
