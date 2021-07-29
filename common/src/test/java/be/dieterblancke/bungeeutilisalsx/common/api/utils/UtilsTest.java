@@ -1,7 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
-import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilsTest
 {
@@ -9,7 +11,7 @@ class UtilsTest
     @Test
     void testGradientsColoring()
     {
-        Assertions.assertEquals(
+        assertEquals(
                 "§x§0§0§0§0§0§0t§x§1§6§1§6§1§6e§x§2§c§2§c§2§cs§x§4§2§4§2§4§2t",
                 Utils.c( "{#000000}test{/#444444}" )
         );
@@ -18,7 +20,7 @@ class UtilsTest
     @Test
     void testHexColoring()
     {
-        Assertions.assertEquals(
+        assertEquals(
                 "§x§1§1§1§1§1§1test",
                 Utils.c( "<#111111>test" )
         );
@@ -27,7 +29,7 @@ class UtilsTest
     @Test
     void testNormalColoring()
     {
-        Assertions.assertEquals(
+        assertEquals(
                 "§1test",
                 Utils.c( "&1test" )
         );
@@ -36,7 +38,7 @@ class UtilsTest
     @Test
     void testParseDateDiff()
     {
-        Assertions.assertEquals(
+        assertEquals(
                 Utils.parseDateDiff( "5d3h18m5s" ),
                 System.currentTimeMillis()
                         + TimeUnit.DAYS.toMillis( 5 )
@@ -49,13 +51,79 @@ class UtilsTest
     @Test
     void testParseDateDiffInPast()
     {
-        Assertions.assertEquals(
+        assertEquals(
                 Utils.parseDateDiffInPast( "5d3h18m5s" ),
                 System.currentTimeMillis()
                         - TimeUnit.DAYS.toMillis( 5 )
                         - TimeUnit.HOURS.toMillis( 3 )
                         - TimeUnit.MINUTES.toMillis( 18 )
                         - TimeUnit.SECONDS.toMillis( 5 )
+        );
+    }
+
+    @Test
+    @DisplayName( "Tests time left method with days, hours, minutes and seconds." )
+    void testTimeLeft1()
+    {
+        assertEquals(
+                "5d 8h 50m 38s",
+                Utils.getTimeLeft(
+                        "%days%d %hours%h %minutes%m %seconds%s",
+                        TimeUnit.DAYS.toMillis( 5 ) + TimeUnit.HOURS.toMillis( 8 )
+                                + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+                )
+        );
+    }
+
+    @Test
+    @DisplayName( "Tests time left method with hours, minutes and seconds, no days." )
+    void testTimeLeft2()
+    {
+        assertEquals(
+                "0d 8h 50m 38s",
+                Utils.getTimeLeft(
+                        "%days%d %hours%h %minutes%m %seconds%s",
+                        TimeUnit.HOURS.toMillis( 8 ) + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+                )
+        );
+    }
+
+    @Test
+    @DisplayName( "Tests time left method with minutes and seconds, no days and hours." )
+    void testTimeLeft3()
+    {
+        assertEquals(
+                "0d 0h 50m 38s",
+                Utils.getTimeLeft(
+                        "%days%d %hours%h %minutes%m %seconds%s",
+                        TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+                )
+        );
+    }
+
+    @Test
+    @DisplayName( "Tests time left method with seconds, no days, hours and minutes." )
+    void testTimeLeft4()
+    {
+        assertEquals(
+                "0d 0h 0m 38s",
+                Utils.getTimeLeft(
+                        "%days%d %hours%h %minutes%m %seconds%s",
+                        TimeUnit.SECONDS.toMillis( 38 )
+                )
+        );
+    }
+
+    @Test
+    @DisplayName( "Tests time left method with 0 timestamp." )
+    void testTimeLeft5()
+    {
+        assertEquals(
+                "0d 0h 0m 0s",
+                Utils.getTimeLeft(
+                        "%days%d %hours%h %minutes%m %seconds%s",
+                        0
+                )
         );
     }
 }

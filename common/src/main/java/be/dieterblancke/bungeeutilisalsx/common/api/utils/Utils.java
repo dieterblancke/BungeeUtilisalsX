@@ -901,39 +901,15 @@ public class Utils
 
     public static String getTimeLeft( final String format, final long millis )
     {
+        final long seconds = millis / 1000;
+        final long minutes = seconds / 60;
+        final long hours = minutes / 60;
+        final long days = hours / 24;
+
         return format
-                .replace( "%days%", String.valueOf( getDays( millis ) ) )
-                .replace( "%hours%", String.valueOf( getHours( millis ) ) )
-                .replace( "%minutes%", String.valueOf( getMinutes( millis ) ) )
-                .replace( "%seconds%", String.valueOf( getSeconds( millis ) ) );
-    }
-
-    private static long getDays( final long time )
-    {
-        return TimeUnit.MILLISECONDS.toDays( time );
-    }
-
-    private static long getHours( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-
-        return TimeUnit.MILLISECONDS.toHours( time );
-    }
-
-    private static long getMinutes( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-
-        return TimeUnit.MILLISECONDS.toMinutes( time );
-    }
-
-    private static long getSeconds( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-        time = time - TimeUnit.MINUTES.toMillis( getMinutes( time ) );
-
-        return TimeUnit.MILLISECONDS.toSeconds( time );
+                .replace( "%days%", String.valueOf( days ) )
+                .replace( "%hours%", String.valueOf( hours % 24 ) )
+                .replace( "%minutes%", String.valueOf( minutes % 60 ) )
+                .replace( "%seconds%", String.valueOf( seconds % 60 ) );
     }
 }

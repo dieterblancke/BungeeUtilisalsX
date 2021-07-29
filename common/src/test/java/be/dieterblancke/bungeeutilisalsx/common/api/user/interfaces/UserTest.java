@@ -20,7 +20,7 @@ class UserTest
     {
         User user = mock( User.class, CALLS_REAL_METHODS );
         final IConfiguration languageConfig = IConfiguration.loadYamlConfiguration(
-                this.getClass().getResourceAsStream( "/lnguages/en_US.yml" )
+                this.getClass().getResourceAsStream( "/languages/en_US.yml" )
         );
         languageConfig.set( "general-commands.bungeeutilisals.help", Arrays.asList(
                 "{#31BF3A}&lLOBBY{/#03FD13}",
