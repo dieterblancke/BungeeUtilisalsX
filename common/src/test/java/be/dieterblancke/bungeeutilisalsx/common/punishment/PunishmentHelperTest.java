@@ -51,7 +51,7 @@ class PunishmentHelperTest
     }
 
     @Test
-    void testGetPlaceHolders() throws NoSuchFieldException, IllegalAccessException, ParseException
+    void testGetPlaceHolders() throws NoSuchFieldException, IllegalAccessException, ParseException, InterruptedException
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.PUNISHMENT_CONFIG,
@@ -59,6 +59,8 @@ class PunishmentHelperTest
         );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
+        Thread.sleep( 3000 );
+
         final List<String> placeHolders = punishmentHelper.getPlaceHolders( punishmentInfo );
 
         assertEquals( Arrays.asList(
@@ -79,7 +81,7 @@ class PunishmentHelperTest
     }
 
     @Test
-    void testSetPlaceHolders() throws NoSuchFieldException, IllegalAccessException, ParseException
+    void testSetPlaceHolders() throws NoSuchFieldException, IllegalAccessException, ParseException, InterruptedException
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.PUNISHMENT_CONFIG,
@@ -87,6 +89,9 @@ class PunishmentHelperTest
         );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
+
+        Thread.sleep( 3000 );
+
         final String text = punishmentHelper.setPlaceHolders(
                 "{reason} {date} {by} {server} {uuid} {ip} {user} {id} {type} {expire} {timeLeft} {removedBy} {punishment_uid}",
                 punishmentInfo
