@@ -110,7 +110,7 @@ public class PunishmentHelper implements IPunishmentHelper
         final List<String> placeHolders = this.getPlaceHolders( info );
         for ( int i = 0; i < placeHolders.size(); i++ )
         {
-            line = line.replace( placeHolders.get( i ), placeHolders.get( i++ ) );
+            line = line.replace( placeHolders.get( i ), placeHolders.get( ++i ) );
         }
 
         return line;
