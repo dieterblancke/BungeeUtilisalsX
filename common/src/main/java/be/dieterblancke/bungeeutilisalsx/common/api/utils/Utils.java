@@ -18,6 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
@@ -39,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -771,7 +774,7 @@ public class Utils
      * @throws UnsupportedOperationException if the collection is immutable
      *                                       and originals contains a string which starts with the specified
      *                                       search string.
-     * @throws IllegalArgumentException      if any parameter is is null
+     * @throws IllegalArgumentException      if any parameter is null
      * @throws IllegalArgumentException      if originals contains a null element.
      */
     public static <T extends Collection<? super String>> T copyPartialMatches( final String token, final Iterable<String> originals, final T collection ) throws UnsupportedOperationException, IllegalArgumentException
@@ -815,14 +818,9 @@ public class Utils
      * @param placeholders the placeholders with their values to be replaced
      * @return the message with the replaced placeholders.
      */
-    public static String replacePlaceHolders( String message, final Object... placeholders )
+    public static String replacePlaceHolders( final String message, final Object... placeholders )
     {
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
-        message = PlaceHolderAPI.formatMessage( message );
-        return message;
+        return replacePlaceHolders( null, message, placeholders );
     }
 
     /**
@@ -835,11 +833,55 @@ public class Utils
      */
     public static String replacePlaceHolders( final User user, String message, final Object... placeholders )
     {
+        return replacePlaceHolders( user, message, null, null, placeholders );
+    }
+
+    /**
+     * Replaces placeholders in a string.
+     *
+     * @param message                  the message to replace in
+     * @param prePlaceholderFormatter  executed before replacing placeholders
+     * @param postPlaceholderFormatter executed after replacing placeholders
+     * @param placeholders             the placeholders with their values to be replaced
+     * @return the message with the replaced placeholders.
+     */
+    public static String replacePlaceHolders( final String message,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
+    {
+        return replacePlaceHolders( null, message, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
+    }
+
+    /**
+     * Replaces placeholders in a string.
+     *
+     * @param user                     the user to format placeholders for
+     * @param message                  the message to replace in
+     * @param prePlaceholderFormatter  executed before replacing placeholders
+     * @param postPlaceholderFormatter executed after replacing placeholders
+     * @param placeholders             the placeholders with their values to be replaced
+     * @return the message with the replaced placeholders.
+     */
+    public static String replacePlaceHolders( final User user,
+                                              String message,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
+    {
+        if ( prePlaceholderFormatter != null )
+        {
+            message = prePlaceholderFormatter.apply( message );
+        }
         for ( int i = 0; i < placeholders.length - 1; i += 2 )
         {
             message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
         message = PlaceHolderAPI.formatMessage( user, message );
+        if ( postPlaceholderFormatter != null )
+        {
+            message = postPlaceholderFormatter.apply( message );
+        }
         return message;
     }
 
@@ -911,5 +953,17 @@ public class Utils
                 .replace( "%hours%", String.valueOf( hours % 24 ) )
                 .replace( "%minutes%", String.valueOf( minutes % 60 ) )
                 .replace( "%seconds%", String.valueOf( seconds % 60 ) );
+    }
+
+    public static LanguageConfig getLanguageConfiguration( User user )
+    {
+        if ( user == null )
+        {
+            return BuX.getApi().getLanguageManager().getConfig(
+                    BuX.getInstance().getName(),
+                    BuX.getApi().getLanguageManager().getDefaultLanguage()
+            );
+        }
+        return user.getLanguageConfig();
     }
 }

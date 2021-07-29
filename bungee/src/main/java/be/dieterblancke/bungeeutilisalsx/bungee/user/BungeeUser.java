@@ -25,6 +25,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -32,13 +33,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -57,7 +56,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Setter
@@ -260,9 +258,9 @@ public class BungeeUser implements User
     @Override
     public void langKick( String path, Object... placeholders )
     {
-        if ( getLanguageConfig().isList( path ) )
+        if ( getLanguageConfig().getConfig().isList( path ) )
         {
-            final String reason = getLanguageConfig().getStringList( path ).stream().map( str ->
+            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
             {
                 for ( int i = 0; i < placeholders.length - 1; i += 2 )
                 {
@@ -275,7 +273,7 @@ public class BungeeUser implements User
         }
         else
         {
-            String message = getLanguageConfig().getString( path );
+            String message = getLanguageConfig().getConfig().getString( path );
             for ( int i = 0; i < placeholders.length - 1; i += 2 )
             {
                 message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
@@ -318,12 +316,6 @@ public class BungeeUser implements User
     public int getPing()
     {
         return parent.getPing();
-    }
-
-    @Override
-    public IConfiguration getLanguageConfig()
-    {
-        return BuX.getApi().getLanguageManager().getLanguageConfiguration( BuX.getInstance().getName(), this );
     }
 
     @Override

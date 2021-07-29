@@ -19,10 +19,12 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.PlaceHolderEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -69,7 +71,7 @@ public class DefaultPlaceHolders implements PlaceHolderPack
 
     private String getCurrentTime( final User user, final String type )
     {
-        final IConfiguration configuration = getLanguageConfiguration( user );
+        final IConfiguration configuration = Utils.getLanguageConfiguration( user ).getConfig();
 
         if ( configuration == null )
         {
@@ -83,17 +85,5 @@ public class DefaultPlaceHolders implements PlaceHolderPack
         final SimpleDateFormat dateFormat = new SimpleDateFormat( format );
 
         return dateFormat.format( new Date() );
-    }
-
-    private IConfiguration getLanguageConfiguration( User user )
-    {
-        if ( user == null )
-        {
-            return BuX.getApi().getLanguageManager().getConfig(
-                    BuX.getInstance().getName(),
-                    BuX.getApi().getLanguageManager().getDefaultLanguage()
-            );
-        }
-        return user.getLanguageConfig();
     }
 }

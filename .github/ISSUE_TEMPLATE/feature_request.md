@@ -1,7 +1,5 @@
 ---
-name: Feature request
-about: Suggest an idea that can be added to BungeeUtilisalsX
-title: "[FEATURE] "
+name: Feature request about: Suggest an idea that can be added to BungeeUtilisalsX title: "[FEATURE] "
 labels: ''
 assignees: ''
 

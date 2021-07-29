@@ -104,7 +104,7 @@ public class ActionBarAnnouncement extends Announcement
             {
                 bar = BuX.getApi().getLanguageManager().getLanguageConfiguration(
                         BuX.getInstance().getName(), player
-                ).getString( message );
+                ).getConfig().getString( message );
             }
 
             player.sendActionBar( bar );

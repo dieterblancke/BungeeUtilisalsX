@@ -227,7 +227,7 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid",  punishmentUid);
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.IPTEMPBAN.getTable() ).insertOne( new Document( data ) );
         return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );

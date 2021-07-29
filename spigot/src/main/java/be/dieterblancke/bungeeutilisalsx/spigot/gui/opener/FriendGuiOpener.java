@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.gui.opener;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
@@ -10,15 +9,10 @@ import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.friend.FriendGuiItemProvider;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.friend.FriendGuiUtils;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 
 public class FriendGuiOpener extends GuiOpener
 {

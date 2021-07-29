@@ -75,12 +75,12 @@ public class TempMuteCommandCall extends PunishmentCommand
             if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
             {
                 mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        muted.getLanguageConfig(), PunishmentType.TEMPMUTE, reason
+                        muted.getLanguageConfig().getConfig(), PunishmentType.TEMPMUTE, reason
                 );
             }
             if ( mute == null )
             {
-                mute = muted.getLanguageConfig().getStringList( "punishments.tempmute.onmute" );
+                mute = muted.getLanguageConfig().getConfig().getStringList( "punishments.tempmute.onmute" );
             }
 
             mute.forEach( str -> muted.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );

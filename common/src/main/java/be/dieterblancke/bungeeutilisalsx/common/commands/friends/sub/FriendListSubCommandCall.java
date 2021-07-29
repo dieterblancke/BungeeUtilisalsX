@@ -85,18 +85,18 @@ public class FriendListSubCommandCall implements CommandCall
                 "{maxPages}", pages
         );
 
-        final String now = user.getLanguageConfig().getString( "friends.list.online" );
-        final String onlineText = user.getLanguageConfig().getString( "friends.list.status.online" );
-        final String offlineText = user.getLanguageConfig().getString( "friends.list.status.offline" );
+        final String now = user.getLanguageConfig().getConfig().getString( "friends.list.online" );
+        final String onlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.online" );
+        final String offlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.offline" );
 
         for ( FriendData friend : friends )
         {
             user.sendLangMessage(
                     "friends.list.format",
                     "{friendName}", friend.getFriend(),
-                    "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig() ),
+                    "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ),
                     "{online}", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
-                    "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig() )
+                    "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() )
             );
         }
         user.sendLangMessage(

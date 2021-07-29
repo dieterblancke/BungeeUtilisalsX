@@ -18,21 +18,20 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
 import java.util.UUID;
@@ -104,12 +103,13 @@ public interface User extends MessageRecipient
      *
      * @param message The message which has to be sent. The BungeeUtilisalsX prefix will appear before.
      */
-    default void sendMessage( String message ) {
+    default void sendMessage( String message )
+    {
         if ( message.isEmpty() )
         {
             return;
         }
-        sendMessage( getLanguageConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
+        sendMessage( getLanguageConfig().getConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
     }
 
     /**
@@ -119,7 +119,7 @@ public interface User extends MessageRecipient
      */
     default void sendLangMessage( String path )
     {
-        sendLangMessage( true, path );
+        this.getLanguageConfig().sendLangMessage( this, path );
     }
 
     /**
@@ -134,38 +134,7 @@ public interface User extends MessageRecipient
      */
     default void sendLangMessage( String path, boolean prefix, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders )
     {
-        if ( getLanguageConfig().isSection( path ) )
-        {
-            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
-            final TextComponent component = MessageBuilder.buildMessage(
-                    this, getLanguageConfig().getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
-            );
-
-            sendMessage( component );
-            return;
-        }
-
-        String message = buildLangMessage( path, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
-
-        if ( message.isEmpty() )
-        {
-            return;
-        }
-
-        if ( message.startsWith( "noprefix: " ) )
-        {
-            prefix = false;
-            message = message.replaceFirst( "noprefix: ", "" );
-        }
-
-        if ( prefix )
-        {
-            sendMessage( message );
-        }
-        else
-        {
-            sendRawColorMessage( message );
-        }
+        this.getLanguageConfig().sendLangMessage( this, path, prefix, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
     }
 
     /**
@@ -176,7 +145,7 @@ public interface User extends MessageRecipient
      */
     default void sendLangMessage( String path, Object... placeholders )
     {
-        sendLangMessage( true, path, placeholders );
+        this.getLanguageConfig().sendLangMessage( this, true, path, placeholders );
     }
 
     /**
@@ -187,7 +156,7 @@ public interface User extends MessageRecipient
      */
     default void sendLangMessage( boolean prefix, String path )
     {
-        sendLangMessage( prefix, path, new Object[0] );
+        this.getLanguageConfig().sendLangMessage( this, prefix, path, new Object[0] );
     }
 
     /**
@@ -199,7 +168,7 @@ public interface User extends MessageRecipient
      */
     default void sendLangMessage( boolean prefix, String path, Object... placeholders )
     {
-        this.sendLangMessage( path, prefix, null, null, placeholders );
+        this.getLanguageConfig().sendLangMessage( this, path, prefix, null, null, placeholders );
     }
 
     /**
@@ -208,7 +177,8 @@ public interface User extends MessageRecipient
      * @param prefix  The prefix for the message. Mostly used for plugin prefixes.
      * @param message The message which has to be sent.
      */
-    default void sendMessage( String prefix, String message ) {
+    default void sendMessage( String prefix, String message )
+    {
         sendMessage( Utils.format( prefix + message ) );
     }
 
@@ -295,7 +265,18 @@ public interface User extends MessageRecipient
     /**
      * @return The user his language config.
      */
-    IConfiguration getLanguageConfig();
+    default LanguageConfig getLanguageConfig()
+    {
+        return this.getLanguageConfig( BuX.getInstance().getName() );
+    }
+
+    /**
+     * @return The user his language config.
+     */
+    default LanguageConfig getLanguageConfig( final String plugin )
+    {
+        return BuX.getApi().getLanguageManager().getLanguageConfiguration( plugin, this );
+    }
 
     /**
      * @return True if console, false if player.
@@ -385,7 +366,7 @@ public interface User extends MessageRecipient
     void sendActionBar( String actionbar );
 
     /**
-     * Sends an title to the user.
+     * Sends a title to the user.
      *
      * @param title    the title to be sent
      * @param subtitle the subtitle to be sent
@@ -396,7 +377,7 @@ public interface User extends MessageRecipient
     void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout );
 
     /**
-     * @return true if user is not receiving pm's, false if the user does allow pm's
+     * @return true if user is not receiving pms, false if the user does allow pms
      */
     boolean isMsgToggled();
 

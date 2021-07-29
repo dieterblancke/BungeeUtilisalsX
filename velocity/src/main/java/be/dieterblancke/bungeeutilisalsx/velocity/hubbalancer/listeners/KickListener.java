@@ -68,7 +68,7 @@ public class KickListener
                 final IConfiguration language = BuX.getApi().getLanguageManager().getLanguageConfiguration(
                         BuX.getInstance().getName(),
                         event.getPlayer().getUsername()
-                );
+                ).getConfig();
 
                 data = BuX.getApi().getHubBalancer().findBestServer( HubServerType.FALLBACK );
 

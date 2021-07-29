@@ -78,7 +78,7 @@ public class BossBarAnnouncement extends Announcement
     {
         stream.forEach( user ->
         {
-            final IConfiguration config = user.getLanguageConfig();
+            final IConfiguration config = user.getLanguageConfig().getConfig();
 
             messages.forEach( message ->
             {

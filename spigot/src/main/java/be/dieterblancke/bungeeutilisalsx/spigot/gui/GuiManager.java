@@ -4,10 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.FriendActionsGuiOpener;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.FriendGuiOpener;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.MainFriendRequestsGuiOpener;
-import be.dieterblancke.bungeeutilisalsx.spigot.gui.opener.OutgoingFriendRequestsGuiOpener;
 import lombok.Data;
 import org.bukkit.entity.Player;
 

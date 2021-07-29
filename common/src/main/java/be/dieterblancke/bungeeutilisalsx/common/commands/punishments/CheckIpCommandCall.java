@@ -95,7 +95,7 @@ public class CheckIpCommandCall implements CommandCall
                 }
 
                 formattedUsers.add(
-                        Utils.c( user.getLanguageConfig().getString( colorPath ) )
+                        Utils.c( user.getLanguageConfig().getConfig().getString( colorPath ) )
                                 + u
                 );
             } );
@@ -103,7 +103,7 @@ public class CheckIpCommandCall implements CommandCall
             user.sendLangMessage(
                     "punishments.checkip.format.message",
                     "{players}", Utils.formatList(
-                            formattedUsers, user.getLanguageConfig().getString( "punishments.checkip.format.separator" )
+                            formattedUsers, user.getLanguageConfig().getConfig().getString( "punishments.checkip.format.separator" )
                     )
             );
 

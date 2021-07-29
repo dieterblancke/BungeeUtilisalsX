@@ -4,11 +4,11 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
@@ -26,7 +26,6 @@ import org.apache.logging.log4j.Logger;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 public class ConsoleUser implements User
 {
@@ -134,7 +133,7 @@ public class ConsoleUser implements User
         {
             return;
         }
-        sendMessage( getLanguageConfig().getString( "prefix" ), message );
+        sendMessage( getLanguageConfig().getConfig().getString( "prefix" ), message );
     }
 
     @Override
@@ -204,12 +203,6 @@ public class ConsoleUser implements User
     public int getPing()
     {
         return 0;
-    }
-
-    @Override
-    public IConfiguration getLanguageConfig()
-    {
-        return BuX.getApi().getLanguageManager().getConfig( BuX.getInstance().getName(), getLanguage() );
     }
 
     @Override

@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
-import com.velocitypowered.api.proxy.InboundConnection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

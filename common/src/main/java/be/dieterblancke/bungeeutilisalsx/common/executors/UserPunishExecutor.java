@@ -21,7 +21,6 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
@@ -108,7 +107,8 @@ public class UserPunishExecutor implements EventExecutor
         }
     }
 
-    private long getPunishmentAmount( final UserPunishmentFinishEvent event, final PunishmentAction action ) {
+    private long getPunishmentAmount( final UserPunishmentFinishEvent event, final PunishmentAction action )
+    {
         if ( event.isUserPunishment() )
         {
             // uuid involved

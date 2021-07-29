@@ -76,7 +76,7 @@ public class ChatAnnouncement extends Announcement
     {
         stream.forEach( user ->
         {
-            final IConfiguration config = user.getLanguageConfig();
+            final IConfiguration config = user.getLanguageConfig().getConfig();
 
             if ( languagePath != null )
             {

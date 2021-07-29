@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.api.language;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.FileStorageType;
-import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.io.File;
 import java.util.List;
@@ -82,14 +81,14 @@ public interface ILanguageManager
      * @param user   The user of which you want to get the config.
      * @return The JsonConfiguration bound to the User's language.
      */
-    IConfiguration getLanguageConfiguration( String plugin, User user );
+    LanguageConfig getLanguageConfiguration( String plugin, User user );
 
     /**
      * @param plugin   The plugin of which you want to get the language config.
      * @param userName The user of which you want to get the config.
      * @return The JsonConfiguration bound to the User's language.
      */
-    IConfiguration getLanguageConfiguration( String plugin, String userName );
+    LanguageConfig getLanguageConfiguration( String plugin, String userName );
 
     /**
      * @param plugin   The plugin of which you want to get the File.
@@ -103,7 +102,7 @@ public interface ILanguageManager
      * @param language The language of which you want to get the JsonConfiguration.
      * @return The JsonConfiguration bound to the certain plugin and language.
      */
-    IConfiguration getConfig( String plugin, Language language );
+    LanguageConfig getConfig( String plugin, Language language );
 
     /**
      * @param plugin   The plugin you want to check.

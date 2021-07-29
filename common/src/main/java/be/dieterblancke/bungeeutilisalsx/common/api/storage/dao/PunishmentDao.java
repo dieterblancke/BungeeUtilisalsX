@@ -33,7 +33,8 @@ import java.util.UUID;
 public interface PunishmentDao
 {
 
-    static String getPunishmentIdCharacters() {
+    static String getPunishmentIdCharacters()
+    {
         return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "puid-characters" );
     }
 
@@ -57,7 +58,7 @@ public interface PunishmentDao
         info.setExpireTime( time );
         info.setActive( active );
         Validate.ifNotNull( removedby, info::setRemovedBy );
-        info.setPunishmentUid(punishmentUid);
+        info.setPunishmentUid( punishmentUid );
 
         return info;
     }

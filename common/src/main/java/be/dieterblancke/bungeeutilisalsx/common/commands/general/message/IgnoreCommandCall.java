@@ -105,7 +105,7 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                         "general-commands.ignore.list.message",
                         "{ignoredusers}",
                         String.join(
-                                user.getLanguageConfig().getString( "general-commands.ignore.list.separator" ),
+                                user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
                                 user.getStorage().getIgnoredUsers()
                         )
                 );

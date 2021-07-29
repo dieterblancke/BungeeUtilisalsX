@@ -105,7 +105,7 @@ public class StaffCommandCall implements CommandCall
             final List<StaffUser> users = staffMembers.get( rank );
             final TextComponent component = MessageBuilder.buildMessage(
                     user,
-                    user.getLanguageConfig().getSection( "general-commands.staff.rank" ),
+                    user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
                     "{rank_displayname}", Utils.c( rank.getDisplay() ),
                     "{amount_online}", users.size(),
                     "{total}", staffUsers.size()
@@ -127,14 +127,14 @@ public class StaffCommandCall implements CommandCall
 
                     c.addExtra( MessageBuilder.buildMessage(
                             user,
-                            user.getLanguageConfig().getSection( "general-commands.staff.users.user" ),
+                            user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
                             "{username}", u.getName(),
                             "{server}", info == null ? "Unknown" : info.getName()
                     ) );
 
                     if ( userIt.hasNext() )
                     {
-                        c.addExtra( Utils.c( user.buildLangMessage( "general-commands.staff.users.separator" ) ) );
+                        c.addExtra( Utils.c( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator" ) ) );
                     }
                 }
             }
