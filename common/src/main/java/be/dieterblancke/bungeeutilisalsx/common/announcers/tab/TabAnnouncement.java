@@ -29,7 +29,6 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -69,7 +68,7 @@ public class TabAnnouncement extends Announcement
     {
         stream.forEach( user ->
         {
-            final IConfiguration config = user.getLanguageConfig();
+            final IConfiguration config = user.getLanguageConfig().getConfig();
 
             final List<String> headers = language ? config.getStringList( this.header.get( 0 ) ) : this.header;
             final List<String> footers = language ? config.getStringList( this.footer.get( 0 ) ) : this.footer;

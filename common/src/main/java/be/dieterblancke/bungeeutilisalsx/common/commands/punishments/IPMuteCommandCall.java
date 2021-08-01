@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -32,7 +31,7 @@ import java.util.List;
 public class IPMuteCommandCall extends PunishmentCommand
 {
 
-    public IPMuteCommandCall( )
+    public IPMuteCommandCall()
     {
         super( "punishments.ipmute", false );
     }
@@ -70,12 +69,12 @@ public class IPMuteCommandCall extends PunishmentCommand
             if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
             {
                 mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        muted.getLanguageConfig(), PunishmentType.IPMUTE, reason
+                        muted.getLanguageConfig().getConfig(), PunishmentType.IPMUTE, reason
                 );
             }
             if ( mute == null )
             {
-                mute = muted.getLanguageConfig().getStringList( "punishments.ipmute.onmute" );
+                mute = muted.getLanguageConfig().getConfig().getStringList( "punishments.ipmute.onmute" );
             }
 
             mute.forEach( str -> muted.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );

@@ -21,6 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.language;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -46,7 +47,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     @Getter
     protected Map<String, FileStorageType> fileTypes = Maps.newHashMap();
     @Getter
-    protected Map<File, IConfiguration> configurations = Maps.newHashMap();
+    protected Map<File, LanguageConfig> configurations = Maps.newHashMap();
     @Getter
     protected List<Language> languages = Lists.newArrayList();
     @Getter
@@ -101,9 +102,9 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     }
 
     @Override
-    public IConfiguration getLanguageConfiguration( String plugin, User user )
+    public LanguageConfig getLanguageConfiguration( String plugin, User user )
     {
-        IConfiguration config = null;
+        LanguageConfig config = null;
         if ( user != null )
         {
             config = getConfig( plugin, user.getLanguage() );
@@ -116,7 +117,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     }
 
     @Override
-    public IConfiguration getLanguageConfiguration( String plugin, String player )
+    public LanguageConfig getLanguageConfiguration( String plugin, String player )
     {
         return getLanguageConfiguration( plugin, BuX.getApi().getUser( player ).orElse( null ) );
     }
@@ -136,7 +137,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     }
 
     @Override
-    public IConfiguration getConfig( String plugin, Language language )
+    public LanguageConfig getConfig( String plugin, Language language )
     {
         if ( !plugins.containsKey( plugin ) )
         {
@@ -176,7 +177,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
             throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
         File lang = getFile( plugin, language );
-        IConfiguration config = configurations.get( lang );
+        IConfiguration config = configurations.get( lang ).getConfig();
 
         try
         {
@@ -197,7 +198,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
             throw new RuntimeException( "The plugin " + plugin + " is not registered!" );
         }
         File lang = getFile( plugin, language );
-        IConfiguration config = configurations.get( lang );
+        IConfiguration config = configurations.get( lang ).getConfig();
         try
         {
             config.reload();

@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -92,4 +93,8 @@ public interface MutesDao
 
         return uid;
     }
+
+    int softDeleteSince( String user, String removedBy, Date date );
+
+    int hardDeleteSince( String user, Date date );
 }

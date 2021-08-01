@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.language;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.io.ByteStreams;
@@ -68,7 +69,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
                     configuration.copyDefaults( IConfiguration.loadYamlConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ) ) );
                 }
 
-                configurations.put( lang, configuration );
+                configurations.put( lang, new LanguageConfig( language, configuration ) );
                 saveLanguage( pluginName, language );
             }
             catch ( IOException e )

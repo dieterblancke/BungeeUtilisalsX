@@ -85,12 +85,12 @@ public class WarnCommandCall implements CommandCall
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             warn = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    target.getLanguageConfig(), PunishmentType.WARN, reason
+                    target.getLanguageConfig().getConfig(), PunishmentType.WARN, reason
             );
         }
         if ( warn == null )
         {
-            warn = target.getLanguageConfig().getStringList( "punishments.warn.onwarn" );
+            warn = target.getLanguageConfig().getConfig().getStringList( "punishments.warn.onwarn" );
         }
 
         warn.forEach( str -> target.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );

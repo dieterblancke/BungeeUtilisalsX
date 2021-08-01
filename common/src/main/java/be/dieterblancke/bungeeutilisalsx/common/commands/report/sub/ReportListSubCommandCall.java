@@ -117,7 +117,7 @@ public class ReportListSubCommandCall implements CommandCall
                         "{reason}", report.getReason(),
                         "{server}", report.getServer(),
                         "{date}", Dao.formatDateToString( report.getDate() ),
-                        "{handled}", user.getLanguageConfig().getString("general-commands.report.list." + (report.isHandled() ? "handled" : "unhandled")),
+                        "{handled}", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ),
                         "{previousPage}", previous,
                         "{nextPage}", next
                 );

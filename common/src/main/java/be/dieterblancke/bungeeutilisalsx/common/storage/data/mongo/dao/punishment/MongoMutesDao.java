@@ -640,6 +640,38 @@ public class MongoMutesDao implements MutesDao
         return document != null;
     }
 
+    @Override
+    public int softDeleteSince( final String user, final String removedBy, final Date date )
+    {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
+        );
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
+
+        return (int) coll.updateMany(
+                Filters.and( filters ),
+                Updates.combine(
+                        Updates.set( "active", false ),
+                        Updates.set( "removed", true ),
+                        Updates.set( "removed_by", removedBy ),
+                        Updates.set( "removed_at", new Date() )
+                )
+        ).getModifiedCount();
+    }
+
+    @Override
+    public int hardDeleteSince( final String user, final Date date )
+    {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
+        );
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
+
+        return (int) coll.deleteMany( Filters.and( filters ) ).getDeletedCount();
+    }
+
     private MongoDatabase db()
     {
         return ( (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager() ).getDatabase();

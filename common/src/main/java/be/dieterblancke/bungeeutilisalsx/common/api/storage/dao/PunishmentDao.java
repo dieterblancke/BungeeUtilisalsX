@@ -33,7 +33,8 @@ import java.util.UUID;
 public interface PunishmentDao
 {
 
-    static String getPunishmentIdCharacters() {
+    static String getPunishmentIdCharacters()
+    {
         return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "puid-characters" );
     }
 
@@ -57,7 +58,7 @@ public interface PunishmentDao
         info.setExpireTime( time );
         info.setActive( active );
         Validate.ifNotNull( removedby, info::setRemovedBy );
-        info.setPunishmentUid(punishmentUid);
+        info.setPunishmentUid( punishmentUid );
 
         return info;
     }
@@ -118,6 +119,15 @@ public interface PunishmentDao
 
     void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date );
 
-    void savePunishmentAction( final UUID uuid, final String username, final String ip, final String uid );
+    void savePunishmentAction( UUID uuid, String username, String ip, String uid );
 
+    default int softDeleteSince( final String user, final String removedBy, final Date time )
+    {
+        return getBansDao().softDeleteSince( user, removedBy, time ) + getMutesDao().softDeleteSince( user, removedBy, time );
+    }
+
+    default int hardDeleteSince( final String user, final Date time )
+    {
+        return getBansDao().hardDeleteSince( user, time ) + getMutesDao().hardDeleteSince( user, time );
+    }
 }

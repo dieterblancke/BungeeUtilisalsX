@@ -39,7 +39,7 @@ public interface TracksDao
         }
     }
 
-    List<PunishmentTrackInfo> getTrackInfos(  UUID uuid, String trackId, String server );
+    List<PunishmentTrackInfo> getTrackInfos( UUID uuid, String trackId, String server );
 
     void addToTrack( PunishmentTrackInfo punishmentTrackInfo );
 

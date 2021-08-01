@@ -1,5 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -28,7 +30,7 @@ class UserTest
                 "{#2EA3BD}&lSURVIVAL{/#0CF1EE}"
         ) );
         languageConfig.set( "prefix", "[test] " );
-        when( user.getLanguageConfig() ).thenReturn( languageConfig );
+        doReturn( new LanguageConfig( new Language( "en_US", true ), languageConfig ) ).when( user ).getLanguageConfig();
 
         doNothing().when( user ).sendMessage( any( BaseComponent.class ) );
         doNothing().when( user ).sendMessage( any( BaseComponent[].class ) );

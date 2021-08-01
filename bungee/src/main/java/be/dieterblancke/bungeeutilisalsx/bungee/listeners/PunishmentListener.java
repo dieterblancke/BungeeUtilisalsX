@@ -102,7 +102,7 @@ public class PunishmentListener implements Listener
         final Language language = storage.getLanguage() == null ? BuX.getApi().getLanguageManager().getDefaultLanguage() : storage.getLanguage();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
                 BuX.getInstance().getName(), language
-        );
+        ).getConfig();
 
         final BansDao bansDao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
         PunishmentInfo info = null;

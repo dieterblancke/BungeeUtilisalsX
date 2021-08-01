@@ -227,7 +227,7 @@ public class MongoBansDao implements BansDao
         data.put( "removed", false );
         data.put( "removed_by", null );
         data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid",  punishmentUid);
+        data.put( "punishment_uid", punishmentUid );
 
         db().getCollection( PunishmentType.IPTEMPBAN.getTable() ).insertOne( new Document( data ) );
         return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
@@ -575,6 +575,38 @@ public class MongoBansDao implements BansDao
         final Document document = collection.find( Filters.eq( "punishment_uid", puid ) ).first();
 
         return document != null;
+    }
+
+    @Override
+    public int softDeleteSince( final String user, final String removedBy, final Date date )
+    {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
+        );
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
+
+        return (int) coll.updateMany(
+                Filters.and( filters ),
+                Updates.combine(
+                        Updates.set( "active", false ),
+                        Updates.set( "removed", true ),
+                        Updates.set( "removed_by", removedBy ),
+                        Updates.set( "removed_at", new Date() )
+                )
+        ).getModifiedCount();
+    }
+
+    @Override
+    public int hardDeleteSince(final String user, final Date date )
+    {
+        final List<Bson> filters = Lists.newArrayList(
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
+        );
+        final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
+
+        return (int) coll.deleteMany( Filters.and( filters ) ).getDeletedCount();
     }
 
     private MongoDatabase db()

@@ -41,7 +41,7 @@ public class LanguageUtils
         final IConfiguration config = languageManager.getLanguageConfiguration(
                 plugin,
                 sender instanceof Player ? ( (Player) sender ).getUsername() : "CONSOLE"
-        );
+        ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -88,7 +88,7 @@ public class LanguageUtils
         final IConfiguration config = languageManager.getLanguageConfiguration(
                 plugin,
                 sender instanceof Player ? ( (Player) sender ).getUsername() : "CONSOLE"
-        );
+        ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -135,7 +135,7 @@ public class LanguageUtils
                                         final User user,
                                         final String path )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -165,7 +165,7 @@ public class LanguageUtils
                                         final String path,
                                         final Object... placeholders )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user ).getConfig();
 
         if ( !config.exists( path ) )
         {

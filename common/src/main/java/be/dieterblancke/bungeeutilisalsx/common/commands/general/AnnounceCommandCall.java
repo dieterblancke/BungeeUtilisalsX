@@ -63,11 +63,11 @@ public class AnnounceCommandCall implements CommandCall, TabCall
 
                 for ( User user : BuX.getApi().getUsers() )
                 {
-                    if ( !user.getLanguageConfig().exists( preconfiguredPath + "." + message ) )
+                    if ( !user.getLanguageConfig().getConfig().exists( preconfiguredPath + "." + message ) )
                     {
                         continue;
                     }
-                    final ISection section = user.getLanguageConfig().getSection( preconfiguredPath + "." + message );
+                    final ISection section = user.getLanguageConfig().getConfig().getSection( preconfiguredPath + "." + message );
 
                     if ( section.exists( "chat" ) )
                     {

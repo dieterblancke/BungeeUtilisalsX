@@ -4,16 +4,15 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +22,6 @@ import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.function.Function;
 
 public class ConsoleUser implements User
 {
@@ -111,7 +109,7 @@ public class ConsoleUser implements User
         {
             return;
         }
-        sendMessage( getLanguageConfig().getString( "prefix" ), message );
+        sendMessage( getLanguageConfig().getConfig().getString( "prefix" ), message );
     }
 
     @Override
@@ -183,12 +181,6 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public IConfiguration getLanguageConfig()
-    {
-        return BuX.getApi().getLanguageManager().getConfig( BuX.getInstance().getName(), getLanguage() );
-    }
-
-    @Override
     public boolean isConsole()
     {
         return true;
@@ -222,12 +214,6 @@ public class ConsoleUser implements User
     public Version getVersion()
     {
         return Version.latest();
-    }
-
-    @Override
-    public String buildLangMessage( final String path, final Object... placeholders )
-    {
-        return this.buildLangMessage( path, null, null, placeholders );
     }
 
     @Override

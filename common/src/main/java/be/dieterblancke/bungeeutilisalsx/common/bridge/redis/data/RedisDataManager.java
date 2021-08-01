@@ -4,13 +4,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManag
 import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.SimpleCacheLoader;
-import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 
-import javax.annotation.Nonnull;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 

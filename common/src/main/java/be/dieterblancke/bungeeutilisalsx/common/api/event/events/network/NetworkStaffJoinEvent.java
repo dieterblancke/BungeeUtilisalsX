@@ -20,7 +20,9 @@ package be.dieterblancke.bungeeutilisalsx.common.api.event.events.network;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Cancellable;
-import lombok.*;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 import java.util.UUID;
 

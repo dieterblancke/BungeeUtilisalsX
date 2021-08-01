@@ -38,7 +38,7 @@ public class LanguageUtils
 
     public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender.getName() );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender.getName() ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -64,7 +64,7 @@ public class LanguageUtils
 
     public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final CommandSender sender, final String path, final Object... placeholders )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender.getName() );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, sender.getName() ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -94,7 +94,7 @@ public class LanguageUtils
 
     public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final User user, final String path )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -120,7 +120,7 @@ public class LanguageUtils
 
     public static void sendLangMessage( final ILanguageManager languageManager, final String plugin, final User user, final String path, final Object... placeholders )
     {
-        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user );
+        final IConfiguration config = languageManager.getLanguageConfiguration( plugin, user ).getConfig();
 
         if ( !config.exists( path ) )
         {
@@ -158,7 +158,7 @@ public class LanguageUtils
         final IConfiguration config = BuX.getApi().getLanguageManager().getLanguageConfiguration(
                 BuX.getInstance().getName(),
                 player.getName()
-        );
+        ).getConfig();
 
         if ( config == null )
         {
@@ -173,7 +173,7 @@ public class LanguageUtils
         final IConfiguration config = BuX.getApi().getLanguageManager().getLanguageConfiguration(
                 BuX.getInstance().getName(),
                 player.getName()
-        );
+        ).getConfig();
 
         if ( config == null )
         {

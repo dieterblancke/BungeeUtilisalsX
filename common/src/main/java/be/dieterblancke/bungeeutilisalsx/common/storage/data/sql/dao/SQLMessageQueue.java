@@ -116,7 +116,7 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
             pstmt.setString( 2, GSON.toJson( message.getMessage() ) );
             pstmt.setString( 3, message.getType() );
             pstmt.setBoolean( 4, true );
-            pstmt.setString( 5, Dao.formatDateToString(new Date() ) );
+            pstmt.setString( 5, Dao.formatDateToString( new Date() ) );
 
             pstmt.executeUpdate();
         }

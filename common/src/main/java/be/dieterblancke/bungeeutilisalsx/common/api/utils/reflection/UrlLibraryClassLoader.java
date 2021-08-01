@@ -38,8 +38,8 @@ public class UrlLibraryClassLoader implements LibraryClassLoader
     {
         try
         {
-            ADD_URL = URLClassLoader.class.getDeclaredMethod("addURL", URL.class);
-            io.github.karlatemp.unsafeaccessor.Root.openAccess(ADD_URL);
+            ADD_URL = URLClassLoader.class.getDeclaredMethod( "addURL", URL.class );
+            io.github.karlatemp.unsafeaccessor.Root.openAccess( ADD_URL );
         }
         catch ( NoSuchMethodException e )
         {

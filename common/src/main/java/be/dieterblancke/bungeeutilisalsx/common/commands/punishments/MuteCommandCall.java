@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -32,7 +31,7 @@ import java.util.List;
 public class MuteCommandCall extends PunishmentCommand
 {
 
-    public MuteCommandCall( )
+    public MuteCommandCall()
     {
         super( "punishments.mute", false );
     }
@@ -69,7 +68,7 @@ public class MuteCommandCall extends PunishmentCommand
             if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
             {
                 mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        muted.getLanguageConfig(), PunishmentType.MUTE, reason
+                        muted.getLanguageConfig().getConfig(), PunishmentType.MUTE, reason
                 );
             }
             if ( mute == null )

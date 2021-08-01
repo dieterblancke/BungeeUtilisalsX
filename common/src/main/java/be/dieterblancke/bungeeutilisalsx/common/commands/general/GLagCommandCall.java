@@ -47,7 +47,7 @@ public class GLagCommandCall implements CommandCall, TabCall
                 "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
                 "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
                 "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
-                "{onlinesince}", Utils.formatDate( new Date( uptime ), user.getLanguageConfig() )
+                "{onlinesince}", Utils.formatDate( new Date( uptime ), user.getLanguageConfig().getConfig() )
         );
     }
 

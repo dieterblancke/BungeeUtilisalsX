@@ -110,16 +110,7 @@ public abstract class CommandManager
         {
             return;
         }
-        final List<String> parameters = Lists.newArrayList();
-        final ISection parameterSection = config.getSection( "parameters" );
-
-        for ( String key : parameterSection.getKeys() )
-        {
-            if ( parameterSection.getBoolean( key ) )
-            {
-                parameters.add( "-" + key );
-            }
-        }
+        final List<String> parameters = this.getParameterList( config.getSection( "parameters" ) );
 
         registerPunishmentCommand( "ban", "commands.ban", new BanCommandCall(), parameters );
         registerPunishmentCommand( "ipban", "commands.ipban", new IPBanCommandCall(), parameters );
@@ -141,6 +132,12 @@ public abstract class CommandManager
         registerPunishmentCommand( "checkip", "commands.checkip", new CheckIpCommandCall(), null );
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
         registerPunishmentCommand( "trackpunish", "commands.trackpunish", new TrackPunishCommandCall(), parameters );
+        registerPunishmentCommand(
+                "staffrollback",
+                "commands.staffrollback",
+                new StaffRollbackCommandCall(),
+                this.getParameterList( config.getSection( "staffrollback-parameters" ) )
+        );
     }
 
     protected void registerSlashServerCommands()
@@ -264,5 +261,20 @@ public abstract class CommandManager
                         command.getName().equalsIgnoreCase( name )
                                 || Arrays.stream( command.getAliases() ).anyMatch( alias -> alias.equalsIgnoreCase( name ) ) )
                 .findFirst();
+    }
+
+    private List<String> getParameterList( final ISection parameterSection )
+    {
+        final List<String> parameters = Lists.newArrayList();
+
+        for ( String key : parameterSection.getKeys() )
+        {
+            if ( parameterSection.getBoolean( key ) )
+            {
+                parameters.add( "-" + key );
+            }
+        }
+
+        return parameters;
     }
 }

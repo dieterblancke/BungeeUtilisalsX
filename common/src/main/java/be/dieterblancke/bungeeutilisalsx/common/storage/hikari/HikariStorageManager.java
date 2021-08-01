@@ -85,9 +85,12 @@ public abstract class HikariStorageManager extends SQLStorageManager
         config.setLeakDetectionThreshold( 10000 );
         config.setConnectionTestQuery( "/* BungeeUtilisalsX ping */ SELECT 1;" );
 
-        try {
+        try
+        {
             config.setInitializationFailTimeout( -1 );
-        } catch ( NoSuchMethodError e ) {
+        }
+        catch ( NoSuchMethodError e )
+        {
             // do nothing
         }
 
