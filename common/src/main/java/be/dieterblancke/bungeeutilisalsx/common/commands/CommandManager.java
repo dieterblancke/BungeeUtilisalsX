@@ -133,8 +133,8 @@ public abstract class CommandManager
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
         registerPunishmentCommand( "trackpunish", "commands.trackpunish", new TrackPunishCommandCall(), parameters );
         registerPunishmentCommand(
-                "trackpunish",
-                "commands.trackpunish",
+                "staffrollback",
+                "commands.staffrollback",
                 new StaffRollbackCommandCall(),
                 this.getParameterList( config.getSection( "staffrollback-parameters" ) )
         );

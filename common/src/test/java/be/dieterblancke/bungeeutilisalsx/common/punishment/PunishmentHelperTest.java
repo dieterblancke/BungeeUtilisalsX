@@ -29,7 +29,7 @@ class PunishmentHelperTest
     @BeforeAll
     static void setup() throws ParseException
     {
-        final Date date = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" ).parse( "29-07-2021 08:48:48" );
+        final Date date = new Date( System.currentTimeMillis() - 10000 );
 
         punishmentInfo = new PunishmentInfo(
                 PunishmentType.BAN,
@@ -41,7 +41,7 @@ class PunishmentHelperTest
                 "testserver",
                 "test reason",
                 date,
-                date.getTime() + TimeUnit.DAYS.toMillis( 5 ),
+                System.currentTimeMillis() + TimeUnit.DAYS.toMillis( 5 ),
                 true,
                 null,
                 "abc"
@@ -57,13 +57,13 @@ class PunishmentHelperTest
         );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
-        Thread.sleep( 3000 );
+        final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
 
         final List<String> placeHolders = punishmentHelper.getPlaceHolders( punishmentInfo );
 
         assertEquals( Arrays.asList(
                 "{reason}", "test reason",
-                "{date}", "29-07-2021 08:48:48",
+                "{date}", dateFormat.format( punishmentInfo.getDate() ),
                 "{by}", "testexec",
                 "{server}", "testserver",
                 "{uuid}", "e7e5216f-c419-43b8-a5e7-525386c56e9b",
@@ -71,7 +71,7 @@ class PunishmentHelperTest
                 "{user}", "testuser",
                 "{id}", "1",
                 "{type}", "ban",
-                "{expire}", "03-08-2021 08:48:48",
+                "{expire}", dateFormat.format( new Date( punishmentInfo.getExpireTime() ) ),
                 "{timeLeft}", "4d",
                 "{removedBy}", "Unknown",
                 "{punishment_uid}", "abc"
@@ -87,8 +87,7 @@ class PunishmentHelperTest
         );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "date-format" ) ).thenReturn( "dd-MM-yyyy kk:mm:ss" );
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
-
-        Thread.sleep( 3000 );
+        final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
 
         final String text = punishmentHelper.setPlaceHolders(
                 "{reason} {date} {by} {server} {uuid} {ip} {user} {id} {type} {expire} {timeLeft} {removedBy} {punishment_uid}",
@@ -96,7 +95,8 @@ class PunishmentHelperTest
         );
 
         assertEquals(
-                "test reason 29-07-2021 08:48:48 testexec testserver e7e5216f-c419-43b8-a5e7-525386c56e9b 127.0.0.1 testuser 1 ban 03-08-2021 08:48:48 4d Unknown abc",
+                "test reason " + dateFormat.format( punishmentInfo.getDate() ) + " testexec testserver " +
+                        "e7e5216f-c419-43b8-a5e7-525386c56e9b 127.0.0.1 testuser 1 ban " + dateFormat.format( new Date( punishmentInfo.getExpireTime() ) ) + " 4d Unknown abc",
                 text
         );
     }

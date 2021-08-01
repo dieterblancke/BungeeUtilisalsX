@@ -44,7 +44,8 @@ class UtilsTest
                         + TimeUnit.DAYS.toMillis( 5 )
                         + TimeUnit.HOURS.toMillis( 3 )
                         + TimeUnit.MINUTES.toMillis( 18 )
-                        + TimeUnit.SECONDS.toMillis( 5 )
+                        + TimeUnit.SECONDS.toMillis( 5 ),
+                50
         );
     }
 
@@ -57,7 +58,8 @@ class UtilsTest
                         - TimeUnit.DAYS.toMillis( 5 )
                         - TimeUnit.HOURS.toMillis( 3 )
                         - TimeUnit.MINUTES.toMillis( 18 )
-                        - TimeUnit.SECONDS.toMillis( 5 )
+                        - TimeUnit.SECONDS.toMillis( 5 ),
+                50
         );
     }
 
