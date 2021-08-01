@@ -18,12 +18,15 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ChatColor;
 
@@ -38,6 +41,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,13 +52,33 @@ public class Utils
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
     private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
-    private static final String GRADIENT_HEX_RAW_PATTERN = "<\\$#([A-Fa-f0-9]){6}>";
-    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( GRADIENT_HEX_RAW_PATTERN );
+    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(\\{(#[A-Fa-f0-9]{6})})(.+?)(\\{/(#[A-Fa-f0-9]{6})})" );
+    private static final List<String> SPECIAL_COLORS = Arrays.asList( "&l", "&n", "&o", "&k", "&m" );
+    private static final Map<Color, net.md_5.bungee.api.ChatColor> COLORS;
     private static final boolean IS_1_16;
 
     static
     {
         IS_1_16 = ReflectionUtils.getMethod( net.md_5.bungee.api.ChatColor.class, "of", String.class ) != null;
+
+        COLORS = ImmutableMap.<Color, net.md_5.bungee.api.ChatColor>builder()
+                .put( new Color( 0 ), net.md_5.bungee.api.ChatColor.getByChar( '0' ) )
+                .put( new Color( 170 ), net.md_5.bungee.api.ChatColor.getByChar( '1' ) )
+                .put( new Color( 43520 ), net.md_5.bungee.api.ChatColor.getByChar( '2' ) )
+                .put( new Color( 43690 ), net.md_5.bungee.api.ChatColor.getByChar( '3' ) )
+                .put( new Color( 11141120 ), net.md_5.bungee.api.ChatColor.getByChar( '4' ) )
+                .put( new Color( 11141290 ), net.md_5.bungee.api.ChatColor.getByChar( '5' ) )
+                .put( new Color( 16755200 ), net.md_5.bungee.api.ChatColor.getByChar( '6' ) )
+                .put( new Color( 11184810 ), net.md_5.bungee.api.ChatColor.getByChar( '7' ) )
+                .put( new Color( 5592405 ), net.md_5.bungee.api.ChatColor.getByChar( '8' ) )
+                .put( new Color( 5592575 ), net.md_5.bungee.api.ChatColor.getByChar( '9' ) )
+                .put( new Color( 5635925 ), net.md_5.bungee.api.ChatColor.getByChar( 'a' ) )
+                .put( new Color( 5636095 ), net.md_5.bungee.api.ChatColor.getByChar( 'b' ) )
+                .put( new Color( 16733525 ), net.md_5.bungee.api.ChatColor.getByChar( 'c' ) )
+                .put( new Color( 16733695 ), net.md_5.bungee.api.ChatColor.getByChar( 'd' ) )
+                .put( new Color( 16777045 ), net.md_5.bungee.api.ChatColor.getByChar( 'e' ) )
+                .put( new Color( 16777215 ), net.md_5.bungee.api.ChatColor.getByChar( 'f' ) )
+                .build();
     }
 
     private Utils()
@@ -69,11 +93,25 @@ public class Utils
      */
     public static String c( String message )
     {
+        return c( message, true );
+    }
+
+    /**
+     * Formats a message.
+     *
+     * @param message The message to be formatted.
+     * @return The formatted message.
+     */
+    public static String c( String message, boolean hex )
+    {
         if ( message == null )
         {
             return "";
         }
-        message = colorHex( message );
+        if ( hex )
+        {
+            message = colorHex( message );
+        }
 
         return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes( '&', message );
     }
@@ -100,122 +138,90 @@ public class Utils
 
     private static String colorGradients( String message )
     {
-        final List<String> hexColorCodes = Lists.newArrayList();
-
-        final Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
+        Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
         while ( matcher.find() )
         {
-            hexColorCodes.add( matcher.group().replace( "<$", "" ).replace( ">", "" ) );
+            final String startColor = matcher.group( 2 );
+            final String text = matcher.group( 3 );
+            final String endColor = matcher.group( 5 );
+
+            message = matcher.replaceFirst( applyGradient( text, startColor, endColor ).replace( "$", "\\$" ) );
+            matcher = GRADIENT_HEX_PATTERN.matcher( message );
         }
+        return message;
+    }
 
-        final String[] parts = message.split( GRADIENT_HEX_RAW_PATTERN );
-        final StringBuilder stringBuilder = new StringBuilder();
-        int hexIdx = 0;
+    private static String applyGradient( String text, final String startHexColor, final String endHexColor )
+    {
+        final ChatColor startColor = ChatColor.of( startHexColor );
+        final ChatColor endColor = ChatColor.of( endHexColor );
 
-        for ( int i = 0; i < parts.length; i++ )
+        final StringBuilder specialColors = new StringBuilder();
+        for ( String color : SPECIAL_COLORS )
         {
-            final String part = parts[i];
+            if ( text.contains( color ) )
+            {
+                specialColors.append( color );
+                text = text.replace( color, "" );
+            }
+        }
+        final StringBuilder stringBuilder = new StringBuilder();
+        final ChatColor[] colors = getGradientColors( startColor.getColor(), endColor.getColor(), text.length() );
+        final String[] characters = text.split( "" );
 
-            if ( i == 0 )
-            {
-                stringBuilder.append( part );
-            }
-            else
-            {
-                if ( part.isEmpty() || hexIdx + 1 >= hexColorCodes.size() )
-                {
-                    stringBuilder.append( part );
-                }
-                else
-                {
-                    final String startColor = hexColorCodes.get( hexIdx );
-                    final String endColor = hexColorCodes.get( hexIdx + 1 );
-                    stringBuilder.append( applyGradient( part, startColor, endColor ) );
-                    hexIdx++;
-                }
-            }
+        for ( int i = 0; i < text.length(); i++ )
+        {
+            stringBuilder.append( colors[i] ).append( specialColors ).append( characters[i] );
         }
         return stringBuilder.toString();
     }
 
-    private static String applyGradient( final String text, final String startHexColor, final String endHexColor )
+    private static ChatColor[] getGradientColors( final Color start, final Color end, final int step )
     {
-        final char[] characters = text.toCharArray();
-        final int length = characters.length;
-        final Color startColor = Color.decode( startHexColor );
-        final Color endColor = Color.decode( endHexColor );
+        final ChatColor[] colors = new ChatColor[step];
+        final int stepR = Math.abs( start.getRed() - end.getRed() ) / ( step - 1 );
+        final int stepG = Math.abs( start.getGreen() - end.getGreen() ) / ( step - 1 );
+        final int stepB = Math.abs( start.getBlue() - end.getBlue() ) / ( step - 1 );
+        final int[] direction = new int[]{
+                start.getRed() < end.getRed() ? +1 : -1,
+                start.getGreen() < end.getGreen() ? +1 : -1,
+                start.getBlue() < end.getBlue() ? +1 : -1
+        };
 
-        double rStep = Math.abs( (double) ( startColor.getRed() - endColor.getRed() ) / length );
-        double gStep = Math.abs( (double) ( startColor.getGreen() - endColor.getGreen() ) / length );
-        double bStep = Math.abs( (double) ( startColor.getBlue() - endColor.getBlue() ) / length );
-
-        if ( startColor.getRed() > endColor.getRed() )
+        for ( int i = 0; i < step; i++ )
         {
-            rStep = -rStep;
-        }
-        if ( startColor.getGreen() > endColor.getGreen() )
-        {
-            gStep = -gStep;
-        }
-        if ( startColor.getBlue() > endColor.getBlue() )
-        {
-            bStep = -bStep;
-        }
-        final IntegerRange integerRange = new IntegerRange( 0, 255 );
-        final StringBuilder resultBuilder = new StringBuilder();
-        Color textColor = new Color( startColor.getRGB() );
-        StringBuilder formatColors = new StringBuilder();
-
-        for ( int i = 0; i < length; i++ )
-        {
-            if ( isColor( characters, i ) )
+            final Color color = new Color(
+                    start.getRed() + ( ( stepR * i ) * direction[0] ),
+                    start.getGreen() + ( ( stepG * i ) * direction[1] ),
+                    start.getBlue() + ( ( stepB * i ) * direction[2] )
+            );
+            if ( IS_1_16 )
             {
-                i++;
-                if ( ChatColor.getByChar( characters[i] ) == ChatColor.RESET )
-                {
-                    // clearing stringbuilderzz
-                    formatColors.setLength( 0 );
-                }
-                else
-                {
-                    formatColors.append( "&" ).append( characters[i] );
-                }
-                continue;
+                colors[i] = ChatColor.of( color );
             }
-            final int red = integerRange.keepWithinRange( Math.round( textColor.getRed() + rStep ) );
-            final int green = integerRange.keepWithinRange( Math.round( textColor.getGreen() + gStep ) );
-            final int blue = integerRange.keepWithinRange( Math.round( textColor.getBlue() + bStep ) );
-
-            textColor = new Color( red, green, blue );
-            final net.md_5.bungee.api.ChatColor chatColor = net.md_5.bungee.api.ChatColor.of( textColor );
-
-            resultBuilder.append( chatColor.toString() )
-                    .append( formatColors )
-                    .append( characters[i] );
+            else
+            {
+                colors[i] = getClosestColor( color );
+            }
         }
-
-        return resultBuilder.toString();
+        return colors;
     }
 
-    private static boolean isColor( final char[] chars, final int idx )
+    private static ChatColor getClosestColor( final Color color )
     {
-        if ( idx >= chars.length )
+        Color nearestColor = null;
+        double nearestDistance = Integer.MAX_VALUE;
+
+        for ( Color constantColor : COLORS.keySet() )
         {
-            return false;
+            double distance = Math.pow( color.getRed() - constantColor.getRed(), 2 ) + Math.pow( color.getGreen() - constantColor.getGreen(), 2 ) + Math.pow( color.getBlue() - constantColor.getBlue(), 2 );
+            if ( nearestDistance > distance )
+            {
+                nearestColor = constantColor;
+                nearestDistance = distance;
+            }
         }
-        return ( chars[idx] == net.md_5.bungee.api.ChatColor.COLOR_CHAR || chars[idx] == '&' )
-                && net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) != null
-                && isFormattingColor( net.md_5.bungee.api.ChatColor.getByChar( chars[idx + 1] ) );
-    }
-
-    private static boolean isFormattingColor( final net.md_5.bungee.api.ChatColor color )
-    {
-        return color == ChatColor.BOLD
-                || color == ChatColor.ITALIC
-                || color == ChatColor.MAGIC
-                || color == ChatColor.STRIKETHROUGH
-                || color == ChatColor.UNDERLINE
-                || color == ChatColor.RESET;
+        return COLORS.get( nearestColor );
     }
 
     public static String formatString( final User user, final String message )
@@ -224,14 +230,48 @@ public class Utils
     }
 
     /**
+     * Formats a message, translates color codes and replaces general placeholders.
+     *
+     * @param message The message to be formatted.
+     * @return The formatted message.
+     */
+    public static String formatString( final String message )
+    {
+        return c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) );
+    }
+
+    /**
+     * Formats a message, translates color codes and replaces general placeholders.
+     *
+     * @param message The message to be formatted.
+     * @param hex     Replace hex colors or not.
+     * @return The formatted message.
+     */
+    public static String formatString( final String message, final boolean hex )
+    {
+        return c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ), hex );
+    }
+
+    /**
      * Formats a message to TextComponent, translates color codes and replaces general placeholders.
      *
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( String message )
+    public static net.md_5.bungee.api.chat.BaseComponent[] format( final String message )
     {
-        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) ) );
+        return asComponent( c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) ) );
+    }
+
+    /**
+     * Wraps a string as a BaseComponent.
+     *
+     * @param message The message to be wrapped.
+     * @return The wrapped message.
+     */
+    public static net.md_5.bungee.api.chat.BaseComponent[] asComponent( final String message )
+    {
+        return new net.md_5.bungee.api.chat.ComponentBuilder( message ).create();
     }
 
     /**
@@ -240,7 +280,7 @@ public class Utils
      * @param messages The messages to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( List<String> messages )
+    public static net.md_5.bungee.api.chat.BaseComponent[] format( final List<String> messages )
     {
         return format( null, messages );
     }
@@ -252,7 +292,7 @@ public class Utils
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( User user, String message )
+    public static net.md_5.bungee.api.chat.BaseComponent[] format( final User user, final String message )
     {
         return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( formatString( user, message ) );
     }
@@ -264,7 +304,7 @@ public class Utils
      * @param messages The messages to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( User user, List<String> messages )
+    public static net.md_5.bungee.api.chat.BaseComponent[] format( final User user, final List<String> messages )
     {
         final AtomicInteger count = new AtomicInteger();
         return messages
@@ -273,11 +313,10 @@ public class Utils
                 {
                     if ( count.incrementAndGet() >= messages.size() )
                     {
-                        return c( PlaceHolderAPI.formatMessage( user, message ) );
+                        return format( user, message );
                     }
-                    return c( PlaceHolderAPI.formatMessage( user, message + "\n" ) );
+                    return format( user, message + "\n" );
                 } )
-                .map( message -> new net.md_5.bungee.api.chat.BaseComponent[]{ new net.md_5.bungee.api.chat.TextComponent( message ) } )
                 .flatMap( Arrays::stream )
                 .toArray( net.md_5.bungee.api.chat.BaseComponent[]::new );
     }
@@ -289,7 +328,7 @@ public class Utils
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( String prefix, String message )
+    public static net.md_5.bungee.api.chat.BaseComponent[] format( final String prefix, final String message )
     {
         return format( prefix + message );
     }
@@ -303,7 +342,7 @@ public class Utils
      * @param <V>   The value type
      * @return The key bound to the requested value.
      */
-    public static <K, V> K getKeyFromValue( Map<K, V> map, V value )
+    public static <K, V> K getKeyFromValue( final Map<K, V> map, final V value )
     {
         for ( Map.Entry<K, V> entry : map.entrySet() )
         {
@@ -337,7 +376,7 @@ public class Utils
      * @param stream The stream you want to read.
      * @return A list containing all lines from the input stream.
      */
-    public static List<String> readFromStream( InputStream stream )
+    public static List<String> readFromStream( final InputStream stream )
     {
         final List<String> lines = Lists.newArrayList();
 
@@ -361,11 +400,22 @@ public class Utils
      * @param time The string you want to importer to time.
      * @return The time, in MILLIS, you requested.
      */
-    public static long parseDateDiff( String time )
+    public static long parseDateDiffInPast( final String time )
+    {
+        return System.currentTimeMillis() - ( parseDateDiff( time ) - System.currentTimeMillis() );
+    }
+
+    /**
+     * Attempts to parse a long time from a given string.
+     *
+     * @param time The string you want to importer to time.
+     * @return The time, in MILLIS, you requested.
+     */
+    public static long parseDateDiff( final String time )
     {
         try
         {
-            Matcher m = timePattern.matcher( time );
+            final Matcher m = timePattern.matcher( time );
             int years = 0;
             int months = 0;
             int weeks = 0;
@@ -429,7 +479,7 @@ public class Utils
             {
                 return 0;
             }
-            Calendar c = new GregorianCalendar();
+            final Calendar c = new GregorianCalendar();
             if ( years > 0 )
             {
                 c.add( Calendar.YEAR, years );
@@ -472,7 +522,7 @@ public class Utils
      * @param object The object you want to check.
      * @return True if Boolean, false if not.
      */
-    public static boolean isBoolean( Object object )
+    public static boolean isBoolean( final Object object )
     {
         try
         {
@@ -491,7 +541,7 @@ public class Utils
      * @param words The string you want to capitalize.
      * @return A new capitalized String.
      */
-    public static String capitalizeWords( String words )
+    public static String capitalizeWords( final String words )
     {
         if ( words != null && words.length() != 0 )
         {
@@ -527,7 +577,7 @@ public class Utils
      * @param a The address to be converted.
      * @return The converted address as a String.
      */
-    public static String getIP( InetSocketAddress a )
+    public static String getIP( final InetSocketAddress a )
     {
         return getIP( a.getAddress() );
     }
@@ -538,7 +588,7 @@ public class Utils
      * @param a The address to be converted.
      * @return The converted address as a String.
      */
-    public static String getIP( InetAddress a )
+    public static String getIP( final InetAddress a )
     {
         return a.toString().split( "/" )[1].split( ":" )[0];
     }
@@ -550,7 +600,7 @@ public class Utils
      * @param separator Seperator which will be used to seperate the list.
      * @return A string in which all sendable of the list are seperated by the separator.
      */
-    public static String formatList( Iterable<?> objects, String separator )
+    public static String formatList( final Iterable<?> objects, final String separator )
     {
         if ( objects == null )
         {
@@ -566,7 +616,7 @@ public class Utils
      * @param separator Seperator which will be used to seperate the array.
      * @return A string in which all sendable of the array are seperated by the separator.
      */
-    public static String formatList( Object[] objects, String separator )
+    public static String formatList( final Object[] objects, final String separator )
     {
         if ( objects == null )
         {
@@ -581,7 +631,7 @@ public class Utils
      * @param clazz The class to be checked.
      * @return True if found, false if not.
      */
-    public static boolean classFound( String clazz )
+    public static boolean classFound( final String clazz )
     {
         try
         {
@@ -610,7 +660,7 @@ public class Utils
      * @param format The date format to be used.
      * @return a formatted date string.
      */
-    public static String getFormattedDate( String format )
+    public static String getFormattedDate( final String format )
     {
         return formatDate( format, new Date( System.currentTimeMillis() ) );
     }
@@ -621,7 +671,7 @@ public class Utils
      * @param date The date to be formatted.
      * @return a formatted date string.
      */
-    public static String formatDate( Date date )
+    public static String formatDate( final Date date )
     {
         SimpleDateFormat sdf = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
         return sdf.format( date );
@@ -634,7 +684,7 @@ public class Utils
      * @param languageConfig The config to take the date format from
      * @return a formatted date string.
      */
-    public static String formatDate( Date date, IConfiguration languageConfig )
+    public static String formatDate( final Date date, final IConfiguration languageConfig )
     {
         return formatDate( languageConfig.getString( "date-format" ), date );
     }
@@ -646,7 +696,7 @@ public class Utils
      * @param date   The date to be formatted.
      * @return a formatted date string.
      */
-    public static String formatDate( String format, Date date )
+    public static String formatDate( final String format, final Date date )
     {
         SimpleDateFormat sdf = new SimpleDateFormat( format );
         return sdf.format( date );
@@ -660,10 +710,8 @@ public class Utils
      * @param <T>  The enum type.
      * @return Parsed enum or default.
      */
-    public static <T extends Enum<T>> T valueOfOr( final String name, T def )
+    public static <T extends Enum<T>> T valueOfOr( final String name, final T def )
     {
-        assert def != null : "Default value cannot be null.";
-
         return valueOfOr( (Class<T>) def.getClass(), name, def );
     }
 
@@ -676,7 +724,7 @@ public class Utils
      * @param <T>   The enum type.
      * @return Parsed enum or default.
      */
-    public static <T extends Enum<T>> T valueOfOr( final Class<T> clazz, final String name, T def )
+    public static <T extends Enum<T>> T valueOfOr( final Class<T> clazz, final String name, final T def )
     {
         try
         {
@@ -696,7 +744,7 @@ public class Utils
      * @param str The UUID to be formatted
      * @return UUID object of the entered uuid
      */
-    public static UUID readUUIDFromString( String str )
+    public static UUID readUUIDFromString( final String str )
     {
         try
         {
@@ -726,7 +774,7 @@ public class Utils
      * @throws UnsupportedOperationException if the collection is immutable
      *                                       and originals contains a string which starts with the specified
      *                                       search string.
-     * @throws IllegalArgumentException      if any parameter is is null
+     * @throws IllegalArgumentException      if any parameter is null
      * @throws IllegalArgumentException      if originals contains a null element.
      */
     public static <T extends Collection<? super String>> T copyPartialMatches( final String token, final Iterable<String> originals, final T collection ) throws UnsupportedOperationException, IllegalArgumentException
@@ -770,14 +818,9 @@ public class Utils
      * @param placeholders the placeholders with their values to be replaced
      * @return the message with the replaced placeholders.
      */
-    public static String replacePlaceHolders( String message, Object... placeholders )
+    public static String replacePlaceHolders( final String message, final Object... placeholders )
     {
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
-        message = PlaceHolderAPI.formatMessage( message );
-        return message;
+        return replacePlaceHolders( null, message, placeholders );
     }
 
     /**
@@ -788,13 +831,57 @@ public class Utils
      * @param placeholders the placeholders with their values to be replaced
      * @return the message with the replaced placeholders.
      */
-    public static String replacePlaceHolders( User user, String message, Object... placeholders )
+    public static String replacePlaceHolders( final User user, String message, final Object... placeholders )
     {
+        return replacePlaceHolders( user, message, null, null, placeholders );
+    }
+
+    /**
+     * Replaces placeholders in a string.
+     *
+     * @param message                  the message to replace in
+     * @param prePlaceholderFormatter  executed before replacing placeholders
+     * @param postPlaceholderFormatter executed after replacing placeholders
+     * @param placeholders             the placeholders with their values to be replaced
+     * @return the message with the replaced placeholders.
+     */
+    public static String replacePlaceHolders( final String message,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
+    {
+        return replacePlaceHolders( null, message, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
+    }
+
+    /**
+     * Replaces placeholders in a string.
+     *
+     * @param user                     the user to format placeholders for
+     * @param message                  the message to replace in
+     * @param prePlaceholderFormatter  executed before replacing placeholders
+     * @param postPlaceholderFormatter executed after replacing placeholders
+     * @param placeholders             the placeholders with their values to be replaced
+     * @return the message with the replaced placeholders.
+     */
+    public static String replacePlaceHolders( final User user,
+                                              String message,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
+    {
+        if ( prePlaceholderFormatter != null )
+        {
+            message = prePlaceholderFormatter.apply( message );
+        }
         for ( int i = 0; i < placeholders.length - 1; i += 2 )
         {
             message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
         }
         message = PlaceHolderAPI.formatMessage( user, message );
+        if ( postPlaceholderFormatter != null )
+        {
+            message = postPlaceholderFormatter.apply( message );
+        }
         return message;
     }
 
@@ -851,44 +938,32 @@ public class Utils
 
     public static String getTimeLeft( final String format, final Date date )
     {
-        return getTimeLeft( format, date.getTime() );
+        return getTimeLeft( format, date.getTime() - System.currentTimeMillis() );
     }
 
     public static String getTimeLeft( final String format, final long millis )
     {
+        final long seconds = millis / 1000;
+        final long minutes = seconds / 60;
+        final long hours = minutes / 60;
+        final long days = hours / 24;
+
         return format
-                .replace( "%days%", String.valueOf( getDays( millis ) ) )
-                .replace( "%hours%", String.valueOf( getHours( millis ) ) )
-                .replace( "%minutes%", String.valueOf( getMinutes( millis ) ) )
-                .replace( "%seconds%", String.valueOf( getSeconds( millis ) ) );
+                .replace( "%days%", String.valueOf( days ) )
+                .replace( "%hours%", String.valueOf( hours % 24 ) )
+                .replace( "%minutes%", String.valueOf( minutes % 60 ) )
+                .replace( "%seconds%", String.valueOf( seconds % 60 ) );
     }
 
-    private static long getDays( long time )
+    public static LanguageConfig getLanguageConfiguration( User user )
     {
-        return TimeUnit.MILLISECONDS.toDays( time );
-    }
-
-    private static long getHours( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-
-        return TimeUnit.MILLISECONDS.toHours( time );
-    }
-
-    private static long getMinutes( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-
-        return TimeUnit.MILLISECONDS.toMinutes( time );
-    }
-
-    private static long getSeconds( long time )
-    {
-        time = time - TimeUnit.DAYS.toMillis( getDays( time ) );
-        time = time - TimeUnit.HOURS.toMillis( getHours( time ) );
-        time = time - TimeUnit.MINUTES.toMillis( getMinutes( time ) );
-
-        return TimeUnit.MILLISECONDS.toSeconds( time );
+        if ( user == null )
+        {
+            return BuX.getApi().getLanguageManager().getConfig(
+                    BuX.getInstance().getName(),
+                    BuX.getApi().getLanguageManager().getDefaultLanguage()
+            );
+        }
+        return user.getLanguageConfig();
     }
 }

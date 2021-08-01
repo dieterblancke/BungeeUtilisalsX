@@ -24,15 +24,14 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.CanReceiveMessages;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -59,12 +58,11 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Setter
 @Getter
-public class VelocityUser implements User, CanReceiveMessages
+public class VelocityUser implements User
 {
 
     private Player player;
@@ -237,87 +235,6 @@ public class VelocityUser implements User, CanReceiveMessages
     }
 
     @Override
-    public void sendMessage( String message )
-    {
-        if ( message.isEmpty() )
-        {
-            return;
-        }
-        sendMessage( getLanguageConfig().getString( "prefix" ), PlaceHolderAPI.formatMessage( this, message ) );
-    }
-
-    @Override
-    public void sendLangMessage( String path )
-    {
-        sendLangMessage( true, path );
-    }
-
-    @Override
-    public void sendLangMessage( String path, Object... placeholders )
-    {
-        sendLangMessage( true, path, placeholders );
-    }
-
-    @Override
-    public void sendLangMessage( boolean prefix, String path )
-    {
-        sendLangMessage( prefix, path, new Object[0] );
-    }
-
-    @Override
-    public void sendLangMessage( boolean prefix, String path, Object... placeholders )
-    {
-        this.sendLangMessage( path, prefix, null, null, placeholders );
-    }
-
-    @Override
-    public void sendLangMessage( final String path,
-                                 boolean prefix,
-                                 final Function<String, String> prePlaceholderFormatter,
-                                 final Function<String, String> postPlaceholderFormatter,
-                                 final Object... placeholders )
-    {
-        if ( getLanguageConfig().isSection( path ) )
-        {
-            // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
-            final TextComponent component = MessageBuilder.buildMessage(
-                    this, getLanguageConfig().getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
-            );
-
-            sendMessage( component );
-            return;
-        }
-
-        String message = buildLangMessage( path, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
-
-        if ( message.isEmpty() )
-        {
-            return;
-        }
-
-        if ( message.startsWith( "noprefix: " ) )
-        {
-            prefix = false;
-            message = message.replaceFirst( "noprefix: ", "" );
-        }
-
-        if ( prefix )
-        {
-            sendMessage( message );
-        }
-        else
-        {
-            sendRawColorMessage( message );
-        }
-    }
-
-    @Override
-    public void sendMessage( String prefix, String message )
-    {
-        sendMessage( Utils.format( prefix + PlaceHolderAPI.formatMessage( this, message ) ) );
-    }
-
-    @Override
     public void sendMessage( BaseComponent component )
     {
         if ( this.isEmpty( component ) )
@@ -346,9 +263,9 @@ public class VelocityUser implements User, CanReceiveMessages
     @Override
     public void langKick( String path, Object... placeholders )
     {
-        if ( getLanguageConfig().isList( path ) )
+        if ( getLanguageConfig().getConfig().isList( path ) )
         {
-            final String reason = getLanguageConfig().getStringList( path ).stream().map( str ->
+            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
             {
                 for ( int i = 0; i < placeholders.length - 1; i += 2 )
                 {
@@ -361,7 +278,7 @@ public class VelocityUser implements User, CanReceiveMessages
         }
         else
         {
-            String message = getLanguageConfig().getString( path );
+            String message = getLanguageConfig().getConfig().getString( path );
             for ( int i = 0; i < placeholders.length - 1; i += 2 )
             {
                 message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
@@ -407,12 +324,6 @@ public class VelocityUser implements User, CanReceiveMessages
     }
 
     @Override
-    public IConfiguration getLanguageConfig()
-    {
-        return BuX.getApi().getLanguageManager().getLanguageConfiguration( BuX.getInstance().getName(), this );
-    }
-
-    @Override
     public boolean isConsole()
     {
         return false;
@@ -445,69 +356,6 @@ public class VelocityUser implements User, CanReceiveMessages
         {
             return Version.MINECRAFT_1_8;
         }
-    }
-
-    @Override
-    public String buildLangMessage( final String path, final Object... placeholders )
-    {
-        return this.buildLangMessage( path, null, null, placeholders );
-    }
-
-    @Override
-    public String buildLangMessage(
-            final String path,
-            final Function<String, String> prePlaceholderFormatter,
-            final Function<String, String> postPlaceholderFormatter,
-            final Object... placeholders )
-    {
-        if ( !getLanguageConfig().exists( path ) )
-        {
-            return "";
-        }
-        final StringBuilder builder = new StringBuilder();
-
-        if ( getLanguageConfig().isList( path ) )
-        {
-            final List<String> messages = getLanguageConfig().getStringList( path );
-
-            if ( messages.isEmpty() )
-            {
-                return "";
-            }
-
-            for ( int i = 0; i < messages.size(); i++ )
-            {
-                final String message = replacePlaceHolders(
-                        messages.get( i ),
-                        prePlaceholderFormatter,
-                        postPlaceholderFormatter,
-                        placeholders
-                );
-                builder.append( message );
-
-                if ( i < messages.size() - 1 )
-                {
-                    builder.append( "\n" );
-                }
-            }
-        }
-        else
-        {
-            final String message = replacePlaceHolders(
-                    getLanguageConfig().getString( path ),
-                    prePlaceholderFormatter,
-                    postPlaceholderFormatter,
-                    placeholders
-            );
-
-            if ( message.isEmpty() )
-            {
-                return "";
-            }
-
-            builder.append( message );
-        }
-        return builder.toString();
     }
 
     @Override

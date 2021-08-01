@@ -86,7 +86,7 @@ public class KickCommandCall implements CommandCall
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    target.getLanguageConfig(), PunishmentType.KICK, reason
+                    target.getLanguageConfig().getConfig(), PunishmentType.KICK, reason
             ), "\n" );
 
             kick = BuX.getApi().getPunishmentExecutor().setPlaceHolders( kick, info );

@@ -10,7 +10,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Predicate;
 
 @AllArgsConstructor
 public class ClickableGuiItem implements GuiItem

@@ -127,6 +127,7 @@ general-commands:
       unignored: '&eYou are not ignoring &b{user} &eanymore!'
 
     list:
+      none: '&eYou currently are not ignoring any users.'
       message: '&eList of users you are currently ignoring: &b{ignoredusers}'
       separator: ', '
   socialspy:
@@ -163,7 +164,10 @@ general-commands:
     list:
       wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
       header: '&eReport list (page &b{page}&e)'
+      footer: ''
       no-reports: '&eThere are no reports matching this criteria.'
+      handled: 'Handled'
+      unhandled: 'Unhandled'
       item:
         text: '&b#{id}&e: &b{reported} &efor &b{reason} &eby &b{reporter} &7&o(Hover Me!)'
         hover:
@@ -358,12 +362,12 @@ friends:
         - text: '&6<- '
           click:
             type: 'RUN_COMMAND'
-            action: '/friends requests {previousPage}'
+            action: '/friends requests {type} {previousPage}'
         - text: '&e{type} Requests List &b({currentPage} of {maxPages})'
         - text: ' &6->'
           click:
             type: 'RUN_COMMAND'
-            action: '/friends requests {nextPage}'
+            action: '/friends requests {type} {nextPage}'
     format:
       incoming: '&a<- &e{target} - &b{requestDate}'
       outgoing: '&c-> &e{target} - &b{requestDate}'
@@ -745,6 +749,12 @@ punishments:
         type: 'SUGGEST_COMMAND'
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
+
+  staffrollback:
+    usage: '&ePlease use &b/staffrollback (user) (time) [-f]&e!'
+
+    hard-rollback: '&b{amount} &epunishments executed by &b{user} &ehave been deleted permanently.'
+    soft-rollback: '&b{amount} &epunishments executed by &b{user} &ehave been deactivated.'
 
   track:
     usage: '&fPlease use &a/trackpunish (user) (reason)&f!'

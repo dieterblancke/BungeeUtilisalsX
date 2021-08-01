@@ -6,7 +6,7 @@ import java.util.Optional;
 
 /**
  * This interface is a layer that is used to fetch the current server of an user.
- *
+ * <p>
  * See {@link be.dieterblancke.bungeeutilisalsx.spigot.user.DataStorageUserServerHelper} for an implementation using UserDao
  * This is mostly meant for possible future implementations to fetch current status from redis, web API even, ...
  */

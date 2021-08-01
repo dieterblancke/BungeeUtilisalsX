@@ -241,6 +241,11 @@ domains:
   aliases: 'domainlist'
   permission: bungeeutilisals.commands.domains
 
+  # Regex mappings for certain domains, for example .*play.example.com means that every domain ending with play.example.com will be mapped to play.example.com
+  mappings:
+    - regex: '.*play.example.com'
+      domain: play.example.com
+
   subcommands:
     list:
       enabled: true

@@ -63,7 +63,7 @@ public class MessageBuilder
         }
         final BaseComponent[] text = searchAndFormat(
                 user,
-                user.getLanguageConfig(),
+                user.getLanguageConfig().getConfig(),
                 section.getString( "text" ),
                 prePlaceholderFormatter,
                 postPlaceholderFormatter,
@@ -233,7 +233,7 @@ public class MessageBuilder
             }
             return searchAndFormat(
                     user,
-                    user.getLanguageConfig(),
+                    user.getLanguageConfig().getConfig(),
                     section.getString( "hover" ),
                     prePlaceholderFormatter,
                     postPlaceholderFormatter,

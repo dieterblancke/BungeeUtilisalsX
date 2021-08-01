@@ -28,7 +28,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.mongodb.Block;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;

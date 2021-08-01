@@ -95,14 +95,21 @@ public class IgnoreCommandCall implements CommandCall, TabCall
         }
         else if ( action.equalsIgnoreCase( "list" ) )
         {
-            user.sendLangMessage(
-                    "general-commands.ignore.list.message",
-                    "{ignoredusers}",
-                    String.join(
-                            user.getLanguageConfig().getString( "general-commands.ignore.list.separator" ),
-                            user.getStorage().getIgnoredUsers()
-                    )
-            );
+            if ( user.getStorage().getIgnoredUsers().isEmpty() )
+            {
+                user.sendLangMessage( "general-commands.ignore.list.none" );
+            }
+            else
+            {
+                user.sendLangMessage(
+                        "general-commands.ignore.list.message",
+                        "{ignoredusers}",
+                        String.join(
+                                user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
+                                user.getStorage().getIgnoredUsers()
+                        )
+                );
+            }
         }
         else
         {

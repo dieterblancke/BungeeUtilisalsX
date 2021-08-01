@@ -63,11 +63,11 @@ public class AnnounceCommandCall implements CommandCall, TabCall
 
                 for ( User user : BuX.getApi().getUsers() )
                 {
-                    if ( !user.getLanguageConfig().exists( preconfiguredPath + "." + message ) )
+                    if ( !user.getLanguageConfig().getConfig().exists( preconfiguredPath + "." + message ) )
                     {
                         continue;
                     }
-                    final ISection section = user.getLanguageConfig().getSection( preconfiguredPath + "." + message );
+                    final ISection section = user.getLanguageConfig().getConfig().getSection( preconfiguredPath + "." + message );
 
                     if ( section.exists( "chat" ) )
                     {
@@ -199,9 +199,9 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                 user.sendTitle(
                         Utils.formatString( user, title ),
                         Utils.formatString( user, subtitle ),
-                        fadein * 20,
-                        stay * 20,
-                        fadeout * 20
+                        fadein,
+                        stay,
+                        fadeout
                 );
             }
         }

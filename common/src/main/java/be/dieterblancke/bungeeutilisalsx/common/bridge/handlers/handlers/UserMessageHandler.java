@@ -129,13 +129,13 @@ public class UserMessageHandler implements BridgeMessageHandler<UserAction>
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig(), PunishmentType.valueOf( type ), reason
+                    user.getLanguageConfig().getConfig(), PunishmentType.valueOf( type ), reason
             ), "\n" );
         }
         if ( kick == null )
         {
             kick = Utils.formatList(
-                    user.getLanguageConfig().getStringList( message.getMessage() ),
+                    user.getLanguageConfig().getConfig().getStringList( message.getMessage() ),
                     "\n"
             );
         }
@@ -152,7 +152,7 @@ public class UserMessageHandler implements BridgeMessageHandler<UserAction>
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig(), PunishmentType.valueOf( type ), reason
+                    user.getLanguageConfig().getConfig(), PunishmentType.valueOf( type ), reason
             );
         }
         if ( mute == null )

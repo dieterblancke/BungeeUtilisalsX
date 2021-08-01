@@ -22,8 +22,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.JarClassLoader;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
@@ -62,7 +63,7 @@ public abstract class AbstractBungeeUtilisalsX
     private final List<Script> scripts = new ArrayList<>();
     protected IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
-    private JarClassLoader jarClassLoader;
+    private LibraryClassLoader libraryClassLoader;
     private PermissionIntegration activePermissionIntegration;
 
     public AbstractBungeeUtilisalsX()
@@ -272,10 +273,15 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
+    protected LibraryClassLoader createLibraryClassLoader()
+    {
+        return new UrlLibraryClassLoader();
+    }
+
     protected void loadLibraries()
     {
         BuX.getLogger().info( "Loading libraries ..." );
-        jarClassLoader = new JarClassLoader();
+        libraryClassLoader = this.createLibraryClassLoader();
 
         for ( StandardLibrary standardLibrary : StandardLibrary.values() )
         {

@@ -106,37 +106,13 @@ public class PunishmentHelper implements IPunishmentHelper
         {
             return null;
         }
-        line = line.replace( "{reason}", info.getReason() );
-        line = line.replace( "{date}", Utils.formatDate( getDateFormat(), info.getDate() ) );
-        line = line.replace( "{by}", info.getExecutedBy() );
-        line = line.replace( "{server}", info.getServer() );
 
-        // Just adding in case someone wants them ...
-        line = line.replace( "{uuid}", info.getUuid().toString() );
-        line = line.replace( "{ip}", info.getIp() );
-        line = line.replace( "{user}", info.getUser() );
-        line = line.replace( "{id}", info.getId() );
-        line = line.replace( "{type}", info.getType().toString().toLowerCase() );
-        line = line.replace( "{punishment_uid}", info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
+        final List<String> placeHolders = this.getPlaceHolders( info );
+        for ( int i = 0; i < placeHolders.size(); i++ )
+        {
+            line = line.replace( placeHolders.get( i ), placeHolders.get( ++i ) );
+        }
 
-        if ( info.getExpireTime() == null )
-        {
-            line = line.replace( "{expire}", "Never" );
-            line = line.replace( "{timeLeft}", "Never" );
-        }
-        else
-        {
-            line = line.replace( "{expire}", Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
-            line = line.replace( "{timeLeft}", Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
-        }
-        if ( info.getRemovedBy() == null )
-        {
-            line = line.replace( "{removedBy}", "Unknown" );
-        }
-        else
-        {
-            line = line.replace( "{removedBy}", info.getRemovedBy() );
-        }
         return line;
     }
 
@@ -210,7 +186,7 @@ public class PunishmentHelper implements IPunishmentHelper
         placeholders.add( "{timeLeft}" );
         if ( info.getExpireTime() != null )
         {
-            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() ) );
+            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() - System.currentTimeMillis() ) );
         }
         else
         {

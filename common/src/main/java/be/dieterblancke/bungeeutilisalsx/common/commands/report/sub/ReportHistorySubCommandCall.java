@@ -57,10 +57,10 @@ public class ReportHistorySubCommandCall implements CommandCall
         }
 
         final String accepted = UnicodeTranslator.translate(
-                user.getLanguageConfig().getString( "general-commands.report.history.accepted" )
+                user.getLanguageConfig().getConfig().getString( "general-commands.report.history.accepted" )
         );
         final String denied = UnicodeTranslator.translate(
-                user.getLanguageConfig().getString( "general-commands.report.history.denied" )
+                user.getLanguageConfig().getConfig().getString( "general-commands.report.history.denied" )
         );
 
         if ( reports.isEmpty() )

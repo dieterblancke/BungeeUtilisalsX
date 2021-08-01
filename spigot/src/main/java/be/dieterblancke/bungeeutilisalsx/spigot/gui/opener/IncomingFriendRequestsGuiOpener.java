@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequestType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.spigot.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.spigot.gui.DefaultGui;

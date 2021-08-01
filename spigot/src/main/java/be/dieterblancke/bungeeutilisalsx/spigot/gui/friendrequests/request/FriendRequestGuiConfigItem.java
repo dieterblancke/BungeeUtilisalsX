@@ -2,7 +2,6 @@ package be.dieterblancke.bungeeutilisalsx.spigot.gui.friendrequests.request;
 
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfig;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItem;
-import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.config.GuiConfigItemStack;
 import com.dbsoftwares.configuration.api.ISection;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;

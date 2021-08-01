@@ -34,6 +34,7 @@ import com.velocitypowered.api.proxy.InboundConnection;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.List;
@@ -70,9 +71,12 @@ public class MotdPingListener
             return null;
         }
         final ServerPing orig = event.getPing();
+        final boolean colorHex = Version.getVersion( motdConnection.getVersion() ).isNewerThen( Version.MINECRAFT_1_16 );
         final String message = formatMessage( motd.getMotd(), event, motdConnection );
         final Component component = GsonComponentSerializer.gson().deserialize(
-                ComponentSerializer.toString( Utils.format( message ) )
+                ComponentSerializer.toString( new TextComponent(
+                        TextComponent.fromLegacyText( Utils.formatString( message, colorHex ) )
+                ) )
         );
 
         final List<ServerPing.SamplePlayer> hoverMessages = Lists.newArrayList();
@@ -154,6 +158,10 @@ public class MotdPingListener
                 .findFirst()
                 .orElse( null );
 
-        return new VelocityMotdConnection( connection, name );
+        return new VelocityMotdConnection(
+                connection.getProtocolVersion().getProtocol(),
+                name,
+                connection.getVirtualHost().orElse( null )
+        );
     }
 }

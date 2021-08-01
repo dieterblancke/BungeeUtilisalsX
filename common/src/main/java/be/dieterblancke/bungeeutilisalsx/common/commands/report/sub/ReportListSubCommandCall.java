@@ -38,11 +38,13 @@ public class ReportListSubCommandCall implements CommandCall
         final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
         final List<Report> reports;
         final int page;
+        final int pages;
 
         if ( args.size() == 0 )
         {
             reports = reportsDao.getActiveReports();
             page = 1;
+            pages = (int) Math.ceil( (double) reports.size() / 10 );
         }
         else
         {
@@ -64,10 +66,20 @@ public class ReportListSubCommandCall implements CommandCall
             {
                 reports = reportsDao.getActiveReports();
             }
+            pages = (int) Math.ceil( (double) reports.size() / 10 );
 
-            if ( args.size() > 1 && MathUtils.isInteger( args.get( 1 ) ) )
+            if ( args.size() > 1 )
             {
-                page = Integer.parseInt( args.get( 1 ) );
+                if ( MathUtils.isInteger( args.get( 1 ) ) )
+                {
+                    final int tempPage = Integer.parseInt( args.get( 1 ) );
+
+                    page = Math.min( tempPage, pages );
+                }
+                else
+                {
+                    page = 1;
+                }
             }
             else
             {
@@ -84,12 +96,15 @@ public class ReportListSubCommandCall implements CommandCall
         try
         {
             final List<Report> pageReports = PageUtils.getPageFromList( page, reports, 10 );
-            final int maxPages = MathUtils.ceil( reports.size() / 10 );
+            final int previous = page > 1 ? page - 1 : 1;
+            final int next = Math.min( page + 1, pages );
 
             user.sendLangMessage(
                     "general-commands.report.list.header",
                     "{page}", page,
-                    "{maxPages}", maxPages
+                    "{maxPages}", pages,
+                    "{previousPage}", previous,
+                    "{nextPage}", next
             );
 
             for ( Report report : pageReports )
@@ -102,9 +117,19 @@ public class ReportListSubCommandCall implements CommandCall
                         "{reason}", report.getReason(),
                         "{server}", report.getServer(),
                         "{date}", Dao.formatDateToString( report.getDate() ),
-                        "{handled}", report.isHandled()
+                        "{handled}", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ),
+                        "{previousPage}", previous,
+                        "{nextPage}", next
                 );
             }
+
+            user.sendLangMessage(
+                    "general-commands.report.list.footer",
+                    "{page}", page,
+                    "{maxPages}", pages,
+                    "{previousPage}", previous,
+                    "{nextPage}", next
+            );
         }
         catch ( PageUtils.PageNotFoundException e )
         {

@@ -11,22 +11,28 @@ import net.md_5.bungee.event.EventHandler;
 
 import java.util.Optional;
 
-public class PluginMessageListener implements Listener {
+public class PluginMessageListener implements Listener
+{
 
-    public PluginMessageListener() {
-        ProxyServer.getInstance().registerChannel("bux:main");
+    public PluginMessageListener()
+    {
+        ProxyServer.getInstance().registerChannel( "bux:main" );
     }
 
     @EventHandler
-    public void onMainPluginMessage(final PluginMessageEvent event) {
-        if (!event.getTag().equalsIgnoreCase("bux:main")) {
+    public void onMainPluginMessage( final PluginMessageEvent event )
+    {
+        if ( !event.getTag().equalsIgnoreCase( "bux:main" ) )
+        {
             return;
         }
-        if (!(event.getReceiver() instanceof ProxiedPlayer)) {
+        if ( !( event.getReceiver() instanceof ProxiedPlayer ) )
+        {
             return;
         }
-        final Optional<User> optionalUser = BuX.getApi().getUser(((ProxiedPlayer) event.getReceiver()).getUniqueId());
-        if (!optionalUser.isPresent()) {
+        final Optional<User> optionalUser = BuX.getApi().getUser( ( (ProxiedPlayer) event.getReceiver() ).getUniqueId() );
+        if ( !optionalUser.isPresent() )
+        {
             return;
         }
         final UserPluginMessageReceiveEvent userPluginMessageReceiveEvent = new UserPluginMessageReceiveEvent(
@@ -34,6 +40,6 @@ public class PluginMessageListener implements Listener {
                 event.getTag(),
                 event.getData().clone()
         );
-        BuX.getApi().getEventLoader().launchEventAsync(userPluginMessageReceiveEvent);
+        BuX.getApi().getEventLoader().launchEventAsync( userPluginMessageReceiveEvent );
     }
 }

@@ -15,7 +15,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManag
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.spigot.bossbar.BossBar;
 import be.dieterblancke.bungeeutilisalsx.spigot.user.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;

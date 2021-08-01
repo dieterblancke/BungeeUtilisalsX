@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
+import org.mockito.Mockito;
 
 import java.io.File;
 import java.util.List;
@@ -16,6 +17,7 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public void initialize()
     {
         // do nothing
+        api = Mockito.mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
     }
 
     @Override

@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
@@ -16,6 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
+import be.dieterblancke.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
@@ -114,6 +116,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                     Bootstrap.getInstance(), new MotdPingListener()
             );
         }
+    }
+
+    @Override
+    protected LibraryClassLoader createLibraryClassLoader()
+    {
+        return new VelocityLibraryClassLoader();
     }
 
     @Override

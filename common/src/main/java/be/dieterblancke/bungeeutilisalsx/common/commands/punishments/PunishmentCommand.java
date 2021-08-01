@@ -223,13 +223,13 @@ public abstract class PunishmentCommand implements CommandCall
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
         {
             kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig(), info.getType(), info.getReason()
+                    user.getLanguageConfig().getConfig(), info.getType(), info.getReason()
             ), "\n" );
         }
         if ( kick == null )
         {
             kick = Utils.formatList(
-                    user.getLanguageConfig().getStringList( path ),
+                    user.getLanguageConfig().getConfig().getStringList( path ),
                     "\n"
             );
         }
@@ -280,7 +280,7 @@ public abstract class PunishmentCommand implements CommandCall
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
         {
             mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig(), info.getType(), info.getReason()
+                    user.getLanguageConfig().getConfig(), info.getType(), info.getReason()
             );
         }
         if ( mute == null )
@@ -303,10 +303,11 @@ public abstract class PunishmentCommand implements CommandCall
         );
     }
 
-    private void executeBridgedAction(final UserStorage storage,
-                                      final String path,
-                                      final UserActionType type,
-                                      final PunishmentInfo info) {
+    private void executeBridgedAction( final UserStorage storage,
+                                       final String path,
+                                       final UserActionType type,
+                                       final PunishmentInfo info )
+    {
         if ( BuX.getApi().getBridgeManager().useBridging() )
         {
             final Map<String, Object> data = Maps.newHashMap();

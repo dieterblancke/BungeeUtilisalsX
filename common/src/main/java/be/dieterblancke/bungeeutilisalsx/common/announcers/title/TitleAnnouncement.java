@@ -74,7 +74,7 @@ public class TitleAnnouncement extends Announcement
     {
         stream.forEach( user ->
         {
-            final IConfiguration config = user.getLanguageConfig();
+            final IConfiguration config = user.getLanguageConfig().getConfig();
 
             user.sendTitle(
                     language && config.exists( title ) ? config.getString( title ) : title,

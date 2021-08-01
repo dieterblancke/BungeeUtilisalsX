@@ -129,12 +129,12 @@ public class MongoPunishmentDao implements PunishmentDao
         if ( type.isActivatable() )
         {
             collection.find(
-                    Filters.and(
-                            Filters.eq( "uuid", uuid.toString() ),
-                            Filters.gte( "date", date ),
-                            Filters.eq( "type", type.toString() ),
-                            Filters.eq( "punishmentaction_status", false )
-                    ) )
+                            Filters.and(
+                                    Filters.eq( "uuid", uuid.toString() ),
+                                    Filters.gte( "date", date ),
+                                    Filters.eq( "type", type.toString() ),
+                                    Filters.eq( "punishmentaction_status", false )
+                            ) )
                     .sort( Sorts.ascending( "date" ) )
                     .limit( limit )
                     .forEach( (Consumer<? super Document>) doc ->
@@ -147,11 +147,11 @@ public class MongoPunishmentDao implements PunishmentDao
         else
         {
             collection.find(
-                    Filters.and(
-                            Filters.eq( "uuid", uuid.toString() ),
-                            Filters.gte( "date", date ),
-                            Filters.eq( "punishmentaction_status", false )
-                    ) )
+                            Filters.and(
+                                    Filters.eq( "uuid", uuid.toString() ),
+                                    Filters.gte( "date", date ),
+                                    Filters.eq( "punishmentaction_status", false )
+                            ) )
                     .sort( Sorts.ascending( "date" ) )
                     .limit( limit )
                     .forEach( (Consumer<? super Document>) doc ->
@@ -169,12 +169,12 @@ public class MongoPunishmentDao implements PunishmentDao
         final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
         collection.find(
-                Filters.and(
-                        Filters.eq( "ip", ip ),
-                        Filters.gte( "date", date ),
-                        Filters.eq( "type", type.toString() ),
-                        Filters.eq( "punishmentaction_status", false )
-                ) )
+                        Filters.and(
+                                Filters.eq( "ip", ip ),
+                                Filters.gte( "date", date ),
+                                Filters.eq( "type", type.toString() ),
+                                Filters.eq( "punishmentaction_status", false )
+                        ) )
                 .sort( Sorts.ascending( "date" ) )
                 .limit( limit )
                 .forEach( (Consumer<? super Document>) doc ->

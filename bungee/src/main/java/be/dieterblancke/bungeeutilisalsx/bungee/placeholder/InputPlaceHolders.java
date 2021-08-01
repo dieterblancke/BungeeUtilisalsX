@@ -43,7 +43,7 @@ public class InputPlaceHolders implements PlaceHolderPack
             @Override
             public String getReplacement( InputPlaceHolderEvent event )
             {
-                final IConfiguration configuration = getLanguageConfiguration( event.getUser() );
+                final IConfiguration configuration = Utils.getLanguageConfiguration( event.getUser() ).getConfig();
                 final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
 
                 try
@@ -74,18 +74,5 @@ public class InputPlaceHolders implements PlaceHolderPack
                 return String.valueOf( server.getPlayers() );
             }
         } );
-    }
-
-    // Utility functions
-    private IConfiguration getLanguageConfiguration( User user )
-    {
-        if ( user == null )
-        {
-            return BuX.getApi().getLanguageManager().getConfig(
-                    BuX.getInstance().getName(),
-                    BuX.getApi().getLanguageManager().getDefaultLanguage()
-            );
-        }
-        return user.getLanguageConfig();
     }
 }

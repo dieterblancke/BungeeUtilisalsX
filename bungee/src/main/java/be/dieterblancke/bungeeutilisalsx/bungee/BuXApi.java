@@ -45,7 +45,7 @@ public class BuXApi implements IBuXApi
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
     private final User consoleUser = new ConsoleUser();
-    private final List<User> users = Collections.synchronizedList( Lists.newArrayList() );
+    private final List<User> users = Lists.newCopyOnWriteArrayList();
 
     @Override
     public Optional<User> getUser( String name )

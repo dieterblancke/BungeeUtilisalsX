@@ -87,7 +87,6 @@ public class Library
                   final ReadableByteChannel channel = Channels.newChannel( input );
                   final FileOutputStream output = new FileOutputStream( path ) )
             {
-
                 output.getChannel().transferFrom( channel, 0, Long.MAX_VALUE );
                 BuX.getLogger().info( "Successfully downloaded libary for " + toString() );
 
@@ -101,7 +100,7 @@ public class Library
             }
         }
 
-        BuX.getInstance().getJarClassLoader().loadJar( path );
+        BuX.getInstance().getLibraryClassLoader().loadJar( path );
         BuX.getLogger().info( "Loaded " + name + " libary!" );
     }
 

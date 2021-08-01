@@ -20,11 +20,11 @@ announcements:
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Global
-    # How long should the title fade in (in seconds)?
+    # How long should the title fade in?
     fadein: 1
-    # How long should the title stay (in seconds)?
+    # How long should the title stay?
     stay: 3
-    # How long should the title fade out (in seconds)?
+    # How long should the title fade out?
     fadeout: 1
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisals.announcements.receive'

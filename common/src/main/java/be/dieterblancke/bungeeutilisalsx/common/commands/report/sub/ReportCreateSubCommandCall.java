@@ -64,8 +64,17 @@ public class ReportCreateSubCommandCall implements CommandCall
         }
 
         final UUID targetUuid = BuX.getApi().getPlayerUtils().getUuid( targetName );
-
-        final Report report = new Report( -1, targetUuid, targetName, user.getName(), new Date(), user.getServerName(), reason, false, false );
+        final Report report = new Report(
+                -1,
+                targetUuid,
+                targetName,
+                user.getName(),
+                new Date(),
+                user.getServerName(),
+                reason,
+                false,
+                false
+        );
         final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
 
         reportsDao.addReport( report );

@@ -25,7 +25,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
 
 import java.sql.Connection;
@@ -861,5 +860,49 @@ public class SQLBansDao implements BansDao
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         return uidFound;
+    }
+
+    @Override
+    public int softDeleteSince( final String user, final String removedBy, final Date date )
+    {
+        int records = 0;
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "update " + PunishmentType.BAN.getTable() + " set active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() + " where executed_by = ? and date >= ?;"
+              ) )
+        {
+            pstmt.setBoolean( 1, false );
+            pstmt.setBoolean( 2, true );
+            pstmt.setString( 3, removedBy );
+            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+            pstmt.setString( 5, user );
+            pstmt.setString( 6, Dao.formatDateToString( date ) );
+            records = pstmt.executeUpdate();
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
+        return records;
+    }
+
+    @Override
+    public int hardDeleteSince(final String user, final Date date )
+    {
+        int records = 0;
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "delete from " + PunishmentType.BAN.getTable() + " where executed_by = ? and date >= ?;"
+              ) )
+        {
+            pstmt.setString( 1, user );
+            pstmt.setString( 2, Dao.formatDateToString( date ) );
+            records = pstmt.executeUpdate();
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
+        return records;
     }
 }
