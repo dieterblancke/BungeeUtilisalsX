@@ -32,6 +32,15 @@ public class FriendPluginMessageListener implements PluginMessageListener
                 this.openGuiFor( input.readUTF(), input.readUTF() );
             }
         }
+        else if ( subchannel.equalsIgnoreCase( "commands:console" ) )
+        {
+            final String[] commands = input.readUTF().split( "\\|" );
+
+            for ( String command : commands )
+            {
+                BuX.getApi().getConsoleUser().executeCommand( command );
+            }
+        }
     }
 
     private void openGuiFor( final String gui, final String user )
