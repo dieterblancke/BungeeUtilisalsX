@@ -237,11 +237,11 @@ public abstract class CommandManager
             command.register();
 
             commands.add( command );
-            BuX.getLogger().info( "Registered a command named " + command.getName() + "." );
+            BuX.debug( "Registered a command named " + command.getName() + "." );
         }
         else
         {
-            BuX.getLogger().info( "Skipping registration of a command named " + name + "." );
+            BuX.debug( "Skipping registration of a command named " + name + "." );
         }
     }
 
