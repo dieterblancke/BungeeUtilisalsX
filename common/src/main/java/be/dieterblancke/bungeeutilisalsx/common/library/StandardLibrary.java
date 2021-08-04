@@ -104,7 +104,7 @@ public enum StandardLibrary {
     TEXTCOMPONENT(
             "net.md_5.bungee.api.ChatColor",
             "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/{version}/bungeecord-chat-{version}.jar",
-            "1.16-R0.3",
+            "1.16-R0.4",
             true
     ),
     RHINO(
@@ -128,7 +128,7 @@ public enum StandardLibrary {
     JSOUP(
             "org.jsoup.nodes.Document",
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/{version}/jsoup-{version}.jar",
-            "1.13.1",
+            "1.14.1",
             true
     ),
     RABBIT_MQ(
