@@ -21,6 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general.message;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -54,55 +55,33 @@ public class MsgCommandCall implements CommandCall
 
         if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
-            final Optional<User> optional = BuX.getApi().getUser( name );
             final String message = String.join( " ", args.subList( 1, args.size() ) );
 
-            if ( optional.isPresent() && !optional.get().isVanished() )
-            {
-                final User target = optional.get();
+            user.getStorage().setData( "MSG_LAST_USER", name );
 
-                if ( target.isMsgToggled() )
-                {
-                    user.sendLangMessage( "general-commands.msgtoggle.not-receiving-pms" );
-                    return;
-                }
-
-                if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
-                {
-                    user.sendLangMessage( "general-commands.msg.ignored" );
-                    return;
-                }
-
-                user.getStorage().setData( "MSG_LAST_USER", target.getName() );
-                target.getStorage().setData( "MSG_LAST_USER", user.getName() );
-
-                target.sendLangMessage(
-                        "general-commands.msg.format.receive",
-                        false,
-                        Utils::c,
-                        null,
-                        "{sender}", user.getName(),
-                        "{message}", message
-                );
-                user.sendLangMessage(
-                        "general-commands.msg.format.send",
-                        false,
-                        Utils::c,
-                        null,
-                        "{receiver}", target.getName(),
-                        "{message}", message
-                );
-
-                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
-            }
-            else
-            {
-                user.sendLangMessage( "offline" );
-            }
+            BuX.getInstance().getJobManager().executeJob( new UserPrivateMessageJob(
+                    user.getUuid(),
+                    user.getName(),
+                    name,
+                    message
+            ) );
         }
         else
         {
             user.sendLangMessage( "offline" );
         }
+
+//        if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
+//        {
+//            final Optional<User> optional = BuX.getApi().getUser( name );
+//
+//            if ( optional.isPresent() && !optional.get().isVanished() )
+//            {
+//                final User target = optional.get();
+//
+        // TODO: socialspy shizzle
+//                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
+//            }
+//        }
     }
 }

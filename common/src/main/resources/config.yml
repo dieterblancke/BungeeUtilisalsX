@@ -4,20 +4,12 @@ debug: false
 # Should JavaScript placeholders be loaded and enabled?
 scripting: false
 
-bridging:
+multi-proxy:
+  # Should multi proxy support be enabled? This REQUIRES RabbitMQ to work!
   enabled: false
-  # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
-  name: 'bungee'
 
-  pooling:
-    min-idle: 4
-    max-idle: 8
-    max-total: 12
-
-  redis:
-    host: 127.0.0.1
-    port: 6379
-    password: ''
+  # This should be the URI of the RabbitMQ instance
+  uri: amqp://userName:password@hostName:portNumber/virtualHost
 
 # See: https://api.minetools.eu/uuid/
 # This can be changed to any API you like, as long as the name / uuid is an URL parameter.
@@ -25,7 +17,7 @@ bridging:
 # - The "name" key for uuid to name convertion
 # - The "id" key for name to uuid convertion (or uuid key if id key was not found).
 #
-# This should not be getting used often, at the time of writing (06/03/2019), it is only being used for the Importer tool.
+# This should not be used often, at this time (05/08/2021), it is only being used for the Importer tool.
 urls:
   uuid-to-name: 'https://api.minetools.eu/uuid/'
   name-to-uuid: 'https://api.minetools.eu/uuid/'

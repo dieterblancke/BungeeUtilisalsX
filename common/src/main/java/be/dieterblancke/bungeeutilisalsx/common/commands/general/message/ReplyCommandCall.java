@@ -94,7 +94,7 @@ public class ReplyCommandCall implements CommandCall, TabCall
                         "{message}", message
                 );
 
-                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
+                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user.getName(), target.getName(), message ) );
             }
             else
             {

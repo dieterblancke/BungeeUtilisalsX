@@ -19,26 +19,21 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.event.events.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 /**
  * This event is being executed upon User Private Message.
  */
 @Data
+@RequiredArgsConstructor
 @EqualsAndHashCode( callSuper = true )
 public class UserPrivateMessageEvent extends AbstractEvent
 {
 
-    private User sender;
-    private User receiver;
-    private String message;
+    private final String sender;
+    private final String receiver;
+    private final String message;
 
-    public UserPrivateMessageEvent( final User sender, final User receiver, final String message )
-    {
-        this.sender = sender;
-        this.receiver = receiver;
-        this.message = message;
-    }
 }

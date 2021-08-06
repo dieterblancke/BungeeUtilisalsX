@@ -11,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.Network
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
@@ -28,6 +29,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryC
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
+import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
+import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.library.Library;
 import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
@@ -65,6 +68,7 @@ public abstract class AbstractBungeeUtilisalsX
     private AbstractStorageManager abstractStorageManager;
     private LibraryClassLoader libraryClassLoader;
     private PermissionIntegration activePermissionIntegration;
+    private JobManager jobManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -114,6 +118,10 @@ public abstract class AbstractBungeeUtilisalsX
         }
 
         this.api = this.createBuXApi();
+
+        this.jobManager = ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+                ? new MultiProxyJobManager()
+                : new SingleProxyJobManager();
 
         this.detectPermissionIntegration();
         this.registerLanguages();
