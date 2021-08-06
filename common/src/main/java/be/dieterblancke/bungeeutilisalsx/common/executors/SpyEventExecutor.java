@@ -39,8 +39,8 @@ public class SpyEventExecutor implements EventExecutor
         final List<User> users = BuX.getApi().getUsers()
                 .stream()
                 .filter( user -> user.isSocialSpy() && user.hasPermission( permission ) )
-                .filter( user -> !user.getUuid().equals( event.getSender().getUuid() )
-                        && !user.getUuid().equals( event.getReceiver().getUuid() ) )
+                .filter( user -> !user.getName().equals( event.getSender() )
+                        && !user.getName().equals( event.getReceiver() ) )
                 .collect( Collectors.toList() );
 
         if ( users.isEmpty() )
@@ -52,8 +52,8 @@ public class SpyEventExecutor implements EventExecutor
         {
             user.sendLangMessage(
                     "general-commands.socialspy.message",
-                    "{sender}", event.getSender().getName(),
-                    "{receiver}", event.getReceiver().getName(),
+                    "{sender}", event.getSender(),
+                    "{receiver}", event.getReceiver(),
                     "{message}", event.getMessage()
             );
         }

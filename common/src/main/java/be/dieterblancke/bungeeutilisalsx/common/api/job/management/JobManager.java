@@ -51,7 +51,7 @@ public abstract class JobManager
                     {
                         if ( name.endsWith( ".class" ) )
                         {
-                            final Class<?> clazz = Class.forName( name.replace( "/", "." ) );
+                            final Class<?> clazz = Class.forName( name.replace( "/", "." ).replace( ".class", "" ) );
 
                             for ( Method method : clazz.getDeclaredMethods() )
                             {

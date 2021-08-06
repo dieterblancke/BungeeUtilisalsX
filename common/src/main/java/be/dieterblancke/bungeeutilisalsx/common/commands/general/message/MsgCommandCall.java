@@ -70,18 +70,5 @@ public class MsgCommandCall implements CommandCall
         {
             user.sendLangMessage( "offline" );
         }
-
-//        if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
-//        {
-//            final Optional<User> optional = BuX.getApi().getUser( name );
-//
-//            if ( optional.isPresent() && !optional.get().isVanished() )
-//            {
-//                final User target = optional.get();
-//
-        // TODO: socialspy shizzle
-//                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user, target, message ) );
-//            }
-//        }
     }
 }

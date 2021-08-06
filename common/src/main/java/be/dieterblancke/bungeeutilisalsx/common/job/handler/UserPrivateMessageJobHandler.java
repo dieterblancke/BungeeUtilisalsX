@@ -49,7 +49,7 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     job,
                     false,
                     true,
-                    "general-commands.msg.ignored",
+                    "general-commands.msg.format.send",
                     "{receiver}", user.getName(),
                     "{message}", job.getMessage()
             ) );
