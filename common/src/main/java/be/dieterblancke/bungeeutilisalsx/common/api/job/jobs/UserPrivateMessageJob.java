@@ -16,15 +16,18 @@ public class UserPrivateMessageJob extends HasUserJob
 
     private final String targetName;
     private final String message;
+    private final PrivateMessageType type;
 
     public UserPrivateMessageJob( final UUID uuid,
                                   final String userName,
                                   final String targetName,
-                                  final String message )
+                                  final String message,
+                                  final PrivateMessageType type)
     {
         super( uuid, userName );
         this.targetName = targetName;
         this.message = message;
+        this.type = type;
     }
 
     @Override
@@ -36,5 +39,11 @@ public class UserPrivateMessageJob extends HasUserJob
     public Optional<User> getTargetUser()
     {
         return BuX.getApi().getUser( targetName );
+    }
+
+    public enum PrivateMessageType
+    {
+        MSG,
+        REPLY;
     }
 }

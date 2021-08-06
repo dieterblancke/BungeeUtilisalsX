@@ -23,6 +23,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob.PrivateMessageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -55,51 +57,15 @@ public class ReplyCommandCall implements CommandCall, TabCall
         final String name = user.getStorage().getData( "MSG_LAST_USER" );
         if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
-            final Optional<User> optional = BuX.getApi().getUser( name );
             final String message = String.join( " ", args );
 
-            if ( optional.isPresent() && !optional.get().isVanished() )
-            {
-                final User target = optional.get();
-
-                if ( target.isMsgToggled() )
-                {
-                    user.sendLangMessage( "general-commands.msgtoggle.not-receiving-pms" );
-                    return;
-                }
-
-                if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
-                {
-                    user.sendLangMessage( "general-commands.reply.ignored" );
-                    return;
-                }
-
-                // only needs to be set for target, as the current user (sender) still has this target as last user
-                target.getStorage().setData( "MSG_LAST_USER", user.getName() );
-
-                target.sendLangMessage(
-                        "general-commands.reply.format.receive",
-                        false,
-                        Utils::c,
-                        null,
-                        "{sender}", user.getName(),
-                        "{message}", message
-                );
-                user.sendLangMessage(
-                        "general-commands.reply.format.send",
-                        false,
-                        Utils::c,
-                        null,
-                        "{receiver}", target.getName(),
-                        "{message}", message
-                );
-
-                BuX.getApi().getEventLoader().launchEventAsync( new UserPrivateMessageEvent( user.getName(), target.getName(), message ) );
-            }
-            else
-            {
-                user.sendLangMessage( "offline" );
-            }
+            BuX.getInstance().getJobManager().executeJob( new UserPrivateMessageJob(
+                    user.getUuid(),
+                    user.getName(),
+                    name,
+                    message,
+                    PrivateMessageType.REPLY
+            ) );
         }
         else
         {

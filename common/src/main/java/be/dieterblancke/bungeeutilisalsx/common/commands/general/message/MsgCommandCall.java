@@ -63,7 +63,8 @@ public class MsgCommandCall implements CommandCall
                     user.getUuid(),
                     user.getName(),
                     name,
-                    message
+                    message,
+                    UserPrivateMessageJob.PrivateMessageType.MSG
             ) );
         }
         else

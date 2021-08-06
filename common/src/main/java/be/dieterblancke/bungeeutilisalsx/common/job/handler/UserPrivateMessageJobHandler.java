@@ -30,14 +30,14 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
 
             if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( job.getUserName() ) ) )
             {
-                executeJob( new UserLanguageMessageJob( job, "general-commands.msg.ignored" ) );
+                executeJob( new UserLanguageMessageJob( job, "general-commands." + job.getType().toString().toLowerCase() + ".ignored" ) );
                 return;
             }
 
             user.getStorage().setData( "MSG_LAST_USER", job.getUserName() );
 
             user.sendLangMessage(
-                    "general-commands.msg.format.receive",
+                    "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
                     false,
                     Utils::c,
                     null,
@@ -49,7 +49,7 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     job,
                     false,
                     true,
-                    "general-commands.msg.format.send",
+                    "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
                     "{receiver}", user.getName(),
                     "{message}", job.getMessage()
             ) );
