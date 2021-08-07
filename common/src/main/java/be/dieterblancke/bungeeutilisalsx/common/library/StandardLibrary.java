@@ -75,19 +75,19 @@ public enum StandardLibrary {
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
             "6.0.2.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean("bridging.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
     ),
     REACTOR_CORE(
             "reactor.core.scheduler.Schedulers",
             "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
             "3.3.10.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean("bridging.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
     ),
     REACTIVE_STREAMS(
             "org.reactivestreams.Processor",
             "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
             "1.0.3",
-            ConfigFiles.CONFIG.getConfig().getBoolean("bridging.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
     ),
     GUAVA(
             "com.google.common.collect.Lists",
@@ -123,7 +123,7 @@ public enum StandardLibrary {
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
             "2.9.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean("bridging.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
     ),
     JSOUP(
             "org.jsoup.nodes.Document",

@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
@@ -31,11 +30,6 @@ public interface IBuXApi
      * @return the console user.
      */
     User getConsoleUser();
-
-    /**
-     * @return The loaded bridging manager.
-     */
-    IBridgeManager getBridgeManager();
 
     /**
      * @return The language chat of BungeeUtilisals.
@@ -134,27 +128,6 @@ public interface IBuXApi
      * @param placeholders PlaceHolders + their replacements
      */
     void langPermissionBroadcast( String message, String permission, Object... placeholders );
-
-    /**
-     * Broadcasts a message with the BungeeUtilisals prefix.
-     *
-     * @param manager      The languagemanager instance to be used.
-     * @param message      The location (in the languages file) of the message to be broadcasted.
-     * @param placeholders PlaceHolders + their replacements
-     */
-    @Deprecated
-    void langBroadcast( ILanguageManager manager, String message, Object... placeholders );
-
-    /**
-     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
-     *
-     * @param manager      The languagemanager instance to be used.
-     * @param message      The location (in the languages file) of the message to be broadcasted.
-     * @param permission   The permission the user must have to receive the message.
-     * @param placeholders PlaceHolders + their replacements
-     */
-    @Deprecated
-    void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders );
 
     /**
      * @return a list of all announcers.

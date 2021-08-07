@@ -5,11 +5,21 @@ debug: false
 scripting: false
 
 multi-proxy:
-  # Should multi proxy support be enabled? This REQUIRES RabbitMQ to work!
+  # Should multi proxy support be enabled? This REQUIRES RabbitMQ AND Redis to work!
   enabled: false
 
   # This should be the URI of the RabbitMQ instance
-  uri: amqp://userName:password@hostName:portNumber/virtualHost
+  rabbitmq-uri: amqp://userName:password@hostName:portNumber/virtualHost
+
+  # This should be the URI of the Redis instance, URI notation: https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details
+  redis:
+    clustered: false
+    uri: redis://userName:password@hostName:portNumber/database
+
+    pooling:
+      min-idle: 4
+      max-idle: 8
+      max-total: 12
 
 # See: https://api.minetools.eu/uuid/
 # This can be changed to any API you like, as long as the name / uuid is an URL parameter.

@@ -26,7 +26,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
@@ -69,7 +68,6 @@ public class BungeeUser implements User
     private String ip;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private List<PunishmentInfo> mute;
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();

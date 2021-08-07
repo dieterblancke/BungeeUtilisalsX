@@ -6,7 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
@@ -17,7 +16,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.bossbar.BossBar;
 import be.dieterblancke.bungeeutilisalsx.spigot.user.ConsoleUser;
-import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,12 +35,6 @@ public class BuXApi implements IBuXApi
 
     private final User consoleUser = new ConsoleUser();
     private final List<User> users = Collections.synchronizedList( Lists.newArrayList() );
-
-    @Override
-    public IBridgeManager getBridgeManager()
-    {
-        throw new UnsupportedOperationException( "The BridgeManager is currently only supported in the proxy versions of BungeeUtilisalsX!" );
-    }
 
     @Override
     public Optional<User> getUser( String name )
@@ -152,38 +144,24 @@ public class BuXApi implements IBuXApi
     @Override
     public void langBroadcast( String message, Object... placeholders )
     {
-
-
-        langBroadcast( languageManager, message, placeholders );
+        for ( User user : users )
+        {
+            user.sendLangMessage( message, placeholders );
+        }
+        getConsoleUser().sendLangMessage( message, placeholders );
     }
 
     @Override
     public void langPermissionBroadcast( String message, String permission, Object... placeholders )
     {
-        langPermissionBroadcast( languageManager, message, permission, placeholders );
-    }
-
-    @Override
-    public void langBroadcast( ILanguageManager manager, String message, Object... placeholders )
-    {
         for ( User user : users )
         {
-            LanguageUtils.sendLangMessage( manager, BuX.getInstance().getName(), user, message, placeholders );
-        }
-        LanguageUtils.sendLangMessage( manager, BuX.getInstance().getName(), getConsoleUser(), message, placeholders );
-    }
-
-    @Override
-    public void langPermissionBroadcast( ILanguageManager manager, String message, String permission, Object... placeholders )
-    {
-        for ( User user : users )
-        {
-            if ( user.hasPermission( permission ) || user.hasPermission( "bungeeutilisals.*" ) )
+            if ( user.hasPermission( permission ) )
             {
-                LanguageUtils.sendLangMessage( manager, BuX.getInstance().getName(), user, message, placeholders );
+                user.sendLangMessage( message, placeholders );
             }
         }
-        LanguageUtils.sendLangMessage( manager, BuX.getInstance().getName(), getConsoleUser(), message, placeholders );
+        getConsoleUser().sendLangMessage( message, placeholders );
     }
 
     @Override

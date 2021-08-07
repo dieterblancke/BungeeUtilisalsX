@@ -72,7 +72,6 @@ public class VelocityUser implements User
     private String ip;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private List<PunishmentInfo> mute;
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();

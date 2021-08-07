@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.cache.LoadingCache;

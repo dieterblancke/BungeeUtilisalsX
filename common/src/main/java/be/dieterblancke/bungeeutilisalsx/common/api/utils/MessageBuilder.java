@@ -27,6 +27,7 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 
 import java.util.List;
 import java.util.function.Function;
@@ -83,7 +84,7 @@ public class MessageBuilder
 
             if ( components != null )
             {
-                component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, components ) );
+                component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text( components ) ) );
             }
         }
         if ( section.exists( "click" ) )

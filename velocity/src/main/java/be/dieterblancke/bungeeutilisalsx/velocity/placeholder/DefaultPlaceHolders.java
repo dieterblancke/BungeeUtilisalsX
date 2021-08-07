@@ -44,8 +44,6 @@ public class DefaultPlaceHolders implements PlaceHolderPack
                 event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
                 event -> String.valueOf( Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers() ) );
-        PlaceHolderAPI.addPlaceHolder( "{redis_online}", false,
-                event -> String.valueOf( BuX.getApi().getBridgeManager().useBridging() ? BuX.getApi().getPlayerUtils().getTotalCount() : 0 ) );
 
         PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
         PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );

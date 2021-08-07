@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data.RedisDataManager;
 import com.dbsoftwares.configuration.api.ISection;
 import io.lettuce.core.RedisClient;
@@ -30,9 +30,7 @@ public class StandardRedisManager implements RedisManager
 
     public StandardRedisManager( final ISection section )
     {
-        final RedisURI redisURI = this.getRedisURI( section.getSection( "redis" ) );
-
-        this.redisClient = RedisClient.create( redisURI );
+        this.redisClient = RedisClient.create( section.getString( "uri" ) );
         this.pool = ConnectionPoolSupport.createGenericObjectPool(
                 redisClient::connect,
                 this.getObjectPoolConfig( section.getSection( "pooling" ) )

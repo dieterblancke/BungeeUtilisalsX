@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.RedisManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data.RedisDataManager;
 import com.dbsoftwares.configuration.api.ISection;
 import io.lettuce.core.RedisURI;
@@ -32,12 +32,7 @@ public class ClusteredRedisManager implements RedisManager
 
     public ClusteredRedisManager( final ISection section )
     {
-        final List<RedisURI> redisURIs = section.getSectionList( "redis" )
-                .stream()
-                .map( this::getRedisURI )
-                .collect( Collectors.toList() );
-
-        this.redisClient = RedisClusterClient.create( redisURIs );
+        this.redisClient = RedisClusterClient.create( section.getString( "uri" ) );
         this.pool = ConnectionPoolSupport.createGenericObjectPool(
                 redisClient::connect,
                 this.getObjectPoolConfig( section.getSection( "pooling" ) )

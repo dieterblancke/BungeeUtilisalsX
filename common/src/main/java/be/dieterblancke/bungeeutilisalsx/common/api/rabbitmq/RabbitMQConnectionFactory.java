@@ -25,7 +25,7 @@ public class RabbitMQConnectionFactory
         this.connectionFactory = new ConnectionFactory();
         try
         {
-            this.connectionFactory.setUri( ConfigFiles.CONFIG.getConfig().getString( "multi-proxy.uri" ) );
+            this.connectionFactory.setUri( ConfigFiles.CONFIG.getConfig().getString( "multi-proxy.rabbitmq-uri" ) );
         }
         catch ( URISyntaxException | NoSuchAlgorithmException | KeyManagementException e )
         {

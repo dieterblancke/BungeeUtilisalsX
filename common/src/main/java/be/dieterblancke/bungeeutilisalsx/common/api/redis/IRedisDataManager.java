@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis;
+package be.dieterblancke.bungeeutilisalsx.common.api.redis;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 

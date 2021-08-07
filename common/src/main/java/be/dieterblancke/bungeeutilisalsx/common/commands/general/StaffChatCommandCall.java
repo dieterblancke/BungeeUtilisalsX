@@ -19,71 +19,27 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserAction;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserActionType;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
 
 public class StaffChatCommandCall implements CommandCall
 {
 
     public static void sendStaffChatMessage( final String serverName, final String userName, final String message )
     {
-        handleStaffChatMessage( serverName, userName, message );
-
-        if ( BuX.getApi().getBridgeManager().useBridging() )
-        {
-            final Map<String, Object> data = Maps.newHashMap();
-
-            data.put( "PERMISSION", Lists.newArrayList(
-                    ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
-                    "bungeeutilisals.commands.*",
-                    "bungeeutilisals.*",
-                    "*"
-            ) );
-
-            BuX.getApi().getBridgeManager().getBridge().sendTargetedMessage(
-                    BridgeType.BUNGEE_BUNGEE,
-                    null,
-                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
-                    "USER",
-                    new UserAction(
-                            null,
-                            UserActionType.MESSAGE,
-                            new BridgedUserMessage(
-                                    true,
-                                    "general-commands.staffchat.format",
-                                    data,
-                                    "{user}", userName,
-                                    "{server}", serverName,
-                                    "{message}", message
-                            )
-                    )
-            );
-        }
-    }
-
-    private static void handleStaffChatMessage( String serverName, String userName, String message )
-    {
-        for ( User user : BuX.getApi().getUsers() )
-        {
-            if ( user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ) )
-                    || user.hasPermission( "bungeeutilisals.commands.*" )
-                    || user.hasPermission( "bungeeutilisals.*" )
-                    || user.hasPermission( "*" ) )
-            {
-                user.sendLangMessage( false, "general-commands.staffchat.format",
-                        "{user}", userName, "{server}", serverName, "{message}", message );
-            }
-        }
+        BuX.getInstance().getJobManager().executeJob(
+                new BroadcastLanguageMessageJob(
+                        "general-commands.staffchat.format",
+                        ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
+                        "{user}", userName,
+                        "{server}", serverName,
+                        "{message}", message
+                )
+        );
     }
 
     @Override

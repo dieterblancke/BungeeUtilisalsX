@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis;
+package be.dieterblancke.bungeeutilisalsx.common.api.redis;
 
 import com.dbsoftwares.configuration.api.ISection;
 import io.lettuce.core.RedisURI;
@@ -28,28 +28,6 @@ public interface RedisManager
     void subscribeToChannels( String... channels );
 
     void publishToChannel( String channel, String message );
-
-    default RedisURI getRedisURI( final ISection section )
-    {
-        final String host = section.getString( "host" );
-        final int port = section.getInteger( "port" );
-        final String password = section.getString( "password" );
-
-        if ( host != null && !host.isEmpty() )
-        {
-            RedisURI.Builder builder = RedisURI.builder()
-                    .withHost( host )
-                    .withPort( port );
-
-            if ( password != null )
-            {
-                builder = builder.withPassword( password.toCharArray() );
-            }
-
-            return builder.build();
-        }
-        return null;
-    }
 
     default <T> GenericObjectPoolConfig<T> getObjectPoolConfig( final ISection section )
     {

@@ -15,11 +15,9 @@ import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
@@ -53,9 +51,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
-        final IBridgeManager bridgeManager = new BridgeManager();
-        final IBuXApi api = new BuXApi(
-                bridgeManager,
+        return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
@@ -66,9 +62,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                                 : new RedisPlayerUtils()
                         : new BungeePlayerUtils()
         );
-        bridgeManager.setup( api );
-
-        return api;
     }
 
     @Override
