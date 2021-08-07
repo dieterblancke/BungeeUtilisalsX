@@ -1,16 +1,20 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUserJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.UUID;
+import java.util.Optional;
 
 @Getter
 @Setter
-public class UserLanguageMessageJob extends HasUserJob
+public class UserLanguageMessageJob implements MultiProxyJob
 {
 
+    private String userName;
     private boolean prefix;
     private boolean colorBefore;
     private String languagePath;
@@ -20,7 +24,7 @@ public class UserLanguageMessageJob extends HasUserJob
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        this( job.getUuid(), job.getUserName(), languagePath, placeholders );
+        this( job.getUserName(), languagePath, placeholders );
     }
 
     public UserLanguageMessageJob( final HasUserJob job,
@@ -28,7 +32,7 @@ public class UserLanguageMessageJob extends HasUserJob
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        this( job.getUuid(), job.getUserName(), prefix, false, languagePath, placeholders );
+        this( job.getUserName(), prefix, false, languagePath, placeholders );
     }
 
     public UserLanguageMessageJob( final HasUserJob job,
@@ -37,26 +41,23 @@ public class UserLanguageMessageJob extends HasUserJob
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        this( job.getUuid(), job.getUserName(), prefix, colorBefore, languagePath, placeholders );
+        this( job.getUserName(), prefix, colorBefore, languagePath, placeholders );
     }
 
-    public UserLanguageMessageJob( final UUID uuid,
-                                   final String userName,
+    public UserLanguageMessageJob( final String userName,
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        this( uuid, userName, true, false, languagePath, placeholders );
+        this( userName, true, false, languagePath, placeholders );
     }
 
-    public UserLanguageMessageJob( final UUID uuid,
-                                   final String userName,
+    public UserLanguageMessageJob( final String userName,
                                    final boolean prefix,
                                    final boolean colorBefore,
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        super( uuid, userName );
-
+        this.userName = userName;
         this.prefix = prefix;
         this.colorBefore = colorBefore;
         this.languagePath = languagePath;
@@ -67,5 +68,10 @@ public class UserLanguageMessageJob extends HasUserJob
     public boolean isAsync()
     {
         return true;
+    }
+
+    public Optional<User> getUser()
+    {
+        return BuX.getApi().getUser( userName );
     }
 }
