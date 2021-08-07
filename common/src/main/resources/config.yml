@@ -57,19 +57,3 @@ storage:
     max-lifetime: 300
     # How long should BungeeUtilisals wait before timing out a connection?
     connection-timeout: 8
-
-  # Storage schema names
-  schemas:
-    users: 'bu_users'
-    ignoredusers: 'bu_ignoredusers'
-    friends: 'bu_friends'
-    friendrequests: 'bu_friendrequests'
-    friendsettings: 'bu_friendsettings'
-    bans: 'bu_bans'
-    mutes: 'bu_mutes'
-    kicks: 'bu_kicks'
-    warns: 'bu_warns'
-    punishmentactions: 'bu_punishmentactions'
-    reports: 'bu_reports'
-    messagequeue: 'bu_messagequeue'
-    punishmenttracks: 'bu_punishmenttracks'

@@ -39,17 +39,6 @@ public class DefaultPlaceHolders implements PlaceHolderPack
     @Override
     public void loadPack()
     {
-        final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "storage.schemas" );
-
-        for ( String key : section.getKeys() )
-        {
-            PlaceHolderAPI.addPlaceHolder(
-                    "{" + key + "-table}",
-                    false,
-                    event -> section.getString( key )
-            );
-        }
-
         // Proxy PlaceHolders
         PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
                 event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );

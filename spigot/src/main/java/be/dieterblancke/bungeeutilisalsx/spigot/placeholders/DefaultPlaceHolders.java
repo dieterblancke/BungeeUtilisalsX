@@ -38,17 +38,6 @@ public class DefaultPlaceHolders implements PlaceHolderPack
     @Override
     public void loadPack()
     {
-        final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "storage.schemas" );
-
-        for ( String key : section.getKeys() )
-        {
-            PlaceHolderAPI.addPlaceHolder(
-                    "{" + key + "-table}",
-                    false,
-                    event -> section.getString( key )
-            );
-        }
-
         PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
         PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );
         PlaceHolderAPI.addPlaceHolder( "{datetime}", false, this::getCurrentDateTime );

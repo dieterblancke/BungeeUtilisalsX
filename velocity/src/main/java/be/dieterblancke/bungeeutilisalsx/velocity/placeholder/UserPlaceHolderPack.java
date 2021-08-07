@@ -73,6 +73,10 @@ public class UserPlaceHolderPack implements PlaceHolderPack
 
     private String getServerCount( final PlaceHolderEvent event )
     {
+        if ( event.getUser().getServerName().trim().isEmpty() )
+        {
+            return "0";
+        }
         return String.valueOf( BuX.getApi().getPlayerUtils().getPlayerCount( event.getUser().getServerName() ) );
     }
 

@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
@@ -108,9 +107,9 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     private void addMessage( final QueuedMessage message ) throws SQLException
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( format(
-                      "INSERT INTO {messagequeue-table}(user, message, type, active, date) VALUES(?, ?, ?, ?, ?);"
-              ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "INSERT INTO bu_messagequeue(user, message, type, active, date) VALUES(?, ?, ?, ?, ?);"
+              ) )
         {
             pstmt.setString( 1, message.getUser() );
             pstmt.setString( 2, GSON.toJson( message.getMessage() ) );
@@ -125,9 +124,9 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     private void handle( final QueuedMessage message )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( format(
-                      "UPDATE {messagequeue-table} SET active = ? WHERE id = ?;"
-              ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "UPDATE bu_messagequeue SET active = ? WHERE id = ?;"
+              ) )
         {
             pstmt.setBoolean( 1, false );
             pstmt.setLong( 2, message.getId() );
@@ -149,9 +148,9 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
     private void fetchMessages()
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( format(
-                      "SELECT * FROM {messagequeue-table} WHERE active = ? AND ((user = ? AND type = ?) OR (user = ? AND type = ?) OR (user = ? AND type = ?));"
-              ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM bu_messagequeue WHERE active = ? AND ((user = ? AND type = ?) OR (user = ? AND type = ?) OR (user = ? AND type = ?));"
+              ) )
         {
             pstmt.setBoolean( 1, true );
             pstmt.setString( 2, uuid.toString() );
@@ -178,10 +177,5 @@ public class SQLMessageQueue extends LinkedList<QueuedMessage> implements Messag
         {
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
-    }
-
-    private String format( final String str )
-    {
-        return PlaceHolderAPI.formatMessage( str );
     }
 }

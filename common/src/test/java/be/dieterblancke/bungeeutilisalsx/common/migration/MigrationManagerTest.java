@@ -36,17 +36,6 @@ class MigrationManagerTest extends BuXTest
                 ConfigFiles.CONFIG,
                 IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/config.yml" ) )
         );
-
-        final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "storage.schemas" );
-
-        for ( String key : section.getKeys() )
-        {
-            PlaceHolderAPI.addPlaceHolder(
-                    "{" + key + "-table}",
-                    false,
-                    event -> section.getString( key )
-            );
-        }
     }
 
     @AfterEach

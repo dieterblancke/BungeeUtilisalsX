@@ -196,7 +196,7 @@ public class MongoPunishmentDao implements PunishmentDao
         data.put( "actionid", uid );
         data.put( "date", new Date() );
 
-        db().getCollection( PlaceHolderAPI.formatMessage( "{punishmentactions-table}" ) ).insertOne( new Document( data ) );
+        db().getCollection( "bu_punishmentactions" ).insertOne( new Document( data ) );
     }
 
     // Recreating save api ...

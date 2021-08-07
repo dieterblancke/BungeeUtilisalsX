@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
@@ -37,21 +36,6 @@ import java.util.function.Consumer;
 public class MongoReportsDao implements ReportsDao
 {
 
-    private String format( String line )
-    {
-        return PlaceHolderAPI.formatMessage( line );
-    }
-
-    private MongoDBStorageManager manager()
-    {
-        return (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager();
-    }
-
-    private MongoDatabase db()
-    {
-        return manager().getDatabase();
-    }
-
     @Override
     public void addReport( Report report )
     {
@@ -66,20 +50,20 @@ public class MongoReportsDao implements ReportsDao
         data.put( "reason", report.getReason() );
         data.put( "accepted", report.isAccepted() );
 
-        db().getCollection( format( "{reports-table}" ) ).insertOne( new Document( data ) );
+        db().getCollection( "bu_reports" ).insertOne( new Document( data ) );
     }
 
     @Override
     public void removeReport( long id )
     {
-        db().getCollection( format( "{reports-table}" ) ).deleteOne( Filters.eq( "_id", id ) );
+        db().getCollection( "bu_reports" ).deleteOne( Filters.eq( "_id", id ) );
     }
 
     @Override
     public Report getReport( long id )
     {
         final Report report;
-        final Document document = db().getCollection( format( "{reports-table}" ) ).find( Filters.eq( "_id", id ) ).limit( 1 ).first();
+        final Document document = db().getCollection( "bu_reports" ).find( Filters.eq( "_id", id ) ).limit( 1 ).first();
 
         if ( document == null || document.isEmpty() )
         {
@@ -95,7 +79,7 @@ public class MongoReportsDao implements ReportsDao
 
     private Report getReport( final Document document )
     {
-        final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
+        final MongoCollection<Document> userColl = db().getCollection( "bu_users" );
         final Document user = userColl.find( Filters.eq( "uuid", document.getString( "uuid" ) ) ).first();
 
         return new Report(
@@ -116,7 +100,7 @@ public class MongoReportsDao implements ReportsDao
     {
         final List<Report> reports = Lists.newArrayList();
 
-        db().getCollection( format( "{reports-table}" ) ).find()
+        db().getCollection( "bu_reports" ).find()
                 .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
         return reports;
@@ -127,7 +111,7 @@ public class MongoReportsDao implements ReportsDao
     {
         final List<Report> reports = Lists.newArrayList();
 
-        db().getCollection( format( "{reports-table}" ) ).find( Filters.eq( "uuid", uuid.toString() ) )
+        db().getCollection( "bu_reports" ).find( Filters.eq( "uuid", uuid.toString() ) )
                 .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
         return reports;
@@ -149,7 +133,7 @@ public class MongoReportsDao implements ReportsDao
     {
         final List<Report> reports = Lists.newArrayList();
 
-        db().getCollection( format( "{reports-table}" ) ).find( Filters.eq( "handled", handled ) )
+        db().getCollection( "bu_reports" ).find( Filters.eq( "handled", handled ) )
                 .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
         return reports;
@@ -162,7 +146,7 @@ public class MongoReportsDao implements ReportsDao
         final Calendar calendar = Calendar.getInstance();
         calendar.add( Calendar.DATE, -7 );
 
-        db().getCollection( format( "{reports-table}" ) ).find( Filters.gte( "date", calendar.getTime() ) )
+        db().getCollection( "bu_reports" ).find( Filters.gte( "date", calendar.getTime() ) )
                 .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
         return reports;
@@ -171,13 +155,13 @@ public class MongoReportsDao implements ReportsDao
     @Override
     public boolean reportExists( long id )
     {
-        return db().getCollection( format( "{reports-table}" ) ).find( Filters.eq( "_id", id ) ).limit( 1 ).iterator().hasNext();
+        return db().getCollection( "bu_reports" ).find( Filters.eq( "_id", id ) ).limit( 1 ).iterator().hasNext();
     }
 
     @Override
     public void handleReport( long id, boolean accepted )
     {
-        final MongoCollection<Document> collection = db().getCollection( format( "{reports-table}" ) );
+        final MongoCollection<Document> collection = db().getCollection( "bu_reports" );
         final Document document = collection.find( Filters.eq( "_id", id ) ).limit( 1 ).first();
 
         document.put( "handled", true );
@@ -203,7 +187,7 @@ public class MongoReportsDao implements ReportsDao
     {
         final List<Report> reports = Lists.newArrayList();
 
-        db().getCollection( format( "{reports-table}" ) )
+        db().getCollection( "bu_reports" )
                 .find( Filters.eq( "reported_by", name ) )
                 .forEach( (Consumer<? super Document>) doc ->
                         reports.add( getReport( doc ) )
@@ -216,7 +200,7 @@ public class MongoReportsDao implements ReportsDao
     {
         final List<Report> reports = Lists.newArrayList();
 
-        db().getCollection( format( "{reports-table}" ) ).find( Filters.eq( "accepted", accepted ) )
+        db().getCollection( "bu_reports" ).find( Filters.eq( "accepted", accepted ) )
                 .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
         return reports;
@@ -236,4 +220,13 @@ public class MongoReportsDao implements ReportsDao
         }
     }
 
+    private MongoDBStorageManager manager()
+    {
+        return (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager();
+    }
+
+    private MongoDatabase db()
+    {
+        return manager().getDatabase();
+    }
 }

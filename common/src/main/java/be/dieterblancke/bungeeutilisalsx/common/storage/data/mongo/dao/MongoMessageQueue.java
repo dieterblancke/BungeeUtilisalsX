@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
@@ -116,12 +115,12 @@ public class MongoMessageQueue extends LinkedList<QueuedMessage> implements Mess
         data.put( "type", message.getType() );
         data.put( "active", true );
 
-        db().getCollection( format( "{messagequeue-table}" ) ).insertOne( new Document( data ) );
+        db().getCollection( "bu_messagequeue" ).insertOne( new Document( data ) );
     }
 
     private void handle( final QueuedMessage message )
     {
-        final MongoCollection<Document> collection = db().getCollection( format( "{messagequeue-table}" ) );
+        final MongoCollection<Document> collection = db().getCollection( "bu_messagequeue" );
         final Document document = collection.find( Filters.eq( "_id", message.getId() ) ).limit( 1 ).first();
 
         document.put( "active", false );
@@ -130,7 +129,7 @@ public class MongoMessageQueue extends LinkedList<QueuedMessage> implements Mess
 
     private void fetchMessages()
     {
-        db().getCollection( format( "{messagequeue-table}" ) )
+        db().getCollection( "bu_messagequeue" )
                 .find( Filters.and(
                         Filters.eq( "active", true ),
                         Filters.or(
@@ -174,11 +173,6 @@ public class MongoMessageQueue extends LinkedList<QueuedMessage> implements Mess
         {
             collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }
-    }
-
-    private String format( final String line )
-    {
-        return PlaceHolderAPI.formatMessage( line );
     }
 
     private MongoDBStorageManager manager()

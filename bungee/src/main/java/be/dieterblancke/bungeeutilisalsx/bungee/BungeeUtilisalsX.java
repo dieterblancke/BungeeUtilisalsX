@@ -60,7 +60,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
-                bridgeManager.useBridging() ?
+                ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ?
                         this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
                                 ? new ProxySyncPlayerUtils()
                                 : new RedisPlayerUtils()

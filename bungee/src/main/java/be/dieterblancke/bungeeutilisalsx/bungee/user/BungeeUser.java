@@ -25,7 +25,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -139,11 +138,8 @@ public class BungeeUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                System.out.println( "Friend list of " + name );
-                System.out.println( Arrays.toString( friends.toArray() ) );
-            }
+            BuX.debug( "Friend list of " + name );
+            BuX.debug( Arrays.toString( friends.toArray() ) );
         }
         else
         {

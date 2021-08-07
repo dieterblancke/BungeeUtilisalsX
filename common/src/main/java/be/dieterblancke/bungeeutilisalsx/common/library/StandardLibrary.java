@@ -135,7 +135,7 @@ public enum StandardLibrary {
             "com.rabbitmq.client.RpcClient",
             "https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/{version}/amqp-client-{version}.jar",
             "5.13.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean("bridging.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
     );
 
     @Getter

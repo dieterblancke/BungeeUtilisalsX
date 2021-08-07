@@ -38,9 +38,7 @@ public class MongoTracksDao implements TracksDao
             filters.add( Filters.eq( "server", server ) );
         }
 
-        final MongoCollection<Document> collection = db().getCollection(
-                PlaceHolderAPI.formatMessage( "{punishmenttracks-table}" )
-        );
+        final MongoCollection<Document> collection = db().getCollection( "bu_punishmenttracks" );
         final MongoIterable<Document> documentIterator = collection.find( Filters.and( filters ) );
 
         for ( Document document : documentIterator )
@@ -61,10 +59,7 @@ public class MongoTracksDao implements TracksDao
     @Override
     public void addToTrack( final PunishmentTrackInfo trackInfo )
     {
-        final MongoCollection<Document> collection = db().getCollection(
-                PlaceHolderAPI.formatMessage( "{punishmenttracks-table}" )
-        );
-
+        final MongoCollection<Document> collection = db().getCollection( "bu_punishmenttracks" );
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
         data.put( "uuid", trackInfo.getUuid().toString() );
         data.put( "track_id", trackInfo.getTrackId() );
@@ -88,9 +83,7 @@ public class MongoTracksDao implements TracksDao
         {
             filters.add( Filters.eq( "server", server ) );
         }
-        final MongoCollection<Document> collection = db().getCollection(
-                PlaceHolderAPI.formatMessage( "{punishmenttracks-table}" )
-        );
+        final MongoCollection<Document> collection = db().getCollection( "bu_punishmenttracks" );
 
         collection.deleteMany( Filters.and( filters ) );
     }

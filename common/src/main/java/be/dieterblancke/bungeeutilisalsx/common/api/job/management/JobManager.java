@@ -22,7 +22,7 @@ public abstract class JobManager
 {
 
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter( Job.class, new JobInterfaceAdapter<Job>() )
+            .registerTypeHierarchyAdapter( Job.class, new JobInterfaceAdapter() )
             .create();
     private static final List<JobHandlerInfo> JOB_HANDLERS = new ArrayList<>();
     private static final Map<Class<?>, Object> JOB_HANDLER_INSTANCES = Maps.newHashMap();

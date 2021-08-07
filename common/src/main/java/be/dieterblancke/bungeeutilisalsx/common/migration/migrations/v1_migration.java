@@ -22,7 +22,7 @@ public class v1_migration extends FileMigration
         boolean shouldRun = true;
 
         final DatabaseMetaData metaData = connection.getMetaData();
-        try ( ResultSet rs = metaData.getTables( null, null, PlaceHolderAPI.formatMessage( "{users-table}" ), null ) )
+        try ( ResultSet rs = metaData.getTables( null, null, "bu_users", null ) )
         {
             if ( rs.next() )
             {

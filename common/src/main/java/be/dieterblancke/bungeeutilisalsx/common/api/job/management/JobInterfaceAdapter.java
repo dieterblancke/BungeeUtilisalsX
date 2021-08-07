@@ -1,15 +1,17 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.management;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.job.Job;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-public class JobInterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T>
+public class JobInterfaceAdapter implements JsonSerializer<Job>, JsonDeserializer<Job>
 {
 
     private final Gson gson = new Gson();
 
-    public JsonElement serialize( T object, Type interfaceType, JsonSerializationContext context )
+    @Override
+    public JsonElement serialize( final Job object, final Type interfaceType, final JsonSerializationContext context )
     {
         final JsonObject wrapper = new JsonObject();
         wrapper.addProperty( "type", object.getClass().getName() );
@@ -17,14 +19,15 @@ public class JobInterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializ
         return wrapper;
     }
 
-    public T deserialize( JsonElement elem, Type interfaceType, JsonDeserializationContext context ) throws JsonParseException
+    @Override
+    public Job deserialize( final JsonElement elem, final Type interfaceType, final JsonDeserializationContext context ) throws JsonParseException
     {
         final JsonObject wrapper = (JsonObject) elem;
         final JsonElement typeName = get( wrapper, "type" );
         final JsonElement data = get( wrapper, "data" );
         final Type actualType = typeForName( typeName );
 
-        return context.deserialize( data, actualType );
+        return gson.fromJson( data, actualType );
     }
 
     private Type typeForName( final JsonElement typeElem )
@@ -42,7 +45,8 @@ public class JobInterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializ
     private JsonElement get( final JsonObject wrapper, String memberName )
     {
         final JsonElement elem = wrapper.get( memberName );
-        if ( elem == null ) {
+        if ( elem == null )
+        {
             throw new JsonParseException( "No '" + memberName + "' member found in what was expected to be an interface wrapper" );
         }
         return elem;

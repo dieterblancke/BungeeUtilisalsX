@@ -144,11 +144,8 @@ public class VelocityUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                System.out.println( "Friend list of " + name );
-                System.out.println( Arrays.toString( friends.toArray() ) );
-            }
+            BuX.debug( "Friend list of " + name );
+            BuX.debug( Arrays.toString( friends.toArray() ) );
         }
         else
         {

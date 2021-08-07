@@ -36,9 +36,7 @@ public abstract class FileMigration implements Migration
                     {
                         builder.deleteCharAt( builder.length() - 1 );
 
-                        String statement = PlaceHolderAPI.formatMessage(
-                                SqlConstants.replaceConstants( builder.toString().trim() )
-                        );
+                        String statement = SqlConstants.replaceConstants( builder.toString().trim() );
                         if ( !statement.isEmpty() )
                         {
                             this.migrationStatements.add( statement );
