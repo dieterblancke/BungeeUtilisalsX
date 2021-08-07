@@ -47,8 +47,7 @@ public class UserMuteJobHandler extends AbstractJobHandler
             mute.forEach( str -> user.sendRawColorMessage( Utils.replacePlaceHolders( user, str, placeholders ) ) );
         }
 
-        // if CURRENT_MUTES key is abscent, the next time a
-        // user chats, BuX will fetch the mutes for that user
+        // if CURRENT_MUTES key is abscent, the next time a user chats, BuX will fetch the mutes for that user
         user.getStorage().removeData( "CURRENT_MUTES" );
     }
 }

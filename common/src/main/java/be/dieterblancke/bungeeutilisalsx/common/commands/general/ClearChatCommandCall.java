@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ClearChatJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -77,6 +78,7 @@ public class ClearChatCommandCall implements CommandCall, TabCall
             return;
         }
         final String server = args.get( 0 ).toLowerCase().contains( "g" ) ? "ALL" : user.getServerName();
-        clearChat( server, user.getName() );
+
+        BuX.getInstance().getJobManager().executeJob( new ClearChatJob( server, user.getName() ) );
     }
 }

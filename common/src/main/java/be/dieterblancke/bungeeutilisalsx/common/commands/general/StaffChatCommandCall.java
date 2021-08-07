@@ -54,7 +54,6 @@ public class StaffChatCommandCall implements CommandCall
 
         user.setInStaffChat( !user.isInStaffChat() );
 
-        user.sendLangMessage( "general-commands.staffchat."
-                + ( user.isInStaffChat() ? "enabled" : "disabled" ) );
+        user.sendLangMessage( "general-commands.staffchat." + ( user.isInStaffChat() ? "enabled" : "disabled" ) );
     }
 }
