@@ -2,21 +2,17 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job.management;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.Job;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public abstract class JobManager
 {
@@ -29,54 +25,26 @@ public abstract class JobManager
 
     static
     {
-        final CodeSource src = JobManager.class.getProtectionDomain().getCodeSource();
+        final List<Class<?>> classes = Utils.getClassesInPackage( "be.dieterblancke.bungeeutilisalsx.common.job.handler" );
 
-        if ( src != null )
+        for ( Class<?> clazz : classes )
         {
-            try
+            for ( Method method : clazz.getDeclaredMethods() )
             {
-                final URL jar = src.getLocation();
-                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
-
-                while ( true )
+                if ( method.isAnnotationPresent( JobHandler.class ) )
                 {
-                    final ZipEntry e = zip.getNextEntry();
-                    if ( e == null )
-                    {
-                        break;
-                    }
-                    final String name = e.getName();
+                    method.setAccessible( true );
 
-                    if ( name.startsWith( "be/dieterblancke/bungeeutilisalsx/common/job/handler" ) )
+                    if ( method.getParameterTypes().length == 1 )
                     {
-                        if ( name.endsWith( ".class" ) )
+                        final Class<?> clazzType = method.getParameterTypes()[0];
+
+                        if ( Job.class.isAssignableFrom( clazzType ) )
                         {
-                            final Class<?> clazz = Class.forName( name.replace( "/", "." ).replace( ".class", "" ) );
-
-                            for ( Method method : clazz.getDeclaredMethods() )
-                            {
-                                if ( method.isAnnotationPresent( JobHandler.class ) )
-                                {
-                                    method.setAccessible( true );
-
-                                    if ( method.getParameterTypes().length == 1 )
-                                    {
-                                        final Class<?> clazzType = method.getParameterTypes()[0];
-
-                                        if ( Job.class.isAssignableFrom( clazzType ) )
-                                        {
-                                            JOB_HANDLERS.add( new JobHandlerInfo( clazzType, method ) );
-                                        }
-                                    }
-                                }
-                            }
+                            JOB_HANDLERS.add( new JobHandlerInfo( clazzType, method ) );
                         }
                     }
                 }
-            }
-            catch ( IOException | ClassNotFoundException e )
-            {
-                e.printStackTrace();
             }
         }
     }

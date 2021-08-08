@@ -8,10 +8,10 @@ import java.sql.DatabaseMetaData;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class v1_migration extends FileMigration
+public class v1_initial_migration extends FileMigration
 {
 
-    public v1_migration()
+    public v1_initial_migration()
     {
         super( "migrations/v1_initial_migration.sql" );
     }

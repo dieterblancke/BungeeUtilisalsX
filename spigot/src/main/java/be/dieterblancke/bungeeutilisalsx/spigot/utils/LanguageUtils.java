@@ -3,7 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.spigot.utils;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import net.md_5.bungee.api.chat.TextComponent;

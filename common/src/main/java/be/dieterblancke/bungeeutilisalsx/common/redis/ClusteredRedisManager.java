@@ -1,10 +1,9 @@
-package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
+package be.dieterblancke.bungeeutilisalsx.common.redis;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data.RedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.redis.data.RedisDataManager;
 import com.dbsoftwares.configuration.api.ISection;
-import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
@@ -14,11 +13,9 @@ import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.Getter;
 import org.apache.commons.pool2.impl.GenericObjectPool;
 
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 public class ClusteredRedisManager implements RedisManager
 {
