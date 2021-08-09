@@ -23,6 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.CommandSpyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
@@ -63,18 +64,8 @@ public class SpyEventExecutor implements EventExecutor
     public void onCommand( final UserCommandEvent event )
     {
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "commandspy.permission" );
-        final List<User> users = BuX.getApi().getUsers()
-                .stream()
-                .filter( user -> user.isCommandSpy() && user.hasPermission( permission ) )
-                .filter( user -> !user.getUuid().equals( event.getUser().getUuid() ) )
-                .collect( Collectors.toList() );
-
-        if ( users.isEmpty() )
-        {
-            return;
-        }
-
         final String commandName = event.getActualCommand().replaceFirst( "/", "" );
+
         for ( String command : ConfigFiles.GENERALCOMMANDS.getConfig().getStringList( "commandspy.ignored-commands" ) )
         {
             if ( command.trim().equalsIgnoreCase( commandName.trim() ) )
@@ -83,14 +74,11 @@ public class SpyEventExecutor implements EventExecutor
             }
         }
 
-        for ( User user : users )
-        {
-            user.sendLangMessage(
-                    "general-commands.commandspy.message",
-                    "{user}", event.getUser().getName(),
-                    "{server}", event.getUser().getServerName(),
-                    "{command}", event.getCommand()
-            );
-        }
+        BuX.getInstance().getJobManager().executeJob( new CommandSpyJob(
+                event.getUser().getUuid(),
+                event.getUser().getName(),
+                event.getUser().getServerName(),
+                event.getCommand()
+        ) );
     }
 }

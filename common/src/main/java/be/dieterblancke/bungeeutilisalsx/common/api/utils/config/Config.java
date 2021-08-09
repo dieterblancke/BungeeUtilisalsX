@@ -67,7 +67,7 @@ public class Config
         }
 
         this.setup();
-        BuX.getLogger().info( "Successfully loaded config file: " + location.substring( 1 ) );
+        BuX.debug( "Successfully loaded config file: " + location.substring( 1 ) );
     }
 
     public void reload()
