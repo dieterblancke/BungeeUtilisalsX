@@ -18,6 +18,7 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.*;
 import com.google.common.collect.Lists;
 
@@ -53,6 +54,7 @@ public class ConfigFiles
         {
             config.load();
         }
+        BuX.getLogger().info( "Finished loaded config files" );
     }
 
     public static void reloadAllConfigs()
