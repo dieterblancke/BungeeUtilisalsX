@@ -63,6 +63,8 @@ storage:
     max-pool-size: 5
     # How many idle connections should be maintained?
     min-idle: 3
+    # If more connections than min-idle are opened, after how many seconds should one of those connections be closed?
+    idle-timeout: 30
     # Maximum lifetime of a connection. Time in seconds.
     max-lifetime: 300
     # How long should BungeeUtilisals wait before timing out a connection?
