@@ -38,13 +38,13 @@ public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable
     private boolean cancelled;
 
     @Getter
-    private String userName;
+    private final String userName;
 
     @Getter
-    private UUID uuid;
+    private final UUID uuid;
 
     @Getter
-    private String staffRank;
+    private final String staffRank;
 
     public NetworkStaffLeaveEvent( final String userName, final UUID uuid, final String staffRank )
     {

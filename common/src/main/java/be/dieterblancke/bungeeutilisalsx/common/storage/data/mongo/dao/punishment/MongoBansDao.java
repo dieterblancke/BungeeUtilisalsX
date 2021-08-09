@@ -598,7 +598,7 @@ public class MongoBansDao implements BansDao
     }
 
     @Override
-    public int hardDeleteSince(final String user, final Date date )
+    public int hardDeleteSince( final String user, final Date date )
     {
         final List<Bson> filters = Lists.newArrayList(
                 Filters.eq( "executed_by", user ),

@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.redis;
 
 import com.dbsoftwares.configuration.api.ISection;
-import io.lettuce.core.RedisURI;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;

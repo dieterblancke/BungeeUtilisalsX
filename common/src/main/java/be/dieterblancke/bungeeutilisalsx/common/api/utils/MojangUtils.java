@@ -84,7 +84,7 @@ public class MojangUtils
         }
         catch ( final IOException e )
         {
-            BuX.getLogger().log( Level.SEVERE, "Could not retrieve name of " + uuid.toString() + ": ", e );
+            BuX.getLogger().log( Level.SEVERE, "Could not retrieve name of " + uuid + ": ", e );
         }
         return null;
     }

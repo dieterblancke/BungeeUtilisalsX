@@ -21,73 +21,74 @@ package be.dieterblancke.bungeeutilisalsx.common.library;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Getter;
 
-public enum StandardLibrary {
+public enum StandardLibrary
+{
 
     SQLITE(
             "org.sqlite.JDBC",
             "https://repo1.maven.org/maven2/org/xerial/sqlite-jdbc/{version}/sqlite-jdbc-{version}.jar",
             "3.34.0",
-            checkType("SQLITE")
+            checkType( "SQLITE" )
     ),
     H2(
             "org.h2.jdbcx.JdbcDataSource",
             "https://repo1.maven.org/maven2/com/h2database/h2/{version}/h2-{version}.jar",
             "1.4.200",
-            checkType("H2")
+            checkType( "H2" )
     ),
     MARIADB(
             "org.mariadb.jdbc.MariaDbDataSource",
             "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
             "2.7.2",
-            checkType("MARIADB")
+            checkType( "MARIADB" )
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
             "42.2.18",
-            checkType("POSTGRESQL")
+            checkType( "POSTGRESQL" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
             "3.12.7",
-            checkType("MONGODB")
+            checkType( "MONGODB" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
             "8.0.23",
-            checkType("MYSQL")
+            checkType( "MYSQL" )
     ),
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "4.0.3",
-            checkType("MYSQL", "MARIADB", "POSTGRESQL")
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     SLF4J(
             "org.slf4j.LoggerFactory",
             "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/{version}/slf4j-api-{version}.jar",
             "1.7.30",
-            checkType("MYSQL", "MARIADB", "POSTGRESQL")
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
             "6.0.2.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
     ),
     REACTOR_CORE(
             "reactor.core.scheduler.Schedulers",
             "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
             "3.3.10.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
     ),
     REACTIVE_STREAMS(
             "org.reactivestreams.Processor",
             "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
             "1.0.3",
-            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
     ),
     GUAVA(
             "com.google.common.collect.Lists",
@@ -111,19 +112,19 @@ public enum StandardLibrary {
             "org.mozilla.javascript.Context",
             "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
             "1.7.13",
-            ConfigFiles.CONFIG.getConfig().get("scripting", false)
+            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
     ),
     RHINO_SCRIPT_ENGINE(
             "de.christophkraemer.rhino.javascript.RhinoScriptEngine",
             "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
             "1.1.1",
-            ConfigFiles.CONFIG.getConfig().get("scripting", false)
+            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
     ),
     APACHE_COMMONS_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
             "2.9.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
     ),
     JSOUP(
             "org.jsoup.nodes.Document",
@@ -135,19 +136,23 @@ public enum StandardLibrary {
             "com.rabbitmq.client.RpcClient",
             "https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/{version}/amqp-client-{version}.jar",
             "5.13.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean("multi-proxy.enabled")
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
     );
 
     @Getter
     private final Library library;
 
-    StandardLibrary(String className, String downloadURL, String version, boolean load) {
-        this.library = new Library(toString(), className, downloadURL, version, load);
+    StandardLibrary( String className, String downloadURL, String version, boolean load )
+    {
+        this.library = new Library( toString(), className, downloadURL, version, load );
     }
 
-    private static boolean checkType(String... types) {
-        for (String type : types) {
-            if (ConfigFiles.CONFIG.getConfig().getString("storage.type").equalsIgnoreCase(type)) {
+    private static boolean checkType( String... types )
+    {
+        for ( String type : types )
+        {
+            if ( ConfigFiles.CONFIG.getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
+            {
                 return true;
             }
         }

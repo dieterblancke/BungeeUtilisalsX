@@ -46,7 +46,7 @@ public class BarStyle
     }
 
     @Getter
-    private int id;
+    private final int id;
 
     public BarStyle( int id )
     {

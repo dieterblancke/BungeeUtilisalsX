@@ -3,7 +3,6 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.Value;
 
 @Getter
 @Setter

@@ -1,6 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration.migrations;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 
 import java.sql.Connection;

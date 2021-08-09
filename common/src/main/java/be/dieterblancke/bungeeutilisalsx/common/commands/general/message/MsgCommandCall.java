@@ -20,14 +20,11 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general.message;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
-import java.util.Optional;
 
 public class MsgCommandCall implements CommandCall
 {

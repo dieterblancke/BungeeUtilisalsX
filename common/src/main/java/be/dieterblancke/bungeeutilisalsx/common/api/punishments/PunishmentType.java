@@ -18,8 +18,6 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-
 public enum PunishmentType
 {
 

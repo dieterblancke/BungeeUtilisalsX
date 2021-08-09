@@ -5,7 +5,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserGetPingJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 public class UserGetPingJobHandler extends AbstractJobHandler
 {

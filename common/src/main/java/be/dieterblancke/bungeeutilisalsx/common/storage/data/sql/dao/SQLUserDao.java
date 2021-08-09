@@ -615,7 +615,7 @@ public class SQLUserDao implements UserDao
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT username, current_server FROM bu_users WHERE username IN (" + paramsBuilder.toString() + ");"
+                      "SELECT username, current_server FROM bu_users WHERE username IN (" + paramsBuilder + ");"
               ) )
         {
             for ( int i = 0; i < users.size(); i++ )

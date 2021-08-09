@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 
 import java.io.BufferedReader;
 import java.io.IOException;

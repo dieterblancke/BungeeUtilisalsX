@@ -22,7 +22,7 @@ public class UserPrivateMessageJob extends HasUserJob
                                   final String userName,
                                   final String targetName,
                                   final String message,
-                                  final PrivateMessageType type)
+                                  final PrivateMessageType type )
     {
         super( uuid, userName );
         this.targetName = targetName;
@@ -44,6 +44,6 @@ public class UserPrivateMessageJob extends HasUserJob
     public enum PrivateMessageType
     {
         MSG,
-        REPLY;
+        REPLY
     }
 }
