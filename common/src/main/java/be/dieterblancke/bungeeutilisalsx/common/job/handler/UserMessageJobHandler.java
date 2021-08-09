@@ -12,7 +12,22 @@ public class UserMessageJobHandler extends AbstractJobHandler
     @JobHandler
     void executeUserMessageJob( final UserMessageJob job )
     {
-        job.getUser().ifPresent( user -> user.sendMessage( job.getMessage() ) );
+        job.getUser().ifPresent( user ->
+        {
+            if ( job.getMessage().contains( "\n" ) )
+            {
+                final String[] lines = job.getMessage().split( "\n" );
+
+                for ( String line : lines )
+                {
+                    user.sendMessage( line );
+                }
+            }
+            else
+            {
+                user.sendMessage( job.getMessage() );
+            }
+        } );
     }
 
     @JobHandler

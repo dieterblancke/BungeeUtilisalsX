@@ -12,7 +12,7 @@ public class UserUnmuteJobHandler
 {
 
     @JobHandler
-    void handleUserUnmoteJob( final UserUnmuteJob job )
+    void handleUserUnmuteJob( final UserUnmuteJob job )
     {
         job.getUser().ifPresent( user ->
         {

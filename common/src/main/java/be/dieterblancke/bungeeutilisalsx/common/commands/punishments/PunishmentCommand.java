@@ -37,7 +37,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Optional;
 
 public abstract class PunishmentCommand implements CommandCall
 {
