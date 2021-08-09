@@ -40,7 +40,7 @@ public class UserMuteJobHandler extends AbstractJobHandler
         }
         if ( mute == null )
         {
-            user.sendLangMessage( "punishments.mute.onmute", placeholders );
+            user.sendLangMessage( languagePath, placeholders );
         }
         else
         {

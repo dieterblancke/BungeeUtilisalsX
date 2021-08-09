@@ -28,10 +28,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AnnounceJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.base.Joiner;
@@ -107,12 +107,17 @@ public class AnnounceCommandCall implements CommandCall, TabCall
             case CHAT:
                 if ( config.getBoolean( "announce.types.chat.enabled" ) )
                 {
+                    final String prefix = config.getString( "announce.types.chat.prefix" );
+
                     for ( String line : message.split( "%nl%" ) )
                     {
-                        BuX.getApi().announce(
-                                config.getString( "announce.types.chat.prefix" ),
-                                line.replace( "%sub%", "" )
-                        );
+                        line = line.replace( "%sub%", "" );
+
+                        for ( User user : BuX.getApi().getUsers() )
+                        {
+                            user.sendMessage( prefix, line );
+                        }
+                        BuX.getApi().getConsoleUser().sendMessage( prefix, line );
                     }
                 }
                 break;

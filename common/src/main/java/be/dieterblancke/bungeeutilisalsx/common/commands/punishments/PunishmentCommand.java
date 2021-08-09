@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.User
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserKickJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserMuteJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserUnmuteJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -334,29 +335,13 @@ public abstract class PunishmentCommand implements CommandCall
 
         public void removeCachedMute()
         {
-            final Optional<User> optionalUser = BuX.getApi().getUser( player );
-            if ( !optionalUser.isPresent() )
-            {
-                return;
-            }
-            final User user = optionalUser.get();
-            if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
-            {
-                return;
-            }
-            final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+            final UserStorage storage = getStorage();
 
-            mutes.removeIf( mute ->
-            {
-                if ( useServerPunishments() )
-                {
-                    return mute.getServer().equalsIgnoreCase( this.getServerOrAll() );
-                }
-                else
-                {
-                    return true;
-                }
-            } );
+            BuX.getInstance().getJobManager().executeJob( new UserUnmuteJob(
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    this.getServerOrAll()
+            ) );
         }
 
         public boolean launchEvent( final PunishmentRemovalAction type )

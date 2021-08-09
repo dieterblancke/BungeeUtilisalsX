@@ -63,23 +63,7 @@ public class IPMuteCommandCall extends PunishmentCommand
                 user.getName()
         );
 
-        BuX.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
-        {
-            List<String> mute = null;
-            if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-            {
-                mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        muted.getLanguageConfig().getConfig(), PunishmentType.IPMUTE, reason
-                );
-            }
-            if ( mute == null )
-            {
-                mute = muted.getLanguageConfig().getConfig().getStringList( "punishments.ipmute.onmute" );
-            }
-
-            mute.forEach( str -> muted.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
-        } );
-
+        super.attemptMute( storage, "punishments.ipmute.onmute", info );
         user.sendLangMessage( "punishments.ipmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )

@@ -42,7 +42,7 @@ public interface IBuXApi
     IEventLoader getEventLoader();
 
     /**
-     * @param name The user name you want to select on.
+     * @param name The username you want to select on.
      * @return Empty optional if user is not present, User inside if present.
      */
     Optional<User> getUser( String name );

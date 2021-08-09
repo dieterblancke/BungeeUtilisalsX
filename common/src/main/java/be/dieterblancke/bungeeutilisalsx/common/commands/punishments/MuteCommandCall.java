@@ -62,25 +62,7 @@ public class MuteCommandCall extends PunishmentCommand
                 user.getName()
         );
 
-        BuX.getApi().getUser( storage.getUserName() ).ifPresent( muted ->
-        {
-            List<String> mute = null;
-            if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-            {
-                mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        muted.getLanguageConfig().getConfig(), PunishmentType.MUTE, reason
-                );
-            }
-            if ( mute == null )
-            {
-                muted.sendLangMessage( "punishments.mute.onmute", BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray() );
-            }
-            else
-            {
-                mute.forEach( str -> muted.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
-            }
-        } );
-
+        super.attemptMute( storage, "punishments.mute.onmute", info );
         user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )

@@ -21,11 +21,11 @@ announcements:
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Global
     # How long should the title fade in?
-    fadein: 1
+    fadein: 10
     # How long should the title stay?
-    stay: 3
+    stay: 30
     # How long should the title fade out?
-    fadeout: 1
+    fadeout: 10
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisals.announcements.receive'
     # Should the message be retrieved from the language files? If true, you must use a valid path!

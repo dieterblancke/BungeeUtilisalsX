@@ -54,37 +54,39 @@ public abstract class JobManager
     @SneakyThrows
     protected void handle( final Job job )
     {
-        final JobHandlerInfo jobHandlerInfo = JOB_HANDLERS.stream()
+        JOB_HANDLERS.stream()
                 .filter( handler -> handler.getJobClass().equals( job.getClass() ) )
-                .findFirst()
-                .orElse( null );
+                .forEach( jobHandlerInfo ->
+                {
+                    final Class<?> clazz = jobHandlerInfo.getHandler().getDeclaringClass();
+                    final Object instance = getJobHandlerInstance( clazz );
 
-        if ( jobHandlerInfo != null )
-        {
-            final Class<?> clazz = jobHandlerInfo.getHandler().getDeclaringClass();
-
-            if ( !JOB_HANDLER_INSTANCES.containsKey( clazz ) )
-            {
-                JOB_HANDLER_INSTANCES.put( clazz, clazz.getConstructor().newInstance() );
-            }
-
-            final Object instance = JOB_HANDLER_INSTANCES.get( clazz );
-
-            if ( job.isAsync() )
-            {
-                BuX.getInstance().getScheduler().runAsync( () -> invokeJobHandler( jobHandlerInfo, instance, job ) );
-            }
-            else
-            {
-                this.invokeJobHandler( jobHandlerInfo, instance, job );
-            }
-        }
+                    if ( job.isAsync() )
+                    {
+                        BuX.getInstance().getScheduler().runAsync( () -> invokeJobHandler( jobHandlerInfo, instance, job ) );
+                    }
+                    else
+                    {
+                        this.invokeJobHandler( jobHandlerInfo, instance, job );
+                    }
+                } );
     }
 
     @SneakyThrows
     private void invokeJobHandler( final JobHandlerInfo jobHandlerInfo, final Object instance, final Job job )
     {
         jobHandlerInfo.getHandler().invoke( instance, job );
+    }
+
+    @SneakyThrows
+    private Object getJobHandlerInstance( final Class<?> clazz )
+    {
+        if ( !JOB_HANDLER_INSTANCES.containsKey( clazz ) )
+        {
+            JOB_HANDLER_INSTANCES.put( clazz, clazz.getConstructor().newInstance() );
+        }
+
+        return JOB_HANDLER_INSTANCES.get( clazz );
     }
 
     protected byte[] encodeJob( final Job job )

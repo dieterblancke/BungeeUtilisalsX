@@ -41,10 +41,10 @@ public class MathUtils
     private static final int SIN_BITS = 14;
     private static final int SIN_MASK = ~( -1 << SIN_BITS );
     private static final int SIN_COUNT = SIN_MASK + 1;
+    private static final float DEG_FULL = 360;
     private static final float DEG_TO_INDEX = SIN_COUNT / DEG_FULL;
     private static final float RAD_FULL = PI * 2;
     private static final float RAD_TO_INDEX = SIN_COUNT / RAD_FULL;
-    private static final float DEG_FULL = 360;
     private static final int ATAN2_BITS = 7;
     private static final int ATAN2_BITS2 = ATAN2_BITS << 1;
     private static final int ATAN2_MASK = ~( -1 << ATAN2_BITS2 );
