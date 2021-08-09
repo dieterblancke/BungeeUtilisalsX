@@ -26,12 +26,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AnnounceJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.redisdata.AnnounceMessage;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.base.Joiner;
@@ -44,11 +44,11 @@ import java.util.Set;
 public class AnnounceCommandCall implements CommandCall, TabCall
 {
 
-    public static void sendAnnounce( final AnnounceMessage message )
+    public static void sendAnnounce( final Set<AnnouncementType> types, final String message )
     {
-        for ( AnnouncementType type : message.getTypes() )
+        for ( AnnouncementType type : types )
         {
-            sendAnnounce( type, message.getMessage() );
+            sendAnnounce( type, message );
         }
     }
 
@@ -221,8 +221,7 @@ public class AnnounceCommandCall implements CommandCall, TabCall
             final String types = args.get( 0 );
             final String message = Joiner.on( " " ).join( args.subList( 1, args.size() ) );
 
-            final AnnounceMessage announceMessage = new AnnounceMessage( getTypes( types ), message );
-            sendAnnounce( announceMessage );
+            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( getTypes( types ), message ) );
         }
         else
         {

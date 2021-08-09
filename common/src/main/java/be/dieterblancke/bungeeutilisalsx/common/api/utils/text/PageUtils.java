@@ -16,7 +16,7 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.api.utils;
+package be.dieterblancke.bungeeutilisalsx.common.api.utils.text;
 
 import lombok.Getter;
 

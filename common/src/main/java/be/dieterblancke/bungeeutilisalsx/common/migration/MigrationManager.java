@@ -3,9 +3,11 @@ package be.dieterblancke.bungeeutilisalsx.common.migration;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.sql.*;
 import java.util.Date;
+import java.util.List;
 import java.util.logging.Level;
 
 public class MigrationManager
@@ -44,23 +46,23 @@ public class MigrationManager
     {
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection() )
         {
-            // Tried using Reflections & ClassPath (guava), neither seemed to work.
-            for ( int i = 1; i < Integer.MAX_VALUE; i++ )
-            {
-                try
-                {
-                    final Class<?> clazz = Class.forName(
-                            "be.dieterblancke.bungeeutilisalsx.common.migration.migrations.v" + i + "_migration"
-                    );
+            final List<Class<?>> classes = Utils.getClassesInPackage( "be.dieterblancke.bungeeutilisalsx.common.migration.migrations" );
 
+            try
+            {
+                for ( Class<?> clazz : classes )
+                {
+                    final int migrationId = Integer.parseInt(
+                            clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
+                    );
                     final Migration migration = (Migration) clazz.newInstance();
 
-                    if ( !this.migrationExists( i ) && migration.shouldRun( connection ) )
+                    if ( !this.migrationExists( migrationId ) && migration.shouldRun( connection ) )
                     {
                         BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
                         migration.migrate( connection );
                         this.createMigration(
-                                i,
+                                migrationId,
                                 migration instanceof FileMigration ? "file" : "java",
                                 migration.getClass().getName(),
                                 new Date(),
@@ -69,14 +71,10 @@ public class MigrationManager
                         BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
                     }
                 }
-                catch ( ClassNotFoundException e )
-                {
-                    break;
-                }
-                catch ( IllegalAccessException | InstantiationException e )
-                {
-                    BuX.getLogger().log( Level.SEVERE, "Could not execute migration", e );
-                }
+            }
+            catch ( IllegalAccessException | InstantiationException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "Could not execute migration", e );
             }
         }
     }

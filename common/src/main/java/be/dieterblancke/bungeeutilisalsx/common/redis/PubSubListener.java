@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
+package be.dieterblancke.bungeeutilisalsx.common.redis;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.redis.RedisMessageEvent;

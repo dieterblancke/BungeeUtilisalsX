@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data;
+package be.dieterblancke.bungeeutilisalsx.common.redis.data;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;

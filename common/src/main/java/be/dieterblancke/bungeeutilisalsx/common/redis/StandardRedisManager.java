@@ -1,14 +1,14 @@
-package be.dieterblancke.bungeeutilisalsx.common.bridge.redis;
+package be.dieterblancke.bungeeutilisalsx.common.redis;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.redis.data.RedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.redis.data.RedisDataManager;
 import com.dbsoftwares.configuration.api.ISection;
-import io.lettuce.core.cluster.RedisClusterClient;
-import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
+import io.lettuce.core.RedisClient;
+import io.lettuce.core.api.StatefulRedisConnection;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
-import io.lettuce.core.cluster.pubsub.StatefulRedisClusterPubSubConnection;
+import io.lettuce.core.pubsub.StatefulRedisPubSubConnection;
 import io.lettuce.core.support.ConnectionPoolSupport;
 import lombok.Getter;
 import org.apache.commons.pool2.impl.GenericObjectPool;
@@ -17,19 +17,19 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class ClusteredRedisManager implements RedisManager
+public class StandardRedisManager implements RedisManager
 {
 
-    private final RedisClusterClient redisClient;
-    private final GenericObjectPool<StatefulRedisClusterConnection<String, String>> pool;
-    private final StatefulRedisClusterPubSubConnection<String, String> pubSubConnection;
+    private final RedisClient redisClient;
+    private final GenericObjectPool<StatefulRedisConnection<String, String>> pool;
+    private final StatefulRedisPubSubConnection<String, String> pubSubConnection;
 
     @Getter
     private final IRedisDataManager dataManager;
 
-    public ClusteredRedisManager( final ISection section )
+    public StandardRedisManager( final ISection section )
     {
-        this.redisClient = RedisClusterClient.create( section.getString( "uri" ) );
+        this.redisClient = RedisClient.create( section.getString( "uri" ) );
         this.pool = ConnectionPoolSupport.createGenericObjectPool(
                 redisClient::connect,
                 this.getObjectPoolConfig( section.getSection( "pooling" ) )
@@ -42,7 +42,7 @@ public class ClusteredRedisManager implements RedisManager
     @Override
     public void execute( final Consumer<RedisClusterCommands<String, String>> consumer )
     {
-        try ( StatefulRedisClusterConnection<String, String> connection = pool.borrowObject() )
+        try ( StatefulRedisConnection<String, String> connection = pool.borrowObject() )
         {
             consumer.accept( connection.sync() );
         }
@@ -56,7 +56,7 @@ public class ClusteredRedisManager implements RedisManager
     public <R> R execute( final Function<RedisClusterCommands<String, String>, R> function )
     {
         R result = null;
-        try ( StatefulRedisClusterConnection<String, String> connection = pool.borrowObject() )
+        try ( StatefulRedisConnection<String, String> connection = pool.borrowObject() )
         {
             result = function.apply( connection.sync() );
         }
@@ -70,7 +70,7 @@ public class ClusteredRedisManager implements RedisManager
     @Override
     public void executeAsync( final Consumer<RedisClusterAsyncCommands<String, String>> consumer )
     {
-        try ( StatefulRedisClusterConnection<String, String> connection = pool.borrowObject() )
+        try ( StatefulRedisConnection<String, String> connection = pool.borrowObject() )
         {
             consumer.accept( connection.async() );
         }
@@ -84,7 +84,7 @@ public class ClusteredRedisManager implements RedisManager
     public <R> CompletableFuture<R> executeAsync( final Function<RedisClusterAsyncCommands<String, String>, CompletableFuture<R>> function )
     {
         CompletableFuture<R> result = null;
-        try ( StatefulRedisClusterConnection<String, String> connection = pool.borrowObject() )
+        try ( StatefulRedisConnection<String, String> connection = pool.borrowObject() )
         {
             result = function.apply( connection.async() );
         }
