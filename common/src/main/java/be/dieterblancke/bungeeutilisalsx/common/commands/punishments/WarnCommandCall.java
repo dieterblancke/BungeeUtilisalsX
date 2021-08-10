@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserWarnJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -33,69 +34,49 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import java.util.List;
 import java.util.Optional;
 
-public class WarnCommandCall implements CommandCall
+public class WarnCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public WarnCommandCall()
     {
-        if ( args.size() < 2 )
-        {
-            user.sendLangMessage( "punishments.warn.usage" );
-            return;
-        }
-        if ( args.get( 0 ).equalsIgnoreCase( user.getName() ) )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
+        super( "punishments.warn", false );
+    }
 
-        final Optional<User> optionalUser = BuX.getApi().getUser( args.get( 0 ) );
-        if ( !optionalUser.isPresent() )
+    @Override
+    public void onPunishmentExecute( final User user,
+                                     final List<String> args,
+                                     final List<String> parameters,
+                                     final PunishmentArgs punishmentArgs )
+    {
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+
+        if ( !BuX.getApi().getPlayerUtils().isOnline( punishmentArgs.getPlayer() ) )
         {
             user.sendLangMessage( "offline" );
             return;
         }
-        final User target = optionalUser.get();
-        final UserStorage storage = target.getStorage();
 
-        if ( BuX.getApi().getPunishmentExecutor().isHigherPunishment( user.getUuid(), storage.getUuid() ) )
+        if ( punishmentArgs.launchEvent( PunishmentType.WARN ) )
         {
-            user.sendLangMessage( "punishments.higher-punishment" );
-            return;
-        }
-
-        final UserPunishEvent event = new UserPunishEvent( PunishmentType.WARN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
-        BuX.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
-        {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-
-        final PunishmentInfo info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().insertWarn(
-                storage.getUuid(), storage.getUserName(), storage.getIp(), reason, user.getServerName(), user.getName()
+        final PunishmentInfo info = dao().getPunishmentDao().getKickAndWarnDao().insertWarn(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                user.getServerName(),
+                user.getName()
         );
 
-        List<String> warn = null;
-        if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-        {
-            warn = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    target.getLanguageConfig().getConfig(), PunishmentType.WARN, reason
-            );
-        }
-        if ( warn == null )
-        {
-            warn = target.getLanguageConfig().getConfig().getStringList( "punishments.warn.onwarn" );
-        }
-
-        warn.forEach( str -> target.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
-
-        user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
+        BuX.getInstance().getJobManager().executeJob( new UserWarnJob(
+                storage.getUuid(),
+                storage.getUserName(),
+                info
+        ) );
+        user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )
         {
@@ -116,9 +97,6 @@ public class WarnCommandCall implements CommandCall
             }
         }
 
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.WARN, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
-        ) );
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.WARN );
     }
 }

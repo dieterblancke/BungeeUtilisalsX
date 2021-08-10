@@ -81,18 +81,18 @@ public class Library
         // Download libary if not present
         if ( !path.exists() )
         {
-            BuX.getLogger().info( "Downloading libary for " + toString() );
+            BuX.getLogger().info( "Downloading libary for " + this );
 
             try ( final InputStream input = new URL( downloadURL ).openStream();
                   final ReadableByteChannel channel = Channels.newChannel( input );
                   final FileOutputStream output = new FileOutputStream( path ) )
             {
                 output.getChannel().transferFrom( channel, 0, Long.MAX_VALUE );
-                BuX.getLogger().info( "Successfully downloaded libary for " + toString() );
+                BuX.getLogger().info( "Successfully downloaded libary for " + this );
 
-                BuX.getLogger().info( "Removing older versions of " + toString() );
+                BuX.getLogger().info( "Removing older versions of " + this );
                 getOutdatedFiles( folder ).forEach( File::delete );
-                BuX.getLogger().info( "Successfully removed older versions of " + toString() );
+                BuX.getLogger().info( "Successfully removed older versions of " + this );
             }
             catch ( IOException e )
             {

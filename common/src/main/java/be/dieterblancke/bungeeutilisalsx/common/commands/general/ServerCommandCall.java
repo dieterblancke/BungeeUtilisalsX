@@ -19,20 +19,17 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserSwitchServerJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class ServerCommandCall implements CommandCall
 {
+
 
     public static void sendToServer( final User user, final IProxyServer server )
     {
@@ -55,6 +52,15 @@ public class ServerCommandCall implements CommandCall
             return;
         }
 
+        final int serverArgIdx = args.size() == 2 ? 1 : 0;
+        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( args.get( serverArgIdx ) );
+
+        if ( server == null )
+        {
+            user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( serverArgIdx ) );
+            return;
+        }
+
         if ( args.size() == 2 )
         {
             if ( !user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.permission-other" ) ) )
@@ -63,60 +69,25 @@ public class ServerCommandCall implements CommandCall
                 return;
             }
 
-            final Optional<User> optionalTarget = BuX.getApi().getUser( args.get( 0 ) );
-            final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( args.get( 1 ) );
+            final String name = args.get( 0 );
 
-            if ( server == null )
+            if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
             {
-                user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( 1 ) );
-                return;
-            }
-
-            if ( !optionalTarget.isPresent() )
-            {
-                if ( BuX.getApi().getBridgeManager().useBridging()
-                        && BuX.getApi().getPlayerUtils().isOnline( args.get( 0 ) ) )
-                {
-                    final Map<String, String> object = Maps.newHashMap();
-
-                    object.put( "user", args.get( 0 ) );
-                    object.put( "server", server.getName() );
-
-                    BuX.getApi().getBridgeManager().getBridge().sendTargetedMessage(
-                            BridgeType.BUNGEE_BUNGEE,
-                            null,
-                            Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
-                            "USER_MOVE_SERVER",
-                            object
-                    );
-                }
-                else
-                {
-                    user.sendLangMessage( "offline" );
-                }
-            }
-            else
-            {
-                final User target = optionalTarget.get();
+                BuX.getInstance().getJobManager().executeJob( new UserSwitchServerJob( name, server.getName() ) );
 
                 user.sendLangMessage(
                         "general-commands.server.sent-other",
-                        "{user}", target.getName(),
+                        "{user}", name,
                         "{server}", server.getName()
                 );
-                sendToServer( target, server );
+            }
+            else
+            {
+                user.sendLangMessage( "offline" );
             }
         }
         else
         {
-            final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( args.get( 0 ) );
-
-            if ( server == null )
-            {
-                user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( 0 ) );
-                return;
-            }
-
             sendToServer( user, server );
         }
     }

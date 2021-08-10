@@ -52,7 +52,7 @@ public class BossBar implements IBossBar
     private BaseComponent[] message;
     private boolean visible;
 
-    private org.bukkit.boss.BossBar bossBar;
+    private final org.bukkit.boss.BossBar bossBar;
 
     public BossBar()
     {

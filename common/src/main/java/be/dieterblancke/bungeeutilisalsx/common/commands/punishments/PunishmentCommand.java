@@ -19,12 +19,14 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishRemoveEvent.PunishmentRemovalAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserKickJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserMuteJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserUnmuteJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -32,16 +34,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserAction;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.types.UserActionType;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.util.BridgedUserMessage;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Data;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public abstract class PunishmentCommand implements CommandCall
 {
@@ -192,145 +187,30 @@ public abstract class PunishmentCommand implements CommandCall
 
     protected void attemptKick( final UserStorage storage, final String path, final PunishmentInfo info )
     {
-        final Optional<User> optionalTarget = BuX.getApi().getUser( storage.getUserName() );
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            if ( info.getType().isIP() )
-            {
-                BuX.getApi().getUsers().stream()
-                        .filter( u -> u.getIp().equalsIgnoreCase( storage.getIp() ) )
-                        .forEach( u -> kickUser( u, path, info ) );
-
-                bridgedKick( storage, path, info );
-            }
-            else
-            {
-                kickUser( target, path, info );
-            }
-        }
-        else
-        {
-            bridgedKick( storage, path, info );
-        }
-    }
-
-    private void kickUser( final User user, final String path, final PunishmentInfo info )
-    {
-        String kick = null;
-        if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
-        {
-            kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig().getConfig(), info.getType(), info.getReason()
-            ), "\n" );
-        }
-        if ( kick == null )
-        {
-            kick = Utils.formatList(
-                    user.getLanguageConfig().getConfig().getStringList( path ),
-                    "\n"
-            );
-        }
-        kick = BuX.getApi().getPunishmentExecutor().setPlaceHolders( kick, info );
-        user.kick( kick );
-    }
-
-    private void bridgedKick( final UserStorage storage, final String path, final PunishmentInfo info )
-    {
-        executeBridgedAction(
-                storage,
+        BuX.getInstance().getJobManager().executeJob( new UserKickJob(
+                storage.getUuid(),
+                storage.getUserName(),
+                info.getType().isIP(),
+                storage.getIp(),
                 path,
-                info.getType().isIP() ? UserActionType.KICK_IP : UserActionType.KICK,
-                info
-        );
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                info.getType(),
+                info.getReason()
+        ) );
     }
 
     protected void attemptMute( final UserStorage storage, final String path, final PunishmentInfo info )
     {
-        final Optional<User> optionalTarget = BuX.getApi().getUser( storage.getUserName() );
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            if ( info.getType().isIP() )
-            {
-                BuX.getApi().getUsers().stream()
-                        .filter( u -> u.getIp().equalsIgnoreCase( storage.getIp() ) )
-                        .forEach( u -> muteUser( u, path, info ) );
-
-                bridgedMute( storage, path, info );
-            }
-            else
-            {
-                muteUser( target, path, info );
-            }
-        }
-        else
-        {
-            bridgedMute( storage, path, info );
-        }
-    }
-
-    private void muteUser( final User user, final String path, final PunishmentInfo info )
-    {
-        List<String> mute = null;
-        if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
-        {
-            mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig().getConfig(), info.getType(), info.getReason()
-            );
-        }
-        if ( mute == null )
-        {
-            user.sendLangMessage( "punishments.mute.onmute", BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray() );
-        }
-        else
-        {
-            mute.forEach( str -> user.sendRawColorMessage( BuX.getApi().getPunishmentExecutor().setPlaceHolders( str, info ) ) );
-        }
-    }
-
-    private void bridgedMute( final UserStorage storage, final String path, final PunishmentInfo info )
-    {
-        executeBridgedAction(
-                storage,
+        BuX.getInstance().getJobManager().executeJob( new UserMuteJob(
+                storage.getUuid(),
+                storage.getUserName(),
+                info.getType().isIP(),
+                storage.getIp(),
                 path,
-                info.getType().isIP() ? UserActionType.MUTE_IP : UserActionType.MUTE,
-                info
-        );
-    }
-
-    private void executeBridgedAction( final UserStorage storage,
-                                       final String path,
-                                       final UserActionType type,
-                                       final PunishmentInfo info )
-    {
-        if ( BuX.getApi().getBridgeManager().useBridging() )
-        {
-            final Map<String, Object> data = Maps.newHashMap();
-            data.put( "reason", info.getReason() );
-            data.put( "type", info.getType() );
-
-            BuX.getApi().getBridgeManager().getBridge().sendTargetedMessage(
-                    BridgeType.BUNGEE_BUNGEE,
-                    null,
-                    Lists.newArrayList( ConfigFiles.CONFIG.getConfig().getString( "bridging.name" ) ),
-                    "USER",
-                    new UserAction(
-                            storage,
-                            type,
-                            new BridgedUserMessage(
-                                    true,
-                                    path,
-                                    data,
-                                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray()
-                            )
-                    )
-            );
-        }
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                info.getType(),
+                info.getReason()
+        ) );
     }
 
     @Data
@@ -454,29 +334,13 @@ public abstract class PunishmentCommand implements CommandCall
 
         public void removeCachedMute()
         {
-            final Optional<User> optionalUser = BuX.getApi().getUser( player );
-            if ( !optionalUser.isPresent() )
-            {
-                return;
-            }
-            final User user = optionalUser.get();
-            if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
-            {
-                return;
-            }
-            final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+            final UserStorage storage = getStorage();
 
-            mutes.removeIf( mute ->
-            {
-                if ( useServerPunishments() )
-                {
-                    return mute.getServer().equalsIgnoreCase( this.getServerOrAll() );
-                }
-                else
-                {
-                    return true;
-                }
-            } );
+            BuX.getInstance().getJobManager().executeJob( new UserUnmuteJob(
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    this.getServerOrAll()
+            ) );
         }
 
         public boolean launchEvent( final PunishmentRemovalAction type )

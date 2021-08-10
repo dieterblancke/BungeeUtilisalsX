@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuXTest;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestMariaDBStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestMySQLStorageManager;
@@ -9,7 +8,6 @@ import be.dieterblancke.bungeeutilisalsx.common.storage.TestPostgreSQLStorageMan
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestSQLiteStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,17 +34,6 @@ class MigrationManagerTest extends BuXTest
                 ConfigFiles.CONFIG,
                 IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/config.yml" ) )
         );
-
-        final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "storage.schemas" );
-
-        for ( String key : section.getKeys() )
-        {
-            PlaceHolderAPI.addPlaceHolder(
-                    "{" + key + "-table}",
-                    false,
-                    event -> section.getString( key )
-            );
-        }
     }
 
     @AfterEach

@@ -887,7 +887,7 @@ public class SQLBansDao implements BansDao
     }
 
     @Override
-    public int hardDeleteSince(final String user, final Date date )
+    public int hardDeleteSince( final String user, final Date date )
     {
         int records = 0;
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();

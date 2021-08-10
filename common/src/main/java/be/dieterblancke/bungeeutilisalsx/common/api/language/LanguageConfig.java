@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.language;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Data;

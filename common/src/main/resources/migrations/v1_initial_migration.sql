@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS {users-table}
+CREATE TABLE IF NOT EXISTS bu_users
 (
     id          DATA_TYPE_SERIAL,
     uuid        DATA_TYPE_VARCHAR UNIQUE NOT NULL,
@@ -11,18 +11,18 @@ CREATE TABLE IF NOT EXISTS {users-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_users_u ON {users-table} (uuid);
-CREATE INDEX idx_users_un ON {users-table} (username);
-CREATE INDEX idx_users_i ON {users-table} (ip);
+CREATE INDEX idx_users_u ON bu_users (uuid);
+CREATE INDEX idx_users_un ON bu_users (username);
+CREATE INDEX idx_users_i ON bu_users (ip);
 
-CREATE TABLE IF NOT EXISTS {ignoredusers-table}
+CREATE TABLE IF NOT EXISTS bu_ignoredusers
 (
     `user`  DATA_TYPE_VARCHAR NOT NULL,
     ignored DATA_TYPE_VARCHAR NOT NULL,
     PRIMARY KEY (`user`, `ignored`)
 );
 
-CREATE TABLE IF NOT EXISTS {friendsettings-table}
+CREATE TABLE IF NOT EXISTS bu_friendsettings
 (
     `user`   DATA_TYPE_VARCHAR NOT NULL,
     requests DATA_TYPE_BOOLEAN NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS {friendsettings-table}
     PRIMARY KEY (`user`)
 );
 
-CREATE TABLE IF NOT EXISTS {friends-table}
+CREATE TABLE IF NOT EXISTS bu_friends
 (
     `user`  DATA_TYPE_VARCHAR NOT NULL,
     friend  DATA_TYPE_VARCHAR NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE IF NOT EXISTS {friends-table}
     PRIMARY KEY (`user`, friend)
 );
 
-CREATE TABLE IF NOT EXISTS {friendrequests-table}
+CREATE TABLE IF NOT EXISTS bu_friendrequests
 (
     `user`       DATA_TYPE_VARCHAR NOT NULL,
     friend       DATA_TYPE_VARCHAR NOT NULL,
@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS {friendrequests-table}
     PRIMARY KEY (`user`, friend)
 );
 
-CREATE TABLE IF NOT EXISTS {bans-table}
+CREATE TABLE IF NOT EXISTS bu_bans
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
@@ -66,17 +66,17 @@ CREATE TABLE IF NOT EXISTS {bans-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_bans_e ON {bans-table} (executed_by);
+CREATE INDEX idx_bans_e ON bu_bans (executed_by);
 
-CREATE INDEX idx_bans_ut ON {bans-table} (uuid, type);
-CREATE INDEX idx_bans_uat ON {bans-table} (uuid, active, type);
-CREATE INDEX idx_bans_uast ON {bans-table} (uuid, active, server, type);
+CREATE INDEX idx_bans_ut ON bu_bans (uuid, type);
+CREATE INDEX idx_bans_uat ON bu_bans (uuid, active, type);
+CREATE INDEX idx_bans_uast ON bu_bans (uuid, active, server, type);
 
-CREATE INDEX idx_bans_it ON {bans-table} (ip, type);
-CREATE INDEX idx_bans_iat ON {bans-table} (ip, active, type);
-CREATE INDEX idx_bans_iast ON {bans-table} (ip, active, server, type);
+CREATE INDEX idx_bans_it ON bu_bans (ip, type);
+CREATE INDEX idx_bans_iat ON bu_bans (ip, active, type);
+CREATE INDEX idx_bans_iast ON bu_bans (ip, active, server, type);
 
-CREATE TABLE IF NOT EXISTS {mutes-table}
+CREATE TABLE IF NOT EXISTS bu_mutes
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
@@ -96,17 +96,17 @@ CREATE TABLE IF NOT EXISTS {mutes-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_mutes_e ON {mutes-table} (executed_by);
+CREATE INDEX idx_mutes_e ON bu_mutes (executed_by);
 
-CREATE INDEX idx_mutes_ut ON {mutes-table} (uuid, type);
-CREATE INDEX idx_mutes_uat ON {mutes-table} (uuid, active, type);
-CREATE INDEX idx_mutes_uast ON {mutes-table} (uuid, active, server, type);
+CREATE INDEX idx_mutes_ut ON bu_mutes (uuid, type);
+CREATE INDEX idx_mutes_uat ON bu_mutes (uuid, active, type);
+CREATE INDEX idx_mutes_uast ON bu_mutes (uuid, active, server, type);
 
-CREATE INDEX idx_mutes_it ON {mutes-table} (ip, type);
-CREATE INDEX idx_mutes_iat ON {mutes-table} (ip, active, type);
-CREATE INDEX idx_mutes_iast ON {mutes-table} (ip, active, server, type);
+CREATE INDEX idx_mutes_it ON bu_mutes (ip, type);
+CREATE INDEX idx_mutes_iat ON bu_mutes (ip, active, type);
+CREATE INDEX idx_mutes_iast ON bu_mutes (ip, active, server, type);
 
-CREATE TABLE IF NOT EXISTS {kicks-table}
+CREATE TABLE IF NOT EXISTS bu_kicks
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
@@ -120,10 +120,10 @@ CREATE TABLE IF NOT EXISTS {kicks-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_kicks_u ON {kicks-table} (uuid);
-CREATE INDEX idx_kicks_e ON {kicks-table} (executed_by);
+CREATE INDEX idx_kicks_u ON bu_kicks (uuid);
+CREATE INDEX idx_kicks_e ON bu_kicks (executed_by);
 
-CREATE TABLE IF NOT EXISTS {warns-table}
+CREATE TABLE IF NOT EXISTS bu_warns
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
@@ -137,10 +137,10 @@ CREATE TABLE IF NOT EXISTS {warns-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_warns_u ON {warns-table} (uuid);
-CREATE INDEX idx_warns_e ON {warns-table} (executed_by);
+CREATE INDEX idx_warns_u ON bu_warns (uuid);
+CREATE INDEX idx_warns_e ON bu_warns (executed_by);
 
-CREATE TABLE IF NOT EXISTS {punishmentactions-table}
+CREATE TABLE IF NOT EXISTS bu_punishmentactions
 (
     id       DATA_TYPE_SERIAL,
     uuid     DATA_TYPE_VARCHAR  NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS {punishmentactions-table}
     PRIMARY KEY (id)
 );
 
-CREATE TABLE IF NOT EXISTS {reports-table}
+CREATE TABLE IF NOT EXISTS bu_reports
 (
     id          DATA_TYPE_SERIAL,
     uuid        DATA_TYPE_VARCHAR  NOT NULL,
@@ -164,11 +164,11 @@ CREATE TABLE IF NOT EXISTS {reports-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_reports_u ON {reports-table} (uuid);
-CREATE INDEX idx_reports_ud ON {reports-table} (uuid, date);
-CREATE INDEX idx_reports_urb ON {reports-table} (uuid, reported_by);
+CREATE INDEX idx_reports_u ON bu_reports (uuid);
+CREATE INDEX idx_reports_ud ON bu_reports (uuid, date);
+CREATE INDEX idx_reports_urb ON bu_reports (uuid, reported_by);
 
-CREATE TABLE IF NOT EXISTS {messagequeue-table}
+CREATE TABLE IF NOT EXISTS bu_messagequeue
 (
     id      DATA_TYPE_SERIAL,
     `user`  DATA_TYPE_VARCHAR  NOT NULL,
@@ -179,4 +179,4 @@ CREATE TABLE IF NOT EXISTS {messagequeue-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_messagequeue_u ON {messagequeue-table} (`user`, type);
+CREATE INDEX idx_messagequeue_u ON bu_messagequeue (`user`, type);

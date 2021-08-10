@@ -19,16 +19,13 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.placeholder;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.PlaceHolderEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,24 +36,11 @@ public class DefaultPlaceHolders implements PlaceHolderPack
     @Override
     public void loadPack()
     {
-        final ISection section = ConfigFiles.CONFIG.getConfig().getSection( "storage.schemas" );
-
-        for ( String key : section.getKeys() )
-        {
-            PlaceHolderAPI.addPlaceHolder(
-                    "{" + key + "-table}",
-                    false,
-                    event -> section.getString( key )
-            );
-        }
-
         // Proxy PlaceHolders
         PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
                 event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
                 event -> String.valueOf( Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers() ) );
-        PlaceHolderAPI.addPlaceHolder( "{redis_online}", false,
-                event -> String.valueOf( BuX.getApi().getBridgeManager().useBridging() ? BuX.getApi().getPlayerUtils().getTotalCount() : 0 ) );
 
         PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
         PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );

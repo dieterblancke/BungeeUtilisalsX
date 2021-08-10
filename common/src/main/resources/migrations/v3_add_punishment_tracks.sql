@@ -1,4 +1,4 @@
-CREATE TABLE IF NOT EXISTS {punishmenttracks-table}
+CREATE TABLE IF NOT EXISTS bu_punishmenttracks
 (
     id                      DATA_TYPE_SERIAL,
     uuid                    DATA_TYPE_VARCHAR  NOT NULL,
@@ -10,8 +10,8 @@ CREATE TABLE IF NOT EXISTS {punishmenttracks-table}
     PRIMARY KEY (id)
 );
 
-CREATE INDEX idx_tracks_e ON {punishmenttracks-table} (executed_by);
+CREATE INDEX idx_tracks_e ON bu_punishmenttracks (executed_by);
 
-CREATE INDEX idx_tracks_u ON {punishmenttracks-table} (uuid);
-CREATE INDEX idx_tracks_ua ON {punishmenttracks-table} (uuid, active);
-CREATE INDEX idx_tracks_uas ON {punishmenttracks-table} (uuid, active, server);
+CREATE INDEX idx_tracks_u ON bu_punishmenttracks (uuid);
+CREATE INDEX idx_tracks_ua ON bu_punishmenttracks (uuid, active);
+CREATE INDEX idx_tracks_uas ON bu_punishmenttracks (uuid, active, server);

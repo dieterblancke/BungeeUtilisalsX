@@ -24,9 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
@@ -40,7 +38,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.velocitypowered.api.proxy.Player;
@@ -72,7 +69,6 @@ public class VelocityUser implements User
     private String ip;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private List<PunishmentInfo> mute;
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();
@@ -144,11 +140,8 @@ public class VelocityUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                System.out.println( "Friend list of " + name );
-                System.out.println( Arrays.toString( friends.toArray() ) );
-            }
+            BuX.debug( "Friend list of " + name );
+            BuX.debug( Arrays.toString( friends.toArray() ) );
         }
         else
         {

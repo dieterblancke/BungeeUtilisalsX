@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
@@ -65,7 +64,7 @@ public class MongoUserDao implements UserDao
         data.put( "joined_host", joinedHost );
         data.put( "current_server", null );
 
-        db().getCollection( format( "{users-table}" ) ).insertOne( new Document( data ) );
+        db().getCollection( "bu_users" ).insertOne( new Document( data ) );
     }
 
     @Override
@@ -78,14 +77,14 @@ public class MongoUserDao implements UserDao
         updates.add( Updates.set( "language", language.getName() ) );
         updates.add( Updates.set( "lastlogout", date ) );
 
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.combine( updates ) );
     }
 
     @Override
     public boolean exists( String name )
     {
-        return db().getCollection( format( "{users-table}" ) ).find(
+        return db().getCollection( "bu_users" ).find(
                 name.contains( "." ) ? Filters.eq( "ip", name ) : Filters.eq( "username", name )
         ).iterator().hasNext();
     }
@@ -93,14 +92,14 @@ public class MongoUserDao implements UserDao
     @Override
     public boolean exists( UUID uuid )
     {
-        return db().getCollection( format( "{users-table}" ) )
+        return db().getCollection( "bu_users" )
                 .find( Filters.eq( "uuid", uuid.toString() ) ).iterator().hasNext();
     }
 
     @Override
     public boolean ipExists( String ip )
     {
-        return db().getCollection( format( "{users-table}" ) )
+        return db().getCollection( "bu_users" )
                 .find( Filters.eq( "ip", ip ) ).iterator().hasNext();
     }
 
@@ -108,8 +107,8 @@ public class MongoUserDao implements UserDao
     public UserStorage getUserData( UUID uuid )
     {
         final UserStorage storage = new UserStorage();
-        final MongoCollection<Document> ignoredUsersColl = db().getCollection( format( "{ignoredusers-table}" ) );
-        final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
+        final MongoCollection<Document> userColl = db().getCollection( "bu_users" );
 
         final Document document = userColl.find( Filters.eq( "uuid", uuid.toString() ) ).first();
 
@@ -146,8 +145,8 @@ public class MongoUserDao implements UserDao
     public UserStorage getUserData( String name )
     {
         final UserStorage storage = new UserStorage();
-        final MongoCollection<Document> ignoredUsersColl = db().getCollection( format( "{ignoredusers-table}" ) );
-        final MongoCollection<Document> userColl = db().getCollection( format( "{users-table}" ) );
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
+        final MongoCollection<Document> userColl = db().getCollection( "bu_users" );
 
         final Document document = userColl.find( Filters.eq( "username", name ) ).first();
 
@@ -185,7 +184,7 @@ public class MongoUserDao implements UserDao
     {
         List<String> users = Lists.newArrayList();
 
-        for ( Document document : db().getCollection( format( "{users-table}" ) ).find( Filters.eq( "ip", ip ) ) )
+        for ( Document document : db().getCollection( "bu_users" ).find( Filters.eq( "ip", ip ) ) )
         {
             users.add( document.getString( "username" ) );
         }
@@ -198,7 +197,7 @@ public class MongoUserDao implements UserDao
     {
         Language language = null;
 
-        Document document = db().getCollection( format( "{users-table}" ) ).find( Filters.eq( "uuid", uuid.toString() ) ).first();
+        Document document = db().getCollection( "bu_users" ).find( Filters.eq( "uuid", uuid.toString() ) ).first();
 
         if ( document != null )
         {
@@ -211,35 +210,35 @@ public class MongoUserDao implements UserDao
     @Override
     public void setName( UUID uuid, String name )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "username", name ) );
     }
 
     @Override
     public void setIP( UUID uuid, String ip )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "ip", ip ) );
     }
 
     @Override
     public void setLanguage( UUID uuid, Language language )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "language", language.getName() ) );
     }
 
     @Override
     public void setLogout( UUID uuid, Date logout )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "lastlogout", logout ) );
     }
 
     @Override
     public void setJoinedHost( UUID uuid, String joinedHost )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "joined_host", joinedHost ) );
     }
 
@@ -247,7 +246,7 @@ public class MongoUserDao implements UserDao
     public Map<String, Integer> getJoinedHostList()
     {
         final Map<String, Integer> map = Maps.newHashMap();
-        final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
+        final MongoCollection<Document> collection = db().getCollection( "bu_users" );
 
         for ( Document doc : collection.aggregate( Collections.singletonList(
                 Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
@@ -268,7 +267,7 @@ public class MongoUserDao implements UserDao
     public Map<String, Integer> searchJoinedHosts( String searchTag )
     {
         final Map<String, Integer> map = Maps.newHashMap();
-        final MongoCollection<Document> collection = db().getCollection( format( "{users-table}" ) );
+        final MongoCollection<Document> collection = db().getCollection( "bu_users" );
 
         for ( Document doc : collection.aggregate( Arrays.asList(
                 Aggregates.match( Filters.regex( "joined_host", searchTag ) ),
@@ -290,7 +289,7 @@ public class MongoUserDao implements UserDao
     public void ignoreUser( UUID user, UUID ignore )
     {
         final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        final MongoCollection<Document> ignoredUsersColl = db().getCollection( format( "{ignoredusers-table}" ) );
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
 
         data.put( "user", user.toString() );
         data.put( "ignored", ignore.toString() );
@@ -301,7 +300,7 @@ public class MongoUserDao implements UserDao
     @Override
     public void unignoreUser( UUID user, UUID unignore )
     {
-        final MongoCollection<Document> ignoredUsersColl = db().getCollection( format( "{ignoredusers-table}" ) );
+        final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
 
         ignoredUsersColl.findOneAndDelete(
                 Filters.and(
@@ -314,14 +313,14 @@ public class MongoUserDao implements UserDao
     @Override
     public void setCurrentServer( final UUID uuid, final String server )
     {
-        db().getCollection( format( "{users-table}" ) )
+        db().getCollection( "bu_users" )
                 .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "current_server", server ) );
     }
 
     @Override
     public String getCurrentServer( final UUID uuid )
     {
-        Document document = db().getCollection( format( "{users-table}" ) )
+        Document document = db().getCollection( "bu_users" )
                 .find( Filters.eq( "uuid", uuid.toString() ) )
                 .first();
 
@@ -336,7 +335,7 @@ public class MongoUserDao implements UserDao
     @Override
     public void setCurrentServerBulk( final List<UUID> users, final String server )
     {
-        db().getCollection( format( "{users-table}" ) ).updateMany(
+        db().getCollection( "bu_users" ).updateMany(
                 Filters.in( "uuid", users.stream().map( UUID::toString ).collect( Collectors.toList() ) ),
                 Updates.set( "current_server", server )
         );
@@ -351,7 +350,7 @@ public class MongoUserDao implements UserDao
         {
             return userServers;
         }
-        final FindIterable<Document> documents = db().getCollection( format( "{users-table}" ) )
+        final FindIterable<Document> documents = db().getCollection( "bu_users" )
                 .find( Filters.in( "username", users ) );
 
         for ( Document document : documents )
@@ -360,16 +359,6 @@ public class MongoUserDao implements UserDao
         }
 
         return userServers;
-    }
-
-    private String format( String line )
-    {
-        return PlaceHolderAPI.formatMessage( line );
-    }
-
-    private String format( String line, Object... replacements )
-    {
-        return PlaceHolderAPI.formatMessage( String.format( line, replacements ) );
     }
 
     private MongoDatabase db()

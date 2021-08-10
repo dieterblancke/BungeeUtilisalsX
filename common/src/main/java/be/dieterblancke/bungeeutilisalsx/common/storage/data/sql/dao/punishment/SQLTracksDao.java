@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
@@ -28,15 +27,15 @@ public class SQLTracksDao implements TracksDao
 
         if ( useServerPunishments() )
         {
-            query = "SELECT * FROM {punishmenttracks-table} WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
+            query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
         }
         else
         {
-            query = "SELECT * FROM {punishmenttracks-table} WHERE uuid = ? AND track_id = ? AND active = ?;";
+            query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
         }
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage( query ) ) )
+              PreparedStatement pstmt = connection.prepareStatement( query ) )
         {
             pstmt.setString( 1, uuid.toString() );
             pstmt.setString( 2, trackId );
@@ -74,9 +73,9 @@ public class SQLTracksDao implements TracksDao
     public void addToTrack( final PunishmentTrackInfo trackInfo )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage(
-                      "INSERT INTO {punishmenttracks-table} (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "INSERT INTO bu_punishmenttracks (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+              ) )
         {
             pstmt.setString( 1, trackInfo.getUuid().toString() );
             pstmt.setString( 2, trackInfo.getTrackId() );
@@ -100,15 +99,15 @@ public class SQLTracksDao implements TracksDao
 
         if ( useServerPunishments() )
         {
-            query = "DELETE FROM {punishmenttracks-table} WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
+            query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
         }
         else
         {
-            query = "DELETE FROM {punishmenttracks-table} WHERE uuid = ? AND track_id = ? AND active = ?;";
+            query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
         }
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage( query ) ) )
+              PreparedStatement pstmt = connection.prepareStatement( query ) )
         {
             pstmt.setString( 1, uuid.toString() );
             pstmt.setString( 2, trackId );

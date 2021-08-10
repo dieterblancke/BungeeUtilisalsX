@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
@@ -27,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.Network
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -42,9 +42,9 @@ public class UserExecutor implements EventExecutor
     {
         event.getApi().getUsers().add( event.getUser() );
 
-        if ( BuX.getApi().getBridgeManager().useBridging() )
+        if ( BuX.getInstance().isRedisManagerEnabled() )
         {
-            final IRedisDataManager redisDataManager = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager();
+            final IRedisDataManager redisDataManager = BuX.getInstance().getRedisManager().getDataManager();
 
             redisDataManager.loadRedisUser( event.getUser() );
         }
@@ -55,9 +55,9 @@ public class UserExecutor implements EventExecutor
     {
         event.getApi().getUsers().remove( event.getUser() );
 
-        if ( BuX.getApi().getBridgeManager().useBridging() )
+        if ( BuX.getInstance().isRedisManagerEnabled() )
         {
-            final IRedisDataManager redisDataManager = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager();
+            final IRedisDataManager redisDataManager = BuX.getInstance().getRedisManager().getDataManager();
 
             redisDataManager.unloadRedisUser( event.getUser() );
         }

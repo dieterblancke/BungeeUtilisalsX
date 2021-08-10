@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,9 +35,7 @@ public abstract class FileMigration implements Migration
                     {
                         builder.deleteCharAt( builder.length() - 1 );
 
-                        String statement = PlaceHolderAPI.formatMessage(
-                                SqlConstants.replaceConstants( builder.toString().trim() )
-                        );
+                        String statement = SqlConstants.replaceConstants( builder.toString().trim() );
                         if ( !statement.isEmpty() )
                         {
                             this.migrationStatements.add( statement );

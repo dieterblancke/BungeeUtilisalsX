@@ -18,8 +18,6 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-
 public enum PunishmentType
 {
 
@@ -29,7 +27,7 @@ public enum PunishmentType
 
     private final boolean activatable;
     private final boolean temporary;
-    private final String tablePlaceHolder;
+    private final String table;
 
     PunishmentType( boolean activatable, boolean temporary )
     {
@@ -51,7 +49,7 @@ public enum PunishmentType
         {
             type = toString.toLowerCase();
         }
-        this.tablePlaceHolder = "{" + type + "s-table}";
+        this.table = "bu_" + type + "s";
     }
 
     public boolean isActivatable()
@@ -64,14 +62,9 @@ public enum PunishmentType
         return temporary;
     }
 
-    public String getTablePlaceHolder()
-    {
-        return tablePlaceHolder;
-    }
-
     public String getTable()
     {
-        return PlaceHolderAPI.formatMessage( getTablePlaceHolder() );
+        return table;
     }
 
     public boolean isIP()

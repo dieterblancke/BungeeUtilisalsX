@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
@@ -242,9 +241,9 @@ public class SQLPunishmentDao implements PunishmentDao
     public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( PlaceHolderAPI.formatMessage(
-                      "INSERT INTO {punishmentactions-table} (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) ) )
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "INSERT INTO bu_punishmentactions (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+              ) )
         {
             pstmt.setString( 1, uuid.toString() );
             pstmt.setString( 2, username );

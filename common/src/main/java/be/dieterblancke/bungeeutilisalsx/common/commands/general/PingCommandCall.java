@@ -19,8 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.BridgeType;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserGetPingJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
@@ -51,38 +51,19 @@ public class PingCommandCall implements CommandCall
                 return;
             }
 
-            final Optional<User> optionalUser = BuX.getApi().getUser( args.get( 0 ) );
+            final String name = args.get( 0 );
+            final Optional<User> optionalUser = BuX.getApi().getUser( name );
 
-            if ( !optionalUser.isPresent() )
+            if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
             {
-                // If using redis, check is player is online in redisbungee
-                if ( BuX.getApi().getBridgeManager().useBridging() && BuX.getApi().getPlayerUtils().isOnline( args.get( 0 ) ) )
-                {
-                    BuX.getApi().getBridgeManager().getBridge().sendMessage(
-                            BridgeType.BUNGEE_BUNGEE,
-                            "GET_USER_PING",
-                            args.get( 0 ),
-                            Integer.class,
-                            ping -> user.sendLangMessage(
-                                    "general-commands.ping.other",
-                                    "{target}", args.get( 0 ),
-                                    "{targetPing}", ping
-                            )
-                    );
-                }
-                else
-                {
-                    user.sendLangMessage( "offline" );
-                }
-                return;
+                BuX.getInstance().getJobManager().executeJob(
+                        new UserGetPingJob( user.getUuid(), user.getName(), name )
+                );
             }
-            final User target = optionalUser.get();
-
-            user.sendLangMessage(
-                    "general-commands.ping.other",
-                    "{target}", target.getName(),
-                    "{targetPing}", target.getPing()
-            );
+            else
+            {
+                user.sendLangMessage( "offline" );
+            }
         }
     }
 }

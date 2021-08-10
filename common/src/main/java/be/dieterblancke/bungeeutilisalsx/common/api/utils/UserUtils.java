@@ -9,9 +9,9 @@ public class UserUtils
     {
         final long amount;
 
-        if ( BuX.getApi().getBridgeManager().useBridging() )
+        if ( BuX.getInstance().isRedisManagerEnabled() )
         {
-            amount = BuX.getApi().getBridgeManager().getBridge().getRedisManager().getDataManager().getAmountOfOnlineUsersOnDomain( domain );
+            amount = BuX.getInstance().getRedisManager().getDataManager().getAmountOfOnlineUsersOnDomain( domain );
         }
         else
         {

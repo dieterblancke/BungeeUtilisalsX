@@ -4,20 +4,22 @@ debug: false
 # Should JavaScript placeholders be loaded and enabled?
 scripting: false
 
-bridging:
+multi-proxy:
+  # Should multi proxy support be enabled? This REQUIRES RabbitMQ AND Redis to work!
   enabled: false
-  # This should be the UNIQUE name of this bungee. Make sure this is AN UNIQUE NAME in your network!!!
-  name: 'bungee'
 
-  pooling:
-    min-idle: 4
-    max-idle: 8
-    max-total: 12
+  # This should be the URI of the RabbitMQ instance
+  rabbitmq-uri: amqp://userName:password@hostName:portNumber/virtualHost
 
+  # This should be the URI of the Redis instance, URI notation: https://github.com/lettuce-io/lettuce-core/wiki/Redis-URI-and-connection-details
   redis:
-    host: 127.0.0.1
-    port: 6379
-    password: ''
+    clustered: false
+    uri: redis://userName:password@hostName:portNumber/database
+
+    pooling:
+      min-idle: 4
+      max-idle: 8
+      max-total: 12
 
 # See: https://api.minetools.eu/uuid/
 # This can be changed to any API you like, as long as the name / uuid is an URL parameter.
@@ -25,7 +27,7 @@ bridging:
 # - The "name" key for uuid to name convertion
 # - The "id" key for name to uuid convertion (or uuid key if id key was not found).
 #
-# This should not be getting used often, at the time of writing (06/03/2019), it is only being used for the Importer tool.
+# This should not be used often, at this time (05/08/2021), it is only being used for the Importer tool.
 urls:
   uuid-to-name: 'https://api.minetools.eu/uuid/'
   name-to-uuid: 'https://api.minetools.eu/uuid/'
@@ -61,23 +63,9 @@ storage:
     max-pool-size: 5
     # How many idle connections should be maintained?
     min-idle: 3
+    # If more connections than min-idle are opened, after how many seconds should one of those connections be closed?
+    idle-timeout: 30
     # Maximum lifetime of a connection. Time in seconds.
     max-lifetime: 300
     # How long should BungeeUtilisals wait before timing out a connection?
     connection-timeout: 8
-
-  # Storage schema names
-  schemas:
-    users: 'bu_users'
-    ignoredusers: 'bu_ignoredusers'
-    friends: 'bu_friends'
-    friendrequests: 'bu_friendrequests'
-    friendsettings: 'bu_friendsettings'
-    bans: 'bu_bans'
-    mutes: 'bu_mutes'
-    kicks: 'bu_kicks'
-    warns: 'bu_warns'
-    punishmentactions: 'bu_punishmentactions'
-    reports: 'bu_reports'
-    messagequeue: 'bu_messagequeue'
-    punishmenttracks: 'bu_punishmenttracks'

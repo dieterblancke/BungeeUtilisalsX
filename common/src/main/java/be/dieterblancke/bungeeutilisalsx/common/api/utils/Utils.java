@@ -19,6 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -37,6 +38,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -44,6 +47,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Utils
 {
@@ -936,11 +941,25 @@ public class Utils
         return classFound( "org.bukkit.Bukkit" );
     }
 
+    /**
+     * Gets the time left until a certain date
+     *
+     * @param format the format that should be replaced
+     * @param date   the date to calculate against
+     * @return time left until the date
+     */
     public static String getTimeLeft( final String format, final Date date )
     {
         return getTimeLeft( format, date.getTime() - System.currentTimeMillis() );
     }
 
+    /**
+     * Gets the time left until a certain time
+     *
+     * @param format the format that should be replaced
+     * @param millis the time to calculate against
+     * @return time left until the date
+     */
     public static String getTimeLeft( final String format, final long millis )
     {
         final long seconds = millis / 1000;
@@ -955,6 +974,12 @@ public class Utils
                 .replace( "%seconds%", String.valueOf( seconds % 60 ) );
     }
 
+    /**
+     * Gets the LanguageConfig for a certain user, or default if the user is null
+     *
+     * @param user the user (or null) to get the language config for
+     * @return the language config for the given user, or null
+     */
     public static LanguageConfig getLanguageConfiguration( User user )
     {
         if ( user == null )
@@ -965,5 +990,51 @@ public class Utils
             );
         }
         return user.getLanguageConfig();
+    }
+
+    /**
+     * Gets the classes inside a package for the BuX jar
+     *
+     * @param packageName the package to get the classes for
+     * @return a list of classes inside the given BuX package
+     */
+    public static List<Class<?>> getClassesInPackage( final String packageName )
+    {
+        final List<Class<?>> classes = new ArrayList<>();
+        final CodeSource src = JobManager.class.getProtectionDomain().getCodeSource();
+
+        if ( src != null )
+        {
+            try
+            {
+                final URL jar = src.getLocation();
+                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
+
+                while ( true )
+                {
+                    final ZipEntry e = zip.getNextEntry();
+                    if ( e == null )
+                    {
+                        break;
+                    }
+                    final String name = e.getName().replace( "/", "." );
+
+                    if ( name.startsWith( packageName ) )
+                    {
+                        if ( name.endsWith( ".class" ) )
+                        {
+                            final Class<?> clazz = Class.forName( name.replace( ".class", "" ) );
+
+                            classes.add( clazz );
+                        }
+                    }
+                }
+            }
+            catch ( IOException | ClassNotFoundException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        return classes;
     }
 }
