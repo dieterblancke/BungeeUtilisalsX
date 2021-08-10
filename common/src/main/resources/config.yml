@@ -51,6 +51,7 @@ storage:
   # The password corresponding to the username above
   password: 'password'
 
+  # Custom properties to be added to the connection uri
   properties:
     serverTimezone: 'Europe/Brussels'
     characterEncoding: utf8
