@@ -16,34 +16,24 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.api.event.events.network;
+package be.dieterblancke.bungeeutilisalsx.common.api.event.events.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Cancellable;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-
-import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 /**
- * This event will be executed upon network join
+ * This event is being executed upon User Friend Private Message.
  */
-@Getter
-@Setter
+@Data
+@RequiredArgsConstructor
 @EqualsAndHashCode( callSuper = true )
-public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable
+public class UserFriendPrivateMessageEvent extends AbstractEvent
 {
 
-    private final String userName;
-    private final UUID uuid;
-    private final String staffRank;
-    private boolean cancelled;
+    private final String sender;
+    private final String receiver;
+    private final String message;
 
-    public NetworkStaffLeaveEvent( final String userName, final UUID uuid, final String staffRank )
-    {
-        this.userName = userName;
-        this.uuid = uuid;
-        this.staffRank = staffRank;
-    }
 }

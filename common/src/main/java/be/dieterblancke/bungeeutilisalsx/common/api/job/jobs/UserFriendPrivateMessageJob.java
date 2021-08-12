@@ -11,18 +11,18 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserPrivateMessageJob extends HasUserJob
+public class UserFriendPrivateMessageJob extends HasUserJob
 {
 
     private final String targetName;
     private final String message;
     private final PrivateMessageType type;
 
-    public UserPrivateMessageJob( final UUID uuid,
-                                  final String userName,
-                                  final String targetName,
-                                  final String message,
-                                  final PrivateMessageType type )
+    public UserFriendPrivateMessageJob( final UUID uuid,
+                                        final String userName,
+                                        final String targetName,
+                                        final String message,
+                                        final PrivateMessageType type )
     {
         super( uuid, userName );
         this.targetName = targetName;
