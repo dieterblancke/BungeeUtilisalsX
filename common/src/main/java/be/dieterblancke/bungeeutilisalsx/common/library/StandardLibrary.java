@@ -18,6 +18,7 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.library;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Getter;
 
@@ -76,19 +77,19 @@ public enum StandardLibrary
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
             "6.0.2.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+            configExistsAndTrue( ConfigFiles.CONFIG, "multi-proxy.enabled" )
     ),
     REACTOR_CORE(
             "reactor.core.scheduler.Schedulers",
             "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
             "3.3.10.RELEASE",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+            configExistsAndTrue( ConfigFiles.CONFIG, "multi-proxy.enabled" )
     ),
     REACTIVE_STREAMS(
             "org.reactivestreams.Processor",
             "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
             "1.0.3",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+            configExistsAndTrue( ConfigFiles.CONFIG, "multi-proxy.enabled" )
     ),
     GUAVA(
             "com.google.common.collect.Lists",
@@ -124,7 +125,7 @@ public enum StandardLibrary
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
             "2.9.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+            configExistsAndTrue( ConfigFiles.CONFIG, "multi-proxy.enabled" )
     ),
     JSOUP(
             "org.jsoup.nodes.Document",
@@ -136,7 +137,7 @@ public enum StandardLibrary
             "com.rabbitmq.client.RpcClient",
             "https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/{version}/amqp-client-{version}.jar",
             "5.13.0",
-            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+            configExistsAndTrue( ConfigFiles.CONFIG, "multi-proxy.enabled" )
     );
 
     @Getter
@@ -157,5 +158,10 @@ public enum StandardLibrary
             }
         }
         return false;
+    }
+
+    private static boolean configExistsAndTrue( final Config config, final String path )
+    {
+        return config.getConfig().exists( path ) && config.getConfig().getBoolean( path );
     }
 }

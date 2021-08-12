@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
@@ -1036,5 +1037,42 @@ public class Utils
             }
         }
         return classes;
+    }
+
+    /**
+     * Gets the user storage for a specific user, or null if the user never joined
+     * @param name the name to get the data for
+     * @return the data for the given user
+     */
+    public static UserStorage getUserStorageIfUserExists( final String name )
+    {
+        return getUserStorageIfUserExists( BuX.getApi().getUser( name ).orElse( null ), name );
+    }
+
+    /**
+     * Gets the user storage for a specific user, or null if the user never joined
+     * @param user the user to take cached data for if not null
+     * @param name the name to get the data for
+     * @return the data for the given user
+     */
+    public static UserStorage getUserStorageIfUserExists( final User user, final String name )
+    {
+        final UserStorage storage;
+
+        if ( user != null )
+        {
+            storage = user.getStorage();
+        }
+        else
+        {
+            if ( !BuX.getApi().getStorageManager().getDao().getUserDao().exists( name ) )
+            {
+                return null;
+            }
+
+            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name );
+        }
+
+        return storage;
     }
 }

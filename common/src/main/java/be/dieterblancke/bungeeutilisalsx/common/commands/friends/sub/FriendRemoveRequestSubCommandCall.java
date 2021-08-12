@@ -23,6 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -41,21 +42,12 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
         final String name = args.get( 0 );
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
-        final UserStorage storage;
+        final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
-        if ( optionalTarget.isPresent() )
+        if ( storage == null )
         {
-            storage = optionalTarget.get().getStorage();
-        }
-        else
-        {
-            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
-            {
-                user.sendLangMessage( "never-joined" );
-                return;
-            }
-
-            storage = dao.getUserDao().getUserData( name );
+            user.sendLangMessage( "never-joined" );
+            return;
         }
 
         if ( !dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )

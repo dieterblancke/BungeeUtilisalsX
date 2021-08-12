@@ -22,9 +22,11 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AddFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -58,21 +60,12 @@ public class FriendAcceptSubCommandCall implements CommandCall
         }
 
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
-        final UserStorage storage;
+        final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
-        if ( optionalTarget.isPresent() )
+        if ( storage == null )
         {
-            storage = optionalTarget.get().getStorage();
-        }
-        else
-        {
-            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
-            {
-                user.sendLangMessage( "never-joined" );
-                return;
-            }
-
-            storage = dao.getUserDao().getUserData( name );
+            user.sendLangMessage( "never-joined" );
+            return;
         }
 
         if ( !dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
@@ -86,12 +79,25 @@ public class FriendAcceptSubCommandCall implements CommandCall
         dao.getFriendsDao().addFriend( storage.getUuid(), user.getUuid() );
 
         user.getFriends().add( new FriendData( storage.getUuid(), name, new Date(), storage.getLastLogout() ) );
-
         user.sendLangMessage( "friends.accept.accepted", "{user}", name );
-        optionalTarget.ifPresent( target ->
+
+        if ( optionalTarget.isPresent() )
         {
+            final User target = optionalTarget.get();
+
             target.sendLangMessage( "friends.accept.request-accepted", "{user}", user.getName() );
             target.getFriends().add( new FriendData( user.getUuid(), user.getName(), new Date(), user.getStorage().getLastLogout() ) );
-        } );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new AddFriendJob(
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    user.getUuid(),
+                    user.getName(),
+                    new Date(),
+                    user.getStorage().getLastLogout()
+            ) );
+        }
     }
 }
