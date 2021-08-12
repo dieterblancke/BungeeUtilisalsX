@@ -51,6 +51,12 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
+    protected void registerPluginSupports()
+    {
+
+    }
+
+    @Override
     public ProxyOperationsApi proxyOperations()
     {
         throw new UnsupportedOperationException();

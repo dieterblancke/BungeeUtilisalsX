@@ -97,6 +97,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
+    protected void registerPluginSupports()
+    {
+
+    }
+
+    @Override
     protected IBuXApi createBuXApi()
     {
         return new BuXApi( new PluginLanguageManager(), new EventLoader() );

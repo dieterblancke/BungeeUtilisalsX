@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class AddFriendJob extends HasUserJob
+public class UserAddFriendJob extends HasUserJob
 {
 
     private final UUID friendUuid;
@@ -18,12 +18,12 @@ public class AddFriendJob extends HasUserJob
     private final Date friendsSince;
     private final Date lastLogout;
 
-    public AddFriendJob( final UUID uuid,
-                         final String userName,
-                         final UUID friendUuid,
-                         final String friendName,
-                         final Date friendsSince,
-                         final Date lastLogout )
+    public UserAddFriendJob( final UUID uuid,
+                             final String userName,
+                             final UUID friendUuid,
+                             final String friendName,
+                             final Date friendsSince,
+                             final Date lastLogout )
     {
         super( uuid, userName );
 

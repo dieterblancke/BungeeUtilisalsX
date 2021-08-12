@@ -75,6 +75,7 @@ public class BungeeUser implements User
     private boolean inStaffChat;
     private MessageQueue<QueuedMessage> messageQueue;
     private boolean msgToggled;
+    private boolean vanished;
 
     @Override
     public void load( UUID uuid )
@@ -468,13 +469,6 @@ public class BungeeUser implements User
             }
         }
         return joinedHost;
-    }
-
-    @Override
-    public boolean isVanished()
-    {
-        return BuX.getInstance().proxyOperations().getPlugin( "PremiumVanish" ).isPresent()
-                && de.myzelyam.api.vanish.BungeeVanishAPI.isInvisible( this.parent );
     }
 
     @Override
