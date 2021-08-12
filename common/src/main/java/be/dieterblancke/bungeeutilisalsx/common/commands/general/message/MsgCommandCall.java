@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general.message;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PrivateMessageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
@@ -61,7 +62,7 @@ public class MsgCommandCall implements CommandCall
                     user.getName(),
                     name,
                     message,
-                    UserPrivateMessageJob.PrivateMessageType.MSG
+                    PrivateMessageType.MSG
             ) );
         }
         else

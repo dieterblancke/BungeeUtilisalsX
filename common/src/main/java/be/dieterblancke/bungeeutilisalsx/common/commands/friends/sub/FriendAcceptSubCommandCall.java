@@ -22,7 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AddFriendJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserAddFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -90,7 +90,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
         {
-            BuX.getInstance().getJobManager().executeJob( new AddFriendJob(
+            BuX.getInstance().getJobManager().executeJob( new UserAddFriendJob(
                     storage.getUuid(),
                     storage.getUserName(),
                     user.getUuid(),

@@ -26,7 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.Network
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ExecuteEventJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ExecuteNetworkStaffEventJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -75,7 +75,7 @@ public class UserExecutor implements EventExecutor
             return;
         }
 
-        BuX.getInstance().getJobManager().executeJob( new ExecuteEventJob(
+        BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
                 NetworkStaffJoinEvent.class,
                 user.getName(),
                 user.getUuid(),
@@ -89,7 +89,7 @@ public class UserExecutor implements EventExecutor
         final User user = event.getUser();
         final StaffRankData rank = findStaffRank( user );
 
-        BuX.getInstance().getJobManager().executeJob( new ExecuteEventJob(
+        BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
                 NetworkStaffLeaveEvent.class,
                 user.getName(),
                 user.getUuid(),

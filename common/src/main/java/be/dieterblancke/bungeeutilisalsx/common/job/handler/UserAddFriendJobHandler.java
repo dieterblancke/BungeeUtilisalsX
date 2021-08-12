@@ -1,14 +1,14 @@
 package be.dieterblancke.bungeeutilisalsx.common.job.handler;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AddFriendJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserAddFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 
-public class AddFriendJobHandler extends AbstractJobHandler
+public class UserAddFriendJobHandler extends AbstractJobHandler
 {
 
     @JobHandler
-    void handleAddFriendJob( final AddFriendJob job )
+    void handleAddFriendJob( final UserAddFriendJob job )
     {
         job.getUser().ifPresent( user ->
         {

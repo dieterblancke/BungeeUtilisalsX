@@ -412,4 +412,10 @@ public interface User extends MessageRecipient
      * @return true if user is vanished, false if not
      */
     boolean isVanished();
+
+    /**
+     * Sets the vanish state for a user
+     * @param vanished the vanish state to be set
+     */
+    void setVanished(boolean vanished);
 }

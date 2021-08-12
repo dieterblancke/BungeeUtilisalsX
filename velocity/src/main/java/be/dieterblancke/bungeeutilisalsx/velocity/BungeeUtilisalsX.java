@@ -114,6 +114,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
+    protected void registerPluginSupports()
+    {
+
+    }
+
+    @Override
     protected LibraryClassLoader createLibraryClassLoader()
     {
         return new VelocityLibraryClassLoader();

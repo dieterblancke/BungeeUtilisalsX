@@ -80,7 +80,7 @@ public class StaffCommandCall implements CommandCall
 
         final List<StaffUser> staffUsers = BuX.getInstance().getStaffMembers()
                 .stream()
-                .filter( staffUser -> !staffUser.isHidden() )
+                .filter( staffUser -> !staffUser.isHidden() && !staffUser.isVanished() )
                 .collect( Collectors.toList() );
         if ( staffUsers.isEmpty() )
         {

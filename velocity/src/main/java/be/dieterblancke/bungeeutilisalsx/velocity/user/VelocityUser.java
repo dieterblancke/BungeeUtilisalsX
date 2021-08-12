@@ -475,6 +475,12 @@ public class VelocityUser implements User
     }
 
     @Override
+    public void setVanished( boolean vanished )
+    {
+        // do nothing
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

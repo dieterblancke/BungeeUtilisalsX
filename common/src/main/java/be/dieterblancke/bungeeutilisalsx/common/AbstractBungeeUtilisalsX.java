@@ -27,7 +27,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
-import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
@@ -40,6 +39,7 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -131,6 +131,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerListeners();
         this.registerExecutors();
         this.registerCommands();
+        this.registerPluginSupports();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -211,7 +212,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void setupTasks()
     {
-        this.scheduler.runTaskDelayed( 1, TimeUnit.MINUTES, new UserMessageQueueTask() );
+        this.scheduler.runTaskDelayed( 30, TimeUnit.SECONDS, new UserMessageQueueTask() );
     }
 
     public void reload()
@@ -283,6 +284,8 @@ public abstract class AbstractBungeeUtilisalsX
     {
         this.getCommandManager().load();
     }
+
+    protected abstract void registerPluginSupports();
 
     protected LibraryClassLoader createLibraryClassLoader()
     {

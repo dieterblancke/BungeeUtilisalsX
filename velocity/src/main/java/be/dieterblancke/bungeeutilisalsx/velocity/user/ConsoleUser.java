@@ -338,4 +338,10 @@ public class ConsoleUser implements User
     {
         return false;
     }
+
+    @Override
+    public void setVanished( boolean vanished )
+    {
+        // do nothing
+    }
 }

@@ -20,17 +20,15 @@ package be.dieterblancke.bungeeutilisalsx.common.api.event.events.network;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Cancellable;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 import java.util.UUID;
 
 /**
  * This event will be executed upon network join
  */
-@Data
-@RequiredArgsConstructor
+@Getter
+@Setter
 @EqualsAndHashCode( callSuper = true )
 public class NetworkStaffJoinEvent extends AbstractEvent implements Cancellable
 {
@@ -40,4 +38,11 @@ public class NetworkStaffJoinEvent extends AbstractEvent implements Cancellable
     private final String staffRank;
 
     private boolean cancelled;
+
+    public NetworkStaffJoinEvent( final String userName, final UUID uuid, final String staffRank )
+    {
+        this.userName = userName;
+        this.uuid = uuid;
+        this.staffRank = staffRank;
+    }
 }

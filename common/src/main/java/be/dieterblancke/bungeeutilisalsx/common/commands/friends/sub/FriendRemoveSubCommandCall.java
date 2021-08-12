@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserRemoveFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -61,12 +62,22 @@ public class FriendRemoveSubCommandCall implements CommandCall
         dao.getFriendsDao().removeFriend( storage.getUuid(), user.getUuid() );
 
         user.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( name ) );
-
         user.sendLangMessage( "friends.remove.removed", "{user}", name );
-        optionalTarget.ifPresent( target ->
+
+        if ( optionalTarget.isPresent() )
         {
+            final User target = optionalTarget.get();
+
             target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
             target.sendLangMessage( "friends.remove.friend-removed", "{user}", user.getName() );
-        } );
+        }
+        else
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserRemoveFriendJob(
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    user.getName()
+            ) );
+        }
     }
 }
