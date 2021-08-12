@@ -2,13 +2,13 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserSwitchServerJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 public class SlashServerCommandCall implements CommandCall
@@ -35,21 +35,25 @@ public class SlashServerCommandCall implements CommandCall
                 return;
             }
 
-            final Optional<User> optionalTarget = BuX.getApi().getUser( args.get( 0 ) );
+            final String name = args.get( 0 );
 
-            if ( !optionalTarget.isPresent() )
+            if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
+            {
+                BuX.getInstance().getJobManager().executeJob( new UserSwitchServerJob(
+                        name,
+                        server.getName()
+                ) );
+
+                user.sendLangMessage(
+                        "general-commands.server.sent-other",
+                        "{user}", name,
+                        "{server}", server.getName()
+                );
+            }
+            else
             {
                 user.sendLangMessage( "offline" );
-                return;
             }
-            final User target = optionalTarget.get();
-
-            user.sendLangMessage(
-                    "general-commands.server.sent-other",
-                    "{user}", target.getName(),
-                    "{server}", server.getName()
-            );
-            sendToServer( target, server );
             return;
         }
 

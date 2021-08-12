@@ -212,7 +212,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void setupTasks()
     {
-        this.scheduler.runTaskDelayed( 1, TimeUnit.MINUTES, new UserMessageQueueTask() );
+        this.scheduler.runTaskDelayed( 30, TimeUnit.SECONDS, new UserMessageQueueTask() );
     }
 
     public void reload()

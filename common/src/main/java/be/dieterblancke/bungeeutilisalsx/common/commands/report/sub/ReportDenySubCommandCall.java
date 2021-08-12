@@ -20,8 +20,8 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.report.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -69,26 +69,41 @@ public class ReportDenySubCommandCall implements CommandCall
         );
 
         final Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
-        final MessageQueue<QueuedMessage> queue;
 
         if ( optionalUser.isPresent() )
         {
-            queue = optionalUser.get().getMessageQueue();
+            final User target = optionalUser.get();
+
+            target.sendLangMessage(
+                    "general-commands.report.deny.denied",
+                    "{id}", report.getId(),
+                    "{reported}", report.getUserName(),
+                    "{staff}", user.getName()
+            );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    report.getReportedBy(),
+                    "general-commands.report.deny.denied",
+                    "{id}", report.getId(),
+                    "{reported}", report.getUserName(),
+                    "{staff}", user.getName()
+            ) );
         }
         else
         {
-            queue = BuX.getApi().getStorageManager().getDao().createMessageQueue();
+            BuX.getApi().getStorageManager().getDao().createMessageQueue().add( new QueuedMessage(
+                    -1,
+                    report.getReportedBy(),
+                    new QueuedMessage.Message(
+                            "general-commands.report.deny.denied",
+                            "{id}", report.getId(),
+                            "{reported}", report.getUserName(),
+                            "{staff}", user.getName()
+                    ),
+                    "NAME"
+            ) );
         }
-        queue.add( new QueuedMessage(
-                -1,
-                report.getReportedBy(),
-                new QueuedMessage.Message(
-                        "general-commands.report.deny.denied",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
-                ),
-                "NAME"
-        ) );
     }
 }
