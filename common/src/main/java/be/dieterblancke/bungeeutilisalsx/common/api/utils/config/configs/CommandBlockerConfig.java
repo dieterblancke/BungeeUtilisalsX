@@ -40,6 +40,7 @@ public class CommandBlockerConfig extends Config
                 config.getSectionList( "blockedcommands" ).stream()
                         .map( section -> new BlockedCommand(
                                 section.getString( "command" ),
+                                section.exists( "bypass-permission" ) ? section.getString( "bypass-permission" ) : "",
                                 section.exists( "subcommands" ) ?
                                         section.getSectionList( "subcommands" ).stream()
                                                 .map( subcommand -> new BlockedSubCommand(
@@ -63,6 +64,7 @@ public class CommandBlockerConfig extends Config
     public static class BlockedCommand
     {
         String command;
+        String bypassPermission;
         List<BlockedSubCommand> subCommands;
         List<ServerGroup> servers;
     }

@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.CommandBlockerConfig.BlockedCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.CommandBlockerConfig.BlockedSubCommand;
@@ -21,7 +22,7 @@ public class UserCommandExecutor implements EventExecutor
 
         final String commmand = event.getActualCommand().replaceFirst( "/", "" );
 
-        if ( isBlocked( event.getUser().getServerName(), commmand, event.getArguments() ) )
+        if ( isBlocked( event.getUser(), commmand, event.getArguments() ) )
         {
             event.setCancelled( true );
             event.getUser().sendLangMessage(
@@ -31,13 +32,17 @@ public class UserCommandExecutor implements EventExecutor
         }
     }
 
-    private boolean isBlocked( final String server, final String command, final String[] args )
+    private boolean isBlocked( final User user, final String command, final String[] args )
     {
         for ( BlockedCommand blockedCommand : ConfigFiles.COMMAND_BLOCKER.getBlockedCommands() )
         {
-            if ( !Strings.isNullOrEmpty( server )
+            if ( !Strings.isNullOrEmpty( user.getServerName() )
                     && !blockedCommand.getServers().isEmpty()
-                    && blockedCommand.getServers().stream().noneMatch( s -> s.isInGroup( server ) ) )
+                    && blockedCommand.getServers().stream().noneMatch( s -> s.isInGroup( user.getServerName() ) ) )
+            {
+                continue;
+            }
+            if ( !Strings.isNullOrEmpty( blockedCommand.getBypassPermission() ) && user.hasPermission( blockedCommand.getBypassPermission() ) )
             {
                 continue;
             }

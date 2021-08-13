@@ -6,6 +6,7 @@ blockedcommands:
   # The servers section is optional, if filled in, commands will only be blocked on the entered servers
   - command: command1
   - command: command2
+    bypass-permission: 'bungeeutilisalsx.commandblocker.bypass.command2'
     # The servers to disablet his command in
     servers:
       - Lobby1
