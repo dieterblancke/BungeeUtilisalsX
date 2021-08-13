@@ -33,6 +33,7 @@ public class ConfigFiles
     public static MotdConfig MOTD = new MotdConfig( "/motd.yml" );
     public static Config CUSTOMCOMMANDS = new Config( "/commands/customcommands.yml" );
     public static Config GENERALCOMMANDS = new Config( "/commands/generalcommands.yml" );
+    public static CommandBlockerConfig COMMAND_BLOCKER = new CommandBlockerConfig( "/commands/commandblocker.yml" );
     public static Config ANTISWEAR = new Config( "/chat/protection/antiswear.yml" );
     public static Config ANTICAPS = new Config( "/chat/protection/anticaps.yml" );
     public static Config ANTIAD = new Config( "/chat/protection/antiadvertise.yml" );

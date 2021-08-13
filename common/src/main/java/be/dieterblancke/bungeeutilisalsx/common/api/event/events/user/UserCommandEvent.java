@@ -24,6 +24,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.util.Arrays;
+
 /**
  * This event is being executed upon User Command execute.
  */
@@ -45,5 +47,12 @@ public class UserCommandEvent extends AbstractEvent implements Cancellable
     public String getActualCommand()
     {
         return command.split( " " )[0].toLowerCase();
+    }
+
+    public String[] getArguments()
+    {
+        final String[] arguments = command.split( " " );
+
+        return Arrays.copyOfRange( arguments, 1, arguments.length );
     }
 }
