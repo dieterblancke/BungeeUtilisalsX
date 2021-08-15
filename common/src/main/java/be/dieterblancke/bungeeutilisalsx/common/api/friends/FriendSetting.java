@@ -21,10 +21,20 @@ package be.dieterblancke.bungeeutilisalsx.common.api.friends;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
-public enum FriendSettingType
+public enum FriendSetting
 {
 
-    REQUESTS, MESSAGES;
+    REQUESTS( Boolean.class ),
+    MESSAGES( Boolean.class ),
+    SERVER_SWITCH( Boolean.class ),
+    FRIEND_BROADCAST( Boolean.class );
+
+    private final Class<?> valueType;
+
+    FriendSetting( final Class<?> valueType )
+    {
+        this.valueType = valueType;
+    }
 
     public String getName()
     {
@@ -41,5 +51,9 @@ public enum FriendSettingType
     public boolean getDefault()
     {
         return ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
+    }
+
+    public boolean isBooleanType() {
+        return this.valueType == Boolean.class;
     }
 }

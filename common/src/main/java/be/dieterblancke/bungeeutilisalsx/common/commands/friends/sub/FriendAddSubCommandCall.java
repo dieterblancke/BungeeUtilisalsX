@@ -20,7 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
@@ -75,7 +75,7 @@ public class FriendAddSubCommandCall implements CommandCall
 
         final boolean accepts = optionalTarget
                 .map( value -> value.getFriendSettings().isRequests() )
-                .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSettingType.REQUESTS ) );
+                .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ) );
 
         if ( !accepts )
         {

@@ -21,7 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -311,7 +312,7 @@ public class SQLFriendsDao implements FriendsDao
     }
 
     @Override
-    public void setSetting( UUID uuid, FriendSettingType type, boolean value )
+    public void setSetting( UUID uuid, FriendSetting type, Object value )
     {
         // not really the cleanest code, but should be fine
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -336,7 +337,7 @@ public class SQLFriendsDao implements FriendsDao
                         "UPDATE bu_friendsettings SET " + type.toString().toLowerCase() + " = ? WHERE user = ?;"
                 ) )
                 {
-                    updatePstmt.setBoolean( 1, value );
+                    updatePstmt.setObject( 1, value );
                     updatePstmt.setString( 2, uuid.toString() );
 
                     updatePstmt.executeUpdate();
@@ -349,8 +350,8 @@ public class SQLFriendsDao implements FriendsDao
                 ) )
                 {
                     insertPstmt.setString( 1, uuid.toString() );
-                    insertPstmt.setBoolean( 2, getValue( FriendSettingType.REQUESTS, type, value ) );
-                    insertPstmt.setBoolean( 3, getValue( FriendSettingType.MESSAGES, type, value ) );
+                    insertPstmt.setObject( 2, getValue( FriendSetting.REQUESTS, type, value ) );
+                    insertPstmt.setObject( 3, getValue( FriendSetting.MESSAGES, type, value ) );
 
                     insertPstmt.executeUpdate();
                 }
@@ -362,15 +363,15 @@ public class SQLFriendsDao implements FriendsDao
         }
     }
 
-    private boolean getValue( final FriendSettingType setting, final FriendSettingType type, final boolean value )
+    private Object getValue( final FriendSetting setting, final FriendSetting type, final Object value )
     {
         return setting.equals( type ) ? value : setting.getDefault();
     }
 
     @Override
-    public boolean getSetting( UUID uuid, FriendSettingType type )
+    public <T> T getSetting( UUID uuid, FriendSetting type )
     {
-        boolean setting = type.getDefault();
+        Object setting = type.getDefault();
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
@@ -383,7 +384,7 @@ public class SQLFriendsDao implements FriendsDao
             {
                 if ( rs.next() )
                 {
-                    setting = rs.getBoolean( type.toString().toLowerCase() );
+                    setting = rs.getObject( type.toString().toLowerCase() );
                 }
             }
         }
@@ -392,13 +393,13 @@ public class SQLFriendsDao implements FriendsDao
             BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
-        return setting;
+        return (T) setting;
     }
 
     @Override
     public FriendSettings getSettings( UUID uuid )
     {
-        FriendSettings settings = null;
+        final FriendSettings settings = new FriendSettings();
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
@@ -409,12 +410,9 @@ public class SQLFriendsDao implements FriendsDao
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
-                if ( rs.next() )
+                while ( rs.next() )
                 {
-                    settings = new FriendSettings(
-                            rs.getBoolean( "requests" ),
-                            rs.getBoolean( "messages" )
-                    );
+                    settings.set( FriendSetting.valueOf( rs.getString("setting").toUpperCase() ), rs.getObject( "value" ) );
                 }
             }
         }
@@ -423,6 +421,6 @@ public class SQLFriendsDao implements FriendsDao
             BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
-        return settings == null ? new FriendSettings() : settings;
+        return settings;
     }
 }

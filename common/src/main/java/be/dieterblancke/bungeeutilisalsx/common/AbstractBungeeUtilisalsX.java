@@ -34,7 +34,7 @@ import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.library.Library;
 import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
-import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
+import be.dieterblancke.bungeeutilisalsx.common.migration.sql.SqlMigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
@@ -106,13 +106,13 @@ public abstract class AbstractBungeeUtilisalsX
         this.loadScripts();
         this.loadDatabase();
 
-        final MigrationManager migrationManager = new MigrationManager();
-        if ( migrationManager.canMigrate() )
+        final SqlMigrationManager sqlMigrationManager = new SqlMigrationManager();
+        if ( sqlMigrationManager.canMigrate() )
         {
-            migrationManager.initialize();
+            sqlMigrationManager.initialize();
             try
             {
-                migrationManager.migrate();
+                sqlMigrationManager.migrate();
             }
             catch ( SQLException e )
             {

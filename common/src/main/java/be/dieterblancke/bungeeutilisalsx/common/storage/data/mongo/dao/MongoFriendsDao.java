@@ -21,7 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
@@ -190,7 +190,7 @@ public class MongoFriendsDao implements FriendsDao
     }
 
     @Override
-    public void setSetting( UUID uuid, FriendSettingType type, boolean value )
+    public void setSetting( UUID uuid, FriendSetting type, boolean value )
     {
         final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
         final boolean exists = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).iterator().hasNext();
@@ -207,20 +207,20 @@ public class MongoFriendsDao implements FriendsDao
             final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
             data.put( "user", uuid.toString() );
-            data.put( "requests", getValue( FriendSettingType.REQUESTS, type, value ) );
-            data.put( "messages", getValue( FriendSettingType.MESSAGES, type, value ) );
+            data.put( "requests", getValue( FriendSetting.REQUESTS, type, value ) );
+            data.put( "messages", getValue( FriendSetting.MESSAGES, type, value ) );
 
             coll.insertOne( new Document( data ) );
         }
     }
 
-    private boolean getValue( final FriendSettingType setting, final FriendSettingType type, final boolean value )
+    private boolean getValue( final FriendSetting setting, final FriendSetting type, final boolean value )
     {
         return setting.equals( type ) ? value : setting.getDefault();
     }
 
     @Override
-    public boolean getSetting( UUID uuid, FriendSettingType type )
+    public boolean getSetting( UUID uuid, FriendSetting type )
     {
         final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
         final boolean exists = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).iterator().hasNext();

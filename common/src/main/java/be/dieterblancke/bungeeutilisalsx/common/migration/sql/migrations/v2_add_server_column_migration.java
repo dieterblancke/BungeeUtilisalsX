@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.migration.migrations;
+package be.dieterblancke.bungeeutilisalsx.common.migration.sql.migrations;
 
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 

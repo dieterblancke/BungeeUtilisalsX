@@ -20,7 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 
 import java.util.List;
@@ -49,9 +49,9 @@ public interface FriendsDao
 
     boolean hasOutgoingFriendRequest( UUID user, UUID uuid );
 
-    void setSetting( UUID uuid, FriendSettingType type, boolean value );
+    void setSetting( UUID uuid, FriendSetting type, Object value );
 
-    boolean getSetting( UUID uuid, FriendSettingType type );
+    <T> T getSetting( UUID uuid, FriendSetting type );
 
     FriendSettings getSettings( UUID uuid );
 }
