@@ -40,7 +40,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
             final FriendSettings settings = user.getFriendSettings();
             user.sendLangMessage( "friends.settings.noargs.header" );
 
-            for ( FriendSetting setting : FriendSetting.values() )
+            for ( FriendSetting setting : FriendSetting.getEnabledSettings() )
             {
                 if (setting.isBooleanType())
                 {

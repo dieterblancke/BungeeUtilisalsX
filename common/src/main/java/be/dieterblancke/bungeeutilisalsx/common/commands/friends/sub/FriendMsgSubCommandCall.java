@@ -30,8 +30,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import java.util.List;
 import java.util.Optional;
 
-public class
-FriendMsgSubCommandCall implements CommandCall
+public class FriendMsgSubCommandCall implements CommandCall
 {
 
     @Override

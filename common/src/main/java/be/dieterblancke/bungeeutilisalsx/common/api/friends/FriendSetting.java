@@ -21,6 +21,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.friends;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
+import java.util.Arrays;
+
 public enum FriendSetting
 {
 
@@ -34,6 +36,13 @@ public enum FriendSetting
     FriendSetting( final Class<?> valueType )
     {
         this.valueType = valueType;
+    }
+
+    public static FriendSetting[] getEnabledSettings()
+    {
+        return Arrays.stream( values() )
+                .filter( setting -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + setting.toString().toLowerCase() ) )
+                .toArray( FriendSetting[]::new );
     }
 
     public String getName()
@@ -53,7 +62,8 @@ public enum FriendSetting
         return ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
     }
 
-    public boolean isBooleanType() {
+    public boolean isBooleanType()
+    {
         return this.valueType == Boolean.class;
     }
 }

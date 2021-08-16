@@ -21,6 +21,8 @@ friendlimits:
 settings:
   requests: true
   messages: true
+  server_switch: true
+  friend_broadcast: true
 
 command:
   aliases: 'friend, bfriends'
