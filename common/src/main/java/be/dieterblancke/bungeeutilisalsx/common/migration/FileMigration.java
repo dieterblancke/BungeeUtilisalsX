@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -53,13 +54,16 @@ public abstract class FileMigration implements Migration
     }
 
     @Override
-    public void migrate( final Connection connection ) throws SQLException
+    public void migrate() throws SQLException
     {
-        try ( Statement statement = connection.createStatement() )
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
         {
-            for ( String migrationStatement : migrationStatements )
+            try ( Statement statement = connection.createStatement() )
             {
-                statement.execute( migrationStatement );
+                for ( String migrationStatement : migrationStatements )
+                {
+                    statement.execute( migrationStatement );
+                }
             }
         }
     }

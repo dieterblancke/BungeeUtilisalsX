@@ -39,7 +39,7 @@ public class ConfigFiles
     public static Config ANTIAD = new Config( "/chat/protection/antiadvertise.yml" );
     public static Config ANTISPAM = new Config( "/chat/protection/antispam.yml" );
     public static Config UTFSYMBOLS = new Config( "/chat/utfsymbols.yml" );
-    public static Config FRIENDS_CONFIG = new Config( "/friends.yml" );
+    public static FriendsConfig FRIENDS_CONFIG = new FriendsConfig( "/friends.yml" );
     public static Config PUNISHMENT_CONFIG = new Config( "/punishments/config.yml" );
     public static PunishmentsActionsConfig PUNISHMENT_ACTIONS = new PunishmentsActionsConfig( "/punishments/actions.yml" );
     public static PunishmentsTracksConfig PUNISHMENT_TRACKS = new PunishmentsTracksConfig( "/punishments/tracks.yml" );

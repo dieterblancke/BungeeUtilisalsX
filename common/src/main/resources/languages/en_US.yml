@@ -288,18 +288,6 @@ friends:
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
     already-requested: '&eThere is already a pending friend request to &b{name}&e!'
-    use-accept-instead:
-      text:
-        - text: '&b{name} &ealready sent you a friend request! Please use '
-        - text: '&b/friend accept {name} '
-          hover:
-            - '&eClick here to accept &b{name}''s &efriend request!'
-          click:
-            # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-            # RUN_COMMAND will only work for BungeeCord commands.
-            type: 'RUN_COMMAND'
-            action: '/friend accept {name}'
-        - text: '&einstead!'
     request-sent: '&eA friend request has been sent to &b{user}&e!'
     disallowed: '&eThis user does not want to receive friend requests.'
   accept:

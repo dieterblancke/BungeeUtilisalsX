@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration.sql.migrations;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 
@@ -17,53 +18,56 @@ public class v4_remake_friend_settings extends FileMigration
     }
 
     @Override
-    public void migrate( Connection connection ) throws SQLException
+    public void migrate() throws SQLException
     {
-        super.migrate( connection );
-
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                "select * from bu_friendsettings_old"
-        ) )
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
         {
-            try ( ResultSet rs = preparedStatement.executeQuery() )
+            super.migrate();
+
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                    "select * from bu_friendsettings_old"
+            ) )
             {
-                while ( rs.next() )
+                try ( ResultSet rs = preparedStatement.executeQuery() )
                 {
-                    final String user = rs.getString( "user" );
-                    final boolean requests = rs.getBoolean( "requests" );
-                    final boolean messages = rs.getBoolean( "messages" );
-
-                    try ( PreparedStatement pstmt = connection.prepareStatement( "insert into bu_friendsettings values (?, ?, ?)" ) )
+                    while ( rs.next() )
                     {
-                        pstmt.setString( 1, user );
-                        pstmt.setString( 2, FriendSetting.REQUESTS.toString() );
-                        pstmt.setObject( 3, requests );
+                        final String user = rs.getString( "user" );
+                        final boolean requests = rs.getBoolean( "requests" );
+                        final boolean messages = rs.getBoolean( "messages" );
 
-                        pstmt.executeUpdate();
-                    }
+                        try ( PreparedStatement pstmt = connection.prepareStatement( "insert into bu_friendsettings values (?, ?, ?)" ) )
+                        {
+                            pstmt.setString( 1, user );
+                            pstmt.setString( 2, FriendSetting.REQUESTS.toString() );
+                            pstmt.setObject( 3, requests );
 
-                    try ( PreparedStatement pstmt = connection.prepareStatement( "insert into bu_friendsettings values (?, ?, ?)" ) )
-                    {
-                        pstmt.setString( 1, user );
-                        pstmt.setString( 2, FriendSetting.MESSAGES.toString() );
-                        pstmt.setObject( 3, messages );
+                            pstmt.executeUpdate();
+                        }
 
-                        pstmt.executeUpdate();
+                        try ( PreparedStatement pstmt = connection.prepareStatement( "insert into bu_friendsettings values (?, ?, ?)" ) )
+                        {
+                            pstmt.setString( 1, user );
+                            pstmt.setString( 2, FriendSetting.MESSAGES.toString() );
+                            pstmt.setObject( 3, messages );
+
+                            pstmt.executeUpdate();
+                        }
                     }
                 }
             }
-        }
 
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                "drop table bu_friendsettings_old"
-        ) )
-        {
-            preparedStatement.execute();
+            try ( PreparedStatement preparedStatement = connection.prepareStatement(
+                    "drop table bu_friendsettings_old"
+            ) )
+            {
+                preparedStatement.execute();
+            }
         }
     }
 
     @Override
-    public boolean shouldRun( Connection connection )
+    public boolean shouldRun()
     {
         return true;
     }

@@ -317,10 +317,11 @@ public class SQLFriendsDao implements FriendsDao
         // not really the cleanest code, but should be fine
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ?"
+                      "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ? AND setting = ?"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
+            pstmt.setString( 2, type.toString() );
             boolean exists = false;
 
             try ( ResultSet rs = pstmt.executeQuery() )
@@ -334,11 +335,12 @@ public class SQLFriendsDao implements FriendsDao
             if ( exists )
             {
                 try ( PreparedStatement updatePstmt = connection.prepareStatement(
-                        "UPDATE bu_friendsettings SET " + type.toString().toLowerCase() + " = ? WHERE user = ?;"
+                        "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
                 ) )
                 {
                     updatePstmt.setObject( 1, value );
                     updatePstmt.setString( 2, uuid.toString() );
+                    updatePstmt.setString( 3, type.toString() );
 
                     updatePstmt.executeUpdate();
                 }
@@ -346,12 +348,12 @@ public class SQLFriendsDao implements FriendsDao
             else
             {
                 try ( PreparedStatement insertPstmt = connection.prepareStatement(
-                        "INSERT INTO bu_friendsettings (user, requests, messages) VALUES (?, ?, ?);"
+                        "INSERT INTO bu_friendsettings (user, setting, value) VALUES (?, ?, ?);"
                 ) )
                 {
                     insertPstmt.setString( 1, uuid.toString() );
-                    insertPstmt.setObject( 2, getValue( FriendSetting.REQUESTS, type, value ) );
-                    insertPstmt.setObject( 3, getValue( FriendSetting.MESSAGES, type, value ) );
+                    insertPstmt.setString( 2, type.toString() );
+                    insertPstmt.setObject( 3, value );
 
                     insertPstmt.executeUpdate();
                 }
@@ -363,28 +365,24 @@ public class SQLFriendsDao implements FriendsDao
         }
     }
 
-    private Object getValue( final FriendSetting setting, final FriendSetting type, final Object value )
-    {
-        return setting.equals( type ) ? value : setting.getDefault();
-    }
-
     @Override
-    public <T> T getSetting( UUID uuid, FriendSetting type )
+    public <T> T getSetting( final UUID uuid, final FriendSetting type )
     {
         Object setting = type.getDefault();
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT " + type.toString().toLowerCase() + " FROM bu_friendsettings WHERE user = ? LIMIT 1;"
+                      "SELECT value FROM bu_friendsettings WHERE user = ? AND setting = ? LIMIT 1;"
               ) )
         {
             pstmt.setString( 1, uuid.toString() );
+            pstmt.setString( 2, type.toString() );
 
             try ( ResultSet rs = pstmt.executeQuery() )
             {
                 if ( rs.next() )
                 {
-                    setting = rs.getObject( type.toString().toLowerCase() );
+                    setting = rs.getObject( "value" );
                 }
             }
         }
@@ -412,7 +410,10 @@ public class SQLFriendsDao implements FriendsDao
             {
                 while ( rs.next() )
                 {
-                    settings.set( FriendSetting.valueOf( rs.getString("setting").toUpperCase() ), rs.getObject( "value" ) );
+                    settings.set( FriendSetting.valueOf(
+                            rs.getString("setting").toUpperCase() ),
+                            rs.getObject( "value" )
+                    );
                 }
             }
         }

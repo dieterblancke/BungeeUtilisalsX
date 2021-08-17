@@ -74,10 +74,11 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         final boolean accepts = optionalTarget
-                .map( value -> value.getFriendSettings().isRequests() )
+                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS, false ) )
                 .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ) );
+        final boolean isIgnored = storage.getIgnoredUsers().stream().anyMatch( u -> u.equalsIgnoreCase( user.getName() ) );
 
-        if ( !accepts )
+        if ( !accepts || isIgnored )
         {
             user.sendLangMessage( "friends.add.disallowed" );
             return;
@@ -90,7 +91,7 @@ public class FriendAddSubCommandCall implements CommandCall
         }
         if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
         {
-            user.sendLangMessage( "friends.add.use-accept-instead", "{name}", name );
+            FriendAcceptSubCommandCall.acceptFriendRequest( user, storage, optionalTarget.orElse( null ) );
             return;
         }
 

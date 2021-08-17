@@ -190,40 +190,41 @@ public class MongoFriendsDao implements FriendsDao
     }
 
     @Override
-    public void setSetting( UUID uuid, FriendSetting type, boolean value )
+    public void setSetting( final UUID uuid, final FriendSetting type, final Object value )
     {
         final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
-        final boolean exists = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).iterator().hasNext();
+        final boolean exists = coll.find( Filters.and(
+                Filters.eq( "user", uuid.toString() ),
+                Filters.eq( "setting", type.toString() )
+        ) ).limit( 1 ).iterator().hasNext();
 
         if ( exists )
         {
             coll.updateOne(
-                    Filters.eq( "user", uuid.toString() ),
+                    Filters.and(
+                            Filters.eq( "user", uuid.toString() ),
+                            Filters.eq( "setting", type.toString() )
+                    ),
                     Updates.set( type.toString().toLowerCase(), value )
             );
         }
         else
         {
-            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-
-            data.put( "user", uuid.toString() );
-            data.put( "requests", getValue( FriendSetting.REQUESTS, type, value ) );
-            data.put( "messages", getValue( FriendSetting.MESSAGES, type, value ) );
-
-            coll.insertOne( new Document( data ) );
+            coll.insertOne( new Document()
+                    .append( "user", uuid.toString() )
+                    .append( "setting", type.toString() )
+                    .append( "value", value ) );
         }
     }
 
-    private boolean getValue( final FriendSetting setting, final FriendSetting type, final boolean value )
-    {
-        return setting.equals( type ) ? value : setting.getDefault();
-    }
-
     @Override
-    public boolean getSetting( UUID uuid, FriendSetting type )
+    public <T> T getSetting( final UUID uuid, final FriendSetting type )
     {
         final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
-        final boolean exists = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).iterator().hasNext();
+        final boolean exists = coll.find( Filters.and(
+                Filters.eq( "user", uuid.toString() ),
+                Filters.eq( "setting", type.toString() )
+        ) ).limit( 1 ).iterator().hasNext();
 
         if ( !exists )
         {
@@ -231,7 +232,7 @@ public class MongoFriendsDao implements FriendsDao
         }
 
         final Document document = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).first();
-        return document.getBoolean( type.toString().toLowerCase() );
+        return (T) document.get( type.toString().toLowerCase(), type.getValueType() );
     }
 
     @Override
@@ -244,12 +245,19 @@ public class MongoFriendsDao implements FriendsDao
         {
             return new FriendSettings();
         }
+        final FriendSettings friendSettings = new FriendSettings();
 
-        final Document document = coll.find( Filters.eq( "user", uuid.toString() ) ).limit( 1 ).first();
-        return new FriendSettings(
-                document.getBoolean( "requests" ),
-                document.getBoolean( "messages" )
-        );
+        coll.find( Filters.eq( "user", uuid.toString() ) ).forEach( (Consumer<Document>) document1 ->
+        {
+            final FriendSetting setting = FriendSetting.valueOf( document1.getString( "setting" ) );
+
+            friendSettings.set(
+                    setting,
+                    document1.get( "value", setting.getValueType() )
+            );
+        } );
+
+        return friendSettings;
     }
 
     private MongoDatabase db()

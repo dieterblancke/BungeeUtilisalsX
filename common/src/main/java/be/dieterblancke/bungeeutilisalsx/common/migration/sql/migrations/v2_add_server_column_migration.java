@@ -13,7 +13,7 @@ public class v2_add_server_column_migration extends FileMigration
     }
 
     @Override
-    public boolean shouldRun( Connection connection )
+    public boolean shouldRun()
     {
         return true;
     }

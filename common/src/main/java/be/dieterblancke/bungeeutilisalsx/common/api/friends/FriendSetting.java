@@ -57,13 +57,19 @@ public enum FriendSetting
                 : getName();
     }
 
-    public boolean getDefault()
+    @SuppressWarnings( "unchecked" )
+    public <T> T getDefault()
     {
-        return ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
+        return (T) ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
     }
 
     public boolean isBooleanType()
     {
         return this.valueType == Boolean.class;
+    }
+
+    public Class<?> getValueType()
+    {
+        return valueType;
     }
 }

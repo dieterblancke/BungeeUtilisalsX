@@ -1,10 +1,10 @@
 package be.dieterblancke.bungeeutilisalsx.common.job.handler;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserFriendPrivateMessageEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ExecuteEventJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserFriendPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -23,7 +23,7 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            if ( !user.getFriendSettings().isMessages() )
+            if ( !user.getFriendSettings().getSetting( FriendSetting.MESSAGES, true ) )
             {
                 executeJob( new UserLanguageMessageJob( job, "friends." + job.getType().toString().toLowerCase() + ".disallowed" ) );
                 return;

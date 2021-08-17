@@ -6,8 +6,8 @@ import java.sql.SQLException;
 public interface Migration
 {
 
-    boolean shouldRun( final Connection connection ) throws SQLException;
+    boolean shouldRun() throws Exception;
 
-    void migrate( final Connection connection ) throws SQLException;
+    void migrate() throws Exception;
 
 }

@@ -25,7 +25,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEv
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import jdk.internal.joptsimple.internal.Strings;
 
 import java.util.List;
 
@@ -54,9 +58,18 @@ public class FriendsExecutor implements EventExecutor
         {
             return;
         }
+
         user.getFriends().forEach( data ->
-                BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
-                        friend.sendLangMessage( "friends.join.join", "{user}", user.getName() ) ) );
+        {
+            if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
+            {
+                BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        data.getFriend(),
+                        "friends.join.join",
+                        "{user}", user.getName()
+                ) );
+            }
+        } );
     }
 
     @Event
@@ -70,8 +83,16 @@ public class FriendsExecutor implements EventExecutor
         }
 
         user.getFriends().forEach( data ->
-                BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
-                        friend.sendLangMessage( "friends.leave", "{user}", user.getName() ) ) );
+        {
+            if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
+            {
+                BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        data.getFriend(),
+                        "friends.leave",
+                        "{user}", user.getName()
+                ) );
+            }
+        } );
     }
 
     @Event
@@ -84,13 +105,32 @@ public class FriendsExecutor implements EventExecutor
             return;
         }
 
+        if ( Strings.isNullOrEmpty( event.getTarget().getName() )
+                || ConfigFiles.FRIENDS_CONFIG.isDisabledServerSwitch( event.getTarget().getName() ) )
+        {
+            return;
+        }
+
         user.getFriends().forEach( data ->
-                BuX.getApi().getUser( data.getUuid() ).ifPresent( friend ->
-                        friend.sendLangMessage(
-                                "friends.switch",
-                                "{user}", user.getName(),
-                                "{from}", user.getServerName(),
-                                "{to}", event.getTarget().getName()
-                        ) ) );
+        {
+            if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
+            {
+                final boolean shouldSend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getSetting(
+                        data.getUuid(),
+                        FriendSetting.SERVER_SWITCH
+                );
+
+                if ( shouldSend )
+                {
+                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                            data.getFriend(),
+                            "friends.switch",
+                            "{user}", user.getName(),
+                            "{from}", user.getServerName(),
+                            "{to}", event.getTarget().getName()
+                    ) );
+                }
+            }
+        } );
     }
 }

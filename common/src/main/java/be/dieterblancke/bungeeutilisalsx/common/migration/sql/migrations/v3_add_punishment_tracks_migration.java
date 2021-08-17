@@ -13,7 +13,7 @@ public class v3_add_punishment_tracks_migration extends FileMigration
     }
 
     @Override
-    public boolean shouldRun( Connection connection )
+    public boolean shouldRun()
     {
         return true;
     }

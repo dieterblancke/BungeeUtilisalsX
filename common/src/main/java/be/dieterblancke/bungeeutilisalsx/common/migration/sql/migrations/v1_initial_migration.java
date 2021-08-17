@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration.sql.migrations;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 
 import java.sql.Connection;
@@ -16,16 +17,19 @@ public class v1_initial_migration extends FileMigration
     }
 
     @Override
-    public boolean shouldRun( Connection connection ) throws SQLException
+    public boolean shouldRun() throws SQLException
     {
         boolean shouldRun = true;
 
-        final DatabaseMetaData metaData = connection.getMetaData();
-        try ( ResultSet rs = metaData.getTables( null, null, "bu_users", null ) )
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
         {
-            if ( rs.next() )
+            final DatabaseMetaData metaData = connection.getMetaData();
+            try ( ResultSet rs = metaData.getTables( null, null, "bu_users", null ) )
             {
-                shouldRun = false;
+                if ( rs.next() )
+                {
+                    shouldRun = false;
+                }
             }
         }
         return shouldRun;

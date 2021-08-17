@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration.sql;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
@@ -30,13 +29,13 @@ public class SqlMigrationManager implements MigrationManager
                     final FileMigration fileMigration = new FileMigration( "migrations/migration_setup.sql" )
                     {
                         @Override
-                        public boolean shouldRun( Connection connection )
+                        public boolean shouldRun()
                         {
                             return true;
                         }
                     };
 
-                    fileMigration.migrate( connection );
+                    fileMigration.migrate();
                 }
             }
         }
@@ -62,10 +61,10 @@ public class SqlMigrationManager implements MigrationManager
                     );
                     final Migration migration = (Migration) clazz.newInstance();
 
-                    if ( !this.migrationExists( migrationId ) && migration.shouldRun( connection ) )
+                    if ( !this.migrationExists( migrationId ) && migration.shouldRun() )
                     {
                         BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
-                        migration.migrate( connection );
+                        migration.migrate();
                         this.createMigration(
                                 migrationId,
                                 migration instanceof FileMigration ? "file" : "java",
@@ -77,7 +76,7 @@ public class SqlMigrationManager implements MigrationManager
                     }
                 }
             }
-            catch ( IllegalAccessException | InstantiationException e )
+            catch ( Exception e )
             {
                 BuX.getLogger().log( Level.SEVERE, "Could not execute migration", e );
             }
@@ -132,10 +131,5 @@ public class SqlMigrationManager implements MigrationManager
         {
             BuX.getLogger().log( Level.SEVERE, "Could not check migration status", e );
         }
-    }
-
-    public boolean canMigrate()
-    {
-        return BuX.getInstance().getAbstractStorageManager().getType() != StorageType.MONGODB;
     }
 }
