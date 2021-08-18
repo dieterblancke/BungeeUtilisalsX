@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.BuXTest;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.migration.sql.SqlMigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestMariaDBStorageManager;
@@ -13,9 +15,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.stubbing.Answer;
 import org.testcontainers.containers.GenericContainer;
 
 import java.sql.SQLException;
+
+import static org.mockito.Mockito.when;
 
 class SqlMigrationManagerTest extends BuXTest
 {
@@ -26,6 +31,9 @@ class SqlMigrationManagerTest extends BuXTest
     public SqlMigrationManagerTest()
     {
         super( true );
+
+        when( BuX.getApi().getStorageManager() )
+                .thenAnswer( (Answer<AbstractStorageManager>) invocationOnMock -> BuX.getInstance().getAbstractStorageManager() );
     }
 
     @BeforeEach

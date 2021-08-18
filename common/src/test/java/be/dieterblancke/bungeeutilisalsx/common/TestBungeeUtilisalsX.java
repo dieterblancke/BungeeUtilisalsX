@@ -23,7 +23,6 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public void initialize()
     {
         api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
-        when( api.getStorageManager() ).thenAnswer( (Answer<AbstractStorageManager>) invocationOnMock -> getAbstractStorageManager() );
     }
 
     @Override
