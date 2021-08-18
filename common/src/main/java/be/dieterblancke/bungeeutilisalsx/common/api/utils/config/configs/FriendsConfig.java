@@ -25,6 +25,7 @@ import com.google.common.collect.Lists;
 import lombok.Getter;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class FriendsConfig extends Config
@@ -51,12 +52,17 @@ public class FriendsConfig extends Config
                 config.getStringList( "ignore-for-switch" )
                         .stream()
                         .map( str -> ConfigFiles.SERVERGROUPS.getServer( str ) )
+                        .filter( Objects::nonNull )
                         .collect( Collectors.toList() )
         );
     }
 
     public boolean isDisabledServerSwitch( final String serverName )
     {
+        if ( serverName == null )
+        {
+            return false;
+        }
         return disabledSwitchMessageServers.stream().anyMatch( group -> group.isInGroup( serverName ) );
     }
 }
