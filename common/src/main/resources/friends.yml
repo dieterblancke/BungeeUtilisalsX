@@ -66,3 +66,6 @@ subcommands:
   settings:
     aliases: ''
     permission: bungeeutilisals.friends.settings
+  broadcast:
+    aliases: ''
+    permission: bungeeutilisals.friends.broadcast

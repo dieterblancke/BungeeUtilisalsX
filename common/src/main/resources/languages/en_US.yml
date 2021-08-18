@@ -405,6 +405,10 @@ friends:
               type: 'RUN_COMMAND'
               action: '/friends settings {type} disable'
       footer: ''
+  broadcast:
+    usage: '&ePlease use &b/friend broadcast (message) &e!'
+    message: '&e(&b{user} &e-> &bAll&e) &f{message}'
+    disabled: '&eYou cannot broadcast as you have this setting disabled!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'

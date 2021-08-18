@@ -124,6 +124,14 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
                         .executable( new FriendSettingsSubCommandCall() )
                         .build()
         );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "broadcast" )
+                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.broadcast" )
+                        .executable( new FriendBroadcastSubCommandCall() )
+                        .build()
+        );
     }
 
     @Override
