@@ -25,7 +25,7 @@ class SqlMigrationManagerTest extends BuXTest
 
     public SqlMigrationManagerTest()
     {
-        super( false );
+        super( true );
     }
 
     @BeforeEach
