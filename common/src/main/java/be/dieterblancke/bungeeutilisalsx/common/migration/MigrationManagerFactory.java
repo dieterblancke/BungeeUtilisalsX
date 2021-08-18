@@ -9,7 +9,7 @@ public class MigrationManagerFactory
 {
 
     public static MigrationManager createMigrationManager() {
-        final StorageType type = BuX.getApi().getStorageManager().getType();
+        final StorageType type = BuX.getInstance().getAbstractStorageManager().getType();
 
         if (type == StorageType.MONGODB) {
             return new MongoMigrationManager();
