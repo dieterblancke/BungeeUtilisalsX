@@ -89,6 +89,7 @@ public abstract class CommandManager
         registerGeneralCommand( "chatlock", new ChatLockCommandCall() );
         registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
         registerGeneralCommand( "domains", new DomainsCommandCall() );
+        registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
 
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {

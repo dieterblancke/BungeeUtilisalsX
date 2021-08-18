@@ -270,3 +270,9 @@ shout:
   aliases: 'sh'
   permission: bungeeutilisals.commands.shout
   staff-permission: bungeeutilisals.commands.shout.staff
+staffannouncement:
+  enabled: true
+  name: staffannouncement
+  aliases: 'sa, staffannounce'
+  permission: bungeeutilisals.commands.staffannouncement.send
+  receive-permission: bungeeutilisals.commands.staffannouncement.receive
