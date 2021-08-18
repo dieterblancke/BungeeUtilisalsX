@@ -10,6 +10,6 @@ public interface MongoMigration extends Migration
 
     default MongoDatabase db()
     {
-        return ( (MongoDBStorageManager) BuX.getApi().getStorageManager() ).getDatabase();
+        return ( (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager() ).getDatabase();
     }
 }

@@ -20,7 +20,7 @@ public class v4_remake_friend_settings extends FileMigration
     @Override
     public void migrate() throws SQLException
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
+        try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection() )
         {
             super.migrate();
 

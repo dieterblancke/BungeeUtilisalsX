@@ -91,7 +91,7 @@ public class MongoMigrationManager implements MigrationManager
 
     private void createMigration( final int migrationId, final String type, final String className, final Date createdAt, final boolean success )
     {
-        final MongoDBStorageManager mongoDBStorageManager = (MongoDBStorageManager) BuX.getApi().getStorageManager();
+        final MongoDBStorageManager mongoDBStorageManager = (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager();
         final MongoCollection<Document> migrationColl = mongoDBStorageManager.getDatabase().getCollection( "bu_migrations" );
 
         migrationColl.insertOne( new Document()

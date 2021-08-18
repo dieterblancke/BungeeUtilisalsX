@@ -56,7 +56,7 @@ public abstract class FileMigration implements Migration
     @Override
     public void migrate() throws SQLException
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
+        try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection() )
         {
             try ( Statement statement = connection.createStatement() )
             {

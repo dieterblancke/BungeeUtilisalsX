@@ -21,7 +21,7 @@ public class v1_initial_migration extends FileMigration
     {
         boolean shouldRun = true;
 
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection() )
+        try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection() )
         {
             final DatabaseMetaData metaData = connection.getMetaData();
             try ( ResultSet rs = metaData.getTables( null, null, "bu_users", null ) )
