@@ -23,7 +23,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Maven
-        run: ./build.sh
+        run: sh build.sh
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
