@@ -93,7 +93,7 @@ public enum PunishmentType
                 ? "iptemp" + this.toString().toLowerCase().replace( "ip", "" )
                 : "temp" + type;
 
-        return ( config.exists( "commands." + type + ".enabled" ) && !config.getBoolean( "commands." + type + ".enabled" ) )
-                || ( config.exists( "commands." + tempType + ".enabled" ) && !config.getBoolean( "commands." + tempType + ".enabled" ) );
+        return ( config.exists( "commands." + type + ".enabled" ) && config.getBoolean( "commands." + type + ".enabled" ) )
+                || ( config.exists( "commands." + tempType + ".enabled" ) && config.getBoolean( "commands." + tempType + ".enabled" ) );
     }
 }
