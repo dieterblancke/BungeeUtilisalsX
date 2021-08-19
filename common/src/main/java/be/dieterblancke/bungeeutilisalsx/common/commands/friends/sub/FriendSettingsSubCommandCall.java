@@ -72,7 +72,11 @@ public class FriendSettingsSubCommandCall implements CommandCall
             user.getFriendSettings().set( type, value );
             BuX.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
 
-            user.sendLangMessage( "friends.settings.updated", "{type}", type.toString().toLowerCase() );
+            user.sendLangMessage(
+                    "friends.settings.updated",
+                    "{type}", type.toString().toLowerCase(),
+                    "{value}", value
+            );
         }
         else
         {

@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.velocity;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
@@ -57,6 +59,8 @@ public class Bootstrap
     @Subscribe
     public void onProxyInitialization( final ProxyInitializeEvent event )
     {
+        BootstrapUtil.loadLibraries( this.getDataFolder(), new VelocityLibraryClassLoader(), logger );
+
         abstractBungeeUtilisalsX = new BungeeUtilisalsX();
         abstractBungeeUtilisalsX.initialize();
     }

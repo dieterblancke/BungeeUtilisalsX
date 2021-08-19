@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.spigot;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,6 +17,8 @@ public class Bootstrap extends JavaPlugin
     public void onEnable()
     {
         instance = this;
+
+        BootstrapUtil.loadLibraries( this.getDataFolder(), new UrlLibraryClassLoader(), getLogger() );
 
         abstractBungeeUtilisalsX = new BungeeUtilisalsX();
         abstractBungeeUtilisalsX.initialize();

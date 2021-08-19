@@ -223,10 +223,9 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     {
         if ( args.size() >= 2 )
         {
-            final String types = args.get( 0 );
-            final String message = Joiner.on( " " ).join( args.subList( 1, args.size() ) );
+            final String message = Joiner.on( " " ).join( args );
 
-            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( getTypes( types ), message ) );
+            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( getTypes( parameters ), message ) );
         }
         else
         {
@@ -234,28 +233,35 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         }
     }
 
-    private Set<AnnouncementType> getTypes( String types )
+    private Set<AnnouncementType> getTypes( final List<String> parameters )
     {
         final Set<AnnouncementType> announcementTypes = Sets.newHashSet();
+        
+        if ( parameters.isEmpty() )
+        {
+            announcementTypes.add( AnnouncementType.CHAT );
+            return announcementTypes;
+        }
 
-        if ( types.contains( "p" ) )
+        if ( parameters.contains( "-p" ) )
         {
             announcementTypes.add( AnnouncementType.PRECONFIGURED );
             return announcementTypes;
         }
-        if ( types.contains( "a" ) )
+
+        if ( parameters.contains( "-a" ) )
         {
             announcementTypes.add( AnnouncementType.ACTIONBAR );
         }
-        if ( types.contains( "c" ) )
+        if ( parameters.contains( "-c" ) )
         {
             announcementTypes.add( AnnouncementType.CHAT );
         }
-        if ( types.contains( "t" ) )
+        if ( parameters.contains( "-t" ) )
         {
             announcementTypes.add( AnnouncementType.TITLE );
         }
-        if ( types.contains( "b" ) )
+        if ( parameters.contains( "-b" ) )
         {
             announcementTypes.add( AnnouncementType.BOSSBAR );
         }

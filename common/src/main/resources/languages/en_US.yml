@@ -386,7 +386,7 @@ friends:
   settings:
     usage: '&ePlease use &b/friend settings (setting) (enable / disable)'
     invalid: '&ePlease use one of the following settings: &b{settings}'
-    updated: '&eYou have successfully updated the &b{type} setting&e!'
+    updated: '&eYou have successfully updated the &b{type} setting to &b{value}&e!'
 
     noargs:
       header: '&eFriend Settings:'

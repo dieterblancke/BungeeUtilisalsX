@@ -44,6 +44,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -69,7 +70,7 @@ public abstract class CommandManager
     {
         registerGeneralCommand( "bungeeutilisals", new PluginCommandCall() );
         registerGeneralCommand( "server", new ServerCommandCall() );
-        registerGeneralCommand( "announce", new AnnounceCommandCall() );
+        registerGeneralCommand( "announce", new AnnounceCommandCall(), Lists.newArrayList("p", "a", "b", "c", "t") );
         registerGeneralCommand( "find", new FindCommandCall() );
         registerGeneralCommand( "glag", new GLagCommandCall() );
         registerGeneralCommand( "clearchat", new ClearChatCommandCall() );
@@ -183,9 +184,15 @@ public abstract class CommandManager
 
     public void registerGeneralCommand( final String section, final CommandCall call )
     {
+        this.registerGeneralCommand( section, call, new ArrayList<>() );
+    }
+
+    public void registerGeneralCommand( final String section, final CommandCall call, final List<String> parameters )
+    {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
                 .name( section )
                 .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( section ) )
+                .parameters( parameters )
                 .executable( call );
 
         buildCommand( section, commandBuilder );

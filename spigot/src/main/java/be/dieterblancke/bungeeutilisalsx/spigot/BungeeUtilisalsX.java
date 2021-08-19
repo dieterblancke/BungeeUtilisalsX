@@ -57,7 +57,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         }
 
         this.loadConfigs();
-        this.loadLibraries();
         this.loadPlaceHolders();
         this.loadDatabase();
 
