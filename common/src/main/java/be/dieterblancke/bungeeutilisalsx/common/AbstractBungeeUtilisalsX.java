@@ -24,16 +24,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
 import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
-import be.dieterblancke.bungeeutilisalsx.common.library.Library;
-import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
@@ -69,7 +65,6 @@ public abstract class AbstractBungeeUtilisalsX
     private final List<Script> scripts = new ArrayList<>();
     protected IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
-    private LibraryClassLoader libraryClassLoader;
     private PermissionIntegration activePermissionIntegration;
     private JobManager jobManager;
     private RedisManager redisManager;
@@ -99,10 +94,10 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
+        this.registerSlf4jImplementation();
         this.loadConfigs();
         ChatProtections.reloadAllProtections();
 
-        this.loadLibraries();
         this.loadPlaceHolders();
         this.loadScripts();
         this.loadDatabase();
@@ -286,28 +281,6 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract void registerPluginSupports();
 
-    protected LibraryClassLoader createLibraryClassLoader()
-    {
-        return new UrlLibraryClassLoader();
-    }
-
-    protected void loadLibraries()
-    {
-        BuX.getLogger().info( "Loading libraries ..." );
-        libraryClassLoader = this.createLibraryClassLoader();
-
-        for ( StandardLibrary standardLibrary : StandardLibrary.values() )
-        {
-            final Library library = standardLibrary.getLibrary();
-
-            if ( library.isToLoad() && !library.isPresent() )
-            {
-                library.load();
-            }
-        }
-        BuX.getLogger().info( "Libraries have been loaded." );
-    }
-
     protected void loadDatabase()
     {
         StorageType type;
@@ -385,5 +358,13 @@ public abstract class AbstractBungeeUtilisalsX
     public boolean isRedisManagerEnabled()
     {
         return redisManager != null;
+    }
+
+    private void registerSlf4jImplementation()
+    {
+        if ( ReflectionUtils.isLoaded( "org.slf4j.LoggerFactory" ) )
+        {
+
+        }
     }
 }

@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.bungee;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import lombok.Getter;
 import net.md_5.bungee.api.plugin.Plugin;
 
@@ -15,6 +17,8 @@ public class Bootstrap extends Plugin
     public void onEnable()
     {
         instance = this;
+
+        BootstrapUtil.loadLibraries( this.getDataFolder(), new UrlLibraryClassLoader(), getLogger() );
 
         abstractBungeeUtilisalsX = new BungeeUtilisalsX();
         abstractBungeeUtilisalsX.initialize();

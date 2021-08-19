@@ -109,6 +109,11 @@ public class PunishmentInfoCommandCall implements CommandCall
         }
         final PunishmentDao dao = BuX.getApi().getStorageManager().getDao().getPunishmentDao();
 
+        if ( !type.isEnabled() )
+        {
+            return;
+        }
+
         switch ( type )
         {
             case BAN:

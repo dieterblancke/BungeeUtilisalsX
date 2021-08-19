@@ -120,12 +120,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected LibraryClassLoader createLibraryClassLoader()
-    {
-        return new VelocityLibraryClassLoader();
-    }
-
-    @Override
     public ProxyOperationsApi proxyOperations()
     {
         return proxyOperationsApi;
