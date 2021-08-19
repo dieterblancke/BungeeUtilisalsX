@@ -13,7 +13,7 @@ fixBuildNames() {
     module=${splitten[0]}
     version=${splitten[1]}
 
-    mv BungeeUtilisalsX*.jar "BungeeUtilisalsX v$version-$module-original.jar"
+    mv BungeeUtilisalsX*.jar "original-BungeeUtilisalsX v$version-$module.jar"
     mv *-shaded.jar "BungeeUtilisalsX v$version-$module.jar"
     echo "Fixed build names for $module"
   fi
