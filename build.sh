@@ -5,7 +5,7 @@ else
 fi
 
 fixBuildNames() {
-  if [[ -f "*shaded" ]]; then
+  if ls *shaded* 1> /dev/null 2>&1; then
     fileName=$(find ./ -printf "%f\n" | grep "shaded")
     splitten=(${fileName//-shaded/ })
     splitten=(${fileName//-/ })
