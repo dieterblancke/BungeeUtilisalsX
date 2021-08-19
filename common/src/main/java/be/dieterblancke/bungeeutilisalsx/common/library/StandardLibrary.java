@@ -84,9 +84,9 @@ public enum StandardLibrary
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
             relocate( "org.slf4j" )
     ),
-    SLF4J_JDK14(
+    SLF4J_NOP(
             "org.slf4j.jul.JDK14LoggerAdapter",
-            "https://repo1.maven.org/maven2/org/slf4j/slf4j-jdk14/{version}/slf4j-jdk14-{version}.jar",
+            "https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/{version}/slf4j-nop-{version}.jar",
             "1.7.32",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
             relocate( "org.slf4j" )
