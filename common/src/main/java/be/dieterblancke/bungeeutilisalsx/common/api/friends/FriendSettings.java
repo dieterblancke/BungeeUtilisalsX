@@ -27,25 +27,25 @@ import java.util.Map;
 public class FriendSettings
 {
 
-    private final Map<FriendSetting, Object> settings;
+    private final Map<FriendSetting, Boolean> settings;
 
     public FriendSettings()
     {
         this( new HashMap<>() );
     }
 
-    public FriendSettings( final Map<FriendSetting, Object> settings )
+    public FriendSettings( final Map<FriendSetting, Boolean> settings )
     {
         this.settings = settings;
     }
 
-    public void set( final FriendSetting key, final Object value )
+    public void set( final FriendSetting key, final boolean value )
     {
         settings.put( key, value );
     }
 
-    public <T> T getSetting( final FriendSetting key, final T def )
+    public boolean getSetting( final FriendSetting key, final boolean def )
     {
-        return (T) settings.getOrDefault( key, def );
+        return settings.getOrDefault( key, def );
     }
 }

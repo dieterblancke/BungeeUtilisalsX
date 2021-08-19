@@ -42,14 +42,11 @@ public class FriendSettingsSubCommandCall implements CommandCall
 
             for ( FriendSetting setting : FriendSetting.getEnabledSettings() )
             {
-                if (setting.isBooleanType())
-                {
-                    user.sendLangMessage(
-                            "friends.settings.noargs.format",
-                            "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
-                            "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting, true ) ? "enabled" : "disabled" ) )
-                    );
-                }
+                user.sendLangMessage(
+                        "friends.settings.noargs.format",
+                        "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
+                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting, true ) ? "enabled" : "disabled" ) )
+                );
             }
 
             user.sendLangMessage( "friends.settings.noargs.footer" );

@@ -49,9 +49,9 @@ public interface FriendsDao
 
     boolean hasOutgoingFriendRequest( UUID user, UUID uuid );
 
-    void setSetting( UUID uuid, FriendSetting type, Object value );
+    void setSetting( UUID uuid, FriendSetting type, boolean value );
 
-    <T> T getSetting( UUID uuid, FriendSetting type );
+    boolean getSetting( UUID uuid, FriendSetting type );
 
     FriendSettings getSettings( UUID uuid );
 }

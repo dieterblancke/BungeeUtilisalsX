@@ -312,7 +312,7 @@ public class SQLFriendsDao implements FriendsDao
     }
 
     @Override
-    public void setSetting( UUID uuid, FriendSetting type, Object value )
+    public void setSetting( UUID uuid, FriendSetting type, boolean value )
     {
         // not really the cleanest code, but should be fine
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -338,7 +338,7 @@ public class SQLFriendsDao implements FriendsDao
                         "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
                 ) )
                 {
-                    updatePstmt.setObject( 1, value );
+                    updatePstmt.setBoolean( 1, value );
                     updatePstmt.setString( 2, uuid.toString() );
                     updatePstmt.setString( 3, type.toString() );
 
@@ -366,9 +366,9 @@ public class SQLFriendsDao implements FriendsDao
     }
 
     @Override
-    public <T> T getSetting( final UUID uuid, final FriendSetting type )
+    public boolean getSetting( final UUID uuid, final FriendSetting type )
     {
-        Object setting = type.getDefault();
+        boolean setting = type.getDefault();
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
@@ -382,7 +382,7 @@ public class SQLFriendsDao implements FriendsDao
             {
                 if ( rs.next() )
                 {
-                    setting = rs.getObject( "value" );
+                    setting = rs.getBoolean( "value" );
                 }
             }
         }
@@ -391,7 +391,7 @@ public class SQLFriendsDao implements FriendsDao
             BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
 
-        return (T) setting;
+        return setting;
     }
 
     @Override
@@ -410,9 +410,9 @@ public class SQLFriendsDao implements FriendsDao
             {
                 while ( rs.next() )
                 {
-                    settings.set( FriendSetting.valueOf(
-                            rs.getString("setting").toUpperCase() ),
-                            rs.getObject( "value" )
+                    settings.set(
+                            FriendSetting.valueOf( rs.getString("setting").toUpperCase() ),
+                            rs.getBoolean( "value" )
                     );
                 }
             }

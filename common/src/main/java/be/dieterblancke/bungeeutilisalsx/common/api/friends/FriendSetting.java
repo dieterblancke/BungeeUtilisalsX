@@ -26,17 +26,10 @@ import java.util.Arrays;
 public enum FriendSetting
 {
 
-    REQUESTS( Boolean.class ),
-    MESSAGES( Boolean.class ),
-    SERVER_SWITCH( Boolean.class ),
-    FRIEND_BROADCAST( Boolean.class );
-
-    private final Class<?> valueType;
-
-    FriendSetting( final Class<?> valueType )
-    {
-        this.valueType = valueType;
-    }
+    REQUESTS,
+    MESSAGES,
+    SERVER_SWITCH,
+    FRIEND_BROADCAST;
 
     public static FriendSetting[] getEnabledSettings()
     {
@@ -57,19 +50,8 @@ public enum FriendSetting
                 : getName();
     }
 
-    @SuppressWarnings( "unchecked" )
-    public <T> T getDefault()
+    public boolean getDefault()
     {
-        return (T) ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
-    }
-
-    public boolean isBooleanType()
-    {
-        return this.valueType == Boolean.class;
-    }
-
-    public Class<?> getValueType()
-    {
-        return valueType;
+        return ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + toString().toLowerCase() );
     }
 }
