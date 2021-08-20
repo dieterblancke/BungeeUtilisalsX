@@ -33,6 +33,25 @@ import java.util.Optional;
 public class FriendDenySubCommandCall implements CommandCall
 {
 
+    public static void removeFriendRequest( final UserStorage storage, final User user, final User target )
+    {
+        BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( user.getUuid(), storage.getUuid() );
+        user.sendLangMessage( "friends.deny.denied", "{user}", storage.getUserName() );
+
+        if ( target != null )
+        {
+            target.sendLangMessage( "friends.deny.request-denied", "{name}", user.getName() );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    storage.getUserName(),
+                    "friends.deny.request-denied",
+                    "{name}", user.getName()
+            ) );
+        }
+    }
+
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
@@ -59,22 +78,6 @@ public class FriendDenySubCommandCall implements CommandCall
             return;
         }
 
-        dao.removeFriendRequest( user.getUuid(), storage.getUuid() );
-        user.sendLangMessage( "friends.deny.denied", "{user}", name );
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            target.sendLangMessage( "friends.deny.request-denied", "{name}", user.getName() );
-        }
-        else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
-        {
-            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    name,
-                    "friends.deny.request-denied",
-                    "{name}", user.getName()
-            ) );
-        }
+        removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
     }
 }

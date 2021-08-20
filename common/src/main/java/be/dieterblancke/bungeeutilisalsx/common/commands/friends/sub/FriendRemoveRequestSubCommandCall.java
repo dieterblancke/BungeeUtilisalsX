@@ -32,6 +32,25 @@ import java.util.Optional;
 public class FriendRemoveRequestSubCommandCall implements CommandCall
 {
 
+    public static void removeFriendRequest( final UserStorage storage, final User user, final User target )
+    {
+        BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( storage.getUuid(), user.getUuid() );
+        user.sendLangMessage( "friends.removerequest.removed", "{user}", storage.getUserName() );
+
+        if ( target != null )
+        {
+            target.sendLangMessage( "friends.removerequest.request-removed", "{user}", user.getName() );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    storage.getUserName(),
+                    "friends.removerequest.request-removed",
+                    "{user}", user.getName()
+            ) );
+        }
+    }
+
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
@@ -57,22 +76,6 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
             return;
         }
 
-        dao.getFriendsDao().removeFriendRequest( storage.getUuid(), user.getUuid() );
-        user.sendLangMessage( "friends.removerequest.removed", "{user}", name );
-
-        if ( optionalTarget.isPresent() )
-        {
-            final User target = optionalTarget.get();
-
-            target.sendLangMessage( "friends.removerequest.request-removed", "{user}", user.getName() );
-        }
-        else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
-        {
-            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    name,
-                    "friends.removerequest.request-removed",
-                    "{user}", user.getName()
-            ) );
-        }
+        removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
     }
 }

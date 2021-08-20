@@ -70,7 +70,7 @@ public abstract class CommandManager
     {
         registerGeneralCommand( "bungeeutilisals", new PluginCommandCall() );
         registerGeneralCommand( "server", new ServerCommandCall() );
-        registerGeneralCommand( "announce", new AnnounceCommandCall(), Lists.newArrayList("p", "a", "b", "c", "t") );
+        registerGeneralCommand( "announce", new AnnounceCommandCall(), Lists.newArrayList("-p", "-a", "-b", "-c", "-t") );
         registerGeneralCommand( "find", new FindCommandCall() );
         registerGeneralCommand( "glag", new GLagCommandCall() );
         registerGeneralCommand( "clearchat", new ClearChatCommandCall() );

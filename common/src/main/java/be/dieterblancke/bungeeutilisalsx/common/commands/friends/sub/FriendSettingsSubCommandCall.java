@@ -54,7 +54,6 @@ public class FriendSettingsSubCommandCall implements CommandCall
         else if ( args.size() == 2 )
         {
             final FriendSetting type = Utils.valueOfOr( FriendSetting.class, args.get( 0 ).toUpperCase(), null );
-            final boolean value = !args.get( 1 ).toLowerCase().contains( "d" );
 
             if ( type == null )
             {
@@ -65,6 +64,9 @@ public class FriendSettingsSubCommandCall implements CommandCall
                 user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );
                 return;
             }
+            final boolean value = args.get( 1 ).contains( "toggle" )
+                    ? !user.getFriendSettings().getSetting( type, false )
+                    : !args.get( 1 ).toLowerCase().contains( "d" );
 
             user.getFriendSettings().set( type, value );
             BuX.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );

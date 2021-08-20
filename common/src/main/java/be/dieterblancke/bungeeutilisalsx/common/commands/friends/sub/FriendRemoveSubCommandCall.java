@@ -42,19 +42,29 @@ public class FriendRemoveSubCommandCall implements CommandCall
         }
         final String name = args.get( 0 );
         final Dao dao = BuX.getApi().getStorageManager().getDao();
-
-        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
-        {
-            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
-            return;
-        }
-
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
         final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
         if ( storage == null )
         {
             user.sendLangMessage( "never-joined" );
+            return;
+        }
+
+        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        {
+            if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
+            {
+                FriendRemoveRequestSubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
+                return;
+            }
+            if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+            {
+                FriendDenySubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
+                return;
+            }
+
+            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
             return;
         }
 
