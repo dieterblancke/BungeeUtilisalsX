@@ -317,7 +317,6 @@ friends:
     friend-removed: '&b{user} &ehas removed you from his friends list!'
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
-    online: 'now'
     status:
       online: 'online'
       offline: 'offline'
@@ -563,7 +562,6 @@ punishments:
 
   kick:
     usage: '&fPlease use &a/kick (user) (reason)&f!'
-    already-muted: '&fThis user is already muted!'
     executed: '&fYou have kicked &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!'
@@ -578,7 +576,6 @@ punishments:
 
   warn:
     usage: '&fPlease use &a/warn (user) (reason)&f!'
-    already-muted: '&fThis user is already muted!'
     executed: '&fYou have warned &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been warned by &a{by} &fat &a{server}&f!'

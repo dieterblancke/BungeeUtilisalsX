@@ -34,7 +34,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -223,9 +222,29 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     {
         if ( args.size() >= 2 )
         {
-            final String message = Joiner.on( " " ).join( args );
+            final String types;
+            final String message;
 
-            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( getTypes( parameters ), message ) );
+            if ( !ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "announce.default-to-chat", false ) )
+            {
+                types = args.get( 0 );
+                message = String.join( " ", args.subList( 1, args.size() ) );
+            }
+            else
+            {
+                if ( args.get( 0 ).startsWith( "type:" ) )
+                {
+                    types = args.get( 0 ).replace( "type:", "" );
+                    message = String.join( " ", args.subList( 1, args.size() ) );
+                }
+                else
+                {
+                    types = "c";
+                    message = String.join( " ", args );
+                }
+            }
+
+            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( this.getTypes( types ), message ) );
         }
         else
         {
@@ -233,35 +252,28 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         }
     }
 
-    private Set<AnnouncementType> getTypes( final List<String> parameters )
+    private Set<AnnouncementType> getTypes( String types )
     {
         final Set<AnnouncementType> announcementTypes = Sets.newHashSet();
-        
-        if ( parameters.isEmpty() )
-        {
-            announcementTypes.add( AnnouncementType.CHAT );
-            return announcementTypes;
-        }
 
-        if ( parameters.contains( "-p" ) )
+        if ( types.contains( "p" ) )
         {
             announcementTypes.add( AnnouncementType.PRECONFIGURED );
             return announcementTypes;
         }
-
-        if ( parameters.contains( "-a" ) )
+        if ( types.contains( "a" ) )
         {
             announcementTypes.add( AnnouncementType.ACTIONBAR );
         }
-        if ( parameters.contains( "-c" ) )
+        if ( types.contains( "c" ) )
         {
             announcementTypes.add( AnnouncementType.CHAT );
         }
-        if ( parameters.contains( "-t" ) )
+        if ( types.contains( "t" ) )
         {
             announcementTypes.add( AnnouncementType.TITLE );
         }
-        if ( parameters.contains( "-b" ) )
+        if ( types.contains( "b" ) )
         {
             announcementTypes.add( AnnouncementType.BOSSBAR );
         }
