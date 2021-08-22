@@ -1,0 +1,14 @@
+enabled: false
+
+motds:
+  # By removing server, the MOTD message will be sent on network join (which is once per session)
+  - message:
+      - '&eWelcome &b{user} &eto our server!'
+  - server: Lobbies
+    once-per-session: true
+    message:
+      - '&eWelcome back to our lobbies &b{user}&e!'
+  - server: Skyblock
+    once-per-session: true
+    language: true
+    message: custom.ingamemotd.skyblock

@@ -773,6 +773,9 @@ hubbalancer:
   already-connected: '&eYou are already connected to &b{serverName}&e!'
 
 custom:
+  ingamemotd:
+    skyblock:
+      - 'This is a skyblock join message'
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:
     welcome:
