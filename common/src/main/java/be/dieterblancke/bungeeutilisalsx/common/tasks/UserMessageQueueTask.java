@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
 public class UserMessageQueueTask implements Runnable
 {
+
     @Override
     public void run()
     {

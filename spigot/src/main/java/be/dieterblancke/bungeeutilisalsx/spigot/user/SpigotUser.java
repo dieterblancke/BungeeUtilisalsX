@@ -31,6 +31,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -137,13 +138,8 @@ public class SpigotUser implements User
 
         friendSettings = ConfigFiles.FRIENDS_CONFIG.isEnabled() ? dao.getFriendsDao().getSettings( uuid ) : new FriendSettings();
 
-        BuX.getInstance().getScheduler().runAsync( () ->
-        {
-            messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue(
-                    player.getUniqueId(), player.getName(), ip
-            );
-            executeMessageQueue();
-        } );
+        messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue( uuid, name, ip );
+        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::executeMessageQueue );
 
         final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
@@ -368,19 +364,6 @@ public class SpigotUser implements User
             return false;
         }
         return false;
-    }
-
-    @Override
-    public void executeMessageQueue()
-    {
-        QueuedMessage message = messageQueue.poll();
-
-        while ( message != null )
-        {
-            sendLangMessage( message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders() );
-
-            message = messageQueue.poll();
-        }
     }
 
     @Override

@@ -349,7 +349,26 @@ public interface User extends MessageRecipient
     /**
      * Executes the queued message
      */
-    void executeMessageQueue();
+    default void executeMessageQueue()
+    {
+        QueuedMessage message = this.getMessageQueue().poll();
+
+        System.out.println( message );
+
+        if ( message != null && !getStorage().hasData( "MESSAGEQUEUE_FIRST_JOIN" ) )
+        {
+            this.sendLangMessage( "messagequeue-join-header" );
+            getStorage().setData( "MESSAGEQUEUE_FIRST_JOIN", false );
+        }
+
+        while ( message != null )
+        {
+            System.out.println( "sending message with id " + message.getId() );
+            this.sendLangMessage( message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders() );
+
+            message = this.getMessageQueue().poll();
+        }
+    }
 
     /**
      * This method makes the user execute a given command.
@@ -415,7 +434,8 @@ public interface User extends MessageRecipient
 
     /**
      * Sets the vanish state for a user
+     *
      * @param vanished the vanish state to be set
      */
-    void setVanished(boolean vanished);
+    void setVanished( boolean vanished );
 }

@@ -207,7 +207,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void setupTasks()
     {
-        this.scheduler.runTaskDelayed( 30, TimeUnit.SECONDS, new UserMessageQueueTask() );
+        this.scheduler.runTaskRepeating( 30, 30, TimeUnit.SECONDS, new UserMessageQueueTask() );
     }
 
     public void reload()
