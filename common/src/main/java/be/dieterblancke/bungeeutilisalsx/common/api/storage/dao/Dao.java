@@ -20,12 +20,10 @@ package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.UUID;
 
 public interface Dao
 {
@@ -64,7 +62,6 @@ public interface Dao
 
     ReportsDao getReportsDao();
 
-    MessageQueue<QueuedMessage> createMessageQueue( UUID uuid, String name, String ip );
+    OfflineMessageDao getOfflineMessageDao();
 
-    MessageQueue<QueuedMessage> createMessageQueue();
 }

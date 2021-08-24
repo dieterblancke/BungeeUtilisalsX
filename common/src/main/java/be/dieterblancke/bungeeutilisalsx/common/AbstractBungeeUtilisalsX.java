@@ -38,7 +38,6 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPerm
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
-import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -50,7 +49,6 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -207,7 +205,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void setupTasks()
     {
-        this.scheduler.runTaskRepeating( 30, 30, TimeUnit.SECONDS, new UserMessageQueueTask() );
+        // do nothing
     }
 
     public void reload()

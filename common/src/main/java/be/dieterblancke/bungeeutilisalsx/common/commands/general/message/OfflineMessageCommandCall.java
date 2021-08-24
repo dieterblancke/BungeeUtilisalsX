@@ -3,11 +3,10 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general.message;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 
 import java.util.Date;
 import java.util.List;
@@ -47,18 +46,16 @@ public class OfflineMessageCommandCall implements CommandCall
             return;
         }
 
-        final MessageQueue<QueuedMessage> messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue();
-        messageQueue.add( new QueuedMessage(
-                -1,
+        BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
                 targetName,
-                new QueuedMessage.Message(
+                new OfflineMessageDao.OfflineMessage(
+                        null,
                         "general-commands.offlinemessage.message",
                         "{user}", user.getName(),
                         "{time}", Utils.formatDate( new Date(), user.getLanguageConfig().getConfig() ),
                         "{message}", message
-                ),
-                "NAME"
-        ) );
+                )
+        );
         user.sendLangMessage( "general-commands.offlinemessage.sent", "{user}", targetName );
     }
 }

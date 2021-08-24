@@ -4,14 +4,13 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -247,13 +246,7 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public MessageQueue<QueuedMessage> getMessageQueue()
-    {
-        return null;
-    }
-
-    @Override
-    public void executeMessageQueue()
+    public void sendOfflineMessages()
     {
         // do nothing
     }

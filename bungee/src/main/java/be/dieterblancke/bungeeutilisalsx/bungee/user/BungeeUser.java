@@ -27,7 +27,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -36,7 +35,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -74,7 +72,6 @@ public class BungeeUser implements User
     private List<FriendData> friends = Lists.newArrayList();
     private FriendSettings friendSettings;
     private boolean inStaffChat;
-    private MessageQueue<QueuedMessage> messageQueue;
     private boolean msgToggled;
     private boolean vanished;
 
@@ -146,8 +143,7 @@ public class BungeeUser implements User
             friendSettings = new FriendSettings();
         }
 
-        messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue( uuid, name, ip );
-        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::executeMessageQueue );
+        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
 
         final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
