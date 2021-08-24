@@ -24,13 +24,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
@@ -342,14 +342,21 @@ public interface User extends MessageRecipient
     boolean hasAnyPermission( String... permissions );
 
     /**
-     * @return the list of queued messages for this user.
-     */
-    MessageQueue<QueuedMessage> getMessageQueue();
-
-    /**
      * Executes the queued message
      */
-    void executeMessageQueue();
+    default void sendOfflineMessages()
+    {
+        final OfflineMessageDao offlineMessageDao = BuX.getApi().getStorageManager().getDao().getOfflineMessageDao();
+        final List<OfflineMessage> messages = offlineMessageDao.getOfflineMessages( this.getName() );
+
+        this.sendLangMessage( "messagequeue-join-header" );
+
+        for ( OfflineMessage message : messages )
+        {
+            this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
+            offlineMessageDao.updateOfflineMessage( message.getId(), true );
+        }
+    }
 
     /**
      * This method makes the user execute a given command.
@@ -415,7 +422,8 @@ public interface User extends MessageRecipient
 
     /**
      * Sets the vanish state for a user
+     *
      * @param vanished the vanish state to be set
      */
-    void setVanished(boolean vanished);
+    void setVanished( boolean vanished );
 }

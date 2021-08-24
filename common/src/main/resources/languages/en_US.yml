@@ -7,6 +7,7 @@ date-format: 'dd-MM-yyyy kk:mm:ss'
 not-for-console: '&eThis action is currently only supported for usage by players.'
 command-disabled-in-this-server: '&eThis command is &cdisabled &ein the &b{server} &eserver!'
 command-disabled: '&eThe command &b{command} &eis &cdisabled &ein the &b{server} &eserver!'
+messagequeue-join-header: '&eMessages you received while you were away:'
 
 updater:
   update-found:
@@ -252,6 +253,11 @@ general-commands:
   staffannouncement:
     usage: '&ePlease use &b/staffannouncement (message) &e!'
     broadcast: '&e&lSTAFFANNOUNCE &b{broadcaster} &e-> &f{message}'
+  offlinemessage:
+    usage: '&ePlease use &b/offlinemessage (user) (message)&e!'
+    online: '&eThis user is online at the moment! Please use &b/msg (user) (message) &einstead&b!'
+    message: '&b{user} &e@ &b{time} &e-> &f{message}'
+    sent: '&eYou have sent an offline message to &b{user}&e!'
 
 friends:
   join:
@@ -326,6 +332,7 @@ friends:
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {previousPage}'
+
         - text: '&eFriends List &b({currentPage} of {maxPages})'
         - text: ' &6->'
           click:

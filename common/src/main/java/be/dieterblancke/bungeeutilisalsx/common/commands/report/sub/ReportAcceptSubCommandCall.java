@@ -22,11 +22,11 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.List;
@@ -94,17 +94,16 @@ public class ReportAcceptSubCommandCall implements CommandCall
         }
         else
         {
-            BuX.getApi().getStorageManager().getDao().createMessageQueue().add( new QueuedMessage(
-                    -1,
+            BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
                     report.getReportedBy(),
-                    new QueuedMessage.Message(
+                    new OfflineMessage(
+                         null,
                             "general-commands.report.deny.accepted",
                             "{id}", report.getId(),
                             "{reported}", report.getUserName(),
                             "{staff}", user.getName()
-                    ),
-                    "NAME"
-            ) );
+                    )
+            );
         }
     }
 }

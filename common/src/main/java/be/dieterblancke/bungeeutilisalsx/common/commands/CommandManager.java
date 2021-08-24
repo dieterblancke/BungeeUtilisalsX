@@ -27,10 +27,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
-import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.IgnoreCommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.MsgCommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.MsgToggleCommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.ReplyCommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.*;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
@@ -91,6 +88,7 @@ public abstract class CommandManager
         registerGeneralCommand( "staffchat", new StaffChatCommandCall() );
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
+        registerGeneralCommand( "offlinemessage", new OfflineMessageCommandCall() );
 
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {

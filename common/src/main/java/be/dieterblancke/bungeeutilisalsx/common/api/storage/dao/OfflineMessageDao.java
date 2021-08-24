@@ -18,11 +18,31 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
-import java.util.Queue;
+import lombok.Value;
 
-public interface MessageQueue<T> extends Queue<T>
+import java.util.List;
+
+public interface OfflineMessageDao
 {
 
-    void refetch();
+    List<OfflineMessage> getOfflineMessages( String username );
 
+    void sendOfflineMessage( String username, OfflineMessage message );
+
+    void updateOfflineMessage( Long id, boolean active );
+
+    @Value
+    class OfflineMessage
+    {
+        Long id;
+        String languagePath;
+        Object[] placeholders;
+
+        public OfflineMessage( final Long id, final String languagePath, final Object... placeholders )
+        {
+            this.id = id;
+            this.languagePath = languagePath;
+            this.placeholders = placeholders;
+        }
+    }
 }

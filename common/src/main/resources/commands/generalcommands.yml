@@ -278,3 +278,10 @@ staffannouncement:
   aliases: 'sa, staffannounce'
   permission: bungeeutilisals.commands.staffannouncement.send
   receive-permission: bungeeutilisals.commands.staffannouncement.receive
+offlinemessage:
+  enabled: false
+  name: offlinemessage
+  aliases: 'omsg'
+  permission: bungeeutilisals.commands.offlinemessage
+  cooldown: 60
+  execute-msg-if-online: true

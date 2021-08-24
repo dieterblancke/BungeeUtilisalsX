@@ -100,17 +100,21 @@ public class MongoDBStorageManager extends AbstractStorageManager
 
     private void initMongo()
     {
-        final MongoCollection<Document> coll = database.getCollection( "bu-counters" );
+        final MongoCollection<Document> coll = database.getCollection( "bu_counters" );
 
         if ( coll.find( Filters.eq( "_id", "reportid" ) ).first() == null )
         {
             coll.insertOne( new Document().append( "_id", "reportid" ).append( "sequence_value", 0 ) );
         }
+        if ( coll.find( Filters.eq( "_id", "offline_message_id" ) ).first() == null )
+        {
+            coll.insertOne( new Document().append( "_id", "offline_message_id" ).append( "sequence_value", 0 ) );
+        }
     }
 
     public long getNextSequenceValue( final String sequenceName )
     {
-        final Document sequenceDocument = database.getCollection( "counters" ).findOneAndUpdate(
+        final Document sequenceDocument = database.getCollection( "bu_counters" ).findOneAndUpdate(
                 Filters.eq( "_id", sequenceName ),
                 Updates.inc( "sequence_value", 1 )
         );
