@@ -162,7 +162,7 @@ public enum StandardLibrary
     JSOUP(
             "org.jsoup.nodes.Document",
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/{version}/jsoup-{version}.jar",
-            "1.14.1",
+            "1.14.2",
             true,
             relocate( "org.jsoup" )
     ),
