@@ -220,12 +220,15 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() >= 2 )
+        final String defaultsTo = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "announce.default-to", "none" );
+        final int minArgs = defaultsTo.equalsIgnoreCase( "none" ) ? 2 : 1;
+
+        if ( args.size() >= minArgs )
         {
             final String types;
             final String message;
 
-            if ( !ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "announce.default-to-chat", false ) )
+            if ( defaultsTo.equalsIgnoreCase( "none" ) )
             {
                 types = args.get( 0 );
                 message = String.join( " ", args.subList( 1, args.size() ) );
@@ -239,7 +242,7 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                 }
                 else
                 {
-                    types = "c";
+                    types = defaultsTo;
                     message = String.join( " ", args );
                 }
             }

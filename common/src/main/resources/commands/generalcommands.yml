@@ -64,8 +64,9 @@ announce:
   name: announce
   aliases: 'alert, bigalert'
   permission: bungeeutilisals.commands.announce
-  # If true, announce will automatically use the chat type and ONLY if you type /announce type:bcat (message), then it will be behaviour as usual.
-  default-to-chat: false
+  # Can set to any combination of b, c, a and t (bcat for all), none to keep default announce behaviour
+  # If not set to none, custom types can still be given using /announce type:(b/c/a/t) (message)
+  default-to: none
   types:
     bossbar:
       enabled: true
