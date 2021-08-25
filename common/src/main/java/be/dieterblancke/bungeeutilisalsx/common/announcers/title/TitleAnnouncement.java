@@ -38,24 +38,17 @@ public class TitleAnnouncement extends Announcement
 {
 
     private boolean language;
-    private String title;
-    private String subtitle;
-    private int fadeIn;
-    private int stay;
-    private int fadeOut;
+    private TitleMessage titleMessage;
 
-    public TitleAnnouncement( boolean language, String title, String subtitle,
-                              int fadeIn, int stay, int fadeOut, ServerGroup serverGroup,
-                              String receivePermission )
+    public TitleAnnouncement( final boolean language,
+                              final TitleMessage titleMessage,
+                              final ServerGroup serverGroup,
+                              final String receivePermission )
     {
         super( serverGroup, receivePermission );
 
         this.language = language;
-        this.title = title;
-        this.subtitle = subtitle;
-        this.fadeIn = fadeIn;
-        this.stay = stay;
-        this.fadeOut = fadeOut;
+        this.titleMessage = titleMessage;
     }
 
     public void send()
@@ -77,11 +70,15 @@ public class TitleAnnouncement extends Announcement
             final IConfiguration config = user.getLanguageConfig().getConfig();
 
             user.sendTitle(
-                    language && config.exists( title ) ? config.getString( title ) : title,
-                    language && config.exists( subtitle ) ? config.getString( subtitle ) : subtitle,
-                    fadeIn,
-                    stay,
-                    fadeOut
+                    language && config.exists( titleMessage.getTitle() )
+                            ? config.getString( titleMessage.getTitle() )
+                            : titleMessage.getTitle(),
+                    language && config.exists( titleMessage.getSubtitle() )
+                            ? config.getString( titleMessage.getSubtitle() )
+                            : titleMessage.getSubtitle(),
+                    titleMessage.getFadeIn(),
+                    titleMessage.getStay(),
+                    titleMessage.getFadeOut()
             );
         } );
     }

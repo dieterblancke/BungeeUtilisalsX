@@ -1,10 +1,15 @@
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.announcers.bossbar.BossBarMessage;
+import be.dieterblancke.bungeeutilisalsx.common.announcers.title.TitleMessage;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.ArrayList;
@@ -39,6 +44,10 @@ public class IngameMotdExecutor implements EventExecutor
             {
                 return;
             }
+            if ( motd.hasReceivePermission() && !user.hasPermission( motd.getReceivePermission() ) )
+            {
+                return;
+            }
 
             if ( motd.isLanguage() )
             {
@@ -54,7 +63,52 @@ public class IngameMotdExecutor implements EventExecutor
                     user.sendRawColorMessage( line );
                 }
             }
+            if ( motd.hasActionBar() )
+            {
+                sendActionBar( user, motd.isLanguage(), motd.getActionBar() );
+            }
+            if ( motd.hasBossBar() )
+            {
+                sendBossBar( user, motd.isLanguage(), motd.getBossBar() );
+            }
+            if ( motd.hasTitle() )
+            {
+                sendTitle( user, motd.isLanguage(), motd.getTitle() );
+            }
             sentMotds.add( motd.getUuid() );
         } );
+    }
+
+    private void sendActionBar( final User user, final boolean language, final String message )
+    {
+        user.sendActionBar( language ? user.getLanguageConfig().getConfig().getString( message ) : message );
+    }
+
+    private void sendBossBar( final User user, final boolean language, final BossBarMessage message )
+    {
+        final IBossBar bar = BuX.getApi().createBossBar();
+        bar.setMessage( Utils.format(
+                user,
+                language ? user.getLanguageConfig().getConfig().getString( message.getText() ) : message.getText()
+        ) );
+        bar.setColor( message.getColor() );
+        bar.setProgress( message.getProgress() );
+        bar.setStyle( message.getStyle() );
+        bar.addUser( user );
+    }
+
+    private void sendTitle( final User user, final boolean language, final TitleMessage message )
+    {
+        user.sendTitle(
+                language && user.getLanguageConfig().getConfig().exists( message.getTitle() )
+                        ? user.getLanguageConfig().getConfig().getString( message.getTitle() )
+                        : message.getTitle(),
+                language && user.getLanguageConfig().getConfig().exists( message.getSubtitle() )
+                        ? user.getLanguageConfig().getConfig().getString( message.getSubtitle() )
+                        : message.getSubtitle(),
+                message.getFadeIn(),
+                message.getStay(),
+                message.getFadeOut()
+        );
     }
 }

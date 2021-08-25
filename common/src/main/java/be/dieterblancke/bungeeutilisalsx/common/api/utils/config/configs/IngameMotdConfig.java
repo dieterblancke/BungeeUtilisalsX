@@ -18,6 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
+import be.dieterblancke.bungeeutilisalsx.common.announcers.bossbar.BossBarMessage;
+import be.dieterblancke.bungeeutilisalsx.common.announcers.title.TitleMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
@@ -62,7 +64,19 @@ public class IngameMotdConfig extends Config
                                 section.exists( "language" ) && section.getBoolean( "language" ),
                                 section.isString( "message" )
                                         ? Collections.singletonList( section.getString( "message" ) )
-                                        : section.getStringList( "message" )
+                                        : section.getStringList( "message" ),
+                                section.exists( "actionbar" )
+                                        ? section.getString( "actionbar" )
+                                        : null,
+                                section.exists( "bossbar" )
+                                        ? new BossBarMessage( section.getSection( "bossbar" ) )
+                                        : null,
+                                section.exists( "title" )
+                                        ? new TitleMessage( section.getSection( "title" ) )
+                                        : null,
+                                section.exists( "receive-permission" )
+                                        ? section.getString( "receive-permission" )
+                                        : null
                         ) )
                         .collect( Collectors.toList() )
         );
@@ -84,5 +98,29 @@ public class IngameMotdConfig extends Config
         boolean oncePerSession;
         boolean language;
         List<String> message;
+        String actionBar;
+        BossBarMessage bossBar;
+        TitleMessage title;
+        String receivePermission;
+
+        public boolean hasActionBar()
+        {
+            return actionBar != null;
+        }
+
+        public boolean hasBossBar()
+        {
+            return bossBar != null;
+        }
+
+        public boolean hasTitle()
+        {
+            return title != null;
+        }
+
+        public boolean hasReceivePermission()
+        {
+            return receivePermission != null;
+        }
     }
 }

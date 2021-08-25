@@ -45,16 +45,10 @@ public class TitleAnnouncer extends Announcer
                 BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
             }
-
-            final int fadeIn = section.getInteger( "fadein" );
-            final int stay = section.getInteger( "stay" );
-            final int fadeOut = section.getInteger( "fadeout" );
             final String permission = section.getString( "permission" );
             final boolean language = section.getBoolean( "language" );
-            final String title = section.getString( "title" );
-            final String subtitle = section.getString( "subtitle" );
 
-            addAnnouncement( new TitleAnnouncement( language, title, subtitle, fadeIn, stay, fadeOut, group, permission ) );
+            addAnnouncement( new TitleAnnouncement( language, new TitleMessage( section ), group, permission ) );
         }
     }
 }
