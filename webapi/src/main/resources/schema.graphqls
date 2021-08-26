@@ -1,0 +1,24 @@
+type Query {
+    findUserByName(name: String!): User
+    findUserByUuid(uuid: UUID!): User
+}
+
+type User {
+    uuid: UUID!
+    userName: String!
+    ip: String!
+    language: Language
+    firstLogin: DateTime
+    lastLogout: DateTime
+    ignoredUsers: [String]
+    joinedHost: String
+}
+
+type Language {
+    name: String!
+    defaultLanguage: Boolean!
+}
+
+scalar Date
+scalar DateTime
+scalar UUID

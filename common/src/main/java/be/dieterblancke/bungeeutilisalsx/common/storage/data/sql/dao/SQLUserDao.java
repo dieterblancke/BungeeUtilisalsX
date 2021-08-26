@@ -192,7 +192,7 @@ public class SQLUserDao implements UserDao
             {
                 if ( rs.next() )
                 {
-                    storage.setUuid( uuid );
+                    storage.setUuid( UUID.fromString( rs.getString( "uuid" ) ) );
                     storage.setUserName( rs.getString( "username" ) );
                     storage.setIp( rs.getString( "ip" ) );
                     storage.setLanguage( BuX.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) ) );
@@ -232,7 +232,7 @@ public class SQLUserDao implements UserDao
                 if ( rs.next() )
                 {
                     storage.setUuid( UUID.fromString( rs.getString( "uuid" ) ) );
-                    storage.setUserName( name );
+                    storage.setUserName( rs.getString( "username" ) );
                     storage.setIp( rs.getString( "ip" ) );
                     storage.setLanguage( BuX.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) ) );
                     storage.setFirstLogin(
