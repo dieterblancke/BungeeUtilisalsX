@@ -59,7 +59,7 @@ public class UrlLibraryClassLoader implements LibraryClassLoader
         }
         else
         {
-            throw new IllegalStateException( "Plugin ClassLoader is not instance of URLClassLoader" );
+            this.classLoader = URLClassLoader.newInstance( new URL[0], loader );
         }
     }
 
