@@ -21,7 +21,9 @@ import java.util.logging.Logger;
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
-    private final IPluginDescription pluginDescription = new WebPluginDescription();
+    private final IPluginDescription pluginDescription = new SpringPluginDescription();
+    private final CommandManager commandManager = new SpringCommandManager();
+    private final ProxyOperationsApi proxyOperations = new SpringProxyOperations();
 
     public BungeeUtilisalsX()
     {
@@ -50,6 +52,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         this.api = this.createBuXApi();
 
         this.registerLanguages();
+        this.registerCommands();
         this.setupTasks();
     }
 
@@ -79,7 +82,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     public CommandManager getCommandManager()
     {
-        throw new UnsupportedOperationException( "The CommandManager is currently only supported in the proxy versions of BungeeUtilisalsX!" );
+        return commandManager;
     }
 
     @Override
@@ -102,7 +105,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     public ProxyOperationsApi proxyOperations()
     {
-        throw new UnsupportedOperationException( "These operations are only supported in the proxy versions of BungeeUtilisalsX!" );
+        return proxyOperations;
     }
 
     @Override

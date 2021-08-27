@@ -3,12 +3,13 @@ package be.dieterblancke.bungeeutilisalsx.webapi;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
 import be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap;
+import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 
-public class WebPluginDescription implements IPluginDescription
+public class SpringPluginDescription implements IPluginDescription
 {
     @Override
     public String getName()

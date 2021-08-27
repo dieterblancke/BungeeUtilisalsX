@@ -14,6 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManag
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
+import be.dieterblancke.bungeeutilisalsx.webapi.console.ConsoleUser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -29,12 +30,7 @@ public class BuXApi implements IBuXApi
 
     private final ILanguageManager languageManager;
     private final IEventLoader eventLoader;
-
-    @Override
-    public User getConsoleUser()
-    {
-        return null;
-    }
+    private final ConsoleUser consoleUser = new ConsoleUser();
 
     @Override
     public Optional<User> getUser( String name )

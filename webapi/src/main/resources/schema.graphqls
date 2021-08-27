@@ -1,6 +1,8 @@
 type Query {
     findUserByName(name: String!): User
     findUserByUuid(uuid: UUID!): User
+    findFriends(uuid: UUID!): [Friend]
+    findFriendRequests(uuid: UUID!, requestType: FriendRequestType!): [FriendRequest]
 }
 
 type User {
@@ -14,6 +16,16 @@ type User {
     joinedHost: String
 }
 
+type Friend {
+    friend: User!
+    created: DateTime!
+}
+
+type FriendRequest {
+    friend: User!
+    requestedAt: DateTime!
+}
+
 type Language {
     name: String!
     defaultLanguage: Boolean!
@@ -22,3 +34,8 @@ type Language {
 scalar Date
 scalar DateTime
 scalar UUID
+
+enum FriendRequestType {
+    INCOMING,
+    OUTGOING
+}
