@@ -7,6 +7,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionU
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
+import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringCommandManager;
+import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringPluginDescription;
+import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringProxyOperations;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;

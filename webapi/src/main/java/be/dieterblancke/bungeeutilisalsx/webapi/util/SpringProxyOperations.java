@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.webapi;
+package be.dieterblancke.bungeeutilisalsx.webapi.util;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;

@@ -11,12 +11,14 @@ import java.util.UUID;
 public class Friend
 {
 
+    UUID userId;
     UUID friendId;
     LocalDateTime created;
 
-    public static Friend of( final FriendData friendData )
+    public static Friend of( final UUID uuid, final FriendData friendData )
     {
         return new Friend(
+                uuid,
                 friendData.getUuid(),
                 new Timestamp( friendData.getFriendSince().getTime() ).toLocalDateTime()
         );

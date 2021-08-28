@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.webapi.queryresolvers;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.Friend;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.FriendRequest;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.FriendRequestType;
@@ -18,6 +19,7 @@ import java.util.stream.Collectors;
 public class Query implements GraphQLQueryResolver
 {
 
+    @Cacheable
     public User findUserByName( final String name )
     {
         final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name );
@@ -25,6 +27,7 @@ public class Query implements GraphQLQueryResolver
         return storage.isLoaded() ? User.of( storage ) : null;
     }
 
+    @Cacheable
     public User findUserByUuid( final UUID uuid )
     {
         final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );
@@ -32,16 +35,18 @@ public class Query implements GraphQLQueryResolver
         return storage.isLoaded() ? User.of( storage ) : null;
     }
 
+    @Cacheable
     public List<Friend> findFriends( final UUID uuid )
     {
         final List<FriendData> friend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( uuid );
 
         return friend
                 .stream()
-                .map( Friend::of )
+                .map( data -> Friend.of( uuid, data ) )
                 .collect( Collectors.toList() );
     }
 
+    @Cacheable
     public List<FriendRequest> findFriendRequests( final UUID uuid, final FriendRequestType requestType )
     {
         final List<be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest> requests;

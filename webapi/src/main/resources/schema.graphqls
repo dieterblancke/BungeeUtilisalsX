@@ -22,6 +22,7 @@ type Friend {
 }
 
 type FriendRequest {
+    user: User!
     friend: User!
     requestedAt: DateTime!
 }
