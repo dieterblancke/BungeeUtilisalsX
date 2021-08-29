@@ -77,6 +77,8 @@ public interface BansDao
 
     List<PunishmentInfo> getIPBans( String ip, String server );
 
+    List<PunishmentInfo> getRecentBans( int limit );
+
     PunishmentInfo getById( String id );
 
     PunishmentInfo getByPunishmentId( String punishmentUid );

@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.caching;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.cache.Cache;
 import lombok.Value;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -8,7 +9,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Aspect
@@ -16,12 +17,18 @@ import java.util.concurrent.TimeUnit;
 public class CachingAspect
 {
 
+    private static final Object NULL = new Object();
     private static final Cache<CachingKey, Object> CACHE = CacheHelper.<CachingKey, Object>builder()
             .build( builder ->
             {
                 builder.maximumSize( 100000 );
-                builder.expireAfterWrite( 10, TimeUnit.MINUTES );
+                builder.expireAfterWrite( ConfigFiles.CONFIG.getConfig().getInteger( "cache-duration-minutes" ), TimeUnit.MINUTES );
             } );
+
+    public static void clearCache()
+    {
+        CACHE.invalidateAll();
+    }
 
     @Around( "@annotation(cacheable)" )
     public Object onCacheableExecution( final ProceedingJoinPoint joinPoint, final Cacheable cacheable ) throws Throwable
@@ -29,11 +36,22 @@ public class CachingAspect
         final String method = joinPoint.getSignature().toShortString();
         final Object[] args = joinPoint.getArgs();
         final CachingKey cachingKey = new CachingKey( method, args );
+        final Object result = CACHE.get( cachingKey, () ->
+        {
+            try
+            {
+                final Object obj = joinPoint.proceed();
 
-        // TODO
-        System.out.println( "\n=======> Executing @Around on method: " + method + ", " + Arrays.toString( args ) );
+                return obj == null ? NULL : obj;
+            }
+            catch ( Throwable e )
+            {
+                e.printStackTrace();
+                throw new ExecutionException( e );
+            }
+        } );
 
-        return joinPoint.proceed();
+        return result == NULL ? null : result;
     }
 
     @Value

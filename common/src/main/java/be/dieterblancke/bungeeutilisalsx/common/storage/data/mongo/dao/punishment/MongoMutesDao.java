@@ -249,20 +249,7 @@ public class MongoMutesDao implements MutesDao
 
         if ( document != null )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+            return this.buildPunishmentInfo( document );
         }
 
         return new PunishmentInfo();
@@ -286,20 +273,7 @@ public class MongoMutesDao implements MutesDao
 
         if ( document != null )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
-
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+            return this.buildPunishmentInfo( document );
         }
 
         return new PunishmentInfo();
@@ -369,21 +343,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -401,21 +361,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -429,22 +375,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final String user = document.getString( "user" );
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -461,21 +392,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -493,21 +410,21 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
+            punishments.add( this.buildPunishmentInfo( document ) );
+        }
+        return punishments;
+    }
 
-            final String id = document.getObjectId( "_id" ).toString();
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
+    @Override
+    public List<PunishmentInfo> getRecentMutes( final int limit )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+        final FindIterable<Document> documents = collection.find().limit( Math.min( limit, 200 ) );
 
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+        for ( Document document : documents )
+        {
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -520,21 +437,7 @@ public class MongoMutesDao implements MutesDao
 
         if ( document != null )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+            return this.buildPunishmentInfo( document );
         }
 
         return null;
@@ -548,20 +451,7 @@ public class MongoMutesDao implements MutesDao
 
         if ( document != null )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-
-            return PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+            return this.buildPunishmentInfo( document );
         }
 
         return null;
@@ -580,21 +470,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final String user = document.getString( "user" );
-            final String ip = document.getString( "ip" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -612,21 +488,7 @@ public class MongoMutesDao implements MutesDao
 
         for ( Document document : documents )
         {
-            final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.IPMUTE );
-
-            final String id = document.getObjectId( "_id" ).toString();
-            final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
-            final String user = document.getString( "user" );
-            final String reason = document.getString( "reason" );
-            final String server = document.getString( "server" );
-            final String executedby = document.getString( "executed_by" );
-            final Date date = document.getDate( "date" );
-            final long time = ( (Number) document.get( "duration" ) ).longValue();
-            final boolean active = document.getBoolean( "active" );
-            final String removedby = document.getString( "removed_by" );
-            final String punishmentUid = document.getString( "punishment_uid" );
-
-            punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+            punishments.add( this.buildPunishmentInfo( document ) );
         }
         return punishments;
     }
@@ -675,5 +537,25 @@ public class MongoMutesDao implements MutesDao
     private MongoDatabase db()
     {
         return ( (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager() ).getDatabase();
+    }
+
+    private PunishmentInfo buildPunishmentInfo( final Document document )
+    {
+        final PunishmentType type = Utils.valueOfOr( document.getString( "type" ), PunishmentType.MUTE );
+
+        final String id = document.getObjectId( "_id" ).toString();
+        final UUID uuid = UUID.fromString( document.getString( "uuid" ) );
+        final String user = document.getString( "user" );
+        final String ip = document.getString( "ip" );
+        final String reason = document.getString( "reason" );
+        final String server = document.getString( "server" );
+        final String executedby = document.getString( "executed_by" );
+        final Date date = document.getDate( "date" );
+        final long time = ( (Number) document.get( "duration" ) ).longValue();
+        final boolean active = document.getBoolean( "active" );
+        final String removedby = document.getString( "removed_by" );
+        final String punishmentUid = document.getString( "punishment_uid" );
+
+        return PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
     }
 }

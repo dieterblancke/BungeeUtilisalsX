@@ -1,8 +1,54 @@
+scalar Date
+scalar DateTime
+scalar UUID
+scalar Long
+
+enum FriendRequestType {
+    INCOMING,
+    OUTGOING
+}
+
+enum PunishmentType {
+    BAN
+    TEMPBAN
+    IPBAN
+    IPTEMPBAN
+    MUTE
+    TEMPMUTE
+    IPMUTE
+    IPTEMPMUTE
+    KICK
+    WARN
+}
+
 type Query {
+    # User queries
     findUserByName(name: String!): User
     findUserByUuid(uuid: UUID!): User
-    findFriends(uuid: UUID!): [Friend]
-    findFriendRequests(uuid: UUID!, requestType: FriendRequestType!): [FriendRequest]
+
+    # Friend queries
+    findFriends(uuid: UUID!): [Friend]!
+    findFriendRequests(uuid: UUID!, requestType: FriendRequestType!): [FriendRequest]!
+
+    # Ban punishment queries
+    findCurrentBan(uuid: UUID!, server: String! = "ALL"): Punishment
+    findCurrentIpBan(ip: String!, server: String! = "ALL"): Punishment
+    findAllBansFor(uuid: UUID!, server: String): [Punishment]!
+    findAllIpBansFor(ip: String!, server: String): [Punishment]!
+    findAllBansExecutedBy(name: String!): [Punishment]!
+    findBanByPunishmentUid(uid: String): Punishment
+    findRecentBans(limit: Int = 200): [Punishment]
+
+    # Mute punishment queries
+    findCurrentMute(uuid: UUID!, server: String! = "ALL"): Punishment
+    findCurrentIpMute(ip: String!, server: String! = "ALL"): Punishment
+    findAllMutesFor(uuid: UUID!, server: String): [Punishment]!
+    findAllIpMutesFor(ip: String!, server: String): [Punishment]!
+    findAllMutesExecutedBy(name: String!): [Punishment]!
+    findMuteByPunishmentUid(uid: String): Punishment
+    findRecentMutes(limit: Int = 200): [Punishment]
+
+    # TODO: kicks, warns, punishmentactions, punishmenttracks, reports
 }
 
 type User {
@@ -27,16 +73,28 @@ type FriendRequest {
     requestedAt: DateTime!
 }
 
+type FriendSetting {
+    user: UUID!
+    setting: String!
+    value: Boolean!
+}
+
 type Language {
     name: String!
     defaultLanguage: Boolean!
 }
 
-scalar Date
-scalar DateTime
-scalar UUID
-
-enum FriendRequestType {
-    INCOMING,
-    OUTGOING
+type Punishment {
+    type: PunishmentType!
+    user: String!
+    uuid: UUID!
+    ip: String!
+    executedBy: User!
+    server: String!
+    reason: String!
+    dateTime: DateTime!
+    expireTime: Long!
+    active: Boolean!
+    removedBy: String
+    punishmentUid: String
 }

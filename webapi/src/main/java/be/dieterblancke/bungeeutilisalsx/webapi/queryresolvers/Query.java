@@ -2,13 +2,13 @@ package be.dieterblancke.bungeeutilisalsx.webapi.queryresolvers;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.Friend;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.FriendRequest;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.FriendRequestType;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
+import be.dieterblancke.bungeeutilisalsx.webapi.dto.*;
+import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
+import com.google.common.base.Strings;
 import graphql.kickstart.tools.GraphQLQueryResolver;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -16,23 +16,22 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Component
+@RequiredArgsConstructor
 public class Query implements GraphQLQueryResolver
 {
+
+    private final UserService userService;
 
     @Cacheable
     public User findUserByName( final String name )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name );
-
-        return storage.isLoaded() ? User.of( storage ) : null;
+        return userService.findByName( name );
     }
 
     @Cacheable
     public User findUserByUuid( final UUID uuid )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );
-
-        return storage.isLoaded() ? User.of( storage ) : null;
+        return userService.findByUuid( uuid );
     }
 
     @Cacheable
@@ -63,6 +62,170 @@ public class Query implements GraphQLQueryResolver
         return requests
                 .stream()
                 .map( FriendRequest::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public Punishment findCurrentBan( final UUID uuid, final String server )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentBan( uuid, server );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public Punishment findCurrentIpBan( final String ip, final String server )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentIPBan( ip, server );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public List<Punishment> findAllBansFor( final UUID uuid, final String server )
+    {
+        final List<PunishmentInfo> bans;
+
+        if ( Strings.isNullOrEmpty( server ) )
+        {
+            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid );
+        }
+        else
+        {
+            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid, server );
+        }
+
+        return bans
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllIpBansFor( final String ip, final String server )
+    {
+        final List<PunishmentInfo> ipBans;
+
+        if ( Strings.isNullOrEmpty( server ) )
+        {
+            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip );
+        }
+        else
+        {
+            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip, server );
+        }
+
+        return ipBans
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllBansExecutedBy( final String name )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBansExecutedBy( name )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public Punishment findBanByPunishmentUid( final String uid )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( uid );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public List<Punishment> findRecentBans( final int limit )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getRecentBans( limit )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public Punishment findCurrentMute( final UUID uuid, final String server )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentMute( uuid, server );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public Punishment findCurrentIpMute( final String ip, final String server )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentIPMute( ip, server );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public List<Punishment> findAllMutesFor( final UUID uuid, final String server )
+    {
+        final List<PunishmentInfo> mutes;
+
+        if ( Strings.isNullOrEmpty( server ) )
+        {
+            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid );
+        }
+        else
+        {
+            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid, server );
+        }
+
+        return mutes
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllIpMutesFor( final String ip, final String server )
+    {
+        final List<PunishmentInfo> ipMutes;
+
+        if ( Strings.isNullOrEmpty( server ) )
+        {
+            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip );
+        }
+        else
+        {
+            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip, server );
+        }
+
+        return ipMutes
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllMutesExecutedBy( final String name )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutesExecutedBy( name )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public Punishment findMuteByPunishmentUid( final String uid )
+    {
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( uid );
+
+        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+    }
+
+    @Cacheable
+    public List<Punishment> findRecentMutes( final int limit )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getRecentMutes( limit )
+                .stream()
+                .map( Punishment::of )
                 .collect( Collectors.toList() );
     }
 }

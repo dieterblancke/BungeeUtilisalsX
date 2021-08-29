@@ -5,6 +5,7 @@ import lombok.Value;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,6 +33,20 @@ public class User
                 new Timestamp( storage.getLastLogout().getTime() ).toLocalDateTime(),
                 storage.getIgnoredUsers(),
                 storage.getJoinedHost()
+        );
+    }
+
+    public static User console()
+    {
+        return new User(
+                UUID.randomUUID(),
+                "CONSOLE",
+                "127.0.0.1",
+                null,
+                null,
+                null,
+                new ArrayList<>(),
+                null
         );
     }
 }

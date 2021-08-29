@@ -1,0 +1,43 @@
+# Enable to get debug messages (where they are enabled)
+debug: false
+
+cache-duration-minutes: 10
+
+storage:
+  # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, H2 & MONGODB | MySQL recommended
+  # SQLite and H2 are for local, file, storage, these could (and likely will) slow down BungeeUtilisals for bigger networks.
+  #
+  # It's recommended to use MYSQL, POSTGRESQL or MARIADB for storage.
+  type: 'H2'
+
+  # The hostname (IP) to connect to
+  hostname: '127.0.0.1'
+  # Default ports:
+  # MySQL / MariaDB: 3306, PostgreSQL: 5432, MongoDB: 27017
+  port: 3306
+  # The database / scheme name
+  database: 'database'
+  # The username, should at least have write & read access to the database above!
+  username: 'username'
+  # The password corresponding to the username above
+  password: 'password'
+
+  # Custom properties to be added to the connection uri
+  properties:
+    serverTimezone: 'Europe/Brussels'
+    characterEncoding: utf8
+    useSSL: true
+
+  pool:
+    # How many connections are allowed to be made?
+    # Find more information at:
+    # https://github.com/brettwooldridge/HikariCP/wiki/About-Pool-Sizing
+    max-pool-size: 5
+    # How many idle connections should be maintained?
+    min-idle: 3
+    # If more connections than min-idle are opened, after how many seconds should one of those connections be closed?
+    idle-timeout: 30
+    # Maximum lifetime of a connection. Time in seconds.
+    max-lifetime: 300
+    # How long should BungeeUtilisals wait before timing out a connection?
+    connection-timeout: 8
