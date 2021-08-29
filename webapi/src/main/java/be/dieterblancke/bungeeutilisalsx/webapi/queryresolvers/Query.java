@@ -228,4 +228,13 @@ public class Query implements GraphQLQueryResolver
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
     }
+
+    @Cacheable
+    public List<TrackData> findPunishmentTrackData( final UUID uuid, final String trackId, final String server )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getTracksDao().getTrackInfos( uuid, trackId, server )
+                .stream()
+                .map( TrackData::of )
+                .collect( Collectors.toList() );
+    }
 }

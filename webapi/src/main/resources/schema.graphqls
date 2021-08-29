@@ -48,7 +48,9 @@ type Query {
     findMuteByPunishmentUid(uid: String): Punishment
     findRecentMutes(limit: Int = 200): [Punishment]
 
-    # TODO: kicks, warns, punishmentactions, punishmenttracks, reports
+    # Track queries
+    findPunishmentTrackData(uuid: UUID!, trackId: String!, server: String = "ALL"): [TrackData]!
+    # TODO: kicks, warns, reports
 }
 
 type User {
@@ -97,4 +99,13 @@ type Punishment {
     active: Boolean!
     removedBy: String
     punishmentUid: String
+}
+
+type TrackData {
+    uuid: UUID!
+    trackId: String!
+    server: String!
+    executedBy: String!
+    date: DateTime!
+    active: Boolean!
 }
