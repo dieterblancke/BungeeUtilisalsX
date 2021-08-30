@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLUserDao implements UserDao
+public class SqlUserDao implements UserDao
 {
 
     private static final String SELECT_USER = "SELECT %s FROM bu_users WHERE %s;";

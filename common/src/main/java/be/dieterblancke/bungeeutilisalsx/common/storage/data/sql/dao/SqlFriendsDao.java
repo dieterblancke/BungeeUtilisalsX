@@ -37,7 +37,7 @@ import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLFriendsDao implements FriendsDao
+public class SqlFriendsDao implements FriendsDao
 {
 
     @Override

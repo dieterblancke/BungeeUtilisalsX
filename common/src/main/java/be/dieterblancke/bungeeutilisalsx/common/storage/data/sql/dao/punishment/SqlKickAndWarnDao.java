@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLKickAndWarnDao implements KickAndWarnDao
+public class SqlKickAndWarnDao implements KickAndWarnDao
 {
 
     @Override

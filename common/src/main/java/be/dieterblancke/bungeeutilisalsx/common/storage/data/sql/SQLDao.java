@@ -31,13 +31,15 @@ public class SQLDao implements Dao
     private final FriendsDao friendsDao;
     private final ReportsDao reportsDao;
     private final OfflineMessageDao offlineMessageDao;
+    private final ApiTokenDao apiTokenDao;
 
     public SQLDao()
     {
-        this.userDao = new SQLUserDao();
-        this.punishmentDao = new SQLPunishmentDao();
-        this.friendsDao = new SQLFriendsDao();
-        this.reportsDao = new SQLReportsDao();
-        this.offlineMessageDao = new SQLOfflineMessageDao();
+        this.userDao = new SqlUserDao();
+        this.punishmentDao = new SqlPunishmentDao();
+        this.friendsDao = new SqlFriendsDao();
+        this.reportsDao = new SqlReportsDao();
+        this.offlineMessageDao = new SqlOfflineMessageDao();
+        this.apiTokenDao = new SqlApiTokenDao();
     }
 }

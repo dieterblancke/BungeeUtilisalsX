@@ -31,7 +31,7 @@ import java.util.List;
 import java.util.UUID;
 
 
-public class SQLOfflineMessageDao implements OfflineMessageDao
+public class SqlOfflineMessageDao implements OfflineMessageDao
 {
 
     private static final Gson GSON = new Gson();

@@ -1,14 +1,6 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.auth;
+package be.dieterblancke.bungeeutilisalsx.webapi.exception;
 
-import graphql.ErrorClassification;
-import graphql.GraphQLError;
-import graphql.language.SourceLocation;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-public class InsufficientPermissionsException extends RuntimeException
+public class InsufficientPermissionsException extends AuthException
 {
     public InsufficientPermissionsException()
     {
