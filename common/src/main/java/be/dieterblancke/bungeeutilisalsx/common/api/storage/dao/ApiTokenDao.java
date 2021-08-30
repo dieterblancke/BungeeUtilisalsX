@@ -31,8 +31,13 @@ public interface ApiTokenDao
 
     Optional<ApiToken> findApiToken( String token );
 
+    void removeApiToken( String token );
+
+    List<ApiToken> getApiTokens();
+
     enum ApiPermission
     {
+        ALL,
         FIND_USER,
         FIND_FRIENDS,
         FIND_BAN,

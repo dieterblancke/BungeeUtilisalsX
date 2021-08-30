@@ -5,13 +5,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ApiTokenDao;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.MongoIterable;
 import com.mongodb.client.model.Filters;
 import org.bson.Document;
 
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class MongoApiTokenDao implements ApiTokenDao
@@ -55,6 +53,34 @@ public class MongoApiTokenDao implements ApiTokenDao
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void removeApiToken( String token )
+    {
+        final MongoCollection<Document> collection = db().getCollection( "bu_api_token" );
+
+        collection.deleteOne( Filters.eq( "api_token", token ) );
+    }
+
+    @Override
+    public List<ApiToken> getApiTokens()
+    {
+        final List<ApiToken> apiTokens = new ArrayList<>();
+        final MongoCollection<Document> collection = db().getCollection( "bu_api_token" );
+        final MongoIterable<Document> iterator = collection.find( Filters.gte( "expire_date", new Date() ) );
+
+        for ( Document document : iterator )
+        {
+            apiTokens.add( new ApiToken(
+                    document.getString( "api_token" ),
+                    document.getDate( "expire_date" ),
+                    Arrays.stream( document.getString( "permissions" ).split( "," ) )
+                            .map( ApiPermission::valueOf )
+                            .collect( Collectors.toList() )
+            ) );
+        }
+        return apiTokens;
     }
 
     private MongoDatabase db()

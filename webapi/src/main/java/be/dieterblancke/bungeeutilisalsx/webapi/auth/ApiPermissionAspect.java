@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.auth;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ApiTokenDao.ApiPermission;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ApiTokenDao.ApiToken;
 import be.dieterblancke.bungeeutilisalsx.webapi.exception.InsufficientPermissionsException;
 import be.dieterblancke.bungeeutilisalsx.webapi.exception.InvalidApiKeyException;
@@ -26,7 +27,7 @@ public class ApiPermissionAspect
         }
         final ApiToken apiToken = (ApiToken) authentication.getPrincipal();
 
-        if ( !apiToken.getPermissions().contains( permission.value() ) )
+        if ( !apiToken.getPermissions().contains( permission.value() ) && !apiToken.getPermissions().contains( ApiPermission.ALL ) )
         {
             throw new InsufficientPermissionsException(
                     "The provided API key does not have the '" + permission.value() + "' permission!"

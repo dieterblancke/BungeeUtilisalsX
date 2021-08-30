@@ -8,9 +8,7 @@ import lombok.SneakyThrows;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class SqlApiTokenDao implements ApiTokenDao
@@ -65,5 +63,49 @@ public class SqlApiTokenDao implements ApiTokenDao
             }
         }
         return Optional.ofNullable( apiToken );
+    }
+
+    @Override
+    @SneakyThrows
+    public void removeApiToken( final String token )
+    {
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "DELETE FROM bu_api_token WHERE api_token = ?;"
+              ) )
+        {
+            pstmt.setString( 1, token );
+            pstmt.executeUpdate();
+        }
+    }
+
+    @Override
+    @SneakyThrows
+    public List<ApiToken> getApiTokens()
+    {
+        final List<ApiToken> apiTokens = new ArrayList<>();
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM bu_api_token WHERE expire_date >= " + Dao.getInsertDateParameter() + ";"
+              ) )
+        {
+            pstmt.setString( 1, Dao.formatDateToString( new Date() ) );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    apiTokens.add( new ApiToken(
+                            rs.getString( "api_token" ),
+                            Dao.formatStringToDate( rs.getString( "expire_date" ) ),
+                            Arrays.stream( rs.getString( "permissions" ).split( "," ) )
+                                    .map( ApiPermission::valueOf )
+                                    .collect( Collectors.toList() )
+                    ) );
+                }
+            }
+        }
+        return apiTokens;
     }
 }
