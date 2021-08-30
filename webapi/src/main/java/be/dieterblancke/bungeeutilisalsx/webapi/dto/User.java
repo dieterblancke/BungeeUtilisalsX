@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.dto;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Value;
 
 import java.sql.Timestamp;
@@ -27,7 +28,7 @@ public class User
         return new User(
                 storage.getUuid(),
                 storage.getUserName(),
-                storage.getIp(),
+                ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? storage.getIp() : "",
                 storage.getLanguage().getName(),
                 new Timestamp( storage.getFirstLogin().getTime() ).toLocalDateTime(),
                 new Timestamp( storage.getLastLogout().getTime() ).toLocalDateTime(),

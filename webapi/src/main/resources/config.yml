@@ -3,6 +3,8 @@ debug: false
 
 cache-duration-minutes: 10
 
+expose-ips: false
+
 storage:
   # Possible storage types: MYSQL, POSTGRESQL, MARIADB, SQLITE, H2 & MONGODB | MySQL recommended
   # SQLite and H2 are for local, file, storage, these could (and likely will) slow down BungeeUtilisals for bigger networks.

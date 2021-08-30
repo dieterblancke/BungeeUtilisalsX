@@ -2,12 +2,11 @@ package be.dieterblancke.bungeeutilisalsx.webapi.dto;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Value;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.UUID;
 
 @Value
@@ -33,7 +32,7 @@ public class Punishment
                 info.getType(),
                 info.getUser(),
                 info.getUuid(),
-                info.getIp(),
+                ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? info.getIp() : "",
                 info.getExecutedBy(),
                 info.getServer(),
                 info.getReason(),
