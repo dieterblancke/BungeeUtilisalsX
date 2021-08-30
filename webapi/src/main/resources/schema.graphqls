@@ -50,7 +50,15 @@ type Query {
 
     # Track queries
     findPunishmentTrackData(uuid: UUID!, trackId: String!, server: String = "ALL"): [TrackData]!
-    # TODO: kicks, warns, reports
+
+    # Kick queries
+    findAllKicksFor(uuid: UUID!): [Punishment]!
+    findAllKicksExecutedBy(name: String!): [Punishment]!
+
+    # Warn queries
+    findAllWarnsFor(uuid: UUID!): [Punishment]!
+    findAllWarnsExecutedBy(name: String!): [Punishment]!
+    # TODO: reports
 }
 
 type User {

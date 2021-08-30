@@ -1,8 +1,9 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.queryresolvers;
+package be.dieterblancke.bungeeutilisalsx.webapi.query;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import be.dieterblancke.bungeeutilisalsx.webapi.auth.InsufficientPermissionsException;
 import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.*;
 import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
@@ -25,6 +26,9 @@ public class Query implements GraphQLQueryResolver
     @Cacheable
     public User findUserByName( final String name )
     {
+        if (true) {
+            throw new InsufficientPermissionsException("The provided API key does not have the 'USER_FIND' permission!");
+        }
         return userService.findByName( name );
     }
 
@@ -235,6 +239,42 @@ public class Query implements GraphQLQueryResolver
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getTracksDao().getTrackInfos( uuid, trackId, server )
                 .stream()
                 .map( TrackData::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllKicksFor( final UUID uuid )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( uuid )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllKicksExecutedBy( final String name )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicksExecutedBy( name )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllWarnsFor( final UUID uuid )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns( uuid )
+                .stream()
+                .map( Punishment::of )
+                .collect( Collectors.toList() );
+    }
+
+    @Cacheable
+    public List<Punishment> findAllWarnsExecutedBy( final String name )
+    {
+        return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarnsExecutedBy( name )
+                .stream()
+                .map( Punishment::of )
                 .collect( Collectors.toList() );
     }
 }

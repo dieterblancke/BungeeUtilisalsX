@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.queryresolvers.user;
+package be.dieterblancke.bungeeutilisalsx.webapi.query.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;

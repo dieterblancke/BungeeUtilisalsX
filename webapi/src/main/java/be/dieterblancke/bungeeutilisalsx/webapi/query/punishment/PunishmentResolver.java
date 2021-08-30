@@ -1,7 +1,7 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.queryresolvers.friend;
+package be.dieterblancke.bungeeutilisalsx.webapi.query.punishment;
 
 import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.Friend;
+import be.dieterblancke.bungeeutilisalsx.webapi.dto.Punishment;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
 import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -10,20 +10,14 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class FriendResolver implements GraphQLResolver<Friend>
+public class PunishmentResolver implements GraphQLResolver<Punishment>
 {
 
     private final UserService userService;
 
     @Cacheable
-    public User getUser( final Friend friend )
+    public User getExecutedBy( final Punishment punishment )
     {
-        return userService.findByUuid( friend.getUserId() );
-    }
-
-    @Cacheable
-    public User getFriend( final Friend friend )
-    {
-        return userService.findByUuid( friend.getFriendId() );
+        return userService.findByName( punishment.getExecutedById() );
     }
 }
