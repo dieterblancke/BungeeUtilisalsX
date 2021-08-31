@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.webapi.coercings.DateCoercing;
 import be.dieterblancke.bungeeutilisalsx.webapi.coercings.DateTimeCoercing;
 import be.dieterblancke.bungeeutilisalsx.webapi.coercings.UuidCoercing;
 import graphql.scalar.GraphqlLongCoercing;
-import graphql.schema.*;
+import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

@@ -28,6 +28,11 @@
             <version>11.1.0</version>
         </dependency>
         <dependency>
+            <groupId>com.graphql-java-kickstart</groupId>
+            <artifactId>playground-spring-boot-starter</artifactId>
+            <version>11.1.0</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
             <version>2.5.4</version>
@@ -67,6 +72,11 @@
             <artifactId>postgresql</artifactId>
             <version>42.2.23.jre7</version>
         </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>5.0.0</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -92,7 +102,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>be.dieterblancke.discordlink.web.Bootstrap</mainClass>
+                            <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -103,7 +113,7 @@
                 <configuration>
                     <executable>true</executable>
                     <fork>false</fork>
-                    <mainClass>be.dieterblancke.discordlink.web.Bootstrap</mainClass>
+                    <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -155,7 +165,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>be.dieterblancke.discordlink.web.Bootstrap</mainClass>
+                                    <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>

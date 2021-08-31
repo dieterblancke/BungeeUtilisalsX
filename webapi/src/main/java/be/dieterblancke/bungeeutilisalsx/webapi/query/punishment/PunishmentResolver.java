@@ -1,6 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.query.punishment;
 
-import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.Punishment;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
 import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;

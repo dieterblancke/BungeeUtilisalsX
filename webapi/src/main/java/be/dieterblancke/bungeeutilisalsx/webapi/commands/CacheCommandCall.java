@@ -20,6 +20,7 @@ public class CacheCommandCall implements CommandCall
             if ( action.equals( "clear" ) )
             {
                 CachingAspect.clearCache();
+                BuX.getLogger().info( "Cache has been cleared" );
                 return;
             }
         }

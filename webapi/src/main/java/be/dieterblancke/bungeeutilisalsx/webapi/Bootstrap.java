@@ -5,13 +5,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryC
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration;
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import java.io.File;
 
@@ -27,8 +24,11 @@ public class Bootstrap
     @SneakyThrows
     public static void main( final String[] args )
     {
+        final File jarFile = new File( Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI() );
+        final File dataFolder = new File( jarFile.isDirectory() ? jarFile : jarFile.getParentFile(), "BungeeUtilisalsX" );
+
         BootstrapUtil.loadLibraries(
-                new File( new File( Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI() ), "BungeeUtilisalsX" ),
+                dataFolder,
                 new UrlLibraryClassLoader(),
                 log
         );

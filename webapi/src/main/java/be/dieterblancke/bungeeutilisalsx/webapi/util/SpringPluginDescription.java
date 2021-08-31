@@ -3,7 +3,6 @@ package be.dieterblancke.bungeeutilisalsx.webapi.util;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
 import be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -28,7 +27,9 @@ public class SpringPluginDescription implements IPluginDescription
     {
         try
         {
-            return new File( Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI() );
+            final File jarFile = new File( Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI() );
+
+            return jarFile.isDirectory() ? jarFile : jarFile.getParentFile();
         }
         catch ( URISyntaxException e )
         {

@@ -3,11 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.webapi.exception;
 import graphql.ErrorClassification;
 import graphql.GraphQLError;
 import graphql.GraphqlErrorBuilder;
-import graphql.language.SourceLocation;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-
-import java.util.HashMap;
 
 @Component
 public class GraphQLExceptionHandler

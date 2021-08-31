@@ -1,4 +1,3 @@
-
 package be.dieterblancke.bungeeutilisalsx.webapi.exception;
 
 public class InvalidApiKeyException extends AuthException

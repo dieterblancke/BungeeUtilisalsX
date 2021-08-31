@@ -1,6 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.query.friend;
 
-import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.Friend;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
 import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;

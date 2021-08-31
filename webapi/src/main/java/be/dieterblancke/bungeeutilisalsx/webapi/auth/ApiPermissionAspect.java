@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.webapi.auth;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ApiTokenDao.ApiPermission;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ApiTokenDao.ApiToken;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.webapi.exception.InsufficientPermissionsException;
 import be.dieterblancke.bungeeutilisalsx.webapi.exception.InvalidApiKeyException;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -19,6 +20,10 @@ public class ApiPermissionAspect
     @Around( "@annotation(permission)" )
     public Object onRequiresPermissionExecution( final ProceedingJoinPoint joinPoint, final RequiresPermission permission ) throws Throwable
     {
+        if ( !ConfigFiles.CONFIG.getConfig().getBoolean( "auth-enabled", true ) )
+        {
+            return joinPoint.proceed();
+        }
         final Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
         if ( authentication == null || !authentication.isAuthenticated() || !( authentication.getPrincipal() instanceof ApiToken ) )
