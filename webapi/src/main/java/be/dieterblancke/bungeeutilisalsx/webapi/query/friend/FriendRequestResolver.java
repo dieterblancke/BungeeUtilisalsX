@@ -15,13 +15,11 @@ public class FriendRequestResolver implements GraphQLResolver<FriendRequest>
 
     private final UserService userService;
 
-    @Cacheable
     public User getUser( final FriendRequest friend )
     {
         return userService.findByUuid( friend.getUserId() );
     }
 
-    @Cacheable
     public User getFriend( final FriendRequest friend )
     {
         return userService.findByUuid( friend.getFriendId() );

@@ -1,7 +1,7 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.query.punishment;
+package be.dieterblancke.bungeeutilisalsx.webapi.query.report;
 
 import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
-import be.dieterblancke.bungeeutilisalsx.webapi.dto.Punishment;
+import be.dieterblancke.bungeeutilisalsx.webapi.dto.Report;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
 import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
 import graphql.kickstart.tools.GraphQLResolver;
@@ -10,13 +10,18 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PunishmentResolver implements GraphQLResolver<Punishment>
+public class ReportResolver implements GraphQLResolver<Report>
 {
 
     private final UserService userService;
 
-    public User getExecutedBy( final Punishment punishment )
+    public User getUser( final Report report )
     {
-        return userService.findByName( punishment.getExecutedById() );
+        return userService.findByName( report.getUserId() );
+    }
+
+    public User getReporter( final Report report )
+    {
+        return userService.findByName( report.getReporterId() );
     }
 }

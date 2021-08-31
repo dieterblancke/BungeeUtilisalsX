@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.webapi.service;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
+import be.dieterblancke.bungeeutilisalsx.webapi.caching.Cacheable;
 import be.dieterblancke.bungeeutilisalsx.webapi.dto.User;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.UUID;
 public class UserService
 {
 
+    @Cacheable
     public User findByName( final String name )
     {
         if ( name.equals( "CONSOLE" ) )
@@ -23,6 +25,7 @@ public class UserService
         return storage.isLoaded() ? User.of( storage ) : null;
     }
 
+    @Cacheable
     public User findByUuid( final UUID uuid )
     {
         final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );

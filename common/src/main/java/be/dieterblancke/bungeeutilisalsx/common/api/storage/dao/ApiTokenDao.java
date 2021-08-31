@@ -44,7 +44,8 @@ public interface ApiTokenDao
         FIND_MUTE,
         FIND_TRACK_DATA,
         FIND_KICK,
-        FIND_WARN
+        FIND_WARN,
+        FIND_REPORT
     }
 
     @Value

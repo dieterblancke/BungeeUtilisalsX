@@ -58,7 +58,16 @@ type Query {
     # Warn queries
     findAllWarnsFor(uuid: UUID!): [Punishment]!
     findAllWarnsExecutedBy(name: String!): [Punishment]!
-    # TODO: reports
+
+    # Report queries
+    findAllReports: [Report]!
+    findActiveReports: [Report]!
+    findHandledReports: [Report]!
+    findAcceptedReports: [Report]!
+    findDeniedReports: [Report]!
+    findRecentReports(days: Int! = 7): [Report]!
+    findReportsFor(uuid: UUID!): [Report]!
+    findReportsBy(name: String!): [Report]!
 }
 
 type User {
@@ -116,4 +125,14 @@ type TrackData {
     executedBy: String!
     date: DateTime!
     active: Boolean!
+}
+
+type Report {
+    user: User!
+    reporter: User!
+    date: DateTime!
+    server: String!
+    reason: String!
+    handled: Boolean!
+    accepted: Boolean!
 }
