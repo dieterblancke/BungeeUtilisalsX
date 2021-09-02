@@ -31,6 +31,7 @@ public class MongoDao implements Dao
     private final FriendsDao friendsDao;
     private final ReportsDao reportsDao;
     private final OfflineMessageDao offlineMessageDao;
+    private final ApiTokenDao apiTokenDao;
 
     public MongoDao()
     {
@@ -39,5 +40,6 @@ public class MongoDao implements Dao
         this.friendsDao = new MongoFriendsDao();
         this.reportsDao = new MongoReportsDao();
         this.offlineMessageDao = new MongoOfflineMessageDao();
+        this.apiTokenDao = new MongoApiTokenDao();
     }
 }

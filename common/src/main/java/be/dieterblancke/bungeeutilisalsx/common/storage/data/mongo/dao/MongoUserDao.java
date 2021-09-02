@@ -114,7 +114,7 @@ public class MongoUserDao implements UserDao
 
         if ( document != null )
         {
-            storage.setUuid( uuid );
+            storage.setUuid( UUID.fromString( document.getString( "uuid" ) ) );
             storage.setUserName( document.getString( "username" ) );
             storage.setIp( document.getString( "ip" ) );
             storage.setLanguage(
@@ -153,7 +153,7 @@ public class MongoUserDao implements UserDao
         if ( document != null )
         {
             storage.setUuid( UUID.fromString( document.getString( "uuid" ) ) );
-            storage.setUserName( name );
+            storage.setUserName( document.getString( "username" ) );
             storage.setIp( document.getString( "ip" ) );
             storage.setLanguage(
                     BuX.getApi().getLanguageManager().getLangOrDefault( document.getString( "language" ) )

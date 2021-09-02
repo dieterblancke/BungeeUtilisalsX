@@ -48,7 +48,6 @@ public class Report
     public void accept( final String accepter )
     {
         BuX.getInstance().getAbstractStorageManager().getDao().getReportsDao().handleReport( id, true );
-        final Optional<User> optionalUser = BuX.getApi().getUser( reportedBy );
 
         BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
                 reportedBy,

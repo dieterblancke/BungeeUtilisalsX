@@ -38,7 +38,7 @@ import java.util.logging.Level;
 
 import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
 
-public class SQLBansDao implements BansDao
+public class SqlBansDao implements BansDao
 {
 
     @Override
@@ -381,20 +381,7 @@ public class SQLBansDao implements BansDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -436,20 +423,7 @@ public class SQLBansDao implements BansDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPBAN );
-
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -554,21 +528,7 @@ public class SQLBansDao implements BansDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final int id = rs.getInt( "id" );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -596,22 +556,7 @@ public class SQLBansDao implements BansDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -640,21 +585,7 @@ public class SQLBansDao implements BansDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final int id = rs.getInt( "id" );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -682,21 +613,7 @@ public class SQLBansDao implements BansDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPBAN );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -725,21 +642,35 @@ public class SQLBansDao implements BansDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPBAN );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
 
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
+        return punishments;
+    }
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+    @Override
+    public List<PunishmentInfo> getRecentBans( final int limit )
+   {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " LIMIT ?;"
+              ) )
+        {
+            pstmt.setInt( 1, Math.min( limit, 200 ) );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -767,21 +698,7 @@ public class SQLBansDao implements BansDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -809,21 +726,7 @@ public class SQLBansDao implements BansDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -904,5 +807,25 @@ public class SQLBansDao implements BansDao
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         return records;
+    }
+
+    private PunishmentInfo buildPunishmentInfo( final ResultSet rs ) throws SQLException
+    {
+        final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.BAN );
+
+        final int id = rs.getInt( "id" );
+        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+        final String user = rs.getString( "user" );
+        final String ip = rs.getString( "ip" );
+        final String reason = rs.getString( "reason" );
+        final String server = rs.getString( "server" );
+        final String executedby = rs.getString( "executed_by" );
+        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+        final long time = rs.getLong( "duration" );
+        final boolean active = rs.getBoolean( "active" );
+        final String removedby = rs.getString( "removed_by" );
+        final String punishmentUid = rs.getString( "punishment_uid" );
+
+        return PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
     }
 }

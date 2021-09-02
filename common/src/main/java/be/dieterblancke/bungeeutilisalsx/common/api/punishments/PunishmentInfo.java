@@ -62,4 +62,9 @@ public class PunishmentInfo
     {
         return isTemporary() && expireTime <= System.currentTimeMillis();
     }
+
+    public boolean isLoaded()
+    {
+        return user != null && ip != null && uuid != null && executedBy != null && reason != null;
+    }
 }

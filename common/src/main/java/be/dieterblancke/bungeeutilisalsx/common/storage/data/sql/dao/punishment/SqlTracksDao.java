@@ -16,7 +16,7 @@ import java.util.logging.Level;
 
 import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao.useServerPunishments;
 
-public class SQLTracksDao implements TracksDao
+public class SqlTracksDao implements TracksDao
 {
 
     @Override

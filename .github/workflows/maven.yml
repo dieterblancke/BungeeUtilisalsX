@@ -33,3 +33,4 @@ jobs:
             bungee/target/BungeeUtilisalsX*.jar
             velocity/target/BungeeUtilisalsX*.jar
             spigot/target/BungeeUtilisalsX*.jar
+            webapi/target/BungeeUtilisalsX*.jar

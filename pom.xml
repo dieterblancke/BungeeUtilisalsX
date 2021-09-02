@@ -33,6 +33,7 @@
         <module>bungee</module>
         <module>spigot</module>
         <module>velocity</module>
+        <module>webapi</module>
     </modules>
 
     <developers>
@@ -65,7 +66,7 @@
         <dependency>
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
-            <version>4.0.3</version>
+            <version>5.0.0</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

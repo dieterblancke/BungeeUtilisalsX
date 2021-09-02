@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLMutesDao implements MutesDao
+public class SqlMutesDao implements MutesDao
 {
 
     @Override
@@ -379,20 +379,7 @@ public class SQLMutesDao implements MutesDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -433,20 +420,7 @@ public class SQLMutesDao implements MutesDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
-
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -550,21 +524,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -593,21 +553,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -635,22 +581,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -678,21 +609,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -721,21 +638,35 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
+                }
+            }
+        }
+        catch ( SQLException e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+        }
 
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
+        return punishments;
+    }
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+    @Override
+    public List<PunishmentInfo> getRecentMutes( final int limit )
+    {
+        final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+              PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT * FROM " + PunishmentType.MUTE.getTable() + " LIMIT ?;"
+              ) )
+        {
+            pstmt.setInt( 1, Math.min( limit, 200 ) );
+
+            try ( ResultSet rs = pstmt.executeQuery() )
+            {
+                while ( rs.next() )
+                {
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -763,21 +694,7 @@ public class SQLMutesDao implements MutesDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -805,21 +722,7 @@ public class SQLMutesDao implements MutesDao
             {
                 if ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-
-                    info = PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
+                    info = this.buildPunishmentInfo( rs );
                 }
             }
         }
@@ -848,21 +751,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -891,21 +780,7 @@ public class SQLMutesDao implements MutesDao
             {
                 while ( rs.next() )
                 {
-                    final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.IPMUTE );
-
-                    final int id = rs.getInt( "id" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
-                    final long time = rs.getLong( "duration" );
-                    final boolean active = rs.getBoolean( "active" );
-                    final String removedby = rs.getString( "removed_by" );
-                    final String punishmentUid = rs.getString( "punishment_uid" );
-
-                    punishments.add( PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid ) );
+                    punishments.add( this.buildPunishmentInfo( rs ) );
                 }
             }
         }
@@ -986,5 +861,25 @@ public class SQLMutesDao implements MutesDao
             BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
         }
         return records;
+    }
+
+    private PunishmentInfo buildPunishmentInfo( final ResultSet rs ) throws SQLException
+    {
+        final PunishmentType type = Utils.valueOfOr( rs.getString( "type" ), PunishmentType.MUTE );
+
+        final int id = rs.getInt( "id" );
+        final String user = rs.getString( "user" );
+        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+        final String ip = rs.getString( "ip" );
+        final String reason = rs.getString( "reason" );
+        final String server = rs.getString( "server" );
+        final String executedby = rs.getString( "executed_by" );
+        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+        final long time = rs.getLong( "duration" );
+        final boolean active = rs.getBoolean( "active" );
+        final String removedby = rs.getString( "removed_by" );
+        final String punishmentUid = rs.getString( "punishment_uid" );
+
+        return PunishmentDao.buildPunishmentInfo( id, type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
     }
 }

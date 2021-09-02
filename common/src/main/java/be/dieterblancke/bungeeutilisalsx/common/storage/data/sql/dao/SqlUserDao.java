@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 
-public class SQLUserDao implements UserDao
+public class SqlUserDao implements UserDao
 {
 
     private static final String SELECT_USER = "SELECT %s FROM bu_users WHERE %s;";
@@ -192,7 +192,7 @@ public class SQLUserDao implements UserDao
             {
                 if ( rs.next() )
                 {
-                    storage.setUuid( uuid );
+                    storage.setUuid( UUID.fromString( rs.getString( "uuid" ) ) );
                     storage.setUserName( rs.getString( "username" ) );
                     storage.setIp( rs.getString( "ip" ) );
                     storage.setLanguage( BuX.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) ) );
@@ -232,7 +232,7 @@ public class SQLUserDao implements UserDao
                 if ( rs.next() )
                 {
                     storage.setUuid( UUID.fromString( rs.getString( "uuid" ) ) );
-                    storage.setUserName( name );
+                    storage.setUserName( rs.getString( "username" ) );
                     storage.setIp( rs.getString( "ip" ) );
                     storage.setLanguage( BuX.getApi().getLanguageManager().getLangOrDefault( rs.getString( "language" ) ) );
                     storage.setFirstLogin(

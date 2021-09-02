@@ -64,4 +64,5 @@ public interface Dao
 
     OfflineMessageDao getOfflineMessageDao();
 
+    ApiTokenDao getApiTokenDao();
 }

@@ -26,10 +26,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.Bans
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.KickAndWarnDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao;
-import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLBansDao;
-import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLKickAndWarnDao;
-import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLMutesDao;
-import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SQLTracksDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SqlBansDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SqlKickAndWarnDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SqlMutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.punishment.SqlTracksDao;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -40,7 +40,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 
 
-public class SQLPunishmentDao implements PunishmentDao
+public class SqlPunishmentDao implements PunishmentDao
 {
 
     private final BansDao bansDao;
@@ -48,12 +48,12 @@ public class SQLPunishmentDao implements PunishmentDao
     private final KickAndWarnDao kickAndWarnDao;
     private final TracksDao tracksDao;
 
-    public SQLPunishmentDao()
+    public SqlPunishmentDao()
     {
-        this.bansDao = new SQLBansDao();
-        this.mutesDao = new SQLMutesDao();
-        this.kickAndWarnDao = new SQLKickAndWarnDao();
-        this.tracksDao = new SQLTracksDao();
+        this.bansDao = new SqlBansDao();
+        this.mutesDao = new SqlMutesDao();
+        this.kickAndWarnDao = new SqlKickAndWarnDao();
+        this.tracksDao = new SqlTracksDao();
     }
 
     @Override
