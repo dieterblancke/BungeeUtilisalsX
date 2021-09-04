@@ -32,11 +32,19 @@ public interface Dao
 
     static String formatDateToString( final Date date )
     {
+        if ( date == null )
+        {
+            return null;
+        }
         return format.format( date );
     }
 
     static Date formatStringToDate( final String date )
     {
+        if ( date == null )
+        {
+            return null;
+        }
         try
         {
             return format.parse( date );

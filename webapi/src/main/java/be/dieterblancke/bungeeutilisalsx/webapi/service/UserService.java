@@ -28,6 +28,11 @@ public class UserService
     @Cacheable
     public User findByUuid( final UUID uuid )
     {
+        return findByUuidUncached( uuid );
+    }
+
+    public User findByUuidUncached( final UUID uuid )
+    {
         final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );
 
         return storage.isLoaded() ? User.of( storage ) : null;

@@ -27,10 +27,10 @@ public class Mutation implements GraphQLMutationResolver
                 uuid,
                 input.getUserName(),
                 input.getIp(),
-                BuX.getApi().getLanguageManager().getLangOrDefault( input.getLanguage() ),
-                Timestamp.valueOf( input.getLastLogout() )
+                BuX.getApi().getLanguageManager().getLangOrDefault( input.getLanguage() == null ? "" : input.getLanguage() ),
+                input.getLastLogout() == null ? null : Timestamp.valueOf( input.getLastLogout() )
         );
 
-        return userService.findByUuid( uuid );
+        return userService.findByUuidUncached( uuid );
     }
 }
