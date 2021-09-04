@@ -45,7 +45,8 @@ public interface ApiTokenDao
         FIND_TRACK_DATA,
         FIND_KICK,
         FIND_WARN,
-        FIND_REPORT
+        FIND_REPORT,
+        UPDATE_USER
     }
 
     @Value

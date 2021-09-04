@@ -99,6 +99,17 @@ type Query {
     findReportsBy(name: String!): [Report]!
 }
 
+type Mutation {
+    updateUser(uuid: UUID!, input: UserUpdateInput): User
+}
+
+input UserUpdateInput {
+    userName: String!
+    ip: String!
+    language: String
+    lastLogout: DateTime
+}
+
 type User {
     # the uuid of the user
     uuid: UUID!

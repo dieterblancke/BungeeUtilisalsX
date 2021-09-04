@@ -72,7 +72,7 @@ public enum StandardLibrary
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
-            "5.0.0",
+            "4.0.3",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
             relocate( "com.zaxxer.hikari" ),
             relocate( "org.slf4j" )
