@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.webapi.coercings;
 
+import graphql.language.StringValue;
 import graphql.schema.Coercing;
 import graphql.schema.CoercingParseLiteralException;
 import graphql.schema.CoercingParseValueException;
@@ -24,6 +25,10 @@ public class DateTimeCoercing implements Coercing<LocalDateTime, String>
 
     public LocalDateTime parseLiteral( Object input ) throws CoercingParseLiteralException
     {
+        if ( input instanceof StringValue )
+        {
+            input = ( (StringValue) input ).getValue();
+        }
         return LocalDateTime.parse( (String) input );
     }
 }
