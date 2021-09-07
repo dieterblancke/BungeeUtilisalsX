@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.converter.converters;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
@@ -48,10 +47,10 @@ public class MongoToMongoConverter extends Converter
         final MongoDBStorageManager storageManager = new MongoDBStorageManager( StorageType.MONGODB, properties );
         final Map<String, MongoCollection<Document>> collections = Maps.newHashMap();
 
-        collections.put( "users", storageManager.getDatabase().getCollection( PlaceHolderAPI.formatMessage( "{users-table}" ) ) );
+        collections.put( "users", storageManager.getDatabase().getCollection( "bu_users" ) );
         for ( PunishmentType type : PunishmentType.values() )
         {
-            collections.put( type.toString(), storageManager.getDatabase().getCollection( PlaceHolderAPI.formatMessage( type.getTablePlaceHolder() ) ) );
+            collections.put( type.toString(), storageManager.getDatabase().getCollection( type.getTable() ) );
         }
 
         final long count = collections.values().stream().mapToLong( MongoCollection::countDocuments ).sum();

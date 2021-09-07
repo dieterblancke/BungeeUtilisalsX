@@ -22,8 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.IAnnouncement;
-import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
-import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
@@ -70,15 +68,7 @@ public class BossBarAnnouncer extends Announcer
 
             for ( ISection message : section.getSectionList( "messages" ) )
             {
-                messages.add(
-                        new BossBarMessage(
-                                BarColor.valueOf( message.getString( "color" ) ),
-                                BarStyle.valueOf( message.getString( "style" ) ),
-                                message.getFloat( "progress" ),
-                                message.getBoolean( "language" ),
-                                message.getString( "text" )
-                        )
-                );
+                messages.add( new BossBarMessage( message ) );
             }
             addAnnouncement( new BossBarAnnouncement( messages, unit, time, group, permission ) );
         }

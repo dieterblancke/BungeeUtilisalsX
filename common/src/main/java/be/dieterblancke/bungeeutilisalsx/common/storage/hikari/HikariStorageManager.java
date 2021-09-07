@@ -78,6 +78,7 @@ public abstract class HikariStorageManager extends SQLStorageManager
 
         config.setMaximumPoolSize( configuration.getInteger( "storage.pool.max-pool-size" ) );
         config.setMinimumIdle( configuration.getInteger( "storage.pool.min-idle" ) );
+        config.setIdleTimeout( configuration.getInteger( "storage.pool.idle-timeout" ) * 1000 );
         config.setMaxLifetime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 );
         config.setConnectionTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 );
 

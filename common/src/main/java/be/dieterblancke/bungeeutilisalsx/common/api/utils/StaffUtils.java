@@ -33,7 +33,7 @@ public class StaffUtils
     {
         for ( StaffUser user : BuX.getApi().getStaffMembers() )
         {
-            if ( user.getName().equalsIgnoreCase( name ) && user.isHidden() )
+            if ( user.getName().equalsIgnoreCase( name ) && ( user.isHidden() || user.isVanished() ) )
             {
                 return true;
             }

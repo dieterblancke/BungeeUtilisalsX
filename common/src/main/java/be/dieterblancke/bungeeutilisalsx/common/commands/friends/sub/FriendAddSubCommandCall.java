@@ -20,11 +20,13 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -63,29 +65,20 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
-        final UserStorage storage;
-        final boolean accepts;
+        final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
-        if ( optionalTarget.isPresent() )
+        if ( storage == null )
         {
-            final User target = optionalTarget.get();
-
-            storage = target.getStorage();
-            accepts = target.getFriendSettings().isRequests();
-        }
-        else
-        {
-            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
-            {
-                user.sendLangMessage( "never-joined" );
-                return;
-            }
-
-            storage = dao.getUserDao().getUserData( name );
-            accepts = dao.getFriendsDao().getSetting( storage.getUuid(), FriendSettingType.REQUESTS );
+            user.sendLangMessage( "never-joined" );
+            return;
         }
 
-        if ( !accepts )
+        final boolean accepts = optionalTarget
+                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS, false ) )
+                .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ) );
+        final boolean isIgnored = storage.getIgnoredUsers().stream().anyMatch( u -> u.equalsIgnoreCase( user.getName() ) );
+
+        if ( !accepts || isIgnored )
         {
             user.sendLangMessage( "friends.add.disallowed" );
             return;
@@ -98,13 +91,26 @@ public class FriendAddSubCommandCall implements CommandCall
         }
         if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
         {
-            user.sendLangMessage( "friends.add.use-accept-instead", "{name}", name );
+            FriendAcceptSubCommandCall.acceptFriendRequest( user, storage, optionalTarget.orElse( null ) );
             return;
         }
 
         dao.getFriendsDao().addFriendRequest( user.getUuid(), storage.getUuid() );
         user.sendLangMessage( "friends.add.request-sent", "{user}", name );
 
-        optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.request-received", "{name}", user.getName() ) );
+        if ( optionalTarget.isPresent() )
+        {
+            final User target = optionalTarget.get();
+
+            target.sendLangMessage( "friends.request-received", "{name}", user.getName() );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    name,
+                    "friends.request-received",
+                    "{name}", user.getName()
+            ) );
+        }
     }
 }

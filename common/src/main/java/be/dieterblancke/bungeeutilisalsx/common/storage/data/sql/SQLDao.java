@@ -19,11 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.*;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao.*;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 public class SQLDao implements Dao
@@ -33,24 +30,16 @@ public class SQLDao implements Dao
     private final PunishmentDao punishmentDao;
     private final FriendsDao friendsDao;
     private final ReportsDao reportsDao;
+    private final OfflineMessageDao offlineMessageDao;
+    private final ApiTokenDao apiTokenDao;
 
     public SQLDao()
     {
-        this.userDao = new SQLUserDao();
-        this.punishmentDao = new SQLPunishmentDao();
-        this.friendsDao = new SQLFriendsDao();
-        this.reportsDao = new SQLReportsDao();
-    }
-
-    @Override
-    public MessageQueue<QueuedMessage> createMessageQueue( final UUID uuid, final String name, final String ip )
-    {
-        return new SQLMessageQueue( uuid, name, ip );
-    }
-
-    @Override
-    public MessageQueue<QueuedMessage> createMessageQueue()
-    {
-        return new SQLMessageQueue();
+        this.userDao = new SqlUserDao();
+        this.punishmentDao = new SqlPunishmentDao();
+        this.friendsDao = new SqlFriendsDao();
+        this.reportsDao = new SqlReportsDao();
+        this.offlineMessageDao = new SqlOfflineMessageDao();
+        this.apiTokenDao = new SqlApiTokenDao();
     }
 }

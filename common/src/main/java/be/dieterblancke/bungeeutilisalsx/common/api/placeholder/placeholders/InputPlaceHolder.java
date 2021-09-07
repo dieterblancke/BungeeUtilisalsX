@@ -30,7 +30,7 @@ import java.util.regex.Pattern;
 public class InputPlaceHolder extends PlaceHolder
 {
 
-    private Pattern pattern;
+    private final Pattern pattern;
 
     public InputPlaceHolder( boolean requiresUser, String prefix, InputPlaceHolderEventHandler handler )
     {

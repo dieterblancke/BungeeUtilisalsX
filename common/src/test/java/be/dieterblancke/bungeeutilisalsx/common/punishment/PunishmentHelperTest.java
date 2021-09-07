@@ -41,7 +41,7 @@ class PunishmentHelperTest
                 "testserver",
                 "test reason",
                 date,
-                System.currentTimeMillis() + TimeUnit.DAYS.toMillis( 5 ),
+                System.currentTimeMillis() + TimeUnit.DAYS.toMillis( 4 ) + TimeUnit.HOURS.toMillis( 5 ),
                 true,
                 null,
                 "abc"

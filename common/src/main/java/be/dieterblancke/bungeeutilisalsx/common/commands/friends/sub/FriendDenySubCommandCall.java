@@ -21,15 +21,36 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
 
 public class FriendDenySubCommandCall implements CommandCall
 {
+
+    public static void removeFriendRequest( final UserStorage storage, final User user, final User target )
+    {
+        BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( user.getUuid(), storage.getUuid() );
+        user.sendLangMessage( "friends.deny.denied", "{user}", storage.getUserName() );
+
+        if ( target != null )
+        {
+            target.sendLangMessage( "friends.deny.request-denied", "{name}", user.getName() );
+        }
+        else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    storage.getUserName(),
+                    "friends.deny.request-denied",
+                    "{name}", user.getName()
+            ) );
+        }
+    }
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
@@ -41,34 +62,22 @@ public class FriendDenySubCommandCall implements CommandCall
         }
         final String name = args.get( 0 );
         final int friendLimit = FriendUtils.getFriendLimit( user );
-        final Dao dao = BuX.getApi().getStorageManager().getDao();
+        final FriendsDao dao = BuX.getApi().getStorageManager().getDao().getFriendsDao();
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
-        final UserStorage storage;
+        final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
-        if ( optionalTarget.isPresent() )
+        if ( storage == null )
         {
-            storage = optionalTarget.get().getStorage();
-        }
-        else
-        {
-            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
-            {
-                user.sendLangMessage( "never-joined" );
-                return;
-            }
-
-            storage = dao.getUserDao().getUserData( name );
+            user.sendLangMessage( "never-joined" );
+            return;
         }
 
-        if ( !dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        if ( !dao.hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
         {
             user.sendLangMessage( "friends.deny.no-request", "{user}", name );
             return;
         }
 
-        dao.getFriendsDao().removeFriendRequest( user.getUuid(), storage.getUuid() );
-        user.sendLangMessage( "friends.deny.denied", "{user}", name );
-
-        optionalTarget.ifPresent( target -> target.sendLangMessage( "friends.deny.request-denied", "{user}", user.getName() ) );
+        removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
     }
 }

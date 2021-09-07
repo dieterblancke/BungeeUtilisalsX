@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.FontWidthInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.FontWidthInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import net.md_5.bungee.api.ChatColor;
 import org.jsoup.nodes.Document;

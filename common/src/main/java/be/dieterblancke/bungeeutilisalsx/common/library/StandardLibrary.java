@@ -18,8 +18,13 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.library;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
+import me.lucko.jarrelocator.Relocation;
+
+import java.io.File;
+import java.util.Arrays;
 
 public enum StandardLibrary
 {
@@ -40,55 +45,80 @@ public enum StandardLibrary
             "org.mariadb.jdbc.MariaDbDataSource",
             "https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/{version}/mariadb-java-client-{version}.jar",
             "2.7.2",
-            checkType( "MARIADB" )
+            checkType( "MARIADB" ),
+            relocate( "org.mariadb.jdbc" )
     ),
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
             "42.2.18",
-            checkType( "POSTGRESQL" )
+            checkType( "POSTGRESQL" ),
+            relocate( "org.postgresql" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
             "3.12.7",
-            checkType( "MONGODB" )
+            checkType( "MONGODB" ),
+            relocate( "com.mongodb" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
             "8.0.23",
-            checkType( "MYSQL" )
+            checkType( "MYSQL" ),
+            relocate( "com.mysql" )
     ),
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "4.0.3",
-            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
+            relocate( "com.zaxxer.hikari" ),
+            relocate( "org.slf4j" )
     ),
-    SLF4J(
+    SLF4J_API(
             "org.slf4j.LoggerFactory",
             "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/{version}/slf4j-api-{version}.jar",
-            "1.7.30",
-            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
+            "1.7.32",
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
+            relocate( "org.slf4j" )
+    ),
+    SLF4J_NOP(
+            "org.slf4j.jul.JDK14LoggerAdapter",
+            "https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/{version}/slf4j-nop-{version}.jar",
+            "1.7.32",
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
+            relocate( "org.slf4j" )
     ),
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
             "6.0.2.RELEASE",
-            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
+            relocate( "io.lettuce.core" ),
+            relocate( "reactor.core" ),
+            relocate( "reactor.adapter" ),
+            relocate( "reactor.util" ),
+            relocate( "org.reactivestreams" ),
+            relocate( "org.apache.commons.pool2" )
     ),
     REACTOR_CORE(
             "reactor.core.scheduler.Schedulers",
             "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
             "3.3.10.RELEASE",
-            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
+            relocate( "reactor.core" ),
+            relocate( "reactor.adapter" ),
+            relocate( "reactor.util" ),
+            relocate( "org.reactivestreams" )
     ),
     REACTIVE_STREAMS(
             "org.reactivestreams.Processor",
             "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
             "1.0.3",
-            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
+            relocate( "org.reactivestreams" )
     ),
     GUAVA(
             "com.google.common.collect.Lists",
@@ -105,51 +135,95 @@ public enum StandardLibrary
     TEXTCOMPONENT(
             "net.md_5.bungee.api.ChatColor",
             "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/{version}/bungeecord-chat-{version}.jar",
-            "1.16-R0.3",
+            "1.16-R0.4",
             true
     ),
     RHINO(
             "org.mozilla.javascript.Context",
             "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
             "1.7.13",
-            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
+            configExistsAndTrue( getConfig(), "scripting" ),
+            relocate( "org.mozilla" )
     ),
     RHINO_SCRIPT_ENGINE(
             "de.christophkraemer.rhino.javascript.RhinoScriptEngine",
             "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
             "1.1.1",
-            ConfigFiles.CONFIG.getConfig().get( "scripting", false )
+            configExistsAndTrue( getConfig(), "scripting" ),
+            relocate( "de.christophkraemer.rhino" )
     ),
     APACHE_COMMONS_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
             "2.9.0",
-            ConfigFiles.CONFIG.getConfig().exists( "bridging.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "bridging.enabled" )
+            configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
+            relocate( "org.apache.commons.pool2" )
     ),
     JSOUP(
             "org.jsoup.nodes.Document",
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/{version}/jsoup-{version}.jar",
-            "1.13.1",
-            true
+            "1.14.2",
+            true,
+            relocate( "org.jsoup" )
+    ),
+    RABBIT_MQ(
+            "com.rabbitmq.client.RpcClient",
+            "https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/{version}/amqp-client-{version}.jar",
+            "5.13.0",
+            configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
+            relocate( "com.rabbitmq" )
     );
 
+    private static IConfiguration config;
     @Getter
     private final Library library;
 
-    StandardLibrary( String className, String downloadURL, String version, boolean load )
+    StandardLibrary( final String className,
+                     final String downloadURL,
+                     final String version,
+                     final boolean load,
+                     final Relocation... relocations )
     {
-        this.library = new Library( toString(), className, downloadURL, version, load );
+        this.library = new Library( toString(), className, downloadURL, version, load, Arrays.asList( relocations ) );
     }
 
     private static boolean checkType( String... types )
     {
         for ( String type : types )
         {
-            if ( ConfigFiles.CONFIG.getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
+            if ( getConfig().getString( "storage.type" ).equalsIgnoreCase( type ) )
             {
                 return true;
             }
         }
         return false;
+    }
+
+    private static boolean configExistsAndTrue( final IConfiguration config, final String path )
+    {
+        return config.exists( path ) && config.getBoolean( path );
+    }
+
+    private static Relocation relocate( final String pkg )
+    {
+        return new Relocation(
+                pkg.replace( "be.dieterblancke.bungeeutilisalsx.internal.", "" ),
+                pkg
+        );
+    }
+
+    private static IConfiguration getConfig()
+    {
+        if ( config != null )
+        {
+            return config;
+        }
+        final File configFile = new File( BootstrapUtil.getDataFolder(), "config.yml" );
+
+        if ( configFile.exists() )
+        {
+            return config = IConfiguration.loadYamlConfiguration( configFile );
+        }
+        return config = IConfiguration.loadYamlConfiguration( BootstrapUtil.class.getResourceAsStream( "/config.yml" ) );
     }
 }

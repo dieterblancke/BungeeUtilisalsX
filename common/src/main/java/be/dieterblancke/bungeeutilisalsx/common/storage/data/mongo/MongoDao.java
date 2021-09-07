@@ -19,11 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.*;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao.*;
 import lombok.Getter;
-
-import java.util.UUID;
 
 @Getter
 public class MongoDao implements Dao
@@ -33,6 +30,8 @@ public class MongoDao implements Dao
     private final PunishmentDao punishmentDao;
     private final FriendsDao friendsDao;
     private final ReportsDao reportsDao;
+    private final OfflineMessageDao offlineMessageDao;
+    private final ApiTokenDao apiTokenDao;
 
     public MongoDao()
     {
@@ -40,17 +39,7 @@ public class MongoDao implements Dao
         this.punishmentDao = new MongoPunishmentDao();
         this.friendsDao = new MongoFriendsDao();
         this.reportsDao = new MongoReportsDao();
-    }
-
-    @Override
-    public MessageQueue<QueuedMessage> createMessageQueue( UUID uuid, String name, String ip )
-    {
-        return new MongoMessageQueue( uuid, name, ip );
-    }
-
-    @Override
-    public MessageQueue<QueuedMessage> createMessageQueue()
-    {
-        return new MongoMessageQueue();
+        this.offlineMessageDao = new MongoOfflineMessageDao();
+        this.apiTokenDao = new MongoApiTokenDao();
     }
 }

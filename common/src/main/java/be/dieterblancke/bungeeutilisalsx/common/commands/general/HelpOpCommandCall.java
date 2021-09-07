@@ -20,11 +20,11 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
-import java.util.Optional;
 
 public class HelpOpCommandCall implements CommandCall
 {
@@ -73,25 +73,25 @@ public class HelpOpCommandCall implements CommandCall
         }
 
         final String targetName = args.get( 1 );
-        final Optional<User> optionalTarget = BuX.getApi().getUser( targetName );
         final String message = String.join( " ", args.subList( 2, args.size() ) );
 
-        if ( !optionalTarget.isPresent() )
+        if ( !BuX.getApi().getPlayerUtils().isOnline( targetName ) )
         {
             user.sendLangMessage( "offline" );
             return;
         }
-        final User target = optionalTarget.get();
 
-        target.sendLangMessage(
+        user.sendLangMessage(
+                "general-commands.helpop.reply-send",
+                "{user}", targetName,
+                "{message}", message
+        );
+
+        BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                targetName,
                 "general-commands.helpop.reply-receive",
                 "{user}", user.getName(),
                 "{message}", message
-        );
-        user.sendLangMessage(
-                "general-commands.helpop.reply-send",
-                "{user}", target.getName(),
-                "{message}", message
-        );
+        ) );
     }
 }

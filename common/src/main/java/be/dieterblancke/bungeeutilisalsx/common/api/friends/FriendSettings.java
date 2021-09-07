@@ -20,47 +20,32 @@ package be.dieterblancke.bungeeutilisalsx.common.api.friends;
 
 import lombok.Data;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @Data
 public class FriendSettings
 {
 
-    private boolean requests;
-    private boolean messages;
+    private final Map<FriendSetting, Boolean> settings;
 
     public FriendSettings()
     {
-        this( FriendSettingType.REQUESTS.getDefault(), FriendSettingType.MESSAGES.getDefault() );
+        this( new HashMap<>() );
     }
 
-    public FriendSettings( final boolean requests, final boolean messages )
+    public FriendSettings( final Map<FriendSetting, Boolean> settings )
     {
-        this.requests = requests;
-        this.messages = messages;
+        this.settings = settings;
     }
 
-    public void set( final FriendSettingType type, final boolean value )
+    public void set( final FriendSetting key, final boolean value )
     {
-        switch ( type )
-        {
-            case REQUESTS:
-                setRequests( value );
-                break;
-            case MESSAGES:
-                setMessages( value );
-                break;
-        }
+        settings.put( key, value );
     }
 
-    public boolean check( final FriendSettingType type )
+    public boolean getSetting( final FriendSetting key, final boolean def )
     {
-        switch ( type )
-        {
-            case REQUESTS:
-                return isRequests();
-            case MESSAGES:
-                return isMessages();
-            default:
-                return false;
-        }
+        return settings.getOrDefault( key, def );
     }
 }

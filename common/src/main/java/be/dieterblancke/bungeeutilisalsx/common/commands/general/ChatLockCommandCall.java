@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ChatLockJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
@@ -36,7 +37,7 @@ public class ChatLockCommandCall implements CommandCall, TabCall
 
     public static void lockChat( final String server, final String by )
     {
-        Stream<User> users = server.equals( "ALL" )
+        final Stream<User> users = server.equals( "ALL" )
                 ? BuX.getApi().getUsers().stream()
                 : BuX.getApi().getUsers().stream().filter( u -> u.getServerName().equalsIgnoreCase( server ) );
 
@@ -70,6 +71,6 @@ public class ChatLockCommandCall implements CommandCall, TabCall
         }
         final String server = args.get( 0 ).toLowerCase().contains( "g" ) ? "ALL" : user.getServerName();
 
-        lockChat( server, user.getName() );
+        BuX.getInstance().getJobManager().executeJob( new ChatLockJob( server, user.getName() ) );
     }
 }

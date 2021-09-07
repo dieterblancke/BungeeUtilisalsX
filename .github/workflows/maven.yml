@@ -23,7 +23,7 @@ jobs:
         with:
           java-version: 1.8
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: bash build.sh
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
@@ -33,3 +33,4 @@ jobs:
             bungee/target/BungeeUtilisalsX*.jar
             velocity/target/BungeeUtilisalsX*.jar
             spigot/target/BungeeUtilisalsX*.jar
+            webapi/target/BungeeUtilisalsX*.jar

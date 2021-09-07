@@ -21,7 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
@@ -80,7 +80,7 @@ public class StaffCommandCall implements CommandCall
 
         final List<StaffUser> staffUsers = BuX.getInstance().getStaffMembers()
                 .stream()
-                .filter( staffUser -> !staffUser.isHidden() )
+                .filter( staffUser -> !staffUser.isHidden() && !staffUser.isVanished() )
                 .collect( Collectors.toList() );
         if ( staffUsers.isEmpty() )
         {

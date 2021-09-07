@@ -47,6 +47,11 @@ public class UserStorage
 
     private Map<String, Object> data = Maps.newHashMap();
 
+    public boolean isLoaded()
+    {
+        return uuid != null && userName != null && ip != null && language != null && firstLogin != null && lastLogout != null;
+    }
+
     public <T> T getData( final String key )
     {
         return !data.containsKey( key ) ? null : (T) data.get( key );

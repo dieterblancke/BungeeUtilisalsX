@@ -28,7 +28,7 @@ import lombok.Getter;
 public class InputPlaceHolderEvent extends PlaceHolderEvent
 {
 
-    private String argument;
+    private final String argument;
 
     public InputPlaceHolderEvent( User user, PlaceHolder placeHolder, String message, String argument )
     {

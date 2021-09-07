@@ -19,86 +19,55 @@
 package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
-import java.util.Optional;
 
-public class KickCommandCall implements CommandCall
+public class KickCommandCall extends PunishmentCommand
 {
 
-    @Override
-    public void onExecute( final User user, final List<String> args, final List<String> parameters )
+    public KickCommandCall()
     {
-        if ( args.size() < 2 )
-        {
-            user.sendLangMessage( "punishments.kick.usage" );
-            return;
-        }
-        if ( args.get( 0 ).equalsIgnoreCase( user.getName() ) )
-        {
-            user.sendLangMessage( "punishments.self-punishment" );
-            return;
-        }
-        final String reason = Utils.formatList( args.subList( 1, args.size() ), " " );
+        super( "punishments.kick", false );
+    }
 
-        final Optional<User> optionalUser = BuX.getApi().getUser( args.get( 0 ) );
-        if ( !optionalUser.isPresent() )
+    @Override
+    public void onPunishmentExecute( final User user,
+                                     final List<String> args,
+                                     final List<String> parameters,
+                                     final PunishmentArgs punishmentArgs )
+    {
+        final String reason = punishmentArgs.getReason();
+        final UserStorage storage = punishmentArgs.getStorage();
+
+        if ( !BuX.getApi().getPlayerUtils().isOnline( punishmentArgs.getPlayer() ) )
         {
             user.sendLangMessage( "offline" );
             return;
         }
-        final User target = optionalUser.get();
-        final UserStorage storage = target.getStorage();
 
-        if ( BuX.getApi().getPunishmentExecutor().isHigherPunishment( user.getUuid(), storage.getUuid() ) )
+        if ( punishmentArgs.launchEvent( PunishmentType.KICK ) )
         {
-            user.sendLangMessage( "punishments.higher-punishment" );
-            return;
-        }
-
-        final UserPunishEvent event = new UserPunishEvent( PunishmentType.KICK, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null );
-        BuX.getApi().getEventLoader().launchEvent( event );
-
-        if ( event.isCancelled() )
-        {
-            user.sendLangMessage( "punishments.cancelled" );
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-
-        final PunishmentInfo info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().insertKick(
-                storage.getUuid(), storage.getUserName(), storage.getIp(),
-                reason, user.getServerName(), user.getName()
+        final PunishmentInfo info = dao().getPunishmentDao().getKickAndWarnDao().insertKick(
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                user.getServerName(),
+                user.getName()
         );
 
-        String kick = null;
-        if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
-        {
-            kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    target.getLanguageConfig().getConfig(), PunishmentType.KICK, reason
-            ), "\n" );
-
-            kick = BuX.getApi().getPunishmentExecutor().setPlaceHolders( kick, info );
-        }
-        if ( kick == null )
-        {
-            target.langKick( "punishments.kick.onkick", executor.getPlaceHolders( info ).toArray( new Object[]{} ) );
-        }
-        else
-        {
-            target.kick( kick );
-        }
+        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+        super.attemptKick( storage, "punishments.kick.onkick", info );
+        user.sendLangMessage( "punishments.kick.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
         if ( !parameters.contains( "-s" ) )
         {
@@ -118,9 +87,7 @@ public class KickCommandCall implements CommandCall
                 );
             }
         }
-        BuX.getApi().getEventLoader().launchEvent( new UserPunishmentFinishEvent(
-                PunishmentType.KICK, user, storage.getUuid(),
-                storage.getUserName(), storage.getIp(), reason, user.getServerName(), null
-        ) );
+
+        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.KICK );
     }
 }

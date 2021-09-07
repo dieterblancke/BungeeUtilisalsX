@@ -23,12 +23,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -52,8 +52,9 @@ public class GListCommandCall implements CommandCall, TabCall
         final String color = config.getString( "glist.playerlist.color" );
         final String separator = config.getString( "glist.playerlist.separator" );
         final List<TextComponent> messages = Lists.newArrayList();
-
-        final long hiddenUsers = this.getHiddenUsers();
+        final List<String> onlinePlayers = BuX.getApi().getPlayerUtils().getPlayers();
+        final long hiddenUsers = this.getHiddenUsers( onlinePlayers );
+        final long totalOnlineCount = BuX.getApi().getPlayerUtils().getTotalCount() - hiddenUsers;
 
         if ( config.exists( "glist.header" ) )
         {
@@ -63,9 +64,9 @@ public class GListCommandCall implements CommandCall, TabCall
                         MessageBuilder.buildMessage(
                                 user,
                                 config.getSection( "glist.header" ),
-                                "%total%", BuX.getApi().getPlayerUtils().getTotalCount() - hiddenUsers,
+                                "%total%", totalOnlineCount,
                                 "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                        StaffUtils.filterPlayerList( BuX.getApi().getPlayerUtils().getPlayers() )
+                                        StaffUtils.filterPlayerList( onlinePlayers )
                                 ) )
                         )
                 );
@@ -103,15 +104,17 @@ public class GListCommandCall implements CommandCall, TabCall
         {
             for ( IProxyServer info : BuX.getInstance().proxyOperations().getServers() )
             {
+                final List<String> players = BuX.getApi().getPlayerUtils().getPlayers( info.getName() );
+
                 messages.add(
                         MessageBuilder.buildMessage(
                                 user,
                                 config.getSection( "glist.format" ),
                                 "%server%", info.getName(),
-                                "%players%", String.valueOf( info.getPlayers().size() - getHiddenUsers( info ) ),
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( StaffUtils.filterPlayerList(
-                                        info.getPlayers()
-                                ) ) )
+                                "%players%", String.valueOf( players.size() - getHiddenUsers( players ) ),
+                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
+                                        StaffUtils.filterPlayerList( players )
+                                ) )
                         )
                 );
             }
@@ -120,9 +123,9 @@ public class GListCommandCall implements CommandCall, TabCall
                 MessageBuilder.buildMessage(
                         user,
                         config.getSection( "glist.total" ),
-                        "%total%", BuX.getApi().getPlayerUtils().getTotalCount() - hiddenUsers,
+                        "%total%", totalOnlineCount,
                         "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                StaffUtils.filterPlayerList( BuX.getApi().getPlayerUtils().getPlayers() )
+                                StaffUtils.filterPlayerList( onlinePlayers )
                         ) )
                 )
         );
@@ -133,16 +136,6 @@ public class GListCommandCall implements CommandCall, TabCall
     private long getHiddenUsers( final ServerGroup group )
     {
         return this.getHiddenUsers( group.getPlayerList() );
-    }
-
-    private long getHiddenUsers( final IProxyServer serverInfo )
-    {
-        return this.getHiddenUsers( BuX.getApi().getPlayerUtils().getPlayers( serverInfo.getName() ) );
-    }
-
-    private long getHiddenUsers()
-    {
-        return this.getHiddenUsers( BuX.getApi().getPlayerUtils().getPlayers() );
     }
 
     private long getHiddenUsers( final List<String> users )

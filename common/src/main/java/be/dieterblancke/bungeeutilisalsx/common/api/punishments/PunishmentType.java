@@ -18,7 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.configuration.api.IConfiguration;
 
 public enum PunishmentType
 {
@@ -29,7 +30,7 @@ public enum PunishmentType
 
     private final boolean activatable;
     private final boolean temporary;
-    private final String tablePlaceHolder;
+    private final String table;
 
     PunishmentType( boolean activatable, boolean temporary )
     {
@@ -51,7 +52,7 @@ public enum PunishmentType
         {
             type = toString.toLowerCase();
         }
-        this.tablePlaceHolder = "{" + type + "s-table}";
+        this.table = "bu_" + type + "s";
     }
 
     public boolean isActivatable()
@@ -64,14 +65,9 @@ public enum PunishmentType
         return temporary;
     }
 
-    public String getTablePlaceHolder()
-    {
-        return tablePlaceHolder;
-    }
-
     public String getTable()
     {
-        return PlaceHolderAPI.formatMessage( getTablePlaceHolder() );
+        return table;
     }
 
     public boolean isIP()
@@ -87,5 +83,17 @@ public enum PunishmentType
     public boolean isMute()
     {
         return toString().contains( "MUTE" );
+    }
+
+    public boolean isEnabled()
+    {
+        final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
+        final String type = this.toString().toLowerCase();
+        final String tempType = this.isIP()
+                ? "iptemp" + this.toString().toLowerCase().replace( "ip", "" )
+                : "temp" + type;
+
+        return ( config.exists( "commands." + type + ".enabled" ) && config.getBoolean( "commands." + type + ".enabled" ) )
+                || ( config.exists( "commands." + tempType + ".enabled" ) && config.getBoolean( "commands." + tempType + ".enabled" ) );
     }
 }

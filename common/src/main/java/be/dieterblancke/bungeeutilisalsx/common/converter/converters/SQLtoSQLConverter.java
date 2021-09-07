@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.converter.converters;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
@@ -52,20 +51,18 @@ public class SQLtoSQLConverter extends Converter
         }
 
         final StringBuilder queryBuilder = new StringBuilder();
-        queryBuilder.append( "SELECT (SELECT COUNT(*) FROM {users-table}) users, " );
+        queryBuilder.append( "SELECT (SELECT COUNT(*) FROM bu_users) users, " );
 
         for ( PunishmentType type : PunishmentType.values() )
         {
-            queryBuilder.append( "(SELECT COUNT(*) FROM " ).append( type.getTablePlaceHolder() ).append( ") " ).append( type.toString().toLowerCase() ).append( ", " );
+            queryBuilder.append( "(SELECT COUNT(*) FROM " ).append( type.getTable() ).append( ") " ).append( type.toString().toLowerCase() ).append( ", " );
         }
 
         queryBuilder.substring( 0, queryBuilder.length() - 2 );
         queryBuilder.append( ";" );
 
-        String countQuery = PlaceHolderAPI.formatMessage( queryBuilder.toString() );
-
         try ( final Connection connection = storageManager.getConnection();
-              final PreparedStatement pstmt = connection.prepareStatement( countQuery );
+              final PreparedStatement pstmt = connection.prepareStatement( queryBuilder.toString() );
               final ResultSet rs = pstmt.executeQuery() )
         {
             if ( rs.next() )
@@ -86,7 +83,7 @@ public class SQLtoSQLConverter extends Converter
         }
 
         try ( final Connection connection = storageManager.getConnection();
-              final PreparedStatement preparedStatement = connection.prepareStatement( PlaceHolderAPI.formatMessage( "SELECT * FROM {users-table} ORDER BY id ASC;" ) );
+              final PreparedStatement preparedStatement = connection.prepareStatement( "SELECT * FROM bu_users ORDER BY id ASC;" );
               final ResultSet rs = preparedStatement.executeQuery() )
         {
 
@@ -115,10 +112,9 @@ public class SQLtoSQLConverter extends Converter
         for ( PunishmentType type : PunishmentType.values() )
         {
             try ( final Connection connection = storageManager.getConnection();
-                  final PreparedStatement preparedStatement = connection.prepareStatement( PlaceHolderAPI.formatMessage( "SELECT * FROM " + type.getTablePlaceHolder() + " ORDER BY id ASC;" ) );
+                  final PreparedStatement preparedStatement = connection.prepareStatement( "SELECT * FROM " + type.getTable() + " ORDER BY id ASC;" );
                   final ResultSet rs = preparedStatement.executeQuery() )
             {
-
                 try ( final Connection newConnection = BuX.getApi().getStorageManager().getConnection() )
                 {
                     newConnection.setAutoCommit( false );
@@ -146,7 +142,7 @@ public class SQLtoSQLConverter extends Converter
     private void createUser( Connection connection, ResultSet rs ) throws SQLException
     {
         try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                PlaceHolderAPI.formatMessage( "INSERT INTO {users-table}(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);" )
+                "INSERT INTO bu_users(uuid, username, ip, language, firstlogin, lastlogout) VALUES (?, ?, ?, ?, ?, ?);"
         ) )
         {
             preparedStatement.setString( 1, rs.getString( "uuid" ) );
@@ -165,7 +161,7 @@ public class SQLtoSQLConverter extends Converter
         if ( !type.isActivatable() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, executed_by) VALUES (?, ?, ?, ?, ?, ?, ?);" )
+                    "INSERT INTO " + type.getTable() + "(uuid, user, ip, reason, server, date, executed_by) VALUES (?, ?, ?, ?, ?, ?, ?);"
             ) )
             {
                 preparedStatement.setString( 1, rs.getString( "uuid" ) );
@@ -182,7 +178,7 @@ public class SQLtoSQLConverter extends Converter
         else if ( type.isTemporary() )
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+                    "INSERT INTO " + type.getTable() + "(uuid, user, ip, time, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);"
             ) )
             {
                 preparedStatement.setString( 1, rs.getString( "uuid" ) );
@@ -202,7 +198,7 @@ public class SQLtoSQLConverter extends Converter
         else
         {
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    PlaceHolderAPI.formatMessage( "INSERT INTO " + type.getTablePlaceHolder() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);" )
+                    "INSERT INTO " + type.getTable() + "(uuid, user, ip, reason, server, date, active, executed_by, removed_by) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);"
             ) )
             {
                 preparedStatement.setString( 1, rs.getString( "uuid" ) );

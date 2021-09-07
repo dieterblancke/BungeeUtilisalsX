@@ -11,9 +11,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.Network
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
@@ -22,21 +24,20 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
-import be.dieterblancke.bungeeutilisalsx.common.library.Library;
-import be.dieterblancke.bungeeutilisalsx.common.library.StandardLibrary;
+import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
+import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
+import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
-import be.dieterblancke.bungeeutilisalsx.common.tasks.UserMessageQueueTask;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -48,7 +49,6 @@ import java.nio.file.Files;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
@@ -63,8 +63,9 @@ public abstract class AbstractBungeeUtilisalsX
     private final List<Script> scripts = new ArrayList<>();
     protected IBuXApi api;
     private AbstractStorageManager abstractStorageManager;
-    private LibraryClassLoader libraryClassLoader;
     private PermissionIntegration activePermissionIntegration;
+    private JobManager jobManager;
+    private RedisManager redisManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -91,35 +92,37 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
+        this.registerSlf4jImplementation();
         this.loadConfigs();
         ChatProtections.reloadAllProtections();
 
-        this.loadLibraries();
         this.loadPlaceHolders();
         this.loadScripts();
         this.loadDatabase();
 
-        final MigrationManager migrationManager = new MigrationManager();
-        if ( migrationManager.canMigrate() )
+        final MigrationManager migrationManager = MigrationManagerFactory.createMigrationManager();
+        migrationManager.initialize();
+        try
         {
-            migrationManager.initialize();
-            try
-            {
-                migrationManager.migrate();
-            }
-            catch ( SQLException e )
-            {
-                BuX.getLogger().log( Level.SEVERE, "Could not execute migrations", e );
-            }
+            migrationManager.migrate();
+        }
+        catch ( Exception e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "Could not execute migrations", e );
         }
 
         this.api = this.createBuXApi();
+
+        final boolean useMultiProxy = ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" );
+        this.redisManager = useMultiProxy ? RedisManagerFactory.create() : null;
+        this.jobManager = useMultiProxy ? new MultiProxyJobManager() : new SingleProxyJobManager();
 
         this.detectPermissionIntegration();
         this.registerLanguages();
         this.registerListeners();
         this.registerExecutors();
         this.registerCommands();
+        this.registerPluginSupports();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -178,6 +181,8 @@ public abstract class AbstractBungeeUtilisalsX
         this.api.getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
 
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
+        this.api.getEventLoader().register( UserCommandEvent.class, new UserCommandExecutor() );
+        this.api.getEventLoader().register( UserServerConnectedEvent.class, new IngameMotdExecutor() );
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
@@ -200,7 +205,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void setupTasks()
     {
-        this.scheduler.runTaskDelayed( 1, TimeUnit.MINUTES, new UserMessageQueueTask() );
+        // do nothing
     }
 
     public void reload()
@@ -273,27 +278,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    protected LibraryClassLoader createLibraryClassLoader()
-    {
-        return new UrlLibraryClassLoader();
-    }
-
-    protected void loadLibraries()
-    {
-        BuX.getLogger().info( "Loading libraries ..." );
-        libraryClassLoader = this.createLibraryClassLoader();
-
-        for ( StandardLibrary standardLibrary : StandardLibrary.values() )
-        {
-            final Library library = standardLibrary.getLibrary();
-
-            if ( library.isToLoad() && !library.isPresent() )
-            {
-                library.load();
-            }
-        }
-        BuX.getLogger().info( "Libraries have been loaded." );
-    }
+    protected abstract void registerPluginSupports();
 
     protected void loadDatabase()
     {
@@ -367,5 +352,18 @@ public abstract class AbstractBungeeUtilisalsX
 
         scripts.forEach( Script::unload );
         api.getEventLoader().getHandlers().forEach( IEventHandler::unregister );
+    }
+
+    public boolean isRedisManagerEnabled()
+    {
+        return redisManager != null;
+    }
+
+    private void registerSlf4jImplementation()
+    {
+        if ( ReflectionUtils.isLoaded( "org.slf4j.LoggerFactory" ) )
+        {
+
+        }
     }
 }

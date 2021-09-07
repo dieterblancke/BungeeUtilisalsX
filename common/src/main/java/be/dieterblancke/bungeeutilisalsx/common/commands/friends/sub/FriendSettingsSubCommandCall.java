@@ -20,7 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -40,12 +40,12 @@ public class FriendSettingsSubCommandCall implements CommandCall
             final FriendSettings settings = user.getFriendSettings();
             user.sendLangMessage( "friends.settings.noargs.header" );
 
-            for ( FriendSettingType setting : FriendSettingType.values() )
+            for ( FriendSetting setting : FriendSetting.getEnabledSettings() )
             {
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
                         "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
-                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.check( setting ) ? "enabled" : "disabled" ) )
+                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting, true ) ? "enabled" : "disabled" ) )
                 );
             }
 
@@ -53,23 +53,29 @@ public class FriendSettingsSubCommandCall implements CommandCall
         }
         else if ( args.size() == 2 )
         {
-            final FriendSettingType type = Utils.valueOfOr( FriendSettingType.class, args.get( 0 ).toUpperCase(), null );
-            final boolean value = !args.get( 1 ).toLowerCase().contains( "d" );
+            final FriendSetting type = Utils.valueOfOr( FriendSetting.class, args.get( 0 ).toUpperCase(), null );
 
             if ( type == null )
             {
-                final String settings = Stream.of( FriendSettingType.values() )
+                final String settings = Stream.of( FriendSetting.values() )
                         .map( t -> t.getName( user.getLanguageConfig().getConfig() ) )
                         .collect( Collectors.joining() );
 
                 user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );
                 return;
             }
+            final boolean value = args.get( 1 ).contains( "toggle" )
+                    ? !user.getFriendSettings().getSetting( type, false )
+                    : !args.get( 1 ).toLowerCase().contains( "d" );
 
             user.getFriendSettings().set( type, value );
             BuX.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
 
-            user.sendLangMessage( "friends.settings.updated", "{type}", type.toString().toLowerCase() );
+            user.sendLangMessage(
+                    "friends.settings.updated",
+                    "{type}", type.toString().toLowerCase(),
+                    "{value}", value
+            );
         }
         else
         {

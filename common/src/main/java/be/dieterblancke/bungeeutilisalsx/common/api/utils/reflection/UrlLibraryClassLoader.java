@@ -27,6 +27,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Optional;
 import java.util.logging.Level;
 
 public class UrlLibraryClassLoader implements LibraryClassLoader
@@ -59,7 +60,8 @@ public class UrlLibraryClassLoader implements LibraryClassLoader
         }
         else
         {
-            throw new IllegalStateException( "Plugin ClassLoader is not instance of URLClassLoader" );
+            this.classLoader = Optional.ofNullable( DynamicClassLoader.findAncestor( loader ) )
+                    .orElseGet( () -> new DynamicClassLoader( ClassLoader.getSystemClassLoader() ) );
         }
     }
 

@@ -1,0 +1,221 @@
+# Java LocalDate representation in GraphQL
+scalar Date
+# Java LocalDateTime representation in GraphQL
+scalar DateTime
+# Java UUID representation in GraphQL
+scalar UUID
+# Java Long representation in GraphQL
+scalar Long
+
+enum FriendRequestType {
+    # Filter type for incoming friend requests
+    INCOMING,
+    # Filter type for outgoing friend requests
+    OUTGOING
+}
+
+enum PunishmentType {
+    BAN
+    TEMPBAN
+    IPBAN
+    IPTEMPBAN
+    MUTE
+    TEMPMUTE
+    IPMUTE
+    IPTEMPMUTE
+    KICK
+    WARN
+}
+
+type Query {
+    # Finds user by name, null if user does not exist
+    findUserByName(name: String!): User
+    # Finds user by uuid, null if user does not exist
+    findUserByUuid(uuid: UUID!): User
+
+    # Finds the list of friends for a user, empty list if no friends or if user does not exist.
+    findFriends(uuid: UUID!): [Friend]!
+    # Finds the list of friends requests for a user with the given request type, empty list if no friends requests or if user does not exist.
+    findFriendRequests(uuid: UUID!, requestType: FriendRequestType!): [FriendRequest]!
+
+    # Finds the current ban for a user on the given server, use "ALL" as server if global punishments are on.
+    findCurrentBan(uuid: UUID!, server: String! = "ALL"): Punishment
+    # Finds the current ipban for an ip on the given server, use "ALL" as server if global punishments are on.
+    findCurrentIpBan(ip: String!, server: String! = "ALL"): Punishment
+    # Finds all bans for a user, if server if filled in, only punishments for that specific server will be shown.
+    findAllBansFor(uuid: UUID!, server: String): [Punishment]!
+    # Finds all bans for an ip, if server if filled in, only punishments for that specific server will be shown.
+    findAllIpBansFor(ip: String!, server: String): [Punishment]!
+    # Finds all bans executed by a certain user.
+    findAllBansExecutedBy(name: String!): [Punishment]!
+    # Finds a ban with the given punishment uid, null if not found.
+    findBanByPunishmentUid(uid: String): Punishment
+    # Finds the last bans and ipbans, with a maximum limit of 200.
+    findRecentBans(limit: Int = 200): [Punishment]
+
+    # Finds the current mute for a user on the given server, use "ALL" as server if global punishments are on.
+    findCurrentMute(uuid: UUID!, server: String! = "ALL"): Punishment
+    # Finds the current ipmute for an ip on the given server, use "ALL" as server if global punishments are on.
+    findCurrentIpMute(ip: String!, server: String! = "ALL"): Punishment
+    # Finds all mutes for a user, if server if filled in, only punishments for that specific server will be shown.
+    findAllMutesFor(uuid: UUID!, server: String): [Punishment]!
+    # Finds all mutes for an ip, if server if filled in, only punishments for that specific server will be shown.
+    findAllIpMutesFor(ip: String!, server: String): [Punishment]!
+    # Finds all mutes executed by a certain user.
+    findAllMutesExecutedBy(name: String!): [Punishment]!
+    # Finds a mute with the given punishment uid, null if not found.
+    findMuteByPunishmentUid(uid: String): Punishment
+    # Finds the last mutes and ipmutes, with a maximum limit of 200.
+    findRecentMutes(limit: Int = 200): [Punishment]
+
+    # Finds the punishment track data for a user for one specific punishment track.
+    findPunishmentTrackData(uuid: UUID!, trackId: String!, server: String = "ALL"): [TrackData]!
+
+    # Finds all kicks for the given user.
+    findAllKicksFor(uuid: UUID!): [Punishment]!
+    # Finds all kicks executed by the given user.
+    findAllKicksExecutedBy(name: String!): [Punishment]!
+
+    # Finds all warns for the given user.
+    findAllWarnsFor(uuid: UUID!): [Punishment]!
+    # Finds all warns executed by the given user.
+    findAllWarnsExecutedBy(name: String!): [Punishment]!
+
+    # Finds all reports
+    findAllReports: [Report]!
+    # Finds all active reports
+    findActiveReports: [Report]!
+    # Finds all handled reports
+    findHandledReports: [Report]!
+    # Finds all accepted reports
+    findAcceptedReports: [Report]!
+    # Finds all denied reports
+    findDeniedReports: [Report]!
+    # Finds recent reports in the last X days (default: last 7 days)
+    findRecentReports(days: Int! = 7): [Report]!
+    # Finds all report ever filed against a user
+    findReportsFor(uuid: UUID!): [Report]!
+    # Finds all report ever filed by a user
+    findReportsBy(name: String!): [Report]!
+}
+
+type Mutation {
+    updateUser(uuid: UUID!, input: UserUpdateInput): User
+}
+
+input UserUpdateInput {
+    userName: String!
+    ip: String!
+    language: String
+    lastLogout: DateTime
+}
+
+type User {
+    # the uuid of the user
+    uuid: UUID!
+    # the last known user name of the user
+    userName: String!
+    # the last known ip of the user, empty if expose-ips is false
+    ip: String!
+    # the language of the user
+    language: Language
+    # the first login time of the user
+    firstLogin: DateTime
+    # the last logout time of the user
+    lastLogout: DateTime
+    # a list of users that are ignored by the user
+    ignoredUsers: [String]
+    # the host the user last used to log in
+    joinedHost: String
+}
+
+type Friend {
+    # the friend for the user
+    friend: User!
+    # the time the friendship was created
+    created: DateTime!
+}
+
+type FriendRequest {
+    # the user who sent the friend request
+    user: User!
+    # the user who received the friend request
+    friend: User!
+    # the time at which the friendship was requested
+    requestedAt: DateTime!
+}
+
+type FriendSetting {
+    # the user id for the setting
+    user: UUID!
+    # the setting key
+    setting: String!
+    # the setting value
+    value: Boolean!
+}
+
+type Language {
+    # the language name
+    name: String!
+    # whether the language is the default or not
+    defaultLanguage: Boolean!
+}
+
+type Punishment {
+    # the punishment type
+    type: PunishmentType!
+    # the punished user (name)
+    user: String!
+    # the punished user (uuid - recommended)
+    uuid: UUID!
+    # the punished user (ip)
+    ip: String!
+    # the user who executed the punishment
+    executedBy: User!
+    # the server the punishment was executed on (or "ALL")
+    server: String!
+    # the reason of the punishment
+    reason: String!
+    # the time of the punishment
+    dateTime: DateTime!
+    # the expiry time (in milliseconds) of the punishment, -1 if permanent punishment
+    expireTime: Long!
+    # the activity status of the punishment
+    active: Boolean!
+    # the person who removed the punishment, if active, this should be null
+    removedBy: String
+    # the punishment UID of the punishment
+    punishmentUid: String
+}
+
+type TrackData {
+    # the user UUID of the track
+    uuid: UUID!
+    # the track id
+    trackId: String!
+    # the server which the track is on (or "ALL")
+    server: String!
+    # the executor of the track punishment
+    executedBy: String!
+    # the time of the track execution
+    date: DateTime!
+    # the activity status of the track
+    active: Boolean!
+}
+
+type Report {
+    # the reported user
+    user: User!
+    # the reporter user
+    reporter: User!
+    # the time of the report
+    date: DateTime!
+    # the server the report was sent from
+    server: String!
+    # the reason of the report
+    reason: String!
+    # the handled status of the report
+    handled: Boolean!
+    # the acceptance status of the report
+    accepted: Boolean!
+}

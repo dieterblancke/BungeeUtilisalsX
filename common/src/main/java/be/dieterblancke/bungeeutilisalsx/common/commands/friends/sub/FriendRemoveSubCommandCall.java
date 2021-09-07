@@ -20,9 +20,11 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserRemoveFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
 import java.util.Optional;
@@ -40,41 +42,52 @@ public class FriendRemoveSubCommandCall implements CommandCall
         }
         final String name = args.get( 0 );
         final Dao dao = BuX.getApi().getStorageManager().getDao();
+        final Optional<User> optionalTarget = BuX.getApi().getUser( name );
+        final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
 
-        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
+        if ( storage == null )
         {
-            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
+            user.sendLangMessage( "never-joined" );
             return;
         }
 
-        final Optional<User> optionalTarget = BuX.getApi().getUser( name );
-        final UserStorage storage;
-
-        if ( optionalTarget.isPresent() )
+        if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
-            storage = optionalTarget.get().getStorage();
-        }
-        else
-        {
-            if ( !dao.getUserDao().exists( args.get( 0 ) ) )
+            if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
             {
-                user.sendLangMessage( "never-joined" );
+                FriendRemoveRequestSubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
+                return;
+            }
+            if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+            {
+                FriendDenySubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
                 return;
             }
 
-            storage = dao.getUserDao().getUserData( name );
+            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
+            return;
         }
 
         dao.getFriendsDao().removeFriend( user.getUuid(), storage.getUuid() );
         dao.getFriendsDao().removeFriend( storage.getUuid(), user.getUuid() );
 
         user.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( name ) );
-
         user.sendLangMessage( "friends.remove.removed", "{user}", name );
-        optionalTarget.ifPresent( target ->
+
+        if ( optionalTarget.isPresent() )
         {
+            final User target = optionalTarget.get();
+
             target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
             target.sendLangMessage( "friends.remove.friend-removed", "{user}", user.getName() );
-        } );
+        }
+        else
+        {
+            BuX.getInstance().getJobManager().executeJob( new UserRemoveFriendJob(
+                    storage.getUuid(),
+                    storage.getUserName(),
+                    user.getName()
+            ) );
+        }
     }
 }

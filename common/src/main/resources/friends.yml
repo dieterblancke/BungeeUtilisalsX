@@ -17,10 +17,16 @@ friendlimits:
     - name: 'helper'
       limit: 25
 
+# Which server groups should be ignored for switch messages
+ignore-for-switch:
+  - Lobbies
+
 # The settings that will be given to players by default.
 settings:
   requests: true
   messages: true
+  server_switch: true
+  friend_broadcast: true
 
 command:
   aliases: 'friend, bfriends'
@@ -60,3 +66,6 @@ subcommands:
   settings:
     aliases: ''
     permission: bungeeutilisals.friends.settings
+  broadcast:
+    aliases: ''
+    permission: bungeeutilisals.friends.broadcast

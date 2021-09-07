@@ -1,12 +1,11 @@
 package be.dieterblancke.bungeeutilisalsx.common;
 
-import com.google.gson.Gson;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.logging.Logger;
 
 public class BuX
 {
-    private static final Gson GSON = new Gson();
 
     public static <T extends AbstractBungeeUtilisalsX> T getInstance()
     {
@@ -18,11 +17,6 @@ public class BuX
         return getInstance().getApi();
     }
 
-    public static Gson getGson()
-    {
-        return GSON;
-    }
-
     public static Logger getLogger( final String name )
     {
         return getLogger();
@@ -31,5 +25,13 @@ public class BuX
     public static Logger getLogger()
     {
         return getInstance().getLogger();
+    }
+
+    public static void debug( final String message )
+    {
+        if ( ConfigFiles.CONFIG.isDebug() )
+        {
+            getLogger().info( message );
+        }
     }
 }

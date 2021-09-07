@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.velocity;
 
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
@@ -21,7 +23,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "bungeeutilisalsx",
         name = "BungeeUtilisalsX",
-        version = "2.1.0",
+        version = "2.1.1",
         authors = { "didjee2" },
         dependencies = {
                 @Dependency( id = "skinsrestorer", optional = true )
@@ -57,6 +59,8 @@ public class Bootstrap
     @Subscribe
     public void onProxyInitialization( final ProxyInitializeEvent event )
     {
+        BootstrapUtil.loadLibraries( this.getDataFolder(), new VelocityLibraryClassLoader(), logger );
+
         abstractBungeeUtilisalsX = new BungeeUtilisalsX();
         abstractBungeeUtilisalsX.initialize();
     }

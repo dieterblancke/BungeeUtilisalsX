@@ -20,12 +20,12 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PrivateMessageType;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserFriendPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FriendReplySubCommandCall implements CommandCall
 {
@@ -50,51 +50,18 @@ public class FriendReplySubCommandCall implements CommandCall
             user.sendLangMessage( "friends.reply.not-friend", "{user}", name );
             return;
         }
+
         if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
-            final Optional<User> optional = BuX.getApi().getUser( name );
             final String message = String.join( " ", args );
-
-            if ( optional.isPresent() && !optional.get().isVanished() )
-            {
-                final User target = optional.get();
-
-                if ( !target.getFriendSettings().isMessages() )
-                {
-                    user.sendLangMessage( "friends.reply.disallowed" );
-                    return;
-                }
-
-                if ( target.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
-                {
-                    user.sendLangMessage( "friends.reply.ignored" );
-                    return;
-                }
-
-                // only needs to be set for target, as the current user (sender) still has this target as last user
-                target.getStorage().setData( "FRIEND_MSG_LAST_USER", user.getName() );
-
-                target.sendLangMessage(
-                        "friends.reply.format.receive",
-                        false,
-                        Utils::c,
-                        null,
-                        "{sender}", user.getName(),
-                        "{message}", message
-                );
-                user.sendLangMessage(
-                        "friends.reply.format.send",
-                        false,
-                        Utils::c,
-                        null,
-                        "{receiver}", target.getName(),
-                        "{message}", message
-                );
-            }
-            else
-            {
-                user.sendLangMessage( "offline" );
-            }
+            
+            BuX.getInstance().getJobManager().executeJob( new UserFriendPrivateMessageJob(
+                    user.getUuid(),
+                    user.getName(),
+                    name,
+                    message,
+                    PrivateMessageType.MSG
+            ) );
         }
         else
         {

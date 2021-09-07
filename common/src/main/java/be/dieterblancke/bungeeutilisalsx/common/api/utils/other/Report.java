@@ -19,8 +19,10 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.other;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -47,27 +49,15 @@ public class Report
     {
         BuX.getInstance().getAbstractStorageManager().getDao().getReportsDao().handleReport( id, true );
 
-        final Optional<User> optionalUser = BuX.getApi().getUser( reportedBy );
-        final MessageQueue<QueuedMessage> queue;
-
-        if ( optionalUser.isPresent() )
-        {
-            queue = optionalUser.get().getMessageQueue();
-        }
-        else
-        {
-            queue = BuX.getInstance().getAbstractStorageManager().getDao().createMessageQueue();
-        }
-        queue.add( new QueuedMessage(
-                -1,
+        BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
                 reportedBy,
-                new QueuedMessage.Message(
+                new OfflineMessage(
+                        null,
                         "general-commands.report.accept.accepted",
                         "{id}", id,
                         "{reported}", userName,
                         "{staff}", accepter
-                ),
-                "NAME"
-        ) );
+                )
+        );
     }
 }

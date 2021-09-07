@@ -57,7 +57,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         }
 
         this.loadConfigs();
-        this.loadLibraries();
         this.loadPlaceHolders();
         this.loadDatabase();
 
@@ -94,6 +93,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         super.reload();
         this.guiManager.reload();
+    }
+
+    @Override
+    protected void registerPluginSupports()
+    {
+
     }
 
     @Override

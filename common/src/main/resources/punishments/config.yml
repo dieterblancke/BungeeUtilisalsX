@@ -161,3 +161,7 @@ commands:
     aliases: 'pt, punishtrack, trackpunishment'
     permission: bungeeutilisals.punishments.trackpunish
     broadcast: bungeeutilisals.punishments.trackpunish.broadcast
+  staffrollback:
+    enabled: true
+    aliases: 'srollback'
+    permission: bungeeutilisals.punishments.staffrollback

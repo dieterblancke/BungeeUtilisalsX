@@ -6,6 +6,8 @@ no-number: '&ePlease enter a valid number!'
 date-format: 'dd-MM-yyyy kk:mm:ss'
 not-for-console: '&eThis action is currently only supported for usage by players.'
 command-disabled-in-this-server: '&eThis command is &cdisabled &ein the &b{server} &eserver!'
+command-disabled: '&eThe command &b{command} &eis &cdisabled &ein the &b{server} &eserver!'
+messagequeue-join-header: '&eMessages you received while you were away:'
 
 updater:
   update-found:
@@ -248,6 +250,14 @@ general-commands:
   shout:
     shout-broadcast: '&6&lSHOUT &e&l{servername} &b{user} &8» &f{message}'
     shout-broadcast-staff: '&6&lSHOUT &e&l{servername} &c(Staff) &b{user} &8» &f{message}'
+  staffannouncement:
+    usage: '&ePlease use &b/staffannouncement (message) &e!'
+    broadcast: '&e&lSTAFFANNOUNCE &b{broadcaster} &e-> &f{message}'
+  offlinemessage:
+    usage: '&ePlease use &b/offlinemessage (user) (message)&e!'
+    online: '&eThis user is online at the moment! Please use &b/msg (user) (message) &einstead&b!'
+    message: '&b{user} &e@ &b{time} &e-> &f{message}'
+    sent: '&eYou have sent an offline message to &b{user}&e!'
 
 friends:
   join:
@@ -287,18 +297,6 @@ friends:
     limited: '&eYou cannot have more then &b{limit} &efriends!'
     already-friend: '&b{friend} &eis already in your friends list!'
     already-requested: '&eThere is already a pending friend request to &b{name}&e!'
-    use-accept-instead:
-      text:
-        - text: '&b{name} &ealready sent you a friend request! Please use '
-        - text: '&b/friend accept {name} '
-          hover:
-            - '&eClick here to accept &b{name}''s &efriend request!'
-          click:
-            # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-            # RUN_COMMAND will only work for BungeeCord commands.
-            type: 'RUN_COMMAND'
-            action: '/friend accept {name}'
-        - text: '&einstead!'
     request-sent: '&eA friend request has been sent to &b{user}&e!'
     disallowed: '&eThis user does not want to receive friend requests.'
   accept:
@@ -325,7 +323,6 @@ friends:
     friend-removed: '&b{user} &ehas removed you from his friends list!'
   list:
     no-friends: '&eIt seems that you do not have any friends at the moment!'
-    online: 'now'
     status:
       online: 'online'
       offline: 'offline'
@@ -335,6 +332,7 @@ friends:
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {previousPage}'
+
         - text: '&eFriends List &b({currentPage} of {maxPages})'
         - text: ' &6->'
           click:
@@ -394,7 +392,7 @@ friends:
   settings:
     usage: '&ePlease use &b/friend settings (setting) (enable / disable)'
     invalid: '&ePlease use one of the following settings: &b{settings}'
-    updated: '&eYou have successfully updated the &b{type} setting&e!'
+    updated: '&eYou have successfully updated the &b{type} setting to &b{value}&e!'
 
     noargs:
       header: '&eFriend Settings:'
@@ -416,6 +414,10 @@ friends:
               type: 'RUN_COMMAND'
               action: '/friends settings {type} disable'
       footer: ''
+  broadcast:
+    usage: '&ePlease use &b/friend broadcast (message) &e!'
+    message: '&e(&b{user} &e-> &bAll&e) &f{message}'
+    disabled: '&eYou cannot broadcast as you have this setting disabled!'
 
 punishments:
   cancelled: '&fIt seems that an external plugin has cancelled your punishment!'
@@ -567,7 +569,6 @@ punishments:
 
   kick:
     usage: '&fPlease use &a/kick (user) (reason)&f!'
-    already-muted: '&fThis user is already muted!'
     executed: '&fYou have kicked &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!'
@@ -582,7 +583,6 @@ punishments:
 
   warn:
     usage: '&fPlease use &a/warn (user) (reason)&f!'
-    already-muted: '&fThis user is already muted!'
     executed: '&fYou have warned &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been warned by &a{by} &fat &a{server}&f!'
@@ -780,6 +780,9 @@ hubbalancer:
   already-connected: '&eYou are already connected to &b{serverName}&e!'
 
 custom:
+  ingamemotd:
+    skyblock:
+      - '&eThis is a skyblock join message'
   # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:
     welcome:

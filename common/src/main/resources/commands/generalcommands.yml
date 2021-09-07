@@ -64,6 +64,9 @@ announce:
   name: announce
   aliases: 'alert, bigalert'
   permission: bungeeutilisals.commands.announce
+  # Can set to any combination of b, c, a and t (bcat for all), none to keep default announce behaviour
+  # If not set to none, custom types can still be given using /announce type:(b/c/a/t) (message)
+  default-to: none
   types:
     bossbar:
       enabled: true
@@ -81,9 +84,9 @@ announce:
       enabled: true
     title:
       enabled: true
-      fadein: 1
-      stay: 3
-      fadeout: 1
+      fadein: 10
+      stay: 30
+      fadeout: 10
   # Path to preconfigured messages in the languages file.
   pre_configured: 'custom.announce'
 find:
@@ -270,3 +273,16 @@ shout:
   aliases: 'sh'
   permission: bungeeutilisals.commands.shout
   staff-permission: bungeeutilisals.commands.shout.staff
+staffannouncement:
+  enabled: true
+  name: staffannouncement
+  aliases: 'sa, staffannounce'
+  permission: bungeeutilisals.commands.staffannouncement.send
+  receive-permission: bungeeutilisals.commands.staffannouncement.receive
+offlinemessage:
+  enabled: false
+  name: offlinemessage
+  aliases: 'omsg'
+  permission: bungeeutilisals.commands.offlinemessage
+  cooldown: 60
+  execute-msg-if-online: true

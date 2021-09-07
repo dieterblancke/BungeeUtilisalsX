@@ -1,0 +1,19 @@
+enabled: false
+
+blockedcommands:
+  # If a command is filled in WITHOUT subcommands, then ONLY the parent command will be blocked.
+  # If the subcommands is filled in, then the parent command will not be blocked, but the entered subcommands will
+  # The servers section is optional, if filled in, commands will only be blocked on the entered servers
+  - command: command1
+  - command: command2
+    bypass-permission: 'bungeeutilisalsx.commandblocker.bypass.command2'
+    # The servers to disablet his command in
+    servers:
+      - Lobby1
+    subcommands:
+      - command: test
+        # What index should be taken as subcommand argument? If the subcommand is /command2 test, then index should be 1
+        index: 1
+      - command: world
+        # If the subcommand is /command2 hello world, then the subcommand should be "world" and index should be 2
+        index: 2

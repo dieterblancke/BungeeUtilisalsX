@@ -29,22 +29,16 @@ import java.util.UUID;
 /**
  * This event will be executed upon network join
  */
+@Getter
+@Setter
 @EqualsAndHashCode( callSuper = true )
 public class NetworkStaffLeaveEvent extends AbstractEvent implements Cancellable
 {
 
-    @Getter
-    @Setter
+    private final String userName;
+    private final UUID uuid;
+    private final String staffRank;
     private boolean cancelled;
-
-    @Getter
-    private String userName;
-
-    @Getter
-    private UUID uuid;
-
-    @Getter
-    private String staffRank;
 
     public NetworkStaffLeaveEvent( final String userName, final UUID uuid, final String staffRank )
     {

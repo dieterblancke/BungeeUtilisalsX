@@ -26,15 +26,14 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.AnnounceJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.redisdata.AnnounceMessage;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
@@ -44,11 +43,11 @@ import java.util.Set;
 public class AnnounceCommandCall implements CommandCall, TabCall
 {
 
-    public static void sendAnnounce( final AnnounceMessage message )
+    public static void sendAnnounce( final Set<AnnouncementType> types, final String message )
     {
-        for ( AnnouncementType type : message.getTypes() )
+        for ( AnnouncementType type : types )
         {
-            sendAnnounce( type, message.getMessage() );
+            sendAnnounce( type, message );
         }
     }
 
@@ -107,12 +106,17 @@ public class AnnounceCommandCall implements CommandCall, TabCall
             case CHAT:
                 if ( config.getBoolean( "announce.types.chat.enabled" ) )
                 {
+                    final String prefix = config.getString( "announce.types.chat.prefix" );
+
                     for ( String line : message.split( "%nl%" ) )
                     {
-                        BuX.getApi().announce(
-                                config.getString( "announce.types.chat.prefix" ),
-                                line.replace( "%sub%", "" )
-                        );
+                        line = line.replace( "%sub%", "" );
+
+                        for ( User user : BuX.getApi().getUsers() )
+                        {
+                            user.sendMessage( prefix, line );
+                        }
+                        BuX.getApi().getConsoleUser().sendMessage( prefix, line );
                     }
                 }
                 break;
@@ -216,13 +220,34 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() >= 2 )
-        {
-            final String types = args.get( 0 );
-            final String message = Joiner.on( " " ).join( args.subList( 1, args.size() ) );
+        final String defaultsTo = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "announce.default-to", "none" );
+        final int minArgs = defaultsTo.equalsIgnoreCase( "none" ) ? 2 : 1;
 
-            final AnnounceMessage announceMessage = new AnnounceMessage( getTypes( types ), message );
-            sendAnnounce( announceMessage );
+        if ( args.size() >= minArgs )
+        {
+            final String types;
+            final String message;
+
+            if ( defaultsTo.equalsIgnoreCase( "none" ) )
+            {
+                types = args.get( 0 );
+                message = String.join( " ", args.subList( 1, args.size() ) );
+            }
+            else
+            {
+                if ( args.get( 0 ).startsWith( "type:" ) )
+                {
+                    types = args.get( 0 ).replace( "type:", "" );
+                    message = String.join( " ", args.subList( 1, args.size() ) );
+                }
+                else
+                {
+                    types = defaultsTo;
+                    message = String.join( " ", args );
+                }
+            }
+
+            BuX.getInstance().getJobManager().executeJob( new AnnounceJob( this.getTypes( types ), message ) );
         }
         else
         {

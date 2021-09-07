@@ -24,20 +24,17 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
-import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -74,7 +71,6 @@ public class SpigotUser implements User
     private List<FriendData> friends = Lists.newArrayList();
     private FriendSettings friendSettings;
     private boolean inStaffChat;
-    private MessageQueue<QueuedMessage> messageQueue;
     private boolean msgToggled;
 
     @Override
@@ -139,13 +135,7 @@ public class SpigotUser implements User
 
         friendSettings = ConfigFiles.FRIENDS_CONFIG.isEnabled() ? dao.getFriendsDao().getSettings( uuid ) : new FriendSettings();
 
-        BuX.getInstance().getScheduler().runAsync( () ->
-        {
-            messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue(
-                    player.getUniqueId(), player.getName(), ip
-            );
-            executeMessageQueue();
-        } );
+        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
 
         final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
@@ -373,19 +363,6 @@ public class SpigotUser implements User
     }
 
     @Override
-    public void executeMessageQueue()
-    {
-        QueuedMessage message = messageQueue.poll();
-
-        while ( message != null )
-        {
-            sendLangMessage( message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders() );
-
-            message = messageQueue.poll();
-        }
-    }
-
-    @Override
     public void executeCommand( final String command )
     {
         Bukkit.dispatchCommand( player, command );
@@ -425,6 +402,12 @@ public class SpigotUser implements User
     public boolean isVanished()
     {
         return false;
+    }
+
+    @Override
+    public void setVanished( boolean vanished )
+    {
+        // do nothing
     }
 
     @Override

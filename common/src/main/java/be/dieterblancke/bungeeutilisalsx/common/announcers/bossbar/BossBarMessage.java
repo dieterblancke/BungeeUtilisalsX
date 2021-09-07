@@ -20,18 +20,28 @@ package be.dieterblancke.bungeeutilisalsx.common.announcers.bossbar;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
+import com.dbsoftwares.configuration.api.ISection;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Value;
 
-@Data
+@Value
 @AllArgsConstructor
 public class BossBarMessage
 {
+    BarColor color;
+    BarStyle style;
+    float progress;
+    boolean language;
+    String text;
 
-    private BarColor color;
-    private BarStyle style;
-    private float progress;
-    private boolean language;
-    private String text;
-
+    public BossBarMessage( final ISection section )
+    {
+        this(
+                BarColor.valueOf( section.getString( "color" ) ),
+                BarStyle.valueOf( section.getString( "style" ) ),
+                section.getFloat( "progress" ),
+                section.exists( "language" ) ? section.getBoolean( "language" ) : false,
+                section.getString( "text" )
+        );
+    }
 }

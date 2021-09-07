@@ -25,19 +25,16 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.MessageQueue;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.QueuedMessage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -70,14 +67,13 @@ public class BungeeUser implements User
     private String ip;
     private UserCooldowns cooldowns;
     private UserStorage storage;
-    private List<PunishmentInfo> mute;
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();
     private FriendSettings friendSettings;
     private boolean inStaffChat;
-    private MessageQueue<QueuedMessage> messageQueue;
     private boolean msgToggled;
+    private boolean vanished;
 
     @Override
     public void load( UUID uuid )
@@ -139,24 +135,15 @@ public class BungeeUser implements User
             friends = dao.getFriendsDao().getFriends( uuid );
             friendSettings = dao.getFriendsDao().getSettings( uuid );
 
-            if ( ConfigFiles.CONFIG.isDebug() )
-            {
-                System.out.println( "Friend list of " + name );
-                System.out.println( Arrays.toString( friends.toArray() ) );
-            }
+            BuX.debug( "Friend list of " + name );
+            BuX.debug( Arrays.toString( friends.toArray() ) );
         }
         else
         {
             friendSettings = new FriendSettings();
         }
 
-        BuX.getInstance().getScheduler().runAsync( () ->
-        {
-            messageQueue = BuX.getApi().getStorageManager().getDao().createMessageQueue(
-                    parent.getUniqueId(), parent.getName(), ip
-            );
-            executeMessageQueue();
-        } );
+        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
 
         final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
         BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
@@ -400,19 +387,6 @@ public class BungeeUser implements User
     }
 
     @Override
-    public void executeMessageQueue()
-    {
-        QueuedMessage message = messageQueue.poll();
-
-        while ( message != null )
-        {
-            sendLangMessage( message.getMessage().getLanguagePath(), message.getMessage().getPlaceHolders() );
-
-            message = messageQueue.poll();
-        }
-    }
-
-    @Override
     public void executeCommand( final String command )
     {
         ProxyServer.getInstance().getPluginManager().dispatchCommand( parent, command );
@@ -474,13 +448,6 @@ public class BungeeUser implements User
             }
         }
         return joinedHost;
-    }
-
-    @Override
-    public boolean isVanished()
-    {
-        return BuX.getInstance().proxyOperations().getPlugin( "PremiumVanish" ).isPresent()
-                && de.myzelyam.api.vanish.BungeeVanishAPI.isInvisible( this.parent );
     }
 
     @Override

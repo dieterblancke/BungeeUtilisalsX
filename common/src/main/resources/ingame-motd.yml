@@ -1,0 +1,34 @@
+enabled: false
+
+motds:
+  # By removing server, the MOTD message will be sent on network join (which is once per session)
+  - message:
+      - '&eWelcome &b{user} &eto our server!'
+  - server: Lobbies
+    once-per-session: true
+    message:
+      - '&eWelcome back to our lobbies &b{user}&e!'
+  - server: Skyblock
+    once-per-session: true
+    language: true
+    actionbar: custom.ingamemotd.skyblock
+    bossbar:
+      # BarColor PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+      color: 'YELLOW'
+      # SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS
+      style: 'SOLID'
+      # Number between 0.0 & 1.0
+      progress: 1.0
+      text: custom.ingamemotd.skyblock
+    title:
+      # How long should the title fade in?
+      fadein: 10
+      # How long should the title stay?
+      stay: 30
+      # How long should the title fade out?
+      fadeout: 10
+      # Title text, if language is set to true, the path will be searched in the language file.
+      title: '&c&lBungeeUtilisals'
+      # SubTitle text, if language is set to true, the path will be searched in the language file.
+      subtitle: custom.ingamemotd.skyblock
+    message: custom.ingamemotd.skyblock

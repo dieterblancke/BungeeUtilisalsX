@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.javascript.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
@@ -15,11 +16,10 @@ import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
-import be.dieterblancke.bungeeutilisalsx.common.api.bridge.IBridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.bridge.BridgeManager;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
@@ -53,22 +53,17 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
-        final IBridgeManager bridgeManager = new BridgeManager();
-        final IBuXApi api = new BuXApi(
-                bridgeManager,
+        return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
                 ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
-                bridgeManager.useBridging() ?
+                ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ?
                         this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
                                 ? new ProxySyncPlayerUtils()
                                 : new RedisPlayerUtils()
                         : new BungeePlayerUtils()
         );
-        bridgeManager.setup( api );
-
-        return api;
     }
 
     @Override
@@ -115,6 +110,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         {
             ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new MotdPingListener() );
         }
+    }
+
+    @Override
+    protected void registerPluginSupports()
+    {
+        PluginSupport.registerPluginSupport( new PremiumVanishPluginSupport() );
     }
 
     @Override

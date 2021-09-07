@@ -32,5 +32,6 @@ public class StaffUser
     private final UUID uuid;
     private final StaffRankData rank;
     private boolean hidden;
+    private boolean vanished;
 
 }

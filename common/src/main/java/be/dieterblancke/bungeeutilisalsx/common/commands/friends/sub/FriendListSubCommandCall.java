@@ -21,6 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
+import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
@@ -43,6 +44,8 @@ public class FriendListSubCommandCall implements CommandCall
             return;
         }
 
+        final int friendLimit = FriendUtils.getFriendLimit( user );
+        final int pendingRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() ).size();
         final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
         final int page;
 
@@ -79,6 +82,8 @@ public class FriendListSubCommandCall implements CommandCall
         user.sendLangMessage(
                 "friends.list.head",
                 "{friendAmount}", allFriends.size(),
+                "{maxFriends}", friendLimit,
+                "{pendingFriends}", pendingRequests,
                 "{previousPage}", previous,
                 "{currentPage}", page,
                 "{nextPage}", next,
@@ -102,6 +107,8 @@ public class FriendListSubCommandCall implements CommandCall
         user.sendLangMessage(
                 "friends.list.foot",
                 "{friendAmount}", allFriends.size(),
+                "{maxFriends}", friendLimit,
+                "{pendingFriends}", pendingRequests,
                 "{previousPage}", previous,
                 "{currentPage}", page,
                 "{nextPage}", next,

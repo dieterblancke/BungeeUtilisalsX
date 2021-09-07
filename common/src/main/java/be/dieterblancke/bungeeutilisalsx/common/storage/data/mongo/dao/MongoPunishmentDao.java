@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
@@ -196,7 +195,7 @@ public class MongoPunishmentDao implements PunishmentDao
         data.put( "actionid", uid );
         data.put( "date", new Date() );
 
-        db().getCollection( PlaceHolderAPI.formatMessage( "{punishmentactions-table}" ) ).insertOne( new Document( data ) );
+        db().getCollection( "bu_punishmentactions" ).insertOne( new Document( data ) );
     }
 
     // Recreating save api ...
