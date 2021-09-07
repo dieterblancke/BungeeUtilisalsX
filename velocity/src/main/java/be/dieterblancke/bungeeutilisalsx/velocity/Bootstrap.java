@@ -23,7 +23,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "bungeeutilisalsx",
         name = "BungeeUtilisalsX",
-        version = "2.1.0",
+        version = "2.1.1",
         authors = { "didjee2" },
         dependencies = {
                 @Dependency( id = "skinsrestorer", optional = true )

@@ -11,10 +11,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.dbsoftwares.configuration.api.IConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 public class IngameMotdExecutor implements EventExecutor
 {
@@ -81,7 +83,7 @@ public class IngameMotdExecutor implements EventExecutor
 
     private void sendActionBar( final User user, final boolean language, final String message )
     {
-        user.sendActionBar( language ? user.getLanguageConfig().getConfig().getString( message ) : message );
+        user.sendActionBar( locateMessage( language, user.getLanguageConfig().getConfig(), message ) );
     }
 
     private void sendBossBar( final User user, final boolean language, final BossBarMessage message )
@@ -89,7 +91,7 @@ public class IngameMotdExecutor implements EventExecutor
         final IBossBar bar = BuX.getApi().createBossBar();
         bar.setMessage( Utils.format(
                 user,
-                language ? user.getLanguageConfig().getConfig().getString( message.getText() ) : message.getText()
+                locateMessage( language, user.getLanguageConfig().getConfig(), message.getText() )
         ) );
         bar.setColor( message.getColor() );
         bar.setProgress( message.getProgress() );
@@ -100,15 +102,30 @@ public class IngameMotdExecutor implements EventExecutor
     private void sendTitle( final User user, final boolean language, final TitleMessage message )
     {
         user.sendTitle(
-                language && user.getLanguageConfig().getConfig().exists( message.getTitle() )
-                        ? user.getLanguageConfig().getConfig().getString( message.getTitle() )
-                        : message.getTitle(),
-                language && user.getLanguageConfig().getConfig().exists( message.getSubtitle() )
-                        ? user.getLanguageConfig().getConfig().getString( message.getSubtitle() )
-                        : message.getSubtitle(),
+                locateMessage( language, user.getLanguageConfig().getConfig(), message.getTitle() ),
+                locateMessage( language, user.getLanguageConfig().getConfig(), message.getSubtitle() ),
                 message.getFadeIn(),
                 message.getStay(),
                 message.getFadeOut()
         );
+    }
+
+    private String locateMessage( final boolean language, final IConfiguration config, final String str )
+    {
+        if ( language )
+        {
+            if ( config.exists( str ) )
+            {
+                if ( config.isString( str ) )
+                {
+                    return config.getString( str );
+                }
+                else if ( config.isList( str ) )
+                {
+                    return config.getStringList( str ).stream().collect( Collectors.joining( System.lineSeparator() ) );
+                }
+            }
+        }
+        return str;
     }
 }
