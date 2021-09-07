@@ -146,7 +146,6 @@ public class DumpSubCommandCall implements CommandCall, TabCall
                 "BungeeUtilisalsX",
                 systemInfo,
                 BuX.getInstance().proxyOperations().getPlugins(),
-                getScripts(),
                 configurations
         );
     }
@@ -199,23 +198,6 @@ public class DumpSubCommandCall implements CommandCall, TabCall
         } );
 
         return values;
-    }
-
-    private Map<String, String> getScripts()
-    {
-        final LinkedHashMap<String, String> scripts = Maps.newLinkedHashMap();
-
-        for ( Script script : BuX.getInstance().getScripts() )
-        {
-            scripts.put(
-                    script.getFile(),
-                    script.getScript()
-                            .replace( "\r\n", " " )
-                            .replace( "\t", "    " )
-            );
-        }
-
-        return scripts;
     }
 
     @Override

@@ -18,21 +18,12 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.dump;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
 import java.util.List;
 import java.util.Map;
 
-@Data
-@AllArgsConstructor
-public class Dump
+public record Dump(String plugin,
+                   Map<String, Object> systemInfo,
+                   List<PluginInfo> plugins,
+                   Map<String, Map<String, Object>> configurations)
 {
-
-    private String plugin;
-    private Map<String, Object> systemInfo;
-    private List<PluginInfo> plugins;
-    private Map<String, String> scripts;
-    private Map<String, Map<String, Object>> configurations;
-
 }
