@@ -3,6 +3,11 @@ package be.dieterblancke.bungeeutilisalsx.common.chat;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 import com.dbsoftwares.configuration.api.ISection;
+import net.md_5.bungee.api.ChatColor;
+
+import java.nio.CharBuffer;
+import java.util.Arrays;
+import java.util.stream.Stream;
 
 public class ChatHelper
 {
@@ -36,26 +41,30 @@ public class ChatHelper
     {
         final char[] chars = FANCY_FONT_CHARACTERS.toCharArray();
         final StringBuilder builder = new StringBuilder();
+        final char[] messageChars = message.toCharArray();
 
-        for ( char replaceableChar : message.toCharArray() )
+        for ( int i = 0; i < messageChars.length; i++ )
         {
-            int i = 0;
-            boolean charFound = false;
-            while ( !charFound && i < chars.length )
-            {
-                if ( chars[i] == replaceableChar )
-                {
-                    charFound = true;
-                }
-                i++;
-            }
-            if ( charFound )
-            {
-                builder.append( (char) ( 65248 + replaceableChar ) );
-            }
-            else
+            char replaceableChar = messageChars[i];
+
+            if ( replaceableChar == ChatColor.COLOR_CHAR
+                    && i < ( messageChars.length - 1 )
+                    && ChatColor.getByChar( messageChars[i + 1] ) != null )
             {
                 builder.append( replaceableChar );
+                builder.append( messageChars[i + 1] );
+                i++;
+            } else {
+                final boolean charFound = CharBuffer.wrap(chars).chars().mapToObj( ch -> (char) ch).anyMatch( c -> c == replaceableChar );
+
+                if ( charFound )
+                {
+                    builder.append( (char) ( 65248 + replaceableChar ) );
+                }
+                else
+                {
+                    builder.append( replaceableChar );
+                }
             }
         }
 
