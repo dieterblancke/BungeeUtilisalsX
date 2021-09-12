@@ -193,13 +193,15 @@
                         </relocation>
                         <relocation>
                             <pattern>io.github.karlatemp.unsafeaccessor</pattern>
-                            <shadedPattern>
-                                be.dieterblancke.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor
-                            </shadedPattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.objectweb.asm</pattern>
                             <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.objectweb.asm</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.mozilla</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.mozilla</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

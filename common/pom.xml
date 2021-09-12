@@ -42,12 +42,6 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>de.christophkraemer</groupId>
-            <artifactId>rhino-script-engine</artifactId>
-            <version>1.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>be.dieterblancke.proxysync</groupId>
             <artifactId>api</artifactId>
             <version>0.0.3</version>

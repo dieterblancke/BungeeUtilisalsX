@@ -5,13 +5,17 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.hash.Hashing;
-import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import lombok.Data;
+import lombok.SneakyThrows;
+import org.mozilla.javascript.Context;
+import org.mozilla.javascript.Scriptable;
 
-import javax.script.ScriptEngine;
+import javax.script.ScriptContext;
 import javax.script.ScriptException;
+import javax.script.SimpleScriptContext;
 import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.logging.Level;
@@ -21,7 +25,6 @@ public class Script
 {
 
     private static final File cacheFolder;
-    private static final RhinoScriptEngineFactory ENGINE_FACTORY = new RhinoScriptEngineFactory();
 
     static
     {
@@ -35,8 +38,10 @@ public class Script
 
     private final String file;
     private final String script;
+    private Context context;
+    private SimpleScriptContext simpleScriptContext;
+    private Scriptable scriptable;
     private IConfiguration storage;
-    private ScriptEngine engine;
 
     public Script( String file, String script ) throws ScriptException, IOException
     {
@@ -51,7 +56,18 @@ public class Script
         }
 
         this.storage = IConfiguration.loadYamlConfiguration( storage );
-        this.engine = loadEngine();
+        this.context = Context.enter();
+        this.simpleScriptContext = new SimpleScriptContext();
+        this.scriptable = new ExternalScriptable( simpleScriptContext );
+
+        this.put( "storage", storage );
+        this.put( "api", BuX.getApi() );
+
+        this.eval( """
+                function isConsole() {
+                    return user === null || user.getClass().getSimpleName() === 'ConsoleUser';
+                }
+                """ );
     }
 
     private static String hash( String str )
@@ -59,33 +75,19 @@ public class Script
         return Hashing.sha256().hashString( str, StandardCharsets.UTF_8 ).toString();
     }
 
-    private ScriptEngine loadEngine() throws ScriptException
-    {
-        final ScriptEngine engine = ENGINE_FACTORY.getScriptEngine();
-
-        engine.put( "storage", storage );
-        engine.put( "api", BuX.getApi() );
-
-        engine.eval( "function isConsole() { return user === null || user.getClass().getSimpleName() !== 'BUser'; }" );
-
-        return engine;
-    }
-
     public String getReplacement( User user )
     {
         final String script = PlaceHolderAPI.formatMessage( user, this.script );
 
-        engine.put( "user", user );
+        this.put( "user", user );
 
-        try
-        {
-            return String.valueOf( engine.eval( script ) );
-        }
-        catch ( ScriptException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-            return "SCRIPT ERROR";
-        }
+        return String.valueOf( this.eval( script ) );
+    }
+
+    @SneakyThrows
+    private Object eval( final String str )
+    {
+        return context.evaluateReader( scriptable, new StringReader( str ), "<Unknown source>", 1, null );
     }
 
     public void unload()
@@ -103,5 +105,10 @@ public class Script
                 BuX.getLogger().log( Level.WARNING, "Could not remove empty script storage.", e );
             }
         }
+    }
+
+    private void put( String key, Object value )
+    {
+        simpleScriptContext.getBindings( ScriptContext.ENGINE_SCOPE ).put( key, value );
     }
 }
