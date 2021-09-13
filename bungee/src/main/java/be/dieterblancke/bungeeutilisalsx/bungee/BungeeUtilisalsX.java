@@ -6,7 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
-import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.javascript.JavaScriptPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
@@ -80,11 +79,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
-
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" ) )
-        {
-            new JavaScriptPlaceHolder().register();
-        }
     }
 
     @Override

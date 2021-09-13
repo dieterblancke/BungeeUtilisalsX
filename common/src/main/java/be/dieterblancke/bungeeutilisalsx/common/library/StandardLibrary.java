@@ -138,20 +138,6 @@ public enum StandardLibrary
             "1.16-R0.4",
             true
     ),
-    RHINO(
-            "org.mozilla.javascript.Context",
-            "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
-            "1.7.13",
-            configExistsAndTrue( getConfig(), "scripting" ),
-            relocate( "org.mozilla" )
-    ),
-    RHINO_SCRIPT_ENGINE(
-            "de.christophkraemer.rhino.javascript.RhinoScriptEngine",
-            "https://repo1.maven.org/maven2/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
-            "1.1.1",
-            configExistsAndTrue( getConfig(), "scripting" ),
-            relocate( "de.christophkraemer.rhino" )
-    ),
     APACHE_COMMONS_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
@@ -172,6 +158,21 @@ public enum StandardLibrary
             "5.13.0",
             configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
             relocate( "com.rabbitmq" )
+    ),
+    RHINO(
+            "org.mozilla.javascript.Script",
+            "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
+            "1.7.13",
+            configExistsAndTrue( getConfig(), "scripting" ),
+            relocate( "org.mozilla" )
+    ),
+    RHINO_SCRIPT_ENGINE(
+            "de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory",
+            "https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
+            "1.2.1",
+            configExistsAndTrue( getConfig(), "scripting" ),
+            relocate( "org.mozilla" ),
+            relocate( "de.christophkraemer.rhino" )
     );
 
     private static IConfiguration config;

@@ -7,7 +7,6 @@ import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.LibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
@@ -15,12 +14,10 @@ import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
-import be.dieterblancke.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
-import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.javascript.JavaScriptPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
 
@@ -71,11 +68,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
-
-        if ( ConfigFiles.CONFIG.getConfig().getBoolean( "scripting" ) )
-        {
-            new JavaScriptPlaceHolder().register();
-        }
     }
 
     @Override

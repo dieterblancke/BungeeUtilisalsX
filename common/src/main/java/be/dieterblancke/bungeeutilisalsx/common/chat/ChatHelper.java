@@ -6,8 +6,6 @@ import com.dbsoftwares.configuration.api.ISection;
 import net.md_5.bungee.api.ChatColor;
 
 import java.nio.CharBuffer;
-import java.util.Arrays;
-import java.util.stream.Stream;
 
 public class ChatHelper
 {
@@ -47,15 +45,17 @@ public class ChatHelper
         {
             char replaceableChar = messageChars[i];
 
-            if ( replaceableChar == ChatColor.COLOR_CHAR
+            if ( ( replaceableChar == '&' || replaceableChar == ChatColor.COLOR_CHAR )
                     && i < ( messageChars.length - 1 )
                     && ChatColor.getByChar( messageChars[i + 1] ) != null )
             {
                 builder.append( replaceableChar );
                 builder.append( messageChars[i + 1] );
                 i++;
-            } else {
-                final boolean charFound = CharBuffer.wrap(chars).chars().mapToObj( ch -> (char) ch).anyMatch( c -> c == replaceableChar );
+            }
+            else
+            {
+                final boolean charFound = CharBuffer.wrap( chars ).chars().mapToObj( ch -> (char) ch ).anyMatch( c -> c == replaceableChar );
 
                 if ( charFound )
                 {
