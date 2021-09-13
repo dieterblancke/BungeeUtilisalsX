@@ -7,6 +7,7 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.hash.Hashing;
 import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import javax.script.ScriptEngine;
 import javax.script.ScriptException;
@@ -66,26 +67,23 @@ public class Script
         engine.put( "storage", storage );
         engine.put( "api", BuX.getApi() );
 
-        engine.eval( "function isConsole() { return user === null || user.getClass().getSimpleName() !== 'BUser'; }" );
+        engine.eval( """
+                function isConsole() {
+                    return user === null || user.getClass().getSimpleName() === 'ConsoleUser';
+                }
+                """ );
 
         return engine;
     }
 
+    @SneakyThrows
     public String getReplacement( User user )
     {
         final String script = PlaceHolderAPI.formatMessage( user, this.script );
 
         engine.put( "user", user );
 
-        try
-        {
-            return String.valueOf( engine.eval( script ) );
-        }
-        catch ( ScriptException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-            return "SCRIPT ERROR";
-        }
+        return String.valueOf( engine.eval( script ) );
     }
 
     public void unload()

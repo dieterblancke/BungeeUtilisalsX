@@ -36,6 +36,7 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -156,6 +157,7 @@ public abstract class AbstractBungeeUtilisalsX
         xmlPlaceHolders.addXmlPlaceHolder( new CenterPlaceHolder() );
 
         PlaceHolderAPI.addPlaceHolder( xmlPlaceHolders );
+        PlaceHolderAPI.addPlaceHolder( false, "javascript", new JavaScriptPlaceHolder() );
     }
 
     protected abstract void registerLanguages();

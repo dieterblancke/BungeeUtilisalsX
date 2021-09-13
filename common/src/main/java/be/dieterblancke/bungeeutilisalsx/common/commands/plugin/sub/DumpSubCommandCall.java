@@ -26,7 +26,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.Dump;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -47,7 +46,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -146,7 +144,6 @@ public class DumpSubCommandCall implements CommandCall, TabCall
                 "BungeeUtilisalsX",
                 systemInfo,
                 BuX.getInstance().proxyOperations().getPlugins(),
-                getScripts(),
                 configurations
         );
     }
@@ -199,23 +196,6 @@ public class DumpSubCommandCall implements CommandCall, TabCall
         } );
 
         return values;
-    }
-
-    private Map<String, String> getScripts()
-    {
-        final LinkedHashMap<String, String> scripts = Maps.newLinkedHashMap();
-
-        for ( Script script : BuX.getInstance().getScripts() )
-        {
-            scripts.put(
-                    script.getFile(),
-                    script.getScript()
-                            .replace( "\r\n", " " )
-                            .replace( "\t", "    " )
-            );
-        }
-
-        return scripts;
     }
 
     @Override
