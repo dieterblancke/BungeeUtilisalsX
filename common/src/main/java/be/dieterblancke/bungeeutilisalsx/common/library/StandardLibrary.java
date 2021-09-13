@@ -165,6 +165,14 @@ public enum StandardLibrary
             "1.7.13",
             configExistsAndTrue( getConfig(), "scripting" ),
             relocate( "org.mozilla" )
+    ),
+    RHINO_SCRIPT_ENGINE(
+            "de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory",
+            "https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
+            "1.2.1",
+            configExistsAndTrue( getConfig(), "scripting" ),
+            relocate( "org.mozilla" ),
+            relocate( "de.christophkraemer.rhino" )
     );
 
     private static IConfiguration config;

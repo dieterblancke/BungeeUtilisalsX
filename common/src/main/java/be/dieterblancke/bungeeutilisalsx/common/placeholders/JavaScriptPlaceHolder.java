@@ -16,7 +16,7 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.bungee.placeholder.javascript;
+package be.dieterblancke.bungeeutilisalsx.common.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.InputPlaceHolderEvent;
@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.impl.InputPlaceH
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
 {
@@ -37,7 +38,8 @@ public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
     public String getReplacement( InputPlaceHolderEvent event )
     {
         final Optional<Script> optional = BuX.getInstance().getScripts()
-                .stream().filter( s -> s.getFile().equalsIgnoreCase( event.getArgument() ) )
+                .stream()
+                .filter( s -> s.getFile().equalsIgnoreCase( event.getArgument() ) )
                 .findFirst();
 
         if ( optional.isPresent() )
