@@ -93,7 +93,6 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
-        this.registerSlf4jImplementation();
         this.loadConfigs();
         ChatProtections.reloadAllProtections();
 
@@ -359,13 +358,5 @@ public abstract class AbstractBungeeUtilisalsX
     public boolean isRedisManagerEnabled()
     {
         return redisManager != null;
-    }
-
-    private void registerSlf4jImplementation()
-    {
-        if ( ReflectionUtils.isLoaded( "org.slf4j.LoggerFactory" ) )
-        {
-
-        }
     }
 }

@@ -139,10 +139,6 @@
                             <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.zaxxer.hikari</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>org.slf4j</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.slf4j</shadedPattern>
-                        </relocation>
-                        <relocation>
                             <pattern>io.lettuce.core</pattern>
                             <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.lettuce.core</shadedPattern>
                         </relocation>
