@@ -54,7 +54,7 @@ public class FriendReplySubCommandCall implements CommandCall
         if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
             final String message = String.join( " ", args );
-            
+
             BuX.getInstance().getJobManager().executeJob( new UserFriendPrivateMessageJob(
                     user.getUuid(),
                     user.getName(),

@@ -33,7 +33,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 import java.util.UUID;
 import java.util.logging.Level;
 
@@ -411,7 +410,7 @@ public class SqlFriendsDao implements FriendsDao
                 while ( rs.next() )
                 {
                     settings.set(
-                            FriendSetting.valueOf( rs.getString("setting").toUpperCase() ),
+                            FriendSetting.valueOf( rs.getString( "setting" ).toUpperCase() ),
                             rs.getBoolean( "value" )
                     );
                 }

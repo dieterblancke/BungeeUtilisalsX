@@ -8,10 +8,12 @@ import be.dieterblancke.bungeeutilisalsx.common.migration.sql.SqlMigrationManage
 public class MigrationManagerFactory
 {
 
-    public static MigrationManager createMigrationManager() {
+    public static MigrationManager createMigrationManager()
+    {
         final StorageType type = BuX.getInstance().getAbstractStorageManager().getType();
 
-        if (type == StorageType.MONGODB) {
+        if ( type == StorageType.MONGODB )
+        {
             return new MongoMigrationManager();
         }
         return new SqlMigrationManager();

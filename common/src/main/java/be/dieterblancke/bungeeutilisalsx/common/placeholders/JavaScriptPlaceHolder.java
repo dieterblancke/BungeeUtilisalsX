@@ -24,7 +24,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.impl.InputPlaceH
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
 {

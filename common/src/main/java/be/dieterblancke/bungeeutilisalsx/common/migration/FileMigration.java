@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration;
 
-import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.FileUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,7 +21,7 @@ public abstract class FileMigration implements Migration
 
     public FileMigration( final String filePath )
     {
-        try ( InputStream is = AbstractBungeeUtilisalsX.class.getClassLoader().getResourceAsStream( filePath ) )
+        try ( InputStream is = FileUtils.getResourceAsStream( filePath ) )
         {
             try ( BufferedReader reader = new BufferedReader( new InputStreamReader( is, StandardCharsets.UTF_8 ) ) )
             {

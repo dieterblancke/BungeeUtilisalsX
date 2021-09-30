@@ -22,13 +22,10 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PrivateMessageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserFriendPrivateMessageJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
-import java.util.Optional;
 
 public class FriendMsgSubCommandCall implements CommandCall
 {

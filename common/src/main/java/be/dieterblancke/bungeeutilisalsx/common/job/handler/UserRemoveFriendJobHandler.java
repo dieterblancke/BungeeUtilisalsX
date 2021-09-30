@@ -1,6 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.common.job.handler;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserAddFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserRemoveFriendJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;

@@ -656,7 +656,7 @@ public class SqlBansDao implements BansDao
 
     @Override
     public List<PunishmentInfo> getRecentBans( final int limit )
-   {
+    {
         final List<PunishmentInfo> punishments = Lists.newArrayList();
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();

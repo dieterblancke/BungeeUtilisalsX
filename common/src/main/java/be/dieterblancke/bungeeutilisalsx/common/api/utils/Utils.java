@@ -1041,6 +1041,7 @@ public class Utils
 
     /**
      * Gets the user storage for a specific user, or null if the user never joined
+     *
      * @param name the name to get the data for
      * @return the data for the given user
      */
@@ -1051,6 +1052,7 @@ public class Utils
 
     /**
      * Gets the user storage for a specific user, or null if the user never joined
+     *
      * @param user the user to take cached data for if not null
      * @param name the name to get the data for
      * @return the data for the given user

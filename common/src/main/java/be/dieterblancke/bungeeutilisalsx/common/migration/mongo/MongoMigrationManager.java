@@ -1,8 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.migration.mongo;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 import be.dieterblancke.bungeeutilisalsx.common.migration.Migration;
@@ -41,7 +39,7 @@ public class MongoMigrationManager implements MigrationManager
                 );
                 final Migration migration = (Migration) clazz.newInstance();
 
-                if ( !this.migrationExists( migrationId ) && migration.shouldRun() && (migration instanceof MongoMigration))
+                if ( !this.migrationExists( migrationId ) && migration.shouldRun() && ( migration instanceof MongoMigration ) )
                 {
                     BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
                     migration.migrate();
@@ -99,6 +97,6 @@ public class MongoMigrationManager implements MigrationManager
                 .append( "type", type )
                 .append( "script", className )
                 .append( "created_at", createdAt )
-                .append( "success", success ));
+                .append( "success", success ) );
     }
 }

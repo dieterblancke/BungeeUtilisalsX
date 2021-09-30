@@ -18,8 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.announcer;
 
-import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.FileUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.RandomIterator;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
@@ -32,6 +32,7 @@ import lombok.Getter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public abstract class Announcer
     static
     {
         folder = new File( BuX.getInstance().getDataFolder(), "announcer" );
+
         if ( !folder.exists() )
         {
             folder.mkdirs();
@@ -71,20 +73,25 @@ public abstract class Announcer
 
     public Announcer( final AnnouncementType type )
     {
-        this(
-                type,
-                new File( folder, type.toString().toLowerCase() + ".yml" ),
-                AbstractBungeeUtilisalsX.class.getResourceAsStream( "/announcers/" + type.toString().toLowerCase() + ".yml" )
-        );
-    }
-
-    public Announcer( final AnnouncementType type, final File file, final InputStream defaultStream )
-    {
         this.type = type;
+
+        final File file = new File(
+                BuX.getInstance().getDataFolder(),
+                "announcer" + File.separator + type.toString().toLowerCase() + ".yml"
+        );
 
         if ( !file.exists() )
         {
-            IConfiguration.createDefaultFile( defaultStream, file );
+            try ( InputStream inputStream = FileUtils.getResourceAsStream(
+                    "/announcer/" + type.toString().toLowerCase() + ".yml"
+            ) )
+            {
+                IConfiguration.createDefaultFile( inputStream, file );
+            }
+            catch ( IOException e )
+            {
+                e.printStackTrace();
+            }
         }
 
         configuration = IConfiguration.loadYamlConfiguration( file );
@@ -98,7 +105,7 @@ public abstract class Announcer
         {
             try
             {
-                final Announcer announcer = clazz.newInstance();
+                final Announcer announcer = clazz.getConstructor().newInstance();
 
                 if ( announcer.isEnabled() )
                 {
@@ -110,7 +117,7 @@ public abstract class Announcer
 
                 announcers.put( announcer.getType(), announcer );
             }
-            catch ( InstantiationException | IllegalAccessException e )
+            catch ( InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e )
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }

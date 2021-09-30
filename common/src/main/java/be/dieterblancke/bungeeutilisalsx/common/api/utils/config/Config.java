@@ -18,8 +18,8 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config;
 
-import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.FileUtils;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
 
@@ -46,7 +46,7 @@ public class Config
 
         if ( !file.exists() )
         {
-            IConfiguration.createDefaultFile( AbstractBungeeUtilisalsX.class.getResourceAsStream( location ), file );
+            IConfiguration.createDefaultFile( FileUtils.getResourceAsStream( location ), file );
 
             this.config = IConfiguration.loadYamlConfiguration( file );
         }
@@ -57,7 +57,7 @@ public class Config
             try
             {
                 config.copyDefaults(
-                        IConfiguration.loadYamlConfiguration( AbstractBungeeUtilisalsX.class.getResourceAsStream( location ) )
+                        IConfiguration.loadYamlConfiguration( FileUtils.getResourceAsStream( location ) )
                 );
             }
             catch ( IOException e )

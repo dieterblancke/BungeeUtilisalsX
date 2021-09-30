@@ -1,11 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUserJob;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Date;
 import java.util.UUID;
 
 @Getter
