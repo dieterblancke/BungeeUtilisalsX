@@ -1004,7 +1004,6 @@ public class Utils
         {
             for ( io.github.classgraph.ClassInfo clazz : scanResult.getAllClasses() )
             {
-                System.out.println( clazz.getName() );
                 classes.add( clazz.loadClass() );
             }
         }
