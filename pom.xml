@@ -195,6 +195,14 @@
                             <pattern>org.objectweb.asm</pattern>
                             <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.objectweb.asm</shadedPattern>
                         </relocation>
+                        <relocation>
+                            <pattern>nonapi.io.github</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.nonapi.io.github</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.github</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github</shadedPattern>
+                        </relocation>
                     </relocations>
                 </configuration>
                 <executions>
