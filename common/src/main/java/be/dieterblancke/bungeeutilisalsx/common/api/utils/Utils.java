@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
@@ -39,8 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.URL;
-import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -48,8 +45,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 public class Utils
 {
@@ -1002,41 +997,51 @@ public class Utils
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
         final List<Class<?>> classes = new ArrayList<>();
-        final CodeSource src = JobManager.class.getProtectionDomain().getCodeSource();
-
-        if ( src != null )
+        try ( io.github.classgraph.ScanResult scanResult = new io.github.classgraph.ClassGraph()
+                .acceptPackages( packageName )
+                .enableClassInfo()
+                .scan() )
         {
-            try
+            for ( io.github.classgraph.ClassInfo clazz : scanResult.getAllClasses() )
             {
-                final URL jar = src.getLocation();
-                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
-
-                while ( true )
-                {
-                    final ZipEntry e = zip.getNextEntry();
-                    if ( e == null )
-                    {
-                        break;
-                    }
-                    final String name = e.getName().replace( "/", "." );
-
-                    if ( name.startsWith( packageName ) )
-                    {
-                        if ( name.endsWith( ".class" ) )
-                        {
-                            final Class<?> clazz = Class.forName( name.replace( ".class", "" ) );
-
-                            classes.add( clazz );
-                        }
-                    }
-                }
-            }
-            catch ( IOException | ClassNotFoundException e )
-            {
-                e.printStackTrace();
+                classes.add( clazz.loadClass() );
             }
         }
+
         return classes;
+//        final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
+//
+//        if ( src != null )
+//        {
+//            try
+//            {
+//                final URL jar = src.getLocation();
+//                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
+//
+//                while ( true )
+//                {
+//                    final ZipEntry e = zip.getNextEntry();
+//                    if ( e == null )
+//                    {
+//                        break;
+//                    }
+//                    final String name = e.getName().replace( "/", "." );
+//
+//                    if ( name.startsWith( packageName ) )
+//                    {
+//                        if ( name.endsWith( ".class" ) )
+//                        {
+//                            classes.add( Class.forName( name.replace( ".class", "" ) ) );
+//                        }
+//                    }
+//                }
+//            }
+//            catch ( IOException | ClassNotFoundException e )
+//            {
+//                e.printStackTrace();
+//            }
+//        }
+//        return classes;
     }
 
     /**
