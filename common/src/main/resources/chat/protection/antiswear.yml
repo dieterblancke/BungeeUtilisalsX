@@ -20,6 +20,6 @@ patterns:
     whitelist:
       - 'words'
 
-# Commands that have to be executed when someone advertises (will be executed by console)
+# Commands that have to be executed when someone swears (will be executed by console)
 commands: [ ]
 # - 'warn {user} Please do not swear.'
