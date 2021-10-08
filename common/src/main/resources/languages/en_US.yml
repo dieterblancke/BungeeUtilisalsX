@@ -767,6 +767,7 @@ punishments:
 
 hubbalancer:
   no-lobbies-found: '&eCould not find any lobbies, perhaps they are offline?'
+  prevented-on-server: '&eThis command cannot be used here.'
   no-fallback:
     - '&cYou have been disconnected'
     - ''

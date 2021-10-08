@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.velocity.user.ConsoleUser;
 
 import java.util.List;
@@ -50,6 +51,12 @@ public class HubCommandCall implements CommandCall, TabCall
         final List<ServerData> lobbies = BuX.getApi().getHubBalancer().getServers().stream()
                 .filter( server -> server.isType( HubServerType.LOBBY ) )
                 .collect( Collectors.toList() );
+
+        if ( serverName != null && ConfigFiles.HUBBALANCER.isPreventedOn( serverName ) )
+        {
+            user.sendMessage( "hubbalancer.prevented-on-server" );
+            return;
+        }
 
         if ( args.size() == 0 )
         {

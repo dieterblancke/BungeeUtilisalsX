@@ -30,12 +30,25 @@ public class KickListener implements Listener
         if ( section.getString( "type" ).equalsIgnoreCase( "BLACKLIST" ) )
         {
             fallback = true;
+
             for ( String contain : section.getStringList( "reasons" ) )
             {
                 if ( reason.contains( contain ) )
                 {
                     fallback = false;
                     break;
+                }
+            }
+
+            if ( event.getKickedFrom() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getKickedFrom().getName() ) )
+                    {
+                        fallback = false;
+                        break;
+                    }
                 }
             }
         }
@@ -48,6 +61,18 @@ public class KickListener implements Listener
                 {
                     fallback = true;
                     break;
+                }
+            }
+
+            if ( event.getKickedFrom() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getKickedFrom().getName() ) )
+                    {
+                        fallback = true;
+                        break;
+                    }
                 }
             }
         }

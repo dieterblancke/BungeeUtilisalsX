@@ -46,7 +46,7 @@ public class UserConnectionListener implements Listener
         final Player player = event.getPlayer();
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }

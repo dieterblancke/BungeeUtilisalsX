@@ -19,11 +19,10 @@ public class InventoryListener implements Listener
     {
         final Inventory inventory = event.getInventory();
 
-        if ( inventory == null || inventory.getHolder() == null || !( inventory.getHolder() instanceof UuidInventoryHolder ) )
+        if ( inventory == null || inventory.getHolder() == null || !( inventory.getHolder() instanceof final UuidInventoryHolder inventoryHolder ) )
         {
             return;
         }
-        final UuidInventoryHolder inventoryHolder = (UuidInventoryHolder) inventory.getHolder();
         final Optional<Gui> optionalGui = ( (BungeeUtilisalsX) BuX.getInstance() ).getGuiManager().findByUuid( inventoryHolder.getUuid() );
 
         optionalGui.ifPresent( gui -> gui.handleInventoryClick( event ) );

@@ -30,12 +30,25 @@ public class KickListener
         if ( section.getString( "type" ).equalsIgnoreCase( "BLACKLIST" ) )
         {
             fallback = true;
+
             for ( String contain : section.getStringList( "reasons" ) )
             {
                 if ( reason.contains( contain ) )
                 {
                     fallback = false;
                     break;
+                }
+            }
+
+            if ( event.getServer() != null && event.getServer().getServerInfo() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getServer().getServerInfo().getName() ) )
+                    {
+                        fallback = false;
+                        break;
+                    }
                 }
             }
         }
@@ -48,6 +61,18 @@ public class KickListener
                 {
                     fallback = true;
                     break;
+                }
+            }
+
+            if ( event.getServer() != null && event.getServer().getServerInfo() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getServer().getServerInfo().getName() ) )
+                    {
+                        fallback = true;
+                        break;
+                    }
                 }
             }
         }
