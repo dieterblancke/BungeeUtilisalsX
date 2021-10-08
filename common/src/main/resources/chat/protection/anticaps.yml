@@ -16,6 +16,6 @@ percentage: 65
 # The permission to bypass the anticaps system
 bypass: 'bungeeutilisalsx.chat.protection.caps.bypass'
 
-# Commands that have to be executed when someone advertises (will be executed by console)
+# Commands that have to be executed when someone types in caps (will be executed by console)
 commands: [ ]
 # - 'warn {user} Please use less caps.'
