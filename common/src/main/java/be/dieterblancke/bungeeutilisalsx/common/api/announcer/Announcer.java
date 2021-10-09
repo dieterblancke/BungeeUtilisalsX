@@ -83,7 +83,7 @@ public abstract class Announcer
         if ( !file.exists() )
         {
             try ( InputStream inputStream = FileUtils.getResourceAsStream(
-                    "/announcer/" + type.toString().toLowerCase() + ".yml"
+                    File.separator + "announcer" + File.separator + type.toString().toLowerCase() + ".yml"
             ) )
             {
                 IConfiguration.createDefaultFile( inputStream, file );
