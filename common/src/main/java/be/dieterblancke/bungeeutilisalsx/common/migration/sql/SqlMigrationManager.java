@@ -26,7 +26,7 @@ public class SqlMigrationManager implements MigrationManager
             {
                 if ( !rs.next() )
                 {
-                    final FileMigration fileMigration = new FileMigration( "migrations/migration_setup.sql" )
+                    final FileMigration fileMigration = new FileMigration( "/migrations/migration_setup.sql" )
                     {
                         @Override
                         public boolean shouldRun()

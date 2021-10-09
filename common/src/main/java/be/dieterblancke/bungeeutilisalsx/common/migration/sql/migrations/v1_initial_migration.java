@@ -13,7 +13,7 @@ public class v1_initial_migration extends FileMigration
 
     public v1_initial_migration()
     {
-        super( "migrations/v1_initial_migration.sql" );
+        super( "/migrations/v1_initial_migration.sql" );
     }
 
     @Override

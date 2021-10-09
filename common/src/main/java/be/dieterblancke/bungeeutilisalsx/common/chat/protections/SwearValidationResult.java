@@ -1,9 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.chat.protections;
 
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatValidationResult;
-import lombok.Data;
+import lombok.Getter;
 
-@Data
+@Getter
 public class SwearValidationResult extends ChatValidationResult
 {
 
