@@ -1,5 +1,5 @@
 if [[ "$1" == "skipTests" ]]; then
-  mvn clean package install -DskipTests -o
+  mvn clean package install -DskipTests
 else
   mvn clean package install
 fi
