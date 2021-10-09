@@ -52,12 +52,6 @@ public class HubCommandCall implements CommandCall, TabCall
                 .filter( server -> server.isType( HubServerType.LOBBY ) )
                 .collect( Collectors.toList() );
 
-        if ( serverName != null && ConfigFiles.HUBBALANCER.isPreventedOn( serverName ) )
-        {
-            user.sendMessage( "hubbalancer.prevented-on-server" );
-            return;
-        }
-
         if ( args.size() == 0 )
         {
             if ( lobbies.stream().anyMatch( server -> server.getName().equalsIgnoreCase( serverName ) ) )

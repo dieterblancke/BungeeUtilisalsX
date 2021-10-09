@@ -29,6 +29,8 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.ClassPath;
+import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
@@ -45,6 +47,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class Utils
 {
@@ -994,21 +997,16 @@ public class Utils
      * @param packageName the package to get the classes for
      * @return a list of classes inside the given BuX package
      */
+    @SneakyThrows
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
         final List<Class<?>> classes = new ArrayList<>();
-        try ( io.github.classgraph.ScanResult scanResult = new io.github.classgraph.ClassGraph()
-                .acceptPackages( packageName )
-                .enableClassInfo()
-                .scan() )
-        {
-            for ( io.github.classgraph.ClassInfo clazz : scanResult.getAllClasses() )
-            {
-                classes.add( clazz.loadClass() );
-            }
-        }
 
-        return classes;
+        return ClassPath.from( BuX.class.getClassLoader() )
+                .getTopLevelClassesRecursive( packageName )
+                .stream()
+                .map( ClassPath.ClassInfo::load )
+                .collect( Collectors.toList() );
 //        final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
 //
 //        if ( src != null )

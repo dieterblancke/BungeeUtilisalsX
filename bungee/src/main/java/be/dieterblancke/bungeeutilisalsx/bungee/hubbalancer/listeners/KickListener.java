@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import net.md_5.bungee.api.AbstractReconnectHandler;
@@ -44,7 +45,8 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getKickedFrom().getName() ) )
+                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = false;
                         break;
@@ -68,7 +70,8 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    if ( ConfigFiles.SERVERGROUPS.getServer( server ).isInGroup( event.getKickedFrom().getName() ) )
+                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = true;
                         break;

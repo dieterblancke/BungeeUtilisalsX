@@ -30,7 +30,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 @Data
-
 public class Command
 {
 
@@ -42,6 +41,7 @@ public class Command
     private final CommandCall command;
     private final TabCall tab;
     private final List<ServerGroup> disabledServers;
+    private final boolean listenerBased;
 
     Command( final String name,
              final String[] aliases,
@@ -50,7 +50,8 @@ public class Command
              final int cooldown,
              final CommandCall command,
              final TabCall tab,
-             final List<ServerGroup> disabledServers )
+             final List<ServerGroup> disabledServers,
+             final boolean listenerBased )
     {
         if ( parameters == null )
         {
@@ -65,6 +66,7 @@ public class Command
         this.command = command;
         this.tab = tab;
         this.disabledServers = disabledServers == null ? new ArrayList<>() : disabledServers;
+        this.listenerBased = listenerBased;
     }
 
     public void execute( final User user, final String[] argList )
@@ -137,7 +139,7 @@ public class Command
         } );
     }
 
-    private boolean isDisabledInServer( final String serverName )
+    public boolean isDisabledInServer( final String serverName )
     {
         if ( serverName == null )
         {

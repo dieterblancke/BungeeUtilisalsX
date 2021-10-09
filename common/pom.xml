@@ -90,12 +90,6 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.classgraph</groupId>
-            <artifactId>classgraph</artifactId>
-            <version>4.8.117</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>
             <version>5.7.2</version>

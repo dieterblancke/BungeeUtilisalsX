@@ -46,6 +46,7 @@ public class CommandBuilder
     private TabCall tab;
     private List<String> parameters;
     private List<ServerGroup> disabledServers = new ArrayList<>();
+    private boolean listenerBased;
 
     public static CommandBuilder builder()
     {
@@ -136,6 +137,11 @@ public class CommandBuilder
                     .collect( Collectors.toList() );
         }
 
+        if ( section.exists( "listener-based" ) && section.getBoolean( "listener-based" ) )
+        {
+            this.listenerBased = true;
+        }
+
         return this;
     }
 
@@ -181,6 +187,6 @@ public class CommandBuilder
             tab = DEFAULT_TAB_CALL;
         }
 
-        return new Command( name, aliases, permission, parameters, cooldown, call, tab, disabledServers );
+        return new Command( name, aliases, permission, parameters, cooldown, call, tab, disabledServers, listenerBased );
     }
 }

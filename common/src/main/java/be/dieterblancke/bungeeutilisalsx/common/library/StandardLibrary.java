@@ -171,28 +171,6 @@ public enum StandardLibrary
             configExistsAndTrue( getConfig(), "scripting" ),
             relocate( "org.mozilla" ),
             relocate( "de.christophkraemer.rhino" )
-    ),
-    CLASS_GRAPH(
-            "io.github.classgraph.ClassGraph",
-            "https://repo1.maven.org/maven2/io/github/classgraph/classgraph/{version}/classgraph-{version}.jar",
-            "4.8.117",
-            true,
-            relocate( "nonapi.io.github.classgraph" ),
-            relocate( "io.github" )
-    ),
-    TOOLFACTORY(
-            "io.github.toolfactory.jvm.Driver",
-            "https://repo1.maven.org/maven2/io/github/toolfactory/jvm-driver/{version}/jvm-driver-{version}.jar",
-            "6.2.2",
-            true,
-            relocate( "io.github" )
-    ),
-    NARCISSUS(
-            "io.github.toolfactory.narcissus.Narcissus",
-            "https://repo1.maven.org/maven2/io/github/toolfactory/narcissus/{version}/narcissus-{version}.jar",
-            "1.0.2",
-            true,
-            relocate( "io.github" )
     );
 
     private static IConfiguration config;

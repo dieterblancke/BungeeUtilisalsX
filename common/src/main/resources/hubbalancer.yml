@@ -37,7 +37,4 @@ commands:
     enabled: true
     aliases: 'lobby, gotohub'
     permission: bungeeutilisals.commands.hub
-
-    # A list of servers on which the hub command should be prevented
-    prevent-on:
-      - 'Login'
+    listener-based: true

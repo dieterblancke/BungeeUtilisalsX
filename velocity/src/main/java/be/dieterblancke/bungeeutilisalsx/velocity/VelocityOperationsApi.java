@@ -33,7 +33,7 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     @Override
     public void registerCommand( final Command command )
     {
-        if ( !commandHolders.containsKey( command ) )
+        if ( !commandHolders.containsKey( command ) && !command.isListenerBased() )
         {
             final CommandHolder commandHolder = new CommandHolder( command );
             final CommandManager commandManager = Bootstrap.getInstance().getProxyServer().getCommandManager();
