@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.migration.Migration;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.mongodb.client.MongoCollection;
+import lombok.SneakyThrows;
 import org.bson.Document;
 
 import java.sql.Connection;
@@ -26,38 +27,33 @@ public class MongoMigrationManager implements MigrationManager
     }
 
     @Override
+    @SneakyThrows
     public void migrate()
     {
         final List<Class<?>> classes = Utils.getClassesInPackage( "be.dieterblancke.bungeeutilisalsx.common.migration.mongo.migrations" );
 
-        try
+        for ( Class<?> clazz : classes )
         {
-            for ( Class<?> clazz : classes )
-            {
-                final int migrationId = Integer.parseInt(
-                        clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
-                );
-                final Migration migration = (Migration) clazz.newInstance();
+            final int migrationId = Integer.parseInt(
+                    clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
+            );
+            final Migration migration = (Migration) clazz.getConstructor().newInstance();
 
-                if ( !this.migrationExists( migrationId ) && migration.shouldRun() && ( migration instanceof MongoMigration ) )
-                {
-                    BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
-                    migration.migrate();
-                    this.createMigration(
-                            migrationId,
-                            migration instanceof FileMigration ? "file" : "java",
-                            migration.getClass().getName(),
-                            new Date(),
-                            true
-                    );
-                    BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
-                }
+            if ( !this.migrationExists( migrationId ) && migration.shouldRun() && ( migration instanceof MongoMigration ) )
+            {
+                BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
+                migration.migrate();
+                this.createMigration(
+                        migrationId,
+                        migration instanceof FileMigration ? "file" : "java",
+                        migration.getClass().getName(),
+                        new Date(),
+                        true
+                );
+                BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
             }
         }
-        catch ( Exception e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "Could not execute migration", e );
-        }
+
     }
 
     private boolean migrationExists( final int version )
