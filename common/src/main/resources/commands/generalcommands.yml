@@ -209,6 +209,34 @@ report:
     - 'IPBAN'
     - 'IPTEMPBAN'
 
+  discord-webhook:
+    enabled: false
+
+    color: 12265273
+
+    author:
+      name: 'Report for {user} by {reporter}.'
+      url: 'https://dieterblancke.xyz/projects/BungeeUtilisalsX'
+      icon: 'https://dieterblancke.xyz/media/avatar.png'
+
+    footer:
+      text: 'BungeeUtilisalsX Report System'
+      icon: 'https://dieterblancke.xyz/media/avatar.png'
+
+    fields:
+      - name: 'Reporter'
+        value: '{reporter}'
+        inline: true
+      - name: 'Target'
+        value: '{user}'
+        inline: true
+      - name: 'Reason'
+        value: '{reason}'
+        inline: true
+      - name: 'Server'
+        value: '{server}'
+        inline: true
+
   subcommands:
     create:
       enabled: true

@@ -75,15 +75,12 @@ public abstract class Announcer
     {
         this.type = type;
 
-        final File file = new File(
-                BuX.getInstance().getDataFolder(),
-                "announcer" + File.separator + type.toString().toLowerCase() + ".yml"
-        );
+        final File file = new File( folder, type.toString().toLowerCase() + ".yml" );
 
         if ( !file.exists() )
         {
             try ( InputStream inputStream = FileUtils.getResourceAsStream(
-                    File.separator + "announcer" + File.separator + type.toString().toLowerCase() + ".yml"
+                    "/announcer/" + type.toString().toLowerCase() + ".yml"
             ) )
             {
                 IConfiguration.createDefaultFile( inputStream, file );

@@ -26,7 +26,7 @@ public class Script
 
     static
     {
-        cacheFolder = new File( BuX.getInstance().getDataFolder(), "scripts" + File.separator + "cache" );
+        cacheFolder = new File( BuX.getInstance().getDataFolder(), "scripts/cache" );
 
         if ( !cacheFolder.exists() )
         {
