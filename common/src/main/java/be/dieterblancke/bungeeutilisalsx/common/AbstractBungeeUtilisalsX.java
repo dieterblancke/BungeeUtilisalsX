@@ -182,8 +182,11 @@ public abstract class AbstractBungeeUtilisalsX
         this.api.getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
 
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
-        this.api.getEventLoader().register( UserCommandEvent.class, new UserCommandExecutor() );
         this.api.getEventLoader().register( UserServerConnectedEvent.class, new IngameMotdExecutor() );
+
+        final UserCommandExecutor userCommandExecutor = new UserCommandExecutor();
+        this.api.getEventLoader().register( UserCommandEvent.class, userCommandExecutor );
+        this.api.getEventLoader().register( UserTabCompleteEvent.class, userCommandExecutor );
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {

@@ -1,5 +1,8 @@
 enabled: false
 
+# Whitelist or blacklist
+type: 'BLACKLIST'
+
 blockedcommands:
   # If a command is filled in WITHOUT subcommands, then ONLY the parent command will be blocked.
   # If the subcommands is filled in, then the parent command will not be blocked, but the entered subcommands will
