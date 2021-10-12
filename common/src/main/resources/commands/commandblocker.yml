@@ -7,7 +7,7 @@ blockedcommands:
   - command: command1
   - command: command2
     bypass-permission: 'bungeeutilisalsx.commandblocker.bypass.command2'
-    # The servers to disablet his command in
+    # The servers to disable this command in
     servers:
       - Lobby1
     subcommands:
