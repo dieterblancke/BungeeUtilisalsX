@@ -21,10 +21,12 @@ package be.dieterblancke.bungeeutilisalsx.velocity.listeners;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserTabCompleteEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.event.player.TabCompleteEvent;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.Optional;
@@ -76,5 +78,27 @@ public class UserChatListener
             }
             event.setResult( CommandExecuteEvent.CommandResult.command( commandEvent.getCommand() ) );
         }
+    }
+
+    @Subscribe
+    public void onTabComplete( final TabCompleteEvent event )
+    {
+        final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
+
+        if ( !optional.isPresent() )
+        {
+            return;
+        }
+        final User user = optional.get();
+        final UserTabCompleteEvent userTabCompleteEvent = new UserTabCompleteEvent(
+                user,
+                event.getPartialMessage(),
+                event.getSuggestions()
+        );
+
+        BuX.getApi().getEventLoader().launchEvent( userTabCompleteEvent );
+
+        event.getSuggestions().clear();
+        event.getSuggestions().addAll( userTabCompleteEvent.getSuggestions() );
     }
 }
