@@ -1,8 +1,6 @@
-if [[ "$1" == "skipTests" ]]; then
-  mvn clean package install -DskipTests
-else
-  mvn clean package install
-fi
+mvn clean package install "$@"
+
+echo mvn clean package install "$@"
 
 fixBuildNames() {
   if ls *shaded* 1> /dev/null 2>&1; then
