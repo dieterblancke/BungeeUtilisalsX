@@ -275,7 +275,7 @@ public class Utils
      */
     public static net.md_5.bungee.api.chat.BaseComponent[] asComponent( final String message )
     {
-        return new net.md_5.bungee.api.chat.ComponentBuilder( message ).create();
+        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( message );
     }
 
     /**
