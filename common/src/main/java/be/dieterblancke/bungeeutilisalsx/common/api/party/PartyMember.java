@@ -16,5 +16,6 @@ public class PartyMember
     private final Date joinedAt;
     private String nickName;
     private boolean partyOwner;
+    private boolean inactive;
 
 }

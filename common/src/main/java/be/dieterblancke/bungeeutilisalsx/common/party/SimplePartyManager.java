@@ -46,7 +46,8 @@ public class SimplePartyManager implements PartyManager
                 leader.getName(),
                 new Date(),
                 leader.getName(),
-                true
+                true,
+                false
         ) );
         final PartyCreationJob partyCreationJob = new PartyCreationJob( party );
 
@@ -111,6 +112,18 @@ public class SimplePartyManager implements PartyManager
         this.parties.removeIf( p -> p.getUuid().equals( party.getUuid() ) );
     }
 
+    @Override
+    public void addMemberToParty( Party party, PartyMember member )
+    {
+        // TODO
+    }
+
+    @Override
+    public void removeMemberFromParty( Party party, PartyMember member )
+    {
+        // TODO
+    }
+
     private void startPartyCleanupTask()
     {
         final int period = ConfigFiles.PARTY_CONFIG.getPartyInactivityPeriod();
@@ -135,7 +148,28 @@ public class SimplePartyManager implements PartyManager
                 }
             }
 
-            parties.removeIf( queuedForRemoval::contains );
+            queuedForRemoval.forEach( this::removeParty );
+
+            for ( Party party : this.parties )
+            {
+                final List<PartyMember> membersQueuedForRemoval = new ArrayList<>();
+
+                for ( PartyMember partyMember : party.getPartyMembers() )
+                {
+                    final boolean inactive = BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() );
+
+                    if ( partyMember.isInactive() && inactive )
+                    {
+                        membersQueuedForRemoval.add( partyMember );
+                    }
+                    else
+                    {
+                        partyMember.setInactive( inactive );
+                    }
+                }
+
+                membersQueuedForRemoval.forEach( member -> this.removeMemberFromParty( party, member ) );
+            }
         } );
     }
 }

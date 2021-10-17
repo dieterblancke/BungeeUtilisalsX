@@ -23,4 +23,8 @@ public interface PartyManager
 
     void unregisterPartyLocally( Party party );
 
+    void addMemberToParty( Party party, PartyMember member );
+
+    void removeMemberFromParty( Party party, PartyMember member );
+
 }
