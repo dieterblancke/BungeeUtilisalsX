@@ -11,4 +11,6 @@ public interface IRedisDataManager
 
     long getAmountOfOnlineUsersOnDomain( String domain );
 
+    IRedisPartyDataManager getRedisPartyDataManager();
+
 }

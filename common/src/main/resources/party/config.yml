@@ -1,6 +1,6 @@
 enabled: false
 
-# How often should BungeeUtilisalsX scan for inactive parties (in minutes)
+# How often should BungeeUtilisalsX scan for inactive parties (in seconds)
 # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
 # Next scan, if the party is already inactive AND all party members are still offline, then the party will be removed.
-party-inactivity-period: 1
+party-inactivity-period: 60

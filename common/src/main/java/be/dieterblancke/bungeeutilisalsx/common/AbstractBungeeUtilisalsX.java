@@ -13,6 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.User
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
@@ -32,6 +33,7 @@ import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManagerFactory;
+import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
@@ -67,6 +69,7 @@ public abstract class AbstractBungeeUtilisalsX
     private PermissionIntegration activePermissionIntegration;
     private JobManager jobManager;
     private RedisManager redisManager;
+    private PartyManager partyManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -116,6 +119,7 @@ public abstract class AbstractBungeeUtilisalsX
         final boolean useMultiProxy = ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" );
         this.redisManager = useMultiProxy ? RedisManagerFactory.create() : null;
         this.jobManager = useMultiProxy ? new MultiProxyJobManager() : new SingleProxyJobManager();
+        this.partyManager = new SimplePartyManager();
 
         this.detectPermissionIntegration();
         this.registerLanguages();

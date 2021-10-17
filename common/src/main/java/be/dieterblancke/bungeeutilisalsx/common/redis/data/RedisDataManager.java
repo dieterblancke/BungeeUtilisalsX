@@ -2,25 +2,33 @@ package be.dieterblancke.bungeeutilisalsx.common.redis.data;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisPartyDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.cache.LoadingCache;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-@RequiredArgsConstructor
+@Getter
 public class RedisDataManager implements IRedisDataManager
 {
 
     private final RedisManager redisManager;
+    private final IRedisPartyDataManager redisPartyDataManager;
     private final LoadingCache<String, Long> domainCountCache = CacheHelper.<String, Long>builder()
             .build( builder ->
             {
                 builder.maximumSize( 250 );
                 builder.expireAfterWrite( 3, TimeUnit.MINUTES );
             }, this::getAmountOfOnlineUsersOnDomainUncached );
+
+    public RedisDataManager( final RedisManager redisManager )
+    {
+        this.redisManager = redisManager;
+        this.redisPartyDataManager = new RedisPartyDataManager( redisManager );
+    }
 
     @Override
     public void loadRedisUser( final User user )
@@ -66,10 +74,5 @@ public class RedisDataManager implements IRedisDataManager
         {
             return commands.scard( RedisDataConstants.DOMAIN_PREFIX + domain );
         } );
-    }
-
-    private static final class RedisDataConstants
-    {
-        private static final String DOMAIN_PREFIX = "domain:";
     }
 }
