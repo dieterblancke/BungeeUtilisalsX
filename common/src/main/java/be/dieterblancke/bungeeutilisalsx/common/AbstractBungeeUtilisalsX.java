@@ -37,6 +37,7 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultP
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -67,6 +68,7 @@ public abstract class AbstractBungeeUtilisalsX
     private PermissionIntegration activePermissionIntegration;
     private JobManager jobManager;
     private RedisManager redisManager;
+    private ProtocolizeManager protocolizeManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -123,6 +125,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerExecutors();
         this.registerCommands();
         this.registerPluginSupports();
+        this.registerProtocolizeSupport();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -361,5 +364,15 @@ public abstract class AbstractBungeeUtilisalsX
     public boolean isRedisManagerEnabled()
     {
         return redisManager != null;
+    }
+
+    private void registerProtocolizeSupport()
+    {
+        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isEmpty() )
+        {
+            return;
+        }
+
+        this.protocolizeManager = new ProtocolizeManager();
     }
 }
