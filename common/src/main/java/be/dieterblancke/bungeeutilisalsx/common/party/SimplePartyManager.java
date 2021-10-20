@@ -1,8 +1,10 @@
 package be.dieterblancke.bungeeutilisalsx.common.party;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyAddMemberJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyCreationJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyRemovalJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyRemoveMemberJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
@@ -113,15 +115,40 @@ public class SimplePartyManager implements PartyManager
     }
 
     @Override
-    public void addMemberToParty( Party party, PartyMember member )
+    public void addMemberToParty( final Party party, final PartyMember member )
     {
-        // TODO
+        final PartyAddMemberJob partyAddMemberJob = new PartyAddMemberJob( party, member );
+
+        BuX.getInstance().getJobManager().executeJob( partyAddMemberJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().addMemberToParty( party, member );
+        }
     }
 
     @Override
-    public void removeMemberFromParty( Party party, PartyMember member )
+    public void removeMemberFromParty( final Party party, final PartyMember member )
     {
-        // TODO
+        if ( member.isPartyOwner() )
+        {
+            // TODO: assign new owner and call PartySetOwnerJob
+        }
+
+        if ( party.getPartyMembers().size() <= 1 )
+        {
+            removeParty( party );
+            return;
+        }
+
+        final PartyRemoveMemberJob partyRemoveMemberJob = new PartyRemoveMemberJob( party, member );
+
+        BuX.getInstance().getJobManager().executeJob( partyRemoveMemberJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().removeMemberFromParty( party, member );
+        }
     }
 
     private void startPartyCleanupTask()
