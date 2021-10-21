@@ -1,21 +1,47 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import dev.simplix.protocolize.api.Protocolize;
-import dev.simplix.protocolize.api.player.ProtocolizePlayer;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.api.ISection;
 
-public class ProtocolizeManager
+public interface ProtocolizeManager
 {
 
-    public ProtocolizePlayer getProtocolizePlayer( final User user )
-    {
-        return Protocolize.playerProvider().player( user.getUuid() );
-    }
+    void sendSound( User user, SoundData soundData );
 
-    public void sendSound( final User user )
+    record SoundData(String sound, String category, float volume, float pitch)
     {
-        final ProtocolizePlayer protocolizePlayer = this.getProtocolizePlayer( user );
 
-        // TODO: play sound
+        public static SoundData fromSection( final ISection section )
+        {
+            return new SoundData(
+                    section.getString( "sound" ),
+                    section.exists( "category" ) ? section.getString( "category" ) : "master",
+                    section.exists( "volume" ) ? section.getFloat( "volume" ) : 1f,
+                    section.exists( "pitch" ) ? section.getFloat( "pitch" ) : 1f
+            );
+        }
+
+        public static SoundData fromSection( final ISection configuration, final String path )
+        {
+            if ( !configuration.exists( path ) )
+            {
+                return null;
+            }
+
+            if ( configuration.isSection( path ) )
+            {
+                return fromSection( configuration.getSection( path ) );
+            }
+            else
+            {
+                return new SoundData(
+                        configuration.getString( path ),
+                        "master",
+                        1f,
+                        1f
+                );
+            }
+        }
     }
 }

@@ -37,7 +37,9 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultP
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.NoOperationProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -370,9 +372,11 @@ public abstract class AbstractBungeeUtilisalsX
     {
         if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isEmpty() )
         {
-            return;
+            this.protocolizeManager = new NoOperationProtocolizeManager();
         }
-
-        this.protocolizeManager = new ProtocolizeManager();
+        else
+        {
+            this.protocolizeManager = new SimpleProtocolizeManager();
+        }
     }
 }

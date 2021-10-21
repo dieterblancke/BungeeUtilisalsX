@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 
@@ -47,6 +48,7 @@ public class CommandBuilder
     private List<String> parameters;
     private List<ServerGroup> disabledServers = new ArrayList<>();
     private boolean listenerBased;
+    private SoundData soundData;
 
     public static CommandBuilder builder()
     {
@@ -142,6 +144,11 @@ public class CommandBuilder
             this.listenerBased = true;
         }
 
+        if ( section.exists( "sound" ) )
+        {
+            this.soundData = SoundData.fromSection( section, "sound" );
+        }
+
         return this;
     }
 
@@ -160,6 +167,12 @@ public class CommandBuilder
     public CommandBuilder tab( final TabCall tab )
     {
         this.tab = tab;
+        return this;
+    }
+
+    public CommandBuilder soundData( final SoundData soundData )
+    {
+        this.soundData = soundData;
         return this;
     }
 
@@ -187,6 +200,6 @@ public class CommandBuilder
             tab = DEFAULT_TAB_CALL;
         }
 
-        return new Command( name, aliases, permission, parameters, cooldown, call, tab, disabledServers, listenerBased );
+        return new Command( name, aliases, permission, parameters, cooldown, call, tab, disabledServers, listenerBased, soundData );
     }
 }
