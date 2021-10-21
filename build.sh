@@ -1,7 +1,5 @@
 mvn clean package install "$@"
 
-echo mvn clean package install "$@"
-
 fixBuildNames() {
   if ls *shaded* 1> /dev/null 2>&1; then
     fileName=$(find ./ -printf "%f\n" | grep "shaded")
