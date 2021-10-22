@@ -47,10 +47,10 @@ jobs:
           name: BungeeUtilisalsX
           retention-days: 14
           path: |
-            ~/builds/bungee/target/BungeeUtilisalsX*.jar
-            ~/builds/velocity/target/BungeeUtilisalsX*.jar
-            ~/builds/spigot/target/BungeeUtilisalsX*.jar
-            ~/builds/webapi/target/BungeeUtilisalsX*.jar
+            bungee/target/BungeeUtilisalsX*.jar
+            velocity/target/BungeeUtilisalsX*.jar
+            spigot/target/BungeeUtilisalsX*.jar
+            webapi/target/BungeeUtilisalsX*.jar
 
 #  deploy:
 #    runs-on: ubuntu-latest
