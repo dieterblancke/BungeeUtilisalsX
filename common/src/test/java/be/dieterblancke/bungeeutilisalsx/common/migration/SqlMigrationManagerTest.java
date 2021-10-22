@@ -11,10 +11,8 @@ import be.dieterblancke.bungeeutilisalsx.common.storage.TestPostgreSQLStorageMan
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestSQLiteStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import com.dbsoftwares.configuration.api.IConfiguration;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.Ignore;
+import org.junit.jupiter.api.*;
 import org.mockito.stubbing.Answer;
 import org.testcontainers.containers.GenericContainer;
 
@@ -22,6 +20,7 @@ import java.sql.SQLException;
 
 import static org.mockito.Mockito.when;
 
+@Disabled
 class SqlMigrationManagerTest extends BuXTest
 {
 
