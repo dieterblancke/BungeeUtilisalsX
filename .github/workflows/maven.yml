@@ -7,6 +7,7 @@ on:
     branches:
       - master
       - development
+      - 162-bungee-gui
   pull_request:
     branches:
       - master
@@ -38,12 +39,27 @@ jobs:
           java-version: 16
       - name: Build with Maven
         run: bash build.sh -Dmaven.test.skip=true
+      - name: Cache jar files
+        uses: actions/cache@v2
+        with:
+          key: build-${{ github.sha }}
+          path: |
+            bungee/target/BungeeUtilisalsX*.jar
+            velocity/target/BungeeUtilisalsX*.jar
+            spigot/target/BungeeUtilisalsX*.jar
+            webapi/target/BungeeUtilisalsX*.jar
 
   deploy:
     runs-on: ubuntu-latest
     needs: build
 
     steps:
+      - name: Cache jar files
+        uses: actions/cache@v2
+        with:
+          key: build-${{ github.sha }}
+          restore-keys: |
+            build-
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
