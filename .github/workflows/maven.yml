@@ -59,16 +59,19 @@ jobs:
       - name: Cache jar files
         uses: actions/cache@v2
         with:
+          path: ~/builds
           key: build-${{ github.sha }}
           restore-keys: |
             build-
+      - name: Build with Maven
+        run: ls -la ~/builds
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
           name: BungeeUtilisalsX
           retention-days: 14
           path: |
-            bungee/target/BungeeUtilisalsX*.jar
-            velocity/target/BungeeUtilisalsX*.jar
-            spigot/target/BungeeUtilisalsX*.jar
-            webapi/target/BungeeUtilisalsX*.jar
+            ~/builds/bungee/target/BungeeUtilisalsX*.jar
+            ~/builds/velocity/target/BungeeUtilisalsX*.jar
+            ~/builds/spigot/target/BungeeUtilisalsX*.jar
+            ~/builds/webapi/target/BungeeUtilisalsX*.jar
