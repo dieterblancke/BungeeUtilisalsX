@@ -1,13 +1,20 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.GuiManager;
 import com.dbsoftwares.configuration.api.ISection;
+import dev.simplix.protocolize.api.inventory.Inventory;
 
 public interface ProtocolizeManager
 {
 
     void sendSound( User user, SoundData soundData );
+
+    void closeInventory( User user );
+
+    void openInventory( User user, Inventory inventory );
+
+    GuiManager getGuiManager();
 
     record SoundData(String sound, String category, float volume, float pitch)
     {

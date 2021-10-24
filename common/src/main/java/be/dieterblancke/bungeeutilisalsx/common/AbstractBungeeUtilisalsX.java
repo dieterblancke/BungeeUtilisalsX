@@ -37,7 +37,6 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultP
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.NoOperationProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
@@ -236,6 +235,11 @@ public abstract class AbstractBungeeUtilisalsX
 
         loadScripts();
         ChatProtections.reloadAllProtections();
+
+        if ( isProtocolizeEnabled() )
+        {
+            protocolizeManager.getGuiManager().reload();
+        }
     }
 
     private void loadScripts()
@@ -370,13 +374,14 @@ public abstract class AbstractBungeeUtilisalsX
 
     private void registerProtocolizeSupport()
     {
-        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isEmpty() )
-        {
-            this.protocolizeManager = new NoOperationProtocolizeManager();
-        }
-        else
+        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isPresent() )
         {
             this.protocolizeManager = new SimpleProtocolizeManager();
         }
+    }
+
+    public boolean isProtocolizeEnabled()
+    {
+        return protocolizeManager != null;
     }
 }

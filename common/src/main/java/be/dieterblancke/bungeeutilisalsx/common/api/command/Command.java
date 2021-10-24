@@ -136,7 +136,10 @@ public class Command
                     user.getCooldowns().updateTime( "COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown );
                 }
 
-                BuX.getInstance().getProtocolizeManager().sendSound( user, soundData );
+                if ( BuX.getInstance().isProtocolizeEnabled() )
+                {
+                    BuX.getInstance().getProtocolizeManager().sendSound( user, soundData );
+                }
             }
             catch ( Exception e )
             {

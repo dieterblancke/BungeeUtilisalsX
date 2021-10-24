@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.spigot.utils;
+package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 public interface TriConsumer<K1, K2, K3>
 {

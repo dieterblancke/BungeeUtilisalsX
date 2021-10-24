@@ -102,7 +102,7 @@ public class MessageBuilder
                     ) ) )
             ) );
         }
-        if ( section.exists( "sound" ) )
+        if ( section.exists( "sound" ) && BuX.getInstance().isProtocolizeEnabled() )
         {
             BuX.getInstance().getProtocolizeManager().sendSound( user, SoundData.fromSection( section, "sound" ) );
         }
