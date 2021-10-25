@@ -27,6 +27,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserComman
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
@@ -110,7 +111,7 @@ public class MuteCheckExecutor implements EventExecutor
 
     private PunishmentInfo getCurrentMuteForUser( final User user, final String server )
     {
-        if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+        if ( !user.getStorage().hasData( UserStorageKey.CURRENT_MUTES ) )
         {
             // mutes seem to not have loaded yet, loading them now ...
             final MutesDao dao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
@@ -119,9 +120,9 @@ public class MuteCheckExecutor implements EventExecutor
             mutes.addAll( dao.getActiveMutes( user.getUuid() ) );
             mutes.addAll( dao.getActiveIPMutes( user.getIp() ) );
 
-            user.getStorage().setData( "CURRENT_MUTES", mutes );
+            user.getStorage().setData( UserStorageKey.CURRENT_MUTES, mutes );
         }
-        final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+        final List<PunishmentInfo> mutes = user.getStorage().getData( UserStorageKey.CURRENT_MUTES );
         if ( mutes.isEmpty() )
         {
             return null;

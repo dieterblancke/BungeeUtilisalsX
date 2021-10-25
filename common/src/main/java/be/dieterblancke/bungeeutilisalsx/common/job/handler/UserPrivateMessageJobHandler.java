@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessage
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 public class UserPrivateMessageJobHandler extends AbstractJobHandler
@@ -34,7 +35,7 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            user.getStorage().setData( "MSG_LAST_USER", job.getUserName() );
+            user.getStorage().setData( UserStorageKey.MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",

@@ -260,6 +260,8 @@ general-commands:
     sent: '&eYou have sent an offline message to &b{user}&e!'
 
 friends:
+  gui:
+    add-chat-input: '&ePlease enter the name of the friend you wish to add or type ''&bcancel&e'' to abort.'
   join:
     requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
     join: '&eYour friend, &b{user}&e, has joined the network!'

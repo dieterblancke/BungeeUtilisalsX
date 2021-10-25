@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.bungee.utils.LanguageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -33,9 +34,9 @@ public class JoinListener implements Listener
         {
             final User user = optionalUser.get();
 
-            if ( user.getStorage().hasData( "HUBBALANCER_NO_REDIRECT" ) )
+            if ( user.getStorage().hasData( UserStorageKey.HUBBALANCER_NO_REDIRECT ) )
             {
-                user.getStorage().removeData( "HUBBALANCER_NO_REDIRECT" );
+                user.getStorage().removeData( UserStorageKey.HUBBALANCER_NO_REDIRECT );
                 return;
             }
         }

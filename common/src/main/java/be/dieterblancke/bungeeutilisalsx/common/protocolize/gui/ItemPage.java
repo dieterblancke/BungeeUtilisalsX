@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TriConsumer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -17,11 +18,12 @@ import dev.simplix.protocolize.api.ClickType;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.inventory.InventoryClick;
 import dev.simplix.protocolize.api.item.ItemStack;
-import dev.simplix.protocolize.data.ItemType;
-import dev.simplix.protocolize.data.inventory.InventoryType;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ItemPage
 {
@@ -175,29 +177,21 @@ public class ItemPage
         return ( gui, user, event ) ->
         {
             event.cancelled( true );
+            user.sendLangMessage( guiAction.getConfigSection().getString( "languagePath" ) );
+            BuX.getInstance().getProtocolizeManager().closeInventory( user );
 
-            final Inventory anvil = new Inventory( InventoryType.ANVIL );
-            final String configTitle = guiAction.getConfigSection().getString( "title" );
-            final String title = user.getLanguageConfig().getConfig().exists( configTitle )
-                    ? user.getLanguageConfig().getConfig().getString( configTitle )
-                    : configTitle;
-
-            anvil.title( Utils.format( title ) );
-            anvil.item( 0, new ItemStack( ItemType.PAPER ) );
-            anvil.item( 2, new ItemStack( ItemType.PAPER ) );
-
-            anvil.onClick( anvilClick ->
+            final List<Consumer<String>> consumers = user.getStorage().getDataOrPut( UserStorageKey.CHAT_CONSUMERS, () -> new ArrayList<>() );
+            consumers.add( ( str ) ->
             {
-                System.out.println( (String) anvil.item( 2 ).displayName( true ) );
+                if ( !str.trim().equalsIgnoreCase( "cancel" ) )
+                {
+                    final TriConsumer<Gui, User, InventoryClick> handler = this.getCommandClickHandler(
+                            action.replace( "{output}", str )
+                    );
 
-                final TriConsumer<Gui, User, InventoryClick> handler = this.getCommandClickHandler(
-                        action.replace( "{output}", anvil.item( 2 ).displayName( true ) )
-                );
-                handler.accept( gui, user, event );
-                BuX.getInstance().getProtocolizeManager().closeInventory( user );
+                    handler.accept( gui, user, event );
+                }
             } );
-
-            BuX.getInstance().getProtocolizeManager().openInventory( user, anvil );
         };
     }
 }
