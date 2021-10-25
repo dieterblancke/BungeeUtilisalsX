@@ -7,7 +7,6 @@ on:
     branches:
       - master
       - development
-      - 162-bungee-gui
   pull_request:
     branches:
       - master

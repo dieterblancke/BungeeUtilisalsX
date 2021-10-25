@@ -177,4 +177,10 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         return Bootstrap.getInstance().getLogger();
     }
+
+    @Override
+    protected void registerMetrics()
+    {
+
+    }
 }

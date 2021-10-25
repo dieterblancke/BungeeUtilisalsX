@@ -17,6 +17,8 @@ import dev.simplix.protocolize.api.ClickType;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.inventory.InventoryClick;
 import dev.simplix.protocolize.api.item.ItemStack;
+import dev.simplix.protocolize.data.ItemType;
+import dev.simplix.protocolize.data.inventory.InventoryType;
 
 import java.util.Arrays;
 import java.util.Optional;
@@ -170,28 +172,32 @@ public class ItemPage
 
     private TriConsumer<Gui, User, InventoryClick> getInputClickHandler( final GuiAction guiAction, final String action )
     {
-        return ( gui, player, event ) ->
+        return ( gui, user, event ) ->
         {
             event.cancelled( true );
 
-// TODO
-//            Bukkit.getScheduler().runTaskLater(
-//                    Bootstrap.getInstance(),
-//                    () -> new AnvilGUI.Builder()
-//                            .title( LanguageUtils.getLanguageString( guiAction.getConfigSection().getString( "title" ), player ) )
-//                            .itemLeft( new ItemStack( Material.PAPER ) )
-//                            .onComplete( ( p, output ) ->
-//                            {
-//                                final TriConsumer<Gui, Player, InventoryClickEvent> handler = this.getCommandClickHandler(
-//                                        action.replace( "{output}", output )
-//                                );
-//                                handler.accept( gui, p, event );
-//                                return AnvilGUI.Response.close();
-//                            } )
-//                            .plugin( Bootstrap.getInstance() )
-//                            .open( player ),
-//                    3
-//            );
+            final Inventory anvil = new Inventory( InventoryType.ANVIL );
+            final String configTitle = guiAction.getConfigSection().getString( "title" );
+            final String title = user.getLanguageConfig().getConfig().exists( configTitle )
+                    ? user.getLanguageConfig().getConfig().getString( configTitle )
+                    : configTitle;
+
+            anvil.title( Utils.format( title ) );
+            anvil.item( 0, new ItemStack( ItemType.PAPER ) );
+            anvil.item( 2, new ItemStack( ItemType.PAPER ) );
+
+            anvil.onClick( anvilClick ->
+            {
+                System.out.println( (String) anvil.item( 2 ).displayName( true ) );
+
+                final TriConsumer<Gui, User, InventoryClick> handler = this.getCommandClickHandler(
+                        action.replace( "{output}", anvil.item( 2 ).displayName( true ) )
+                );
+                handler.accept( gui, user, event );
+                BuX.getInstance().getProtocolizeManager().closeInventory( user );
+            } );
+
+            BuX.getInstance().getProtocolizeManager().openInventory( user, anvil );
         };
     }
 }

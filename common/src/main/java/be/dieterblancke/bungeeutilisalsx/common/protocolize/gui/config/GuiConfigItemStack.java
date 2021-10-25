@@ -9,6 +9,8 @@ import com.google.common.collect.Lists;
 import dev.simplix.protocolize.api.item.ItemStack;
 import dev.simplix.protocolize.data.ItemType;
 import lombok.Data;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -65,11 +67,20 @@ public class GuiConfigItemStack
         }
         itemStack.lore(
                 this.lore.stream()
-                        .map( lore -> Utils.format( user, Utils.replacePlaceHolders( lore, placeholders ) ) )
+                        .map( lore ->
+                        {
+                            final TextComponent loreComponent = new TextComponent( Utils.format( user, Utils.replacePlaceHolders( lore, placeholders ) ) );
+
+                            loreComponent.setItalic( false );
+
+                            return new BaseComponent[]{ loreComponent };
+                        } )
                         .collect( Collectors.toList() ),
                 false
         );
-        itemStack.displayName( Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) ) );
+        final TextComponent displayName = new TextComponent( Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) ) );
+        displayName.setItalic( false );
+        itemStack.displayName( new BaseComponent[]{ displayName } );
 
         this.enchantments.forEach( enchant -> enchant.addToItem( itemStack ) );
 
