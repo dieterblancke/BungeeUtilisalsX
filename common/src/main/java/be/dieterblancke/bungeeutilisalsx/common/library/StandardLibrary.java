@@ -74,8 +74,7 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "5.0.0",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
-            relocate( "com.zaxxer.hikari" ),
-            relocate( "org.slf4j" )
+            relocate( "com.zaxxer.hikari" )
     ),
     SLF4J_API(
             "org.slf4j.LoggerFactory",
