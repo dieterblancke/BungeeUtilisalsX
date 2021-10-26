@@ -106,4 +106,16 @@ public class FriendAcceptSubCommandCall implements CommandCall
 
         acceptFriendRequest( user, storage, optionalTarget.orElse( null ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Accepts an outstanding incoming friend request.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend accept (user)";
+    }
 }

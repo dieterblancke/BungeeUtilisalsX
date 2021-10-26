@@ -113,4 +113,16 @@ public class FriendAddSubCommandCall implements CommandCall
             ) );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Adds a friend to your friends list. If this user has an outstanding friend request towards you, this request will be accepted.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend add (user)";
+    }
 }

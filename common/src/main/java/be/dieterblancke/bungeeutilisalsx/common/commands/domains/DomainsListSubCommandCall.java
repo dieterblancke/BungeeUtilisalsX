@@ -77,6 +77,18 @@ public class DomainsListSubCommandCall implements CommandCall
         user.sendLangMessage( "general-commands.domains.list.footer", "{total}", domains.size() );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Lists all domains that have been used to join your network. This can also show how many people joined on the domain in total and how many are online right now.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/domains list";
+    }
+
     private void addDomain( final Map<String, Integer> domains,
                             final Map<String, Set<String>> domainLists,
                             final String domain,

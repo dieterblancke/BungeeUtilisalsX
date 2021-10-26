@@ -80,4 +80,16 @@ public class FriendDenySubCommandCall implements CommandCall
 
         removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Denies an incoming friend request.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend deny (user)";
+    }
 }

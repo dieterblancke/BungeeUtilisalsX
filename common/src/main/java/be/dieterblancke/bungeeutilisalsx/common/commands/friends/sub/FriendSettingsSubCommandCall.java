@@ -82,4 +82,16 @@ public class FriendSettingsSubCommandCall implements CommandCall
             user.sendLangMessage( "friends.settings.usage" );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Updates a setting value for one of the existing setting types.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend settings [setting] [value]";
+    }
 }

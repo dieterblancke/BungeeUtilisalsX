@@ -66,4 +66,16 @@ public class FriendMsgSubCommandCall implements CommandCall
             user.sendLangMessage( "offline" );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Allows you to privately message a friend.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend msg (user)";
+    }
 }
