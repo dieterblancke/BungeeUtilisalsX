@@ -58,4 +58,16 @@ public class OfflineMessageCommandCall implements CommandCall
         );
         user.sendLangMessage( "general-commands.offlinemessage.sent", "{user}", targetName );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends an offline private message to a user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/offlinemessage (user) (message)";
+    }
 }

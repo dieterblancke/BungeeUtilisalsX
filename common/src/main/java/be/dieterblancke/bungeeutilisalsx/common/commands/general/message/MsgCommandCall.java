@@ -71,4 +71,16 @@ public class MsgCommandCall implements CommandCall
             user.sendLangMessage( "offline" );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends a private message to a user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/msg (user) (message)";
+    }
 }

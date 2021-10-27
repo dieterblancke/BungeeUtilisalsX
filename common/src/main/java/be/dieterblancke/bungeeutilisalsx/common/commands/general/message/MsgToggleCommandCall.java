@@ -21,4 +21,16 @@ public class MsgToggleCommandCall implements CommandCall
         user.setMsgToggled( !user.isMsgToggled() );
         user.sendLangMessage( "general-commands.msgtoggle." + ( user.isMsgToggled() ? "enabled" : "disabled" ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Allows you to toggle private messages for the current session (will re-enable on rejoin).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/msgtoggle";
+    }
 }
