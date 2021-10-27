@@ -17,7 +17,7 @@ public class ShoutCommandCall implements CommandCall
         String shoutMessagePath = "general-commands.shout.shout-broadcast";
         if ( user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "shout.staff-permission" ) ) )
         {
-            shoutMessagePath += "staff";
+            shoutMessagePath += "-staff";
         }
 
         BuX.getApi().langBroadcast(
