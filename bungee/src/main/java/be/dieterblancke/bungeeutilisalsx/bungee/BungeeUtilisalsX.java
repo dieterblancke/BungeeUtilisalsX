@@ -9,10 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
-import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import be.dieterblancke.bungeeutilisalsx.common.IBuXApi;
-import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
-import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
+import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
@@ -27,11 +24,15 @@ import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import com.dbsoftwares.configuration.api.FileStorageType;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.SimplePie;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
@@ -40,14 +41,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     private final CommandManager commandManager = new BungeeCommandManager();
     private final IPluginDescription pluginDescription = new BungeePluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
-
-    @Override
-    public void initialize()
-    {
-        super.initialize();
-
-        this.registerMetrics();
-    }
 
     @Override
     protected IBuXApi createBuXApi()
@@ -148,45 +141,61 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         return Bootstrap.getInstance().getLogger();
     }
 
-    private void registerMetrics()
+    @Override
+    protected void registerMetrics()
     {
         final Metrics metrics = new Metrics( Bootstrap.getInstance(), 5134 );
 
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "punishments",
                 () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "motds",
                 () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
+                "ingame_motds",
+                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
                 "friends",
                 () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "actionbar_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "title_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "bossbar_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "chat_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "tab_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new Metrics.SimplePie(
+        metrics.addCustomChart( new SimplePie(
                 "hubbalancer",
                 () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "protocolize",
+                () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new AdvancedPie(
+                "player_versions",
+                () -> BuX.getApi().getUsers()
+                        .stream()
+                        .map( u -> u.getVersion().toString() )
+                        .collect( Collectors.groupingBy( Function.identity(), Collectors.summingInt( it -> 1 ) ) )
         ) );
     }
 }

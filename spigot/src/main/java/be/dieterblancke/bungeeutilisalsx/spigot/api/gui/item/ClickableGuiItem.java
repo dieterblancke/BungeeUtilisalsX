@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item;
 
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.Gui;
-import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TriConsumer;
 import lombok.AllArgsConstructor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.ClickType;

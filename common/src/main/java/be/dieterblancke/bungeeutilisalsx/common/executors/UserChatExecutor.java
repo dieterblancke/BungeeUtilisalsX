@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Priority;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
@@ -13,6 +14,9 @@ import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.chat.protections.SwearValidationResult;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.ChatLockCommandCall;
 import com.dbsoftwares.configuration.api.IConfiguration;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 public class UserChatExecutor implements EventExecutor
 {
@@ -167,6 +171,25 @@ public class UserChatExecutor implements EventExecutor
 
                     BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
+            }
+        }
+    }
+
+    @Event
+    public void executeChatConsumers( final UserChatEvent event )
+    {
+        if ( event.getUser().getStorage().hasData( UserStorageKey.CHAT_CONSUMERS ) )
+        {
+            final List<Consumer<String>> consumers = event.getUser().getStorage().getData( UserStorageKey.CHAT_CONSUMERS );
+
+            if ( !consumers.isEmpty() )
+            {
+                event.setCancelled( true );
+                for ( Consumer<String> consumer : consumers )
+                {
+                    consumer.accept( event.getMessage() );
+                }
+                consumers.clear();
             }
         }
     }

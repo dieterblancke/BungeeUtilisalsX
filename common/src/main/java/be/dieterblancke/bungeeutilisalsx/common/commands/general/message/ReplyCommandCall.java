@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PrivateMessageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 
@@ -45,13 +46,13 @@ public class ReplyCommandCall implements CommandCall, TabCall
             user.sendLangMessage( "general-commands.reply.usage" );
             return;
         }
-        if ( !user.getStorage().hasData( "MSG_LAST_USER" ) )
+        if ( !user.getStorage().hasData( UserStorageKey.MSG_LAST_USER ) )
         {
             user.sendLangMessage( "general-commands.reply.no-target" );
             return;
         }
 
-        final String name = user.getStorage().getData( "MSG_LAST_USER" );
+        final String name = user.getStorage().getData( UserStorageKey.MSG_LAST_USER );
         if ( BuX.getApi().getPlayerUtils().isOnline( name ) && !StaffUtils.isHidden( name ) )
         {
             final String message = String.join( " ", args );

@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.ReportUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.collect.Lists;
@@ -49,11 +50,11 @@ public class UserPunishExecutor implements EventExecutor
         {
             event.getUser().ifPresent( user ->
             {
-                if ( !user.getStorage().hasData( "CURRENT_MUTES" ) )
+                if ( !user.getStorage().hasData( UserStorageKey.CURRENT_MUTES ) )
                 {
-                    user.getStorage().setData( "CURRENT_MUTES", Lists.newArrayList() );
+                    user.getStorage().setData( UserStorageKey.CURRENT_MUTES, Lists.newArrayList() );
                 }
-                final List<PunishmentInfo> mutes = user.getStorage().getData( "CURRENT_MUTES" );
+                final List<PunishmentInfo> mutes = user.getStorage().getData( UserStorageKey.CURRENT_MUTES );
 
                 mutes.add( event.getInfo() );
             } );

@@ -96,4 +96,10 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         return LOGGER;
     }
+
+    @Override
+    protected void registerMetrics()
+    {
+        // do nothing
+    }
 }

@@ -24,7 +24,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.executors.*;
@@ -37,6 +36,8 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultP
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
 import com.dbsoftwares.configuration.api.IConfiguration;
@@ -67,6 +68,7 @@ public abstract class AbstractBungeeUtilisalsX
     private PermissionIntegration activePermissionIntegration;
     private JobManager jobManager;
     private RedisManager redisManager;
+    private ProtocolizeManager protocolizeManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -80,14 +82,6 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void initialize()
     {
-        if ( ReflectionUtils.getJavaVersion() < 8 )
-        {
-            BuX.getLogger().warning( "You are running a Java version lower then Java 8." );
-            BuX.getLogger().warning( "Please upgrade to Java 8 or newer." );
-            BuX.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
-            return;
-        }
-
         if ( !getDataFolder().exists() )
         {
             getDataFolder().mkdirs();
@@ -123,6 +117,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerExecutors();
         this.registerCommands();
         this.registerPluginSupports();
+        this.registerProtocolizeSupport();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -133,6 +128,7 @@ public abstract class AbstractBungeeUtilisalsX
         );
 
         this.setupTasks();
+        this.registerMetrics();
     }
 
     public PermissionIntegration getActivePermissionIntegration()
@@ -231,6 +227,11 @@ public abstract class AbstractBungeeUtilisalsX
 
         loadScripts();
         ChatProtections.reloadAllProtections();
+
+        if ( isProtocolizeEnabled() )
+        {
+            protocolizeManager.getGuiManager().reload();
+        }
     }
 
     private void loadScripts()
@@ -362,4 +363,19 @@ public abstract class AbstractBungeeUtilisalsX
     {
         return redisManager != null;
     }
+
+    private void registerProtocolizeSupport()
+    {
+        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isPresent() )
+        {
+            this.protocolizeManager = new SimpleProtocolizeManager();
+        }
+    }
+
+    public boolean isProtocolizeEnabled()
+    {
+        return protocolizeManager != null;
+    }
+
+    protected abstract void registerMetrics();
 }

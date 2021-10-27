@@ -140,4 +140,10 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         return log;
     }
+
+    @Override
+    protected void registerMetrics()
+    {
+        // do nothing
+    }
 }
