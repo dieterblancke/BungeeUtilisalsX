@@ -40,6 +40,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.URL;
+import java.security.CodeSource;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.*;
@@ -48,6 +50,8 @@ import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class Utils
 {
@@ -1002,44 +1006,51 @@ public class Utils
     {
         final List<Class<?>> classes = new ArrayList<>();
 
-        return ClassPath.from( BuX.class.getClassLoader() )
-                .getTopLevelClassesRecursive( packageName )
-                .stream()
-                .map( ClassPath.ClassInfo::load )
-                .collect( Collectors.toList() );
-//        final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
-//
-//        if ( src != null )
-//        {
-//            try
-//            {
-//                final URL jar = src.getLocation();
-//                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
-//
-//                while ( true )
-//                {
-//                    final ZipEntry e = zip.getNextEntry();
-//                    if ( e == null )
-//                    {
-//                        break;
-//                    }
-//                    final String name = e.getName().replace( "/", "." );
-//
-//                    if ( name.startsWith( packageName ) )
-//                    {
-//                        if ( name.endsWith( ".class" ) )
-//                        {
-//                            classes.add( Class.forName( name.replace( ".class", "" ) ) );
-//                        }
-//                    }
-//                }
-//            }
-//            catch ( IOException | ClassNotFoundException e )
-//            {
-//                e.printStackTrace();
-//            }
-//        }
-//        return classes;
+        classes.addAll(
+                ClassPath.from( BuX.class.getClassLoader() )
+                        .getTopLevelClassesRecursive( packageName )
+                        .stream()
+                        .map( ClassPath.ClassInfo::load )
+                        .collect( Collectors.toList() )
+        );
+
+        if ( classes.isEmpty() )
+        {
+            final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
+
+            if ( src != null )
+            {
+                try
+                {
+                    final URL jar = src.getLocation();
+                    final ZipInputStream zip = new ZipInputStream( jar.openStream() );
+
+                    while ( true )
+                    {
+                        final ZipEntry e = zip.getNextEntry();
+                        if ( e == null )
+                        {
+                            break;
+                        }
+                        final String name = e.getName().replace( "/", "." );
+
+                        if ( name.startsWith( packageName ) )
+                        {
+                            if ( name.endsWith( ".class" ) )
+                            {
+                                classes.add( Class.forName( name.replace( ".class", "" ) ) );
+                            }
+                        }
+                    }
+                }
+                catch ( IOException | ClassNotFoundException e )
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        return classes;
     }
 
     /**
