@@ -87,4 +87,16 @@ public class IPMuteCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPMUTE );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Permanently ip mutes a given user globally (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ipmute (user / ip) <server> (reason)";
+    }
 }

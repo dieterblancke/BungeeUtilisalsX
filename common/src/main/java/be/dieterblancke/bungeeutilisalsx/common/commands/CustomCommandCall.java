@@ -51,4 +51,16 @@ public class CustomCommandCall implements CommandCall
                 PlaceHolderAPI.formatMessage( user, command )
         ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "";
+    }
 }

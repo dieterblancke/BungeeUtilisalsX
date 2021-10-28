@@ -133,6 +133,18 @@ public class GListCommandCall implements CommandCall, TabCall
         messages.forEach( user::sendMessage );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Lists the players online on each server in a very configurable way, with multi proxy support.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/glist";
+    }
+
     private long getHiddenUsers( final ServerGroup group )
     {
         return this.getHiddenUsers( group.getPlayerList() );

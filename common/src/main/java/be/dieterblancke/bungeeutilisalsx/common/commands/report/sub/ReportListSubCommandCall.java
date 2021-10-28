@@ -140,4 +140,16 @@ public class ReportListSubCommandCall implements CommandCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Lists all active reports or all reports of a given type.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report list [all / denied / accepted / active] [page]";
+    }
 }

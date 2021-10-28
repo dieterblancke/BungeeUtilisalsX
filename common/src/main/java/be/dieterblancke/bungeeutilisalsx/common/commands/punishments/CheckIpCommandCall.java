@@ -69,11 +69,9 @@ public class CheckIpCommandCall implements CommandCall
 
             final List<String> users = userDao.getUsersOnIP( storage.getIp() );
             final List<String> formattedUsers = Lists.newArrayList();
-            final Map<String, CheckIpStatus> statusMap = Maps.newHashMap();
 
             users.forEach( u ->
             {
-                final UserStorage userStorage = userDao.getUserData( u );
                 final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" );
                 final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" );
 
@@ -114,8 +112,15 @@ public class CheckIpCommandCall implements CommandCall
         } );
     }
 
-    private enum CheckIpStatus
+    @Override
+    public String getDescription()
     {
-        ONLINE, OFFLINE, BANNED
+        return "Checks the accounts on a given IP and their current ban status.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/checkip (user / ip)";
     }
 }

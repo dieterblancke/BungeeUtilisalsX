@@ -76,4 +76,16 @@ public class LanguageCommandCall implements CommandCall, TabCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Changes your current language.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/language (language)";
+    }
 }

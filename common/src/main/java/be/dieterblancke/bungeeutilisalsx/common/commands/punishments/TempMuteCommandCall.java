@@ -93,4 +93,16 @@ public class TempMuteCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPMUTE );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Temporarily mutes a given user globally (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/tempmute (user) (time) <server> (reason)";
+    }
 }

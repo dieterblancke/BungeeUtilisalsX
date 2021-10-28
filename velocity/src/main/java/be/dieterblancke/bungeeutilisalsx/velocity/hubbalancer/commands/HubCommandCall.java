@@ -127,4 +127,16 @@ public class HubCommandCall implements CommandCall, TabCall
             }
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends you to one of the hub servers.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/hub [hubNumber]";
+    }
 }

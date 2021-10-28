@@ -106,4 +106,16 @@ public class ReportAcceptSubCommandCall implements CommandCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Accepts a report with a given id. This will notify the reporter.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report accept (id)";
+    }
 }

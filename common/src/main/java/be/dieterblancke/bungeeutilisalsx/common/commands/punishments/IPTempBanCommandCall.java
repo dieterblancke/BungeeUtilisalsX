@@ -95,4 +95,16 @@ public class IPTempBanCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPBAN );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Temporarily ipbans a given user from the network (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/iptempban (user / ip) (time) <server> (reason)";
+    }
 }
