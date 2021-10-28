@@ -116,6 +116,18 @@ public class FriendListSubCommandCall implements CommandCall
         );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Lists your current friends.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend list [page]";
+    }
+
     private List<FriendData> filterPlayerList( final List<FriendData> orig )
     {
         final List<FriendData> result = Lists.newArrayList();

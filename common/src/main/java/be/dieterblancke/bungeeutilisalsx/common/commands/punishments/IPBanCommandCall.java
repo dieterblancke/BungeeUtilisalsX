@@ -88,4 +88,17 @@ public class IPBanCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPBAN );
     }
+
+
+    @Override
+    public String getDescription()
+    {
+        return "Permanently ipbans a given user from the network (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ipban (user / ip) <server> (reason)";
+    }
 }

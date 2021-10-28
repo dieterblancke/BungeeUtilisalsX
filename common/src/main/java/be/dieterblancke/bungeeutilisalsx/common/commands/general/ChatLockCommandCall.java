@@ -73,4 +73,16 @@ public class ChatLockCommandCall implements CommandCall, TabCall
 
         BuX.getInstance().getJobManager().executeJob( new ChatLockJob( server, user.getName() ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Locks the chat globally or in a specfic server.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/chatlock (server / ALL)";
+    }
 }

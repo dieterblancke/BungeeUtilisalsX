@@ -95,6 +95,18 @@ public class ReportCreateSubCommandCall implements CommandCall
         this.sendDiscordWebhook( report );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Creates a new report against a user with a given description.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report create (user) (reason)";
+    }
+
     private void sendDiscordWebhook( final Report report )
     {
         final ISection discordSection = ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.discord-webhook" );

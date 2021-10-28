@@ -55,4 +55,16 @@ public class DomainsSearchSubCommandCall implements CommandCall
 
         user.sendLangMessage( "general-commands.domains.search.footer", "{total}", domains.size() );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Searches domain details for one specific domain, this works similar to /domains list, but instead of all domains it only shows domains that match your input.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/domains search (input)";
+    }
 }

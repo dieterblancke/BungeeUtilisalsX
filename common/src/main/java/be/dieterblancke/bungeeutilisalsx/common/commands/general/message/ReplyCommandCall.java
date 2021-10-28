@@ -72,6 +72,18 @@ public class ReplyCommandCall implements CommandCall, TabCall
     }
 
     @Override
+    public String getDescription()
+    {
+        return "Sends a reply to the user you lastly interacted privately with.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/reply (message)";
+    }
+
+    @Override
     public List<String> onTabComplete( final User user, final String[] args )
     {
         return TabCompleter.empty();

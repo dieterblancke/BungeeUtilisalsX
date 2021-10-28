@@ -67,4 +67,16 @@ public class ReportCommandCall extends ParentCommand implements CommandCall
                         .build()
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "This command sends a list of available report commands.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report";
+    }
 }

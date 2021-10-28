@@ -107,4 +107,16 @@ public class UnmuteIPCommandCall extends PunishmentCommand
             }
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Removes an IP mute for a given user / IP.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/unmuteip (user / IP) <server>";
+    }
 }

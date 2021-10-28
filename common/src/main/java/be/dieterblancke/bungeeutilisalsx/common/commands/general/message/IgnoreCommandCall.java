@@ -118,6 +118,18 @@ public class IgnoreCommandCall implements CommandCall, TabCall
     }
 
     @Override
+    public String getDescription()
+    {
+        return "Ignores private messages and friend requests from a user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ignore (add/remove/list) [user]";
+    }
+
+    @Override
     public List<String> onTabComplete( User user, String[] args )
     {
         return TabCompleter.empty();

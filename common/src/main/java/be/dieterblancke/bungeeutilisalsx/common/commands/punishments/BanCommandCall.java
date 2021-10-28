@@ -88,4 +88,16 @@ public class BanCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.BAN );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Permanently bans a given user from the network (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ban (user) <server> (reason)";
+    }
 }

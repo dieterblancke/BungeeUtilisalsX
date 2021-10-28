@@ -27,4 +27,16 @@ public class ShoutCommandCall implements CommandCall
                 "{message}", message
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends a global shout. This is a simplified version of /announce that can be used as a donator perk. Staff can have a custom shout format.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/shout (message)";
+    }
 }

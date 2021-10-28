@@ -56,4 +56,16 @@ public class StaffChatCommandCall implements CommandCall
 
         user.sendLangMessage( "general-commands.staffchat." + ( user.isInStaffChat() ? "enabled" : "disabled" ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Toggles your chat mode into staff chat mode, only people with a given permission can then see your messages.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staffchat [message]";
+    }
 }

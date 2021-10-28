@@ -64,6 +64,18 @@ public class HelpOpCommandCall implements CommandCall
         );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Sends a helpop message to the online staff. Staff can reply using /helpop reply (user) (message).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/helpop [reply] (message)";
+    }
+
     private void executeReplySubCommand( final User user, final List<String> args )
     {
         if ( !user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "helpop.reply-permission" ) ) )

@@ -107,4 +107,16 @@ public class UnmuteCommandCall extends PunishmentCommand
             }
         }
     }
+    
+    @Override
+    public String getDescription()
+    {
+        return "Removes a mute for a given user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/unmute (user) <server>";
+    }
 }

@@ -93,17 +93,7 @@ public abstract class AbstractBungeeUtilisalsX
         this.loadPlaceHolders();
         this.loadScripts();
         this.loadDatabase();
-
-        final MigrationManager migrationManager = MigrationManagerFactory.createMigrationManager();
-        migrationManager.initialize();
-        try
-        {
-            migrationManager.migrate();
-        }
-        catch ( Exception e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "Could not execute migrations", e );
-        }
+        this.migrate();
 
         this.api = this.createBuXApi();
 
@@ -377,4 +367,17 @@ public abstract class AbstractBungeeUtilisalsX
     }
 
     protected abstract void registerMetrics();
+
+    protected void migrate() {
+        final MigrationManager migrationManager = MigrationManagerFactory.createMigrationManager();
+        migrationManager.initialize();
+        try
+        {
+            migrationManager.migrate();
+        }
+        catch ( Exception e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "Could not execute migrations", e );
+        }
+    }
 }

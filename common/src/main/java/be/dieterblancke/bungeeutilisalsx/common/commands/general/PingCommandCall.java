@@ -61,4 +61,16 @@ public class PingCommandCall implements CommandCall
             }
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Shows your (or someone else's) current ping towards the current proxy.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ping [user]";
+    }
 }

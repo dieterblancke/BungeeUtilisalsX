@@ -110,4 +110,16 @@ public class ReportHistorySubCommandCall implements CommandCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Lists all reports you have created in the past.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/reports history [page]";
+    }
 }

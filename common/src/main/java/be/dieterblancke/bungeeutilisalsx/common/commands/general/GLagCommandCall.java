@@ -51,23 +51,15 @@ public class GLagCommandCall implements CommandCall, TabCall
         );
     }
 
-    private ChatColor getColor( double tps )
+    @Override
+    public String getDescription()
     {
-        if ( tps >= 18.0 )
-        {
-            return ChatColor.GREEN;
-        }
-        else if ( tps >= 14.0 )
-        {
-            return ChatColor.YELLOW;
-        }
-        else if ( tps >= 8.0 )
-        {
-            return ChatColor.RED;
-        }
-        else
-        {
-            return ChatColor.DARK_RED;
-        }
+        return "Gives you some basic information about the current proxy (online time and memory usage).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/glag";
     }
 }

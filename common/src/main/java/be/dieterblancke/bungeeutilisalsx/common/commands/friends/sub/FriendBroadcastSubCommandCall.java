@@ -56,4 +56,16 @@ public class FriendBroadcastSubCommandCall implements CommandCall
                         .collect( Collectors.toList() )
         ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Broadcasts a message to all your online friends.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend broadcast (message)";
+    }
 }

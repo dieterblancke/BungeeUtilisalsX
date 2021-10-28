@@ -30,7 +30,6 @@ import java.util.List;
 public class ServerCommandCall implements CommandCall
 {
 
-
     public static void sendToServer( final User user, final IProxyServer server )
     {
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
@@ -90,5 +89,17 @@ public class ServerCommandCall implements CommandCall
         {
             sendToServer( user, server );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Allows you to switch yourself, or someone else, to another server.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/server [user] (serverName)";
     }
 }

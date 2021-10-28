@@ -117,4 +117,16 @@ public class TrackPunishCommandCall extends PunishmentCommand
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Executes a track punishment for a specific user. Track punishments can be very useful for laying out a set punishment path for certain rule breakings.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/trackpunish (user) (reason)";
+    }
 }

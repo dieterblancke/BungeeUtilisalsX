@@ -105,4 +105,16 @@ public class ReportDenySubCommandCall implements CommandCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Denies a report with a given id.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report deny (id)";
+    }
 }

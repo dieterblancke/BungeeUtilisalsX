@@ -69,4 +69,16 @@ public class FriendReplySubCommandCall implements CommandCall
             user.sendLangMessage( "offline" );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Allows you to reply to a friend that messaged you earlier.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend reply (message)";
+    }
 }

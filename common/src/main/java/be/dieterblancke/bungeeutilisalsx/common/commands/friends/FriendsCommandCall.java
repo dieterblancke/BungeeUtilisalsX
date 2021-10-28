@@ -145,4 +145,16 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
 
         super.onExecute( user, args, parameters );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "This command either sends a list of available friends commands, or it opens a GUI.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friends";
+    }
 }

@@ -98,4 +98,16 @@ public class PunishmentDataCommandCall implements CommandCall
             );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Shows you data for a specific punishment type and id.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/punishmentdata (type) (id)";
+    }
 }
