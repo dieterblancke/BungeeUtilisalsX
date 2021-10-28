@@ -182,7 +182,6 @@ public abstract class AbstractBungeeUtilisalsX
 
         final UserCommandExecutor userCommandExecutor = new UserCommandExecutor();
         this.api.getEventLoader().register( UserCommandEvent.class, userCommandExecutor );
-        this.api.getEventLoader().register( UserTabCompleteEvent.class, userCommandExecutor );
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {

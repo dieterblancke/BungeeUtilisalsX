@@ -45,7 +45,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
                         "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
-                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting, true ) ? "enabled" : "disabled" ) )
+                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) )
                 );
             }
 
@@ -65,7 +65,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
                 return;
             }
             final boolean value = args.get( 1 ).contains( "toggle" )
-                    ? !user.getFriendSettings().getSetting( type, false )
+                    ? !user.getFriendSettings().getSetting( type )
                     : !args.get( 1 ).toLowerCase().contains( "d" );
 
             user.getFriendSettings().set( type, value );

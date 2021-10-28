@@ -29,7 +29,7 @@ public class FriendBroadcastJob implements MultiProxyJob
                 .stream()
                 .filter( user -> user.getName().equalsIgnoreCase( senderName )
                         || receivers.stream().anyMatch( name -> name.equalsIgnoreCase( user.getName() ) ) )
-                .filter( user -> user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST, true ) )
+                .filter( user -> user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST ) )
                 .collect( Collectors.toList() );
     }
 

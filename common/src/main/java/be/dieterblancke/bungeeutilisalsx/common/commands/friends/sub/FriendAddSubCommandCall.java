@@ -74,7 +74,7 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         final boolean accepts = optionalTarget
-                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS, false ) )
+                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS ) )
                 .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ) );
         final boolean isIgnored = storage.getIgnoredUsers().stream().anyMatch( u -> u.equalsIgnoreCase( user.getName() ) );
 

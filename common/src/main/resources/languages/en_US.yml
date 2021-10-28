@@ -782,6 +782,10 @@ hubbalancer:
   offline: '&eIt seems that &b{serverName} &eis offline at the moment, try again later!'
   already-connected: '&eYou are already connected to &b{serverName}&e!'
 
+gui:
+  input:
+    cancelled: '&eThe input action was cancelled.'
+
 custom:
   ingamemotd:
     skyblock:

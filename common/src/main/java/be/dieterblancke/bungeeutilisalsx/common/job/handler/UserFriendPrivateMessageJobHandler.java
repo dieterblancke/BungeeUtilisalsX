@@ -24,7 +24,7 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            if ( !user.getFriendSettings().getSetting( FriendSetting.MESSAGES, true ) )
+            if ( !user.getFriendSettings().getSetting( FriendSetting.MESSAGES ) )
             {
                 executeJob( new UserLanguageMessageJob( job, "friends." + job.getType().toString().toLowerCase() + ".disallowed" ) );
                 return;

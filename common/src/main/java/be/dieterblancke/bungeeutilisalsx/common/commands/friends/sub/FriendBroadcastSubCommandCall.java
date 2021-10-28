@@ -39,7 +39,7 @@ public class FriendBroadcastSubCommandCall implements CommandCall
             user.sendLangMessage( "friends.broadcast.usage" );
             return;
         }
-        if ( !user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST, true ) )
+        if ( !user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST ) )
         {
             user.sendLangMessage( "friends.broadcast.disabled" );
             return;

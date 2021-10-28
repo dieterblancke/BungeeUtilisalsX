@@ -190,6 +190,8 @@ public class ItemPage
                     );
 
                     handler.accept( gui, user, event );
+                } else {
+                    user.sendLangMessage( "gui.input.cancel" );
                 }
             } );
         };
