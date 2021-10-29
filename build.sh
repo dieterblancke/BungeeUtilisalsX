@@ -15,7 +15,7 @@ fixBuildNames() {
   fi
 }
 
-for moduleName in bungee spigot velocity webapi; do
+for moduleName in bungee velocity webapi; do
   if [[ $(pwd) == *target ]]; then
     cd ../../$moduleName/target
   else

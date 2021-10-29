@@ -31,7 +31,6 @@
     <modules>
         <module>common</module>
         <module>bungee</module>
-        <module>spigot</module>
         <module>velocity</module>
         <module>webapi</module>
     </modules>
