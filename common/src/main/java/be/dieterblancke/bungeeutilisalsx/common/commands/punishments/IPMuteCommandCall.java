@@ -53,7 +53,7 @@ public class IPMuteCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertMute(
+        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertIPMute(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),

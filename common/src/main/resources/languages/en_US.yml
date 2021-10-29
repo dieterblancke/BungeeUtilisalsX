@@ -312,7 +312,7 @@ friends:
     usage: '&ePlease use &b/friends deny (name)&e!'
     no-request: '&eCould not find a friend request from &b{user}&e!'
     denied: '&eYou have denied the friend request from &b{user}&e!'
-    request-denied: '&b{user} &ehas denied your friend request!'
+    request-denied: '&b{name} &ehas denied your friend request!'
   removerequest:
     usage: '&ePlease use &b/friends removerequest (name)&e!'
     no-request: '&eYou have no outgoing friend request towards &b{user}&e!'
