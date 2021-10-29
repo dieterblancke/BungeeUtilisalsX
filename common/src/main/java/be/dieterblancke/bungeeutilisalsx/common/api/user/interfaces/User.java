@@ -356,7 +356,7 @@ public interface User extends MessageRecipient
             for ( OfflineMessage message : messages )
             {
                 this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
-                offlineMessageDao.updateOfflineMessage( message.getId(), true );
+                offlineMessageDao.updateOfflineMessage( message.getId(), false );
             }
         }
     }
