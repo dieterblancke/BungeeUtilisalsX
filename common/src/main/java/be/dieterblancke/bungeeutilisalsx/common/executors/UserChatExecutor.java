@@ -60,7 +60,7 @@ public class UserChatExecutor implements EventExecutor
 
         if ( config.getBoolean( "symbols.enabled" ) && event.getUser().hasPermission( config.getString( "symbols.permission" ) ) )
         {
-            event.setMessage( ChatHelper.replaceSymbols( event.getMessage() ) );
+            event.setMessage( ChatHelper.replaceSymbols( event.getUser(), event.getMessage() ) );
         }
     }
 
