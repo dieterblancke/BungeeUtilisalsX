@@ -21,11 +21,9 @@ package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserTabCompleteEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import net.md_5.bungee.api.CommandSender;
 import net.md_5.bungee.api.event.ChatEvent;
-import net.md_5.bungee.api.event.TabCompleteEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
@@ -70,31 +68,5 @@ public class UserChatListener implements Listener
 
             event.setMessage( chatEvent.getMessage() );
         }
-    }
-
-    @EventHandler
-    public void onTabComplete( final TabCompleteEvent event )
-    {
-        final Optional<User> optional = BuX.getApi().getUser( ( (CommandSender) event.getSender() ).getName() );
-
-        if ( !optional.isPresent() )
-        {
-            return;
-        }
-        final User user = optional.get();
-        final UserTabCompleteEvent userTabCompleteEvent = new UserTabCompleteEvent(
-                user,
-                event.getCursor(),
-                event.getSuggestions()
-        );
-
-        BuX.getApi().getEventLoader().launchEvent( userTabCompleteEvent );
-
-        if ( userTabCompleteEvent.isCancelled() )
-        {
-            event.setCancelled( true );
-        }
-        event.getSuggestions().clear();
-        event.getSuggestions().addAll( userTabCompleteEvent.getSuggestions() );
     }
 }

@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Data
 @NoArgsConstructor
@@ -57,6 +58,15 @@ public class UserStorage
         return !data.containsKey( key ) ? null : (T) data.get( key );
     }
 
+    public <T> T getDataOrPut( final String key, Supplier<T> supplier )
+    {
+        if ( !this.hasData( key ) )
+        {
+            this.setData( key, supplier.get() );
+        }
+        return this.getData( key );
+    }
+
     public void setData( final String key, final Object value )
     {
         data.put( key, value );
@@ -70,5 +80,30 @@ public class UserStorage
     public void removeData( final String key )
     {
         this.data.remove( key );
+    }
+
+    public <T> T getData( final UserStorageKey key )
+    {
+        return this.getData( key.toString() );
+    }
+
+    public <T> T getDataOrPut( final UserStorageKey key, Supplier<T> supplier )
+    {
+        return this.getDataOrPut( key.toString(), supplier );
+    }
+
+    public void setData( final UserStorageKey key, final Object value )
+    {
+        this.setData( key.toString(), value );
+    }
+
+    public boolean hasData( final UserStorageKey key )
+    {
+        return this.hasData( key.toString() );
+    }
+
+    public void removeData( final UserStorageKey key )
+    {
+        this.removeData( key.toString() );
     }
 }

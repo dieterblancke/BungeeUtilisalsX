@@ -145,6 +145,18 @@ public class StaffCommandCall implements CommandCall
         user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Lists online staff by rank.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staff";
+    }
+
     private List<TextComponent> findUsersComponents( final TextComponent component )
     {
         final List<TextComponent> components = component.getExtra().stream()

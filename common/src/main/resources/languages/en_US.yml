@@ -7,7 +7,7 @@ date-format: 'dd-MM-yyyy kk:mm:ss'
 not-for-console: '&eThis action is currently only supported for usage by players.'
 command-disabled-in-this-server: '&eThis command is &cdisabled &ein the &b{server} &eserver!'
 command-disabled: '&eThe command &b{command} &eis &cdisabled &ein the &b{server} &eserver!'
-messagequeue-join-header: '&eMessages you received while you were away:'
+offlinemessages-join-header: '&eMessages you received while you were away:'
 
 updater:
   update-found:
@@ -260,6 +260,8 @@ general-commands:
     sent: '&eYou have sent an offline message to &b{user}&e!'
 
 friends:
+  gui:
+    add-chat-input: '&ePlease enter the name of the friend you wish to add or type ''&bcancel&e'' to abort.'
   join:
     requests: '&eYou have &b{amount} &eoutstanding friend requests. Use &b/friend requests &eto check them out!'
     join: '&eYour friend, &b{user}&e, has joined the network!'
@@ -310,7 +312,7 @@ friends:
     usage: '&ePlease use &b/friends deny (name)&e!'
     no-request: '&eCould not find a friend request from &b{user}&e!'
     denied: '&eYou have denied the friend request from &b{user}&e!'
-    request-denied: '&b{user} &ehas denied your friend request!'
+    request-denied: '&b{name} &ehas denied your friend request!'
   removerequest:
     usage: '&ePlease use &b/friends removerequest (name)&e!'
     no-request: '&eYou have no outgoing friend request towards &b{user}&e!'
@@ -779,6 +781,10 @@ hubbalancer:
   connected: '&eYou are being connected to &b{serverName}&e!'
   offline: '&eIt seems that &b{serverName} &eis offline at the moment, try again later!'
   already-connected: '&eYou are already connected to &b{serverName}&e!'
+
+gui:
+  input:
+    cancelled: '&eThe input action was cancelled.'
 
 custom:
   ingamemotd:

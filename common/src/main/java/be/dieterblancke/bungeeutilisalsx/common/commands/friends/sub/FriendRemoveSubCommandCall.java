@@ -90,4 +90,16 @@ public class FriendRemoveSubCommandCall implements CommandCall
             ) );
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Removes a friend from your friends list. If this user has an outstanding friend request towards you, this request will be denied.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend remove (user)";
+    }
 }

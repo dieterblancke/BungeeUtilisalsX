@@ -28,4 +28,16 @@ public class CacheCommandCall implements CommandCall
         BuX.getLogger().info( "Cache Command help reference:" );
         BuX.getLogger().info( "- cache clear" );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return null;
+    }
 }

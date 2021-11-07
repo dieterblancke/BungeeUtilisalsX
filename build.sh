@@ -1,7 +1,5 @@
 mvn clean package install "$@"
 
-echo mvn clean package install "$@"
-
 fixBuildNames() {
   if ls *shaded* 1> /dev/null 2>&1; then
     fileName=$(find ./ -printf "%f\n" | grep "shaded")
@@ -17,7 +15,7 @@ fixBuildNames() {
   fi
 }
 
-for moduleName in bungee spigot velocity webapi; do
+for moduleName in bungee velocity webapi; do
   if [[ $(pwd) == *target ]]; then
     cd ../../$moduleName/target
   else

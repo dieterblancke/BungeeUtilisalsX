@@ -90,4 +90,16 @@ public class KickCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.KICK );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Kicks a user for a given reason.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/kick (user) <server> (reason)";
+    }
 }

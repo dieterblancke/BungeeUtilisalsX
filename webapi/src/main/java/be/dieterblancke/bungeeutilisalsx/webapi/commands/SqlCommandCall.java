@@ -44,6 +44,18 @@ public class SqlCommandCall implements CommandCall
         BuX.getLogger().info( "- sql exec (query)" );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return null;
+    }
+
     @SneakyThrows
     private void query( final String query )
     {

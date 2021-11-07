@@ -17,14 +17,6 @@ bungeeutilisals:
       enabled: true
       name: dump
       permission: bungeeutilisals.commands.admin.dump
-    import:
-      enabled: true
-      name: import
-      permission: bungeeutilisals.commands.admin.import
-    convert:
-      enabled: true
-      name: convert
-      permission: bungeeutilisals.commands.admin.convert
 glist:
   # Enable this command or not?
   enabled: true

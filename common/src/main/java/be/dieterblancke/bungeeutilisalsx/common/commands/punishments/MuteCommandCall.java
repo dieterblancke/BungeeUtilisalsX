@@ -86,4 +86,16 @@ public class MuteCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.MUTE );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Permanently bans a given user globally (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/mute (user) <server> (reason)";
+    }
 }

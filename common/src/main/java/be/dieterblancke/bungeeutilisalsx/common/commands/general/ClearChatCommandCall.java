@@ -81,4 +81,16 @@ public class ClearChatCommandCall implements CommandCall, TabCall
 
         BuX.getInstance().getJobManager().executeJob( new ClearChatJob( server, user.getName() ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Clears the chat globally or in a specfic server.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/clearchat (server / ALL)";
+    }
 }

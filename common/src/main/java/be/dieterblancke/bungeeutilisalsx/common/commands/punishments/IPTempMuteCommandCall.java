@@ -93,4 +93,16 @@ public class IPTempMuteCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPMUTE );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Temporarily ipmutes a given user globally (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/iptempmute (user / ip) (time) <server> (reason)";
+    }
 }

@@ -78,4 +78,16 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
 
         removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Removes an outstanding friend request from / towards a certain user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend removerequest (user)";
+    }
 }

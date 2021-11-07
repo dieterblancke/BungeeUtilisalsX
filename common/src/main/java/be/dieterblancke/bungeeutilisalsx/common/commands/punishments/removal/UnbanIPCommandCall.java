@@ -104,4 +104,16 @@ public class UnbanIPCommandCall extends PunishmentCommand
             }
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Removes an IP ban for a given user / IP.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/unbanip (user / IP) <server>";
+    }
 }

@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserMuteJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
@@ -48,6 +49,6 @@ public class UserMuteJobHandler extends AbstractJobHandler
         }
 
         // if CURRENT_MUTES key is abscent, the next time a user chats, BuX will fetch the mutes for that user
-        user.getStorage().removeData( "CURRENT_MUTES" );
+        user.getStorage().removeData( UserStorageKey.CURRENT_MUTES );
     }
 }

@@ -1,0 +1,66 @@
+# The title that should be given to the gui
+title: '&2&lYour Friends'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  # Borders will automatically select the "border slots" of the GUI as slot list that should be filled.
+  - slots: 'borders'
+    # True if these slots represent friends, false if not.
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      name: ''
+    action: nothing
+  - slots: '10..16,19..25,28..34,37..43'
+    # True if these slots represent friends, false if not.
+    friend-slots: true
+    offlineitem:
+      material: PLAYER_HEAD
+      name: '&e{friend-name} &8- &c&lOFFLINE'
+      lores:
+        - ''
+        - '&c» Offline'
+        - '&7Last online: &b{last-online}'
+    onlineitem:
+      material: PLAYER_HEAD
+      name: '&e{friend-name} &8- &a&lONLINE'
+      lores:
+        - ''
+        - '&a» Online'
+        - '&7Server: &b{server}'
+    action: open:friendactions {friend-name}
+  - slots: '45'
+    item:
+      material: EMERALD
+      name: '&e&lFriend Requests'
+    action: open:friendrequests
+  - slots: '46'
+    show-if: has-previous-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aPrevious Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY1MmUyYjkzNmNhODAyNmJkMjg2NTFkN2M5ZjI4MTlkMmU5MjM2OTc3MzRkMThkZmRiMTM1NTBmOGZkYWQ1ZiJ9fX0='
+    action: previous-page
+  - slots: '49'
+    item:
+      material: PLAYER_HEAD
+      name: '&aAdd Friend'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19'
+    action:
+      type: input
+      languagePath: 'friends.gui.add-chat-input'
+      action: execute:friend add {output}
+  - slots: '52'
+    show-if: has-next-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aNext Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEzYjhmNjgxZGFhZDhiZjQzNmNhZThkYTNmZTgxMzFmNjJhMTYyYWI4MWFmNjM5YzNlMDY0NGFhNmFiYWMyZiJ9fX0='
+    action: next-page
+  - slots: '53'
+    item:
+      material: RED_BED
+      name: '&c&lClose'
+    action: close

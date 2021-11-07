@@ -25,7 +25,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PingCommandCall implements CommandCall
 {
@@ -42,17 +41,13 @@ public class PingCommandCall implements CommandCall
             final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.permission-other" );
             if ( permission != null
                     && !permission.isEmpty()
-                    && !user.hasPermission( permission )
-                    && !user.hasPermission( "bungeeutilisals.commands.*" )
-                    && !user.hasPermission( "bungeeutilisals.*" )
-                    && !user.hasPermission( "*" ) )
+                    && !user.hasPermission( permission ) )
             {
                 user.sendLangMessage( "no-permission", "%permission%", permission );
                 return;
             }
 
             final String name = args.get( 0 );
-            final Optional<User> optionalUser = BuX.getApi().getUser( name );
 
             if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
             {
@@ -65,5 +60,17 @@ public class PingCommandCall implements CommandCall
                 user.sendLangMessage( "offline" );
             }
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Shows your (or someone else's) current ping towards the current proxy.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ping [user]";
     }
 }

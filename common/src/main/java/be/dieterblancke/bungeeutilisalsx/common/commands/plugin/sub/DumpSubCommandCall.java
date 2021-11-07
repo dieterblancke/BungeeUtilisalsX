@@ -104,6 +104,18 @@ public class DumpSubCommandCall implements CommandCall, TabCall
         } );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Dumps proxy and system information to paste.dieterblancke.xyz. This can be useful when making an issue.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/bungeeutilisals dump";
+    }
+
     private Dump getDump()
     {
         final OperatingSystemMXBean operatingSystemMXBean = ( (OperatingSystemMXBean) ManagementFactory.getOperatingSystemMXBean() );

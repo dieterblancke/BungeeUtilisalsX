@@ -54,4 +54,16 @@ public class FindCommandCall implements CommandCall
 
         user.sendLangMessage( "general-commands.find.message", "{user}", args.get( 0 ), "{server}", server.getName() );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Finds the server the given user currently is in.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/find (user)";
+    }
 }

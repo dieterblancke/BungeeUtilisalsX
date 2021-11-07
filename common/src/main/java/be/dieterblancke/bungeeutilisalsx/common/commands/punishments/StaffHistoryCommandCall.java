@@ -105,6 +105,18 @@ public class StaffHistoryCommandCall implements CommandCall
         );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Shows you a list of punishments executed by this specific user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staffhistory (user) [type / all] [page]";
+    }
+
     private List<PunishmentInfo> listPunishments( final String name, final String action )
     {
         final List<PunishmentInfo> list = Lists.newArrayList();

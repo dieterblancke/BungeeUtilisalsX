@@ -15,7 +15,7 @@ import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.ClickableGuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.api.gui.item.GuiItem;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.LanguageUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.utils.PluginMessageUtils;
-import be.dieterblancke.bungeeutilisalsx.spigot.utils.TriConsumer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.TriConsumer;
 import net.wesjd.anvilgui.AnvilGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;

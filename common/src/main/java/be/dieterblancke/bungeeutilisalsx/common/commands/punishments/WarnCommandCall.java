@@ -94,4 +94,16 @@ public class WarnCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.WARN );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Warns a user for a given reason.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/warn (user) <server> (reason)";
+    }
 }

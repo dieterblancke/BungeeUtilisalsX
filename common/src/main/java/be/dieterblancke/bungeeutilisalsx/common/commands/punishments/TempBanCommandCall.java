@@ -96,4 +96,16 @@ public class TempBanCommandCall extends PunishmentCommand
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPBAN );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Temporarily bans a given user from the network (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/tempban (user) (time) <server> (reason)";
+    }
 }
