@@ -1,10 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.party;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyAddMemberJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyCreationJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyRemovalJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyRemoveMemberJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
@@ -133,14 +130,28 @@ public class SimplePartyManager implements PartyManager
     {
         if ( party.getPartyMembers().size() <= 1 )
         {
+            // the owner was the last party member, so removing party
             removeParty( party );
             return;
         }
 
         if ( member.isPartyOwner() )
         {
-            // TODO: ALSO UPDATE OWNER STATUS IN REDIS
-            // TODO: assign new owner and call PartySetOwnerJob
+            final Optional<PartyMember> partyMember = party.getPartyMembers()
+                    .stream()
+                    .filter( m -> !m.getUuid().equals( member.getUuid() ) )
+                    .findFirst();
+
+            if ( partyMember.isPresent() )
+            {
+                this.setPartyOwner( party, partyMember.get() );
+            }
+            else
+            {
+                // could not assign new party owner, removing party
+                removeParty( party );
+                return;
+            }
         }
 
         final PartyRemoveMemberJob partyRemoveMemberJob = new PartyRemoveMemberJob( party, member );
@@ -151,6 +162,14 @@ public class SimplePartyManager implements PartyManager
         {
             BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().removeMemberFromParty( party, member );
         }
+    }
+
+    @Override
+    public void setPartyOwner( final Party party, final PartyMember member )
+    {
+        final PartySetOwnerJob partySetOwnerJob = new PartySetOwnerJob( party, member.getUuid() );
+
+        BuX.getInstance().getJobManager().executeJob( partySetOwnerJob );
     }
 
     private void startPartyCleanupTask()
@@ -218,6 +237,7 @@ public class SimplePartyManager implements PartyManager
                     }
                 }
 
+                // TODO: broadcast member inactivity removal to party
                 membersQueuedForRemoval.forEach( member -> this.removeMemberFromParty( party, member ) );
             }
         } );

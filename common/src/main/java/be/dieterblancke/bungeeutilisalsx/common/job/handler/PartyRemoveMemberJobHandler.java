@@ -15,8 +15,6 @@ public class PartyRemoveMemberJobHandler extends AbstractJobHandler
     {
         BuX.getInstance().getPartyManager().getCurrentPartyByUuid( job.getParty().getUuid() ).ifPresent( party ->
         {
-            // TODO: broadcast to party
-
             party.getPartyMembers().removeIf( member -> job.getPartyMember().getUuid().equals( member.getUuid() ) );
         } );
     }

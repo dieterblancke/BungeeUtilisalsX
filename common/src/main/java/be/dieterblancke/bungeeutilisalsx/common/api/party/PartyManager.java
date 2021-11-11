@@ -27,4 +27,6 @@ public interface PartyManager
 
     void removeMemberFromParty( Party party, PartyMember member );
 
+    void setPartyOwner( final Party party, final PartyMember member );
+
 }
