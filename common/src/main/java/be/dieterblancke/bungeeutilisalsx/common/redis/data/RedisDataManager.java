@@ -36,7 +36,7 @@ public class RedisDataManager implements IRedisDataManager
         final String uuid = user.getUuid().toString();
         final String domain = user.getJoinedHost();
 
-        this.redisManager.execute( commands ->
+        this.redisManager.executeAsync( commands ->
         {
             commands.sadd( RedisDataConstants.DOMAIN_PREFIX + domain, uuid );
         } );
@@ -48,7 +48,7 @@ public class RedisDataManager implements IRedisDataManager
         final String uuid = user.getUuid().toString();
         final String domain = user.getJoinedHost();
 
-        this.redisManager.execute( commands ->
+        this.redisManager.executeAsync( commands ->
         {
             commands.srem( RedisDataConstants.DOMAIN_PREFIX + domain, uuid );
         } );
@@ -66,6 +66,29 @@ public class RedisDataManager implements IRedisDataManager
             e.printStackTrace();
             return this.getAmountOfOnlineUsersOnDomainUncached( domain );
         }
+    }
+
+    @Override
+    public boolean attemptShedLock( final String type, final int period, final TimeUnit unit )
+    {
+        final Long lastExecute = this.redisManager.execute( commands ->
+        {
+            final String str = commands.get( RedisDataConstants.SHEDLOCK_PREFIX + type );
+
+            return str == null ? null : Long.parseLong( str );
+        } );
+
+        if ( lastExecute + unit.toMillis( period ) > System.currentTimeMillis() )
+        {
+            return false;
+        }
+
+        this.redisManager.executeAsync( commands ->
+        {
+            commands.set( RedisDataConstants.SHEDLOCK_PREFIX + type, String.valueOf( System.currentTimeMillis() ) );
+        } );
+
+        return true;
     }
 
     private long getAmountOfOnlineUsersOnDomainUncached( final String domain )

@@ -18,6 +18,12 @@ public interface IRedisPartyDataManager
 
     void removeMemberFromParty( Party party, PartyMember partyMember );
 
+    void setInactiveStatus( Party party, boolean inactive );
+
+    void setInactiveStatus( Party party, PartyMember partyMember, boolean inactive );
+
+    void setOwnerStatus( Party party, PartyMember partyMember, boolean owner );
+
     void addInviteToParty( Party party, PartyInvite partyInvite );
 
     void removeInviteToParty( Party party, PartyInvite partyInvite );

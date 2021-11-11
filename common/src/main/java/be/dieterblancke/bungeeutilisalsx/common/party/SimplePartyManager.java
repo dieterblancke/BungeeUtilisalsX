@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -130,15 +131,16 @@ public class SimplePartyManager implements PartyManager
     @Override
     public void removeMemberFromParty( final Party party, final PartyMember member )
     {
-        if ( member.isPartyOwner() )
-        {
-            // TODO: assign new owner and call PartySetOwnerJob
-        }
-
         if ( party.getPartyMembers().size() <= 1 )
         {
             removeParty( party );
             return;
+        }
+
+        if ( member.isPartyOwner() )
+        {
+            // TODO: ALSO UPDATE OWNER STATUS IN REDIS
+            // TODO: assign new owner and call PartySetOwnerJob
         }
 
         final PartyRemoveMemberJob partyRemoveMemberJob = new PartyRemoveMemberJob( party, member );
@@ -157,6 +159,16 @@ public class SimplePartyManager implements PartyManager
 
         BuX.getInstance().getScheduler().runTaskRepeating( period, period, TimeUnit.SECONDS, () ->
         {
+            if ( BuX.getInstance().isRedisManagerEnabled() )
+            {
+                final IRedisDataManager redisDataManager = BuX.getInstance().getRedisManager().getDataManager();
+
+                if ( !redisDataManager.attemptShedLock( "PARTY_CLEANUP", period, TimeUnit.SECONDS ) )
+                {
+                    return;
+                }
+            }
+
             final List<Party> queuedForRemoval = new ArrayList<>();
 
             for ( Party party : parties )
@@ -171,6 +183,12 @@ public class SimplePartyManager implements PartyManager
                 }
                 else
                 {
+                    if ( party.isInactive() != partyInactive && BuX.getInstance().isRedisManagerEnabled() )
+                    {
+                        BuX.getInstance().getRedisManager().getDataManager()
+                                .getRedisPartyDataManager().setInactiveStatus( party, partyInactive );
+                    }
+
                     party.setInactive( partyInactive );
                 }
             }
@@ -191,6 +209,11 @@ public class SimplePartyManager implements PartyManager
                     }
                     else
                     {
+                        if ( partyMember.isInactive() != inactive && BuX.getInstance().isRedisManagerEnabled() )
+                        {
+                            BuX.getInstance().getRedisManager().getDataManager()
+                                    .getRedisPartyDataManager().setInactiveStatus( party, partyMember, inactive );
+                        }
                         partyMember.setInactive( inactive );
                     }
                 }

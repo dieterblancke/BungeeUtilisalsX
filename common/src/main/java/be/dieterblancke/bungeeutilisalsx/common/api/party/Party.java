@@ -13,12 +13,17 @@ import java.util.UUID;
 public class Party
 {
 
-    private final UUID uuid = UUID.randomUUID();
+    private final UUID uuid;
     private final Date createdAt;
     private final List<PartyMember> partyMembers = new ArrayList<>();
     private final List<PartyInvite> sentInvites = new ArrayList<>();
     private final List<PartyJoinRequest> joinRequests = new ArrayList<>();
     private boolean inactive;
+
+    public Party( final Date createdAt )
+    {
+        this( UUID.randomUUID(), createdAt );
+    }
 
     public PartyMember getOwner()
     {
