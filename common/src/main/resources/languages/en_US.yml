@@ -786,6 +786,10 @@ gui:
   input:
     cancelled: '&eThe input action was cancelled.'
 
+party:
+  create:
+    already-in-party: '&eYou are already in a party.'
+
 custom:
   ingamemotd:
     skyblock:

@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPa
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.*;
@@ -170,6 +171,35 @@ public class SimplePartyManager implements PartyManager
         final PartySetOwnerJob partySetOwnerJob = new PartySetOwnerJob( party, member.getUuid() );
 
         BuX.getInstance().getJobManager().executeJob( partySetOwnerJob );
+    }
+
+    @Override
+    public void broadcastToParty( final Party party, final String message, final Object... placeholders )
+    {
+        for ( PartyMember partyMember : party.getPartyMembers() )
+        {
+            final UserMessageJob userMessageJob = new UserMessageJob(
+                    partyMember.getUuid(),
+                    Utils.replacePlaceHolders( message, placeholders )
+            );
+
+            BuX.getInstance().getJobManager().executeJob( userMessageJob );
+        }
+    }
+
+    @Override
+    public void languageBroadcastToParty( final Party party, final String messagePath, final Object... placeholders )
+    {
+        for ( PartyMember partyMember : party.getPartyMembers() )
+        {
+            final UserLanguageMessageJob userLanguageMessageJob = new UserLanguageMessageJob(
+                    partyMember.getUuid(),
+                    messagePath,
+                    placeholders
+            );
+
+            BuX.getInstance().getJobManager().executeJob( userLanguageMessageJob );
+        }
     }
 
     private void startPartyCleanupTask()

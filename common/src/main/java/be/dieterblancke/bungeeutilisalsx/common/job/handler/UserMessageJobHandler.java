@@ -33,7 +33,7 @@ public class UserMessageJobHandler extends AbstractJobHandler
     @JobHandler
     void executeUserLanguageMessageJob( final UserLanguageMessageJob job )
     {
-        job.getUser().ifPresent( user -> user.sendLangMessage(
+        job.getUser().or( () -> job.getUserByName() ).ifPresent( user -> user.sendLangMessage(
                 job.getLanguagePath(),
                 job.isPrefix(),
                 job.isColorBefore() ? Utils::c : null,

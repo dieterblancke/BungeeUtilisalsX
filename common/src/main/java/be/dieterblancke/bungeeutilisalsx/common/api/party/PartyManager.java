@@ -27,6 +27,10 @@ public interface PartyManager
 
     void removeMemberFromParty( Party party, PartyMember member );
 
-    void setPartyOwner( final Party party, final PartyMember member );
+    void setPartyOwner( Party party, PartyMember member );
+
+    void broadcastToParty( Party party, String message, Object... placeholders );
+
+    void languageBroadcastToParty( Party party, String messagePath, Object... placeholders );
 
 }

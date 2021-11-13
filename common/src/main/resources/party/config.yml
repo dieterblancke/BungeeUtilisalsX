@@ -4,3 +4,11 @@ enabled: false
 # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
 # Next scan, if the party is already inactive AND all party members are still offline, then the party will be removed.
 party-inactivity-period: 60
+
+command:
+  aliases: 'party, bparty'
+  permission: bungeeutilisalsx.party
+  send-message: true
+  # Set this to true to open gui on party command execute without arguments.
+  open-gui: false
+
