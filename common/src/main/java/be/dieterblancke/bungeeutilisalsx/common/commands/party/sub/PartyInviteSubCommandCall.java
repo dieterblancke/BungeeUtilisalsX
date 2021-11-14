@@ -20,46 +20,62 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 
 import java.util.List;
 import java.util.Optional;
 
-public class PartyCreateSubCommandCall implements CommandCall
+public class PartyInviteSubCommandCall implements CommandCall
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        try
-        {
-            BuX.getInstance().getPartyManager().createParty( user );
+        final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-            user.sendLangMessage( "party.create.created" );
-        }
-        catch ( AlreadyInPartyException e )
+        if ( !optionalParty.isPresent() )
         {
-            user.sendLangMessage( "party.create.already-in-party" );
+            user.sendLangMessage( "party.not-in-party" );
+            return;
         }
+        final Party party = optionalParty.get();
+
+        if ( args.size() != 1 )
+        {
+            user.sendLangMessage( "party.invite.usage" );
+            return;
+        }
+        if ( !party.getOwner().getUuid().equals( user.getUuid() ) )
+        {
+            user.sendLangMessage( "party.invite.not-allowed" );
+            return;
+        }
+        final String targetUser = args.get( 0 );
+
+        UserUtils.getUserStorage( targetUser, user::sendLangMessage ).ifPresent( target ->
+        {
+            if ( target.getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( user.getName() ) ) )
+            {
+                user.sendLangMessage( "party.invite.ignored" );
+                return;
+            }
+
+            // TODO: add invite to party (and add invite, and join request methods to PartyManager) and message the invited user
+            // TODO: use invite setting from party config
+        } );
     }
 
     @Override
     public String getDescription()
     {
-        return "Creates a new party.";
+        return "Invites someone to your party.";
     }
 
     @Override
     public String getUsage()
     {
-        return "/party create";
+        return "/party invite (user)";
     }
 }

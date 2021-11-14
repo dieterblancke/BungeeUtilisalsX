@@ -787,8 +787,21 @@ gui:
     cancelled: '&eThe input action was cancelled.'
 
 party:
+  not-in-party: '&eYou need to be in a party to do this.'
+
+  help:
+    message:
+      - '' # TODO
   create:
     already-in-party: '&eYou are already in a party.'
+    created: '&eYou have successfully created a party! You can invite people by using &b/party invite (user)&e!'
+  invite:
+    usage: '&ePlease use &b/party invite (user)&e!'
+    invite-self: '&eYou cannot invite yourself to your own party.'
+    already-in-party: '&b{user} &eis already in your party!'
+    already-in-other-party: '&b{user} &eis already in another party!'
+    not-allowed: '&eOnly the &bparty owner &ecan invite people to the party!'
+    ignored: '&eYou cannot invite people that have ignored you!'
 
 custom:
   ingamemotd:
