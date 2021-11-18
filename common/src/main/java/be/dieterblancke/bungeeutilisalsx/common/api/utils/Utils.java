@@ -1014,12 +1014,16 @@ public class Utils
                         .collect( Collectors.toList() )
         );
 
+        BuX.debug("Found " + classes + " classes in package " + packageName);
+
         if ( classes.isEmpty() )
         {
+            BuX.debug("Class list is empty");
             final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
 
             if ( src != null )
             {
+                BuX.debug("FOUND SRC");
                 try
                 {
                     final URL jar = src.getLocation();
@@ -1034,8 +1038,12 @@ public class Utils
                         }
                         final String name = e.getName().replace( "/", "." );
 
+                        BuX.debug("class name: " + name);
+
                         if ( name.startsWith( packageName ) )
                         {
+                            BuX.debug("FOUND CLASS: " + name);
+
                             if ( name.endsWith( ".class" ) )
                             {
                                 classes.add( Class.forName( name.replace( ".class", "" ) ) );
