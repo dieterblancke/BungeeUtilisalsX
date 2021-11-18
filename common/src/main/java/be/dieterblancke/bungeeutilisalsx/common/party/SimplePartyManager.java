@@ -2,9 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.party;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.*;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -162,6 +160,58 @@ public class SimplePartyManager implements PartyManager
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {
             BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().removeMemberFromParty( party, member );
+        }
+    }
+
+    @Override
+    public void addInvitationToParty( final Party party, final PartyInvite invite )
+    {
+        final PartyAddInvitationJob partyAddInvitationJob = new PartyAddInvitationJob( party, invite );
+
+        BuX.getInstance().getJobManager().executeJob( partyAddInvitationJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().addInviteToParty( party, invite );
+        }
+    }
+
+    @Override
+    public void removeInvitationFromParty( final Party party, final PartyInvite invite )
+    {
+        final PartyRemoveInvitationJob partyRemoveInvitationjob = new PartyRemoveInvitationJob( party, invite );
+
+        BuX.getInstance().getJobManager().executeJob( partyRemoveInvitationjob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().removeInviteFromParty( party, invite );
+        }
+    }
+
+    @Override
+    public void addJoinRequestToParty( final Party party, final PartyJoinRequest joinRequest )
+    {
+        final PartyAddJoinRequestJob partyAddJoinRequestJob = new PartyAddJoinRequestJob( party, joinRequest );
+
+        BuX.getInstance().getJobManager().executeJob( partyAddJoinRequestJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().addJoinRequestToParty( party, joinRequest );
+        }
+    }
+
+    @Override
+    public void removeJoinRequestFromParty( final Party party, final PartyJoinRequest joinRequest )
+    {
+        final PartyRemoveJoinRequestJob partyRemoveJoinRequest = new PartyRemoveJoinRequestJob( party, joinRequest );
+
+        BuX.getInstance().getJobManager().executeJob( partyRemoveJoinRequest );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().removeJoinRequestFromParty( party, joinRequest );
         }
     }
 

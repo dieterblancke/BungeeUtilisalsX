@@ -27,6 +27,14 @@ public interface PartyManager
 
     void removeMemberFromParty( Party party, PartyMember member );
 
+    void addInvitationToParty( Party party, PartyInvite invite );
+
+    void removeInvitationFromParty( Party party, PartyInvite invite );
+
+    void addJoinRequestToParty( Party party, PartyJoinRequest joinRequest );
+
+    void removeJoinRequestFromParty( Party party, PartyJoinRequest joinRequest );
+
     void setPartyOwner( Party party, PartyMember member );
 
     void broadcastToParty( Party party, String message, Object... placeholders );

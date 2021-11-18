@@ -141,7 +141,7 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
     }
 
     @Override
-    public void removeInviteToParty( final Party party, final PartyInvite partyInvite )
+    public void removeInviteFromParty( final Party party, final PartyInvite partyInvite )
     {
         redisManager.executeAsync( commands ->
         {
@@ -166,7 +166,7 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
     }
 
     @Override
-    public void removeJoinRequestToParty( final Party party, final PartyJoinRequest partyJoinRequest )
+    public void removeJoinRequestFromParty( final Party party, final PartyJoinRequest partyJoinRequest )
     {
         redisManager.executeAsync( commands ->
         {

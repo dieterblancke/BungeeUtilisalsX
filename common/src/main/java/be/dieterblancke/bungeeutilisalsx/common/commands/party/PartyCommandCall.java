@@ -24,7 +24,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.*;
+import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyCreateSubCommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyInviteSubCommandCall;
 
 import java.util.List;
 
@@ -45,8 +46,16 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "create" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.create" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "create" )
                         .executable( new PartyCreateSubCommandCall() )
+                        .build()
+        );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "invite" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "invite" )
+                        .executable( new PartyInviteSubCommandCall() )
                         .build()
         );
     }

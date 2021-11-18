@@ -802,6 +802,9 @@ party:
     already-in-other-party: '&b{user} &eis already in another party!'
     not-allowed: '&eOnly the &bparty owner &ecan invite people to the party!'
     ignored: '&eYou cannot invite people that have ignored you!'
+    invited: '&eYou have been invited to &b{user}''s &bparty! Use &b/party join {user} &eto join the party!'
+    invited-broadcast: '&b{user} &ehas been invited to the party!'
+    invite-success: '&eYou have successfully invited &b{user} &eto your party!'
 
 custom:
   ingamemotd:

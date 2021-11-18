@@ -12,6 +12,9 @@ command:
   # Set this to true to open gui on party command execute without arguments.
   open-gui: false
 
+# Set this to false if you don't want people to be able to be invited if they are already in a party.
+allow-invites-to-members-already-in-party: true
+
 create:
   aliases: 'make, new'
   permission: bungeeutilisalsx.party.create
@@ -19,6 +22,3 @@ create:
 invite:
   aliases: 'invite, add'
   permission: bungeeutilisalsx.party.invite
-
-  # Set this to false if you don't want people to be able to be invited if they are already in a party.
-  allow-cross-party-invites: true

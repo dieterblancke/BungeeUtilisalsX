@@ -20,10 +20,14 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyInvite;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,15 +66,50 @@ public class PartyInviteSubCommandCall implements CommandCall
                 return;
             }
 
-            // TODO: add invite to party (and add invite, and join request methods to PartyManager) and message the invited user
-            // TODO: use invite setting from party config
+            final Optional<Party> currentParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( target.getUserName() );
+
+            if ( currentParty.isPresent() )
+            {
+                if ( currentParty.get().getUuid().equals( party.getUuid() ) )
+                {
+                    user.sendLangMessage( "party.invite.already-in-party" );
+                    return;
+                }
+                else if ( !ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "allow-invites-to-members-already-in-party" ) )
+                {
+                    user.sendLangMessage( "party.invite.already-in-other-party" );
+                    return;
+                }
+            }
+
+            BuX.getInstance().getPartyManager().addInvitationToParty(
+                    party,
+                    new PartyInvite( new Date(), target.getUuid(), user.getUuid() )
+            );
+
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    target.getUserName(),
+                    "party.invite.invited",
+                    "{user}", user.getName()
+            ) );
+
+            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    target.getUserName(),
+                    "party.invite.invite-success",
+                    "{user}", user.getName()
+            ) );
+            BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                    party,
+                    "party.invite.invited-broadcast",
+                    "{user}", target.getUserName()
+            );
         } );
     }
 
     @Override
     public String getDescription()
     {
-        return "Invites someone to your party.";
+        return "Invites someone to your current party.";
     }
 
     @Override

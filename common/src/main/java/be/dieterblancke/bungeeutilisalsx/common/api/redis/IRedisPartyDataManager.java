@@ -26,11 +26,11 @@ public interface IRedisPartyDataManager
 
     void addInviteToParty( Party party, PartyInvite partyInvite );
 
-    void removeInviteToParty( Party party, PartyInvite partyInvite );
+    void removeInviteFromParty( Party party, PartyInvite partyInvite );
 
     void addJoinRequestToParty( Party party, PartyJoinRequest partyJoinRequest );
 
-    void removeJoinRequestToParty( Party party, PartyJoinRequest partyJoinRequest );
+    void removeJoinRequestFromParty( Party party, PartyJoinRequest partyJoinRequest );
 
     List<Party> getAllParties();
 

@@ -1,12 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
-import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUserJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
 import java.util.UUID;
 
 @Getter

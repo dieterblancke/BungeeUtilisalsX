@@ -1,5 +1,3 @@
-mvn clean package install "$@"
-
 fixBuildNames() {
   if ls *shaded* 1> /dev/null 2>&1; then
     fileName=$(find ./ -printf "%f\n" | grep "shaded")
@@ -24,4 +22,4 @@ for moduleName in bungee velocity webapi; do
   fixBuildNames
 done
 
-echo "Finished building BungeeUtilisalsX"
+echo "Successfully renamed BungeeUtilisalsX build names"
