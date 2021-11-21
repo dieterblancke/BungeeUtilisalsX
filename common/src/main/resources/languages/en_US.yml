@@ -107,7 +107,7 @@ general-commands:
 
     format:
       send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
-      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+      receive: '&7({sender-server} - &b{sender} &e-> Me&7) &f{message}'
   reply:
     usage: '&ePlease use &b/reply (message)&e!'
     no-target: '&eThere is currently nobody to reply to!'
@@ -115,7 +115,7 @@ general-commands:
 
     format:
       send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
-      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+      receive: '&7({sender-server} - &b{sender} &e-> Me&7) &f{message}'
   ignore:
     usage: '&ePlease use &b/ignore (add / remove / list) [player]&e!'
     self-ignore: '&eYou cannot (un)ignore yourself!'

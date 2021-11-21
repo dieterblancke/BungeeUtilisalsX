@@ -32,6 +32,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
+import com.google.common.base.Strings;
 
 import java.util.Comparator;
 
@@ -120,8 +121,11 @@ public class UserExecutor implements EventExecutor
 
     private StaffRankData findStaffRank( final User user )
     {
-        return ConfigFiles.RANKS.getRanks().stream()
-                .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
+        final String group = BuX.getInstance().getActivePermissionIntegration().getGroup( user.getUuid() );
+
+        return ConfigFiles.RANKS.getRanks()
+                .stream()
+                .filter( rank -> Strings.isNullOrEmpty( group ) ? user.hasPermission( rank.getPermission(), true ) : rank.getName().equalsIgnoreCase( group ) )
                 .max( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .orElse( null );
     }
