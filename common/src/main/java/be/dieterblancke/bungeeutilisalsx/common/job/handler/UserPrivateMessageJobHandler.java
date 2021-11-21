@@ -45,7 +45,8 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     null,
                     "{sender}", job.getUserName(),
                     "{message}", job.getMessage(),
-                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName()
+                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
+                    "{receiver-server}", user.getServerName()
             );
 
             executeJob( new UserLanguageMessageJob(
@@ -55,7 +56,8 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
                     "{receiver}", user.getName(),
                     "{message}", job.getMessage(),
-                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName()
+                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
+                    "{receiver-server}", user.getServerName()
             ) );
 
             executeJob( new ExecuteEventJob(
