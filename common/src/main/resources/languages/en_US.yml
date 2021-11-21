@@ -106,16 +106,16 @@ general-commands:
     self-msg: '&eYou cannot message yourself!'
 
     format:
-      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
-      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+      send: '&7(&eMe &e-> &7({receiver-server}) &b{receiver}&7) &f{message}'
+      receive: '&7({sender-server}) &b{sender} &e-> Me &f{message}'
   reply:
     usage: '&ePlease use &b/reply (message)&e!'
     no-target: '&eThere is currently nobody to reply to!'
     ignored: '&eYou cannot send a message to this user!'
 
     format:
-      send: '&7(&eMe &e-> &b{receiver}&7) &f{message}'
-      receive: '&7(&b{sender} &e-> Me&7) &f{message}'
+      send: '&eMe &e-> &7({receiver-server}) &b{receiver}&7 &f{message}'
+      receive: '&7({sender-server}) &b{sender} &e-> &eMe &f{message}'
   ignore:
     usage: '&ePlease use &b/ignore (add / remove / list) [player]&e!'
     self-ignore: '&eYou cannot (un)ignore yourself!'
