@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -33,6 +32,7 @@ public class ConsoleUser implements User
     private final UserCooldowns cooldowns = new UserCooldowns();
     @Getter
     private final List<FriendData> friends = Lists.newArrayList();
+    private final UUID uuid = UUID.randomUUID();
     @Getter
     @Setter
     private boolean socialSpy;
@@ -187,7 +187,7 @@ public class ConsoleUser implements User
     @Override
     public UUID getUuid()
     {
-        return UUID.randomUUID();
+        return uuid;
     }
 
     @Override

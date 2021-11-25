@@ -48,6 +48,11 @@ public class PartyConfig extends Config
 
     public int getPartyInactivityPeriod()
     {
-        return config.getInteger( "party-inactivity-period" );
+        return config.getInteger( "inactivity-period.party" );
+    }
+
+    public int getPartyMemberInactivityPeriod()
+    {
+        return config.getInteger( "inactivity-period.party-member" );
     }
 }

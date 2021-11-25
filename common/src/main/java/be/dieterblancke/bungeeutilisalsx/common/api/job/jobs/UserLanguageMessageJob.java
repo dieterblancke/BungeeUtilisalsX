@@ -11,7 +11,6 @@ import java.util.UUID;
 public class UserLanguageMessageJob extends HasUserJob
 {
 
-    private String userName;
     private boolean prefix;
     private boolean colorBefore;
     private String languagePath;
@@ -73,7 +72,6 @@ public class UserLanguageMessageJob extends HasUserJob
     {
         super( uuid, userName );
 
-        this.userName = userName;
         this.prefix = prefix;
         this.colorBefore = colorBefore;
         this.languagePath = languagePath;

@@ -35,7 +35,7 @@ public interface PartyManager
 
     void removeJoinRequestFromParty( Party party, PartyJoinRequest joinRequest );
 
-    void setPartyOwner( Party party, PartyMember member );
+    void setPartyOwner( Party party, PartyMember member, boolean owner );
 
     void broadcastToParty( Party party, String message, Object... placeholders );
 

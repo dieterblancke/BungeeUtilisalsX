@@ -143,7 +143,7 @@ public class SimplePartyManager implements PartyManager
 
             if ( partyMember.isPresent() )
             {
-                this.setPartyOwner( party, partyMember.get() );
+                this.setPartyOwner( party, partyMember.get(), true );
             }
             else
             {
@@ -216,11 +216,18 @@ public class SimplePartyManager implements PartyManager
     }
 
     @Override
-    public void setPartyOwner( final Party party, final PartyMember member )
+    public void setPartyOwner( final Party party, final PartyMember member, final boolean owner )
     {
-        final PartySetOwnerJob partySetOwnerJob = new PartySetOwnerJob( party, member.getUuid() );
+        member.setPartyOwner( owner );
+
+        final PartySetOwnerJob partySetOwnerJob = new PartySetOwnerJob( party, member.getUuid(), owner );
 
         BuX.getInstance().getJobManager().executeJob( partySetOwnerJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setOwnerStatus( party, member, owner );
+        }
     }
 
     @Override
@@ -256,70 +263,85 @@ public class SimplePartyManager implements PartyManager
     {
         final int period = ConfigFiles.PARTY_CONFIG.getPartyInactivityPeriod();
 
-        BuX.getInstance().getScheduler().runTaskRepeating( period, period, TimeUnit.SECONDS, () ->
+        if ( period > 0 )
         {
-            if ( BuX.getInstance().isRedisManagerEnabled() )
+            BuX.getInstance().getScheduler().runTaskRepeating( period, period, TimeUnit.SECONDS, () ->
             {
-                final IRedisDataManager redisDataManager = BuX.getInstance().getRedisManager().getDataManager();
-
-                if ( !redisDataManager.attemptShedLock( "PARTY_CLEANUP", period, TimeUnit.SECONDS ) )
+                if ( BuX.getInstance().isRedisManagerEnabled() )
                 {
-                    return;
-                }
-            }
+                    final IRedisDataManager redisDataManager = BuX.getInstance().getRedisManager().getDataManager();
 
-            final List<Party> queuedForRemoval = new ArrayList<>();
-
-            for ( Party party : parties )
-            {
-                final boolean partyInactive = party.getPartyMembers()
-                        .stream()
-                        .noneMatch( partyMember -> BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() ) );
-
-                if ( party.isInactive() && partyInactive )
-                {
-                    queuedForRemoval.add( party );
-                }
-                else
-                {
-                    if ( party.isInactive() != partyInactive && BuX.getInstance().isRedisManagerEnabled() )
+                    if ( !redisDataManager.attemptShedLock( "PARTY_CLEANUP", period, TimeUnit.SECONDS ) )
                     {
-                        BuX.getInstance().getRedisManager().getDataManager()
-                                .getRedisPartyDataManager().setInactiveStatus( party, partyInactive );
+                        return;
                     }
-
-                    party.setInactive( partyInactive );
                 }
-            }
 
-            queuedForRemoval.forEach( this::removeParty );
+                final List<Party> queuedForRemoval = new ArrayList<>();
 
-            for ( Party party : this.parties )
-            {
-                final List<PartyMember> membersQueuedForRemoval = new ArrayList<>();
-
-                for ( PartyMember partyMember : party.getPartyMembers() )
+                for ( Party party : parties )
                 {
-                    final boolean inactive = BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() );
+                    final boolean partyInactive = party.getPartyMembers()
+                            .stream()
+                            .noneMatch( partyMember -> BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() ) );
 
-                    if ( partyMember.isInactive() && inactive )
+                    if ( party.isInactive() && partyInactive )
                     {
-                        membersQueuedForRemoval.add( partyMember );
+                        queuedForRemoval.add( party );
                     }
                     else
                     {
-                        if ( partyMember.isInactive() != inactive && BuX.getInstance().isRedisManagerEnabled() )
+                        if ( party.isInactive() != partyInactive && BuX.getInstance().isRedisManagerEnabled() )
                         {
                             BuX.getInstance().getRedisManager().getDataManager()
-                                    .getRedisPartyDataManager().setInactiveStatus( party, partyMember, inactive );
+                                    .getRedisPartyDataManager().setInactiveStatus( party, partyInactive );
                         }
-                        partyMember.setInactive( inactive );
+
+                        party.setInactive( partyInactive );
                     }
                 }
 
-                // TODO: broadcast member inactivity removal to party
-                membersQueuedForRemoval.forEach( member -> this.removeMemberFromParty( party, member ) );
-            }
-        } );
+                queuedForRemoval.forEach( this::removeParty );
+            } );
+        }
+
+        final int memberPeriod = ConfigFiles.PARTY_CONFIG.getPartyInactivityPeriod();
+
+        if ( memberPeriod > 0 )
+        {
+            BuX.getInstance().getScheduler().runTaskRepeating( memberPeriod, memberPeriod, TimeUnit.SECONDS, () ->
+            {
+                for ( Party party : this.parties )
+                {
+                    final List<PartyMember> membersQueuedForRemoval = new ArrayList<>();
+
+                    for ( PartyMember partyMember : party.getPartyMembers() )
+                    {
+                        final boolean inactive = !BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() );
+
+                        if ( partyMember.isInactive() && inactive )
+                        {
+                            membersQueuedForRemoval.add( partyMember );
+                        }
+                        else
+                        {
+                            if ( partyMember.isInactive() != inactive && BuX.getInstance().isRedisManagerEnabled() )
+                            {
+                                BuX.getInstance().getRedisManager().getDataManager()
+                                        .getRedisPartyDataManager().setInactiveStatus( party, partyMember, inactive );
+                            }
+
+                            partyMember.setInactive( inactive );
+                        }
+                    }
+
+                    membersQueuedForRemoval.forEach( member ->
+                    {
+                        this.removeMemberFromParty( party, member );
+                        languageBroadcastToParty( party, "party.inactivity-removal", "{user}", member.getUserName() );
+                    } );
+                }
+            } );
+        }
     }
 }

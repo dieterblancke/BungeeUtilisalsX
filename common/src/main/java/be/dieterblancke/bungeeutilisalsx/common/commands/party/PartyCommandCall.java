@@ -24,8 +24,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyAcceptSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyCreateSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyInviteSubCommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.commands.party.sub.PartyLeaveSubCommandCall;
 
 import java.util.List;
 
@@ -56,6 +58,22 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
                         .name( "invite" )
                         .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "invite" )
                         .executable( new PartyInviteSubCommandCall() )
+                        .build()
+        );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "accept" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "accept" )
+                        .executable( new PartyAcceptSubCommandCall() )
+                        .build()
+        );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "leave" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "leave" )
+                        .executable( new PartyLeaveSubCommandCall() )
                         .build()
         );
     }

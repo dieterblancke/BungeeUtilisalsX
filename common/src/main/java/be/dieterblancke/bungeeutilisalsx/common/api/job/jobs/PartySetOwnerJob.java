@@ -11,7 +11,8 @@ public class PartySetOwnerJob implements MultiProxyJob
 {
 
     private final Party party;
-    private final UUID newOwner;
+    private final UUID uuid;
+    private final boolean owner;
 
     @Override
     public boolean isAsync()

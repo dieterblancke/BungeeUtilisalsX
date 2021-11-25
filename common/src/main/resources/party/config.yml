@@ -1,9 +1,16 @@
 enabled: false
 
-# How often should BungeeUtilisalsX scan for inactive parties (in seconds)
-# This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
-# Next scan, if the party is already inactive AND all party members are still offline, then the party will be removed.
-party-inactivity-period: 60
+inactivity-period:
+  # How often should BungeeUtilisalsX scan for inactive parties (in seconds)?
+  # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
+  # Next scan, if the party is already inactive AND all party members are still offline, then the party will be removed.
+  party: 60
+
+  # How often should BungeeUtilisalsX scan for inactive party members (in seconds)?
+  # This will flag members that are offline, next scan, if they are still offline, they will be removed from the party
+  # If the party is empty, the party will be removed, if the party owner is offline, a new owner will be assigned automatically
+  # Set this to -1 to not automatically remove inactive members!
+  party-member: -1
 
 command:
   aliases: 'party, bparty'
@@ -22,3 +29,11 @@ create:
 invite:
   aliases: 'invite, add'
   permission: bungeeutilisalsx.party.invite
+
+accept:
+  aliases: 'join'
+  permission: bungeeutilisalsx.party.accept
+
+leave:
+  aliases: 'quit'
+  permission: bungeeutilisalsx.party.leave

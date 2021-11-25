@@ -72,7 +72,7 @@ public class PartyInviteSubCommandCall implements CommandCall
             {
                 if ( currentParty.get().getUuid().equals( party.getUuid() ) )
                 {
-                    user.sendLangMessage( "party.invite.already-in-party" );
+                    user.sendLangMessage( "party.invite.already-in-party", "{user}", targetUser );
                     return;
                 }
                 else if ( !ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "allow-invites-to-members-already-in-party" ) )
@@ -93,11 +93,10 @@ public class PartyInviteSubCommandCall implements CommandCall
                     "{user}", user.getName()
             ) );
 
-            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    target.getUserName(),
+            user.sendLangMessage(
                     "party.invite.invite-success",
-                    "{user}", user.getName()
-            ) );
+                    "{user}", target.getUserName()
+            );
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                     party,
                     "party.invite.invited-broadcast",

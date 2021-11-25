@@ -103,7 +103,11 @@ public abstract class AbstractBungeeUtilisalsX
         final boolean useMultiProxy = ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" );
         this.redisManager = useMultiProxy ? RedisManagerFactory.create() : null;
         this.jobManager = useMultiProxy ? new MultiProxyJobManager() : new SingleProxyJobManager();
-        this.partyManager = new SimplePartyManager();
+
+        if ( ConfigFiles.PARTY_CONFIG.isEnabled() )
+        {
+            this.partyManager = new SimplePartyManager();
+        }
 
         this.detectPermissionIntegration();
         this.registerLanguages();
@@ -372,7 +376,8 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract void registerMetrics();
 
-    protected void migrate() {
+    protected void migrate()
+    {
         final MigrationManager migrationManager = MigrationManagerFactory.createMigrationManager();
         migrationManager.initialize();
         try

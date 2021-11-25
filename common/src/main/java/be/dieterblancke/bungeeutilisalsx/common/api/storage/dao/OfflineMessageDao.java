@@ -29,7 +29,7 @@ public interface OfflineMessageDao
 
     void sendOfflineMessage( String username, OfflineMessage message );
 
-    void updateOfflineMessage( Long id, boolean active );
+    void deleteOfflineMessage( Long id );
 
     @Value
     class OfflineMessage

@@ -28,6 +28,7 @@ public class ConsoleUser implements User
     private final UserCooldowns cooldowns = new UserCooldowns();
     @Getter
     private final List<FriendData> friends = Lists.newArrayList();
+    private final UUID uuid = UUID.randomUUID();
     @Getter
     @Setter
     private boolean socialSpy;
@@ -162,7 +163,7 @@ public class ConsoleUser implements User
     @Override
     public UUID getUuid()
     {
-        return UUID.randomUUID();
+        return uuid;
     }
 
     @Override

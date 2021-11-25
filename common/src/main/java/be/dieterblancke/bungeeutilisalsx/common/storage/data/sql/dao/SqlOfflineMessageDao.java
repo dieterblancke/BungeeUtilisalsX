@@ -85,17 +85,16 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
 
     @Override
     @SneakyThrows
-    public void updateOfflineMessage( final Long id, final boolean active )
+    public void deleteOfflineMessage( final Long id )
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "update bu_offline_message set active = ? where id = ?;"
+                      "delete from bu_offline_message where id = ?;"
               ) )
         {
-            pstmt.setBoolean( 1, active );
-            pstmt.setLong( 2, id );
+            pstmt.setLong( 1, id );
 
-            pstmt.executeUpdate();
+            pstmt.execute();
         }
     }
 }

@@ -22,7 +22,7 @@ public class RedisDataConstants
 
     public static String getPartyPrefix( final String partyUuid )
     {
-        return PARTY_PREFIX + partyUuid;
+        return PARTY_PREFIX + SEPARATOR + partyUuid;
     }
 
     public static String getPartyPrefix( final UUID partyUuid )

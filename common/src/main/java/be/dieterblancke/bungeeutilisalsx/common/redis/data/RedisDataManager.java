@@ -5,6 +5,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisPartyDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
 
@@ -78,7 +80,7 @@ public class RedisDataManager implements IRedisDataManager
             return str == null ? null : Long.parseLong( str );
         } );
 
-        if ( lastExecute + unit.toMillis( period ) > System.currentTimeMillis() )
+        if ( MoreObjects.firstNonNull( lastExecute, 0l ) + unit.toMillis( period ) > System.currentTimeMillis() )
         {
             return false;
         }

@@ -20,18 +20,10 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
-import java.util.Optional;
 
 public class PartyCreateSubCommandCall implements CommandCall
 {
@@ -39,6 +31,11 @@ public class PartyCreateSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
+        if ( user.isConsole() )
+        {
+            user.sendLangMessage( "not-for-console" );
+            return;
+        }
         try
         {
             BuX.getInstance().getPartyManager().createParty( user );
