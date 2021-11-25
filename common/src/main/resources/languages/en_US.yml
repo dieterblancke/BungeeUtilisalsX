@@ -817,6 +817,10 @@ party:
     left: '&eYou have left the party of &b{party-owner}&e!'
     left-broadcast: '&b{user} &ehas left the party!'
     owner-left-broadcast: '&eSince &b{party-old-owner} &ewas the party owner, &b{party-owner} &ehas been assigned as the new party owner!'
+  chat:
+    enabled: '&eParty chat is now &aENABLED&e!'
+    disabled: '&eParty chat is now &cDISABLED&e!'
+    format: '&7(PARTY) &b{user} -> &f{message}'
 
 custom:
   ingamemotd:

@@ -92,6 +92,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
                 new Date(),
                 user.getName(),
                 false,
+                false,
                 false
         );
 

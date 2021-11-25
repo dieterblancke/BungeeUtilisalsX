@@ -46,6 +46,7 @@ public class SimplePartyManager implements PartyManager
                 new Date(),
                 leader.getName(),
                 true,
+                false,
                 false
         ) );
         final PartyCreationJob partyCreationJob = new PartyCreationJob( party );
@@ -256,6 +257,21 @@ public class SimplePartyManager implements PartyManager
             );
 
             BuX.getInstance().getJobManager().executeJob( userLanguageMessageJob );
+        }
+    }
+
+    @Override
+    public void setChatMode( final Party party, final PartyMember partyMember, final boolean chat )
+    {
+        partyMember.setChat( chat );
+
+        final PartySetChatModeJob partySetChatModeJob = new PartySetChatModeJob( party, partyMember.getUuid(), chat );
+
+        BuX.getInstance().getJobManager().executeJob( partySetChatModeJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setOwnerStatus( party, partyMember, chat );
         }
     }
 

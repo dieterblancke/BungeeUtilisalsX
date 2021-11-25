@@ -24,6 +24,8 @@ public interface IRedisPartyDataManager
 
     void setOwnerStatus( Party party, PartyMember partyMember, boolean owner );
 
+    void setChatStatus( Party party, PartyMember partyMember, boolean chat );
+
     void addInviteToParty( Party party, PartyInvite partyInvite );
 
     void removeInviteFromParty( Party party, PartyInvite partyInvite );

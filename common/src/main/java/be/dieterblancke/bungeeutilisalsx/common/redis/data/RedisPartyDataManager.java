@@ -99,7 +99,8 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
                 "joinedAt",
                 "nickName",
                 "partyOwner",
-                "inactive"
+                "inactive",
+                "chat"
         );
     }
 
@@ -127,6 +128,15 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
         redisManager.executeAsync( commands ->
         {
             commands.hset( getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ), "partyOwner", String.valueOf( owner ) );
+        } );
+    }
+
+    @Override
+    public void setChatStatus( final Party party, final PartyMember partyMember, final boolean chat )
+    {
+        redisManager.executeAsync( commands ->
+        {
+            commands.hset( getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ), "chat", String.valueOf( chat ) );
         } );
     }
 

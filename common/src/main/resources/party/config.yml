@@ -37,3 +37,7 @@ accept:
 leave:
   aliases: 'quit'
   permission: bungeeutilisalsx.party.leave
+
+chat:
+  aliases: 'c'
+  permission: bungeeutilisalsx.party.chat

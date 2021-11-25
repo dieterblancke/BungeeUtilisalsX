@@ -41,4 +41,6 @@ public interface PartyManager
 
     void languageBroadcastToParty( Party party, String messagePath, Object... placeholders );
 
+    void setChatMode( Party party, PartyMember partyMember, boolean chat );
+
 }

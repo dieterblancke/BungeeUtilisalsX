@@ -19,6 +19,7 @@ public class PartyMember
     private String nickName;
     private boolean partyOwner;
     private boolean inactive;
+    private boolean chat;
 
     public static PartyMember fromMap( final UUID partyMemberUuid, final Map<String, String> memberData )
     {
@@ -28,7 +29,8 @@ public class PartyMember
                 new Date( Long.parseLong( memberData.get( "joinedAt" ) ) ),
                 memberData.get( "nickName" ),
                 Boolean.parseBoolean( memberData.get( "partyOwner" ) ),
-                Boolean.parseBoolean( memberData.get( "inactive" ) )
+                Boolean.parseBoolean( memberData.get( "inactive" ) ),
+                Boolean.parseBoolean( memberData.get( "chat" ) )
         );
     }
 
@@ -41,6 +43,7 @@ public class PartyMember
         memberData.put( "nickName", nickName );
         memberData.put( "partyOwner", String.valueOf( partyOwner ) );
         memberData.put( "inactive", String.valueOf( inactive ) );
+        memberData.put( "chat", String.valueOf( chat ) );
 
         return memberData;
     }
