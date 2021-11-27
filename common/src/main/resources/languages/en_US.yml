@@ -830,6 +830,10 @@ party:
   kick:
     usage: '&ePlease use &b/party kick (user)&e!'
     not-allowed: '&eOnly the &bparty owner &ecan kick people from the party!'
+    not-in-party: '&eThis user is not in your party!'
+    kick: '&eYou have kicked &b{kickedUser} &efrom your party!'
+    kicked-broadcast: '&b{kickedUser} &ehas been kicked from the party by &b{user}&e!'
+    kicked: '&eYou have been kicked from the party by &b{user}&e!'
 
 custom:
   ingamemotd:

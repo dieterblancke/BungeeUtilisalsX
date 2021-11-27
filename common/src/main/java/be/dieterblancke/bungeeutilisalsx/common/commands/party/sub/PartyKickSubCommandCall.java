@@ -20,10 +20,9 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,7 +55,32 @@ public class PartyKickSubCommandCall implements CommandCall
 
         final String targetName = args.get( 0 );
 
-        // TODO
+        party.getPartyMembers()
+                .stream()
+                .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
+                .findFirst()
+                .ifPresentOrElse( member ->
+                {
+                    BuX.getInstance().getPartyManager().removeMemberFromParty( party, member );
+
+                    user.sendLangMessage(
+                            "party.kick.kick",
+                            "{kickedUser}", member.getUserName()
+                    );
+
+                    BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                            party,
+                            "party.kick.kicked-broadcast",
+                            "{kickedUser}", member.getUserName(),
+                            "{user}", user.getName()
+                    );
+
+                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                            member.getUuid(),
+                            "party.kick.kicked",
+                            "{user}", user.getName()
+                    ) );
+                }, () -> user.sendLangMessage( "party.kick.not-in-party" ) );
     }
 
     @Override

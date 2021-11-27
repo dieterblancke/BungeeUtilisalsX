@@ -1,5 +1,7 @@
 enabled: false
 
+# TODO: member limits
+
 inactivity-period:
   # How often should BungeeUtilisalsX scan for inactive parties (in seconds)?
   # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
@@ -45,3 +47,7 @@ chat:
 setowner:
   aliases: 'owner'
   permission: bungeeutilisalsx.party.setowner
+
+kick:
+  aliases: 'remove'
+  permission: bungeeutilisalsx.party.kick

@@ -89,6 +89,14 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
                         .executable( new PartySetOwnerSubCommandCall() )
                         .build()
         );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "kick" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "kick" )
+                        .executable( new PartyKickSubCommandCall() )
+                        .build()
+        );
     }
 
     @Override
