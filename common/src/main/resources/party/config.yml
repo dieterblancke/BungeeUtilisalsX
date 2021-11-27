@@ -41,3 +41,7 @@ leave:
 chat:
   aliases: 'c'
   permission: bungeeutilisalsx.party.chat
+
+setowner:
+  aliases: 'owner'
+  permission: bungeeutilisalsx.party.setowner

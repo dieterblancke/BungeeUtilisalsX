@@ -81,6 +81,14 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
                         .executable( new PartyChatSubCommandCall() )
                         .build()
         );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "setowner" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "setowner" )
+                        .executable( new PartySetOwnerSubCommandCall() )
+                        .build()
+        );
     }
 
     @Override

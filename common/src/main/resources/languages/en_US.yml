@@ -821,6 +821,15 @@ party:
     enabled: '&eParty chat is now &aENABLED&e!'
     disabled: '&eParty chat is now &cDISABLED&e!'
     format: '&7(PARTY) &b{user} -> &f{message}'
+  setowner:
+    usage: '&ePlease use &b/party setowner (user)&e!'
+    not-allowed: '&eYou are not the party owner!'
+    not-in-party: '&eThis user is not in your party!'
+    changed: '&eYou have given &b{new-owner} &eownership of the party!'
+    broadcast: '&b{old-owner} &ehas passed the ownership of the party to &b{new-owner}&e!'
+  kick:
+    usage: '&ePlease use &b/party kick (user)&e!'
+    not-allowed: '&eOnly the &bparty owner &ecan kick people from the party!'
 
 custom:
   ingamemotd:
