@@ -789,6 +789,13 @@ gui:
 party:
   not-in-party: '&eYou need to be in a party to do this.'
   inactivity-removal: '&b{user} &ehas been automatically removed from the party due to inactivity!'
+  info:
+    - '&b{party-owner}''s &eparty info:'
+    - '&7Created at: &f{party-created-at}'
+    - '&7Party members: &f{party-member-count}'
+    - '&f{party-member-list}'
+    - '&7Sent invites: {party-invitation-count}'
+    - '&7Join requests: {party-joinrequest-count}'
 
   help:
     message:
