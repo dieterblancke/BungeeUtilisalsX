@@ -1,6 +1,10 @@
 enabled: false
 
-# TODO: member limits
+member-limits:
+  - permission: bungeeutilisalsx.party.limits.default
+    limit: 15
+  - permission: bungeeutilisalsx.party.limits.vip
+    limit: 25
 
 inactivity-period:
   # How often should BungeeUtilisalsX scan for inactive parties (in seconds)?
