@@ -1,9 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.velocity;
 
-import be.dieterblancke.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import be.dieterblancke.bungeeutilisalsx.common.IBuXApi;
-import be.dieterblancke.bungeeutilisalsx.common.IPluginDescription;
-import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
+import be.dieterblancke.bungeeutilisalsx.common.*;
+import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
+import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -20,11 +19,16 @@ import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import com.dbsoftwares.configuration.api.FileStorageType;
+import org.bstats.charts.AdvancedPie;
+import org.bstats.charts.SimplePie;
+import org.bstats.velocity.Metrics;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
@@ -145,5 +149,63 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public Logger getLogger()
     {
         return Bootstrap.getInstance().getLogger();
+    }
+
+    @Override
+    protected void registerMetrics()
+    {
+        final Metrics metrics = Bootstrap.getInstance().createMetrics();
+
+        metrics.addCustomChart( new SimplePie(
+                "punishments",
+                () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "motds",
+                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "ingame_motds",
+                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "friends",
+                () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "actionbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "title_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "bossbar_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "chat_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "tab_announcers",
+                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "hubbalancer",
+                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new SimplePie(
+                "protocolize",
+                () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"
+        ) );
+        metrics.addCustomChart( new AdvancedPie(
+                "player_versions",
+                () -> BuX.getApi().getUsers()
+                        .stream()
+                        .map( u -> u.getVersion().toString() )
+                        .collect( Collectors.groupingBy( Function.identity(), Collectors.summingInt( it -> 1 ) ) )
+        ) );
     }
 }

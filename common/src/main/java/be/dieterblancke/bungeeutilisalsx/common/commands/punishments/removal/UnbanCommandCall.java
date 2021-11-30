@@ -105,4 +105,16 @@ public class UnbanCommandCall extends PunishmentCommand
             }
         }
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Removes a ban for a given user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/unban (user) <server>";
+    }
 }

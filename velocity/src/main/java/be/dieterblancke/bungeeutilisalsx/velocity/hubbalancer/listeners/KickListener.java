@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
@@ -30,12 +31,26 @@ public class KickListener
         if ( section.getString( "type" ).equalsIgnoreCase( "BLACKLIST" ) )
         {
             fallback = true;
+
             for ( String contain : section.getStringList( "reasons" ) )
             {
                 if ( reason.contains( contain ) )
                 {
                     fallback = false;
                     break;
+                }
+            }
+
+            if ( event.getServer() != null && event.getServer().getServerInfo() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    {
+                        fallback = false;
+                        break;
+                    }
                 }
             }
         }
@@ -48,6 +63,19 @@ public class KickListener
                 {
                     fallback = true;
                     break;
+                }
+            }
+
+            if ( event.getServer() != null && event.getServer().getServerInfo() != null )
+            {
+                for ( String server : section.getStringList( "servers" ) )
+                {
+                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    {
+                        fallback = true;
+                        break;
+                    }
                 }
             }
         }

@@ -101,6 +101,18 @@ public class PunishmentInfoCommandCall implements CommandCall
         }
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Shows you the current status for a specific punishment type or all punishment types for a specific user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/punishmentinfo (user) <server> [type / all]";
+    }
+
     private void sendTypeInfo( final User user, final UserStorage storage, String server, final PunishmentType type )
     {
         if ( !useServerPunishments() || server == null )

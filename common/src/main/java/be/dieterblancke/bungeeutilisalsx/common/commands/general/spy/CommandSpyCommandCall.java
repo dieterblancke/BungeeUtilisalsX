@@ -25,6 +25,7 @@ import java.util.List;
 
 public class CommandSpyCommandCall implements CommandCall
 {
+
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
@@ -38,5 +39,17 @@ public class CommandSpyCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.commandspy.disabled" );
             user.setCommandSpy( false );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Toggles command spy for the current session. This will allow you to see all commands that are being executed.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/commandspy";
     }
 }

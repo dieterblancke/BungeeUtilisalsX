@@ -24,8 +24,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 
 import java.util.List;
@@ -109,5 +109,17 @@ public class ReportHistorySubCommandCall implements CommandCall
                     "{maxpages}", e.getMaxPages()
             );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Lists all reports you have created in the past.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/reports history [page]";
     }
 }

@@ -130,4 +130,16 @@ public class FriendRequestsSubCommandCall implements CommandCall
                 "{type_lowercase}", requestType.toLowerCase()
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Lists all friend requests for a certain type (incoming / outgoing)";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend requests (in / out) [page]";
+    }
 }

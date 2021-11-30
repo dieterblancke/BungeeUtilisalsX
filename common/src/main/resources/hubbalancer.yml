@@ -23,15 +23,18 @@ fallback-servers:
   - Lobby2
 
 fallback-trigger:
-  # When using BLACKLIST, only kick reasons that contain what you add below will be kicked from the network.
-  # When using WHITELIST, only kick reasons that DO NOT contain what you add below will be kicked from the network.
+  # When using BLACKLIST, only kick reasons / from servers that contain what you add below will be kicked from the network.
+  # When using WHITELIST, only kick reasons / from servers that DO NOT contain what you add below will be kicked from the network.
   type: 'BLACKLIST'
   reasons:
     - 'ban'
     - 'kick'
+  servers:
+    - 'Login'
 
 commands:
   hub:
     enabled: true
     aliases: 'lobby, gotohub'
     permission: bungeeutilisals.commands.hub
+    listener-based: true

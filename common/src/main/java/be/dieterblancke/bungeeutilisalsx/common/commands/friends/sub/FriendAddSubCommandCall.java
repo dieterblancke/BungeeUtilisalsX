@@ -74,7 +74,7 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         final boolean accepts = optionalTarget
-                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS, false ) )
+                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS ) )
                 .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ) );
         final boolean isIgnored = storage.getIgnoredUsers().stream().anyMatch( u -> u.equalsIgnoreCase( user.getName() ) );
 
@@ -112,5 +112,17 @@ public class FriendAddSubCommandCall implements CommandCall
                     "{name}", user.getName()
             ) );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Adds a friend to your friends list. If this user has an outstanding friend request towards you, this request will be accepted.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend add (user)";
     }
 }

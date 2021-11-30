@@ -14,7 +14,7 @@ public class v4_remake_friend_settings extends FileMigration
 
     public v4_remake_friend_settings()
     {
-        super( "migrations/v4_remake_friend_settings.sql" );
+        super( "/migrations/v4_remake_friend_settings.sql" );
     }
 
     @Override

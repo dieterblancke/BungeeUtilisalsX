@@ -39,7 +39,7 @@ public class FriendBroadcastSubCommandCall implements CommandCall
             user.sendLangMessage( "friends.broadcast.usage" );
             return;
         }
-        if ( !user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST, true ) )
+        if ( !user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST ) )
         {
             user.sendLangMessage( "friends.broadcast.disabled" );
             return;
@@ -55,5 +55,17 @@ public class FriendBroadcastSubCommandCall implements CommandCall
                         .map( FriendData::getFriend )
                         .collect( Collectors.toList() )
         ) );
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Broadcasts a message to all your online friends.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend broadcast (message)";
     }
 }

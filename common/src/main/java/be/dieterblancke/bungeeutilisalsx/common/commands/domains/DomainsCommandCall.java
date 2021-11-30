@@ -45,4 +45,16 @@ public class DomainsCommandCall extends ParentCommand implements CommandCall
                         .build()
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "This command allows you to see on what domains users first joined. This might not work when behind another proxy.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/domains";
+    }
 }

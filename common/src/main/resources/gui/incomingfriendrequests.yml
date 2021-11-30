@@ -1,0 +1,57 @@
+# The title that should be given to the gui
+title: '&2&lIncoming Friend Requests'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  - slots: 'borders'
+    # True if these slots represent friends, false if not.
+    friend-slots: false
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      name: ''
+    action: nothing
+  - slots: '10..16,19..25,28..34,37..43'
+    # True if these slots represent requests, false if not.
+    request-slots: true
+    item:
+      material: PLAYER_HEAD
+      name: '&e{user-name}'
+      lores:
+        - ''
+        - '&bRequested at:'
+        - '&7» {requested-at}'
+        - ''
+        - '&aLeft click to accept this request!'
+        - '&cRight click to deny this request!'
+    action: 'execute:friend accept {user-name}'
+    right-action: 'execute:friend deny {user-name}'
+  - slots: '45'
+    item:
+      material: ARROW
+      name: '&aGo back'
+    action: open:friendrequests
+  - slots: '46'
+    friend-slots: false
+    show-if: has-previous-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aPrevious Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY1MmUyYjkzNmNhODAyNmJkMjg2NTFkN2M5ZjI4MTlkMmU5MjM2OTc3MzRkMThkZmRiMTM1NTBmOGZkYWQ1ZiJ9fX0='
+    action: previous-page
+  - slots: '52'
+    friend-slots: false
+    show-if: has-next-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aNext Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEzYjhmNjgxZGFhZDhiZjQzNmNhZThkYTNmZTgxMzFmNjJhMTYyYWI4MWFmNjM5YzNlMDY0NGFhNmFiYWMyZiJ9fX0='
+    action: next-page
+  - slots: '53'
+    friend-slots: false
+    item:
+      material: RED_BED
+      name: '&c&lClose'
+    action: close

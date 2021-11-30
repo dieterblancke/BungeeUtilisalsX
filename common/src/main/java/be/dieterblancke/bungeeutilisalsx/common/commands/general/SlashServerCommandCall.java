@@ -60,6 +60,18 @@ public class SlashServerCommandCall implements CommandCall
         sendToServer( user, server );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "A shorthand notation for /server, if enabled.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/(serverName) [user]";
+    }
+
     private void sendToServer( final User user, final IProxyServer server )
     {
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )

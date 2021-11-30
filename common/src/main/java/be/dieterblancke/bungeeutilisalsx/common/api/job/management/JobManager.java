@@ -27,6 +27,8 @@ public abstract class JobManager
     {
         final List<Class<?>> classes = Utils.getClassesInPackage( "be.dieterblancke.bungeeutilisalsx.common.job.handler" );
 
+        BuX.debug( classes.toString() );
+
         for ( Class<?> clazz : classes )
         {
             for ( Method method : clazz.getDeclaredMethods() )

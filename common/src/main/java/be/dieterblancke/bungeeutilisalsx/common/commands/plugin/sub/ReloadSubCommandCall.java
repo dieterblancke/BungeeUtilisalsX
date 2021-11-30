@@ -41,4 +41,16 @@ public class ReloadSubCommandCall implements CommandCall, TabCall
         BuX.getInstance().reload();
         user.sendMessage( "&7All configuration files have been &areloaded&7!" );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Reloads all configuration files and most systems of BungeeUtilisalsX.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/bungeeutilisals reload";
+    }
 }

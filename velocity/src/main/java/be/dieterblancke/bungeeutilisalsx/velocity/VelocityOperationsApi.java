@@ -22,33 +22,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class VelocityOperationsApi implements ProxyOperationsApi
 {
 
-    private final LoadingCache<String, IProxyServer> proxyServerCache = CacheBuilder.newBuilder()
-            .expireAfterWrite( 1, TimeUnit.MINUTES )
-            .build( new CacheLoader<String, IProxyServer>()
-            {
-                @Override
-                public IProxyServer load( @Nonnull final String serverName )
-                {
-                    return Bootstrap.getInstance().getProxyServer()
-                            .getServer( serverName )
-                            .map( VelocityServer::new )
-                            .orElseThrow( () -> new RuntimeException( "Could not find server " + serverName + "!" ) );
-                }
-            } );
-
     private final Map<Command, CommandHolder> commandHolders = new HashMap<>();
 
     @Override
     public void registerCommand( final Command command )
     {
-        if ( !commandHolders.containsKey( command ) )
+        if ( !commandHolders.containsKey( command ) && !command.isListenerBased() )
         {
             final CommandHolder commandHolder = new CommandHolder( command );
             final CommandManager commandManager = Bootstrap.getInstance().getProxyServer().getCommandManager();
@@ -84,17 +69,10 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     @Override
     public IProxyServer getServerInfo( final String serverName )
     {
-        try
-        {
-            return this.proxyServerCache.get( serverName );
-        }
-        catch ( ExecutionException e )
-        {
-            return Bootstrap.getInstance().getProxyServer()
-                    .getServer( serverName )
-                    .map( VelocityServer::new )
-                    .orElse( null );
-        }
+        return Bootstrap.getInstance().getProxyServer()
+                .getServer( serverName )
+                .map( VelocityServer::new )
+                .orElse( null );
     }
 
     @Override

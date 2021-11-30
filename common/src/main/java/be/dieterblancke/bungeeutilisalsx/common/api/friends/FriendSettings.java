@@ -48,4 +48,9 @@ public class FriendSettings
     {
         return settings.getOrDefault( key, def );
     }
+
+    public boolean getSetting( final FriendSetting key )
+    {
+        return this.getSetting( key, key.getDefault() );
+    }
 }

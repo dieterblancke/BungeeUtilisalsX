@@ -1,11 +1,13 @@
 package be.dieterblancke.bungeeutilisalsx.common.job.handler;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivateMessageEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ExecuteEventJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 public class UserPrivateMessageJobHandler extends AbstractJobHandler
@@ -34,7 +36,7 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            user.getStorage().setData( "MSG_LAST_USER", job.getUserName() );
+            user.getStorage().setData( UserStorageKey.MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
@@ -42,7 +44,9 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     Utils::c,
                     null,
                     "{sender}", job.getUserName(),
-                    "{message}", job.getMessage()
+                    "{message}", job.getMessage(),
+                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
+                    "{receiver-server}", user.getServerName()
             );
 
             executeJob( new UserLanguageMessageJob(
@@ -51,7 +55,9 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
                     true,
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
                     "{receiver}", user.getName(),
-                    "{message}", job.getMessage()
+                    "{message}", job.getMessage(),
+                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
+                    "{receiver-server}", user.getServerName()
             ) );
 
             executeJob( new ExecuteEventJob(

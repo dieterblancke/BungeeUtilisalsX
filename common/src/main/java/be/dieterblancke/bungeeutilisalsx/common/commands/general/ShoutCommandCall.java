@@ -17,7 +17,7 @@ public class ShoutCommandCall implements CommandCall
         String shoutMessagePath = "general-commands.shout.shout-broadcast";
         if ( user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "shout.staff-permission" ) ) )
         {
-            shoutMessagePath += "staff";
+            shoutMessagePath += "-staff";
         }
 
         BuX.getApi().langBroadcast(
@@ -26,5 +26,17 @@ public class ShoutCommandCall implements CommandCall
                 "{servername}", user.getServerName(),
                 "{message}", message
         );
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends a global shout. This is a simplified version of /announce that can be used as a donator perk. Staff can have a custom shout format.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/shout (message)";
     }
 }

@@ -349,12 +349,15 @@ public interface User extends MessageRecipient
         final OfflineMessageDao offlineMessageDao = BuX.getApi().getStorageManager().getDao().getOfflineMessageDao();
         final List<OfflineMessage> messages = offlineMessageDao.getOfflineMessages( this.getName() );
 
-        this.sendLangMessage( "messagequeue-join-header" );
-
-        for ( OfflineMessage message : messages )
+        if ( !messages.isEmpty() )
         {
-            this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
-            offlineMessageDao.updateOfflineMessage( message.getId(), true );
+            this.sendLangMessage( "offlinemessages-join-header" );
+
+            for ( OfflineMessage message : messages )
+            {
+                this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
+                offlineMessageDao.updateOfflineMessage( message.getId(), false );
+            }
         }
     }
 

@@ -46,7 +46,8 @@ public class ConfigFiles
     public static Config LANGUAGES_CONFIG = new Config( "/languages/config.yml" );
     public static RanksConfig RANKS = new RanksConfig( "/chat/ranks.yml" );
     public static Config HUBBALANCER = new Config( "/hubbalancer.yml" );
-    public static IngameMotdConfig INGAME_MOTD_CONFIG = new IngameMotdConfig("/ingame-motd.yml");
+    public static IngameMotdConfig INGAME_MOTD_CONFIG = new IngameMotdConfig( "/ingame-motd.yml" );
+    public static WebhookConfig WEBHOOK_CONFIG = new WebhookConfig( "/webhooks.yml" );
 
     public static void loadAllConfigs()
     {

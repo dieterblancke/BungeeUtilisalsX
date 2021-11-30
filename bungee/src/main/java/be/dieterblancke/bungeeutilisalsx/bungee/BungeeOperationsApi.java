@@ -6,9 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
@@ -18,37 +15,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class BungeeOperationsApi implements ProxyOperationsApi
 {
-
-    private final LoadingCache<String, IProxyServer> proxyServerCache = CacheBuilder.newBuilder()
-            .expireAfterWrite( 1, TimeUnit.MINUTES )
-            .build( new CacheLoader<String, IProxyServer>()
-            {
-                @Override
-                public IProxyServer load( final String serverName )
-                {
-                    final ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo( serverName );
-
-                    if ( serverInfo == null )
-                    {
-                        throw new RuntimeException( "Could not find server " + serverName + "!" );
-                    }
-
-                    return new BungeeServer( serverInfo );
-                }
-            } );
 
     private final Map<Command, CommandHolder> commandHolders = new HashMap<>();
 
     @Override
     public void registerCommand( final Command command )
     {
-        if ( !commandHolders.containsKey( command ) )
+        if ( !commandHolders.containsKey( command ) && !command.isListenerBased() )
         {
             final CommandHolder commandHolder = new CommandHolder( command );
 
@@ -82,15 +59,8 @@ public class BungeeOperationsApi implements ProxyOperationsApi
     @Override
     public IProxyServer getServerInfo( final String serverName )
     {
-        try
-        {
-            return this.proxyServerCache.get( serverName );
-        }
-        catch ( ExecutionException e )
-        {
-            final ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo( serverName );
-            return serverInfo == null ? null : new BungeeServer( serverInfo );
-        }
+        final ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo( serverName );
+        return serverInfo == null ? null : new BungeeServer( serverInfo );
     }
 
     @Override

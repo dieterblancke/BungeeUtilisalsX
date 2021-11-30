@@ -29,11 +29,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ExecuteNetworkStaffEventJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
-
-import java.util.Comparator;
 
 public class UserExecutor implements EventExecutor
 {
@@ -68,33 +65,32 @@ public class UserExecutor implements EventExecutor
     public void onStaffLoad( final UserLoadEvent event )
     {
         final User user = event.getUser();
-        final StaffRankData rank = findStaffRank( user );
 
-        if ( rank == null )
+        StaffUtils.getStaffRankForUser( user ).ifPresent( rank ->
         {
-            return;
-        }
-
-        BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
-                NetworkStaffJoinEvent.class,
-                user.getName(),
-                user.getUuid(),
-                rank.getName()
-        ) );
+            BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
+                    NetworkStaffJoinEvent.class,
+                    user.getName(),
+                    user.getUuid(),
+                    rank.getName()
+            ) );
+        } );
     }
 
     @Event
     public void onStaffUnload( UserUnloadEvent event )
     {
         final User user = event.getUser();
-        final StaffRankData rank = findStaffRank( user );
 
-        BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
-                NetworkStaffLeaveEvent.class,
-                user.getName(),
-                user.getUuid(),
-                rank == null ? null : rank.getName()
-        ) );
+        StaffUtils.getStaffRankForUser( user ).ifPresent( rank ->
+        {
+            BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
+                    NetworkStaffLeaveEvent.class,
+                    user.getName(),
+                    user.getUuid(),
+                    rank.getName()
+            ) );
+        } );
     }
 
     @Event
@@ -116,13 +112,5 @@ public class UserExecutor implements EventExecutor
                     null
             );
         }
-    }
-
-    private StaffRankData findStaffRank( final User user )
-    {
-        return ConfigFiles.RANKS.getRanks().stream()
-                .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
-                .max( Comparator.comparingInt( StaffRankData::getPriority ) )
-                .orElse( null );
     }
 }

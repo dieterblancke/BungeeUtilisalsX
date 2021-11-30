@@ -45,4 +45,16 @@ public class StaffAnnouncementCommandCall implements CommandCall
                 "{message}", message
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends an announcement only to people that have a specific permission.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staffannouncement (message)";
+    }
 }

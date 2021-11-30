@@ -111,6 +111,18 @@ public class PunishmentHistoryCommandCall implements CommandCall
         );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return "Shows you the punishment history for a specific user.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/punishmenthistory (user) [type / all] [page]";
+    }
+
     private List<PunishmentInfo> listPunishments( final UserStorage storage, final String action )
     {
         final List<PunishmentInfo> list = Lists.newArrayList();

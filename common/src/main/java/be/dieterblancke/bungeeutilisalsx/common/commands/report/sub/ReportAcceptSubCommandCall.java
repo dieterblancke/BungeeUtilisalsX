@@ -97,7 +97,7 @@ public class ReportAcceptSubCommandCall implements CommandCall
             BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
                     report.getReportedBy(),
                     new OfflineMessage(
-                         null,
+                            null,
                             "general-commands.report.deny.accepted",
                             "{id}", report.getId(),
                             "{reported}", report.getUserName(),
@@ -105,5 +105,17 @@ public class ReportAcceptSubCommandCall implements CommandCall
                     )
             );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Accepts a report with a given id. This will notify the reporter.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report accept (id)";
     }
 }

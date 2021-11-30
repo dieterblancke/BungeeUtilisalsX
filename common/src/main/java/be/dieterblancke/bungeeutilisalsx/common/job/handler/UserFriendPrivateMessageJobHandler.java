@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserFriendPrivateMe
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
@@ -23,7 +24,7 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            if ( !user.getFriendSettings().getSetting( FriendSetting.MESSAGES, true ) )
+            if ( !user.getFriendSettings().getSetting( FriendSetting.MESSAGES ) )
             {
                 executeJob( new UserLanguageMessageJob( job, "friends." + job.getType().toString().toLowerCase() + ".disallowed" ) );
                 return;
@@ -41,7 +42,7 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
                 return;
             }
 
-            user.getStorage().setData( "FRIEND_MSG_LAST_USER", job.getUserName() );
+            user.getStorage().setData( UserStorageKey.FRIEND_MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
                     "friends." + job.getType().toString().toLowerCase() + ".format.receive",

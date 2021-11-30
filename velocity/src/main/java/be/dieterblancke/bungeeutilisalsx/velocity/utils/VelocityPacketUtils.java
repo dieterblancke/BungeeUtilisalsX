@@ -15,7 +15,7 @@ public class VelocityPacketUtils
 
     public static void sendPacket( final Player player, final Object packet )
     {
-        if ( packet instanceof MinecraftPacket )
+        if ( player != null && packet instanceof MinecraftPacket )
         {
             ( (ConnectedPlayer) player ).getConnection().write( packet );
         }
@@ -23,7 +23,7 @@ public class VelocityPacketUtils
 
     public static void sendTabPacket( final Player player, final BaseComponent[] header, final BaseComponent[] footer )
     {
-        if ( player.getProtocolVersion().compareTo( ProtocolVersion.MINECRAFT_1_8 ) >= 0 )
+        if ( player != null && player.getProtocolVersion().compareTo( ProtocolVersion.MINECRAFT_1_8 ) >= 0 )
         {
             sendPacket( player, new HeaderAndFooter(
                     ComponentSerializer.toString( header ),

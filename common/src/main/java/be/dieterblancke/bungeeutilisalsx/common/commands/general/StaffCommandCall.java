@@ -21,12 +21,12 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -143,6 +143,18 @@ public class StaffCommandCall implements CommandCall
         }
 
         user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Lists online staff by rank.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staff";
     }
 
     private List<TextComponent> findUsersComponents( final TextComponent component )

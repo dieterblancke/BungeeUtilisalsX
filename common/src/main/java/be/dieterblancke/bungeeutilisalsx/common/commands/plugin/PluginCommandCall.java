@@ -22,7 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.ConvertSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.DumpSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.ReloadSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.VersionSubCommandCall;
@@ -57,13 +56,17 @@ public class PluginCommandCall extends ParentCommand implements CommandCall
                         .executable( new DumpSubCommandCall() )
                         .build()
         );
+    }
 
-        registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "convert" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.convert" ) )
-                        .executable( new ConvertSubCommandCall() )
-                        .build()
-        );
+    @Override
+    public String getDescription()
+    {
+        return "The default / admin command to help manage the plugin.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/bungeeutilisals";
     }
 }

@@ -40,4 +40,16 @@ public class VersionSubCommandCall implements CommandCall, TabCall
     {
         user.sendMessage( "&7You are running BungeeUtilisalsX &av" + BuX.getInstance().getVersion() + "&7!" );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Prints the current BungeeUtilisalsX version in your chat.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/bungeeutilisals version";
+    }
 }

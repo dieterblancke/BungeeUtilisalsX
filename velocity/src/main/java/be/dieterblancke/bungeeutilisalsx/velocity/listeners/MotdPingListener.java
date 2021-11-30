@@ -71,7 +71,7 @@ public class MotdPingListener
             return null;
         }
         final ServerPing orig = event.getPing();
-        final boolean colorHex = Version.getVersion( motdConnection.getVersion() ).isNewerThen( Version.MINECRAFT_1_16 );
+        final boolean colorHex = motdConnection.getVersion() >= Version.MINECRAFT_1_16.getVersionId();
         final String message = formatMessage( motd.getMotd(), event, motdConnection );
         final Component component = GsonComponentSerializer.gson().deserialize(
                 ComponentSerializer.toString( new TextComponent(

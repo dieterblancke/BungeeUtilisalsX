@@ -22,8 +22,11 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.DiscordWebhook.EmbedObject;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
+import be.dieterblancke.bungeeutilisalsx.common.webhook.WebhookFactory;
+import com.dbsoftwares.configuration.api.ISection;
 
 import java.util.Date;
 import java.util.List;
@@ -88,5 +91,38 @@ public class ReportCreateSubCommandCall implements CommandCall
                 "{reason}", reason,
                 "{server}", user.getServerName()
         );
+
+        this.sendDiscordWebhook( report );
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Creates a new report against a user with a given description.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/report create (user) (reason)";
+    }
+
+    private void sendDiscordWebhook( final Report report )
+    {
+        final ISection discordSection = ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.discord-webhook" );
+
+        if ( !ConfigFiles.WEBHOOK_CONFIG.getDiscordWebhook().enabled() || !discordSection.getBoolean( "enabled" ) )
+        {
+            return;
+        }
+
+        WebhookFactory.discord().send( EmbedObject.fromSection(
+                discordSection,
+                "{user}", report.getUserName(),
+                "{uuid}", report.getUuid(),
+                "{reporter}", report.getReportedBy(),
+                "{reason}", report.getReason(),
+                "{server}", report.getServer()
+        ) );
     }
 }

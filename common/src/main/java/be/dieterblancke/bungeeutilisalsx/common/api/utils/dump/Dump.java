@@ -18,8 +18,6 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.dump;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.Value;
 
 import java.util.List;

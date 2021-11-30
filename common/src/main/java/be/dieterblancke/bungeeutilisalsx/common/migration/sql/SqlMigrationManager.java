@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.migration.FileMigration;
 import be.dieterblancke.bungeeutilisalsx.common.migration.Migration;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
+import lombok.SneakyThrows;
 
 import java.sql.*;
 import java.util.Date;
@@ -26,7 +27,7 @@ public class SqlMigrationManager implements MigrationManager
             {
                 if ( !rs.next() )
                 {
-                    final FileMigration fileMigration = new FileMigration( "migrations/migration_setup.sql" )
+                    final FileMigration fileMigration = new FileMigration( "/migrations/migration_setup.sql" )
                     {
                         @Override
                         public boolean shouldRun()
@@ -46,39 +47,33 @@ public class SqlMigrationManager implements MigrationManager
     }
 
     @Override
+    @SneakyThrows
     public void migrate() throws SQLException
     {
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection() )
         {
             final List<Class<?>> classes = Utils.getClassesInPackage( "be.dieterblancke.bungeeutilisalsx.common.migration.sql.migrations" );
 
-            try
+            for ( Class<?> clazz : classes )
             {
-                for ( Class<?> clazz : classes )
-                {
-                    final int migrationId = Integer.parseInt(
-                            clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
-                    );
-                    final Migration migration = (Migration) clazz.newInstance();
+                final int migrationId = Integer.parseInt(
+                        clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
+                );
+                final Migration migration = (Migration) clazz.getConstructor().newInstance();
 
-                    if ( !this.migrationExists( migrationId ) && migration.shouldRun() )
-                    {
-                        BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
-                        migration.migrate();
-                        this.createMigration(
-                                migrationId,
-                                migration instanceof FileMigration ? "file" : "java",
-                                migration.getClass().getName(),
-                                new Date(),
-                                true
-                        );
-                        BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
-                    }
+                if ( !this.migrationExists( migrationId ) && migration.shouldRun() )
+                {
+                    BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
+                    migration.migrate();
+                    this.createMigration(
+                            migrationId,
+                            migration instanceof FileMigration ? "file" : "java",
+                            migration.getClass().getName(),
+                            new Date(),
+                            true
+                    );
+                    BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
                 }
-            }
-            catch ( Exception e )
-            {
-                BuX.getLogger().log( Level.SEVERE, "Could not execute migration", e );
             }
         }
     }

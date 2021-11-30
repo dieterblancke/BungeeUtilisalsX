@@ -1,0 +1,6 @@
+webhooks:
+  discord:
+    enabled: false
+    url: 'webhook url'
+    username: 'BungeeUtilisalsX'
+    avatar-url: 'https://dieterblancke.xyz/media/avatar.png'

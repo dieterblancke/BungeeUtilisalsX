@@ -1,0 +1,52 @@
+# The title that should be given to the gui
+title: '&2&l{friend-name} - Friend'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 5
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  - slots: 13
+    friend-slots: true
+    offlineitem:
+      material: PLAYER_HEAD
+      name: '&e{friend-name} &8- &c&lOFFLINE'
+      lores:
+        - ''
+        - '&c» Offline'
+        - '&7Last online: &b{last-online}'
+      owner: '{friend-name}'
+    onlineitem:
+      material: PLAYER_HEAD
+      name: '&e{friend-name} &8- &a&lONLINE'
+      lores:
+        - ''
+        - '&a» Online'
+        - '&7Server: &b{server}'
+      owner: '{friend-name}'
+  - slots: 29
+    item:
+      material: REDSTONE_BLOCK
+      name: '&c&lIGNORE'
+      lores:
+        - '&7Click to ignore &a{friend-name}&7.'
+    action: 'execute:ignore add {friend-name}'
+  - slots: 33
+    item:
+      material: BARRIER
+      name: '&4&lREMOVE'
+      lores:
+        - '&7Click to remove &a{friend-name} &7from your friend list.'
+    action: 'execute:friend remove {friend-name}'
+  - slots: 36
+    item:
+      material: ARROW
+      name: '&aGo back'
+    action: open:friend
+  - slots: '44'
+    friend-slots: false
+    item:
+      material: RED_BED
+      name: '&c&lClose'
+    action: close

@@ -74,22 +74,19 @@ public enum StandardLibrary
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
             "5.0.0",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
-            relocate( "com.zaxxer.hikari" ),
-            relocate( "org.slf4j" )
+            relocate( "com.zaxxer.hikari" )
     ),
     SLF4J_API(
             "org.slf4j.LoggerFactory",
             "https://repo1.maven.org/maven2/org/slf4j/slf4j-api/{version}/slf4j-api-{version}.jar",
             "1.7.32",
-            checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
-            relocate( "org.slf4j" )
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     SLF4J_NOP(
             "org.slf4j.jul.JDK14LoggerAdapter",
             "https://repo1.maven.org/maven2/org/slf4j/slf4j-nop/{version}/slf4j-nop-{version}.jar",
             "1.7.32",
-            checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
-            relocate( "org.slf4j" )
+            checkType( "MYSQL", "MARIADB", "POSTGRESQL" )
     ),
     LETTUCE(
             "io.lettuce.core.RedisClient",

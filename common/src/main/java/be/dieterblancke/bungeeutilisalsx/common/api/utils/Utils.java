@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
@@ -30,6 +29,8 @@ import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
+import com.google.common.reflect.ClassPath;
+import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatColor;
 
 import java.awt.*;
@@ -48,6 +49,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
@@ -277,7 +279,7 @@ public class Utils
      */
     public static net.md_5.bungee.api.chat.BaseComponent[] asComponent( final String message )
     {
-        return new net.md_5.bungee.api.chat.ComponentBuilder( message ).create();
+        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( message );
     }
 
     /**
@@ -999,48 +1001,69 @@ public class Utils
      * @param packageName the package to get the classes for
      * @return a list of classes inside the given BuX package
      */
+    @SneakyThrows
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
         final List<Class<?>> classes = new ArrayList<>();
-        final CodeSource src = JobManager.class.getProtectionDomain().getCodeSource();
 
-        if ( src != null )
+        classes.addAll(
+                ClassPath.from( BuX.class.getClassLoader() )
+                        .getTopLevelClassesRecursive( packageName )
+                        .stream()
+                        .map( ClassPath.ClassInfo::load )
+                        .collect( Collectors.toList() )
+        );
+
+        BuX.debug("Found " + classes + " classes in package " + packageName);
+
+        if ( classes.isEmpty() )
         {
-            try
+            BuX.debug("Class list is empty");
+            final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
+
+            if ( src != null )
             {
-                final URL jar = src.getLocation();
-                final ZipInputStream zip = new ZipInputStream( jar.openStream() );
-
-                while ( true )
+                BuX.debug("FOUND SRC");
+                try
                 {
-                    final ZipEntry e = zip.getNextEntry();
-                    if ( e == null )
-                    {
-                        break;
-                    }
-                    final String name = e.getName().replace( "/", "." );
+                    final URL jar = src.getLocation();
+                    final ZipInputStream zip = new ZipInputStream( jar.openStream() );
 
-                    if ( name.startsWith( packageName ) )
+                    while ( true )
                     {
-                        if ( name.endsWith( ".class" ) )
+                        final ZipEntry e = zip.getNextEntry();
+                        if ( e == null )
                         {
-                            final Class<?> clazz = Class.forName( name.replace( ".class", "" ) );
+                            break;
+                        }
+                        final String name = e.getName().replace( "/", "." );
 
-                            classes.add( clazz );
+                        BuX.debug("class name: " + name);
+
+                        if ( name.startsWith( packageName ) )
+                        {
+                            BuX.debug("FOUND CLASS: " + name);
+
+                            if ( name.endsWith( ".class" ) )
+                            {
+                                classes.add( Class.forName( name.replace( ".class", "" ) ) );
+                            }
                         }
                     }
                 }
-            }
-            catch ( IOException | ClassNotFoundException e )
-            {
-                e.printStackTrace();
+                catch ( IOException | ClassNotFoundException e )
+                {
+                    e.printStackTrace();
+                }
             }
         }
+
         return classes;
     }
 
     /**
      * Gets the user storage for a specific user, or null if the user never joined
+     *
      * @param name the name to get the data for
      * @return the data for the given user
      */
@@ -1051,6 +1074,7 @@ public class Utils
 
     /**
      * Gets the user storage for a specific user, or null if the user never joined
+     *
      * @param user the user to take cached data for if not null
      * @param name the name to get the data for
      * @return the data for the given user

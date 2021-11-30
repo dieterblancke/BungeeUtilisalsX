@@ -40,4 +40,16 @@ public class StaffRollbackCommandCall implements CommandCall
                 "{user}", playerName
         );
     }
+
+    @Override
+    public String getDescription()
+    {
+        return "Performs a rollback of punishments executed since the given time. If the -f parameter is given, the rollback will be a hard rollback (permanently deleted).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/staffrollback (user) (time) [-f]";
+    }
 }

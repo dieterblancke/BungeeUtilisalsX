@@ -45,7 +45,8 @@ public class FriendSettingsSubCommandCall implements CommandCall
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
                         "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
-                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting, true ) ? "enabled" : "disabled" ) )
+                        "{unformatted-type}", setting.toString(),
+                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) )
                 );
             }
 
@@ -58,14 +59,14 @@ public class FriendSettingsSubCommandCall implements CommandCall
             if ( type == null )
             {
                 final String settings = Stream.of( FriendSetting.values() )
-                        .map( t -> t.getName( user.getLanguageConfig().getConfig() ) )
+                        .map( t -> t.toString() )
                         .collect( Collectors.joining() );
 
                 user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );
                 return;
             }
             final boolean value = args.get( 1 ).contains( "toggle" )
-                    ? !user.getFriendSettings().getSetting( type, false )
+                    ? !user.getFriendSettings().getSetting( type )
                     : !args.get( 1 ).toLowerCase().contains( "d" );
 
             user.getFriendSettings().set( type, value );
@@ -81,5 +82,17 @@ public class FriendSettingsSubCommandCall implements CommandCall
         {
             user.sendLangMessage( "friends.settings.usage" );
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Updates a setting value for one of the existing setting types.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/friend settings [setting] [value]";
     }
 }

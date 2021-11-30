@@ -98,6 +98,18 @@ public class ApiTokenCommandCall implements CommandCall
                 .collect( Collectors.joining( "," ) ) );
     }
 
+    @Override
+    public String getDescription()
+    {
+        return null;
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return null;
+    }
+
     @SneakyThrows
     private void query( final String query )
     {

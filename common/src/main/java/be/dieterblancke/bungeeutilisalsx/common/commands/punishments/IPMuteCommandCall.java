@@ -53,7 +53,7 @@ public class IPMuteCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertMute(
+        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertIPMute(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
@@ -86,5 +86,17 @@ public class IPMuteCommandCall extends PunishmentCommand
         }
 
         punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPMUTE );
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Permanently ip mutes a given user globally (or given server if per-server punishments are enabled).";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/ipmute (user / ip) <server> (reason)";
     }
 }

@@ -18,9 +18,11 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.text;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.dbsoftwares.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -99,6 +101,10 @@ public class MessageBuilder
                             placeholders
                     ) ) )
             ) );
+        }
+        if ( section.exists( "sound" ) && BuX.getInstance().isProtocolizeEnabled() )
+        {
+            BuX.getInstance().getProtocolizeManager().sendSound( user, SoundData.fromSection( section, "sound" ) );
         }
 
         return component;

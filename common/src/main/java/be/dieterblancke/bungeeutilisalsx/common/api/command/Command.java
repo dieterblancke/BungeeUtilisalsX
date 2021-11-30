@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
@@ -30,7 +31,6 @@ import java.util.List;
 import java.util.logging.Level;
 
 @Data
-
 public class Command
 {
 
@@ -42,6 +42,8 @@ public class Command
     private final CommandCall command;
     private final TabCall tab;
     private final List<ServerGroup> disabledServers;
+    private final boolean listenerBased;
+    private final SoundData soundData;
 
     Command( final String name,
              final String[] aliases,
@@ -50,7 +52,9 @@ public class Command
              final int cooldown,
              final CommandCall command,
              final TabCall tab,
-             final List<ServerGroup> disabledServers )
+             final List<ServerGroup> disabledServers,
+             final boolean listenerBased,
+             final SoundData soundData )
     {
         if ( parameters == null )
         {
@@ -65,6 +69,8 @@ public class Command
         this.command = command;
         this.tab = tab;
         this.disabledServers = disabledServers == null ? new ArrayList<>() : disabledServers;
+        this.listenerBased = listenerBased;
+        this.soundData = soundData;
     }
 
     public void execute( final User user, final String[] argList )
@@ -129,6 +135,11 @@ public class Command
                 {
                     user.getCooldowns().updateTime( "COMMAND_COOLDOWNS_" + name, TimeUnit.SECONDS, cooldown );
                 }
+
+                if ( BuX.getInstance().isProtocolizeEnabled() )
+                {
+                    BuX.getInstance().getProtocolizeManager().sendSound( user, soundData );
+                }
             }
             catch ( Exception e )
             {
@@ -137,7 +148,7 @@ public class Command
         } );
     }
 
-    private boolean isDisabledInServer( final String serverName )
+    public boolean isDisabledInServer( final String serverName )
     {
         if ( serverName == null )
         {

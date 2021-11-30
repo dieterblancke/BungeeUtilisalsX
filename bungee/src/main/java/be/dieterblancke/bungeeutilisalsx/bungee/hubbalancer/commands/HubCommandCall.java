@@ -6,8 +6,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -69,7 +71,7 @@ public class HubCommandCall implements CommandCall, TabCall
             }
 
             user.sendLangMessage( "hubbalancer.connected", "{serverName}", optimal.getName() );
-            user.getStorage().setData( "HUBBALANCER_NO_REDIRECT", true );
+            user.getStorage().setData( UserStorageKey.HUBBALANCER_NO_REDIRECT, true );
             user.sendToServer( optimal.getServerInfo() );
         }
         else
@@ -114,7 +116,7 @@ public class HubCommandCall implements CommandCall, TabCall
                     {
                         user.sendLangMessage( "hubbalancer.connected", "{serverName}", target.getName() );
 
-                        user.getStorage().setData( "HUBBALANCER_NO_REDIRECT", true );
+                        user.getStorage().setData( UserStorageKey.HUBBALANCER_NO_REDIRECT, true );
                         user.sendToServer( target.getServerInfo() );
                     }
                     else
@@ -124,5 +126,17 @@ public class HubCommandCall implements CommandCall, TabCall
                 }
             }
         }
+    }
+
+    @Override
+    public String getDescription()
+    {
+        return "Sends you to one of the hub servers.";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/hub [hubNumber]";
     }
 }

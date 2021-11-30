@@ -255,6 +255,22 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         }
     }
 
+    @Override
+    public String getDescription()
+    {
+        return """
+                Announces a message globally (similarly to alert). This can be done over chat, title, actionbar and bossbar.
+                Title and subtitles can be split using %sub%.
+                If a default type is set up in the config, a type can still be overridden by using type:(types) as first parameter.
+                Types can be concatinated, for example 'bcat' will announce bossbar, chat, actionbar and title at the same time.""";
+    }
+
+    @Override
+    public String getUsage()
+    {
+        return "/announce (p/b/c/a/t) (message)";
+    }
+
     private Set<AnnouncementType> getTypes( String types )
     {
         final Set<AnnouncementType> announcementTypes = Sets.newHashSet();

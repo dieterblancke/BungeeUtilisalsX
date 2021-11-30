@@ -13,6 +13,8 @@ import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
 import lombok.Getter;
+import org.bstats.velocity.Metrics;
+import org.bstats.velocity.Metrics.Factory;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -23,10 +25,11 @@ import java.util.logging.Logger;
 @Plugin(
         id = "bungeeutilisalsx",
         name = "BungeeUtilisalsX",
-        version = "2.1.2",
+        version = "2.2.0",
         authors = { "didjee2" },
         dependencies = {
-                @Dependency( id = "skinsrestorer", optional = true )
+                @Dependency( id = "skinsrestorer", optional = true ),
+                @Dependency( id = "protocolize", optional = true )
         }
 )
 public class Bootstrap
@@ -40,10 +43,14 @@ public class Bootstrap
     private final Logger logger;
     @Getter
     private final File dataFolder;
+    private final Factory metricsFactory;
     private AbstractBungeeUtilisalsX abstractBungeeUtilisalsX;
 
     @Inject
-    public Bootstrap( final ProxyServer proxyServer, final org.slf4j.Logger logger, final @DataDirectory Path dataDirectory )
+    public Bootstrap( final ProxyServer proxyServer,
+                      final org.slf4j.Logger logger,
+                      final @DataDirectory Path dataDirectory,
+                      final Factory metricsFactory )
     {
         instance = this;
         this.proxyServer = proxyServer;
@@ -54,6 +61,7 @@ public class Bootstrap
         }
         this.logger.addHandler( new Slf4jLoggerWrapper( logger ) );
         this.dataFolder = dataDirectory.toFile();
+        this.metricsFactory = metricsFactory;
     }
 
     @Subscribe
@@ -69,5 +77,10 @@ public class Bootstrap
     public void onProxyShutdown( final ProxyShutdownEvent event )
     {
         abstractBungeeUtilisalsX.shutdown();
+    }
+
+    protected Metrics createMetrics()
+    {
+        return metricsFactory.make( this, 13139 );
     }
 }
