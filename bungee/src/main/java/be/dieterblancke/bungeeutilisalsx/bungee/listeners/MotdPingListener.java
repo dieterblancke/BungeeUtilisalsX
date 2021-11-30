@@ -72,7 +72,7 @@ public class MotdPingListener implements Listener
         {
             return null;
         }
-        final boolean colorHex = Version.getVersion( connection.getVersion() ).isNewerThen( Version.MINECRAFT_1_16 );
+        final boolean colorHex = connection.getVersion() >= Version.MINECRAFT_1_16.getVersionId();
         final String message = formatMessage( motd.getMotd(), connection );
         final BaseComponent component = new TextComponent(
                 TextComponent.fromLegacyText( Utils.formatString( message, colorHex ) )
