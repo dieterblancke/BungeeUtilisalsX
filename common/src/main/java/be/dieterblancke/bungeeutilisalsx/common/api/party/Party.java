@@ -18,11 +18,12 @@ public class Party
     private final List<PartyMember> partyMembers = new ArrayList<>();
     private final List<PartyInvite> sentInvites = new ArrayList<>();
     private final List<PartyJoinRequest> joinRequests = new ArrayList<>();
+    private final int partyLimit;
     private boolean inactive;
 
-    public Party( final Date createdAt )
+    public Party( final Date createdAt, final int partyLimit )
     {
-        this( UUID.randomUUID(), createdAt );
+        this( UUID.randomUUID(), createdAt, partyLimit );
     }
 
     public PartyMember getOwner()
@@ -32,5 +33,10 @@ public class Party
                 .filter( PartyMember::isPartyOwner )
                 .findFirst()
                 .orElseGet( () -> partyMembers.isEmpty() ? null : partyMembers.get( 0 ) );
+    }
+
+    public boolean isFull()
+    {
+        return partyMembers.size() >= partyLimit;
     }
 }

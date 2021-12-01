@@ -2,11 +2,10 @@ package be.dieterblancke.bungeeutilisalsx.common.redis.data;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
-import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisPartyDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.PartyDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.base.MoreObjects;
-import com.google.common.base.Objects;
 import com.google.common.cache.LoadingCache;
 import lombok.Getter;
 
@@ -18,7 +17,7 @@ public class RedisDataManager implements IRedisDataManager
 {
 
     private final RedisManager redisManager;
-    private final IRedisPartyDataManager redisPartyDataManager;
+    private final PartyDataManager redisPartyDataManager;
     private final LoadingCache<String, Long> domainCountCache = CacheHelper.<String, Long>builder()
             .build( builder ->
             {

@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyInvite;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyJoinRequest;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
-import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisPartyDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.PartyDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;
 import io.lettuce.core.cluster.api.sync.RedisClusterCommands;
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 import static be.dieterblancke.bungeeutilisalsx.common.redis.data.RedisDataConstants.*;
 
 @RequiredArgsConstructor
-public class RedisPartyDataManager implements IRedisPartyDataManager
+public class RedisPartyDataManager implements PartyDataManager
 {
 
     private final RedisManager redisManager;
@@ -31,6 +31,7 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
             final Map<String, String> partyData = new HashMap<>();
             partyData.put( "createdAt", String.valueOf( party.getCreatedAt().getTime() ) );
             partyData.put( "inactive", String.valueOf( party.isInactive() ) );
+            partyData.put( "partyLimit", String.valueOf( party.getPartyLimit() ) );
 
             commands.hset( getPartyPrefix( party.getUuid() ), partyData );
 
@@ -51,7 +52,8 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
             commands.hdel(
                     getPartyPrefix( party.getUuid() ),
                     "createdAt",
-                    "inactive"
+                    "inactive",
+                    "partyLimit"
             );
 
             for ( PartyMember partyMember : party.getPartyMembers() )
@@ -198,9 +200,11 @@ public class RedisPartyDataManager implements IRedisPartyDataManager
                     .stream()
                     .map( partyUuid ->
                     {
+                        final Map<String, String> partyData = commands.hgetall(getPartyPrefix( partyUuid ));
                         final Party party = new Party(
                                 UUID.fromString( partyUuid ),
-                                new Date( Long.parseLong( commands.hget( getPartyPrefix( partyUuid ), "createdAt" ) ) )
+                                new Date( Long.parseLong( partyData.get( "createdAt" ) ) ),
+                                Integer.parseInt( partyData.get( "partyLimit" ) )
                         );
 
                         party.getPartyMembers().addAll( this.getAllPartyMembers( commands, party ) );

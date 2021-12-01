@@ -1,5 +1,11 @@
 enabled: false
 
+# The default member limit, put to -1 to leave unlimited
+default-member-limit: 10
+
+# Permissions that are allowed to have higher party member limits. This is checked on party creation,
+# changing party owner will not change it, a new party would have to be made!
+# Change this to member-limits: [] if you want no permission specific limits.
 member-limits:
   - permission: bungeeutilisalsx.party.limits.default
     limit: 15

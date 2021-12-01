@@ -56,6 +56,11 @@ public class PartyInviteSubCommandCall implements CommandCall
             user.sendLangMessage( "party.invite.not-allowed" );
             return;
         }
+        if ( party.isFull() )
+        {
+            user.sendLangMessage( "party.your-party-full" );
+            return;
+        }
         final String targetUser = args.get( 0 );
 
         UserUtils.getUserStorage( targetUser, user::sendLangMessage ).ifPresent( target ->

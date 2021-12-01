@@ -13,7 +13,7 @@ public interface IRedisDataManager
 
     long getAmountOfOnlineUsersOnDomain( String domain );
 
-    IRedisPartyDataManager getRedisPartyDataManager();
+    PartyDataManager getRedisPartyDataManager();
 
     boolean attemptShedLock( String type, int period, TimeUnit unit );
 

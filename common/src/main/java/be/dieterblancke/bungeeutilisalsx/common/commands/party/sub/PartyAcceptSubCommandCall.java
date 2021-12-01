@@ -82,6 +82,15 @@ public class PartyAcceptSubCommandCall implements CommandCall
             return;
         }
 
+        if ( inviterParty.isFull() )
+        {
+            user.sendLangMessage(
+                    "party.other-party-full",
+                    "{user}", inviterParty.getOwner().getNickName()
+            );
+            return;
+        }
+
         // Add to party and remove invite
         final PartyInvite invite = optionalInvite.get();
         partyManager.removeInvitationFromParty( inviterParty, invite );

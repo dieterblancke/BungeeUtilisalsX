@@ -7,7 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 
 import java.util.List;
 
-public interface IRedisPartyDataManager
+public interface PartyDataManager
 {
 
     void registerParty( Party party );

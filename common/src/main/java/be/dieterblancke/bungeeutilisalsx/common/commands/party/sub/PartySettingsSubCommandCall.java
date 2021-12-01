@@ -29,7 +29,7 @@ public class PartySettingsSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        // TODO
+        // TODO (also add party roles with settings in config)
     }
 
     @Override

@@ -46,8 +46,6 @@ import java.util.stream.Collectors;
 public class MotdPingListener implements Listener
 {
 
-    private static final UUID EMPTY_UUID = new UUID( 0, 0 );
-
     @EventHandler
     public void onPing( ProxyPingEvent event )
     {

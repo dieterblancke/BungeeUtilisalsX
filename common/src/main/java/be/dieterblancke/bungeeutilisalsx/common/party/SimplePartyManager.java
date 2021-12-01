@@ -39,7 +39,7 @@ public class SimplePartyManager implements PartyManager
             throw new AlreadyInPartyException();
         }
 
-        final Party party = new Party( new Date() );
+        final Party party = new Party( new Date(), this.getPartyLimit( leader ) );
         party.getPartyMembers().add( new PartyMember(
                 leader.getUuid(),
                 leader.getName(),
@@ -359,5 +359,15 @@ public class SimplePartyManager implements PartyManager
                 }
             } );
         }
+    }
+
+    private int getPartyLimit( final User leader )
+    {
+        return ConfigFiles.PARTY_CONFIG.getConfig().getSectionList( "member-limits" )
+                .stream()
+                .filter( section -> leader.hasPermission( section.getString( "permission" ) ) )
+                .map( section -> section.getInteger( "limit" ) )
+                .findFirst()
+                .orElse( ConfigFiles.PARTY_CONFIG.getConfig().getInteger( "default-member-limit" ) );
     }
 }

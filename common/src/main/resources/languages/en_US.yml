@@ -796,6 +796,8 @@ party:
     - '&f{party-member-list}'
     - '&7Sent invites: {party-invitation-count}'
     - '&7Join requests: {party-joinrequest-count}'
+  own-party-full: '&eYour party is currently full!'
+  other-party-full: '&b{user}''s &eparty is currently full!'
 
   help:
     message:
