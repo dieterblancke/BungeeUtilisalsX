@@ -1,12 +1,32 @@
 package be.dieterblancke.bungeeutilisalsx.common.motd;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+
 import java.net.InetSocketAddress;
 
-public interface MotdConnection
+public abstract class MotdConnection
 {
-    int getVersion();
 
-    String getName();
+    private String name;
 
-    InetSocketAddress getVirtualHost();
+    public abstract int getVersion();
+
+    public abstract InetSocketAddress getRemoteIp();
+
+    public abstract InetSocketAddress getVirtualHost();
+
+    public String getName()
+    {
+        if ( name == null )
+        {
+            this.name = BuX.getApi().getStorageManager().getDao().getUserDao()
+                    .getUsersOnIP( Utils.getIP( this.getRemoteIp() ) )
+                    .stream()
+                    .findFirst()
+                    .orElse( null );
+        }
+
+        return this.name;
+    }
 }

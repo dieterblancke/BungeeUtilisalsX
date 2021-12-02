@@ -19,6 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.motd.handlers;
 
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
+import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionOperator;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 
 public class NameConditionHandler extends ConditionHandler
@@ -32,11 +33,7 @@ public class NameConditionHandler extends ConditionHandler
     @Override
     public boolean checkCondition( final MotdConnection connection )
     {
-        final String[] args = condition.split( " " );
-        final String operator = args[0];
-        final String value = args[1];
-
-        if ( operator.equalsIgnoreCase( "==" ) )
+        if ( operator == ConditionOperator.EQ )
         {
             if ( connection.getName() == null )
             {
@@ -44,7 +41,7 @@ public class NameConditionHandler extends ConditionHandler
             }
             return connection.getName().equalsIgnoreCase( value );
         }
-        else if ( operator.equalsIgnoreCase( "!=" ) )
+        else if ( operator == ConditionOperator.NOT_EQ )
         {
             if ( connection.getName() == null )
             {

@@ -19,6 +19,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.motd.handlers;
 
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
+import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionOperator;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 
 public class DomainConditionHandler extends ConditionHandler
@@ -36,11 +37,8 @@ public class DomainConditionHandler extends ConditionHandler
         {
             return false;
         }
-        final String[] args = condition.split( " " );
-        final String operator = args[0];
-        final String conditionHost = args[1];
         final String joinedHost = connection.getVirtualHost().getHostName();
 
-        return operator.equalsIgnoreCase( "==" ) == joinedHost.equalsIgnoreCase( conditionHost );
+        return operator == ConditionOperator.EQ && joinedHost.equalsIgnoreCase( value );
     }
 }

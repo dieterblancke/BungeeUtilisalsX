@@ -8,11 +8,11 @@ import java.net.InetSocketAddress;
 
 @Data
 @AllArgsConstructor
-public class VelocityMotdConnection implements MotdConnection
+public class VelocityMotdConnection extends MotdConnection
 {
 
     private final int version;
-    private final String name;
+    private final InetSocketAddress remoteIp;
     private final InetSocketAddress virtualHost;
 
 }

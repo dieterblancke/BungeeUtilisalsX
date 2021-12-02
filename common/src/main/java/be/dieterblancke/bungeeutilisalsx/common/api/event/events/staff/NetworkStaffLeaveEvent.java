@@ -16,7 +16,7 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.api.event.events.network;
+package be.dieterblancke.bungeeutilisalsx.common.api.event.events.staff;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Cancellable;
