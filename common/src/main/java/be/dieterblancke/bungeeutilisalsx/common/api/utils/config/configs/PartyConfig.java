@@ -20,10 +20,17 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import lombok.Getter;
+import lombok.Value;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 public class PartyConfig extends Config
 {
+
+    private final List<PartyRole> partyRoles = new ArrayList<>();
 
     public PartyConfig( String location )
     {
@@ -33,6 +40,7 @@ public class PartyConfig extends Config
     @Override
     public void purge()
     {
+        this.partyRoles.clear();
     }
 
     @Override
@@ -43,7 +51,14 @@ public class PartyConfig extends Config
             return;
         }
 
-
+        config.getSectionList( "party-roles" )
+                .forEach( section -> this.partyRoles.add( new PartyRole(
+                        section.getString( "name" ),
+                        section.getStringList( "permissions" )
+                                .stream()
+                                .map( PartyRolePermission::valueOf )
+                                .collect( Collectors.toList() )
+                ) ) );
     }
 
     public int getPartyInactivityPeriod()
@@ -54,5 +69,24 @@ public class PartyConfig extends Config
     public int getPartyMemberInactivityPeriod()
     {
         return config.getInteger( "inactivity-period.party-member" );
+    }
+
+    public List<PartyRole> getPartyRoles()
+    {
+        return partyRoles;
+    }
+
+    public enum PartyRolePermission
+    {
+        INVITE,
+        KICK,
+        SETTINGS
+    }
+
+    @Value
+    public static class PartyRole
+    {
+        String name;
+        List<PartyRolePermission> permissions;
     }
 }

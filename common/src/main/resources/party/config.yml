@@ -24,6 +24,17 @@ inactivity-period:
   # Set this to -1 to not automatically remove inactive members!
   party-member: -1
 
+# A list of party roles with their permissions, the available permissions are:
+# - INVITE
+# - KICK
+# - SETTINGS
+# Besides these roles, there is also the party owner, which isn't a role.
+party-roles:
+  - name: MODERATOR
+    permissions:
+      - INVITE
+      - KICK
+
 command:
   aliases: 'party, bparty'
   permission: bungeeutilisalsx.party
