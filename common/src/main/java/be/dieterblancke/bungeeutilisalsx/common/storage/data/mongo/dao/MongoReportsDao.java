@@ -31,50 +31,190 @@ import com.mongodb.client.model.ReplaceOptions;
 import org.bson.Document;
 
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class MongoReportsDao implements ReportsDao
 {
 
     @Override
-    public void addReport( Report report )
+    public CompletableFuture<Void> addReport( Report report )
     {
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-
-        data.put( "_id", manager().getNextSequenceValue( "reportid" ) );
-        data.put( "uuid", report.getUuid().toString() );
-        data.put( "reported_by", report.getReportedBy() );
-        data.put( "date", new Date() );
-        data.put( "handled", report.isHandled() );
-        data.put( "server", report.getServer() );
-        data.put( "reason", report.getReason() );
-        data.put( "accepted", report.isAccepted() );
-
-        db().getCollection( "bu_reports" ).insertOne( new Document( data ) );
-    }
-
-    @Override
-    public void removeReport( long id )
-    {
-        db().getCollection( "bu_reports" ).deleteOne( Filters.eq( "_id", id ) );
-    }
-
-    @Override
-    public Report getReport( long id )
-    {
-        final Report report;
-        final Document document = db().getCollection( "bu_reports" ).find( Filters.eq( "_id", id ) ).limit( 1 ).first();
-
-        if ( document == null || document.isEmpty() )
+        return CompletableFuture.runAsync( () ->
         {
-            report = null;
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+
+            data.put( "_id", manager().getNextSequenceValue( "reportid" ) );
+            data.put( "uuid", report.getUuid().toString() );
+            data.put( "reported_by", report.getReportedBy() );
+            data.put( "date", new Date() );
+            data.put( "handled", report.isHandled() );
+            data.put( "server", report.getServer() );
+            data.put( "reason", report.getReason() );
+            data.put( "accepted", report.isAccepted() );
+
+            db().getCollection( "bu_reports" ).insertOne( new Document( data ) );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> removeReport( long id )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            db().getCollection( "bu_reports" ).deleteOne( Filters.eq( "_id", id ) );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Report> getReport( long id )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final Document document = db().getCollection( "bu_reports" ).find( Filters.eq( "_id", id ) ).limit( 1 ).first();
+
+            return document == null || document.isEmpty() ? null : getReport( document );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getReports()
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+
+            db().getCollection( "bu_reports" ).find()
+                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getReports( UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+
+            db().getCollection( "bu_reports" ).find( Filters.eq( "uuid", uuid.toString() ) )
+                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getActiveReports()
+    {
+        return getHandledReports( false );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getHandledReports()
+    {
+        return getHandledReports( true );
+    }
+
+    private CompletableFuture<List<Report>> getHandledReports( final boolean handled )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+
+            db().getCollection( "bu_reports" ).find( Filters.eq( "handled", handled ) )
+                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getRecentReports( int days )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+            final Calendar calendar = Calendar.getInstance();
+            calendar.add( Calendar.DATE, -7 );
+
+            db().getCollection( "bu_reports" ).find( Filters.gte( "date", calendar.getTime() ) )
+                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> handleReport( long id, boolean accepted )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            final MongoCollection<Document> collection = db().getCollection( "bu_reports" );
+            final Document document = collection.find( Filters.eq( "_id", id ) ).limit( 1 ).first();
+
+            document.put( "handled", true );
+            document.put( "accepted", accepted );
+
+            save( collection, document );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getAcceptedReports()
+    {
+        return getAcceptedReports( true );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getDeniedReports()
+    {
+        return getAcceptedReports( false );
+    }
+
+    @Override
+    public CompletableFuture<List<Report>> getReportsHistory( final String name )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+
+            db().getCollection( "bu_reports" )
+                    .find( Filters.eq( "reported_by", name ) )
+                    .forEach( (Consumer<? super Document>) doc ->
+                            reports.add( getReport( doc ) )
+                    );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    private CompletableFuture<List<Report>> getAcceptedReports( final boolean accepted )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Report> reports = Lists.newArrayList();
+
+            db().getCollection( "bu_reports" ).find( Filters.eq( "accepted", accepted ) )
+                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    private void save( final MongoCollection<Document> collection, final Document document )
+    {
+        final Object id = document.get( "_id" );
+
+        if ( id == null )
+        {
+            collection.insertOne( document );
         }
         else
         {
-            report = getReport( document );
+            collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
         }
-
-        return report;
     }
 
     private Report getReport( final Document document )
@@ -93,131 +233,6 @@ public class MongoReportsDao implements ReportsDao
                 document.getBoolean( "handled" ),
                 document.getBoolean( "accepted" )
         );
-    }
-
-    @Override
-    public List<Report> getReports()
-    {
-        final List<Report> reports = Lists.newArrayList();
-
-        db().getCollection( "bu_reports" ).find()
-                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
-
-        return reports;
-    }
-
-    @Override
-    public List<Report> getReports( UUID uuid )
-    {
-        final List<Report> reports = Lists.newArrayList();
-
-        db().getCollection( "bu_reports" ).find( Filters.eq( "uuid", uuid.toString() ) )
-                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
-
-        return reports;
-    }
-
-    @Override
-    public List<Report> getActiveReports()
-    {
-        return getHandledReports( false );
-    }
-
-    @Override
-    public List<Report> getHandledReports()
-    {
-        return getHandledReports( true );
-    }
-
-    private List<Report> getHandledReports( final boolean handled )
-    {
-        final List<Report> reports = Lists.newArrayList();
-
-        db().getCollection( "bu_reports" ).find( Filters.eq( "handled", handled ) )
-                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
-
-        return reports;
-    }
-
-    @Override
-    public List<Report> getRecentReports( int days )
-    {
-        final List<Report> reports = Lists.newArrayList();
-        final Calendar calendar = Calendar.getInstance();
-        calendar.add( Calendar.DATE, -7 );
-
-        db().getCollection( "bu_reports" ).find( Filters.gte( "date", calendar.getTime() ) )
-                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
-
-        return reports;
-    }
-
-    @Override
-    public boolean reportExists( long id )
-    {
-        return db().getCollection( "bu_reports" ).find( Filters.eq( "_id", id ) ).limit( 1 ).iterator().hasNext();
-    }
-
-    @Override
-    public void handleReport( long id, boolean accepted )
-    {
-        final MongoCollection<Document> collection = db().getCollection( "bu_reports" );
-        final Document document = collection.find( Filters.eq( "_id", id ) ).limit( 1 ).first();
-
-        document.put( "handled", true );
-        document.put( "accepted", accepted );
-
-        save( collection, document );
-    }
-
-    @Override
-    public List<Report> getAcceptedReports()
-    {
-        return getAcceptedReports( true );
-    }
-
-    @Override
-    public List<Report> getDeniedReports()
-    {
-        return getAcceptedReports( false );
-    }
-
-    @Override
-    public List<Report> getReportsHistory( final String name )
-    {
-        final List<Report> reports = Lists.newArrayList();
-
-        db().getCollection( "bu_reports" )
-                .find( Filters.eq( "reported_by", name ) )
-                .forEach( (Consumer<? super Document>) doc ->
-                        reports.add( getReport( doc ) )
-                );
-
-        return reports;
-    }
-
-    private List<Report> getAcceptedReports( final boolean accepted )
-    {
-        final List<Report> reports = Lists.newArrayList();
-
-        db().getCollection( "bu_reports" ).find( Filters.eq( "accepted", accepted ) )
-                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
-
-        return reports;
-    }
-
-    private void save( final MongoCollection<Document> collection, final Document document )
-    {
-        final Object id = document.get( "_id" );
-
-        if ( id == null )
-        {
-            collection.insertOne( document );
-        }
-        else
-        {
-            collection.replaceOne( Filters.eq( "_id", id ), document, new ReplaceOptions().upsert( true ) );
-        }
     }
 
     private MongoDBStorageManager manager()

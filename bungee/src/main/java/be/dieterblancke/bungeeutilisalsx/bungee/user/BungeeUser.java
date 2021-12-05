@@ -48,11 +48,7 @@ import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
 import java.net.InetSocketAddress;
-import java.sql.Date;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Setter
@@ -60,7 +56,7 @@ import java.util.stream.Collectors;
 public class BungeeUser implements User
 {
 
-    private ProxiedPlayer parent;
+    private ProxiedPlayer player;
 
     private String name;
     private UUID uuid;
@@ -76,59 +72,67 @@ public class BungeeUser implements User
     private boolean vanished;
 
     @Override
-    public void load( UUID uuid )
+    public void load( final Object playerInstance )
     {
+        final Date now = new Date();
         final Dao dao = BuX.getInstance().getAbstractStorageManager().getDao();
 
-        this.parent = ProxyServer.getInstance().getPlayer( uuid );
-        this.name = parent.getName();
-        this.uuid = parent.getUniqueId();
-        this.ip = Utils.getIP( (InetSocketAddress) parent.getSocketAddress() );
-        this.storage = new UserStorage();
+        this.player = (ProxiedPlayer) playerInstance;
+        this.name = player.getName();
+        this.uuid = player.getUniqueId();
+        this.ip = Utils.getIP( (InetSocketAddress) player.getSocketAddress() );
         this.cooldowns = new UserCooldowns();
+        this.storage = new UserStorage(
+                uuid,
+                name,
+                ip,
+                BuX.getApi().getLanguageManager().getDefaultLanguage(),
+                now,
+                now,
+                Lists.newArrayList(),
+                this.getJoinedHost(),
+                Maps.newHashMap()
+        );
 
-        if ( dao.getUserDao().exists( uuid ) )
+        dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
-            storage = dao.getUserDao().getUserData( uuid );
-
-            if ( !storage.getUserName().equalsIgnoreCase( name ) )
+            if ( userStorage.isLoaded() )
             {
-                dao.getUserDao().setName( uuid, name );
-                storage.setUserName( name );
+                storage = userStorage;
+
+                if ( !storage.getUserName().equalsIgnoreCase( name ) )
+                {
+                    dao.getUserDao().setName( uuid, name );
+                    storage.setUserName( name );
+                }
+
+                if ( BuX.getApi().getLanguageManager().useCustomIntegration() )
+                {
+                    storage.setLanguage( BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
+                }
+
+                if ( storage.getJoinedHost() == null )
+                {
+                    final String joinedHost = this.getJoinedHost();
+
+                    storage.setJoinedHost( joinedHost );
+                    dao.getUserDao().setJoinedHost( uuid, joinedHost );
+                }
             }
-
-            storage.setLanguage( BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
-
-            if ( storage.getJoinedHost() == null )
+            else
             {
+                final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
                 final String joinedHost = this.getJoinedHost();
 
-                storage.setJoinedHost( joinedHost );
-                dao.getUserDao().setJoinedHost( uuid, joinedHost );
+                dao.getUserDao().createUser(
+                        uuid,
+                        name,
+                        ip,
+                        defLanguage,
+                        joinedHost
+                );
             }
-        }
-        else
-        {
-            final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
-            final Date date = new Date( System.currentTimeMillis() );
-            final String joinedHost = this.getJoinedHost();
-
-            dao.getUserDao().createUser(
-                    uuid,
-                    name,
-                    ip,
-                    defLanguage,
-                    joinedHost
-            );
-
-            storage = new UserStorage( uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), joinedHost, Maps.newHashMap() );
-        }
-
-        if ( !storage.getUserName().equals( name ) )
-        { // Stored name != user current name | Name changed?
-            storage.setUserName( name );
-            dao.getUserDao().setName( uuid, name );
-        }
+        } );
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
@@ -144,29 +148,30 @@ public class BungeeUser implements User
         }
 
         BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
-
-        final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
-        BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
+        BuX.getApi().getEventLoader().launchEventAsync( new UserLoadEvent( this ) );
     }
 
     @Override
     public void unload()
     {
-        final UserUnloadEvent event = new UserUnloadEvent( this );
-        BuX.getApi().getEventLoader().launchEvent( event );
+        BuX.getApi().getEventLoader().launchEvent( new UserUnloadEvent( this ) );
+        this.save( true );
 
-        save();
+        // clearing data from memory
         cooldowns.remove();
-
-        parent = null;
+        player = null;
         storage.getData().clear();
     }
 
     @Override
-    public void save()
+    public void save( final boolean logout )
     {
         BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().updateUser(
-                uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() )
+                uuid,
+                getName(),
+                ip,
+                getLanguage(),
+                logout ? new Date() : null
         );
     }
 
@@ -223,7 +228,7 @@ public class BungeeUser implements User
         {
             return;
         }
-        getParent().sendMessage( component );
+        this.player.sendMessage( component );
     }
 
     @Override
@@ -233,13 +238,13 @@ public class BungeeUser implements User
         {
             return;
         }
-        getParent().sendMessage( components );
+        this.player.sendMessage( components );
     }
 
     @Override
     public void kick( String reason )
     {
-        BuX.getInstance().getScheduler().runAsync( () -> getParent().disconnect( Utils.format( reason ) ) );
+        BuX.getInstance().getScheduler().runAsync( () -> this.forceKick( reason ) );
     }
 
     @Override
@@ -273,7 +278,7 @@ public class BungeeUser implements User
     @Override
     public void forceKick( String reason )
     {
-        getParent().disconnect( Utils.format( reason ) );
+        this.player.disconnect( Utils.format( reason ) );
     }
 
     @Override
@@ -294,15 +299,10 @@ public class BungeeUser implements User
         sendLangMessage( "no-permission" );
     }
 
-    public ProxiedPlayer parent()
-    {
-        return parent;
-    }
-
     @Override
     public int getPing()
     {
-        return parent.getPing();
+        return player.getPing();
     }
 
     @Override
@@ -314,17 +314,17 @@ public class BungeeUser implements User
     @Override
     public String getServerName()
     {
-        if ( getParent() == null || getParent().getServer() == null || getParent().getServer().getInfo() == null )
+        if ( player == null || player.getServer() == null || player.getServer().getInfo() == null )
         {
             return "";
         }
-        return getParent().getServer().getInfo().getName();
+        return player.getServer().getInfo().getName();
     }
 
     @Override
     public void sendToServer( IProxyServer proxyServer )
     {
-        this.parent.connect( ( (BungeeServer) proxyServer ).getServerInfo() );
+        this.player.connect( ( (BungeeServer) proxyServer ).getServerInfo() );
     }
 
     @Override
@@ -332,7 +332,7 @@ public class BungeeUser implements User
     {
         try
         {
-            return Version.getVersion( parent.getPendingConnection().getVersion() );
+            return Version.getVersion( player.getPendingConnection().getVersion() );
         }
         catch ( Exception e )
         {
@@ -361,7 +361,7 @@ public class BungeeUser implements User
         {
             for ( String permission : permissions )
             {
-                if ( parent.hasPermission( permission ) )
+                if ( player.hasPermission( permission ) )
                 {
                     if ( ConfigFiles.CONFIG.isDebug() )
                     {
@@ -389,13 +389,13 @@ public class BungeeUser implements User
     @Override
     public void executeCommand( final String command )
     {
-        ProxyServer.getInstance().getPluginManager().dispatchCommand( parent, command );
+        ProxyServer.getInstance().getPluginManager().dispatchCommand( player, command );
     }
 
     @Override
     public void sendActionBar( final String actionbar )
     {
-        parent.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( this, actionbar ) );
+        player.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( this, actionbar ) );
     }
 
     @Override
@@ -410,7 +410,7 @@ public class BungeeUser implements User
         bungeeTitle.stay( stay );
         bungeeTitle.fadeOut( fadeout );
 
-        parent.sendTitle( bungeeTitle );
+        player.sendTitle( bungeeTitle );
     }
 
     @Override
@@ -418,33 +418,33 @@ public class BungeeUser implements User
     {
         if ( packet instanceof DefinedPacket )
         {
-            parent.unsafe().sendPacket( (DefinedPacket) packet );
+            player.unsafe().sendPacket( (DefinedPacket) packet );
         }
     }
 
     @Override
     public void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer )
     {
-        parent.setTabHeader( header, footer );
+        player.setTabHeader( header, footer );
     }
 
     @Override
     public String getJoinedHost()
     {
         final String joinedHost;
-        if ( parent.getPendingConnection().getVirtualHost() == null )
+        if ( player.getPendingConnection().getVirtualHost() == null )
         {
             joinedHost = null;
         }
         else
         {
-            if ( parent.getPendingConnection().getVirtualHost().getHostName() == null )
+            if ( player.getPendingConnection().getVirtualHost().getHostName() == null )
             {
-                joinedHost = Utils.getIP( parent.getPendingConnection().getVirtualHost().getAddress() );
+                joinedHost = Utils.getIP( player.getPendingConnection().getVirtualHost().getAddress() );
             }
             else
             {
-                joinedHost = parent.getPendingConnection().getVirtualHost().getHostName();
+                joinedHost = player.getPendingConnection().getVirtualHost().getHostName();
             }
         }
         return joinedHost;

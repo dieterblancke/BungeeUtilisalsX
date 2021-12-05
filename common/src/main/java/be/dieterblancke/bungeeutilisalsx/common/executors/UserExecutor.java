@@ -92,25 +92,4 @@ public class UserExecutor implements EventExecutor
             ) );
         } );
     }
-
-    @Event
-    public void onServerConnected( final UserServerConnectedEvent event )
-    {
-        BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
-                event.getUser().getUuid(),
-                event.getTarget().getName()
-        );
-    }
-
-    @Event
-    public void updateServerOnUserDisconnect( final UserUnloadEvent event )
-    {
-        if ( !Utils.isSpigot() )
-        {
-            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServer(
-                    event.getUser().getUuid(),
-                    null
-            );
-        }
-    }
 }

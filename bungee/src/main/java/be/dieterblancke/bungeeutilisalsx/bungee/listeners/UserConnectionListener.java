@@ -42,7 +42,7 @@ public class UserConnectionListener implements Listener
     {
         final BungeeUser user = new BungeeUser();
 
-        user.load( event.getPlayer().getUniqueId() );
+        user.load( event.getPlayer() );
     }
 
     // Executing on LOWEST priority to get it to execute early on in the quit procedure

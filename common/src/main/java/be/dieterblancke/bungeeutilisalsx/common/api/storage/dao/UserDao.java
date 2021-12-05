@@ -25,53 +25,41 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface UserDao
 {
 
-    void createUser( UUID uuid, String username, String ip, Language language, String joinedHost );
+    CompletableFuture<Void> createUser( UUID uuid, String username, String ip, Language language, String joinedHost );
 
-    void createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost );
+    CompletableFuture<Void> createUser( UUID uuid, String username, String ip, Language language, Date login, Date logout, String joinedHost );
 
-    void updateUser( UUID uuid, String name, String ip, Language language, Date logout );
+    CompletableFuture<Void> updateUser( UUID uuid, String name, String ip, Language language, Date logout );
 
-    boolean exists( String name );
+    CompletableFuture<Boolean> exists( String name );
 
-    boolean exists( UUID uuid );
+    CompletableFuture<Boolean> ipExists( String ip );
 
-    boolean ipExists( String ip );
+    CompletableFuture<UserStorage> getUserData( UUID uuid );
 
-    UserStorage getUserData( UUID uuid );
+    CompletableFuture<UserStorage> getUserData( String name );
 
-    UserStorage getUserData( String name );
+    CompletableFuture<List<String>> getUsersOnIP( String ip );
 
-    List<String> getUsersOnIP( String ip );
+    CompletableFuture<Void> setName( UUID uuid, String name );
 
-    Language getLanguage( UUID uuid );
+    CompletableFuture<Void> setLanguage( UUID uuid, Language language );
 
-    void setName( UUID uuid, String name );
+    CompletableFuture<Void> setJoinedHost( UUID uuid, String joinedHost );
 
-    void setIP( UUID uuid, String ip );
+    CompletableFuture<Map<String, Integer>> getJoinedHostList();
 
-    void setLanguage( UUID uuid, Language language );
+    CompletableFuture<Map<String, Integer>> searchJoinedHosts( final String searchTag );
 
-    void setLogout( UUID uuid, Date logout );
+    CompletableFuture<Void> ignoreUser( UUID user, UUID ignore );
 
-    void setJoinedHost( UUID uuid, String joinedHost );
+    CompletableFuture<Void> unignoreUser( UUID user, UUID unignore );
 
-    Map<String, Integer> getJoinedHostList();
+    CompletableFuture<UUID> getUuidFromName( String targetName );
 
-    Map<String, Integer> searchJoinedHosts( final String searchTag );
-
-    void ignoreUser( UUID user, UUID ignore );
-
-    void unignoreUser( UUID user, UUID unignore );
-
-    void setCurrentServer( UUID user, String server );
-
-    String getCurrentServer( UUID user );
-
-    void setCurrentServerBulk( List<UUID> users, String server );
-
-    Map<String, String> getCurrentServersBulk( List<String> users );
 }

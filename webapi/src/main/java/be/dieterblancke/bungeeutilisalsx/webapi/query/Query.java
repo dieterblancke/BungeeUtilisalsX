@@ -11,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
 import com.google.common.base.Strings;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -298,80 +299,96 @@ public class Query implements GraphQLQueryResolver
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findAllReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports()
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findActiveReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getActiveReports()
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findHandledReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getHandledReports()
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findAcceptedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getAcceptedReports()
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findDeniedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getDeniedReports()
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findRecentReports( final int days )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getRecentReports( days )
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findReportsFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid )
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
+    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findReportsBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReportsHistory( name )
+                .get()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );

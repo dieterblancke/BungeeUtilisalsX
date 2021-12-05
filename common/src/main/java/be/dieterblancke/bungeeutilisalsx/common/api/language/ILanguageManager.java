@@ -129,4 +129,9 @@ public interface ILanguageManager
      * @return A list of registered languages.
      */
     List<Language> getLanguages();
+
+    /**
+     * @return true if a custom integration has been registered, false otherwise.
+     */
+    boolean useCustomIntegration();
 }

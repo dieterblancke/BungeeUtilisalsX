@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -60,7 +59,7 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public void load( UUID uuid )
+    public void load( Object playerInstance )
     {
         // do nothing
     }
@@ -72,7 +71,7 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public void save()
+    public void save( final boolean logout )
     {
         // do nothing
     }

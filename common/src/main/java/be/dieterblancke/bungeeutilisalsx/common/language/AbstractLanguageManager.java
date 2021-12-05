@@ -39,23 +39,18 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.logging.Level;
 
+@Getter
 public abstract class AbstractLanguageManager implements ILanguageManager
 {
 
-    @Getter
     protected Map<String, File> plugins = Maps.newHashMap();
-    @Getter
     protected Map<String, FileStorageType> fileTypes = Maps.newHashMap();
-    @Getter
     protected Map<File, LanguageConfig> configurations = Maps.newHashMap();
-    @Getter
     protected List<Language> languages = Lists.newArrayList();
-    @Getter
     protected LanguageIntegration integration;
 
     AbstractLanguageManager()
     {
-        integration = uuid -> BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().getLanguage( uuid );
         ISection section = ConfigFiles.LANGUAGES_CONFIG.getConfig().getSection( "languages" );
 
         for ( String key : section.getKeys() )
@@ -208,6 +203,12 @@ public abstract class AbstractLanguageManager implements ILanguageManager
             BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
         }
         return true;
+    }
+
+    @Override
+    public boolean useCustomIntegration()
+    {
+        return integration != null;
     }
 
     protected abstract File loadResource( Class<?> resourceClass, String plugin, String source, File target );

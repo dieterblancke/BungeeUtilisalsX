@@ -24,10 +24,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessage
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.List;
 import java.util.Optional;
@@ -53,58 +51,59 @@ public class ReportAcceptSubCommandCall implements CommandCall
         final long id = Long.parseLong( args.get( 0 ) );
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final ReportsDao reportsDao = dao.getReportsDao();
-        final UserDao userDao = dao.getUserDao();
 
-        if ( !reportsDao.reportExists( id ) )
+        reportsDao.getReport( id ).thenAccept( report ->
         {
-            user.sendLangMessage( "general-commands.report.accept.not-found" );
-            return;
-        }
-        final Report report = reportsDao.getReport( id );
+            if ( report == null )
+            {
+                user.sendLangMessage( "general-commands.report.accept.not-found" );
+                return;
+            }
 
-        report.accept( user.getName() );
+            report.accept( user.getName() );
 
-        user.sendLangMessage(
-                "general-commands.report.accept.updated",
-                "{id}", id
-        );
-
-        final Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
-
-        if ( optionalUser.isPresent() )
-        {
-            final User target = optionalUser.get();
-
-            target.sendLangMessage(
-                    "general-commands.report.deny.accepted",
-                    "{id}", report.getId(),
-                    "{reported}", report.getUserName(),
-                    "{staff}", user.getName()
+            user.sendLangMessage(
+                    "general-commands.report.accept.updated",
+                    "{id}", id
             );
-        }
-        else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
-        {
-            BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    report.getReportedBy(),
-                    "general-commands.report.deny.accepted",
-                    "{id}", report.getId(),
-                    "{reported}", report.getUserName(),
-                    "{staff}", user.getName()
-            ) );
-        }
-        else
-        {
-            BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
-                    report.getReportedBy(),
-                    new OfflineMessage(
-                            null,
-                            "general-commands.report.deny.accepted",
-                            "{id}", report.getId(),
-                            "{reported}", report.getUserName(),
-                            "{staff}", user.getName()
-                    )
-            );
-        }
+
+            final Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
+
+            if ( optionalUser.isPresent() )
+            {
+                final User target = optionalUser.get();
+
+                target.sendLangMessage(
+                        "general-commands.report.deny.accepted",
+                        "{id}", report.getId(),
+                        "{reported}", report.getUserName(),
+                        "{staff}", user.getName()
+                );
+            }
+            else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
+            {
+                BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        report.getReportedBy(),
+                        "general-commands.report.deny.accepted",
+                        "{id}", report.getId(),
+                        "{reported}", report.getUserName(),
+                        "{staff}", user.getName()
+                ) );
+            }
+            else
+            {
+                BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
+                        report.getReportedBy(),
+                        new OfflineMessage(
+                                null,
+                                "general-commands.report.deny.accepted",
+                                "{id}", report.getId(),
+                                "{reported}", report.getUserName(),
+                                "{staff}", user.getName()
+                        )
+                );
+            }
+        } );
     }
 
     @Override

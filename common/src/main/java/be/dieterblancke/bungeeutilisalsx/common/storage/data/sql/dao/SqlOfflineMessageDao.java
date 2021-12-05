@@ -28,6 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 
 public class SqlOfflineMessageDao implements OfflineMessageDao
@@ -37,65 +38,71 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
 
     @Override
     @SneakyThrows
-    public List<OfflineMessage> getOfflineMessages( final String username )
+    public CompletableFuture<List<OfflineMessage>> getOfflineMessages( final String username )
     {
-        final List<OfflineMessage> messages = new ArrayList<>();
+        return CompletableFuture.supplyAsync( () -> {
+            final List<OfflineMessage> messages = new ArrayList<>();
 
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "select * from bu_offline_message where username = ? and active = ?;"
-              ) )
-        {
-            pstmt.setString( 1, username );
-            pstmt.setBoolean( 2, true );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "select * from bu_offline_message where username = ? and active = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, username );
+                pstmt.setBoolean( 2, true );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    messages.add( new OfflineMessage(
-                            rs.getLong( "id" ),
-                            rs.getString( "message" ),
-                            GSON.fromJson( rs.getString( "parameters" ), Object[].class )
-                    ) );
+                    while ( rs.next() )
+                    {
+                        messages.add( new OfflineMessage(
+                                rs.getLong( "id" ),
+                                rs.getString( "message" ),
+                                GSON.fromJson( rs.getString( "parameters" ), Object[].class )
+                        ) );
+                    }
                 }
             }
-        }
 
-        return messages;
+            return messages;
+        } );
     }
 
     @Override
     @SneakyThrows
-    public void sendOfflineMessage( final String username, final OfflineMessage message )
+    public CompletableFuture<Void> sendOfflineMessage( final String username, final OfflineMessage message )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
-              ) )
-        {
-            pstmt.setString( 1, username );
-            pstmt.setString( 2, message.getLanguagePath() );
-            pstmt.setString( 3, GSON.toJson( message.getPlaceholders() ) );
-            pstmt.setBoolean( 4, true );
+        return CompletableFuture.runAsync( () -> {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
+                  ) )
+            {
+                pstmt.setString( 1, username );
+                pstmt.setString( 2, message.getLanguagePath() );
+                pstmt.setString( 3, GSON.toJson( message.getPlaceholders() ) );
+                pstmt.setBoolean( 4, true );
 
-            pstmt.execute();
-        }
+                pstmt.execute();
+            }
+        } );
     }
 
     @Override
     @SneakyThrows
-    public void updateOfflineMessage( final Long id, final boolean active )
+    public CompletableFuture<Void> updateOfflineMessage( final Long id, final boolean active )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "update bu_offline_message set active = ? where id = ?;"
-              ) )
-        {
-            pstmt.setBoolean( 1, active );
-            pstmt.setLong( 2, id );
+        return CompletableFuture.runAsync( () -> {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "update bu_offline_message set active = ? where id = ?;"
+                  ) )
+            {
+                pstmt.setBoolean( 1, active );
+                pstmt.setLong( 2, id );
 
-            pstmt.executeUpdate();
-        }
+                pstmt.executeUpdate();
+            }
+        } );
     }
 }

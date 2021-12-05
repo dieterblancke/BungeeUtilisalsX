@@ -59,46 +59,49 @@ public class PunishmentInfoCommandCall implements CommandCall
         final String username = args.get( 0 );
         final String server = useServerPunishments() ? args.get( 1 ) : null;
 
-        if ( !dao.getUserDao().exists( username ) )
+        dao.getUserDao().getUserData( username ).thenAccept( storage ->
         {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-        final UserStorage storage = dao.getUserDao().getUserData( username );
-        final String action;
-
-        if ( useServerPunishments() )
-        {
-            action = args.size() > 2 ? args.get( 2 ) : "all";
-        }
-        else
-        {
-            action = args.size() > 1 ? args.get( 1 ) : "all";
-        }
-
-        if ( action.equalsIgnoreCase( "all" ) )
-        {
-            for ( PunishmentType type : PunishmentType.values() )
+            if ( !storage.isLoaded() )
             {
-                if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
-                {
-                    continue;
-                }
-                sendTypeInfo( user, storage, server, type );
+                user.sendLangMessage( "never-joined" );
+                return;
             }
-        }
-        else
-        {
-            for ( String typeStr : action.split( "," ) )
+
+            final String action;
+
+            if ( useServerPunishments() )
             {
-                final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
-                if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
-                {
-                    continue;
-                }
-                sendTypeInfo( user, storage, server, type );
+                action = args.size() > 2 ? args.get( 2 ) : "all";
             }
-        }
+            else
+            {
+                action = args.size() > 1 ? args.get( 1 ) : "all";
+            }
+
+            if ( action.equalsIgnoreCase( "all" ) )
+            {
+                for ( PunishmentType type : PunishmentType.values() )
+                {
+                    if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
+                    {
+                        continue;
+                    }
+                    sendTypeInfo( user, storage, server, type );
+                }
+            }
+            else
+            {
+                for ( String typeStr : action.split( "," ) )
+                {
+                    final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
+                    if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
+                    {
+                        continue;
+                    }
+                    sendTypeInfo( user, storage, server, type );
+                }
+            }
+        } );
     }
 
     @Override

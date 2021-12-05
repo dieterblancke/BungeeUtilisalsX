@@ -54,4 +54,5 @@ public interface FriendsDao
     boolean getSetting( UUID uuid, FriendSetting type );
 
     FriendSettings getSettings( UUID uuid );
+
 }

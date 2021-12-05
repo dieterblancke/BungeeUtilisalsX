@@ -314,14 +314,6 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void shutdown()
     {
-        if ( !Utils.isSpigot() )
-        {
-            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
-                    this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
-                    null
-            );
-        }
-
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
         try
         {

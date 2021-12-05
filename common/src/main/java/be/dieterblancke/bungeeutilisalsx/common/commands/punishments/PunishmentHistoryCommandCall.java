@@ -48,67 +48,70 @@ public class PunishmentHistoryCommandCall implements CommandCall
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final String username = args.get( 0 );
 
-        if ( !dao.getUserDao().exists( username ) )
+        dao.getUserDao().getUserData( username ).thenAccept( storage ->
         {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-        final UserStorage storage = dao.getUserDao().getUserData( username );
-        final String action = args.size() > 1 ? args.get( 1 ) : "all";
-        int page = args.size() > 2
-                ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
-                : 1;
+            if ( !storage.isLoaded() )
+            {
+                user.sendLangMessage( "never-joined" );
+                return;
+            }
 
-        final List<PunishmentInfo> allPunishments = listPunishments( storage, action );
-        if ( allPunishments.isEmpty() )
-        {
+            final String action = args.size() > 1 ? args.get( 1 ) : "all";
+            int page = args.size() > 2
+                    ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
+                    : 1;
+
+            final List<PunishmentInfo> allPunishments = listPunishments( storage, action );
+            if ( allPunishments.isEmpty() )
+            {
+                user.sendLangMessage(
+                        "punishments.punishmenthistory.no-punishments",
+                        "{user}", username,
+                        "{type}", action
+                );
+                return;
+            }
+            final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
+
+            if ( page > pages )
+            {
+                page = pages;
+            }
+
+            final int previous = page > 1 ? page - 1 : 1;
+            final int next = Math.min( page + 1, pages );
+
+            int maxNumber = page * 10;
+            int minNumber = maxNumber - 10;
+
+            if ( maxNumber > allPunishments.size() )
+            {
+                maxNumber = allPunishments.size();
+            }
+
+            final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
             user.sendLangMessage(
-                    "punishments.punishmenthistory.no-punishments",
+                    "punishments.punishmenthistory.head",
+                    "{previousPage}", previous,
+                    "{currentPage}", page,
+                    "{nextPage}", next,
+                    "{maxPages}", pages,
+                    "{type}", action
+            );
+
+            punishments.forEach( punishment ->
+                    user.sendLangMessage(
+                            "punishments.punishmenthistory.format",
+                            BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
+                    )
+            );
+            user.sendLangMessage(
+                    "punishments.punishmenthistory.foot",
+                    "{punishmentAmount}", allPunishments.size(),
                     "{user}", username,
                     "{type}", action
             );
-            return;
-        }
-        final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
-
-        if ( page > pages )
-        {
-            page = pages;
-        }
-
-        final int previous = page > 1 ? page - 1 : 1;
-        final int next = Math.min( page + 1, pages );
-
-        int maxNumber = page * 10;
-        int minNumber = maxNumber - 10;
-
-        if ( maxNumber > allPunishments.size() )
-        {
-            maxNumber = allPunishments.size();
-        }
-
-        final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
-        user.sendLangMessage(
-                "punishments.punishmenthistory.head",
-                "{previousPage}", previous,
-                "{currentPage}", page,
-                "{nextPage}", next,
-                "{maxPages}", pages,
-                "{type}", action
-        );
-
-        punishments.forEach( punishment ->
-                user.sendLangMessage(
-                        "punishments.punishmenthistory.format",
-                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
-                )
-        );
-        user.sendLangMessage(
-                "punishments.punishmenthistory.foot",
-                "{punishmentAmount}", allPunishments.size(),
-                "{user}", username,
-                "{type}", action
-        );
+        } );
     }
 
     @Override

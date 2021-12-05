@@ -31,296 +31,304 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class SqlReportsDao implements ReportsDao
 {
 
     @Override
-    public void addReport( Report report )
+    public CompletableFuture<Void> addReport( Report report )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_reports (uuid, reported_by, handled, server, reason, accepted, date) VALUES (?, ?, ?, ?, ?, ?, ?);"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, report.getUuid().toString() );
-            pstmt.setString( 2, report.getReportedBy() );
-            pstmt.setBoolean( 3, report.isHandled() );
-            pstmt.setString( 4, report.getServer() );
-            pstmt.setString( 5, report.getReason() );
-            pstmt.setBoolean( 6, report.isAccepted() );
-            pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
-
-            pstmt.execute();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-    }
-
-    @Override
-    public void removeReport( long id )
-    {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "DELETE FROM bu_reports WHERE id = ?;"
-              ) )
-        {
-            pstmt.setLong( 1, id );
-
-            pstmt.execute();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-    }
-
-    @Override
-    public Report getReport( long id )
-    {
-        Report report = null;
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;"
-              ) )
-        {
-            pstmt.setLong( 1, id );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO bu_reports (uuid, reported_by, handled, server, reason, accepted, date) VALUES (?, ?, ?, ?, ?, ?, ?);"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, report.getUuid().toString() );
+                pstmt.setString( 2, report.getReportedBy() );
+                pstmt.setBoolean( 3, report.isHandled() );
+                pstmt.setString( 4, report.getServer() );
+                pstmt.setString( 5, report.getReason() );
+                pstmt.setBoolean( 6, report.isAccepted() );
+                pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
+
+                pstmt.execute();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> removeReport( long id )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "DELETE FROM bu_reports WHERE id = ?;"
+                  ) )
+            {
+                pstmt.setLong( 1, id );
+
+                pstmt.execute();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Report> getReport( long id )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            Report report = null;
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;"
+                  ) )
+            {
+                pstmt.setLong( 1, id );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    report = getReport( rs );
+                    if ( rs.next() )
+                    {
+                        report = getReport( rs );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return report;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return report;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<Report> getReports()
+    public CompletableFuture<List<Report>> getReports()
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid;"
+                  ) )
             {
-                while ( rs.next() )
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<Report> getReports( UUID uuid )
+    public CompletableFuture<List<Report>> getReports( UUID uuid )
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.uuid = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.uuid = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<Report> getActiveReports()
+    public CompletableFuture<List<Report>> getActiveReports()
     {
         return getHandledReports( false );
     }
 
     @Override
-    public List<Report> getHandledReports()
+    public CompletableFuture<List<Report>> getHandledReports()
     {
         return getHandledReports( true );
     }
 
-    private List<Report> getHandledReports( boolean handled )
+    private CompletableFuture<List<Report>> getHandledReports( boolean handled )
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE handled = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setBoolean( 1, handled );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE handled = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setBoolean( 1, handled );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
-    private List<Report> getAcceptedReports( boolean accepted )
+    private CompletableFuture<List<Report>> getAcceptedReports( boolean accepted )
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE accepted = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setBoolean( 1, accepted );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE accepted = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setBoolean( 1, accepted );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<Report> getRecentReports( int days )
+    public CompletableFuture<List<Report>> getRecentReports( int days )
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setInt( 1, -days );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setInt( 1, -days );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
-    }
-
-    @Override
-    public boolean reportExists( long id )
-    {
-        boolean exists = false;
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT id FROM bu_reports WHERE id = ? LIMIT 1;"
-              ) )
-        {
-            pstmt.setLong( 1, id );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            catch ( SQLException e )
             {
-                exists = rs.next();
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return exists;
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void handleReport( long id, boolean accepted )
+    public CompletableFuture<Void> handleReport( long id, boolean accepted )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "UPDATE bu_reports SET handled = ?, accepted = ? WHERE id = ?;"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setBoolean( 1, true );
-            pstmt.setBoolean( 2, accepted );
-            pstmt.setLong( 3, id );
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "UPDATE bu_reports SET handled = ?, accepted = ? WHERE id = ?;"
+                  ) )
+            {
+                pstmt.setBoolean( 1, true );
+                pstmt.setBoolean( 2, accepted );
+                pstmt.setLong( 3, id );
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<Report> getAcceptedReports()
+    public CompletableFuture<List<Report>> getAcceptedReports()
     {
         return getAcceptedReports( true );
     }
 
     @Override
-    public List<Report> getDeniedReports()
+    public CompletableFuture<List<Report>> getDeniedReports()
     {
         return getAcceptedReports( false );
     }
 
     @Override
-    public List<Report> getReportsHistory( final String name )
+    public CompletableFuture<List<Report>> getReportsHistory( final String name )
     {
-        final List<Report> reports = Lists.newArrayList();
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE reported_by = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, name );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            final List<Report> reports = Lists.newArrayList();
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE reported_by = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, name );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    reports.add( getReport( rs ) );
+                    while ( rs.next() )
+                    {
+                        reports.add( getReport( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return reports;
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+            return reports;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     private Report getReport( final ResultSet rs ) throws SQLException

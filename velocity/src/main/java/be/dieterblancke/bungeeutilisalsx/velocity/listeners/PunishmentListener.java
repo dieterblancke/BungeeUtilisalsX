@@ -95,7 +95,7 @@ public class PunishmentListener
 
     private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );
+        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join();
         final Language language = storage.getLanguage() == null ? BuX.getApi().getLanguageManager().getDefaultLanguage() : storage.getLanguage();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
                 BuX.getInstance().getName(), language

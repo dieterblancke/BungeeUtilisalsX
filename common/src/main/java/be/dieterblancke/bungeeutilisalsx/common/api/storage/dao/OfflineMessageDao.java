@@ -21,15 +21,16 @@ package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 import lombok.Value;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public interface OfflineMessageDao
 {
 
-    List<OfflineMessage> getOfflineMessages( String username );
+    CompletableFuture<List<OfflineMessage>> getOfflineMessages( String username );
 
-    void sendOfflineMessage( String username, OfflineMessage message );
+    CompletableFuture<Void> sendOfflineMessage( String username, OfflineMessage message );
 
-    void updateOfflineMessage( Long id, boolean active );
+    CompletableFuture<Void> updateOfflineMessage( Long id, boolean active );
 
     @Value
     class OfflineMessage

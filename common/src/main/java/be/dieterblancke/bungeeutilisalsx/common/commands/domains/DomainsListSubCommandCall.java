@@ -43,38 +43,40 @@ public class DomainsListSubCommandCall implements CommandCall
                         ( section ) -> section.getString( "domain" )
                 ) );
 
-        final Map<String, Integer> tempDomains = BuX.getApi().getStorageManager().getDao().getUserDao().getJoinedHostList();
-        final Map<String, Set<String>> domainLists = new HashMap<>();
+        BuX.getApi().getStorageManager().getDao().getUserDao().getJoinedHostList()
+                .thenAccept( (tempDomains) -> {
+                    final Map<String, Set<String>> domainLists = new HashMap<>();
 
-        tempDomains.forEach( ( domain, amount ) ->
-        {
-            for ( Map.Entry<Pattern, String> entry : mappings.entrySet() )
-            {
-                final Matcher matcher = entry.getKey().matcher( domain );
+                    tempDomains.forEach( ( domain, amount ) ->
+                    {
+                        for ( Map.Entry<Pattern, String> entry : mappings.entrySet() )
+                        {
+                            final Matcher matcher = entry.getKey().matcher( domain );
 
-                if ( matcher.find() )
-                {
-                    this.addDomain( domains, domainLists, entry.getValue(), amount );
-                    return;
-                }
-            }
-            this.addDomain( domains, domainLists, domain, amount );
-        } );
+                            if ( matcher.find() )
+                            {
+                                this.addDomain( domains, domainLists, entry.getValue(), amount );
+                                return;
+                            }
+                        }
+                        this.addDomain( domains, domainLists, domain, amount );
+                    } );
 
-        user.sendLangMessage( "general-commands.domains.list.header", "{total}", domains.size() );
+                    user.sendLangMessage( "general-commands.domains.list.header", "{total}", domains.size() );
 
-        domains.entrySet().stream()
-                .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
-                .forEach( entry ->
-                        user.sendLangMessage(
-                                "general-commands.domains.list.format",
-                                "{domain}", entry.getKey(),
-                                "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
-                                "{total}", entry.getValue()
-                        )
-                );
+                    domains.entrySet().stream()
+                            .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
+                            .forEach( entry ->
+                                    user.sendLangMessage(
+                                            "general-commands.domains.list.format",
+                                            "{domain}", entry.getKey(),
+                                            "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
+                                            "{total}", entry.getValue()
+                                    )
+                            );
 
-        user.sendLangMessage( "general-commands.domains.list.footer", "{total}", domains.size() );
+                    user.sendLangMessage( "general-commands.domains.list.footer", "{total}", domains.size() );
+                } );
     }
 
     @Override
