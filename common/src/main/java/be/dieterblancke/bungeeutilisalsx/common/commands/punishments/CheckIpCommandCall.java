@@ -27,10 +27,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Pattern;
 
 public class CheckIpCommandCall implements CommandCall
@@ -54,26 +52,29 @@ public class CheckIpCommandCall implements CommandCall
             final UserDao userDao = dao.getUserDao();
             final PunishmentDao punishmentDao = dao.getPunishmentDao();
 
-            final boolean exists = IP_PATTERN.matcher( args.get( 0 ) ).find() ? userDao.ipExists( args.get( 0 ) ) : userDao.exists( args.get( 0 ) );
+            final boolean exists = IP_PATTERN.matcher( args.get( 0 ) ).find()
+                    ? userDao.ipExists( args.get( 0 ) ).join()
+                    : userDao.exists( args.get( 0 ) ).join();
+
             if ( !exists )
             {
                 user.sendLangMessage( "never-joined" );
                 return;
             }
-            final UserStorage storage = userDao.getUserData( args.get( 0 ) );
+            final UserStorage storage = userDao.getUserData( args.get( 0 ) ).join();
 
             user.sendLangMessage(
                     "punishments.checkip.head",
                     "{user}", storage.getUserName(), "{ip}", storage.getIp()
             );
 
-            final List<String> users = userDao.getUsersOnIP( storage.getIp() );
+            final List<String> users = userDao.getUsersOnIP( storage.getIp() ).join();
             final List<String> formattedUsers = Lists.newArrayList();
 
             users.forEach( u ->
             {
-                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" );
-                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" );
+                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" ).join();
+                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" ).join();
 
                 String colorPath = "punishments.checkip.colors.";
                 if ( banned || ipbanned )

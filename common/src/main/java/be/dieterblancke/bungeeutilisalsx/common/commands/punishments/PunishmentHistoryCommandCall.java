@@ -29,9 +29,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class PunishmentHistoryCommandCall implements CommandCall
 {
@@ -48,67 +49,81 @@ public class PunishmentHistoryCommandCall implements CommandCall
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final String username = args.get( 0 );
 
-        if ( !dao.getUserDao().exists( username ) )
+        dao.getUserDao().getUserData( username ).thenAccept( storage ->
         {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-        final UserStorage storage = dao.getUserDao().getUserData( username );
-        final String action = args.size() > 1 ? args.get( 1 ) : "all";
-        int page = args.size() > 2
-                ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
-                : 1;
+            if ( !storage.isLoaded() )
+            {
+                user.sendLangMessage( "never-joined" );
+                return;
+            }
 
-        final List<PunishmentInfo> allPunishments = listPunishments( storage, action );
-        if ( allPunishments.isEmpty() )
-        {
-            user.sendLangMessage(
-                    "punishments.punishmenthistory.no-punishments",
-                    "{user}", username,
-                    "{type}", action
-            );
-            return;
-        }
-        final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
+            final String action = args.size() > 1 ? args.get( 1 ) : "all";
+            final List<CompletableFuture<List<PunishmentInfo>>> allTasks = listPunishments( storage, action );
 
-        if ( page > pages )
-        {
-            page = pages;
-        }
+            CompletableFuture.allOf( allTasks.toArray( new CompletableFuture[allTasks.size()] ) )
+                    .thenRun( () ->
+                    {
+                        final List<PunishmentInfo> allPunishments = allTasks
+                                .stream()
+                                .map( CompletableFuture::join )
+                                .flatMap( Collection::stream )
+                                .toList();
 
-        final int previous = page > 1 ? page - 1 : 1;
-        final int next = Math.min( page + 1, pages );
 
-        int maxNumber = page * 10;
-        int minNumber = maxNumber - 10;
+                        if ( allPunishments.isEmpty() )
+                        {
+                            user.sendLangMessage(
+                                    "punishments.punishmenthistory.no-punishments",
+                                    "{user}", username,
+                                    "{type}", action
+                            );
+                            return;
+                        }
+                        int page = args.size() > 2
+                                ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
+                                : 1;
+                        final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
 
-        if ( maxNumber > allPunishments.size() )
-        {
-            maxNumber = allPunishments.size();
-        }
+                        if ( page > pages )
+                        {
+                            page = pages;
+                        }
 
-        final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
-        user.sendLangMessage(
-                "punishments.punishmenthistory.head",
-                "{previousPage}", previous,
-                "{currentPage}", page,
-                "{nextPage}", next,
-                "{maxPages}", pages,
-                "{type}", action
-        );
+                        final int previous = page > 1 ? page - 1 : 1;
+                        final int next = Math.min( page + 1, pages );
 
-        punishments.forEach( punishment ->
-                user.sendLangMessage(
-                        "punishments.punishmenthistory.format",
-                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
-                )
-        );
-        user.sendLangMessage(
-                "punishments.punishmenthistory.foot",
-                "{punishmentAmount}", allPunishments.size(),
-                "{user}", username,
-                "{type}", action
-        );
+                        int maxNumber = page * 10;
+                        int minNumber = maxNumber - 10;
+
+                        if ( maxNumber > allPunishments.size() )
+                        {
+                            maxNumber = allPunishments.size();
+                        }
+
+                        final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
+                        user.sendLangMessage(
+                                "punishments.punishmenthistory.head",
+                                "{previousPage}", previous,
+                                "{currentPage}", page,
+                                "{nextPage}", next,
+                                "{maxPages}", pages,
+                                "{type}", action
+                        );
+
+                        punishments.forEach( punishment ->
+                                user.sendLangMessage(
+                                        "punishments.punishmenthistory.format",
+                                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
+                                )
+                        );
+                        user.sendLangMessage(
+                                "punishments.punishmenthistory.foot",
+                                "{punishmentAmount}", allPunishments.size(),
+                                "{user}", username,
+                                "{type}", action
+                        );
+                    } );
+        } );
     }
 
     @Override
@@ -123,15 +138,15 @@ public class PunishmentHistoryCommandCall implements CommandCall
         return "/punishmenthistory (user) [type / all] [page]";
     }
 
-    private List<PunishmentInfo> listPunishments( final UserStorage storage, final String action )
+    private List<CompletableFuture<List<PunishmentInfo>>> listPunishments( final UserStorage storage, final String action )
     {
-        final List<PunishmentInfo> list = Lists.newArrayList();
+        final List<CompletableFuture<List<PunishmentInfo>>> list = Lists.newArrayList();
 
         if ( action.equalsIgnoreCase( "all" ) )
         {
             for ( PunishmentType type : PunishmentType.values() )
             {
-                list.addAll( listPunishments( storage, type ) );
+                list.add( listPunishments( storage, type ) );
             }
         }
         else
@@ -140,13 +155,13 @@ public class PunishmentHistoryCommandCall implements CommandCall
             {
                 final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
 
-                list.addAll( listPunishments( storage, type ) );
+                list.add( listPunishments( storage, type ) );
             }
         }
         return list;
     }
 
-    private List<PunishmentInfo> listPunishments( final UserStorage storage, final PunishmentType type )
+    private CompletableFuture<List<PunishmentInfo>> listPunishments( final UserStorage storage, final PunishmentType type )
     {
         final Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
         final Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
@@ -156,28 +171,28 @@ public class PunishmentHistoryCommandCall implements CommandCall
             default:
             case BAN:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
-                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
             case TEMPBAN:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
-                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
             case IPBAN:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
-                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
             case IPTEMPBAN:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
-                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
             case MUTE:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
-                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
             case TEMPMUTE:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
-                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
             case IPMUTE:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
-                        .stream().filter( permanentFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
             case IPTEMPMUTE:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
-                        .stream().filter( temporaryFilter ).collect( Collectors.toList() );
+                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
             case KICK:
                 return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( storage.getUuid() );
             case WARN:

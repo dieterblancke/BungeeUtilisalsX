@@ -29,8 +29,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao.useServerPunishments;
 
 public class PunishmentInfoCommandCall implements CommandCall
 {
@@ -59,46 +60,49 @@ public class PunishmentInfoCommandCall implements CommandCall
         final String username = args.get( 0 );
         final String server = useServerPunishments() ? args.get( 1 ) : null;
 
-        if ( !dao.getUserDao().exists( username ) )
+        dao.getUserDao().getUserData( username ).thenAccept( storage ->
         {
-            user.sendLangMessage( "never-joined" );
-            return;
-        }
-        final UserStorage storage = dao.getUserDao().getUserData( username );
-        final String action;
-
-        if ( useServerPunishments() )
-        {
-            action = args.size() > 2 ? args.get( 2 ) : "all";
-        }
-        else
-        {
-            action = args.size() > 1 ? args.get( 1 ) : "all";
-        }
-
-        if ( action.equalsIgnoreCase( "all" ) )
-        {
-            for ( PunishmentType type : PunishmentType.values() )
+            if ( !storage.isLoaded() )
             {
-                if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
-                {
-                    continue;
-                }
-                sendTypeInfo( user, storage, server, type );
+                user.sendLangMessage( "never-joined" );
+                return;
             }
-        }
-        else
-        {
-            for ( String typeStr : action.split( "," ) )
+
+            final String action;
+
+            if ( useServerPunishments() )
             {
-                final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
-                if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
-                {
-                    continue;
-                }
-                sendTypeInfo( user, storage, server, type );
+                action = args.size() > 2 ? args.get( 2 ) : "all";
             }
-        }
+            else
+            {
+                action = args.size() > 1 ? args.get( 1 ) : "all";
+            }
+
+            if ( action.equalsIgnoreCase( "all" ) )
+            {
+                for ( PunishmentType type : PunishmentType.values() )
+                {
+                    if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
+                    {
+                        continue;
+                    }
+                    sendTypeInfo( user, storage, server, type );
+                }
+            }
+            else
+            {
+                for ( String typeStr : action.split( "," ) )
+                {
+                    final PunishmentType type = Utils.valueOfOr( typeStr.toUpperCase(), PunishmentType.BAN );
+                    if ( type.equals( PunishmentType.KICK ) || type.equals( PunishmentType.WARN ) )
+                    {
+                        continue;
+                    }
+                    sendTypeInfo( user, storage, server, type );
+                }
+            }
+        } );
     }
 
     @Override
@@ -126,62 +130,42 @@ public class PunishmentInfoCommandCall implements CommandCall
             return;
         }
 
+        final CompletableFuture<PunishmentInfo> task;
         switch ( type )
         {
             case BAN:
             case TEMPBAN:
-                if ( dao.getBansDao().isBanned( storage.getUuid(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentBan( storage.getUuid(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getBansDao().getCurrentBan( storage.getUuid(), server );
                 break;
             case IPBAN:
             case IPTEMPBAN:
-                if ( dao.getBansDao().isIPBanned( storage.getIp(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentIPBan( storage.getIp(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getBansDao().getCurrentIPBan( storage.getIp(), server );
                 break;
             case MUTE:
             case TEMPMUTE:
-                if ( dao.getMutesDao().isMuted( storage.getUuid(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentMute( storage.getUuid(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getMutesDao().getCurrentMute( storage.getUuid(), server );
                 break;
             case IPMUTE:
             case IPTEMPMUTE:
-                if ( dao.getMutesDao().isIPMuted( storage.getIp(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentIPMute( storage.getIp(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getMutesDao().getCurrentIPMute( storage.getIp(), server );
                 break;
-            case KICK:
-            case WARN:
+            default:
+                task = null;
                 break;
+        }
+
+        if ( task != null )
+        {
+            task.thenAccept( info -> sendInfoMessage( user, storage, type, info ) );
         }
     }
 
-    private void sendInfoMessage( final User user, final UserStorage storage, final PunishmentType type,
-                                  final boolean punished, final PunishmentInfo info )
+    private void sendInfoMessage( final User user,
+                                  final UserStorage storage,
+                                  final PunishmentType type,
+                                  final PunishmentInfo info )
     {
-        if ( punished )
+        if ( info != null )
         {
             user.sendLangMessage(
                     "punishments.punishmentinfo.typeinfo.found",

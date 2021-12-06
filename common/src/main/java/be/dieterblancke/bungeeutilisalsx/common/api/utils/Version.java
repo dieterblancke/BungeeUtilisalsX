@@ -24,6 +24,7 @@ public enum Version
 {
 
     LEGACY( -1 ),
+    UNKNOWN_NEW_VERSION( -1 ),
     MINECRAFT_1_8( 47 ),
     MINECRAFT_1_9( 107 ),
     MINECRAFT_1_9_1( 108 ),
@@ -52,7 +53,8 @@ public enum Version
     MINECRAFT_1_16_3( 753 ),
     MINECRAFT_1_16_4( 754 ),
     MINECRAFT_1_17( 755 ),
-    MINECRAFT_1_17_1( 756 );
+    MINECRAFT_1_17_1( 756 ),
+    MINECRAFT_1_18( 757 );
 
     @Getter
     private final int versionId;

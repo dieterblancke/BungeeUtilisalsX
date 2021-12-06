@@ -7,9 +7,10 @@ import be.dieterblancke.bungeeutilisalsx.common.announcers.tab.TabAnnouncer;
 import be.dieterblancke.bungeeutilisalsx.common.announcers.title.TitleAnnouncer;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.staff.NetworkStaffJoinEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.staff.NetworkStaffLeaveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
@@ -21,7 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -55,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Data
 public abstract class AbstractBungeeUtilisalsX
@@ -159,44 +158,31 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void registerExecutors()
     {
-        final UserExecutor userExecutor = new UserExecutor();
-        this.api.getEventLoader().register( UserLoadEvent.class, userExecutor );
-        this.api.getEventLoader().register( UserUnloadEvent.class, userExecutor );
-        this.api.getEventLoader().register( UserServerConnectedEvent.class, userExecutor );
+        new UserExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
+        new StaffNetworkExecutor().registerForEvents( NetworkStaffJoinEvent.class, NetworkStaffLeaveEvent.class );
+        new SpyEventExecutor().registerForEvents( UserPrivateMessageEvent.class, UserCommandEvent.class );
 
         this.api.getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
         this.api.getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
-
-        final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
-        this.api.getEventLoader().register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
-        this.api.getEventLoader().register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
-
-        final SpyEventExecutor spyEventExecutor = new SpyEventExecutor();
-        this.api.getEventLoader().register( UserPrivateMessageEvent.class, spyEventExecutor );
-        this.api.getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
-
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
         this.api.getEventLoader().register( UserServerConnectedEvent.class, new IngameMotdExecutor() );
+        this.api.getEventLoader().register( UserCommandEvent.class, new UserCommandExecutor() );
 
-        final UserCommandExecutor userCommandExecutor = new UserCommandExecutor();
-        this.api.getEventLoader().register( UserCommandEvent.class, userCommandExecutor );
+        if ( ConfigFiles.MOTD.isEnabled() )
+        {
+            this.api.getEventLoader().register( ProxyMotdPingEvent.class, new ProxyMotdPingExecutor() );
+        }
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
-            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
+            new MuteCheckExecutor().registerForEvents( UserChatEvent.class, UserCommandEvent.class );
 
-            final MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-            this.api.getEventLoader().register( UserChatEvent.class, muteCheckExecutor );
-            this.api.getEventLoader().register( UserCommandEvent.class, muteCheckExecutor );
+            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
         }
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
-            final FriendsExecutor friendsExecutor = new FriendsExecutor();
-
-            this.api.getEventLoader().register( UserLoadEvent.class, friendsExecutor );
-            this.api.getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
-            this.api.getEventLoader().register( UserServerConnectedEvent.class, friendsExecutor );
+            new FriendsExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
         }
     }
 
@@ -334,14 +320,6 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void shutdown()
     {
-        if ( !Utils.isSpigot() )
-        {
-            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
-                    this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
-                    null
-            );
-        }
-
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
         try
         {

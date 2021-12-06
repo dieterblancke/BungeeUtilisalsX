@@ -24,7 +24,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 
 import java.util.List;
-import java.util.Map;
 
 public class DomainsSearchSubCommandCall implements CommandCall
 {
@@ -38,22 +37,24 @@ public class DomainsSearchSubCommandCall implements CommandCall
             return;
         }
         final String domainToSearch = args.get( 0 );
-        final Map<String, Integer> domains = BuX.getApi().getStorageManager().getDao().getUserDao().searchJoinedHosts( domainToSearch );
 
-        user.sendLangMessage( "general-commands.domains.search.header", "{total}", domains.size() );
+        BuX.getApi().getStorageManager().getDao().getUserDao().searchJoinedHosts( domainToSearch ).thenAccept( ( domains ) ->
+        {
+            user.sendLangMessage( "general-commands.domains.search.header", "{total}", domains.size() );
 
-        domains.entrySet().stream()
-                .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
-                .forEach( entry ->
-                        user.sendLangMessage(
-                                "general-commands.domains.search.format",
-                                "{domain}", entry.getKey(),
-                                "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
-                                "{total}", entry.getValue()
-                        )
-                );
+            domains.entrySet().stream()
+                    .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
+                    .forEach( entry ->
+                            user.sendLangMessage(
+                                    "general-commands.domains.search.format",
+                                    "{domain}", entry.getKey(),
+                                    "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
+                                    "{total}", entry.getValue()
+                            )
+                    );
 
-        user.sendLangMessage( "general-commands.domains.search.footer", "{total}", domains.size() );
+            user.sendLangMessage( "general-commands.domains.search.footer", "{total}", domains.size() );
+        } );
     }
 
     @Override

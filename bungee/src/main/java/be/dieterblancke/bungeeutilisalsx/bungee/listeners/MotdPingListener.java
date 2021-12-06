@@ -18,142 +18,63 @@
 
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
+import be.dieterblancke.bungeeutilisalsx.bungee.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeMotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
-import be.dieterblancke.bungeeutilisalsx.common.motd.MotdData;
-import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.ServerPing.PlayerInfo;
 import net.md_5.bungee.api.ServerPing.Players;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 public class MotdPingListener implements Listener
 {
 
     @EventHandler
-    public void onPing( ProxyPingEvent event )
+    public void onPing( final ProxyPingEvent event )
     {
-        final List<MotdData> dataList = ConfigFiles.MOTD.getMotds();
+        event.registerIntent( Bootstrap.getInstance() );
+
         final MotdConnection motdConnection = this.createMotdConnection( event.getConnection() );
+        final ProxyMotdPingEvent proxyMotdPingEvent = new ProxyMotdPingEvent(
+                motdConnection,
+                ( e ) ->
+                {
+                    if ( e.getMotdPingResponse() == null )
+                    {
+                        return;
+                    }
+                    final ServerPing orig = event.getResponse();
 
-        ServerPing result = loadConditionalMotd( event, motdConnection, dataList );
-        if ( result == null )
-        {
-            result = loadDefaultMotd( event, motdConnection, dataList );
-        }
+                    event.getResponse().setPlayers( new Players(
+                            orig.getPlayers().getMax(),
+                            orig.getPlayers().getOnline(),
+                            e.getMotdPingResponse().getPlayers()
+                                    .stream()
+                                    .map( it -> new PlayerInfo( it.getName(), it.getUuid() ) )
+                                    .toArray( PlayerInfo[]::new )
+                    ) );
+                    event.getResponse().setDescriptionComponent( e.getMotdPingResponse().getMotd() );
 
-        if ( result != null )
-        {
-            event.setResponse( result );
-        }
-    }
-
-    private ServerPing loadMotd( final ServerPing orig, final MotdConnection connection, final MotdData motd )
-    {
-        if ( motd == null )
-        {
-            return null;
-        }
-        final boolean colorHex = Version.getVersion( connection.getVersion() ).isNewerThen( Version.MINECRAFT_1_16 );
-        final String message = formatMessage( motd.getMotd(), connection );
-        final BaseComponent component = new TextComponent(
-                TextComponent.fromLegacyText( Utils.formatString( message, colorHex ) )
+                    event.completeIntent( Bootstrap.getInstance() );
+                }
         );
 
-        final List<PlayerInfo> hoverMessages = Lists.newArrayList();
-        for ( int i = 0; i < motd.getHoverMessages().size(); i++ )
-        {
-            final String hoverMessage = motd.getHoverMessages().get( i );
-
-            hoverMessages.add( new PlayerInfo(
-                    Utils.formatString( formatMessage( hoverMessage, connection ), colorHex ),
-                    String.valueOf( i )
-            ) );
-        }
-        final PlayerInfo[] hover = hoverMessages.toArray( new PlayerInfo[0] );
-
-        orig.setPlayers( new Players( orig.getPlayers().getMax(), orig.getPlayers().getOnline(), hover ) );
-        orig.setDescriptionComponent( component );
-
-        return orig;
-    }
-
-    private String formatMessage( String message, final MotdConnection connection )
-    {
-        final Version version = Version.getVersion( connection.getVersion() );
-
-        message = message.replace( "{user}", connection.getName() == null ? "Unknown" : connection.getName() );
-        message = message.replace( "{version}", version == null ? "Unknown" : version.toString() );
-
-        if ( connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null )
-        {
-            message = message.replace( "{domain}", "Unknown" );
-        }
-        else
-        {
-            message = message.replace( "{domain}", connection.getVirtualHost().getHostName() );
-        }
-
-        return message;
-    }
-
-    private ServerPing loadDefaultMotd( final ProxyPingEvent event, final MotdConnection connection, final List<MotdData> motds )
-    {
-        final List<MotdData> defMotds = motds.stream().filter( MotdData::isDef ).collect( Collectors.toList() );
-        final MotdData motd = MathUtils.getRandomFromList( defMotds );
-
-        return loadMotd( event.getResponse(), connection, motd );
-    }
-
-    private ServerPing loadConditionalMotd( final ProxyPingEvent event, final MotdConnection connection, final List<MotdData> motds )
-    {
-        final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).collect( Collectors.toList() );
-
-        for ( final MotdData condition : conditions )
-        {
-            final ConditionHandler handler = condition.getConditionHandler();
-
-            if ( handler.checkCondition( connection ) )
-            {
-                final List<MotdData> conditionalMotds = conditions.stream().filter(
-                        data -> data.getConditionHandler().getCondition().equalsIgnoreCase( handler.getCondition() )
-                ).collect( Collectors.toList() );
-                final MotdData motd = MathUtils.getRandomFromList( conditionalMotds );
-
-                return loadMotd( event.getResponse(), connection, motd );
-            }
-        }
-        return null;
+        BuX.getApi().getEventLoader().launchEventAsync( proxyMotdPingEvent );
     }
 
     // Name not known on serverlist ping, so we're loading the last seen name on the IP as the initial connection name.
     private MotdConnection createMotdConnection( final PendingConnection connection )
     {
-        final String name = BuX.getApi().getStorageManager().getDao().getUserDao()
-                .getUsersOnIP( Utils.getIP( (InetSocketAddress) connection.getSocketAddress() ) )
-                .stream()
-                .findFirst()
-                .orElse( null );
-
         return new BungeeMotdConnection(
                 connection.getVersion(),
-                name,
+                (InetSocketAddress) connection.getSocketAddress(),
                 connection.getVirtualHost()
         );
     }

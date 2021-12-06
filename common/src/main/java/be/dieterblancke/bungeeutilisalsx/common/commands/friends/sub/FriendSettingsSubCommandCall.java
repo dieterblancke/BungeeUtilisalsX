@@ -45,6 +45,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
                         "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
+                        "{unformatted-type}", setting.toString(),
                         "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) )
                 );
             }
@@ -58,7 +59,7 @@ public class FriendSettingsSubCommandCall implements CommandCall
             if ( type == null )
             {
                 final String settings = Stream.of( FriendSetting.values() )
-                        .map( t -> t.getName( user.getLanguageConfig().getConfig() ) )
+                        .map( t -> t.toString() )
                         .collect( Collectors.joining() );
 
                 user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );

@@ -5,7 +5,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.DefaultGui;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friend.FriendGuiUtils;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendactions.FriendActionsGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendactions.FriendActionsGuiItemProvider;
 
@@ -19,7 +18,11 @@ public class FriendActionsGuiOpener extends GuiOpener
     @Override
     public void openGui( final User user, final String[] args )
     {
-        final FriendData friendData = FriendGuiUtils.getFriendData( user.getUuid(), args[0] );
+        final FriendData friendData = user.getFriends()
+                .stream()
+                .filter( d -> d.getFriend().equalsIgnoreCase( args[0] ) )
+                .findFirst()
+                .orElse( null );
 
         if ( friendData != null )
         {

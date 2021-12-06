@@ -28,45 +28,36 @@ public class VersionConditionHandler extends ConditionHandler
 
     public VersionConditionHandler( String condition )
     {
-        super( condition.replaceFirst( "version ", "" ) );
+        super( condition.replaceFirst( "version ", "" ).replace( ".", "_" ) );
     }
 
     @Override
     public boolean checkCondition( final MotdConnection connection )
     {
-        final String[] args = condition.split( " " );
-        final String operator = args[0];
-        final Version version = formatVersion( args[1] );
+        final Version version = formatVersion( value );
 
         if ( version == null )
         {
             return false;
         }
 
-        switch ( operator )
-        {
-            case "<":
-                return connection.getVersion() < version.getVersionId();
-            case "<=":
-                return connection.getVersion() <= version.getVersionId();
-            case "==":
-                return connection.getVersion() == version.getVersionId();
-            case "!=":
-                return connection.getVersion() != version.getVersionId();
-            case ">=":
-                return connection.getVersion() >= version.getVersionId();
-            case ">":
-                return connection.getVersion() > version.getVersionId();
-            default:
-                return false;
-        }
+        return switch ( operator )
+                {
+                    case LT -> connection.getVersion() < version.getVersionId();
+                    case LTE -> connection.getVersion() <= version.getVersionId();
+                    case EQ -> connection.getVersion() == version.getVersionId();
+                    case NOT_EQ -> connection.getVersion() != version.getVersionId();
+                    case GTE -> connection.getVersion() >= version.getVersionId();
+                    case GT -> connection.getVersion() > version.getVersionId();
+                    default -> false;
+                };
     }
 
     private Version formatVersion( String mcVersion )
     {
         try
         {
-            return Version.valueOf( "MINECRAFT_" + mcVersion.replace( ".", "_" ) );
+            return Version.valueOf( "MINECRAFT_" + mcVersion );
         }
         catch ( IllegalArgumentException e )
         {

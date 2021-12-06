@@ -28,6 +28,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class ReportListSubCommandCall implements CommandCall
 {
@@ -35,110 +36,74 @@ public class ReportListSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
-        final List<Report> reports;
-        final int page;
-        final int pages;
-
-        if ( args.size() == 0 )
+        loadReports( args.size() == 0 ? null : args.get( 0 ) ).thenAccept( reports ->
         {
-            reports = reportsDao.getActiveReports();
-            page = 1;
-            pages = (int) Math.ceil( (double) reports.size() / 10 );
-        }
-        else
-        {
-            final String action = args.get( 0 );
+            final int pages = (int) Math.ceil( (double) reports.size() / 10 );
+            final int page;
 
-            if ( action.equalsIgnoreCase( "all" ) )
+            if ( args.size() > 1 && MathUtils.isInteger( args.get( 1 ) ) )
             {
-                reports = reportsDao.getReports();
-            }
-            else if ( action.equalsIgnoreCase( "accepted" ) )
-            {
-                reports = reportsDao.getAcceptedReports();
-            }
-            else if ( action.equalsIgnoreCase( "denied" ) )
-            {
-                reports = reportsDao.getDeniedReports();
-            }
-            else
-            {
-                reports = reportsDao.getActiveReports();
-            }
-            pages = (int) Math.ceil( (double) reports.size() / 10 );
-
-            if ( args.size() > 1 )
-            {
-                if ( MathUtils.isInteger( args.get( 1 ) ) )
-                {
-                    final int tempPage = Integer.parseInt( args.get( 1 ) );
-
-                    page = Math.min( tempPage, pages );
-                }
-                else
-                {
-                    page = 1;
-                }
+                page = Math.min( Integer.parseInt( args.get( 1 ) ), pages );
             }
             else
             {
                 page = 1;
             }
-        }
 
-        if ( reports.isEmpty() )
-        {
-            user.sendLangMessage( "general-commands.report.list.no-reports" );
-            return;
-        }
 
-        try
-        {
-            final List<Report> pageReports = PageUtils.getPageFromList( page, reports, 10 );
-            final int previous = page > 1 ? page - 1 : 1;
-            final int next = Math.min( page + 1, pages );
-
-            user.sendLangMessage(
-                    "general-commands.report.list.header",
-                    "{page}", page,
-                    "{maxPages}", pages,
-                    "{previousPage}", previous,
-                    "{nextPage}", next
-            );
-
-            for ( Report report : pageReports )
+            if ( reports.isEmpty() )
             {
+                user.sendLangMessage( "general-commands.report.list.no-reports" );
+                return;
+            }
+
+            try
+            {
+                final List<Report> pageReports = PageUtils.getPageFromList( page, reports, 10 );
+                final int previous = page > 1 ? page - 1 : 1;
+                final int next = Math.min( page + 1, pages );
+
                 user.sendLangMessage(
-                        "general-commands.report.list.item",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{reporter}", report.getReportedBy(),
-                        "{reason}", report.getReason(),
-                        "{server}", report.getServer(),
-                        "{date}", Dao.formatDateToString( report.getDate() ),
-                        "{handled}", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ),
+                        "general-commands.report.list.header",
+                        "{page}", page,
+                        "{maxPages}", pages,
+                        "{previousPage}", previous,
+                        "{nextPage}", next
+                );
+
+                for ( Report report : pageReports )
+                {
+                    user.sendLangMessage(
+                            "general-commands.report.list.item",
+                            "{id}", report.getId(),
+                            "{reported}", report.getUserName(),
+                            "{reporter}", report.getReportedBy(),
+                            "{reason}", report.getReason(),
+                            "{server}", report.getServer(),
+                            "{date}", Dao.formatDateToString( report.getDate() ),
+                            "{handled}", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ),
+                            "{previousPage}", previous,
+                            "{nextPage}", next
+                    );
+                }
+
+                user.sendLangMessage(
+                        "general-commands.report.list.footer",
+                        "{page}", page,
+                        "{maxPages}", pages,
                         "{previousPage}", previous,
                         "{nextPage}", next
                 );
             }
-
-            user.sendLangMessage(
-                    "general-commands.report.list.footer",
-                    "{page}", page,
-                    "{maxPages}", pages,
-                    "{previousPage}", previous,
-                    "{nextPage}", next
-            );
-        }
-        catch ( PageUtils.PageNotFoundException e )
-        {
-            user.sendLangMessage(
-                    "general-commands.report.list.wrong-page",
-                    "{page}", e.getPage(),
-                    "{maxpages}", e.getMaxPages()
-            );
-        }
+            catch ( PageUtils.PageNotFoundException e )
+            {
+                user.sendLangMessage(
+                        "general-commands.report.list.wrong-page",
+                        "{page}", e.getPage(),
+                        "{maxpages}", e.getMaxPages()
+                );
+            }
+        } );
     }
 
     @Override
@@ -151,5 +116,27 @@ public class ReportListSubCommandCall implements CommandCall
     public String getUsage()
     {
         return "/report list [all / denied / accepted / active] [page]";
+    }
+
+    private CompletableFuture<List<Report>> loadReports( final String type )
+    {
+        final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
+
+        if ( type != null )
+        {
+            if ( type.equalsIgnoreCase( "all" ) )
+            {
+                return reportsDao.getReports();
+            }
+            else if ( type.equalsIgnoreCase( "accepted" ) )
+            {
+                return reportsDao.getAcceptedReports();
+            }
+            else if ( type.equalsIgnoreCase( "denied" ) )
+            {
+                return reportsDao.getDeniedReports();
+            }
+        }
+        return reportsDao.getActiveReports();
     }
 }

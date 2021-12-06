@@ -409,12 +409,12 @@ friends:
           - text: '&a&lENABLE'
             click:
               type: 'RUN_COMMAND'
-              action: '/friends settings {type} enable'
+              action: '/friends settings {unformatted-type} enable'
           - text: ' &e- '
           - text: '&c&lDISABLE'
             click:
               type: 'RUN_COMMAND'
-              action: '/friends settings {type} disable'
+              action: '/friends settings {unformatted-type} disable'
       footer: ''
   broadcast:
     usage: '&ePlease use &b/friend broadcast (message) &e!'

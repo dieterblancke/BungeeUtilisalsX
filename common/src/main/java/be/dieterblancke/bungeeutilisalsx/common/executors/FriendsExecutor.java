@@ -24,14 +24,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.base.Strings;
-
-import java.util.List;
 
 public class FriendsExecutor implements EventExecutor
 {
@@ -40,13 +37,14 @@ public class FriendsExecutor implements EventExecutor
     public void onLoad( final UserLoadEvent event )
     {
         final User user = event.getUser();
-        final List<FriendRequest> requests = BuX.getApi().getStorageManager().getDao()
-                .getFriendsDao().getIncomingFriendRequests( user.getUuid() );
-
-        if ( !requests.isEmpty() )
-        {
-            user.sendLangMessage( "friends.join.requests", "{amount}", requests.size() );
-        }
+        BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() )
+                .thenAccept( requests ->
+                {
+                    if ( !requests.isEmpty() )
+                    {
+                        user.sendLangMessage( "friends.join.requests", "{amount}", requests.size() );
+                    }
+                } );
     }
 
     @Event
@@ -115,21 +113,22 @@ public class FriendsExecutor implements EventExecutor
         {
             if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
             {
-                final boolean shouldSend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getSetting(
+                BuX.getApi().getStorageManager().getDao().getFriendsDao().getSetting(
                         data.getUuid(),
                         FriendSetting.SERVER_SWITCH
-                );
-
-                if ( shouldSend )
+                ).thenAccept( shouldSend ->
                 {
-                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                            data.getFriend(),
-                            "friends.switch",
-                            "{user}", user.getName(),
-                            "{from}", user.getServerName(),
-                            "{to}", event.getTarget().getName()
-                    ) );
-                }
+                    if ( shouldSend )
+                    {
+                        BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                                data.getFriend(),
+                                "friends.switch",
+                                "{user}", user.getName(),
+                                "{from}", user.getServerName(),
+                                "{to}", event.getTarget().getName()
+                        ) );
+                    }
+                } );
             }
         } );
     }
