@@ -48,12 +48,8 @@ import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.net.InetSocketAddress;
-import java.sql.Date;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Setter
@@ -71,72 +67,77 @@ public class VelocityUser implements User
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();
-    private FriendSettings friendSettings;
+    private FriendSettings friendSettings = new FriendSettings();
     private boolean inStaffChat;
     private boolean msgToggled;
 
     @Override
-    public void load( UUID uuid )
+    public void load( final Object playerInstance )
     {
+        final Date now = new Date();
         final Dao dao = BuX.getInstance().getAbstractStorageManager().getDao();
 
-        this.player = Bootstrap.getInstance().getProxyServer().getPlayer( uuid ).orElseThrow(
-                () -> new RuntimeException( "Could not find player with uuid " + uuid + " on join." )
-        );
+        this.player = (Player) playerInstance;
         this.name = player.getUsername();
         this.uuid = player.getUniqueId();
         this.ip = Utils.getIP( player.getRemoteAddress() );
-        this.storage = new UserStorage();
         this.cooldowns = new UserCooldowns();
+        this.storage = new UserStorage(
+                uuid,
+                name,
+                ip,
+                BuX.getApi().getLanguageManager().getDefaultLanguage(),
+                now,
+                now,
+                Lists.newArrayList(),
+                this.getJoinedHost(),
+                Maps.newHashMap()
+        );
 
-        if ( dao.getUserDao().exists( uuid ) )
+        dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
-            storage = dao.getUserDao().getUserData( uuid );
-
-            if ( !storage.getUserName().equalsIgnoreCase( name ) )
+            if ( userStorage.isLoaded() )
             {
-                dao.getUserDao().setName( uuid, name );
-                storage.setUserName( name );
+                storage = userStorage;
+
+                if ( !storage.getUserName().equalsIgnoreCase( name ) )
+                {
+                    dao.getUserDao().setName( uuid, name );
+                    storage.setUserName( name );
+                }
+
+                if ( BuX.getApi().getLanguageManager().useCustomIntegration() )
+                {
+                    storage.setLanguage( BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
+                }
+
+                if ( storage.getJoinedHost() == null )
+                {
+                    final String joinedHost = this.getJoinedHost();
+
+                    storage.setJoinedHost( joinedHost );
+                    dao.getUserDao().setJoinedHost( uuid, joinedHost );
+                }
             }
-
-            storage.setLanguage( BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
-
-            if ( storage.getJoinedHost() == null )
+            else
             {
+                final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
                 final String joinedHost = this.getJoinedHost();
 
-                storage.setJoinedHost( joinedHost );
-                dao.getUserDao().setJoinedHost( uuid, joinedHost );
+                dao.getUserDao().createUser(
+                        uuid,
+                        name,
+                        ip,
+                        defLanguage,
+                        joinedHost
+                );
             }
-        }
-        else
-        {
-            final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
-            final Date date = new Date( System.currentTimeMillis() );
-            final String joinedHost = this.getJoinedHost();
-
-            dao.getUserDao().createUser(
-                    uuid,
-                    name,
-                    ip,
-                    defLanguage,
-                    joinedHost
-            );
-
-            storage = new UserStorage( uuid, name, ip, defLanguage, date, date, Lists.newArrayList(), joinedHost, Maps.newHashMap() );
-        }
-
-        if ( !storage.getUserName().equals( name ) )
-        {
-            // Stored name != user current name | Name changed?
-            storage.setUserName( name );
-            dao.getUserDao().setName( uuid, name );
-        }
+        } );
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
-            friends = dao.getFriendsDao().getFriends( uuid );
-            friendSettings = dao.getFriendsDao().getSettings( uuid );
+            dao.getFriendsDao().getFriends( uuid ).thenAccept( friendsList -> friends = friendsList );
+            dao.getFriendsDao().getSettings( uuid ).thenAccept( settings -> friendSettings = settings );
 
             BuX.debug( "Friend list of " + name );
             BuX.debug( Arrays.toString( friends.toArray() ) );
@@ -147,29 +148,30 @@ public class VelocityUser implements User
         }
 
         BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
-
-        final UserLoadEvent userLoadEvent = new UserLoadEvent( this );
-        BuX.getApi().getEventLoader().launchEvent( userLoadEvent );
+        BuX.getApi().getEventLoader().launchEventAsync( new UserLoadEvent( this ) );
     }
 
     @Override
     public void unload()
     {
-        final UserUnloadEvent event = new UserUnloadEvent( this );
-        BuX.getApi().getEventLoader().launchEvent( event );
+        BuX.getApi().getEventLoader().launchEvent( new UserUnloadEvent( this ) );
+        this.save( true );
 
-        save();
+        // clearing data from memory
         cooldowns.remove();
-
         player = null;
         storage.getData().clear();
     }
 
     @Override
-    public void save()
+    public void save( final boolean logout )
     {
         BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().updateUser(
-                uuid, getName(), ip, getLanguage(), new Date( System.currentTimeMillis() )
+                uuid,
+                getName(),
+                ip,
+                getLanguage(),
+                logout ? new Date() : null
         );
     }
 
@@ -276,7 +278,7 @@ public class VelocityUser implements User
     @Override
     public void forceKick( String reason )
     {
-        getPlayer().disconnect( Component.text( Utils.c( reason ) ) );
+        this.player.disconnect( Component.text( Utils.c( reason ) ) );
     }
 
     @Override
@@ -297,11 +299,6 @@ public class VelocityUser implements User
         sendLangMessage( "no-permission" );
     }
 
-    public Player getPlayer()
-    {
-        return player;
-    }
-
     @Override
     public int getPing()
     {
@@ -317,11 +314,11 @@ public class VelocityUser implements User
     @Override
     public String getServerName()
     {
-        if ( getPlayer() == null || !getPlayer().getCurrentServer().isPresent() )
+        if ( this.player == null )
         {
             return "";
         }
-        return getPlayer().getCurrentServer().get().getServerInfo().getName();
+        return this.player.getCurrentServer().map( it -> it.getServerInfo().getName() ).orElse( "" );
     }
 
     @Override

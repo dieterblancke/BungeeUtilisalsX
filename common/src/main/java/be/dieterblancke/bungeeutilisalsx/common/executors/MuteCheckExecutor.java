@@ -34,7 +34,7 @@ import com.google.common.collect.Lists;
 
 import java.util.List;
 
-import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao.useServerPunishments;
 
 public class MuteCheckExecutor implements EventExecutor
 {
@@ -117,8 +117,8 @@ public class MuteCheckExecutor implements EventExecutor
             final MutesDao dao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao();
             final List<PunishmentInfo> mutes = Lists.newArrayList();
 
-            mutes.addAll( dao.getActiveMutes( user.getUuid() ) );
-            mutes.addAll( dao.getActiveIPMutes( user.getIp() ) );
+            mutes.addAll( dao.getActiveMutes( user.getUuid() ).join() );
+            mutes.addAll( dao.getActiveIPMutes( user.getIp() ).join() );
 
             user.getStorage().setData( UserStorageKey.CURRENT_MUTES, mutes );
         }

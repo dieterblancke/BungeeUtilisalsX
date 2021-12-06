@@ -36,7 +36,7 @@ public class ConsoleUser implements User
     private boolean commandSpy;
 
     @Override
-    public void load( UUID uuid )
+    public void load( Object playerInstance )
     {
         // do nothing
     }
@@ -48,7 +48,7 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public void save()
+    public void save( final boolean logout )
     {
         // do nothing
     }

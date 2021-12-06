@@ -59,7 +59,7 @@ public class UnbanIPCommandCall extends PunishmentCommand
             return;
         }
         final UserStorage storage = punishmentRemovalArgs.getStorage();
-        if ( !dao().getPunishmentDao().getBansDao().isIPBanned( storage.getIp(), punishmentRemovalArgs.getServerOrAll() ) )
+        if ( !dao().getPunishmentDao().getBansDao().isIPBanned( storage.getIp(), punishmentRemovalArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.unbanip.not-banned" );
             return;

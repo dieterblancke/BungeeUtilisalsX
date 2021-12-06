@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class StaffRollbackCommandCall implements CommandCall
 {
@@ -23,22 +24,22 @@ public class StaffRollbackCommandCall implements CommandCall
         final String playerName = args.get( 0 );
         final Date time = new Date( Utils.parseDateDiffInPast( args.get( 1 ) ) );
         final boolean hardRollback = parameters.contains( "-f" );
-        final int amount;
+        final CompletableFuture<Integer> deleteTask;
 
         if ( hardRollback )
         {
-            amount = BuX.getApi().getStorageManager().getDao().getPunishmentDao().hardDeleteSince( playerName, time );
+            deleteTask = BuX.getApi().getStorageManager().getDao().getPunishmentDao().hardDeleteSince( playerName, time );
         }
         else
         {
-            amount = BuX.getApi().getStorageManager().getDao().getPunishmentDao().softDeleteSince( playerName, user.getName(), time );
+            deleteTask = BuX.getApi().getStorageManager().getDao().getPunishmentDao().softDeleteSince( playerName, user.getName(), time );
         }
 
-        user.sendLangMessage(
+        deleteTask.thenAccept( amount -> user.sendLangMessage(
                 "punishments.staffrollback." + ( hardRollback ? "hard" : "soft" ) + "-rollback",
                 "{amount}", amount,
                 "{user}", playerName
-        );
+        ) );
     }
 
     @Override

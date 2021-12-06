@@ -21,13 +21,15 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import com.google.gson.Gson;
-import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 
 public class SqlOfflineMessageDao implements OfflineMessageDao
@@ -36,66 +38,84 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
     private static final Gson GSON = new Gson();
 
     @Override
-    @SneakyThrows
-    public List<OfflineMessage> getOfflineMessages( final String username )
+    public CompletableFuture<List<OfflineMessage>> getOfflineMessages( final String username )
     {
-        final List<OfflineMessage> messages = new ArrayList<>();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "select * from bu_offline_message where username = ? and active = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, username );
-            pstmt.setBoolean( 2, true );
+            final List<OfflineMessage> messages = new ArrayList<>();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "select * from bu_offline_message where username = ? and active = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, username );
+                pstmt.setBoolean( 2, true );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    messages.add( new OfflineMessage(
-                            rs.getLong( "id" ),
-                            rs.getString( "message" ),
-                            GSON.fromJson( rs.getString( "parameters" ), Object[].class )
-                    ) );
+                    while ( rs.next() )
+                    {
+                        messages.add( new OfflineMessage(
+                                rs.getLong( "id" ),
+                                rs.getString( "message" ),
+                                GSON.fromJson( rs.getString( "parameters" ), Object[].class )
+                        ) );
+                    }
                 }
             }
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
 
-        return messages;
+            return messages;
+        } );
     }
 
     @Override
-    @SneakyThrows
-    public void sendOfflineMessage( final String username, final OfflineMessage message )
+    public CompletableFuture<Void> sendOfflineMessage( final String username, final OfflineMessage message )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, username );
-            pstmt.setString( 2, message.getLanguagePath() );
-            pstmt.setString( 3, GSON.toJson( message.getPlaceholders() ) );
-            pstmt.setBoolean( 4, true );
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
+                  ) )
+            {
+                pstmt.setString( 1, username );
+                pstmt.setString( 2, message.getLanguagePath() );
+                pstmt.setString( 3, GSON.toJson( message.getPlaceholders() ) );
+                pstmt.setBoolean( 4, true );
 
-            pstmt.execute();
-        }
+                pstmt.execute();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+        } );
     }
 
     @Override
-    @SneakyThrows
-    public void updateOfflineMessage( final Long id, final boolean active )
+    public CompletableFuture<Void> updateOfflineMessage( final Long id, final boolean active )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "update bu_offline_message set active = ? where id = ?;"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setBoolean( 1, active );
-            pstmt.setLong( 2, id );
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "update bu_offline_message set active = ? where id = ?;"
+                  ) )
+            {
+                pstmt.setBoolean( 1, active );
+                pstmt.setLong( 2, id );
 
-            pstmt.executeUpdate();
-        }
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
+        } );
     }
 }

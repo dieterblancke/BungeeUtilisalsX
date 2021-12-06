@@ -35,6 +35,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Data;
+import lombok.SneakyThrows;
 
 import java.util.List;
 
@@ -232,14 +233,15 @@ public abstract class PunishmentCommand implements CommandCall
 
         public boolean hasJoined()
         {
-            return dao().getUserDao().exists( player );
+            return getStorage().isLoaded();
         }
 
+        @SneakyThrows
         public UserStorage getStorage()
         {
             if ( storage == null )
             {
-                return storage = dao().getUserDao().getUserData( player );
+                return storage = dao().getUserDao().getUserData( player ).get();
             }
             return storage;
         }
@@ -311,14 +313,15 @@ public abstract class PunishmentCommand implements CommandCall
 
         public boolean hasJoined()
         {
-            return dao().getUserDao().exists( player );
+            return getStorage().isLoaded();
         }
 
+        @SneakyThrows
         public UserStorage getStorage()
         {
             if ( storage == null )
             {
-                return storage = dao().getUserDao().getUserData( player );
+                return storage = dao().getUserDao().getUserData( player ).get();
             }
             return storage;
         }

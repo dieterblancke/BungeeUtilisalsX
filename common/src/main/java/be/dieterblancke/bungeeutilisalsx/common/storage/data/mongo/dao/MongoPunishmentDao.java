@@ -41,6 +41,7 @@ import org.bson.Document;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 public class MongoPunishmentDao implements PunishmentDao
@@ -84,52 +85,103 @@ public class MongoPunishmentDao implements PunishmentDao
     }
 
     @Override
-    public long getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
+    public CompletableFuture<Long> getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
     {
-        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
-
-        if ( type.isActivatable() )
+        return CompletableFuture.supplyAsync( () ->
         {
+            final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
+            if ( type.isActivatable() )
+            {
+                return collection.countDocuments( Filters.and(
+                        Filters.eq( "uuid", uuid.toString() ),
+                        Filters.gte( "date", date ),
+                        Filters.eq( "type", type.toString() ),
+                        Filters.eq( "punishmentaction_status", false )
+                ) );
+            }
+            else
+            {
+                return collection.countDocuments( Filters.and(
+                        Filters.eq( "uuid", uuid ),
+                        Filters.gte( "date", date ),
+                        Filters.eq( "punishmentaction_status", false )
+                ) );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Long> getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
             return collection.countDocuments( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.eq( "ip", ip ),
                     Filters.gte( "date", date ),
                     Filters.eq( "type", type.toString() ),
                     Filters.eq( "punishmentaction_status", false )
             ) );
-        }
-        else
-        {
-            return collection.countDocuments( Filters.and(
-                    Filters.eq( "uuid", uuid ),
-                    Filters.gte( "date", date ),
-                    Filters.eq( "punishmentaction_status", false )
-            ) );
-        }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public long getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    public CompletableFuture<Void> updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
     {
-        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+        return CompletableFuture.runAsync( () ->
+        {
+            final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
-        return collection.countDocuments( Filters.and(
-                Filters.eq( "ip", ip ),
-                Filters.gte( "date", date ),
-                Filters.eq( "type", type.toString() ),
-                Filters.eq( "punishmentaction_status", false )
-        ) );
+            if ( type.isActivatable() )
+            {
+                collection.find(
+                                Filters.and(
+                                        Filters.eq( "uuid", uuid.toString() ),
+                                        Filters.gte( "date", date ),
+                                        Filters.eq( "type", type.toString() ),
+                                        Filters.eq( "punishmentaction_status", false )
+                                ) )
+                        .sort( Sorts.ascending( "date" ) )
+                        .limit( limit )
+                        .forEach( (Consumer<? super Document>) doc ->
+                        {
+                            doc.put( "punishmentaction_status", true );
+
+                            save( collection, doc );
+                        } );
+            }
+            else
+            {
+                collection.find(
+                                Filters.and(
+                                        Filters.eq( "uuid", uuid.toString() ),
+                                        Filters.gte( "date", date ),
+                                        Filters.eq( "punishmentaction_status", false )
+                                ) )
+                        .sort( Sorts.ascending( "date" ) )
+                        .limit( limit )
+                        .forEach( (Consumer<? super Document>) doc ->
+                        {
+                            doc.put( "punishmentaction_status", true );
+
+                            save( collection, doc );
+                        } );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
+    public CompletableFuture<Void> updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
     {
-        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
-
-        if ( type.isActivatable() )
+        return CompletableFuture.runAsync( () ->
         {
+            final MongoCollection<Document> collection = db().getCollection( type.getTable() );
+
             collection.find(
                             Filters.and(
-                                    Filters.eq( "uuid", uuid.toString() ),
+                                    Filters.eq( "ip", ip ),
                                     Filters.gte( "date", date ),
                                     Filters.eq( "type", type.toString() ),
                                     Filters.eq( "punishmentaction_status", false )
@@ -142,60 +194,24 @@ public class MongoPunishmentDao implements PunishmentDao
 
                         save( collection, doc );
                     } );
-        }
-        else
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> savePunishmentAction( UUID uuid, String username, String ip, String uid )
+    {
+        return CompletableFuture.runAsync( () ->
         {
-            collection.find(
-                            Filters.and(
-                                    Filters.eq( "uuid", uuid.toString() ),
-                                    Filters.gte( "date", date ),
-                                    Filters.eq( "punishmentaction_status", false )
-                            ) )
-                    .sort( Sorts.ascending( "date" ) )
-                    .limit( limit )
-                    .forEach( (Consumer<? super Document>) doc ->
-                    {
-                        doc.put( "punishmentaction_status", true );
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
 
-                        save( collection, doc );
-                    } );
-        }
-    }
+            data.put( "uuid", uuid.toString() );
+            data.put( "user", username );
+            data.put( "ip", ip );
+            data.put( "actionid", uid );
+            data.put( "date", new Date() );
 
-    @Override
-    public void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
-    {
-        final MongoCollection<Document> collection = db().getCollection( type.getTable() );
-
-        collection.find(
-                        Filters.and(
-                                Filters.eq( "ip", ip ),
-                                Filters.gte( "date", date ),
-                                Filters.eq( "type", type.toString() ),
-                                Filters.eq( "punishmentaction_status", false )
-                        ) )
-                .sort( Sorts.ascending( "date" ) )
-                .limit( limit )
-                .forEach( (Consumer<? super Document>) doc ->
-                {
-                    doc.put( "punishmentaction_status", true );
-
-                    save( collection, doc );
-                } );
-    }
-
-    @Override
-    public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
-    {
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-
-        data.put( "uuid", uuid.toString() );
-        data.put( "user", username );
-        data.put( "ip", ip );
-        data.put( "actionid", uid );
-        data.put( "date", new Date() );
-
-        db().getCollection( "bu_punishmentactions" ).insertOne( new Document( data ) );
+            db().getCollection( "bu_punishmentactions" ).insertOne( new Document( data ) );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     // Recreating save api ...

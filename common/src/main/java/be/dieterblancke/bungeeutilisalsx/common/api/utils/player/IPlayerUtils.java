@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MojangUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import lombok.SneakyThrows;
 
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +44,7 @@ public interface IPlayerUtils
 
     UUID getUuidNoFallback( String targetName );
 
+    @SneakyThrows
     default UUID getUuid( final String targetName )
     {
         UUID uuid = this.getUuidNoFallback( targetName );
@@ -51,7 +53,7 @@ public interface IPlayerUtils
         {
             return uuid;
         }
-        uuid = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( targetName ).getUuid();
+        uuid = BuX.getApi().getStorageManager().getDao().getUserDao().getUuidFromName( targetName ).get();
 
         if ( uuid != null )
         {

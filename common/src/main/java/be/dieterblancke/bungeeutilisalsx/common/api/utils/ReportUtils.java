@@ -3,10 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 import com.dbsoftwares.configuration.api.IConfiguration;
 
-import java.util.List;
 import java.util.UUID;
 
 public class ReportUtils
@@ -26,7 +24,7 @@ public class ReportUtils
             return;
         }
 
-        final List<Report> reports = BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid );
-        reports.forEach( report -> report.accept( accepter ) );
+        BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid )
+                .thenAccept( reports -> reports.forEach( report -> report.accept( accepter ) ) );
     }
 }

@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.scheduler;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
@@ -26,4 +27,6 @@ public interface IScheduler
     {
         return this.runTaskRepeating( delay, period, unit.toJavaTimeUnit(), runnable );
     }
+
+    Executor getExecutorService();
 }

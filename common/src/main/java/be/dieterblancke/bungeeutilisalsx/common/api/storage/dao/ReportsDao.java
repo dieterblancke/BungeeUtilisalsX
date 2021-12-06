@@ -22,33 +22,33 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface ReportsDao
 {
 
-    void addReport( Report report );
+    CompletableFuture<Void> addReport( Report report );
 
-    void removeReport( long id );
+    CompletableFuture<Void> removeReport( long id );
 
-    Report getReport( long id );
+    CompletableFuture<Report> getReport( long id );
 
-    List<Report> getReports();
+    CompletableFuture<List<Report>> getReports();
 
-    List<Report> getReports( UUID uuid );
+    CompletableFuture<List<Report>> getReports( UUID uuid );
 
-    List<Report> getActiveReports();
+    CompletableFuture<List<Report>> getActiveReports();
 
-    List<Report> getHandledReports();
+    CompletableFuture<List<Report>> getHandledReports();
 
-    List<Report> getRecentReports( int days );
+    CompletableFuture<List<Report>> getRecentReports( int days );
 
-    boolean reportExists( long id );
+    CompletableFuture<Void> handleReport( long id, boolean accepted );
 
-    void handleReport( long id, boolean accepted );
+    CompletableFuture<List<Report>> getAcceptedReports();
 
-    List<Report> getAcceptedReports();
+    CompletableFuture<List<Report>> getDeniedReports();
 
-    List<Report> getDeniedReports();
+    CompletableFuture<List<Report>> getReportsHistory( String name );
 
-    List<Report> getReportsHistory( String name );
 }

@@ -27,6 +27,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class PunishmentDataCommandCall implements CommandCall
 {
@@ -49,54 +50,57 @@ public class PunishmentDataCommandCall implements CommandCall
             return;
         }
 
-        PunishmentInfo info = null;
+        CompletableFuture<PunishmentInfo> completableFuture = null;
         switch ( type )
         {
             case BAN:
             case TEMPBAN:
             case IPBAN:
             case IPTEMPBAN:
-                info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getById( id );
+                completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getById( id );
 
-                if ( info == null )
+                if ( completableFuture == null )
                 {
-                    info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( id );
+                    completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( id );
                 }
                 break;
             case MUTE:
             case TEMPMUTE:
             case IPMUTE:
             case IPTEMPMUTE:
-                info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getById( id );
+                completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getById( id );
 
-                if ( info == null )
+                if ( completableFuture == null )
                 {
-                    info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( id );
+                    completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( id );
                 }
                 break;
             case KICK:
-                info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKickById( id );
+                completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKickById( id );
                 break;
             case WARN:
-                info = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarnById( id );
+                completableFuture = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarnById( id );
                 break;
         }
 
-        if ( info == null )
+        completableFuture.thenAccept( info ->
         {
-            user.sendLangMessage(
-                    "punishments.punishmentdata.not-found",
-                    "{type}", type.toString().toLowerCase(),
-                    "{id}", id
-            );
-        }
-        else
-        {
-            user.sendLangMessage(
-                    "punishments.punishmentdata.found",
-                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[0] )
-            );
-        }
+            if ( info == null )
+            {
+                user.sendLangMessage(
+                        "punishments.punishmentdata.not-found",
+                        "{type}", type.toString().toLowerCase(),
+                        "{id}", id
+                );
+            }
+            else
+            {
+                user.sendLangMessage(
+                        "punishments.punishmentdata.found",
+                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[0] )
+                );
+            }
+        } );
     }
 
     @Override

@@ -935,16 +935,6 @@ public class Utils
     }
 
     /**
-     * Checks if the server is a Bukkit instance or not
-     *
-     * @return true if Bukkit instance, false if not
-     */
-    public static boolean isSpigot()
-    {
-        return classFound( "org.bukkit.Bukkit" );
-    }
-
-    /**
      * Gets the time left until a certain date
      *
      * @param format the format that should be replaced
@@ -1014,16 +1004,16 @@ public class Utils
                         .collect( Collectors.toList() )
         );
 
-        BuX.debug("Found " + classes + " classes in package " + packageName);
+        BuX.debug( "Found " + classes + " classes in package " + packageName );
 
         if ( classes.isEmpty() )
         {
-            BuX.debug("Class list is empty");
+            BuX.debug( "Class list is empty" );
             final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
 
             if ( src != null )
             {
-                BuX.debug("FOUND SRC");
+                BuX.debug( "FOUND SRC" );
                 try
                 {
                     final URL jar = src.getLocation();
@@ -1038,11 +1028,11 @@ public class Utils
                         }
                         final String name = e.getName().replace( "/", "." );
 
-                        BuX.debug("class name: " + name);
+                        BuX.debug( "class name: " + name );
 
                         if ( name.startsWith( packageName ) )
                         {
-                            BuX.debug("FOUND CLASS: " + name);
+                            BuX.debug( "FOUND CLASS: " + name );
 
                             if ( name.endsWith( ".class" ) )
                             {
@@ -1079,6 +1069,7 @@ public class Utils
      * @param name the name to get the data for
      * @return the data for the given user
      */
+    @SneakyThrows
     public static UserStorage getUserStorageIfUserExists( final User user, final String name )
     {
         final UserStorage storage;
@@ -1089,12 +1080,12 @@ public class Utils
         }
         else
         {
-            if ( !BuX.getApi().getStorageManager().getDao().getUserDao().exists( name ) )
+            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).get();
+
+            if ( !storage.isLoaded() )
             {
                 return null;
             }
-
-            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name );
         }
 
         return storage;

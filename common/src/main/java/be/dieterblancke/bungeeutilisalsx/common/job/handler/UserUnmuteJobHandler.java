@@ -7,7 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 
 import java.util.List;
 
-import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao.useServerPunishments;
 
 public class UserUnmuteJobHandler
 {

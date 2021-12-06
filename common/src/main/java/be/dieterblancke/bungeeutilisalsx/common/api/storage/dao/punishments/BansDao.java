@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -27,63 +26,48 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface BansDao
 {
 
-    static boolean useServerPunishments()
-    {
-        try
-        {
-            return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
-        }
-        catch ( Exception e )
-        {
-            return true;
-        }
-    }
+    CompletableFuture<Boolean> isBanned( UUID uuid, String server );
 
-    boolean isBanned( UUID uuid, String server );
+    CompletableFuture<Boolean> isIPBanned( String ip, String server );
 
-    boolean isIPBanned( String ip, String server );
+    CompletableFuture<PunishmentInfo> insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    boolean isBanned( PunishmentType type, UUID uuid, String server );
+    CompletableFuture<PunishmentInfo> insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
+    CompletableFuture<PunishmentInfo> insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
+    CompletableFuture<PunishmentInfo> insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
+    CompletableFuture<PunishmentInfo> getCurrentBan( UUID uuid, String server );
 
-    PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
+    CompletableFuture<PunishmentInfo> getCurrentIPBan( String ip, String server );
 
-    boolean isIPBanned( PunishmentType type, String ip, String server );
+    CompletableFuture<Void> removeCurrentBan( UUID uuid, String removedBy, String server );
 
-    PunishmentInfo getCurrentBan( UUID uuid, String server );
+    CompletableFuture<Void> removeCurrentIPBan( String ip, String removedBy, String server );
 
-    PunishmentInfo getCurrentIPBan( String ip, String server );
+    CompletableFuture<List<PunishmentInfo>> getBans( UUID uuid );
 
-    void removeCurrentBan( UUID uuid, String removedBy, String server );
+    CompletableFuture<List<PunishmentInfo>> getBansExecutedBy( String name );
 
-    void removeCurrentIPBan( String ip, String removedBy, String server );
+    CompletableFuture<List<PunishmentInfo>> getBans( UUID uuid, String server );
 
-    List<PunishmentInfo> getBans( UUID uuid );
+    CompletableFuture<List<PunishmentInfo>> getIPBans( String ip );
 
-    List<PunishmentInfo> getBansExecutedBy( String name );
+    CompletableFuture<List<PunishmentInfo>> getIPBans( String ip, String server );
 
-    List<PunishmentInfo> getBans( UUID uuid, String server );
+    CompletableFuture<List<PunishmentInfo>> getRecentBans( int limit );
 
-    List<PunishmentInfo> getIPBans( String ip );
+    CompletableFuture<PunishmentInfo> getById( String id );
 
-    List<PunishmentInfo> getIPBans( String ip, String server );
+    CompletableFuture<PunishmentInfo> getByPunishmentId( String punishmentUid );
 
-    List<PunishmentInfo> getRecentBans( int limit );
-
-    PunishmentInfo getById( String id );
-
-    PunishmentInfo getByPunishmentId( String punishmentUid );
-
-    boolean isPunishmentUidFound( String puid );
+    CompletableFuture<Boolean> isPunishmentUidFound( String puid );
 
     default String createUniqueBanId()
     {
@@ -93,7 +77,7 @@ public interface BansDao
         );
 
         // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
-        while ( this.isPunishmentUidFound( uid ) )
+        while ( this.isPunishmentUidFound( uid ).join() )
         {
             uid = Utils.createRandomString(
                     PunishmentDao.getPunishmentIdCharacters(),
@@ -104,7 +88,7 @@ public interface BansDao
         return uid;
     }
 
-    int softDeleteSince( String user, String removedBy, Date date );
+    CompletableFuture<Integer> softDeleteSince( String user, String removedBy, Date date );
 
-    int hardDeleteSince( String user, Date date );
+    CompletableFuture<Integer> hardDeleteSince( String user, Date date );
 }

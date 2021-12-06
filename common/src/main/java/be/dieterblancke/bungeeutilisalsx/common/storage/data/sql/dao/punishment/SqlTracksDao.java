@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.TracksDao.useServerPunishments;
@@ -20,109 +21,118 @@ public class SqlTracksDao implements TracksDao
 {
 
     @Override
-    public List<PunishmentTrackInfo> getTrackInfos( final UUID uuid, final String trackId, final String server )
+    public CompletableFuture<List<PunishmentTrackInfo>> getTrackInfos( final UUID uuid, final String trackId, final String server )
     {
-        final List<PunishmentTrackInfo> trackInfos = new ArrayList<>();
-        final String query;
-
-        if ( useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
-        }
-        else
-        {
-            query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, trackId );
-            pstmt.setBoolean( 3, true );
+            final List<PunishmentTrackInfo> trackInfos = new ArrayList<>();
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 4, server );
+                query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
+            }
+            else
+            {
+                query = "SELECT * FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
             }
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, trackId );
+                pstmt.setBoolean( 3, true );
+
+                if ( useServerPunishments() )
                 {
-                    trackInfos.add( new PunishmentTrackInfo(
-                            UUID.fromString( rs.getString( "uuid" ) ),
-                            rs.getString( "track_id" ),
-                            rs.getString( "server" ),
-                            rs.getString( "executed_by" ),
-                            Dao.formatStringToDate( rs.getString( "date" ) ),
-                            rs.getBoolean( "active" )
-                    ) );
+                    pstmt.setString( 4, server );
+                }
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        trackInfos.add( new PunishmentTrackInfo(
+                                UUID.fromString( rs.getString( "uuid" ) ),
+                                rs.getString( "track_id" ),
+                                rs.getString( "server" ),
+                                rs.getString( "executed_by" ),
+                                Dao.formatStringToDate( rs.getString( "date" ) ),
+                                rs.getBoolean( "active" )
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return trackInfos;
+            return trackInfos;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void addToTrack( final PunishmentTrackInfo trackInfo )
+    public CompletableFuture<Void> addToTrack( final PunishmentTrackInfo trackInfo )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_punishmenttracks (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, trackInfo.getUuid().toString() );
-            pstmt.setString( 2, trackInfo.getTrackId() );
-            pstmt.setString( 3, trackInfo.getServer() );
-            pstmt.setString( 4, trackInfo.getExecutedBy() );
-            pstmt.setString( 5, Dao.formatDateToString( trackInfo.getDate() ) );
-            pstmt.setBoolean( 6, trackInfo.isActive() );
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO bu_punishmenttracks (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  ) )
+            {
+                pstmt.setString( 1, trackInfo.getUuid().toString() );
+                pstmt.setString( 2, trackInfo.getTrackId() );
+                pstmt.setString( 3, trackInfo.getServer() );
+                pstmt.setString( 4, trackInfo.getExecutedBy() );
+                pstmt.setString( 5, Dao.formatDateToString( trackInfo.getDate() ) );
+                pstmt.setBoolean( 6, trackInfo.isActive() );
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void resetTrack( final UUID uuid, final String trackId, final String server )
+    public CompletableFuture<Void> resetTrack( final UUID uuid, final String trackId, final String server )
     {
-        final String query;
-
-        if ( useServerPunishments() )
+        return CompletableFuture.runAsync( () ->
         {
-            query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
-        }
-        else
-        {
-            query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, trackId );
-            pstmt.setBoolean( 3, true );
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 4, server );
+                query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ? AND server = ?;";
+            }
+            else
+            {
+                query = "DELETE FROM bu_punishmenttracks WHERE uuid = ? AND track_id = ? AND active = ?;";
             }
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, trackId );
+                pstmt.setBoolean( 3, true );
+
+                if ( useServerPunishments() )
+                {
+                    pstmt.setString( 4, server );
+                }
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 }

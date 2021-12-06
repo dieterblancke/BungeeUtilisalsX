@@ -70,7 +70,7 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
             return;
         }
 
-        if ( !dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        if ( !dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
             user.sendLangMessage( "friends.removerequest.no-request", "{user}", name );
             return;
