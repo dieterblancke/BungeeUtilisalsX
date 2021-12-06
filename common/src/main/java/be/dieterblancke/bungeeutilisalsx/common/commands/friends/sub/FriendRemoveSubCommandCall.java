@@ -53,12 +53,12 @@ public class FriendRemoveSubCommandCall implements CommandCall
 
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
-            if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ) )
+            if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
             {
                 FriendRemoveRequestSubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
                 return;
             }
-            if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+            if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
             {
                 FriendDenySubCommandCall.removeFriendRequest( storage, user, optionalTarget.orElse( null ) );
                 return;

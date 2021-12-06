@@ -45,75 +45,78 @@ public class FriendListSubCommandCall implements CommandCall
         }
 
         final int friendLimit = FriendUtils.getFriendLimit( user );
-        final int pendingRequests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() ).size();
-        final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
-        final int page;
 
-        if ( args.size() >= 1 )
+        BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() ).thenAccept( pendingRequests ->
         {
-            if ( MathUtils.isInteger( args.get( 0 ) ) )
-            {
-                final int tempPage = Integer.parseInt( args.get( 0 ) );
+            final int pages = (int) Math.ceil( (double) allFriends.size() / 15 );
+            final int page;
 
-                page = Math.min( tempPage, pages );
+            if ( args.size() >= 1 )
+            {
+                if ( MathUtils.isInteger( args.get( 0 ) ) )
+                {
+                    final int tempPage = Integer.parseInt( args.get( 0 ) );
+
+                    page = Math.min( tempPage, pages );
+                }
+                else
+                {
+                    page = 1;
+                }
             }
             else
             {
                 page = 1;
             }
-        }
-        else
-        {
-            page = 1;
-        }
 
-        final int previous = page > 1 ? page - 1 : 1;
-        final int next = Math.min( page + 1, pages );
+            final int previous = page > 1 ? page - 1 : 1;
+            final int next = Math.min( page + 1, pages );
 
-        int maxNumber = page * 10;
-        int minNumber = maxNumber - 10;
+            int maxNumber = page * 10;
+            int minNumber = maxNumber - 10;
 
-        if ( maxNumber > allFriends.size() )
-        {
-            maxNumber = allFriends.size();
-        }
+            if ( maxNumber > allFriends.size() )
+            {
+                maxNumber = allFriends.size();
+            }
 
-        final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
-        user.sendLangMessage(
-                "friends.list.head",
-                "{friendAmount}", allFriends.size(),
-                "{maxFriends}", friendLimit,
-                "{pendingFriends}", pendingRequests,
-                "{previousPage}", previous,
-                "{currentPage}", page,
-                "{nextPage}", next,
-                "{maxPages}", pages
-        );
-
-        final String now = user.getLanguageConfig().getConfig().getString( "friends.list.online" );
-        final String onlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.online" );
-        final String offlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.offline" );
-
-        for ( FriendData friend : friends )
-        {
+            final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
             user.sendLangMessage(
-                    "friends.list.format",
-                    "{friendName}", friend.getFriend(),
-                    "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ),
-                    "{online}", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
-                    "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() )
+                    "friends.list.head",
+                    "{friendAmount}", allFriends.size(),
+                    "{maxFriends}", friendLimit,
+                    "{pendingFriends}", pendingRequests,
+                    "{previousPage}", previous,
+                    "{currentPage}", page,
+                    "{nextPage}", next,
+                    "{maxPages}", pages
             );
-        }
-        user.sendLangMessage(
-                "friends.list.foot",
-                "{friendAmount}", allFriends.size(),
-                "{maxFriends}", friendLimit,
-                "{pendingFriends}", pendingRequests,
-                "{previousPage}", previous,
-                "{currentPage}", page,
-                "{nextPage}", next,
-                "{maxPages}", pages
-        );
+
+            final String now = user.getLanguageConfig().getConfig().getString( "friends.list.online" );
+            final String onlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.online" );
+            final String offlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.offline" );
+
+            for ( FriendData friend : friends )
+            {
+                user.sendLangMessage(
+                        "friends.list.format",
+                        "{friendName}", friend.getFriend(),
+                        "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ),
+                        "{online}", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
+                        "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() )
+                );
+            }
+            user.sendLangMessage(
+                    "friends.list.foot",
+                    "{friendAmount}", allFriends.size(),
+                    "{maxFriends}", friendLimit,
+                    "{pendingFriends}", pendingRequests,
+                    "{previousPage}", previous,
+                    "{currentPage}", page,
+                    "{nextPage}", next,
+                    "{maxPages}", pages
+            );
+        } );
     }
 
     @Override

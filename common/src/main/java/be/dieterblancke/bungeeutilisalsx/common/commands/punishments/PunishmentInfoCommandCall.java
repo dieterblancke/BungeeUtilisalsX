@@ -29,8 +29,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
-import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao.useServerPunishments;
 
 public class PunishmentInfoCommandCall implements CommandCall
 {
@@ -129,62 +130,42 @@ public class PunishmentInfoCommandCall implements CommandCall
             return;
         }
 
+        final CompletableFuture<PunishmentInfo> task;
         switch ( type )
         {
             case BAN:
             case TEMPBAN:
-                if ( dao.getBansDao().isBanned( storage.getUuid(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentBan( storage.getUuid(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getBansDao().getCurrentBan( storage.getUuid(), server );
                 break;
             case IPBAN:
             case IPTEMPBAN:
-                if ( dao.getBansDao().isIPBanned( storage.getIp(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getBansDao().getCurrentIPBan( storage.getIp(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getBansDao().getCurrentIPBan( storage.getIp(), server );
                 break;
             case MUTE:
             case TEMPMUTE:
-                if ( dao.getMutesDao().isMuted( storage.getUuid(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentMute( storage.getUuid(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getMutesDao().getCurrentMute( storage.getUuid(), server );
                 break;
             case IPMUTE:
             case IPTEMPMUTE:
-                if ( dao.getMutesDao().isIPMuted( storage.getIp(), server ) )
-                {
-                    sendInfoMessage( user, storage, type, true, dao.getMutesDao().getCurrentIPMute( storage.getIp(), server ) );
-                }
-                else
-                {
-                    sendInfoMessage( user, storage, type, false, null );
-                }
+                task = dao.getMutesDao().getCurrentIPMute( storage.getIp(), server );
                 break;
-            case KICK:
-            case WARN:
+            default:
+                task = null;
                 break;
+        }
+
+        if ( task != null )
+        {
+            task.thenAccept( info -> sendInfoMessage( user, storage, type, info ) );
         }
     }
 
-    private void sendInfoMessage( final User user, final UserStorage storage, final PunishmentType type,
-                                  final boolean punished, final PunishmentInfo info )
+    private void sendInfoMessage( final User user,
+                                  final UserStorage storage,
+                                  final PunishmentType type,
+                                  final PunishmentInfo info )
     {
-        if ( punished )
+        if ( info != null )
         {
             user.sendLangMessage(
                     "punishments.punishmentinfo.typeinfo.found",

@@ -22,7 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.MutesDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
@@ -40,498 +39,597 @@ import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class MongoMutesDao implements MutesDao
 {
 
     @Override
-    public boolean isMuted( final UUID uuid, final String server )
+    public CompletableFuture<Boolean> isMuted( final UUID uuid, final String server )
     {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "^(?!IP.*$).*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "^(?!IP.*$).*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", server ) );
+            }
 
-        return db()
-                .getCollection( PunishmentType.MUTE.getTable() )
-                .find( Filters.and( filters ) )
-                .limit( 1 )
-                .iterator()
-                .hasNext();
+            return db()
+                    .getCollection( PunishmentType.MUTE.getTable() )
+                    .find( Filters.and( filters ) )
+                    .limit( 1 )
+                    .iterator()
+                    .hasNext();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isIPMuted( final String ip, final String server )
+    public CompletableFuture<Boolean> isIPMuted( final String ip, final String server )
     {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "ip", ip ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "IP*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "ip", ip ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "IP*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", server ) );
+            }
 
-        return db()
-                .getCollection( PunishmentType.MUTE.getTable() )
-                .find( Filters.and( filters ) )
-                .limit( 1 )
-                .iterator()
-                .hasNext();
+            return db()
+                    .getCollection( PunishmentType.MUTE.getTable() )
+                    .find( Filters.and( filters ) )
+                    .limit( 1 )
+                    .iterator()
+                    .hasNext();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isMuted( final PunishmentType type, final UUID uuid, final String server )
+    public CompletableFuture<PunishmentInfo> insertMute( final UUID uuid,
+                                                         final String user,
+                                                         final String ip,
+                                                         final String reason,
+                                                         final String server,
+                                                         final boolean active,
+                                                         final String executedby )
     {
-        if ( type.isIP() || !type.isMute() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            return false;
-        }
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.eq( "active", true ),
-                Filters.eq( "type", type.toString() )
-        );
-        if ( BansDao.useServerPunishments() )
+            final String punishmentUid = this.createUniqueMuteId();
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+            data.put( "type", PunishmentType.MUTE.toString() );
+            data.put( "uuid", uuid.toString() );
+            data.put( "user", user );
+            data.put( "ip", ip );
+            data.put( "reason", reason );
+            data.put( "server", server );
+            data.put( "date", new Date() );
+            data.put( "duration", -1 );
+            data.put( "active", active );
+            data.put( "executed_by", executedby );
+            data.put( "removed", false );
+            data.put( "removed_by", null );
+            data.put( "punishmentaction_status", false );
+            data.put( "punishment_uid", punishmentUid );
+
+            db().getCollection( PunishmentType.MUTE.getTable() ).insertOne( new Document( data ) );
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.MUTE,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    -1,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertIPMute( final UUID uuid,
+                                                           final String user,
+                                                           final String ip,
+                                                           final String reason,
+                                                           final String server,
+                                                           final boolean active,
+                                                           final String executedby )
+    {
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
+            final String punishmentUid = this.createUniqueMuteId();
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+            data.put( "type", PunishmentType.IPMUTE.toString() );
+            data.put( "uuid", uuid.toString() );
+            data.put( "user", user );
+            data.put( "ip", ip );
+            data.put( "reason", reason );
+            data.put( "server", server );
+            data.put( "date", new Date() );
+            data.put( "duration", -1 );
+            data.put( "active", active );
+            data.put( "executed_by", executedby );
+            data.put( "removed", false );
+            data.put( "removed_by", null );
+            data.put( "punishmentaction_status", false );
+            data.put( "punishment_uid", punishmentUid );
 
-        return db()
-                .getCollection( type.getTable() )
-                .find( Filters.and( filters ) )
-                .limit( 1 )
-                .iterator()
-                .hasNext();
+            db().getCollection( PunishmentType.IPMUTE.getTable() ).insertOne( new Document( data ) );
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.IPMUTE,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    -1,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isIPMuted( final PunishmentType type, final String ip, final String server )
+    public CompletableFuture<PunishmentInfo> insertTempMute( final UUID uuid,
+                                                             final String user,
+                                                             final String ip,
+                                                             final String reason,
+                                                             final String server,
+                                                             final boolean active,
+                                                             final String executedby,
+                                                             final long duration )
     {
-        if ( !type.isMute() || !type.isIP() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            return false;
-        }
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "ip", ip ),
-                Filters.eq( "active", true ),
-                Filters.eq( "type", type.toString() )
-        );
-        if ( BansDao.useServerPunishments() )
+            final String punishmentUid = this.createUniqueMuteId();
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+            data.put( "type", PunishmentType.TEMPMUTE.toString() );
+            data.put( "uuid", uuid.toString() );
+            data.put( "user", user );
+            data.put( "ip", ip );
+            data.put( "reason", reason );
+            data.put( "server", server );
+            data.put( "date", new Date() );
+            data.put( "duration", duration );
+            data.put( "active", active );
+            data.put( "executed_by", executedby );
+            data.put( "removed", false );
+            data.put( "removed_by", null );
+            data.put( "punishmentaction_status", false );
+            data.put( "punishment_uid", punishmentUid );
+
+            db().getCollection( PunishmentType.TEMPMUTE.getTable() ).insertOne( new Document( data ) );
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.TEMPMUTE,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    duration,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertTempIPMute( final UUID uuid,
+                                                               final String user,
+                                                               final String ip,
+                                                               final String reason,
+                                                               final String server,
+                                                               final boolean active,
+                                                               final String executedby,
+                                                               final long duration )
+    {
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
-        return db()
-                .getCollection( type.getTable() )
-                .find( Filters.and( filters ) )
-                .limit( 1 )
-                .iterator()
-                .hasNext();
+            final String punishmentUid = this.createUniqueMuteId();
+            final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+            data.put( "type", PunishmentType.IPTEMPMUTE.toString() );
+            data.put( "uuid", uuid.toString() );
+            data.put( "user", user );
+            data.put( "ip", ip );
+            data.put( "reason", reason );
+            data.put( "server", server );
+            data.put( "date", new Date() );
+            data.put( "duration", duration );
+            data.put( "active", active );
+            data.put( "executed_by", executedby );
+            data.put( "removed", false );
+            data.put( "removed_by", null );
+            data.put( "punishmentaction_status", false );
+            data.put( "punishment_uid", punishmentUid );
+
+            db().getCollection( PunishmentType.IPTEMPMUTE.getTable() ).insertOne( new Document( data ) );
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.IPTEMPMUTE,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    duration,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
+    public CompletableFuture<PunishmentInfo> getCurrentMute( final UUID uuid, final String serverName )
     {
-        final String punishmentUid = this.createUniqueMuteId();
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put( "type", PunishmentType.MUTE.toString() );
-        data.put( "uuid", uuid.toString() );
-        data.put( "user", user );
-        data.put( "ip", ip );
-        data.put( "reason", reason );
-        data.put( "server", server );
-        data.put( "date", new Date() );
-        data.put( "duration", -1 );
-        data.put( "active", active );
-        data.put( "executed_by", executedby );
-        data.put( "removed", false );
-        data.put( "removed_by", null );
-        data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid", punishmentUid );
-
-        db().getCollection( PunishmentType.MUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.MUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
-    {
-        final String punishmentUid = this.createUniqueMuteId();
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put( "type", PunishmentType.IPMUTE.toString() );
-        data.put( "uuid", uuid.toString() );
-        data.put( "user", user );
-        data.put( "ip", ip );
-        data.put( "reason", reason );
-        data.put( "server", server );
-        data.put( "date", new Date() );
-        data.put( "duration", -1 );
-        data.put( "active", active );
-        data.put( "executed_by", executedby );
-        data.put( "removed", false );
-        data.put( "removed_by", null );
-        data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid", punishmentUid );
-
-        db().getCollection( PunishmentType.IPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPMUTE, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
-    {
-        final String punishmentUid = this.createUniqueMuteId();
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put( "type", PunishmentType.TEMPMUTE.toString() );
-        data.put( "uuid", uuid.toString() );
-        data.put( "user", user );
-        data.put( "ip", ip );
-        data.put( "reason", reason );
-        data.put( "server", server );
-        data.put( "date", new Date() );
-        data.put( "duration", duration );
-        data.put( "active", active );
-        data.put( "executed_by", executedby );
-        data.put( "removed", false );
-        data.put( "removed_by", null );
-        data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid", punishmentUid );
-
-        db().getCollection( PunishmentType.TEMPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
-    {
-        final String punishmentUid = this.createUniqueMuteId();
-        final LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
-        data.put( "type", PunishmentType.IPTEMPMUTE.toString() );
-        data.put( "uuid", uuid.toString() );
-        data.put( "user", user );
-        data.put( "ip", ip );
-        data.put( "reason", reason );
-        data.put( "server", server );
-        data.put( "date", new Date() );
-        data.put( "duration", duration );
-        data.put( "active", active );
-        data.put( "executed_by", executedby );
-        data.put( "removed", false );
-        data.put( "removed_by", null );
-        data.put( "punishmentaction_status", false );
-        data.put( "punishment_uid", punishmentUid );
-
-        db().getCollection( PunishmentType.IPTEMPMUTE.getTable() ).insertOne( new Document( data ) );
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPMUTE, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo getCurrentMute( final UUID uuid, final String serverName )
-    {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "^(?!IP.*$).*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", serverName ) );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "^(?!IP.*$).*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", serverName ) );
+            }
 
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final Document document = collection.find( Filters.and( filters ) ).first();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final Document document = collection.find( Filters.and( filters ) ).first();
 
-        if ( document != null )
+            if ( document != null )
+            {
+                return this.buildPunishmentInfo( document );
+            }
+
+            return null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> getCurrentIPMute( final String ip, final String serverName )
+    {
+        return CompletableFuture.supplyAsync( () ->
         {
-            return this.buildPunishmentInfo( document );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "ip", ip ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "IP*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", serverName ) );
+            }
 
-        return new PunishmentInfo();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final Document document = collection.find( Filters.and( filters ) ).first();
+
+            if ( document != null )
+            {
+                return this.buildPunishmentInfo( document );
+            }
+
+            return null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getCurrentIPMute( final String ip, final String serverName )
+    public CompletableFuture<Void> removeCurrentMute( final UUID uuid, final String removedBy, final String server )
     {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "ip", ip ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "IP*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.runAsync( () ->
         {
-            filters.add( Filters.eq( "server", serverName ) );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "^(?!IP.*$).*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", server ) );
+            }
+            final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final Document document = collection.find( Filters.and( filters ) ).first();
+            // updateMany, this if for some reason multiple mutes would be active at the same time.
+            coll.updateMany(
+                    Filters.and( filters ),
+                    Updates.combine(
+                            Updates.set( "active", false ),
+                            Updates.set( "removed", true ),
+                            Updates.set( "removed_by", removedBy ),
+                            Updates.set( "removed_at", new Date() )
+                    )
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
 
-        if ( document != null )
+    @Override
+    public CompletableFuture<Void> removeCurrentIPMute( final String ip, final String removedBy, final String server )
+    {
+        return CompletableFuture.runAsync( () ->
         {
-            return this.buildPunishmentInfo( document );
-        }
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "ip", ip ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "IP*" )
+            );
+            if ( PunishmentDao.useServerPunishments() )
+            {
+                filters.add( Filters.eq( "server", server ) );
+            }
+            final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
-        return new PunishmentInfo();
+            // updateMany, this if for some reason multiple mutes would be active at the same time.
+            coll.updateMany(
+                    Filters.and( filters ),
+                    Updates.combine(
+                            Updates.set( "active", false ),
+                            Updates.set( "removed", true ),
+                            Updates.set( "removed_by", removedBy ),
+                            Updates.set( "removed_at", new Date() )
+                    )
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void removeCurrentMute( final UUID uuid, final String removedBy, final String server )
+    public CompletableFuture<List<PunishmentInfo>> getMutes( final UUID uuid )
     {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "^(?!IP.*$).*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
-        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.regex( "type", "^(?!IP.*$).*" )
+            ) );
 
-        // updateMany, this if for some reason multiple mutes would be active at the same time.
-        coll.updateMany(
-                Filters.and( filters ),
-                Updates.combine(
-                        Updates.set( "active", false ),
-                        Updates.set( "removed", true ),
-                        Updates.set( "removed_by", removedBy ),
-                        Updates.set( "removed_at", new Date() )
-                )
-        );
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void removeCurrentIPMute( final String ip, final String removedBy, final String server )
+    public CompletableFuture<List<PunishmentInfo>> getMutes( final UUID uuid, final String serverName )
     {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "ip", ip ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "IP*" )
-        );
-        if ( BansDao.useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            filters.add( Filters.eq( "server", server ) );
-        }
-        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.regex( "type", "^(?!IP.*$).*" ),
+                    Filters.eq( "server", serverName )
+            ) );
 
-        // updateMany, this if for some reason multiple mutes would be active at the same time.
-        coll.updateMany(
-                Filters.and( filters ),
-                Updates.combine(
-                        Updates.set( "active", false ),
-                        Updates.set( "removed", true ),
-                        Updates.set( "removed_by", removedBy ),
-                        Updates.set( "removed_at", new Date() )
-                )
-        );
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getMutes( UUID uuid )
+    public CompletableFuture<List<PunishmentInfo>> getMutesExecutedBy( final String name )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.regex( "type", "^(?!IP.*$).*" )
-        ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.eq( "executed_by", name ) );
+
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getMutes( final UUID uuid, final String serverName )
+    public CompletableFuture<List<PunishmentInfo>> getIPMutes( final String ip )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.regex( "type", "^(?!IP.*$).*" ),
-                Filters.eq( "server", serverName )
-        ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "ip", ip ),
+                    Filters.regex( "type", "IP*" )
+            ) );
+
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getMutesExecutedBy( String name )
+    public CompletableFuture<List<PunishmentInfo>> getIPMutes( final String ip, final String serverName )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.eq( "executed_by", name ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "ip", ip ),
+                    Filters.regex( "type", "IP*" ),
+                    Filters.eq( "server", serverName )
+            ) );
+
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getIPMutes( String ip )
+    public CompletableFuture<List<PunishmentInfo>> getRecentMutes( final int limit )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "ip", ip ),
-                Filters.regex( "type", "IP*" )
-        ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final FindIterable<Document> documents = collection.find().limit( Math.min( limit, 200 ) );
+
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getIPMutes( final String ip, final String serverName )
+    public CompletableFuture<PunishmentInfo> getById( final String id )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "ip", ip ),
-                Filters.regex( "type", "IP*" ),
-                Filters.eq( "server", serverName )
-        ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final Document document = collection.find( Filters.eq( "_id", id ) ).first();
+
+            if ( document != null )
+            {
+                return this.buildPunishmentInfo( document );
+            }
+
+            return null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getRecentMutes( final int limit )
+    public CompletableFuture<PunishmentInfo> getByPunishmentId( final String punishmentUid )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final FindIterable<Document> documents = collection.find().limit( Math.min( limit, 200 ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final Document document = collection.find( Filters.eq( "punishment_uid", punishmentUid ) ).first();
+
+            if ( document != null )
+            {
+                return this.buildPunishmentInfo( document );
+            }
+
+            return null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getById( String id )
+    public CompletableFuture<List<PunishmentInfo>> getActiveMutes( final UUID uuid )
     {
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final Document document = collection.find( Filters.eq( "_id", id ) ).first();
-
-        if ( document != null )
+        return CompletableFuture.supplyAsync( () ->
         {
-            return this.buildPunishmentInfo( document );
-        }
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "^(?!IP.*$).*" )
+            ) );
 
-        return null;
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getByPunishmentId( String punishmentUid )
+    public CompletableFuture<List<PunishmentInfo>> getActiveIPMutes( final String ip )
     {
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final Document document = collection.find( Filters.eq( "punishment_uid", punishmentUid ) ).first();
-
-        if ( document != null )
+        return CompletableFuture.supplyAsync( () ->
         {
-            return this.buildPunishmentInfo( document );
-        }
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
+            final FindIterable<Document> documents = collection.find( Filters.and(
+                    Filters.eq( "ip", ip ),
+                    Filters.eq( "active", true ),
+                    Filters.regex( "type", "IP*" ) )
+            );
 
-        return null;
+            for ( Document document : documents )
+            {
+                punishments.add( this.buildPunishmentInfo( document ) );
+            }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getActiveMutes( final UUID uuid )
+    public CompletableFuture<Boolean> isPunishmentUidFound( final String puid )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "uuid", uuid.toString() ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "^(?!IP.*$).*" )
-        ) );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
+            final Document document = collection.find( Filters.eq( "punishment_uid", puid ) ).first();
+
+            return document != null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getActiveIPMutes( final String ip )
+    public CompletableFuture<Integer> softDeleteSince( final String user, final String removedBy, final Date date )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
-        final FindIterable<Document> documents = collection.find( Filters.and(
-                Filters.eq( "ip", ip ),
-                Filters.eq( "active", true ),
-                Filters.regex( "type", "IP*" ) )
-        );
-
-        for ( Document document : documents )
+        return CompletableFuture.supplyAsync( () ->
         {
-            punishments.add( this.buildPunishmentInfo( document ) );
-        }
-        return punishments;
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "executed_by", user ),
+                    Filters.gte( "date", date )
+            );
+            final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
+
+            return (int) coll.updateMany(
+                    Filters.and( filters ),
+                    Updates.combine(
+                            Updates.set( "active", false ),
+                            Updates.set( "removed", true ),
+                            Updates.set( "removed_by", removedBy ),
+                            Updates.set( "removed_at", new Date() )
+                    )
+            ).getModifiedCount();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isPunishmentUidFound( final String puid )
+    public CompletableFuture<Integer> hardDeleteSince( final String user, final Date date )
     {
-        final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
-        final Document document = collection.find( Filters.eq( "punishment_uid", puid ) ).first();
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<Bson> filters = Lists.newArrayList(
+                    Filters.eq( "executed_by", user ),
+                    Filters.gte( "date", date )
+            );
+            final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
-        return document != null;
-    }
-
-    @Override
-    public int softDeleteSince( final String user, final String removedBy, final Date date )
-    {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "executed_by", user ),
-                Filters.gte( "date", date )
-        );
-        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
-
-        return (int) coll.updateMany(
-                Filters.and( filters ),
-                Updates.combine(
-                        Updates.set( "active", false ),
-                        Updates.set( "removed", true ),
-                        Updates.set( "removed_by", removedBy ),
-                        Updates.set( "removed_at", new Date() )
-                )
-        ).getModifiedCount();
-    }
-
-    @Override
-    public int hardDeleteSince( final String user, final Date date )
-    {
-        final List<Bson> filters = Lists.newArrayList(
-                Filters.eq( "executed_by", user ),
-                Filters.gte( "date", date )
-        );
-        final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
-
-        return (int) coll.deleteMany( Filters.and( filters ) ).getDeletedCount();
+            return (int) coll.deleteMany( Filters.and( filters ) ).getDeletedCount();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     private MongoDatabase db()

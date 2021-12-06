@@ -25,34 +25,35 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface FriendsDao
 {
 
-    void addFriend( UUID user, UUID uuid );
+    CompletableFuture<Void> addFriend( UUID user, UUID uuid );
 
-    void removeFriend( UUID user, UUID uuid );
+    CompletableFuture<Void> removeFriend( UUID user, UUID uuid );
 
-    List<FriendData> getFriends( UUID uuid );
+    CompletableFuture<List<FriendData>> getFriends( UUID uuid );
 
-    long getAmountOfFriends( UUID uuid );
+    CompletableFuture<Long> getAmountOfFriends( UUID uuid );
 
-    void addFriendRequest( UUID user, UUID uuid );
+    CompletableFuture<Void> addFriendRequest( UUID user, UUID uuid );
 
-    void removeFriendRequest( UUID user, UUID uuid );
+    CompletableFuture<Void> removeFriendRequest( UUID user, UUID uuid );
 
-    List<FriendRequest> getIncomingFriendRequests( UUID uuid );
+    CompletableFuture<List<FriendRequest>> getIncomingFriendRequests( UUID uuid );
 
-    List<FriendRequest> getOutgoingFriendRequests( UUID uuid );
+    CompletableFuture<List<FriendRequest>> getOutgoingFriendRequests( UUID uuid );
 
-    boolean hasIncomingFriendRequest( UUID user, UUID uuid );
+    CompletableFuture<Boolean> hasIncomingFriendRequest( UUID user, UUID uuid );
 
-    boolean hasOutgoingFriendRequest( UUID user, UUID uuid );
+    CompletableFuture<Boolean> hasOutgoingFriendRequest( UUID user, UUID uuid );
 
-    void setSetting( UUID uuid, FriendSetting type, boolean value );
+    CompletableFuture<Void> setSetting( UUID uuid, FriendSetting type, boolean value );
 
-    boolean getSetting( UUID uuid, FriendSetting type );
+    CompletableFuture<Boolean> getSetting( UUID uuid, FriendSetting type );
 
-    FriendSettings getSettings( UUID uuid );
+    CompletableFuture<FriendSettings> getSettings( UUID uuid );
 
 }

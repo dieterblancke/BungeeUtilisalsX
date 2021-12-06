@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -48,7 +47,7 @@ public class TempMuteCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.tempmute.non-valid" );
             return;
         }
-        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
+        if ( dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.tempmute.already-muted" );
             return;
@@ -58,7 +57,7 @@ public class TempMuteCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertTempMute(
+        dao().getPunishmentDao().getMutesDao().insertTempMute(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
@@ -67,31 +66,32 @@ public class TempMuteCommandCall extends PunishmentCommand
                 true,
                 user.getName(),
                 time
-        );
-
-        super.attemptMute( storage, "punishments.tempmute.onmute", info );
-        user.sendLangMessage( "punishments.tempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
+        ).thenAccept( info ->
         {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.tempmute.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.tempmute.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempmute.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
+            super.attemptMute( storage, "punishments.tempmute.onmute", info );
+            user.sendLangMessage( "punishments.tempmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPMUTE );
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.tempmute.broadcast",
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.tempmute.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempmute.broadcast" ),
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+            }
+
+            punishmentArgs.launchPunishmentFinishEvent( PunishmentType.TEMPMUTE );
+        } );
     }
 
     @Override

@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -41,7 +40,7 @@ public class MuteCommandCall extends PunishmentCommand
     {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
-        if ( dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
+        if ( dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.mute.already-muted" );
             return;
@@ -52,7 +51,7 @@ public class MuteCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getMutesDao().insertMute(
+        dao().getPunishmentDao().getMutesDao().insertMute(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
@@ -60,31 +59,32 @@ public class MuteCommandCall extends PunishmentCommand
                 punishmentArgs.getServerOrAll(),
                 true,
                 user.getName()
-        );
-
-        super.attemptMute( storage, "punishments.mute.onmute", info );
-        user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
+        ).thenAccept( info ->
         {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.mute.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.mute.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.mute.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
+            super.attemptMute( storage, "punishments.mute.onmute", info );
+            user.sendLangMessage( "punishments.mute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.MUTE );
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.mute.broadcast",
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.mute.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.mute.broadcast" ),
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+            }
+
+            punishmentArgs.launchPunishmentFinishEvent( PunishmentType.MUTE );
+        } );
     }
 
     @Override

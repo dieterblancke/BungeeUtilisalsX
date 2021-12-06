@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -41,7 +40,8 @@ public class BanCommandCall extends PunishmentCommand
     {
         final String reason = punishmentArgs.getReason();
         final UserStorage storage = punishmentArgs.getStorage();
-        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ) )
+
+        if ( dao().getPunishmentDao().getBansDao().isBanned( storage.getUuid(), punishmentArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.ban.already-banned" );
             return;
@@ -52,8 +52,7 @@ public class BanCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-
-        final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertBan(
+        dao().getPunishmentDao().getBansDao().insertBan(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
@@ -61,32 +60,33 @@ public class BanCommandCall extends PunishmentCommand
                 punishmentArgs.getServerOrAll(),
                 true,
                 user.getName()
-        );
-
-        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
-        super.attemptKick( storage, "punishments.ban.kick", info );
-        user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
+        ).thenAccept( info ->
         {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.ban.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.ban.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
+            // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+            super.attemptKick( storage, "punishments.ban.kick", info );
+            user.sendLangMessage( "punishments.ban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
 
-        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.BAN );
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.ban.broadcast",
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.ban.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+            }
+
+            punishmentArgs.launchPunishmentFinishEvent( PunishmentType.BAN );
+        } );
     }
 
     @Override

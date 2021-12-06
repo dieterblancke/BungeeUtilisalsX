@@ -44,7 +44,8 @@ public class DomainsListSubCommandCall implements CommandCall
                 ) );
 
         BuX.getApi().getStorageManager().getDao().getUserDao().getJoinedHostList()
-                .thenAccept( (tempDomains) -> {
+                .thenAccept( ( tempDomains ) ->
+                {
                     final Map<String, Set<String>> domainLists = new HashMap<>();
 
                     tempDomains.forEach( ( domain, amount ) ->

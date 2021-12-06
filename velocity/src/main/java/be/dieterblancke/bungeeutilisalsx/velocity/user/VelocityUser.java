@@ -67,7 +67,7 @@ public class VelocityUser implements User
     private boolean socialSpy;
     private boolean commandSpy;
     private List<FriendData> friends = Lists.newArrayList();
-    private FriendSettings friendSettings;
+    private FriendSettings friendSettings = new FriendSettings();
     private boolean inStaffChat;
     private boolean msgToggled;
 
@@ -136,8 +136,8 @@ public class VelocityUser implements User
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
-            friends = dao.getFriendsDao().getFriends( uuid );
-            friendSettings = dao.getFriendsDao().getSettings( uuid );
+            dao.getFriendsDao().getFriends( uuid ).thenAccept( friendsList -> friends = friendsList );
+            dao.getFriendsDao().getSettings( uuid ).thenAccept( settings -> friendSettings = settings );
 
             BuX.debug( "Friend list of " + name );
             BuX.debug( Arrays.toString( friends.toArray() ) );

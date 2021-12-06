@@ -11,7 +11,6 @@ import be.dieterblancke.bungeeutilisalsx.webapi.service.UserService;
 import com.google.common.base.Strings;
 import graphql.kickstart.tools.GraphQLQueryResolver;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class Query implements GraphQLQueryResolver
     @RequiresPermission( ApiPermission.FIND_FRIENDS )
     public List<Friend> findFriends( final UUID uuid )
     {
-        final List<FriendData> friend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( uuid );
+        final List<FriendData> friend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( uuid ).join();
 
         return friend
                 .stream()
@@ -57,11 +56,11 @@ public class Query implements GraphQLQueryResolver
 
         if ( requestType == FriendRequestType.INCOMING )
         {
-            requests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( uuid );
+            requests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( uuid ).join();
         }
         else
         {
-            requests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( uuid );
+            requests = BuX.getApi().getStorageManager().getDao().getFriendsDao().getOutgoingFriendRequests( uuid ).join();
         }
 
         return requests
@@ -74,18 +73,18 @@ public class Query implements GraphQLQueryResolver
     @RequiresPermission( ApiPermission.FIND_BAN )
     public Punishment findCurrentBan( final UUID uuid, final String server )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentBan( uuid, server );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentBan( uuid, server ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
     @RequiresPermission( ApiPermission.FIND_BAN )
     public Punishment findCurrentIpBan( final String ip, final String server )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentIPBan( ip, server );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getCurrentIPBan( ip, server ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
@@ -96,11 +95,11 @@ public class Query implements GraphQLQueryResolver
 
         if ( Strings.isNullOrEmpty( server ) )
         {
-            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid );
+            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid ).join();
         }
         else
         {
-            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid, server );
+            bans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( uuid, server ).join();
         }
 
         return bans
@@ -117,11 +116,11 @@ public class Query implements GraphQLQueryResolver
 
         if ( Strings.isNullOrEmpty( server ) )
         {
-            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip );
+            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip ).join();
         }
         else
         {
-            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip, server );
+            ipBans = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( ip, server ).join();
         }
 
         return ipBans
@@ -135,6 +134,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllBansExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBansExecutedBy( name )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -144,9 +144,9 @@ public class Query implements GraphQLQueryResolver
     @RequiresPermission( ApiPermission.FIND_BAN )
     public Punishment findBanByPunishmentUid( final String uid )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( uid );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getByPunishmentId( uid ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
@@ -154,6 +154,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findRecentBans( final int limit )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getRecentBans( limit )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -163,18 +164,18 @@ public class Query implements GraphQLQueryResolver
     @RequiresPermission( ApiPermission.FIND_MUTE )
     public Punishment findCurrentMute( final UUID uuid, final String server )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentMute( uuid, server );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentMute( uuid, server ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
     @RequiresPermission( ApiPermission.FIND_MUTE )
     public Punishment findCurrentIpMute( final String ip, final String server )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentIPMute( ip, server );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getCurrentIPMute( ip, server ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
@@ -185,11 +186,11 @@ public class Query implements GraphQLQueryResolver
 
         if ( Strings.isNullOrEmpty( server ) )
         {
-            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid );
+            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid ).join();
         }
         else
         {
-            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid, server );
+            mutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( uuid, server ).join();
         }
 
         return mutes
@@ -206,11 +207,11 @@ public class Query implements GraphQLQueryResolver
 
         if ( Strings.isNullOrEmpty( server ) )
         {
-            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip );
+            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip ).join();
         }
         else
         {
-            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip, server );
+            ipMutes = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( ip, server ).join();
         }
 
         return ipMutes
@@ -224,6 +225,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllMutesExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutesExecutedBy( name )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -233,9 +235,9 @@ public class Query implements GraphQLQueryResolver
     @RequiresPermission( ApiPermission.FIND_MUTE )
     public Punishment findMuteByPunishmentUid( final String uid )
     {
-        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( uid );
+        final PunishmentInfo punishmentInfo = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getByPunishmentId( uid ).join();
 
-        return punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
+        return punishmentInfo != null && punishmentInfo.isLoaded() ? Punishment.of( punishmentInfo ) : null;
     }
 
     @Cacheable
@@ -243,6 +245,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findRecentMutes( final int limit )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getRecentMutes( limit )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -253,6 +256,7 @@ public class Query implements GraphQLQueryResolver
     public List<TrackData> findPunishmentTrackData( final UUID uuid, final String trackId, final String server )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getTracksDao().getTrackInfos( uuid, trackId, server )
+                .join()
                 .stream()
                 .map( TrackData::of )
                 .collect( Collectors.toList() );
@@ -263,6 +267,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllKicksFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( uuid )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -273,6 +278,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllKicksExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicksExecutedBy( name )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -283,6 +289,7 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllWarnsFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns( uuid )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
@@ -293,102 +300,95 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllWarnsExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarnsExecutedBy( name )
+                .join()
                 .stream()
                 .map( Punishment::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findAllReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports()
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findActiveReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getActiveReports()
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findHandledReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getHandledReports()
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findAcceptedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getAcceptedReports()
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findDeniedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getDeniedReports()
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findRecentReports( final int days )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getRecentReports( days )
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findReportsFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid )
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );
     }
 
     @Cacheable
-    @SneakyThrows
     @RequiresPermission( ApiPermission.FIND_REPORT )
     public List<Report> findReportsBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReportsHistory( name )
-                .get()
+                .join()
                 .stream()
                 .map( Report::of )
                 .collect( Collectors.toList() );

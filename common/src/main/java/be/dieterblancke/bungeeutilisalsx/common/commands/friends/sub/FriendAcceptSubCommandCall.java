@@ -98,7 +98,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
             return;
         }
 
-        if ( !dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        if ( !dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
             user.sendLangMessage( "friends.accept.no-request", "{user}", name );
             return;

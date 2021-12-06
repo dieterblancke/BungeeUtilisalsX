@@ -21,14 +21,15 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import com.google.gson.Gson;
-import lombok.SneakyThrows;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
 
 
 public class SqlOfflineMessageDao implements OfflineMessageDao
@@ -37,10 +38,10 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
     private static final Gson GSON = new Gson();
 
     @Override
-    @SneakyThrows
     public CompletableFuture<List<OfflineMessage>> getOfflineMessages( final String username )
     {
-        return CompletableFuture.supplyAsync( () -> {
+        return CompletableFuture.supplyAsync( () ->
+        {
             final List<OfflineMessage> messages = new ArrayList<>();
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -63,16 +64,20 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
                     }
                 }
             }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
 
             return messages;
         } );
     }
 
     @Override
-    @SneakyThrows
     public CompletableFuture<Void> sendOfflineMessage( final String username, final OfflineMessage message )
     {
-        return CompletableFuture.runAsync( () -> {
+        return CompletableFuture.runAsync( () ->
+        {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
                           "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
@@ -85,14 +90,18 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
 
                 pstmt.execute();
             }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+            }
         } );
     }
 
     @Override
-    @SneakyThrows
     public CompletableFuture<Void> updateOfflineMessage( final Long id, final boolean active )
     {
-        return CompletableFuture.runAsync( () -> {
+        return CompletableFuture.runAsync( () ->
+        {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
                           "update bu_offline_message set active = ? where id = ?;"
@@ -102,6 +111,10 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
                 pstmt.setLong( 2, id );
 
                 pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
         } );
     }

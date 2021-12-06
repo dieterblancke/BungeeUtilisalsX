@@ -73,8 +73,8 @@ public class CheckIpCommandCall implements CommandCall
 
             users.forEach( u ->
             {
-                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" );
-                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" );
+                final boolean banned = punishmentDao.getBansDao().isBanned( storage.getUuid(), "ALL" ).join();
+                final boolean ipbanned = punishmentDao.getBansDao().isIPBanned( storage.getIp(), "ALL" ).join();
 
                 String colorPath = "punishments.checkip.colors.";
                 if ( banned || ipbanned )

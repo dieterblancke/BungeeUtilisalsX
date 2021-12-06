@@ -25,13 +25,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.PlaceHolde
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.user.ConsoleUser;
 import com.velocitypowered.api.proxy.Player;
-
-import java.util.Comparator;
 
 public class UserPlaceHolderPack implements PlaceHolderPack
 {

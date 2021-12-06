@@ -34,779 +34,825 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
-import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao.useServerPunishments;
+import static be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao.useServerPunishments;
 
 public class SqlBansDao implements BansDao
 {
 
     @Override
-    public boolean isBanned( final UUID uuid, final String server )
+    public CompletableFuture<Boolean> isBanned( final UUID uuid, final String server )
     {
-        boolean exists = false;
-        final String query;
-        if ( useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
-                    " AND active = ? AND server = ? AND type NOT LIKE 'IP%');";
-        }
-        else
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
-                    " AND active = ? AND type NOT LIKE 'IP%');";
-        }
+            boolean exists = false;
+            final String query;
+            if ( useServerPunishments() )
+            {
+                query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
+                        " AND active = ? AND server = ? AND type NOT LIKE 'IP%');";
+            }
+            else
+            {
+                query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
+                        " AND active = ? AND type NOT LIKE 'IP%');";
+            }
 
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setBoolean( 2, true );
+
+                if ( useServerPunishments() )
+                {
+                    pstmt.setString( 3, server );
+                }
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        exists = rs.getBoolean( 1 );
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+
+            return exists;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> isIPBanned( final String ip, final String server )
+    {
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setBoolean( 2, true );
+            boolean exists = false;
+            final String query;
+            if ( useServerPunishments() )
+            {
+                query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
+                        " AND active = ? AND server = ? AND type LIKE 'IP%');";
+            }
+            else
+            {
+                query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
+                        " AND active = ? AND type LIKE 'IP%');";
+            }
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
+            {
+                pstmt.setString( 1, ip );
+                pstmt.setBoolean( 2, true );
+
+                if ( useServerPunishments() )
+                {
+                    pstmt.setString( 3, server );
+                }
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        exists = rs.getBoolean( 1 );
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+
+            return exists;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertBan( final UUID uuid,
+                                                        final String user,
+                                                        final String ip,
+                                                        final String reason,
+                                                        final String server,
+                                                        final boolean active,
+                                                        final String executedby )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final String punishmentUid = this.createUniqueBanId();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setBoolean( 6, active );
+                pstmt.setString( 7, executedby );
+                pstmt.setLong( 8, -1 );
+                pstmt.setString( 9, PunishmentType.BAN.toString() );
+                pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 11, punishmentUid );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.BAN,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    -1,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertIPBan( final UUID uuid,
+                                                          final String user,
+                                                          final String ip,
+                                                          final String reason,
+                                                          final String server,
+                                                          final boolean active,
+                                                          final String executedby )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final String punishmentUid = this.createUniqueBanId();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setBoolean( 6, active );
+                pstmt.setString( 7, executedby );
+                pstmt.setLong( 8, -1 );
+                pstmt.setString( 9, PunishmentType.IPBAN.toString() );
+                pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 11, punishmentUid );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.IPBAN,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    -1,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertTempBan( final UUID uuid,
+                                                            final String user,
+                                                            final String ip,
+                                                            final String reason,
+                                                            final String server,
+                                                            final boolean active,
+                                                            final String executedby,
+                                                            final long duration )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final String punishmentUid = this.createUniqueBanId();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setBoolean( 6, active );
+                pstmt.setString( 7, executedby );
+                pstmt.setLong( 8, duration );
+                pstmt.setString( 9, PunishmentType.TEMPBAN.toString() );
+                pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 11, punishmentUid );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.TEMPBAN,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    duration,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertTempIPBan( final UUID uuid,
+                                                              final String user,
+                                                              final String ip,
+                                                              final String reason,
+                                                              final String server,
+                                                              final boolean active,
+                                                              final String executedby,
+                                                              final long duration )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final String punishmentUid = this.createUniqueBanId();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setBoolean( 6, active );
+                pstmt.setString( 7, executedby );
+                pstmt.setLong( 8, duration );
+                pstmt.setString( 9, PunishmentType.IPTEMPBAN.toString() );
+                pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 11, punishmentUid );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo(
+                    PunishmentType.IPTEMPBAN,
+                    uuid,
+                    user,
+                    ip,
+                    reason,
+                    server,
+                    executedby,
+                    new Date(),
+                    duration,
+                    active,
+                    null,
+                    punishmentUid
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> getCurrentBan( final UUID uuid, final String serverName )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            PunishmentInfo info = null;
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 3, server );
+                query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%' LIMIT 1;";
+            }
+            else
+            {
+                query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%' LIMIT 1;";
             }
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setBoolean( 2, true );
+
+                if ( useServerPunishments() )
                 {
-                    exists = rs.getBoolean( 1 );
+                    pstmt.setString( 3, serverName );
+                }
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        info = this.buildPunishmentInfo( rs );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return exists;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isIPBanned( final String ip, final String server )
+    public CompletableFuture<PunishmentInfo> getCurrentIPBan( final String ip, final String serverName )
     {
-        boolean exists = false;
-        final String query;
-        if ( useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
-                    " AND active = ? AND server = ? AND type LIKE 'IP%');";
-        }
-        else
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
-                    " AND active = ? AND type LIKE 'IP%');";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, ip );
-            pstmt.setBoolean( 2, true );
+            PunishmentInfo info = null;
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 3, server );
+                query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%' LIMIT 1;";
+            }
+            else
+            {
+                query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND type LIKE 'IP%' LIMIT 1;";
             }
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, ip );
+                pstmt.setBoolean( 2, true );
+
+                if ( useServerPunishments() )
                 {
-                    exists = rs.getBoolean( 1 );
+                    pstmt.setString( 3, serverName );
+                }
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        info = this.buildPunishmentInfo( rs );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return exists;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isBanned( final PunishmentType type, final UUID uuid, final String server )
+    public CompletableFuture<Void> removeCurrentBan( final UUID uuid, final String removedBy, final String server )
     {
-        if ( type.isIP() || !type.isBan() )
+        return CompletableFuture.runAsync( () ->
         {
-            return false;
-        }
-        boolean exists = false;
-        final String query;
-        if ( useServerPunishments() )
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE uuid = ?" +
-                    " AND active = ? AND type = ? AND server = ?);";
-        }
-        else
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE uuid = ?" +
-                    " AND active = ? AND type = ?);";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setBoolean( 2, true );
-            pstmt.setString( 3, type.toString() );
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 4, server );
+                query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
+                        " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
             }
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            else
             {
-                if ( rs.next() )
-                {
-                    exists = rs.getBoolean( 1 );
-                }
+                query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
+                        " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
 
-        return exists;
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
+            {
+                pstmt.setBoolean( 1, false );
+                pstmt.setBoolean( 2, true );
+                pstmt.setString( 3, removedBy );
+                pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 5, uuid.toString() );
+                pstmt.setBoolean( 6, true );
+
+                if ( useServerPunishments() )
+                {
+                    pstmt.setString( 7, server );
+                }
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean isIPBanned( final PunishmentType type, final String ip, final String server )
+    public CompletableFuture<Void> removeCurrentIPBan( final String ip, final String removedBy, final String server )
     {
-        if ( !type.isBan() || !type.isIP() )
+        return CompletableFuture.runAsync( () ->
         {
-            return false;
-        }
-        boolean exists = false;
-        final String query;
-        if ( useServerPunishments() )
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE ip = ?" +
-                    " AND active = ? AND type = ? AND server = ?);";
-        }
-        else
-        {
-            query = "SELECT EXISTS(SELECT id FROM " + type.getTable() + " WHERE ip = ?" +
-                    " AND active = ? AND type = ?);";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, ip );
-            pstmt.setBoolean( 2, true );
-            pstmt.setString( 3, type.toString() );
+            final String query;
 
             if ( useServerPunishments() )
             {
-                pstmt.setString( 4, server );
+                query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
+                        " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
             }
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            else
             {
-                if ( rs.next() )
+                query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
+                        " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
+            }
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( query ) )
+            {
+                pstmt.setBoolean( 1, false );
+                pstmt.setBoolean( 2, true );
+                pstmt.setString( 3, removedBy );
+                pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 5, ip );
+                pstmt.setBoolean( 6, true );
+
+                if ( useServerPunishments() )
                 {
-                    exists = rs.getBoolean( 1 );
+                    pstmt.setString( 7, server );
+                }
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<PunishmentInfo>> getBans( final UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND type NOT LIKE 'IP%';"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-
-        return exists;
-    }
-
-    @Override
-    public PunishmentInfo insertBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
-    {
-        final String punishmentUid = this.createUniqueBanId();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setBoolean( 6, active );
-            pstmt.setString( 7, executedby );
-            pstmt.setLong( 8, -1 );
-            pstmt.setString( 9, PunishmentType.BAN.toString() );
-            pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 11, punishmentUid );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.BAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby )
-    {
-        final String punishmentUid = this.createUniqueBanId();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setBoolean( 6, active );
-            pstmt.setString( 7, executedby );
-            pstmt.setLong( 8, -1 );
-            pstmt.setString( 9, PunishmentType.IPBAN.toString() );
-            pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 11, punishmentUid );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPBAN, uuid, user, ip, reason, server, executedby, new Date(), -1, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertTempBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
-    {
-        final String punishmentUid = this.createUniqueBanId();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setBoolean( 6, active );
-            pstmt.setString( 7, executedby );
-            pstmt.setLong( 8, duration );
-            pstmt.setString( 9, PunishmentType.TEMPBAN.toString() );
-            pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 11, punishmentUid );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.TEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo insertTempIPBan( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration )
-    {
-        final String punishmentUid = this.createUniqueBanId();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                              "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setBoolean( 6, active );
-            pstmt.setString( 7, executedby );
-            pstmt.setLong( 8, duration );
-            pstmt.setString( 9, PunishmentType.IPTEMPBAN.toString() );
-            pstmt.setString( 10, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 11, punishmentUid );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.IPTEMPBAN, uuid, user, ip, reason, server, executedby, new Date(), duration, active, null, punishmentUid );
-    }
-
-    @Override
-    public PunishmentInfo getCurrentBan( final UUID uuid, final String serverName )
-    {
-        PunishmentInfo info = new PunishmentInfo();
-        final String query;
-
-        if ( useServerPunishments() )
-        {
-            query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%' LIMIT 1;";
-        }
-        else
-        {
-            query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%' LIMIT 1;";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setBoolean( 2, true );
-
-            if ( useServerPunishments() )
+            catch ( SQLException e )
             {
-                pstmt.setString( 3, serverName );
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<PunishmentInfo>> getBansExecutedBy( final String name )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE executed_by = ?;"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, name );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    info = this.buildPunishmentInfo( rs );
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return info;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getCurrentIPBan( final String ip, final String serverName )
+    public CompletableFuture<List<PunishmentInfo>> getBans( final UUID uuid, final String serverName )
     {
-        PunishmentInfo info = new PunishmentInfo();
-        final String query;
-
-        if ( useServerPunishments() )
+        return CompletableFuture.supplyAsync( () ->
         {
-            query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%' LIMIT 1;";
-        }
-        else
-        {
-            query = "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ? AND active = ? AND type LIKE 'IP%' LIMIT 1;";
-        }
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setString( 1, ip );
-            pstmt.setBoolean( 2, true );
-
-            if ( useServerPunishments() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND server = ? AND type NOT LIKE 'IP%';"
+                  ) )
             {
-                pstmt.setString( 3, serverName );
-            }
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, serverName );
 
-            try ( ResultSet rs = pstmt.executeQuery() )
-            {
-                if ( rs.next() )
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    info = this.buildPunishmentInfo( rs );
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-
-        return info;
-    }
-
-    @Override
-    public void removeCurrentBan( final UUID uuid, final String removedBy, final String server )
-    {
-        final String query;
-
-        if ( useServerPunishments() )
-        {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                    " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
-        }
-        else
-        {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                    " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
-        }
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setBoolean( 1, false );
-            pstmt.setBoolean( 2, true );
-            pstmt.setString( 3, removedBy );
-            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 5, uuid.toString() );
-            pstmt.setBoolean( 6, true );
-
-            if ( useServerPunishments() )
+            catch ( SQLException e )
             {
-                pstmt.setString( 7, server );
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void removeCurrentIPBan( final String ip, final String removedBy, final String server )
+    public CompletableFuture<List<PunishmentInfo>> getIPBans( final String ip )
     {
-        final String query;
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-        if ( useServerPunishments() )
-        {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                    " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
-        }
-        else
-        {
-            query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                    " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
-        }
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement( query ) )
-        {
-            pstmt.setBoolean( 1, false );
-            pstmt.setBoolean( 2, true );
-            pstmt.setString( 3, removedBy );
-            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 5, ip );
-            pstmt.setBoolean( 6, true );
-
-            if ( useServerPunishments() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND type LIKE 'IP%';"
+                  ) )
             {
-                pstmt.setString( 7, server );
-            }
+                pstmt.setString( 1, ip );
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-    }
-
-    @Override
-    public List<PunishmentInfo> getBans( final UUID uuid )
-    {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND type NOT LIKE 'IP%';"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
-            {
-                while ( rs.next() )
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getBansExecutedBy( String name )
+    public CompletableFuture<List<PunishmentInfo>> getIPBans( final String ip, final String serverName )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE executed_by = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, name );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND server = ? AND type LIKE 'IP%';"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, ip );
+                pstmt.setString( 2, serverName );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getBans( final UUID uuid, final String serverName )
+    public CompletableFuture<List<PunishmentInfo>> getRecentBans( final int limit )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND server = ? AND type NOT LIKE 'IP%';"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, serverName );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " LIMIT ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setInt( 1, Math.min( limit, 200 ) );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    while ( rs.next() )
+                    {
+                        punishments.add( this.buildPunishmentInfo( rs ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getIPBans( final String ip )
+    public CompletableFuture<PunishmentInfo> getById( final String id )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND type LIKE 'IP%';"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, ip );
+            PunishmentInfo info = null;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE id = ? LIMIT 1;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setInt( 1, Integer.parseInt( id ) );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    if ( rs.next() )
+                    {
+                        info = this.buildPunishmentInfo( rs );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getIPBans( final String ip, final String serverName )
+    public CompletableFuture<PunishmentInfo> getByPunishmentId( final String punishmentUid )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND server = ? AND type LIKE 'IP%';"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, ip );
-            pstmt.setString( 2, serverName );
+            PunishmentInfo info = null;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ? LIMIT 1;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, punishmentUid );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    if ( rs.next() )
+                    {
+                        info = this.buildPunishmentInfo( rs );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getRecentBans( final int limit )
+    public CompletableFuture<Boolean> isPunishmentUidFound( final String punishmentUid )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " LIMIT ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setInt( 1, Math.min( limit, 200 ) );
+            boolean uidFound = false;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, punishmentUid );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    punishments.add( this.buildPunishmentInfo( rs ) );
+                    if ( rs.next() )
+                    {
+                        uidFound = true;
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-
-        return punishments;
-    }
-
-    @Override
-    public PunishmentInfo getById( String id )
-    {
-        PunishmentInfo info = null;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE id = ? LIMIT 1;"
-              ) )
-        {
-            pstmt.setInt( 1, Integer.parseInt( id ) );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            catch ( SQLException e )
             {
-                if ( rs.next() )
-                {
-                    info = this.buildPunishmentInfo( rs );
-                }
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-
-        return info;
+            return uidFound;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getByPunishmentId( String punishmentUid )
+    public CompletableFuture<Integer> softDeleteSince( final String user, final String removedBy, final Date date )
     {
-        PunishmentInfo info = null;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ? LIMIT 1;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, punishmentUid );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            int records = 0;
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "update " + PunishmentType.BAN.getTable() + " set active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() + " where executed_by = ? and date >= ?;"
+                  ) )
             {
-                if ( rs.next() )
-                {
-                    info = this.buildPunishmentInfo( rs );
-                }
+                pstmt.setBoolean( 1, false );
+                pstmt.setBoolean( 2, true );
+                pstmt.setString( 3, removedBy );
+                pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
+                pstmt.setString( 5, user );
+                pstmt.setString( 6, Dao.formatDateToString( date ) );
+                records = pstmt.executeUpdate();
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-
-        return info;
-    }
-
-    @Override
-    public boolean isPunishmentUidFound( final String punishmentUid )
-    {
-        boolean uidFound = false;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ?;"
-              ) )
-        {
-            pstmt.setString( 1, punishmentUid );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            catch ( SQLException e )
             {
-                if ( rs.next() )
-                {
-                    uidFound = true;
-                }
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return uidFound;
+            return records;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public int softDeleteSince( final String user, final String removedBy, final Date date )
+    public CompletableFuture<Integer> hardDeleteSince( final String user, final Date date )
     {
-        int records = 0;
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "update " + PunishmentType.BAN.getTable() + " set active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() + " where executed_by = ? and date >= ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setBoolean( 1, false );
-            pstmt.setBoolean( 2, true );
-            pstmt.setString( 3, removedBy );
-            pstmt.setString( 4, Dao.formatDateToString( new Date() ) );
-            pstmt.setString( 5, user );
-            pstmt.setString( 6, Dao.formatDateToString( date ) );
-            records = pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return records;
-    }
-
-    @Override
-    public int hardDeleteSince( final String user, final Date date )
-    {
-        int records = 0;
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "delete from " + PunishmentType.BAN.getTable() + " where executed_by = ? and date >= ?;"
-              ) )
-        {
-            pstmt.setString( 1, user );
-            pstmt.setString( 2, Dao.formatDateToString( date ) );
-            records = pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return records;
+            int records = 0;
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "delete from " + PunishmentType.BAN.getTable() + " where executed_by = ? and date >= ?;"
+                  ) )
+            {
+                pstmt.setString( 1, user );
+                pstmt.setString( 2, Dao.formatDateToString( date ) );
+                records = pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return records;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     private PunishmentInfo buildPunishmentInfo( final ResultSet rs ) throws SQLException

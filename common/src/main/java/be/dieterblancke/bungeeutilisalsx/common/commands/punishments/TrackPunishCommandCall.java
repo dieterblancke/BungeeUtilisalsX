@@ -38,7 +38,10 @@ public class TrackPunishCommandCall extends PunishmentCommand
     }
 
     @Override
-    public void onPunishmentExecute( User user, List<String> args, List<String> parameters, PunishmentArgs punishmentArgs )
+    public void onPunishmentExecute( final User user,
+                                     final List<String> args,
+                                     final List<String> parameters,
+                                     final PunishmentArgs punishmentArgs )
     {
         final String reason = punishmentArgs.getReason();
         final PunishmentTrack track = ConfigFiles.PUNISHMENT_TRACKS.getPunishmentTrack( reason );
@@ -50,72 +53,75 @@ public class TrackPunishCommandCall extends PunishmentCommand
             return;
         }
 
-        final List<PunishmentTrackInfo> trackInfos = dao().getPunishmentDao().getTracksDao().getTrackInfos(
-                storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
-        );
-
-        if ( TrackUtils.isFinished( track, trackInfos ) )
-        {
-            user.sendLangMessage( "punishments.track.track-already-finished" );
-            return;
-        }
-        final PunishmentTrackInfo trackInfo = new PunishmentTrackInfo(
+        dao().getPunishmentDao().getTracksDao().getTrackInfos(
                 storage.getUuid(),
                 track.getIdentifier(),
-                punishmentArgs.getServerOrAll(),
-                user.getName(),
-                new Date(),
-                true
-        );
-        trackInfos.add( trackInfo );
-        dao().getPunishmentDao().getTracksDao().addToTrack( trackInfo );
-
-        TrackUtils.executeStageIfNeeded(
-                track,
-                trackInfos,
-                ( trackRecord ) -> TrackUtils.executeTrackActionFor(
-                        user,
-                        storage,
-                        track.getIdentifier(),
-                        trackRecord.getAction()
-                )
-        );
-
-        final Object[] messagePlaceholders = new Object[]{
-                "{user}", storage.getUserName(),
-                "{track}", track.getIdentifier(),
-                "{trackCount}", trackInfos.size(),
-                "{trackMax}", TrackUtils.getMaxRunsForTrack( track ),
-                "{executed_by}", user.getName()
-        };
-
-        user.sendLangMessage( "punishments.track.executed", messagePlaceholders );
-
-        if ( !parameters.contains( "-s" ) )
+                punishmentArgs.getServerOrAll()
+        ).thenAccept( trackInfos ->
         {
-            if ( parameters.contains( "-nbp" ) )
+            if ( TrackUtils.isFinished( track, trackInfos ) )
             {
-                BuX.getApi().langBroadcast(
-                        "punishments.track.broadcast",
-                        messagePlaceholders
-                );
+                user.sendLangMessage( "punishments.track.track-already-finished" );
+                return;
             }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.track.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.trackpunish.broadcast" ),
-                        messagePlaceholders
-                );
-            }
-        }
-
-        if ( TrackUtils.isFinished( track, trackInfos ) && track.isCanRunAgain() )
-        {
-            dao().getPunishmentDao().getTracksDao().resetTrack(
-                    storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+            final PunishmentTrackInfo trackInfo = new PunishmentTrackInfo(
+                    storage.getUuid(),
+                    track.getIdentifier(),
+                    punishmentArgs.getServerOrAll(),
+                    user.getName(),
+                    new Date(),
+                    true
             );
-        }
+            trackInfos.add( trackInfo );
+            dao().getPunishmentDao().getTracksDao().addToTrack( trackInfo );
+
+            TrackUtils.executeStageIfNeeded(
+                    track,
+                    trackInfos,
+                    ( trackRecord ) -> TrackUtils.executeTrackActionFor(
+                            user,
+                            storage,
+                            track.getIdentifier(),
+                            trackRecord.getAction()
+                    )
+            );
+
+            final Object[] messagePlaceholders = new Object[]{
+                    "{user}", storage.getUserName(),
+                    "{track}", track.getIdentifier(),
+                    "{trackCount}", trackInfos.size(),
+                    "{trackMax}", TrackUtils.getMaxRunsForTrack( track ),
+                    "{executed_by}", user.getName()
+            };
+
+            user.sendLangMessage( "punishments.track.executed", messagePlaceholders );
+
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.track.broadcast",
+                            messagePlaceholders
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.track.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.trackpunish.broadcast" ),
+                            messagePlaceholders
+                    );
+                }
+            }
+
+            if ( TrackUtils.isFinished( track, trackInfos ) && track.isCanRunAgain() )
+            {
+                dao().getPunishmentDao().getTracksDao().resetTrack(
+                        storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+                );
+            }
+        } );
     }
 
     @Override

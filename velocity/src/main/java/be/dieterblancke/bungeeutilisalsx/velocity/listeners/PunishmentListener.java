@@ -102,14 +102,10 @@ public class PunishmentListener
         ).getConfig();
 
         final BansDao bansDao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
-        PunishmentInfo info = null;
-        if ( bansDao.isBanned( uuid, server ) )
+        PunishmentInfo info = bansDao.getCurrentBan( uuid, server ).join();
+        if ( info == null )
         {
-            info = bansDao.getCurrentBan( uuid, server );
-        }
-        else if ( bansDao.isIPBanned( ip, server ) )
-        {
-            info = bansDao.getCurrentIPBan( ip, server );
+            info = bansDao.getCurrentIPBan( ip, server ).join();
         }
 
         if ( info == null )
