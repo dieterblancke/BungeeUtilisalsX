@@ -36,7 +36,7 @@ public class UserUtils
             onFailure.accept( "offline" );
             return Optional.empty();
         }
-        final UserStorage target = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( userName );
+        final UserStorage target = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( userName ).join();
         if ( target == null || !target.isLoaded() )
         {
             onFailure.accept( "never-joined" );

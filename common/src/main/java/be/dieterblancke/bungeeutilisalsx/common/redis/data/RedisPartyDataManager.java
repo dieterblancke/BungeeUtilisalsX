@@ -48,7 +48,6 @@ public class RedisPartyDataManager implements PartyDataManager
         redisManager.executeAsync( commands ->
         {
             commands.srem( PARTIES_KEY, party.getUuid().toString() );
-
             commands.hdel(
                     getPartyPrefix( party.getUuid() ),
                     "createdAt",
@@ -58,8 +57,23 @@ public class RedisPartyDataManager implements PartyDataManager
 
             for ( PartyMember partyMember : party.getPartyMembers() )
             {
-                this.removeMemberFromParty( commands, party, partyMember );
+                this.removeMemberFromParty( commands, party, partyMember, false );
             }
+
+            for ( PartyInvite partyInvite : party.getSentInvites() )
+            {
+                this.removeInviteFromParty( commands, party, partyInvite, false );
+            }
+
+            for ( PartyJoinRequest partyJoinRequest : party.getJoinRequests() )
+            {
+                this.removeJoinRequestFromParty( commands, party, partyJoinRequest, false );
+            }
+            commands.del(
+                    getPartyMemberPrefix( party.getUuid() ),
+                    getPartyJoinRequestPrefix( party.getUuid() ),
+                    getPartyInvitationPrefix( party.getUuid() )
+            );
         } );
     }
 
@@ -85,15 +99,19 @@ public class RedisPartyDataManager implements PartyDataManager
     {
         redisManager.executeAsync( commands ->
         {
-            removeMemberFromParty( commands, party, partyMember );
+            removeMemberFromParty( commands, party, partyMember, true );
         } );
     }
 
     private void removeMemberFromParty( final RedisClusterAsyncCommands<String, String> commands,
                                         final Party party,
-                                        final PartyMember partyMember )
+                                        final PartyMember partyMember,
+                                        final boolean srem )
     {
-        commands.srem( getPartyMemberPrefix( party.getUuid() ), partyMember.getUuid().toString() );
+        if ( srem )
+        {
+            commands.srem( getPartyMemberPrefix( party.getUuid() ), partyMember.getUuid().toString() );
+        }
 
         commands.hdel(
                 getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ),
@@ -157,14 +175,25 @@ public class RedisPartyDataManager implements PartyDataManager
     {
         redisManager.executeAsync( commands ->
         {
-            commands.srem( getPartyInvitationPrefix( party.getUuid() ), partyInvite.getInvitee().toString() );
-
-            commands.hdel(
-                    getPartyInvitationPrefix( party.getUuid(), partyInvite.getInvitee() ),
-                    "invitedAt",
-                    "invitedBy"
-            );
+            removeInviteFromParty( commands, party, partyInvite, true );
         } );
+    }
+
+    private void removeInviteFromParty( final RedisClusterAsyncCommands<String, String> commands,
+                                        final Party party,
+                                        final PartyInvite partyInvite,
+                                        final boolean srem )
+    {
+        if ( srem )
+        {
+            commands.srem( getPartyInvitationPrefix( party.getUuid() ), partyInvite.getInvitee().toString() );
+        }
+
+        commands.hdel(
+                getPartyInvitationPrefix( party.getUuid(), partyInvite.getInvitee() ),
+                "invitedAt",
+                "invitedBy"
+        );
     }
 
     @Override
@@ -182,13 +211,24 @@ public class RedisPartyDataManager implements PartyDataManager
     {
         redisManager.executeAsync( commands ->
         {
-            commands.srem( getPartyJoinRequestPrefix( party.getUuid() ), partyJoinRequest.getRequester().toString() );
-
-            commands.hdel(
-                    getPartyJoinRequestPrefix( party.getUuid(), partyJoinRequest.getRequester() ),
-                    "requestedAt"
-            );
+            removeJoinRequestFromParty( commands, party, partyJoinRequest, true );
         } );
+    }
+
+    private void removeJoinRequestFromParty( final RedisClusterAsyncCommands<String, String> commands,
+                                             final Party party,
+                                             final PartyJoinRequest partyJoinRequest,
+                                             final boolean srem )
+    {
+        if ( srem )
+        {
+            commands.srem( getPartyJoinRequestPrefix( party.getUuid() ), partyJoinRequest.getRequester().toString() );
+        }
+
+        commands.hdel(
+                getPartyJoinRequestPrefix( party.getUuid(), partyJoinRequest.getRequester() ),
+                "requestedAt"
+        );
     }
 
     @Override
@@ -200,7 +240,7 @@ public class RedisPartyDataManager implements PartyDataManager
                     .stream()
                     .map( partyUuid ->
                     {
-                        final Map<String, String> partyData = commands.hgetall(getPartyPrefix( partyUuid ));
+                        final Map<String, String> partyData = commands.hgetall( getPartyPrefix( partyUuid ) );
                         final Party party = new Party(
                                 UUID.fromString( partyUuid ),
                                 new Date( Long.parseLong( partyData.get( "createdAt" ) ) ),
