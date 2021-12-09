@@ -29,7 +29,7 @@ public class PartyListSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        // TODO
+        // TODO: also add /party list [members / invites / joinrequests] [page] (defaults to members)
     }
 
     @Override
