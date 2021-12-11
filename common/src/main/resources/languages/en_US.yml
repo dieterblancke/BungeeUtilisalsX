@@ -248,6 +248,7 @@ general-commands:
     pm-cmd-disabled: '&eYou cannot send or receive any private messages while you have them &cdisabled&e.'
     not-receiving-pms: '&eThis user currently has private messages &cdisabled&e!'
   shout:
+    usage: '&ePlease use &b/shout (message)&e!'
     shout-broadcast: '&6&lSHOUT &e&l{servername} &b{user} &8» &f{message}'
     shout-broadcast-staff: '&6&lSHOUT &e&l{servername} &c(Staff) &b{user} &8» &f{message}'
   staffannouncement:
