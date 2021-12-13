@@ -7,13 +7,11 @@ import be.dieterblancke.bungeeutilisalsx.common.migration.Migration;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import lombok.SneakyThrows;
 import org.bson.Document;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.logging.Level;
@@ -58,35 +56,17 @@ public class MongoMigrationManager implements MigrationManager
 
     private boolean migrationExists( final int version )
     {
-        boolean exists = false;
-        try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
-              PreparedStatement ps = connection.prepareStatement(
-                      "SELECT id FROM bu_migrations WHERE migration_id = ? AND success = ?;"
-              )
-        )
-        {
-            ps.setInt( 1, version );
-            ps.setBoolean( 2, true );
+        final MongoCollection<Document> migrationColl = db().getCollection( "bu_migrations" );
 
-            try ( ResultSet rs = ps.executeQuery() )
-            {
-                if ( rs.next() )
-                {
-                    exists = true;
-                }
-            }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "Could not check migration status", e );
-        }
-        return exists;
+        return migrationColl.find( Filters.and(
+                Filters.eq( "migration_id", version ),
+                Filters.eq( "success", true )
+        ) ).iterator().hasNext();
     }
 
     private void createMigration( final int migrationId, final String type, final String className, final Date createdAt, final boolean success )
     {
-        final MongoDBStorageManager mongoDBStorageManager = (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager();
-        final MongoCollection<Document> migrationColl = mongoDBStorageManager.getDatabase().getCollection( "bu_migrations" );
+        final MongoCollection<Document> migrationColl = db().getCollection( "bu_migrations" );
 
         migrationColl.insertOne( new Document()
                 .append( "migration_id", migrationId )
@@ -94,5 +74,10 @@ public class MongoMigrationManager implements MigrationManager
                 .append( "script", className )
                 .append( "created_at", createdAt )
                 .append( "success", success ) );
+    }
+
+    private MongoDatabase db()
+    {
+        return ( (MongoDBStorageManager) BuX.getInstance().getAbstractStorageManager() ).getDatabase();
     }
 }
