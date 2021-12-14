@@ -70,6 +70,7 @@ public class BungeeUser implements User
     private boolean inStaffChat;
     private boolean msgToggled;
     private boolean vanished;
+    private String group;
 
     @Override
     public void load( final Object playerInstance )
@@ -147,6 +148,7 @@ public class BungeeUser implements User
             friendSettings = new FriendSettings();
         }
 
+        BuX.getInstance().getActivePermissionIntegration().getGroup( uuid ).thenAccept( group -> this.group = group );
         BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
         BuX.getApi().getEventLoader().launchEventAsync( new UserLoadEvent( this ) );
     }

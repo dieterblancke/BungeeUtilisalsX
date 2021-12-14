@@ -433,4 +433,9 @@ public interface User extends MessageRecipient
      * @param vanished the vanish state to be set
      */
     void setVanished( boolean vanished );
+
+    /**
+     * @return the cached user group
+     */
+    String getGroup();
 }

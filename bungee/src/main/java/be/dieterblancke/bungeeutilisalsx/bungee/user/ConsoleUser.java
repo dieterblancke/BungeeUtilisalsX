@@ -310,4 +310,10 @@ public class ConsoleUser implements User
     {
         // do nothing
     }
+
+    @Override
+    public String getGroup()
+    {
+        return "";
+    }
 }
