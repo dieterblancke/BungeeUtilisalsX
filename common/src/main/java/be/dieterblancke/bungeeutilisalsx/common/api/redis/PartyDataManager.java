@@ -26,6 +26,8 @@ public interface PartyDataManager
 
     void setChatStatus( Party party, PartyMember partyMember, boolean chat );
 
+    void setPartyMemberRole( Party party, PartyMember partyMember, String partyRole );
+
     void addInviteToParty( Party party, PartyInvite partyInvite );
 
     void removeInviteFromParty( Party party, PartyInvite partyInvite );

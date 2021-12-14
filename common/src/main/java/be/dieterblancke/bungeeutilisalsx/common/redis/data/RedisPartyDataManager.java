@@ -118,6 +118,7 @@ public class RedisPartyDataManager implements PartyDataManager
                 "userName",
                 "joinedAt",
                 "nickName",
+                "partyRole",
                 "partyOwner",
                 "inactive",
                 "chat"
@@ -157,6 +158,15 @@ public class RedisPartyDataManager implements PartyDataManager
         redisManager.executeAsync( commands ->
         {
             commands.hset( getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ), "chat", String.valueOf( chat ) );
+        } );
+    }
+
+    @Override
+    public void setPartyMemberRole( final Party party, final PartyMember partyMember, final String partyRole )
+    {
+        redisManager.executeAsync( commands ->
+        {
+            commands.hset( getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ), "partyRole", partyRole );
         } );
     }
 

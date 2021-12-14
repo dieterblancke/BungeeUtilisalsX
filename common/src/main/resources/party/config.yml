@@ -34,6 +34,7 @@ party-roles:
     permissions:
       - INVITE
       - KICK
+      - WARP
 
 command:
   aliases: 'party, bparty'

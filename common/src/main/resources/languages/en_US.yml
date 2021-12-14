@@ -811,7 +811,7 @@ party:
     invite-self: '&eYou cannot invite yourself to your own party.'
     already-in-party: '&b{user} &eis already in your party!'
     already-in-other-party: '&b{user} &eis already in another party!'
-    not-allowed: '&eOnly the &bparty owner &ecan invite people to the party!'
+    not-allowed: '&eYou do not have the permission to invite people to the party!'
     ignored: '&eYou cannot invite people that have ignored you!'
     invited: '&eYou have been invited to &b{user}''s &bparty! Use &b/party accept {user} &eto join the party!'
     invited-broadcast: '&b{user} &ehas been invited to the party!'
@@ -839,11 +839,13 @@ party:
     broadcast: '&b{old-owner} &ehas passed the ownership of the party to &b{new-owner}&e!'
   kick:
     usage: '&ePlease use &b/party kick (user)&e!'
-    not-allowed: '&eOnly the &bparty owner &ecan kick people from the party!'
+    not-allowed: '&eYou do not have the permission to kick people from the party!'
     not-in-party: '&eThis user is not in your party!'
     kick: '&eYou have kicked &b{kickedUser} &efrom your party!'
     kicked-broadcast: '&b{kickedUser} &ehas been kicked from the party by &b{user}&e!'
     kicked: '&eYou have been kicked from the party by &b{user}&e!'
+  warp:
+    not-allowed: '&eYou do not have the permission to warp your party to your server!'
 
 custom:
   ingamemotd:

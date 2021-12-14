@@ -19,11 +19,13 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
+import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Getter
@@ -76,11 +78,23 @@ public class PartyConfig extends Config
         return partyRoles;
     }
 
+    public Optional<PartyRole> findPartyRole( final String partyRole )
+    {
+        if ( Strings.isNullOrEmpty( partyRole ) )
+        {
+            return Optional.empty();
+        }
+        return partyRoles
+                .stream()
+                .filter( it -> it.getName().equals( partyRole ) )
+                .findAny();
+    }
+
     public enum PartyRolePermission
     {
         INVITE,
         KICK,
-        SETTINGS
+        WARP
     }
 
     @Value

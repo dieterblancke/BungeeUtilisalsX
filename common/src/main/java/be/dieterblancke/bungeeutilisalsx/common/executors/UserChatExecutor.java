@@ -209,6 +209,8 @@ public class UserChatExecutor implements EventExecutor
                         .findFirst()
                         .ifPresent( member ->
                         {
+                            event.setCancelled( true );
+
                             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                                     party,
                                     "party.chat.format",

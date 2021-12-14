@@ -18,10 +18,16 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PartyWarpSubCommandCall implements CommandCall
 {
@@ -29,7 +35,22 @@ public class PartyWarpSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        // TODO
+        final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
+
+        if ( !optionalParty.isPresent() )
+        {
+            user.sendLangMessage( "party.not-in-party" );
+            return;
+        }
+        final Party party = optionalParty.get();
+
+        if ( !PartyUtils.hasPermission( party, user, PartyRolePermission.WARP ) )
+        {
+            user.sendLangMessage( "party.warp.not-allowed" );
+            return;
+        }
+
+        // TODO (also check for specific party member warping (/party warp didjee2 for example))
     }
 
     @Override

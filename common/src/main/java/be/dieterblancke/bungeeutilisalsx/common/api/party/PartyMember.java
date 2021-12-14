@@ -1,12 +1,11 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.party;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +16,7 @@ public class PartyMember
     private final String userName;
     private final Date joinedAt;
     private String nickName;
+    private PartyRole partyRole;
     private boolean partyOwner;
     private boolean inactive;
     private boolean chat;
@@ -28,6 +28,7 @@ public class PartyMember
                 memberData.get( "userName" ),
                 new Date( Long.parseLong( memberData.get( "joinedAt" ) ) ),
                 memberData.get( "nickName" ),
+                ConfigFiles.PARTY_CONFIG.findPartyRole( memberData.getOrDefault( "partyRole", null ) ).orElse( null ),
                 Boolean.parseBoolean( memberData.get( "partyOwner" ) ),
                 Boolean.parseBoolean( memberData.get( "inactive" ) ),
                 Boolean.parseBoolean( memberData.get( "chat" ) )
@@ -41,6 +42,7 @@ public class PartyMember
         memberData.put( "userName", userName );
         memberData.put( "joinedAt", String.valueOf( joinedAt.getTime() ) );
         memberData.put( "nickName", nickName );
+        memberData.put( "partyRole", Optional.ofNullable( partyRole ).map( PartyRole::getName ).orElse( "" ) );
         memberData.put( "partyOwner", String.valueOf( partyOwner ) );
         memberData.put( "inactive", String.valueOf( inactive ) );
         memberData.put( "chat", String.valueOf( chat ) );

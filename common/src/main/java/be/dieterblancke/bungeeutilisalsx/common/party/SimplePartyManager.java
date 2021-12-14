@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
 
 import java.util.*;
 
@@ -45,6 +46,7 @@ public class SimplePartyManager implements PartyManager
                 leader.getName(),
                 new Date(),
                 leader.getName(),
+                null,
                 true,
                 false,
                 false
@@ -271,7 +273,26 @@ public class SimplePartyManager implements PartyManager
 
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {
-            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setOwnerStatus( party, partyMember, chat );
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setChatStatus( party, partyMember, chat );
+        }
+    }
+
+    @Override
+    public void setPartyMemberRole( final Party party, final PartyMember partyMember, final PartyRole partyRole )
+    {
+        partyMember.setPartyRole( partyRole );
+
+        final String partyRoleName = Optional.ofNullable( partyRole ).map( PartyRole::getName ).orElse( null );
+        final PartySetPartyMemberRoleJob partySetPartyMemberRoleJob = new PartySetPartyMemberRoleJob( party, partyMember.getUuid(), partyRoleName );
+        BuX.getInstance().getJobManager().executeJob( partySetPartyMemberRoleJob );
+
+        if ( BuX.getInstance().isRedisManagerEnabled() )
+        {
+            BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setPartyMemberRole(
+                    party,
+                    partyMember,
+                    partyRoleName
+            );
         }
     }
 

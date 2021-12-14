@@ -23,9 +23,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyInvite;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
 
 import java.util.Date;
 import java.util.List;
@@ -51,7 +53,7 @@ public class PartyInviteSubCommandCall implements CommandCall
             user.sendLangMessage( "party.invite.usage" );
             return;
         }
-        if ( !party.getOwner().getUuid().equals( user.getUuid() ) )
+        if ( !PartyUtils.hasPermission( party, user, PartyRolePermission.INVITE ) )
         {
             user.sendLangMessage( "party.invite.not-allowed" );
             return;

@@ -23,24 +23,24 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
 
-public class PartySettingsSubCommandCall implements CommandCall
+public class PartyRoleSubCommandCall implements CommandCall
 {
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        // TODO (also add party roles with settings in config)
+        // TODO
     }
 
     @Override
     public String getDescription()
     {
-        return "Gets or changes a party setting.";
+        return "Warps all party members to your current server.";
     }
 
     @Override
     public String getUsage()
     {
-        return "/party setting (setting) [value]";
+        return "/party warp";
     }
 }
