@@ -12,6 +12,10 @@ member-limits:
   - permission: bungeeutilisalsx.party.limits.vip
     limit: 25
 
+# A list of servers that you cannot be warped FROM (for example, combat log servers, login servers etc)
+disabled-warp-from-servers:
+  - LoginServers
+
 inactivity-period:
   # How often should BungeeUtilisalsX scan for inactive parties (in seconds)?
   # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.

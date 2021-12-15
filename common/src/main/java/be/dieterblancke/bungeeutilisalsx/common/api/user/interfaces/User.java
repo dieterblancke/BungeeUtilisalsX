@@ -34,6 +34,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -438,4 +439,8 @@ public interface User extends MessageRecipient
      * @return the cached user group
      */
     String getGroup();
+
+    default Optional<IProxyServer> getCurrentServer() {
+        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo(this.getServerName()) );
+    }
 }

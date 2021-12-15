@@ -19,6 +19,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.Value;
@@ -33,6 +35,7 @@ public class PartyConfig extends Config
 {
 
     private final List<PartyRole> partyRoles = new ArrayList<>();
+    private final List<ServerGroup> disabledWarpServers = new ArrayList<>();
 
     public PartyConfig( String location )
     {
@@ -43,6 +46,7 @@ public class PartyConfig extends Config
     public void purge()
     {
         this.partyRoles.clear();
+        this.disabledWarpServers.clear();
     }
 
     @Override
@@ -61,6 +65,12 @@ public class PartyConfig extends Config
                                 .map( PartyRolePermission::valueOf )
                                 .collect( Collectors.toList() )
                 ) ) );
+
+
+        config.getStringList( "disabled-warp-from-servers" )
+                .stream()
+                .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
+                .forEach( this.disabledWarpServers::add );
     }
 
     public int getPartyInactivityPeriod()
@@ -88,6 +98,11 @@ public class PartyConfig extends Config
                 .stream()
                 .filter( it -> it.getName().equals( partyRole ) )
                 .findAny();
+    }
+
+    public boolean canWarpFrom( final String currentMemberServer )
+    {
+        return disabledWarpServers.stream().noneMatch( group -> group.isInGroup( currentMemberServer ) );
     }
 
     public enum PartyRolePermission

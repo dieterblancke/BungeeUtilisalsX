@@ -21,10 +21,12 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 
 import java.util.List;
 import java.util.Optional;
@@ -50,7 +52,53 @@ public class PartyWarpSubCommandCall implements CommandCall
             return;
         }
 
-        // TODO (also check for specific party member warping (/party warp didjee2 for example))
+        user.getCurrentServer().ifPresentOrElse( currentServer ->
+        {
+            final List<PartyMember> partyMembersToWarp;
+            if ( args.size() == 1 )
+            {
+                final String targetName = args.get( 0 );
+
+                partyMembersToWarp = party.getPartyMembers()
+                        .stream()
+                        .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
+                        .filter( m ->
+                        {
+                            final String currentMemberServer = Optional.ofNullable(
+                                    BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
+                            ).map( IProxyServer::getName ).orElse( "" );
+
+                            return !currentServer.getName().equals( currentMemberServer )
+                                    && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
+                        } )
+                        .limit( 1 )
+                        .toList();
+            }
+            else
+            {
+                partyMembersToWarp = party.getPartyMembers()
+                        .stream()
+                        .filter( m ->
+                        {
+                            final String currentMemberServer = Optional.ofNullable(
+                                    BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
+                            ).map( IProxyServer::getName ).orElse( "" );
+
+                            return !currentServer.getName().equals( currentMemberServer )
+                                    && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
+                        } )
+                        .toList();
+            }
+
+            if ( !partyMembersToWarp.isEmpty() )
+            {
+                // TODO: warp party members (job)
+            }
+            else
+            {
+                user.sendLangMessage( "party.warp.nobody-to-warp" );
+            }
+        }, () -> user.sendLangMessage( "party.warp.failed" ) );
     }
 
     @Override
@@ -62,6 +110,6 @@ public class PartyWarpSubCommandCall implements CommandCall
     @Override
     public String getUsage()
     {
-        return "/party warp";
+        return "/party warp [user]";
     }
 }

@@ -846,6 +846,8 @@ party:
     kicked: '&eYou have been kicked from the party by &b{user}&e!'
   warp:
     not-allowed: '&eYou do not have the permission to warp your party to your server!'
+    failed: '&eCould not warp your party to your server!'
+    nobody-to-warp: '&eThere was nobody to warp to your current server!'
 
 custom:
   ingamemotd:
