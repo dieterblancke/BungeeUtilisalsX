@@ -848,6 +848,8 @@ party:
     not-allowed: '&eYou do not have the permission to warp your party to your server!'
     failed: '&eCould not warp your party to your server!'
     nobody-to-warp: '&eThere was nobody to warp to your current server!'
+    warping: '&eWarping all party members to your server ...'
+    warped: '&eYou have been warped to &b{server}&e!'
 
 custom:
   ingamemotd:

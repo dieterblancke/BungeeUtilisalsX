@@ -20,6 +20,7 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyWarpMembersJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
@@ -92,7 +93,16 @@ public class PartyWarpSubCommandCall implements CommandCall
 
             if ( !partyMembersToWarp.isEmpty() )
             {
-                // TODO: warp party members (job)
+                BuX.getInstance().getJobManager().executeJob( new PartyWarpMembersJob(
+                        party.getUuid(),
+                        partyMembersToWarp
+                                .stream()
+                                .map( PartyMember::getUuid )
+                                .toList(),
+                        currentServer.getName()
+                ) );
+
+                user.sendLangMessage( "party.warp.warping" );
             }
             else
             {
