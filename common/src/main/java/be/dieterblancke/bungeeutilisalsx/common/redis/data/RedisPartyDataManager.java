@@ -202,7 +202,8 @@ public class RedisPartyDataManager implements PartyDataManager
         commands.hdel(
                 getPartyInvitationPrefix( party.getUuid(), partyInvite.getInvitee() ),
                 "invitedAt",
-                "invitedBy"
+                "invitedBy",
+                "inviteeName"
         );
     }
 
@@ -237,7 +238,8 @@ public class RedisPartyDataManager implements PartyDataManager
 
         commands.hdel(
                 getPartyJoinRequestPrefix( party.getUuid(), partyJoinRequest.getRequester() ),
-                "requestedAt"
+                "requestedAt",
+                "requesterName"
         );
     }
 

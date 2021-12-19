@@ -15,12 +15,14 @@ public class PartyJoinRequest
 
     private final Date requestedAt;
     private final UUID requester;
+    private final String requesterName;
 
     public static PartyJoinRequest fromMap( final UUID requesterUuid, final Map<String, String> requestData )
     {
         return new PartyJoinRequest(
                 new Date( Long.parseLong( requestData.get( "requestedAt" ) ) ),
-                requesterUuid
+                requesterUuid,
+                requestData.get( "requesterName" )
         );
     }
 
@@ -29,6 +31,7 @@ public class PartyJoinRequest
         final Map<String, String> requestData = new HashMap<>();
 
         requestData.put( "invitedAt", String.valueOf( requestedAt.getTime() ) );
+        requestData.put( "requesterName", requesterName );
 
         return requestData;
     }

@@ -91,7 +91,7 @@ public class PartyInviteSubCommandCall implements CommandCall
 
             BuX.getInstance().getPartyManager().addInvitationToParty(
                     party,
-                    new PartyInvite( new Date(), target.getUuid(), user.getUuid() )
+                    new PartyInvite( new Date(), target.getUuid(), target.getUserName(), user.getUuid() )
             );
 
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(

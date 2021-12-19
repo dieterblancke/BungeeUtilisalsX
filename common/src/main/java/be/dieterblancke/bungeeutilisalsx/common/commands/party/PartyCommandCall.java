@@ -97,6 +97,23 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
                         .executable( new PartyKickSubCommandCall() )
                         .build()
         );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "warp" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "warp" )
+                        .executable( new PartyWarpSubCommandCall() )
+                        .build()
+        );
+
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "list" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "list" )
+                        .executable( new PartyListSubCommandCall() )
+                        .build()
+        );
     }
 
     @Override

@@ -850,6 +850,32 @@ party:
     nobody-to-warp: '&eThere was nobody to warp to your current server!'
     warping: '&eWarping all party members to your server ...'
     warped: '&eYou have been warped to &b{server}&e!'
+  list:
+    members:
+      empty: '&eYour party currently has no members!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+      no-role: 'None'
+
+      header: '&eParty Member List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &7({role}) &b{user} [{joinedAt}]'
+    invites:
+      empty: '&eYour party currently has no sent invites!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+
+      header: '&eParty Invite List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{invitedAt}]'
+    requests:
+      empty: '&eYour party currently has no join requests!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+
+      header: '&eParty Join Request List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{requestedAt}]'
 
 custom:
   ingamemotd:

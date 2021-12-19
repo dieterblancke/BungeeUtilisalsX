@@ -30,7 +30,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 public class PartyAcceptSubCommandCall implements CommandCall
 {
@@ -100,6 +99,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
                 user.getName(),
                 new Date(),
                 user.getName(),
+                null,
                 false,
                 false,
                 false

@@ -77,3 +77,11 @@ setowner:
 kick:
   aliases: 'remove'
   permission: bungeeutilisalsx.party.kick
+
+warp:
+  aliases: 'tphere'
+  permission: bungeeutilisalsx.party.warp
+
+list:
+  aliases: 'l'
+  permission: bungeeutilisalsx.party.list

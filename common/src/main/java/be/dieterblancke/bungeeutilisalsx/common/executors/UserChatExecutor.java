@@ -206,6 +206,7 @@ public class UserChatExecutor implements EventExecutor
                 .ifPresent( party -> party.getPartyMembers()
                         .stream()
                         .filter( m -> m.getUuid().equals( event.getUser().getUuid() ) )
+                        .filter( m -> m.isChat() )
                         .findFirst()
                         .ifPresent( member ->
                         {

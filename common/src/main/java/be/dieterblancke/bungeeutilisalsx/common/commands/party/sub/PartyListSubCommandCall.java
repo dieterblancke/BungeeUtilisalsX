@@ -18,10 +18,21 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyInvite;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyJoinRequest;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageMessageInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageResponseHandler;
 
 import java.util.List;
+import java.util.Optional;
 
 public class PartyListSubCommandCall implements CommandCall
 {
@@ -29,7 +40,31 @@ public class PartyListSubCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        // TODO: also add /party list [members / invites / joinrequests] [page] (defaults to members)
+        final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
+
+        if ( !optionalParty.isPresent() )
+        {
+            user.sendLangMessage( "party.not-in-party" );
+            return;
+        }
+        final Party party = optionalParty.get();
+
+        if ( args.size() > 0 )
+        {
+            final String type = args.get( 0 );
+
+            if ( type.equalsIgnoreCase( "requests" ) )
+            {
+                this.sendJoinRequestsList( user, party, args );
+                return;
+            }
+            else if ( type.equalsIgnoreCase( "invites" ) )
+            {
+                this.sendInvitesList( user, party, args );
+                return;
+            }
+        }
+        this.sendMembersList( user, party, args );
     }
 
     @Override
@@ -42,5 +77,129 @@ public class PartyListSubCommandCall implements CommandCall
     public String getUsage()
     {
         return "/party list [page]";
+    }
+
+    private void sendMembersList( final User user, final Party party, final List<String> args )
+    {
+        PageUtils.sendPagedList( user, party.getPartyMembers(), args.size() == 2 ? args.get( 1 ) : "1", 10, new PageResponseHandler<>()
+        {
+
+            @Override
+            public PageMessageInfo getEmptyListMessage()
+            {
+                return new PageMessageInfo( "party.list.members.empty" );
+            }
+
+            @Override
+            public PageMessageInfo getHeaderMessage()
+            {
+                return new PageMessageInfo( "party.list.members.header" );
+            }
+
+            @Override
+            public PageMessageInfo getItemMessage( final PartyMember member )
+            {
+                return new PageMessageInfo(
+                        "party.list.members.item",
+                        "{user}", member.getUserName(),
+                        "{role}", Optional.ofNullable( member.getPartyRole() ).map( PartyRole::getName ).orElse( user.getLanguageConfig().getConfig().getString( "party.list.members.no-role" ) ),
+                        "{joinedAt}", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() )
+                );
+            }
+
+            @Override
+            public PageMessageInfo getFooterMessage()
+            {
+                return new PageMessageInfo( "party.list.members.footer" );
+            }
+
+            @Override
+            public PageMessageInfo getInvalidPageMessage()
+            {
+                return new PageMessageInfo( "party.list.members.wrong-page" );
+            }
+        } );
+    }
+
+    private void sendInvitesList( final User user, final Party party, final List<String> args )
+    {
+        PageUtils.sendPagedList( user, party.getSentInvites(), args.size() == 2 ? args.get( 1 ) : "1", 10, new PageResponseHandler<>()
+        {
+
+            @Override
+            public PageMessageInfo getEmptyListMessage()
+            {
+                return new PageMessageInfo( "party.list.invites.empty" );
+            }
+
+            @Override
+            public PageMessageInfo getHeaderMessage()
+            {
+                return new PageMessageInfo( "party.list.invites.header" );
+            }
+
+            @Override
+            public PageMessageInfo getItemMessage( final PartyInvite invite )
+            {
+                return new PageMessageInfo(
+                        "party.list.invites.item",
+                        "{user}", invite.getInviteeName(),
+                        "{invitedAt}", Utils.formatDate( invite.getInvitedAt(), user.getLanguageConfig().getConfig() )
+                );
+            }
+
+            @Override
+            public PageMessageInfo getFooterMessage()
+            {
+                return new PageMessageInfo( "party.list.invites.footer" );
+            }
+
+            @Override
+            public PageMessageInfo getInvalidPageMessage()
+            {
+                return new PageMessageInfo( "party.list.invites.wrong-page" );
+            }
+        } );
+    }
+
+    private void sendJoinRequestsList( final User user, final Party party, final List<String> args )
+    {
+        PageUtils.sendPagedList( user, party.getJoinRequests(), args.size() == 2 ? args.get( 1 ) : "1", 10, new PageResponseHandler<>()
+        {
+
+            @Override
+            public PageMessageInfo getEmptyListMessage()
+            {
+                return new PageMessageInfo( "party.list.requests.empty" );
+            }
+
+            @Override
+            public PageMessageInfo getHeaderMessage()
+            {
+                return new PageMessageInfo( "party.list.requests.header" );
+            }
+
+            @Override
+            public PageMessageInfo getItemMessage( final PartyJoinRequest request )
+            {
+                return new PageMessageInfo(
+                        "party.list.requests.item",
+                        "{user}", request.getRequesterName(),
+                        "{requestedAt}", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() )
+                );
+            }
+
+            @Override
+            public PageMessageInfo getFooterMessage()
+            {
+                return new PageMessageInfo( "party.list.requests.footer" );
+            }
+
+            @Override
+            public PageMessageInfo getInvalidPageMessage()
+            {
+                return new PageMessageInfo( "party.list.requests.wrong-page" );
+            }
+        } );
     }
 }
