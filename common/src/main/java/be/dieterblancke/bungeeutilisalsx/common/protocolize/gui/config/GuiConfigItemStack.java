@@ -73,14 +73,14 @@ public class GuiConfigItemStack
 
                             loreComponent.setItalic( false );
 
-                            return new BaseComponent[]{ loreComponent };
+                            return BuX.getInstance().proxyOperations().getMessageComponent( loreComponent );
                         } )
                         .collect( Collectors.toList() ),
                 false
         );
         final TextComponent displayName = new TextComponent( Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) ) );
         displayName.setItalic( false );
-        itemStack.displayName( new BaseComponent[]{ displayName } );
+        itemStack.displayName( BuX.getInstance().proxyOperations().getMessageComponent( displayName ) );
 
         this.enchantments.forEach( enchant -> enchant.addToItem( itemStack ) );
 

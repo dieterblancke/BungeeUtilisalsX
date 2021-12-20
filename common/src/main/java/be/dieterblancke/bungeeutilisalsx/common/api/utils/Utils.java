@@ -994,15 +994,11 @@ public class Utils
     @SneakyThrows
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
-        final List<Class<?>> classes = new ArrayList<>();
-
-        classes.addAll(
-                ClassPath.from( BuX.class.getClassLoader() )
-                        .getTopLevelClassesRecursive( packageName )
-                        .stream()
-                        .map( ClassPath.ClassInfo::load )
-                        .collect( Collectors.toList() )
-        );
+        final List<Class<?>> classes = ClassPath.from( BuX.class.getClassLoader() )
+                .getTopLevelClassesRecursive( packageName )
+                .stream()
+                .map( ClassPath.ClassInfo::load )
+                .collect( Collectors.toList() );
 
         BuX.debug( "Found " + classes + " classes in package " + packageName );
 
@@ -1048,7 +1044,10 @@ public class Utils
             }
         }
 
-        return classes;
+        return classes
+                .stream()
+                .sorted( Comparator.comparing( ( Class<?> o ) -> o.getSimpleName() ) )
+                .toList();
     }
 
     /**

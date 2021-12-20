@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import net.md_5.bungee.api.ProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
@@ -87,6 +88,12 @@ public class BungeeOperationsApi implements ProxyOperationsApi
         return Optional.ofNullable( plugin )
                 .map( Plugin::getDescription )
                 .map( this::getPluginInfo );
+    }
+
+    @Override
+    public Object getMessageComponent( final BaseComponent... components )
+    {
+        return components;
     }
 
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
