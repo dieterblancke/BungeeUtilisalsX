@@ -34,6 +34,9 @@ inactivity-period:
 # - SETTINGS
 # Besides these roles, there is also the party owner, which isn't a role.
 party-roles:
+  - name: MEMBER
+    default: true
+    permissions: []
   - name: MODERATOR
     permissions:
       - INVITE
@@ -50,38 +53,44 @@ command:
 # Set this to false if you don't want people to be able to be invited if they are already in a party.
 allow-invites-to-members-already-in-party: true
 
-create:
-  aliases: 'make, new'
-  permission: bungeeutilisalsx.party.create
-
-invite:
-  aliases: 'invite, add'
-  permission: bungeeutilisalsx.party.invite
-
-accept:
-  aliases: 'join'
-  permission: bungeeutilisalsx.party.accept
-
-leave:
-  aliases: 'quit'
-  permission: bungeeutilisalsx.party.leave
-
-chat:
-  aliases: 'c'
-  permission: bungeeutilisalsx.party.chat
-
-setowner:
-  aliases: 'owner'
-  permission: bungeeutilisalsx.party.setowner
-
-kick:
-  aliases: 'remove'
-  permission: bungeeutilisalsx.party.kick
-
-warp:
-  aliases: 'tphere'
-  permission: bungeeutilisalsx.party.warp
-
-list:
-  aliases: 'l'
-  permission: bungeeutilisalsx.party.list
+subcommands:
+  create:
+    enabled: true
+    aliases: 'make, new'
+    permission: bungeeutilisalsx.party.create
+  invite:
+    enabled: true
+    aliases: 'invite, add'
+    permission: bungeeutilisalsx.party.invite
+  accept:
+    enabled: true
+    aliases: 'join'
+    permission: bungeeutilisalsx.party.accept
+  leave:
+    enabled: true
+    aliases: 'quit'
+    permission: bungeeutilisalsx.party.leave
+  chat:
+    enabled: true
+    aliases: 'c'
+    permission: bungeeutilisalsx.party.chat
+  setowner:
+    enabled: true
+    aliases: 'owner'
+    permission: bungeeutilisalsx.party.setowner
+  kick:
+    enabled: true
+    aliases: 'remove'
+    permission: bungeeutilisalsx.party.kick
+  warp:
+    enabled: true
+    aliases: 'tphere'
+    permission: bungeeutilisalsx.party.warp
+  list:
+    enabled: true
+    aliases: 'l'
+    permission: bungeeutilisalsx.party.list
+  setrole:
+    enabled: true
+    aliases: 'sr'
+    permission: bungeeutilisalsx.party.setrole

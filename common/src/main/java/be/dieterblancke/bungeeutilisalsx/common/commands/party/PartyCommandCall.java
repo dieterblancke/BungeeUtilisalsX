@@ -45,7 +45,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "create" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "create" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.create" )
                         .executable( new PartyCreateSubCommandCall() )
                         .build()
         );
@@ -53,7 +53,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "invite" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "invite" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.invite" )
                         .executable( new PartyInviteSubCommandCall() )
                         .build()
         );
@@ -61,7 +61,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "accept" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "accept" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.accept" )
                         .executable( new PartyAcceptSubCommandCall() )
                         .build()
         );
@@ -69,7 +69,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "leave" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "leave" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.leave" )
                         .executable( new PartyLeaveSubCommandCall() )
                         .build()
         );
@@ -77,7 +77,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "chat" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "chat" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.chat" )
                         .executable( new PartyChatSubCommandCall() )
                         .build()
         );
@@ -85,7 +85,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "setowner" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "setowner" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.setowner" )
                         .executable( new PartySetOwnerSubCommandCall() )
                         .build()
         );
@@ -93,7 +93,7 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "kick" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "kick" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.kick" )
                         .executable( new PartyKickSubCommandCall() )
                         .build()
         );
@@ -101,17 +101,24 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "warp" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "warp" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.warp" )
                         .executable( new PartyWarpSubCommandCall() )
                         .build()
         );
 
-
         super.registerSubCommand(
                 CommandBuilder.builder()
                         .name( "list" )
-                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "list" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.list" )
                         .executable( new PartyListSubCommandCall() )
+                        .build()
+        );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "setrole" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.setrole" )
+                        .executable( new PartySetRoleSubCommandCall() )
                         .build()
         );
     }

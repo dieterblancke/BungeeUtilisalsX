@@ -9,7 +9,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
+import com.google.common.collect.Lists;
 
 import java.util.*;
 
@@ -22,11 +24,11 @@ public class SimplePartyManager implements PartyManager
     {
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {
-            parties = Collections.synchronizedList( BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().getAllParties() );
+            parties = Lists.newCopyOnWriteArrayList( BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().getAllParties() );
         }
         else
         {
-            parties = Collections.synchronizedList( new ArrayList<>() );
+            parties = Lists.newCopyOnWriteArrayList( new ArrayList<>() );
         }
 
         this.startPartyCleanupTask();

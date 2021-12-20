@@ -1,18 +1,21 @@
 package be.dieterblancke.bungeeutilisalsx.common;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
+import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
+import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
+import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
+import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
+import com.dbsoftwares.configuration.api.IConfiguration;
+import lombok.SneakyThrows;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.stubbing.Answer;
 
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;
 
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
@@ -20,9 +23,21 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     private final Logger LOGGER = Logger.getLogger( "BungeeUtilisalsX" );
 
     @Override
+    @SneakyThrows
     public void initialize()
     {
-        api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
+        if ( ConfigFiles.CONFIG.getConfig() == null )
+        {
+            TestInjectionUtil.injectConfiguration(
+                    ConfigFiles.CONFIG,
+                    mock( IConfiguration.class )
+            );
+        }
+        this.api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
+
+        this.setRedisManager( ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ? RedisManagerFactory.create() : null );
+        this.setJobManager( new SingleProxyJobManager() );
+        this.setPartyManager( new SimplePartyManager() );
     }
 
     @Override

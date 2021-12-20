@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.party;
 
+import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
@@ -15,9 +16,9 @@ public class Party
 
     private final UUID uuid;
     private final Date createdAt;
-    private final List<PartyMember> partyMembers = new ArrayList<>();
-    private final List<PartyInvite> sentInvites = new ArrayList<>();
-    private final List<PartyJoinRequest> joinRequests = new ArrayList<>();
+    private final List<PartyMember> partyMembers = Lists.newCopyOnWriteArrayList();
+    private final List<PartyInvite> sentInvites = Lists.newCopyOnWriteArrayList();
+    private final List<PartyJoinRequest> joinRequests = Lists.newCopyOnWriteArrayList();
     private final int partyLimit;
     private boolean inactive;
 

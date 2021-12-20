@@ -850,6 +850,13 @@ party:
     nobody-to-warp: '&eThere was nobody to warp to your current server!'
     warping: '&eWarping all party members to your server ...'
     warped: '&eYou have been warped to &b{server}&e!'
+  setrole:
+    usage: '&ePlease use &b/party setrole (user) (role)&e!'
+    not-allowed: '&eOnly the party owner can set someone''s role!'
+    not-in-party: '&eThis user is not in your party!'
+    incorrect-role: '&eThat role does not exist, please use one of the following roles: &b{roles}'
+    role-updated: '&eYou have changed the role of &b{user} &eto &b{role}&e!'
+    role-updated-broadcast: '&b{user}''s &erole has been changed to &b{role}&e!'
   list:
     members:
       empty: '&eYour party currently has no members!'

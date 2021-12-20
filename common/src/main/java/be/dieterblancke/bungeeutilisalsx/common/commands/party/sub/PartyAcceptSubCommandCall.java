@@ -26,6 +26,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
 
 import java.util.Date;
 import java.util.List;
@@ -99,7 +100,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
                 user.getName(),
                 new Date(),
                 user.getName(),
-                null,
+                ConfigFiles.PARTY_CONFIG.getDefaultRole(),
                 false,
                 false,
                 false

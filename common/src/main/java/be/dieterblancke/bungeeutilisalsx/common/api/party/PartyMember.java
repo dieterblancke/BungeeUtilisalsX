@@ -28,7 +28,8 @@ public class PartyMember
                 memberData.get( "userName" ),
                 new Date( Long.parseLong( memberData.get( "joinedAt" ) ) ),
                 memberData.get( "nickName" ),
-                ConfigFiles.PARTY_CONFIG.findPartyRole( memberData.getOrDefault( "partyRole", null ) ).orElse( null ),
+                ConfigFiles.PARTY_CONFIG.findPartyRole( memberData.getOrDefault( "partyRole", null ) )
+                        .orElse( ConfigFiles.PARTY_CONFIG.getDefaultRole() ),
                 Boolean.parseBoolean( memberData.get( "partyOwner" ) ),
                 Boolean.parseBoolean( memberData.get( "inactive" ) ),
                 Boolean.parseBoolean( memberData.get( "chat" ) )
