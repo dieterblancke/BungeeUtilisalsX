@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Data
@@ -39,5 +39,18 @@ public class Party
     public boolean isFull()
     {
         return partyMembers.size() >= partyLimit;
+    }
+
+    public Optional<PartyMember> getMemberByUuid( final UUID uuid )
+    {
+        return partyMembers
+                .stream()
+                .filter( it -> it.getUuid().equals( uuid ) )
+                .findAny();
+    }
+
+    public boolean isOwner( final UUID uuid )
+    {
+        return this.getOwner().getUuid().equals( uuid );
     }
 }

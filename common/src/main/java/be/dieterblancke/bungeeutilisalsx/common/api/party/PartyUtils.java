@@ -1,10 +1,12 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.party;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
 
 import java.util.Optional;
+import java.util.UUID;
 
 public class PartyUtils
 {
@@ -15,7 +17,7 @@ public class PartyUtils
 
     public static boolean hasPermission( final Party party, final User user, final PartyRolePermission permission )
     {
-        return party.getOwner().getUuid().equals( user.getUuid() ) || party.getPartyMembers()
+        return party.isOwner( user.getUuid() ) || party.getPartyMembers()
                 .stream()
                 .filter( m -> m.getUuid().equals( user.getUuid() ) )
                 .findAny()
@@ -23,19 +25,19 @@ public class PartyUtils
                 .orElse( false );
     }
 
-    public static String getRoleName( final Party party, final User user )
+    public static String getRoleName( final Party party, final UUID uuid, final LanguageConfig languageConfig )
     {
-        final String noRole = user.getLanguageConfig().getConfig().getString( "party.list.members.no-role" );
+        final String noRole = languageConfig.getConfig().getString( "party.list.members.no-role" );
 
         return party.getPartyMembers()
                 .stream()
-                .filter( it -> it.getUuid().equals( user.getUuid() ) )
+                .filter( it -> it.getUuid().equals( uuid ) )
                 .findFirst()
                 .map( it ->
                 {
                     if ( it.getUuid().equals( party.getOwner().getUuid() ) )
                     {
-                        return user.getLanguageConfig().getConfig().getString( "party.owner-role-name" );
+                        return languageConfig.getConfig().getString( "party.owner-role-name" );
                     }
                     else
                     {

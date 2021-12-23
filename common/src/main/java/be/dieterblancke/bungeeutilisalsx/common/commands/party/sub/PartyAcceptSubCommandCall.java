@@ -58,8 +58,8 @@ public class PartyAcceptSubCommandCall implements CommandCall
             else
             {
                 user.sendLangMessage( "party.accept.already-in-party" );
+                return;
             }
-            return;
         }
 
         // Check invite

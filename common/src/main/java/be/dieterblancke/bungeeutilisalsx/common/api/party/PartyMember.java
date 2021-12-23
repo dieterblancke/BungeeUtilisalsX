@@ -50,4 +50,9 @@ public class PartyMember
 
         return memberData;
     }
+
+    public int getPartyRolePriority()
+    {
+        return Optional.ofNullable( partyRole ).map( PartyRole::getPriority ).orElse( 0 );
+    }
 }

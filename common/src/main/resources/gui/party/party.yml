@@ -53,6 +53,7 @@ contents:
       name: '&4&lDisband Party'
     action: execute:party disband
   - slots: '48'
+    show-if: has-party-permission:KICK
     item:
       material: PLAYER_HEAD
       name: '&c&lKick User'
@@ -62,7 +63,7 @@ contents:
       languagePath: 'party.gui.kick-chat-input'
       action: execute:party kick {output}
   - slots: '49'
-    show-if: has-party-permission:KICK
+    show-if: has-party-permission:INVITE
     item:
       material: PLAYER_HEAD
       name: '&a&lInvite User'

@@ -58,7 +58,7 @@ public class PartyLeaveSubCommandCall implements CommandCall
                 "{user}", user.getName()
         );
 
-        if ( partyMember.isPartyOwner() && !party.getOwner().getUuid().equals( user.getUuid() ) )
+        if ( partyMember.isPartyOwner() && !party.isOwner( user.getUuid() ) )
         {
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                     party,

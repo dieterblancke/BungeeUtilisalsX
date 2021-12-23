@@ -48,7 +48,7 @@ public class PartySetOwnerSubCommandCall implements CommandCall
         }
         final Party party = optionalParty.get();
 
-        if ( !party.getOwner().getUuid().equals( user.getUuid() ) )
+        if ( !party.isOwner( user.getUuid() ) )
         {
             user.sendLangMessage( "party.setowner.not-allowed" );
             return;

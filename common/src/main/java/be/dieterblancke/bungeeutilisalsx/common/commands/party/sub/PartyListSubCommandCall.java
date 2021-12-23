@@ -98,7 +98,7 @@ public class PartyListSubCommandCall implements CommandCall
                 return new PageMessageInfo(
                         "party.list.members.item",
                         "{user}", member.getUserName(),
-                        "{role}", PartyUtils.getRoleName( party, user ),
+                        "{role}", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ),
                         "{joinedAt}", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() )
                 );
             }

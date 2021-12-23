@@ -61,7 +61,8 @@ public class PartyConfig extends Config
                 .forEach( section -> this.partyRoles.add( new PartyRole(
                         section.getString( "name" ),
                         section.exists( "default" ) && section.getBoolean( "default" ),
-                        section.getStringList( "permissions" )
+                        section.exists( "priority" ) ? section.getInteger( "priority" ) : 0,
+                        Optional.ofNullable( section.getStringList( "permissions" ) ).orElse( new ArrayList<>() )
                                 .stream()
                                 .map( PartyRolePermission::valueOf )
                                 .collect( Collectors.toList() )
@@ -69,7 +70,7 @@ public class PartyConfig extends Config
 
         if ( getDefaultRole() == null )
         {
-            partyRoles.add( new PartyRole( "MEMBER", true, new ArrayList<>() ) );
+            partyRoles.add( new PartyRole( "MEMBER", true, 0, new ArrayList<>() ) );
         }
 
         config.getStringList( "disabled-warp-from-servers" )
@@ -127,6 +128,7 @@ public class PartyConfig extends Config
     {
         String name;
         boolean defaultRole;
+        int priority;
         List<PartyRolePermission> permissions;
     }
 }

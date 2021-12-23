@@ -865,6 +865,7 @@ party:
     kick: '&eYou have kicked &b{kickedUser} &efrom your party!'
     kicked-broadcast: '&b{kickedUser} &ehas been kicked from the party by &b{user}&e!'
     kicked: '&eYou have been kicked from the party by &b{user}&e!'
+    cannot-kick: '&eYou cannot kick this user from the party!'
   warp:
     not-allowed: '&eYou do not have the permission to warp your party to your server!'
     failed: '&eCould not warp your party to your server!'

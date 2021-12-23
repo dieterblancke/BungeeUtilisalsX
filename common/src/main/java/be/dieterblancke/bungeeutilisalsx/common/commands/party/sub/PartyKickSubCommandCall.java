@@ -22,9 +22,9 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
 
 import java.util.List;
@@ -55,7 +55,7 @@ public class PartyKickSubCommandCall implements CommandCall
             user.sendLangMessage( "party.kick.not-allowed" );
             return;
         }
-
+        final PartyMember currentMember = party.getMemberByUuid( user.getUuid() ).orElse( null );
         final String targetName = args.get( 0 );
 
         party.getPartyMembers()
@@ -64,6 +64,16 @@ public class PartyKickSubCommandCall implements CommandCall
                 .findFirst()
                 .ifPresentOrElse( member ->
                 {
+                    if ( !party.isOwner( currentMember.getUuid() )
+                            && ( party.isOwner( member.getUuid() ) || currentMember.getPartyRolePriority() <= member.getPartyRolePriority() ) )
+                    {
+                        user.sendLangMessage(
+                                "party.kick.cannot-kick",
+                                "{user}", member.getUserName()
+                        );
+                        return;
+                    }
+
                     BuX.getInstance().getPartyManager().removeMemberFromParty( party, member );
 
                     user.sendLangMessage(

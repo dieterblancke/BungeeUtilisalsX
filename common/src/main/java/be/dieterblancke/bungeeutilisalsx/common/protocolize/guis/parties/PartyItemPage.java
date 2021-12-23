@@ -72,7 +72,7 @@ public class PartyItemPage extends ItemPage
                         currentServer,
                         "{member}", member.getUserName(),
                         "{server}", currentServer == null ? "Unknown" : currentServer,
-                        "{role}", PartyUtils.getRoleName( party, user )
+                        "{role}", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() )
                 ) );
             }
         }
@@ -99,7 +99,7 @@ public class PartyItemPage extends ItemPage
         {
             final Party party = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() ).orElse( null );
 
-            return party != null && party.getOwner().getUuid().equals( user.getUuid() );
+            return party != null && party.isOwner( user.getUuid() );
         }
 
         return super.shouldShow( user, page, max, item );

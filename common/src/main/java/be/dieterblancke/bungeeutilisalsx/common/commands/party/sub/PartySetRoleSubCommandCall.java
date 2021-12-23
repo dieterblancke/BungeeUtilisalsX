@@ -49,7 +49,7 @@ public class PartySetRoleSubCommandCall implements CommandCall
         }
         final Party party = optionalParty.get();
 
-        if ( !party.getOwner().getUuid().equals( user.getUuid() ) )
+        if ( !party.isOwner( user.getUuid() ) )
         {
             user.sendLangMessage( "party.setrole.not-allowed" );
             return;
@@ -69,14 +69,14 @@ public class PartySetRoleSubCommandCall implements CommandCall
 
                         user.sendLangMessage(
                                 "party.setrole.role-updated",
-                                "{user}", user.getName(),
+                                "{user}", member.getUserName(),
                                 "{role}", role.getName()
                         );
 
                         BuX.getInstance().getPartyManager().languageBroadcastToParty(
                                 party,
                                 "party.setrole.role-updated-broadcast",
-                                "{user}", user.getName(),
+                                "{user}", member.getUserName(),
                                 "{role}", role.getName()
                         );
                     }, () -> user.sendLangMessage(
