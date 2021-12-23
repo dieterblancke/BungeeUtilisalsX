@@ -20,13 +20,9 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.party.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyInvite;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyJoinRequest;
-import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageMessageInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageResponseHandler;
@@ -70,13 +66,13 @@ public class PartyListSubCommandCall implements CommandCall
     @Override
     public String getDescription()
     {
-        return "Shows a list of members of your current party.";
+        return "Shows a list of members, invites or requests of your current party.";
     }
 
     @Override
     public String getUsage()
     {
-        return "/party list [page]";
+        return "/party list (members / invites / requests) [page]";
     }
 
     private void sendMembersList( final User user, final Party party, final List<String> args )
@@ -102,7 +98,7 @@ public class PartyListSubCommandCall implements CommandCall
                 return new PageMessageInfo(
                         "party.list.members.item",
                         "{user}", member.getUserName(),
-                        "{role}", Optional.ofNullable( member.getPartyRole() ).map( PartyRole::getName ).orElse( user.getLanguageConfig().getConfig().getString( "party.list.members.no-role" ) ),
+                        "{role}", PartyUtils.getRoleName( party, user ),
                         "{joinedAt}", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() )
                 );
             }

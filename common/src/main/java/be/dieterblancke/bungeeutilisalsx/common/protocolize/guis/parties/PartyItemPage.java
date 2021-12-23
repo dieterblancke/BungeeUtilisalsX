@@ -26,6 +26,7 @@ public class PartyItemPage extends ItemPage
                           final int page,
                           final int max,
                           final PartyGuiConfig guiConfig,
+                          final Party party,
                           final List<PartyMember> partyMembers )
     {
         super( guiConfig.getRows() * 9 );
@@ -71,9 +72,7 @@ public class PartyItemPage extends ItemPage
                         currentServer,
                         "{member}", member.getUserName(),
                         "{server}", currentServer == null ? "Unknown" : currentServer,
-                        "{role}", Optional.ofNullable( member.getPartyRole() )
-                                .map( PartyRole::getName )
-                                .orElse( user.getLanguageConfig().getConfig().getString( "party.list.members.no-role" ) )
+                        "{role}", PartyUtils.getRoleName( party, user )
                 ) );
             }
         }

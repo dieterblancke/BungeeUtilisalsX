@@ -803,6 +803,7 @@ party:
     - '&7Join requests: {party-joinrequest-count}'
   own-party-full: '&eYour party is currently full!'
   other-party-full: '&b{user}''s &eparty is currently full!'
+  owner-role-name: 'OWNER'
 
   gui:
     invite-chat-input: '&ePlease enter the name of the user you wish to invite or type ''&bcancel&e'' to abort.'
@@ -810,7 +811,19 @@ party:
 
   help:
     message:
-      - '' # TODO
+      - '&e&lParty help reference:'
+      - '&7- &b/party create &7- Creates a new party.'
+      - '&7- &b/party disband &7- Disbands your party.'
+      - '&7- &b/party chat [message] &7- Toggles party chat mode or sends a chat message to the party.'
+      - '&7- &b/party accept (user) &7- Accepts a party invite.'
+      - '&7- &b/party info &7- Shows info of your current party.'
+      - '&7- &b/party invite (user) &7- Invites someone to your party.'
+      - '&7- &b/party kick (user) &7- Kicks someone from your party.'
+      - '&7- &b/party leave &7- Makes you leave your current party.'
+      - '&7- &b/party list (members / invites / requests) [page] &7- Lists members, invites or requests for the party.'
+      - '&7- &b/party setowner (user) &7- Sets a new party owner.'
+      - '&7- &b/party setrole (user) (role) &7- Sets a role for an user.'
+      - '&7- &b/party warp &7- Warps all party users to your current server.'
   create:
     already-in-party: '&eYou are already in a party.'
     created: '&eYou have successfully created a party! You can invite people by using &b/party invite (user)&e!'

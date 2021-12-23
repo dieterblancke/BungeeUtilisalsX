@@ -73,7 +73,7 @@ public class PartySetRoleSubCommandCall implements CommandCall
                                 "{role}", role.getName()
                         );
 
-                        BuX.getInstance().getPartyManager().broadcastToParty(
+                        BuX.getInstance().getPartyManager().languageBroadcastToParty(
                                 party,
                                 "party.setrole.role-updated-broadcast",
                                 "{user}", user.getName(),

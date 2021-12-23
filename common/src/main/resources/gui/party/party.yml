@@ -12,14 +12,14 @@ contents:
     party-slots: true
     offlineitem:
       material: PLAYER_HEAD
-      name: '&e{user} &8- &c&lOFFLINE'
+      name: '&e{member} &8- &c&lOFFLINE'
       lores:
         - ''
         - '&c» Offline'
         - '&7Role: &b{role}'
     onlineitem:
       material: PLAYER_HEAD
-      name: '&e{user} &8- &a&lONLINE'
+      name: '&e{member} &8- &a&lONLINE'
       lores:
         - ''
         - '&a» Online'
@@ -55,7 +55,7 @@ contents:
   - slots: '48'
     item:
       material: PLAYER_HEAD
-      name: '&c&lKick user'
+      name: '&c&lKick User'
       owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0='
     action:
       type: input

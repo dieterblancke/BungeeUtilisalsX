@@ -98,3 +98,7 @@ subcommands:
     enabled: true
     aliases: 'dispose'
     permission: bungeeutilisalsx.party.disband
+  info:
+    enabled: true
+    aliases: 'stats'
+    permission: bungeeutilisalsx.party.info

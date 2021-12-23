@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.parties;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.ItemPage;
@@ -14,7 +15,10 @@ public class PartyGuiItemProvider implements PageableItemProvider
 
     private final ItemPage[] pages;
 
-    public PartyGuiItemProvider( final User user, final PartyGuiConfig config, final List<PartyMember> members )
+    public PartyGuiItemProvider( final User user,
+                                 final PartyGuiConfig config,
+                                 final Party party,
+                                 final List<PartyMember> members )
     {
         final int itemsPerPage = config.getItems().stream()
                 .filter( item -> ( (PartyGuiConfigItem) item ).isMemberItem() )
@@ -36,6 +40,7 @@ public class PartyGuiItemProvider implements PageableItemProvider
                     i,
                     pages,
                     config,
+                    party,
                     members.isEmpty() ? members : members.size() <= max ? members : members.subList( i * itemsPerPage, max )
             );
         }

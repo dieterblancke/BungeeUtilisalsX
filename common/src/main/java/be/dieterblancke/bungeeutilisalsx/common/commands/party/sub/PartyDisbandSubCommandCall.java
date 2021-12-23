@@ -47,7 +47,7 @@ public class PartyDisbandSubCommandCall implements CommandCall
             return;
         }
 
-        BuX.getInstance().getPartyManager().broadcastToParty(
+        BuX.getInstance().getPartyManager().languageBroadcastToParty(
                 party,
                 "party.disband.broadcast",
                 "{user}", user.getName()
