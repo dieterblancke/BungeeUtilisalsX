@@ -60,6 +60,11 @@ public class GuiManager
         {
             gui.loadConfig();
         }
+
+        for ( GuiOpener guiOpener : this.guiOpeners )
+        {
+            guiOpener.reload();
+        }
     }
 
     public void closeAll()

@@ -440,7 +440,22 @@ public interface User extends MessageRecipient
      */
     String getGroup();
 
+    /**
+     * Gets the user current server
+     *
+     * @return an optional of the server the user is currently in
+     */
     default Optional<IProxyServer> getCurrentServer() {
         return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo(this.getServerName()) );
     }
+
+    /**
+     * @return short language tag of the user, f.e. "en"
+     */
+    String getLanguageTagShort();
+
+    /**
+     * @return long language tag of the user, f.e. "en_US"
+     */
+    String getLanguageTagLong();
 }

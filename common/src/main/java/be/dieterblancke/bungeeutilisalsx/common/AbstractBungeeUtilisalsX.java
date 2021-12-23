@@ -36,12 +36,12 @@ import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
-import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
-import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.placeholders.*;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
+import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -109,12 +109,12 @@ public abstract class AbstractBungeeUtilisalsX
         }
 
         this.detectPermissionIntegration();
+        this.registerProtocolizeSupport();
         this.registerLanguages();
         this.registerListeners();
         this.registerExecutors();
         this.registerCommands();
         this.registerPluginSupports();
-        this.registerProtocolizeSupport();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -150,9 +150,17 @@ public abstract class AbstractBungeeUtilisalsX
 
         PlaceHolderAPI.addPlaceHolder( xmlPlaceHolders );
         PlaceHolderAPI.addPlaceHolder( false, "javascript", new JavaScriptPlaceHolder() );
+
+        PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
     }
 
-    protected abstract void registerLanguages();
+    protected void registerLanguages()
+    {
+        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
+        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
+    }
 
     protected abstract void registerListeners();
 
@@ -350,6 +358,11 @@ public abstract class AbstractBungeeUtilisalsX
     public boolean isProtocolizeEnabled()
     {
         return protocolizeManager != null;
+    }
+
+    public boolean isPartyManagerEnabled()
+    {
+        return partyManager != null;
     }
 
     protected abstract void registerMetrics();

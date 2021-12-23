@@ -37,7 +37,11 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
 
         this.setRedisManager( ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ? RedisManagerFactory.create() : null );
         this.setJobManager( new SingleProxyJobManager() );
-        this.setPartyManager( new SimplePartyManager() );
+
+        if ( ConfigFiles.PARTY_CONFIG.getConfig() != null )
+        {
+            this.setPartyManager( new SimplePartyManager() );
+        }
     }
 
     @Override

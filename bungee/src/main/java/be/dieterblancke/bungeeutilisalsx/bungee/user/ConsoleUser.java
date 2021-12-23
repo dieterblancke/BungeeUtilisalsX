@@ -316,4 +316,16 @@ public class ConsoleUser implements User
     {
         return "";
     }
+
+    @Override
+    public String getLanguageTagShort()
+    {
+        return "en";
+    }
+
+    @Override
+    public String getLanguageTagLong()
+    {
+        return "en_US";
+    }
 }

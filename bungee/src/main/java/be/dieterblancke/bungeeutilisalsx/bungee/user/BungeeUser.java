@@ -453,6 +453,18 @@ public class BungeeUser implements User
     }
 
     @Override
+    public String getLanguageTagShort()
+    {
+        return player.getLocale().getLanguage();
+    }
+
+    @Override
+    public String getLanguageTagLong()
+    {
+        return player.getLocale().toString();
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

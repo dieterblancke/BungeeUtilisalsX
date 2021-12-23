@@ -89,6 +89,12 @@ public class BungeeOperationsApi implements ProxyOperationsApi
                 .map( this::getPluginInfo );
     }
 
+    @Override
+    public long getMaxPlayers()
+    {
+        return ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers();
+    }
+
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
     {
         return new PluginInfo(

@@ -459,6 +459,22 @@ public class VelocityUser implements User
     }
 
     @Override
+    public String getLanguageTagShort()
+    {
+        return Optional.ofNullable( player.getPlayerSettings().getLocale() )
+                .map( Locale::toString )
+                .orElse( "en" );
+    }
+
+    @Override
+    public String getLanguageTagLong()
+    {
+        return Optional.ofNullable( player.getPlayerSettings().getLocale() )
+                .map( Locale::toString )
+                .orElse( "en_US" );
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

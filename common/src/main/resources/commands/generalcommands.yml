@@ -306,3 +306,8 @@ offlinemessage:
   permission: bungeeutilisals.commands.offlinemessage
   cooldown: 60
   execute-msg-if-online: true
+opengui:
+  enabled: true
+  name: opengui
+  aliases: 'og'
+  permission: bungeeutilisals.commands.opengui

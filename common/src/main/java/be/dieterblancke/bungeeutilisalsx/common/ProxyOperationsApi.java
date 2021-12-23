@@ -24,4 +24,6 @@ public interface ProxyOperationsApi
 
     Optional<PluginInfo> getPlugin( String pluginName );
 
+    long getMaxPlayers();
+
 }

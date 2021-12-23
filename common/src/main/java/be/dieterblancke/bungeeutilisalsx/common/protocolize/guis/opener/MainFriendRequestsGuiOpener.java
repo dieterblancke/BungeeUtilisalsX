@@ -4,8 +4,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.DefaultGui;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendrequests.MainFriendRequestsGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendrequests.MainFriendRequestsGuiItemProvider;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friendrequests.MainFriendRequestsGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friendrequests.MainFriendRequestsGuiItemProvider;
 
 public class MainFriendRequestsGuiOpener extends GuiOpener
 {

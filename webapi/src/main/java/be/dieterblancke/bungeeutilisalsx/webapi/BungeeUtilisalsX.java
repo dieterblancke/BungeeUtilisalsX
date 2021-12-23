@@ -94,13 +94,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected void registerLanguages()
-    {
-        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
-        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
-    }
-
-    @Override
     protected void registerListeners()
     {
     }

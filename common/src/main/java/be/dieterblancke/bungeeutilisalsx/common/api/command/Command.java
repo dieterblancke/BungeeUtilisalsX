@@ -80,7 +80,7 @@ public class Command
 
         for ( String argument : argList )
         {
-            if ( argument.startsWith( "-" ) && this.parameters.contains( argument ) )
+            if ( argument.startsWith( "-" ) && this.parameters.stream().anyMatch( param -> argument.startsWith( param ) ) )
             {
                 if ( user.hasPermission( this.permission + ".parameters." + argument.substring( 1 ) )
                         || user.hasPermission( this.permission + ".parameters.*" ) )

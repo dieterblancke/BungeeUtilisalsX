@@ -51,4 +51,10 @@ public class SpringProxyOperations implements ProxyOperationsApi
     {
         return Optional.empty();
     }
+
+    @Override
+    public long getMaxPlayers()
+    {
+        return 0;
+    }
 }

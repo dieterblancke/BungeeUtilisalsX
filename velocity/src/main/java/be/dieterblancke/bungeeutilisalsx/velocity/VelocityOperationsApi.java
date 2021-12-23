@@ -96,6 +96,12 @@ public class VelocityOperationsApi implements ProxyOperationsApi
                 .map( this::getPluginInfo );
     }
 
+    @Override
+    public long getMaxPlayers()
+    {
+        return Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers();
+    }
+
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
     {
         return new PluginInfo(

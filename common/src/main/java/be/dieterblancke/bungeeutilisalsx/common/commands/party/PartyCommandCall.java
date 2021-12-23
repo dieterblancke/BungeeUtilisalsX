@@ -121,6 +121,14 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
                         .executable( new PartySetRoleSubCommandCall() )
                         .build()
         );
+
+        super.registerSubCommand(
+                CommandBuilder.builder()
+                        .name( "disband" )
+                        .fromSection( ConfigFiles.PARTY_CONFIG.getConfig(), "subcommands.disband" )
+                        .executable( new PartyDisbandSubCommandCall() )
+                        .build()
+        );
     }
 
     @Override

@@ -91,6 +91,11 @@ public abstract class CommandManager
         registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
         registerGeneralCommand( "offlinemessage", new OfflineMessageCommandCall() );
 
+        if ( BuX.getInstance().isProtocolizeEnabled() )
+        {
+            registerGeneralCommand( "opengui", new OpenGuiCommandCall(), List.of( "-u" ) );
+        }
+
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {
             registerSlashServerCommands();

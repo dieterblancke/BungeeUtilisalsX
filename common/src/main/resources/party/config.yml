@@ -94,3 +94,7 @@ subcommands:
     enabled: true
     aliases: 'sr'
     permission: bungeeutilisalsx.party.setrole
+  disband:
+    enabled: true
+    aliases: 'dispose'
+    permission: bungeeutilisalsx.party.disband
