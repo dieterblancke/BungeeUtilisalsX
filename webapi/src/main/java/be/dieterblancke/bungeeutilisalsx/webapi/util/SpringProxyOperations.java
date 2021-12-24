@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
 import java.util.Optional;
@@ -56,5 +57,11 @@ public class SpringProxyOperations implements ProxyOperationsApi
     public long getMaxPlayers()
     {
         return 0;
+    }
+
+    @Override
+    public Object getMessageComponent( BaseComponent... components )
+    {
+        return null;
     }
 }

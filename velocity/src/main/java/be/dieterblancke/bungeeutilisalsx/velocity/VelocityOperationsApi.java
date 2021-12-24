@@ -13,6 +13,9 @@ import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -91,7 +94,11 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     @Override
     public Optional<PluginInfo> getPlugin( final String pluginName )
     {
-        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugin( pluginName )
+        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugins()
+                .stream()
+                .filter( it -> it.getDescription().getName().orElse( "" ).equalsIgnoreCase( pluginName )
+                        || it.getDescription().getId().equalsIgnoreCase( pluginName ) )
+                .findFirst()
                 .map( PluginContainer::getDescription )
                 .map( this::getPluginInfo );
     }
@@ -100,6 +107,12 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     public long getMaxPlayers()
     {
         return Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers();
+    }
+
+    @Override
+    public Object getMessageComponent( final BaseComponent... components )
+    {
+        return GsonComponentSerializer.gson().deserialize( ComponentSerializer.toString( components ) );
     }
 
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
