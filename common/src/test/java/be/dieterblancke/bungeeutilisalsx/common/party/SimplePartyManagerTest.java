@@ -22,23 +22,9 @@ import static org.mockito.Mockito.when;
 class SimplePartyManagerTest extends BuXTest
 {
 
-    private static final TestRedisContainer TEST_REDIS_CONTAINER = new TestRedisContainer();
-
     public SimplePartyManagerTest()
     {
         super( false );
-    }
-
-    @BeforeAll
-    static void setupRedis()
-    {
-        TEST_REDIS_CONTAINER.initialize();
-    }
-
-    @AfterAll
-    static void shutdownRedis()
-    {
-        TEST_REDIS_CONTAINER.shutdown();
     }
 
     @BeforeEach
