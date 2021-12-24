@@ -9,6 +9,8 @@ import dev.simplix.protocolize.api.player.ProtocolizePlayer;
 import dev.simplix.protocolize.data.Sound;
 import lombok.Getter;
 
+import java.util.Optional;
+
 public class SimpleProtocolizeManager implements ProtocolizeManager
 {
 
@@ -24,10 +26,14 @@ public class SimpleProtocolizeManager implements ProtocolizeManager
         }
 
         final ProtocolizePlayer protocolizePlayer = this.getProtocolizePlayer( user );
-        final Sound sound = Sound.valueOf( soundData.sound() );
-        final SoundCategory category = SoundCategory.valueOf( soundData.category() );
 
-        protocolizePlayer.playSound( sound, category, soundData.volume(), soundData.pitch() );
+        if ( protocolizePlayer != null )
+        {
+            final Sound sound = Sound.valueOf( soundData.sound() );
+            final SoundCategory category = SoundCategory.valueOf( soundData.category() );
+
+            protocolizePlayer.playSound( sound, category, soundData.volume(), soundData.pitch() );
+        }
     }
 
     @Override
@@ -38,7 +44,7 @@ public class SimpleProtocolizeManager implements ProtocolizeManager
             return;
         }
 
-        getProtocolizePlayer( user ).closeInventory();
+        Optional.ofNullable( getProtocolizePlayer( user ) ).ifPresent( p -> p.closeInventory() );
     }
 
     @Override
@@ -48,7 +54,8 @@ public class SimpleProtocolizeManager implements ProtocolizeManager
         {
             return;
         }
-        getProtocolizePlayer( user ).openInventory( inventory );
+
+        Optional.ofNullable( getProtocolizePlayer( user ) ).ifPresent( p -> p.openInventory( inventory ) );
     }
 
     private ProtocolizePlayer getProtocolizePlayer( final User user )

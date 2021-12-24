@@ -22,14 +22,12 @@ public class GuiManager
         BuX.getInstance().getScheduler().runTaskRepeating( 1, 1, TimeUnit.MINUTES, () ->
                 activeGuis.removeIf( gui ->
                 {
+                    gui.getUsers().removeIf( u -> u == null || !BuX.getApi().getPlayerUtils().isOnline( u.getName() ) );
+
                     if ( gui.getLastActivity() + TimeUnit.MINUTES.toMillis( 5 ) < System.currentTimeMillis() )
                     {
                         gui.close( false );
                         return true;
-                    }
-                    else
-                    {
-                        gui.getUsers().removeIf( u -> u == null || !BuX.getApi().getPlayerUtils().isOnline( u.getName() ) );
                     }
                     return false;
                 } )
