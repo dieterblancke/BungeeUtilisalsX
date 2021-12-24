@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import com.dbsoftwares.configuration.api.IConfiguration;
+import com.dbsoftwares.configuration.yaml.YamlConfiguration;
 import lombok.SneakyThrows;
 import org.mockito.Mockito;
 
@@ -30,7 +31,7 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
         {
             TestInjectionUtil.injectConfiguration(
                     ConfigFiles.CONFIG,
-                    mock( IConfiguration.class )
+                    new YamlConfiguration( BuXTest.class.getResourceAsStream( "/config.yml" ) )
             );
         }
         this.api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
