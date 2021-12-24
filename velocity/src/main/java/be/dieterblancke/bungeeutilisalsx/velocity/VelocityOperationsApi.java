@@ -104,6 +104,12 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     }
 
     @Override
+    public long getMaxPlayers()
+    {
+        return Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers();
+    }
+
+    @Override
     public Object getMessageComponent( final BaseComponent... components )
     {
         return GsonComponentSerializer.gson().deserialize( ComponentSerializer.toString( components ) );

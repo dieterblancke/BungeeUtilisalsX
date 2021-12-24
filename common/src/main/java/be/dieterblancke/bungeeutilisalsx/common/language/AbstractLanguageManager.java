@@ -134,6 +134,7 @@ public abstract class AbstractLanguageManager implements ILanguageManager
     @Override
     public LanguageConfig getConfig( String plugin, Language language )
     {
+        language = language == null ? getDefaultLanguage() : language;
         if ( !plugins.containsKey( plugin ) )
         {
             throw new RuntimeException( "The plugin " + plugin + " is not registered!" );

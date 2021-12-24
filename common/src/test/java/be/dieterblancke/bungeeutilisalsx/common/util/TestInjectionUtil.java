@@ -9,6 +9,7 @@ import com.dbsoftwares.configuration.json.JsonConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Field;
+import java.util.function.Consumer;
 
 public class TestInjectionUtil
 {
@@ -27,7 +28,8 @@ public class TestInjectionUtil
         injectConfiguration( config, new JsonConfiguration( (InputStream) null ) );
     }
 
-    public static void injectConfiguration( final Config config, final IConfiguration configuration ) throws NoSuchFieldException, IllegalAccessException
+    public static void injectConfiguration( final Config config,
+                                            final IConfiguration configuration ) throws NoSuchFieldException, IllegalAccessException
     {
         Field field;
         try

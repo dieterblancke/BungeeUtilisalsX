@@ -34,6 +34,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -359,7 +360,7 @@ public interface User extends MessageRecipient
                 for ( OfflineMessage message : messages )
                 {
                     this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
-                    offlineMessageDao.updateOfflineMessage( message.getId(), false );
+                    offlineMessageDao.deleteOfflineMessage( message.getId() );
                 }
             }
         } );
@@ -433,4 +434,28 @@ public interface User extends MessageRecipient
      * @param vanished the vanish state to be set
      */
     void setVanished( boolean vanished );
+
+    /**
+     * @return the cached user group
+     */
+    String getGroup();
+
+    /**
+     * Gets the user current server
+     *
+     * @return an optional of the server the user is currently in
+     */
+    default Optional<IProxyServer> getCurrentServer() {
+        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo(this.getServerName()) );
+    }
+
+    /**
+     * @return short language tag of the user, f.e. "en"
+     */
+    String getLanguageTagShort();
+
+    /**
+     * @return long language tag of the user, f.e. "en_US"
+     */
+    String getLanguageTagLong();
 }

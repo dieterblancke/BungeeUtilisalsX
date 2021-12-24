@@ -1,0 +1,32 @@
+# The title that should be given to the gui
+title: '&2&lTest GUI'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  # Borders will automatically select the "border slots" of the GUI as slot list that should be filled.
+  - slots: 'borders'
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      name: ''
+    action: nothing
+  - slots: '10'
+    item:
+      material: PLAYER_HEAD
+      name: '&e&lOnline Players'
+      lores:
+        - ''
+        - '&7» &eGlobal: &b{global_online} online'
+    action: nothing
+  - slots: '11'
+    item:
+      material: DIRT
+      name: '&e&lOpen friends GUI'
+    action: open:friend
+  - slots: '53'
+    item:
+      material: RED_BED
+      name: '&c&lClose'
+    action: close

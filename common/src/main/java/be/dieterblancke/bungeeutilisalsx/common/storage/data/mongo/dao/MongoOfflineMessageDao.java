@@ -26,7 +26,6 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
-import com.mongodb.client.model.Updates;
 import org.bson.Document;
 
 import java.util.ArrayList;
@@ -82,17 +81,14 @@ public class MongoOfflineMessageDao implements OfflineMessageDao
     }
 
     @Override
-    public CompletableFuture<Void> updateOfflineMessage( final Long id, final boolean active )
+    public CompletableFuture<Void> deleteOfflineMessage( final Long id )
     {
         return CompletableFuture.runAsync( () ->
         {
             final MongoCollection<Document> collection = db().getCollection( "bu_offline_message" );
 
-            collection.findOneAndUpdate(
-                    Filters.eq( "_id", id ),
-                    Updates.set( "active", active )
-            );
-        } );
+            collection.deleteOne( Filters.eq( "_id", id ) );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     private MongoDBStorageManager manager()

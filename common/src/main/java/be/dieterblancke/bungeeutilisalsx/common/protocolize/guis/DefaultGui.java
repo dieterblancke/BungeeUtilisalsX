@@ -3,11 +3,13 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.guis;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequestType;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfig;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friend.FriendGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendactions.FriendActionsGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendrequests.MainFriendRequestsGuiConfig;
-import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friendrequests.request.FriendRequestsGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friend.FriendGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friendactions.FriendActionsGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friendrequests.MainFriendRequestsGuiConfig;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friendrequests.request.FriendRequestsGuiConfig;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.opener.*;
+import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.parties.PartyGuiConfig;
 
 import java.util.function.Supplier;
 
@@ -33,6 +35,18 @@ public enum DefaultGui
     OUTGOINGFRIENDREQUESTS(
             () -> new FriendRequestsGuiConfig( FriendRequestType.OUTGOING ),
             OutgoingFriendRequestsGuiOpener::new
+    ),
+    PARTY(
+            PartyGuiConfig::new,
+            PartyGuiOpener::new
+    ),
+    CUSTOM(
+            () ->
+            {
+                new GuiConfig( "/gui/custom/test.yml", GuiConfigItem.class );
+                return null;
+            },
+            CustomGuiOpener::new
     );
 
     private final Supplier<GuiConfig> configSupplier;

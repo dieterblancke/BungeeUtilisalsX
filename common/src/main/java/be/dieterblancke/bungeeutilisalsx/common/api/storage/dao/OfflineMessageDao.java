@@ -30,7 +30,7 @@ public interface OfflineMessageDao
 
     CompletableFuture<Void> sendOfflineMessage( String username, OfflineMessage message );
 
-    CompletableFuture<Void> updateOfflineMessage( Long id, boolean active );
+    CompletableFuture<Void> deleteOfflineMessage( Long id );
 
     @Value
     class OfflineMessage

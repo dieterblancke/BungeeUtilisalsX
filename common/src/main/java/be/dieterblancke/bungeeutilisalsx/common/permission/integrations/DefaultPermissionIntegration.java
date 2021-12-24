@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.permission.integrations;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class DefaultPermissionIntegration implements PermissionIntegration
 {
@@ -14,8 +15,8 @@ public class DefaultPermissionIntegration implements PermissionIntegration
     }
 
     @Override
-    public String getGroup( final UUID uuid )
+    public CompletableFuture<String> getGroup( final UUID uuid )
     {
-        return "";
+        return CompletableFuture.completedFuture( "" );
     }
 }

@@ -3,16 +3,12 @@ package be.dieterblancke.bungeeutilisalsx.bungee;
 import be.dieterblancke.bungeeutilisalsx.bungee.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
-import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.DefaultPlaceHolders;
-import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.InputPlaceHolders;
-import be.dieterblancke.bungeeutilisalsx.bungee.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -62,23 +58,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public CommandManager getCommandManager()
     {
         return commandManager;
-    }
-
-    @Override
-    protected void loadPlaceHolders()
-    {
-        super.loadPlaceHolders();
-
-        PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
-        PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
-        PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
-    }
-
-    @Override
-    protected void registerLanguages()
-    {
-        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
-        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
     }
 
     @Override

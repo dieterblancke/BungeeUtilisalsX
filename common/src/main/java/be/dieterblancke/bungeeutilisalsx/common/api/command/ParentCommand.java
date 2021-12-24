@@ -45,6 +45,13 @@ public class ParentCommand implements TabCall
     public ParentCommand( final Consumer<User> helpConsumer )
     {
         this.helpConsumer = helpConsumer;
+
+        this.registerSubCommand( CommandBuilder.builder()
+                .enabled( true )
+                .name( "help" )
+                .executable( new HelpSubCommandCall() )
+                .build()
+        );
     }
 
     protected void registerSubCommand( final Command cmd )
@@ -89,6 +96,27 @@ public class ParentCommand implements TabCall
         else
         {
             return null;
+        }
+    }
+
+    private class HelpSubCommandCall implements CommandCall
+    {
+        @Override
+        public void onExecute( User user, List<String> args, List<String> parameters )
+        {
+            helpConsumer.accept( user );
+        }
+
+        @Override
+        public String getDescription()
+        {
+            return "";
+        }
+
+        @Override
+        public String getUsage()
+        {
+            return "";
         }
     }
 }

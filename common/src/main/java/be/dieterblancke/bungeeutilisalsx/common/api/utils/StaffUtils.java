@@ -48,7 +48,7 @@ public class StaffUtils
 
     public static Optional<StaffRankData> getStaffRankForUser( final User user )
     {
-        final String group = BuX.getInstance().getActivePermissionIntegration().getGroup( user.getUuid() );
+        final String group = user.getGroup();
 
         return ConfigFiles.RANKS.getRanks()
                 .stream()

@@ -21,14 +21,14 @@ public class UserCommandExecutor implements EventExecutor
             return;
         }
 
-        final String commmand = event.getActualCommand().replaceFirst( "/", "" );
+        final String command = event.getActualCommand().replaceFirst( "/", "" );
 
-        if ( isBlocked( event.getUser(), commmand, event.getArguments() ) )
+        if ( isBlocked( event.getUser(), command, event.getArguments() ) )
         {
             event.setCancelled( true );
             event.getUser().sendLangMessage(
                     "command-disabled",
-                    "{command}", commmand
+                    "{command}", command
             );
         }
     }
@@ -36,13 +36,13 @@ public class UserCommandExecutor implements EventExecutor
     @Event
     public void onListenerCommand( final UserCommandEvent event )
     {
-        final String commmandName = event.getActualCommand().replaceFirst( "/", "" );
+        final String commandName = event.getActualCommand().replaceFirst( "/", "" );
 
-        BuX.getInstance().getCommandManager().findCommandByName( commmandName ).ifPresent( command ->
+        BuX.getInstance().getCommandManager().findCommandByName( commandName ).ifPresent( command ->
         {
             if ( command.isListenerBased() && !command.isDisabledInServer( event.getUser().getServerName() ) )
             {
-                BuX.debug( "Executing listener command " + commmandName );
+                BuX.debug( "Executing listener command " + commandName );
                 event.setCancelled( true );
                 command.execute( event.getUser(), event.getArguments() );
             }

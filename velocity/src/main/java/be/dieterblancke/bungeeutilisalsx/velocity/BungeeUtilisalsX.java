@@ -3,7 +3,6 @@ package be.dieterblancke.bungeeutilisalsx.velocity;
 import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
-import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
@@ -14,11 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
-import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.DefaultPlaceHolders;
-import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.InputPlaceHolders;
-import be.dieterblancke.bungeeutilisalsx.velocity.placeholder.UserPlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
-import com.dbsoftwares.configuration.api.FileStorageType;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SimplePie;
 import org.bstats.velocity.Metrics;
@@ -65,23 +60,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    protected void loadPlaceHolders()
-    {
-        super.loadPlaceHolders();
-
-        PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
-        PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
-        PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
-    }
-
-    @Override
-    protected void registerLanguages()
-    {
-        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
-        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
-    }
-
-    @Override
     protected void registerListeners()
     {
         Bootstrap.getInstance().getProxyServer().getEventManager().register(
@@ -112,7 +90,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void registerPluginSupports()
     {
-
     }
 
     @Override

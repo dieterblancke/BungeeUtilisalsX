@@ -1,0 +1,86 @@
+# The title that should be given to the gui
+title: '&2&lYour Party'
+# The size of the gui, in rows. Recommended to leave at a maximum of 6!
+rows: 6
+
+# Items lower in contents will override slots that have been previously defined, for example, setting an item on slot 53
+# would override the "borders" slot as long as it's lower in the content list
+contents:
+  # Borders will automatically select the "border slots" of the GUI as slot list that should be filled.
+  - slots: '0..35'
+    # True if these slots represent friends, false if not.
+    party-slots: true
+    offlineitem:
+      material: PLAYER_HEAD
+      name: '&e{member} &8- &c&lOFFLINE'
+      lores:
+        - ''
+        - '&c» Offline'
+        - '&7Role: &b{role}'
+    onlineitem:
+      material: PLAYER_HEAD
+      name: '&e{member} &8- &a&lONLINE'
+      lores:
+        - ''
+        - '&a» Online'
+        - '&7Server: &b{server}'
+        - '&7Role: &b{role}'
+    action: nothing
+  - slots: '36..44'
+    # True if these slots represent friends, false if not.
+    item:
+      material: GRAY_STAINED_GLASS_PANE
+      name: ''
+    action: nothing
+  - slots: '36'
+    show-if: has-previous-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aPrevious Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODY1MmUyYjkzNmNhODAyNmJkMjg2NTFkN2M5ZjI4MTlkMmU5MjM2OTc3MzRkMThkZmRiMTM1NTBmOGZkYWQ1ZiJ9fX0='
+    action: previous-page
+  - slots: '44'
+    show-if: has-next-page
+    item:
+      material: PLAYER_HEAD
+      name: '&aNext Page'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmEzYjhmNjgxZGFhZDhiZjQzNmNhZThkYTNmZTgxMzFmNjJhMTYyYWI4MWFmNjM5YzNlMDY0NGFhNmFiYWMyZiJ9fX0='
+    action: next-page
+  - slots: '45'
+    show-if: is-party-owner
+    item:
+      material: BARRIER
+      name: '&4&lDisband Party'
+    action: execute:party disband
+  - slots: '48'
+    show-if: has-party-permission:KICK
+    item:
+      material: PLAYER_HEAD
+      name: '&c&lKick User'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGU0YjhiOGQyMzYyYzg2NGUwNjIzMDE0ODdkOTRkMzI3MmE2YjU3MGFmYmY4MGMyYzViMTQ4Yzk1NDU3OWQ0NiJ9fX0='
+    action:
+      type: input
+      languagePath: 'party.gui.kick-chat-input'
+      action: execute:party kick {output}
+  - slots: '49'
+    show-if: has-party-permission:INVITE
+    item:
+      material: PLAYER_HEAD
+      name: '&a&lInvite User'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjA1NmJjMTI0NGZjZmY5OTM0NGYxMmFiYTQyYWMyM2ZlZTZlZjZlMzM1MWQyN2QyNzNjMTU3MjUzMWYifX19'
+    action:
+      type: input
+      languagePath: 'party.gui.invite-chat-input'
+      action: execute:party invite {output}
+  - slots: '50'
+    show-if: has-party-permission:WARP
+    item:
+      material: PLAYER_HEAD
+      name: '&e&lWarp Party'
+      owner: 'eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGE0MGNjOTIxOTRkMmUwYzZkZGNjZDllZTAzZmZjZGE2NmZiNDY5ZjRlMjNkZTdlZDcyOTNmOTIzNTU5N2VjMCJ9fX0='
+    action: execute:party warp
+  - slots: '53'
+    item:
+      material: RED_BED
+      name: '&c&lClose'
+    action: close

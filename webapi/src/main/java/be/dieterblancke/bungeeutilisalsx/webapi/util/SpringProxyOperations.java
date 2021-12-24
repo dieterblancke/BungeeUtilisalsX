@@ -54,6 +54,12 @@ public class SpringProxyOperations implements ProxyOperationsApi
     }
 
     @Override
+    public long getMaxPlayers()
+    {
+        return 0;
+    }
+
+    @Override
     public Object getMessageComponent( BaseComponent... components )
     {
         return null;

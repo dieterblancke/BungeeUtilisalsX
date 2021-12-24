@@ -91,6 +91,12 @@ public class BungeeOperationsApi implements ProxyOperationsApi
     }
 
     @Override
+    public long getMaxPlayers()
+    {
+        return ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers();
+    }
+
+    @Override
     public Object getMessageComponent( final BaseComponent... components )
     {
         return components;

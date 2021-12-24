@@ -11,4 +11,7 @@ public abstract class GuiOpener
 
     public abstract void openGui( User user, String[] args );
 
+    public void reload()
+    {
+    }
 }

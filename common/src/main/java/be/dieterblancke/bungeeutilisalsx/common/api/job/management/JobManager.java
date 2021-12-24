@@ -13,6 +13,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 
 public abstract class JobManager
 {
@@ -51,7 +52,7 @@ public abstract class JobManager
         }
     }
 
-    public abstract void executeJob( Job job );
+    public abstract CompletableFuture<Void> executeJob( Job job );
 
     @SneakyThrows
     protected void handle( final Job job )

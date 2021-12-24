@@ -193,4 +193,31 @@ public class UserChatExecutor implements EventExecutor
             }
         }
     }
+
+    @Event
+    public void onPartyChat( final UserChatEvent event )
+    {
+        if ( BuX.getInstance().getPartyManager() == null )
+        {
+            return;
+        }
+
+        BuX.getInstance().getPartyManager().getCurrentPartyFor( event.getUser().getName() )
+                .ifPresent( party -> party.getPartyMembers()
+                        .stream()
+                        .filter( m -> m.getUuid().equals( event.getUser().getUuid() ) )
+                        .filter( m -> m.isChat() )
+                        .findFirst()
+                        .ifPresent( member ->
+                        {
+                            event.setCancelled( true );
+
+                            BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                                    party,
+                                    "party.chat.format",
+                                    "{user}", event.getUser().getName(),
+                                    "{message}", event.getMessage()
+                            );
+                        } ) );
+    }
 }

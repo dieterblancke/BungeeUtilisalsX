@@ -1,6 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
-import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUserJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUuidJob;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,22 +8,21 @@ import java.util.UUID;
 
 @Getter
 @Setter
-public class UserMessageJob extends HasUserJob
+public class UserMessageJob extends HasUuidJob
 {
 
     private final String message;
 
-    public UserMessageJob( final HasUserJob job,
+    public UserMessageJob( final HasUuidJob job,
                            final String message )
     {
-        this( job.getUuid(), job.getUserName(), message );
+        this( job.getUuid(), message );
     }
 
     public UserMessageJob( final UUID uuid,
-                           final String userName,
                            final String message )
     {
-        super( uuid, userName );
+        super( uuid );
         this.message = message;
     }
 

@@ -6,6 +6,7 @@ import lombok.SneakyThrows;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class LuckPermsPermissionIntegration implements PermissionIntegration
 {
@@ -17,15 +18,18 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
     }
 
     @Override
-    public String getGroup( final UUID uuid )
+    public CompletableFuture<String> getGroup( final UUID uuid )
     {
-        final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
-
-        if ( luckUser == null )
+        return CompletableFuture.supplyAsync( () ->
         {
-            return "";
-        }
-        return luckUser.getPrimaryGroup();
+            final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
+
+            if ( luckUser == null )
+            {
+                return "";
+            }
+            return luckUser.getPrimaryGroup();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @SneakyThrows
