@@ -46,7 +46,9 @@ public interface ApiTokenDao
         FIND_KICK,
         FIND_WARN,
         FIND_REPORT,
-        UPDATE_USER
+        UPDATE_USER,
+        CREATE_PUNISHMENT,
+        REMOVE_PUNISHMENT
     }
 
     @Value

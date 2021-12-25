@@ -1089,4 +1089,33 @@ public class Utils
 
         return storage;
     }
+
+    /**
+     * @param obj the obj to check
+     * @param def the default value
+     * @param <T> type of obj
+     * @return the object given, or default if null
+     */
+    public static <T> T nullToDefault( final T obj, final T def )
+    {
+        if ( obj == null )
+        {
+            return def;
+        }
+        return obj;
+    }
+
+    /**
+     * @param string the string to check
+     * @param def    the default value
+     * @return the object given, or default if null
+     */
+    public static String blankToDefault( final String string, final String def )
+    {
+        if ( string == null || string.isBlank() )
+        {
+            return def;
+        }
+        return string;
+    }
 }

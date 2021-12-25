@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.webapi.config;
 import be.dieterblancke.bungeeutilisalsx.webapi.coercings.DateCoercing;
 import be.dieterblancke.bungeeutilisalsx.webapi.coercings.DateTimeCoercing;
 import be.dieterblancke.bungeeutilisalsx.webapi.coercings.UuidCoercing;
+import be.dieterblancke.bungeeutilisalsx.webapi.coercings.VoidCoercing;
 import graphql.scalar.GraphqlLongCoercing;
 import graphql.schema.GraphQLScalarType;
 import org.springframework.context.annotation.Bean;
@@ -49,6 +50,16 @@ public class GraphQLConfig
                 .name( "UUID" )
                 .description( "Java UUID as scalar." )
                 .coercing( new UuidCoercing() )
+                .build();
+    }
+
+    @Bean
+    GraphQLScalarType voidScalar()
+    {
+        return GraphQLScalarType.newScalar()
+                .name( "Void" )
+                .description( "Java Void type as scalar." )
+                .coercing( new VoidCoercing() )
                 .build();
     }
 }

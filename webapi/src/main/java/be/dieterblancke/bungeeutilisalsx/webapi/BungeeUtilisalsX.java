@@ -64,6 +64,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         ConfigFiles.CONFIG.load();
         ConfigFiles.LANGUAGES_CONFIG.load();
+        ConfigFiles.PUNISHMENT_CONFIG.load();
     }
 
     @Override
