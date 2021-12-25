@@ -22,7 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.ParentCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.DumpSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.ReloadSubCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.sub.VersionSubCommandCall;
 
@@ -46,14 +45,6 @@ public class PluginCommandCall extends ParentCommand implements CommandCall
                         .name( "reload" )
                         .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.reload" ) )
                         .executable( new ReloadSubCommandCall() )
-                        .build()
-        );
-
-        registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "dump" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.dump" ) )
-                        .executable( new DumpSubCommandCall() )
                         .build()
         );
     }

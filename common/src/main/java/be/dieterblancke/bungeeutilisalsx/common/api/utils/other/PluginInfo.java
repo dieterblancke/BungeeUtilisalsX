@@ -16,20 +16,23 @@
  *
  */
 
-package be.dieterblancke.bungeeutilisalsx.common.api.utils.dump;
+package be.dieterblancke.bungeeutilisalsx.common.api.utils.other;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
-import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
-@Value
-public class Dump
+@Data
+@AllArgsConstructor
+public class PluginInfo
 {
 
-    String plugin;
-    Map<String, Object> systemInfo;
-    List<PluginInfo> plugins;
-    Map<String, Map<String, Object>> configurations;
+    private String name;
+    private String version;
+    private String author;
+    private Set<String> depends;
+    private Set<String> softDepends;
+    private String description;
 
 }

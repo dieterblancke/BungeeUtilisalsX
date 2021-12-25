@@ -38,7 +38,6 @@ general-commands:
     help:
       - '&e- &b/bux version'
       - '&e- &b/bux reload'
-      - '&e- &b/bux dump'
       - '&e- &b/bux convert (oldtype) [properties]'
   announce:
     usage: '&ePlease use &b/announce (p/b/c/a/t) (message)&e.'

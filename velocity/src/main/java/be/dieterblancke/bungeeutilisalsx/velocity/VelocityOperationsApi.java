@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.velocity;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.CommandHolder;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
