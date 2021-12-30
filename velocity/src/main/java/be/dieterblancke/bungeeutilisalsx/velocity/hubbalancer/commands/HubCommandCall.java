@@ -6,9 +6,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
-import be.dieterblancke.bungeeutilisalsx.velocity.user.VelocityConsoleUser;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +41,7 @@ public class HubCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( user instanceof VelocityConsoleUser )
+        if ( user instanceof ConsoleUser )
         {
             user.sendMessage( "This command is for players only!" );
             return;
