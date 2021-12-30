@@ -1,6 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.commands;
 
-import be.dieterblancke.bungeeutilisalsx.bungee.user.ConsoleUser;
+import be.dieterblancke.bungeeutilisalsx.bungee.user.BungeeConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
@@ -41,7 +41,7 @@ public class HubCommandCall implements CommandCall, TabCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( user instanceof ConsoleUser )
+        if ( user instanceof BungeeConsoleUser )
         {
             user.sendMessage( "This command is for players only!" );
             return;

@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.webapi.console;
+package be.dieterblancke.bungeeutilisalsx.velocity.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
@@ -10,20 +10,24 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.google.common.collect.Lists;
+import com.velocitypowered.proxy.console.VelocityConsole;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import org.apache.logging.log4j.Logger;
 
+import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
-public class ConsoleUser implements User
+public class VelocityConsoleUser implements User
 {
 
     private static final String NOT_SUPPORTED = "The console does not support this operation!";
+    private static org.apache.logging.log4j.Logger velocityConsoleOutput;
     private final UserStorage storage = new UserStorage();
     private final UserCooldowns cooldowns = new UserCooldowns();
     @Getter
@@ -35,6 +39,25 @@ public class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
+
+    private static org.apache.logging.log4j.Logger getConsoleOutput()
+    {
+        if ( velocityConsoleOutput == null )
+        {
+            try
+            {
+                final Field loggerField = VelocityConsole.class.getDeclaredField( "logger" );
+                loggerField.setAccessible( true );
+
+                velocityConsoleOutput = (Logger) loggerField.get( null );
+            }
+            catch ( IllegalAccessException | NoSuchFieldException e )
+            {
+                e.printStackTrace();
+            }
+        }
+        return velocityConsoleOutput;
+    }
 
     @Override
     public void load( Object playerInstance )
@@ -123,7 +146,8 @@ public class ConsoleUser implements User
         {
             return;
         }
-        BuX.getLogger().info( ComponentSerializer.toString( component ) );
+
+        getConsoleOutput().info( BaseComponent.toLegacyText( component ) );
     }
 
     @Override
@@ -133,7 +157,7 @@ public class ConsoleUser implements User
         {
             return;
         }
-        BuX.getLogger().info( ComponentSerializer.toString( components ) );
+        getConsoleOutput().info( BaseComponent.toLegacyText( components ) );
     }
 
     @Override
@@ -187,7 +211,7 @@ public class ConsoleUser implements User
     @Override
     public String getServerName()
     {
-        return "BUNGEE";
+        return "PROXY";
     }
 
     @Override
@@ -223,19 +247,26 @@ public class ConsoleUser implements User
     @Override
     public boolean hasPermission( String permission )
     {
-        return true;
+        return Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission );
     }
 
     @Override
     public boolean hasPermission( String permission, boolean specific )
     {
-        return true;
+        return Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission );
     }
 
     @Override
     public boolean hasAnyPermission( String... permissions )
     {
-        return true;
+        for ( String permission : permissions )
+        {
+            if ( Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission ) )
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -247,7 +278,10 @@ public class ConsoleUser implements User
     @Override
     public void executeCommand( final String command )
     {
-        // do nothing
+        Bootstrap.getInstance().getProxyServer().getCommandManager().executeAsync(
+                Bootstrap.getInstance().getProxyServer().getConsoleCommandSource(),
+                command
+        );
     }
 
     @Override

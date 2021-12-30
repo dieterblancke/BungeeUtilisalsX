@@ -20,7 +20,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import java.util.List;
 import java.util.UUID;
 
-public class ConsoleUser implements User
+public class BungeeConsoleUser implements User
 {
 
     private static final String NOT_SUPPORTED = "The console does not support this operation!";
@@ -187,7 +187,7 @@ public class ConsoleUser implements User
     @Override
     public String getServerName()
     {
-        return "BUNGEE";
+        return "PROXY";
     }
 
     @Override
