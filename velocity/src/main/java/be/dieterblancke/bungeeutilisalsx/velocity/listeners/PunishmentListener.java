@@ -33,7 +33,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
-import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
@@ -63,34 +62,36 @@ public class PunishmentListener
     @Subscribe( order = PostOrder.LAST )
     public void onConnect( final ServerPreConnectEvent event )
     {
-        final RegisteredServer target = event.getResult().getServer().orElse( null );
-        final Player player = event.getPlayer();
-        final String ip = Utils.getIP( player.getRemoteAddress() );
-        final String kickReason = getKickReasonIfBanned( player.getUniqueId(), ip, target.getServerInfo().getName() );
-
-        if ( ConfigFiles.CONFIG.isDebug() )
+        event.getResult().getServer().ifPresent( target ->
         {
-            System.out.printf(
-                    "Checking ban for UUID: %s and IP: %s for server %s%n",
-                    player.getUniqueId().toString(),
-                    ip,
-                    target.getServerInfo().getName()
-            );
-        }
+            final Player player = event.getPlayer();
+            final String ip = Utils.getIP( player.getRemoteAddress() );
+            final String kickReason = getKickReasonIfBanned( player.getUniqueId(), ip, target.getServerInfo().getName() );
 
-        if ( kickReason != null )
-        {
-            // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
-            if ( !event.getPlayer().getCurrentServer().isPresent() )
+            if ( ConfigFiles.CONFIG.isDebug() )
             {
-                player.disconnect( Component.text( Utils.c( kickReason ) ) );
+                System.out.printf(
+                        "Checking ban for UUID: %s and IP: %s for server %s%n",
+                        player.getUniqueId().toString(),
+                        ip,
+                        target.getServerInfo().getName()
+                );
             }
-            else
+
+            if ( kickReason != null )
             {
-                event.setResult( ServerPreConnectEvent.ServerResult.denied() );
-                player.sendMessage( Component.text( Utils.c( kickReason ) ) );
+                // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
+                if ( !event.getPlayer().getCurrentServer().isPresent() )
+                {
+                    player.disconnect( Component.text( Utils.c( kickReason ) ) );
+                }
+                else
+                {
+                    event.setResult( ServerPreConnectEvent.ServerResult.denied() );
+                    player.sendMessage( Component.text( Utils.c( kickReason ) ) );
+                }
             }
-        }
+        } );
     }
 
     private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
