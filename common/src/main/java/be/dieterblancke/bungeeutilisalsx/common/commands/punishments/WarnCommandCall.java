@@ -61,7 +61,7 @@ public class WarnCommandCall extends PunishmentCommand
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                user.getServerName(),
+                punishmentArgs.getServerOrAll(),
                 user.getName()
         ).thenAccept( info ->
         {

@@ -1,12 +1,13 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.commands;
 
-import be.dieterblancke.bungeeutilisalsx.bungee.user.ConsoleUser;
+import be.dieterblancke.bungeeutilisalsx.bungee.user.BungeeConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.HubServerType;
 import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 

@@ -17,7 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.bossbar.BossBar;
-import be.dieterblancke.bungeeutilisalsx.velocity.user.ConsoleUser;
+import be.dieterblancke.bungeeutilisalsx.velocity.user.VelocityConsoleUser;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class BuXApi implements IBuXApi
     private final IHubBalancer hubBalancer;
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
-    private final User consoleUser = new ConsoleUser();
+    private final User consoleUser = new VelocityConsoleUser();
     private final List<User> users = Collections.synchronizedList( Lists.newArrayList() );
 
     @Override

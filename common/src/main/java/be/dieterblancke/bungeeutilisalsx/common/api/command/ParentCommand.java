@@ -22,10 +22,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import lombok.Setter;
 
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class ParentCommand implements TabCall
@@ -34,17 +34,18 @@ public class ParentCommand implements TabCall
     @Getter
     private final List<Command> subCommands = Lists.newArrayList();
 
-    @Setter
-    private Consumer<User> helpConsumer;
+    private final Consumer<User> helpConsumer;
+    private final Supplier<Boolean> canSend;
 
     public ParentCommand( final String helpPath )
     {
-        this( user -> user.sendLangMessage( helpPath ) );
+        this( user -> user.sendLangMessage( helpPath ), () -> true );
     }
 
-    public ParentCommand( final Consumer<User> helpConsumer )
+    public ParentCommand( final Consumer<User> helpConsumer, final Supplier<Boolean> canSend )
     {
         this.helpConsumer = helpConsumer;
+        this.canSend = canSend;
 
         this.registerSubCommand( CommandBuilder.builder()
                 .enabled( true )
@@ -77,7 +78,10 @@ public class ParentCommand implements TabCall
                 }
             }
         }
-        helpConsumer.accept( user );
+        if ( canSend.get() )
+        {
+            helpConsumer.accept( user );
+        }
     }
 
     @Override
@@ -110,13 +114,18 @@ public class ParentCommand implements TabCall
         @Override
         public String getDescription()
         {
-            return "";
+            return "Displays help information for the " + this.getCommandName() + "command";
         }
 
         @Override
         public String getUsage()
         {
-            return "";
+            return "/" + this.getCommandName() + " help";
+        }
+
+        private String getCommandName()
+        {
+            return this.getClass().getSimpleName().toLowerCase().split( "command" )[0];
         }
     }
 }

@@ -6,6 +6,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHa
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
+import java.util.stream.Stream;
+
 public class CommandSpyJobHandler extends AbstractJobHandler
 {
 
@@ -14,8 +16,7 @@ public class CommandSpyJobHandler extends AbstractJobHandler
     {
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "commandspy.permission" );
 
-        BuX.getApi().getUsers()
-                .stream()
+        Stream.concat( BuX.getApi().getUsers().stream(), Stream.of( BuX.getApi().getConsoleUser() ) )
                 .filter( user -> user.isCommandSpy() && user.hasPermission( permission ) )
                 .filter( user -> !user.getUuid().equals( job.getUuid() ) )
                 .forEach( user ->

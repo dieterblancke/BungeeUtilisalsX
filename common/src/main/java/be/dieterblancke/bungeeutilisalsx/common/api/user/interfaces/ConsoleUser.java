@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.velocity.user;
+package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
@@ -6,28 +6,22 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.google.common.collect.Lists;
-import com.velocitypowered.proxy.console.VelocityConsole;
 import lombok.Getter;
 import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.apache.logging.log4j.Logger;
 
-import java.lang.reflect.Field;
 import java.util.List;
 import java.util.UUID;
 
-public class ConsoleUser implements User
+public abstract class ConsoleUser implements User
 {
 
     private static final String NOT_SUPPORTED = "The console does not support this operation!";
-    private static org.apache.logging.log4j.Logger velocityConsoleOutput;
     private final UserStorage storage = new UserStorage();
     private final UserCooldowns cooldowns = new UserCooldowns();
     @Getter
@@ -39,25 +33,6 @@ public class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
-
-    private static org.apache.logging.log4j.Logger getConsoleOutput()
-    {
-        if ( velocityConsoleOutput == null )
-        {
-            try
-            {
-                final Field loggerField = VelocityConsole.class.getDeclaredField( "logger" );
-                loggerField.setAccessible( true );
-
-                velocityConsoleOutput = (Logger) loggerField.get( null );
-            }
-            catch ( IllegalAccessException | NoSuchFieldException e )
-            {
-                e.printStackTrace();
-            }
-        }
-        return velocityConsoleOutput;
-    }
 
     @Override
     public void load( Object playerInstance )
@@ -140,27 +115,6 @@ public class ConsoleUser implements User
     }
 
     @Override
-    public void sendMessage( BaseComponent component )
-    {
-        if ( this.isEmpty( component ) )
-        {
-            return;
-        }
-
-        getConsoleOutput().info( BaseComponent.toLegacyText( component ) );
-    }
-
-    @Override
-    public void sendMessage( BaseComponent[] components )
-    {
-        if ( this.isEmpty( components ) )
-        {
-            return;
-        }
-        getConsoleOutput().info( BaseComponent.toLegacyText( components ) );
-    }
-
-    @Override
     public void kick( String reason )
     {
         // do nothing
@@ -211,7 +165,7 @@ public class ConsoleUser implements User
     @Override
     public String getServerName()
     {
-        return "BUNGEE";
+        return "PROXY";
     }
 
     @Override
@@ -244,44 +198,11 @@ public class ConsoleUser implements User
         throw new UnsupportedOperationException( NOT_SUPPORTED );
     }
 
-    @Override
-    public boolean hasPermission( String permission )
-    {
-        return Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission );
-    }
-
-    @Override
-    public boolean hasPermission( String permission, boolean specific )
-    {
-        return Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission );
-    }
-
-    @Override
-    public boolean hasAnyPermission( String... permissions )
-    {
-        for ( String permission : permissions )
-        {
-            if ( Bootstrap.getInstance().getProxyServer().getConsoleCommandSource().hasPermission( permission ) )
-            {
-                return true;
-            }
-        }
-        return false;
-    }
 
     @Override
     public void sendOfflineMessages()
     {
         // do nothing
-    }
-
-    @Override
-    public void executeCommand( final String command )
-    {
-        Bootstrap.getInstance().getProxyServer().getCommandManager().executeAsync(
-                Bootstrap.getInstance().getProxyServer().getConsoleCommandSource(),
-                command
-        );
     }
 
     @Override

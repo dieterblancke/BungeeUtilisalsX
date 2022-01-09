@@ -33,13 +33,9 @@ public class PartyCommandCall extends ParentCommand implements CommandCall
 
     public PartyCommandCall()
     {
-        super( user ->
-                {
-                    if ( ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "command.send-message" ) )
-                    {
-                        user.sendLangMessage( "party.help.message" );
-                    }
-                }
+        super(
+                user -> user.sendLangMessage( "party.help.message" ),
+                () -> ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "command.send-message" )
         );
 
         super.registerSubCommand(
