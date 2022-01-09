@@ -1118,4 +1118,21 @@ public class Utils
         }
         return string;
     }
+
+    /**
+     * @param optionals the optionals to be checked
+     * @param <T> type
+     * @return the first optional with a value, or an empty if none
+     */
+    public static <T> Optional<T> firstPresent( final Optional<T>... optionals )
+    {
+        for ( Optional<T> optional : optionals )
+        {
+            if ( optional.isPresent() )
+            {
+                return optional;
+            }
+        }
+        return Optional.empty();
+    }
 }
