@@ -439,7 +439,7 @@ public class VelocityUser implements User
     public String getJoinedHost()
     {
         final String joinedHost;
-        if ( !player.getVirtualHost().isPresent() )
+        if ( player.getVirtualHost().isEmpty() )
         {
             joinedHost = null;
         }

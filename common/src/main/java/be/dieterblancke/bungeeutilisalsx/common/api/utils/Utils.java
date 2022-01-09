@@ -1124,6 +1124,7 @@ public class Utils
      * @param <T> type
      * @return the first optional with a value, or an empty if none
      */
+    @SafeVarargs
     public static <T> Optional<T> firstPresent( final Optional<T>... optionals )
     {
         for ( Optional<T> optional : optionals )
