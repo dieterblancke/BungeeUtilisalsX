@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEv
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
@@ -82,13 +83,14 @@ public class UserChatExecutor implements EventExecutor
             {
                 event.setMessage( swearValidationResult.getResultMessage() );
             }
-            user.sendLangMessage( "chat-protection.swear" );
+            user.sendLangMessage( "chat-protection.swear", "{swear-word}", swearValidationResult.getSwearWord() );
 
             if ( config.exists( "commands" ) )
             {
                 config.getStringList( "commands" ).forEach( command ->
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
+                    command = Utils.replacePlaceHolders( command, "{swear-word}", swearValidationResult.getSwearWord() );
 
                     BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
