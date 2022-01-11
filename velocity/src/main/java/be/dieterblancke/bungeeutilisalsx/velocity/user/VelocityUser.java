@@ -122,14 +122,27 @@ public class VelocityUser implements User
             }
             else
             {
-                final Language defLanguage = BuX.getApi().getLanguageManager().getDefaultLanguage();
                 final String joinedHost = this.getJoinedHost();
+                Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
+
+                if ( ConfigFiles.LANGUAGES_CONFIG.getConfig().getBoolean( "check-default-language" ) )
+                {
+                    final Optional<Language> optionalLanguage = Utils.firstPresent(
+                            BuX.getApi().getLanguageManager().getLanguage( this.getLanguageTagLong() ),
+                            BuX.getApi().getLanguageManager().getLanguage( this.getLanguageTagShort() )
+                    );
+
+                    if ( optionalLanguage.isPresent() )
+                    {
+                        language = optionalLanguage.get();
+                    }
+                }
 
                 dao.getUserDao().createUser(
                         uuid,
                         name,
                         ip,
-                        defLanguage,
+                        language,
                         joinedHost
                 );
             }
@@ -426,7 +439,7 @@ public class VelocityUser implements User
     public String getJoinedHost()
     {
         final String joinedHost;
-        if ( !player.getVirtualHost().isPresent() )
+        if ( player.getVirtualHost().isEmpty() )
         {
             joinedHost = null;
         }
