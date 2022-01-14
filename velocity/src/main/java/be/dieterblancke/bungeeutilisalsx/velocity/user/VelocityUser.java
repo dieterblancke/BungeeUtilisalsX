@@ -488,6 +488,12 @@ public class VelocityUser implements User
     }
 
     @Override
+    public Object getPlayerObject()
+    {
+        return player;
+    }
+
+    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

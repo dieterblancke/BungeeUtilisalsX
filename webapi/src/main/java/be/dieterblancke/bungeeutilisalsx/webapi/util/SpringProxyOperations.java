@@ -36,12 +36,6 @@ public class SpringProxyOperations implements ProxyOperationsApi
     }
 
     @Override
-    public String getProxyIdentifier()
-    {
-        return null;
-    }
-
-    @Override
     public List<PluginInfo> getPlugins()
     {
         return null;

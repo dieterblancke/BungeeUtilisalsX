@@ -19,4 +19,16 @@ public class DefaultPermissionIntegration implements PermissionIntegration
     {
         return CompletableFuture.completedFuture( "" );
     }
+
+    @Override
+    public String getPrefix( UUID uuid )
+    {
+        return "";
+    }
+
+    @Override
+    public String getSuffix( UUID uuid )
+    {
+        return "";
+    }
 }

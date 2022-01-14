@@ -458,4 +458,9 @@ public interface User extends MessageRecipient
      * @return long language tag of the user, f.e. "en_US"
      */
     String getLanguageTagLong();
+
+    /**
+     * @return the underlying player object
+     */
+    Object getPlayerObject();
 }

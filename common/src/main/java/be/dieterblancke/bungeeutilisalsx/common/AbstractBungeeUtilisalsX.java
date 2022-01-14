@@ -154,6 +154,7 @@ public abstract class AbstractBungeeUtilisalsX
         PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
         PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
+        PlaceHolderAPI.loadPlaceHolderPack( new PermissionPlaceHolderPack() );
     }
 
     protected void registerLanguages()

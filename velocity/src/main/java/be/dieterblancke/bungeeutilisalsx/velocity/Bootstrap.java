@@ -25,11 +25,12 @@ import java.util.logging.Logger;
 @Plugin(
         id = "bungeeutilisalsx",
         name = "BungeeUtilisalsX",
-        version = "2.3.0",
+        version = "2.3.1",
         authors = { "didjee2" },
         dependencies = {
                 @Dependency( id = "skinsrestorer", optional = true ),
-                @Dependency( id = "protocolize", optional = true )
+                @Dependency( id = "protocolize", optional = true ),
+                @Dependency( id = "luckperms", optional = true )
         }
 )
 public class Bootstrap

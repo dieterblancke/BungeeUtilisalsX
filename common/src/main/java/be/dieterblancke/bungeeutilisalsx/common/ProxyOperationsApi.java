@@ -19,8 +19,6 @@ public interface ProxyOperationsApi
 
     IProxyServer getServerInfo( String serverName );
 
-    String getProxyIdentifier();
-
     List<PluginInfo> getPlugins();
 
     Optional<PluginInfo> getPlugin( String pluginName );

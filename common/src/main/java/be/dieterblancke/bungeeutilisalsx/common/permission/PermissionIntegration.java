@@ -9,14 +9,13 @@ import java.util.concurrent.CompletableFuture;
 public interface PermissionIntegration
 {
 
-    static PermissionIntegration getActiveIntegration()
-    {
-        return null;
-    }
-
     boolean isActive();
 
     CompletableFuture<String> getGroup( UUID user );
+
+    String getPrefix( UUID uuid );
+
+    String getSuffix( UUID uuid );
 
     default boolean hasLowerOrEqualGroup( final UUID userUuid, final UUID otherUuid )
     {

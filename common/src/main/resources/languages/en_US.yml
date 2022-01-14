@@ -70,7 +70,7 @@ general-commands:
   staffchat:
     enabled: '&eYou are now talking in the &bstaff chat&e!'
     disabled: '&eYou are now talking in the &bpublic chat&e!'
-    format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
+    format: '&7(&4SC&7) &7(&a{server}&7) {user_prefix} &e{user} &8» &f{message}'
   language:
     usage:
       - '&ePlease use &b/language (language)&e!'

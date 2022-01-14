@@ -22,6 +22,8 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
@@ -29,14 +31,17 @@ import java.util.List;
 public class StaffChatCommandCall implements CommandCall
 {
 
-    public static void sendStaffChatMessage( final String serverName, final String userName, final String message )
+    public static void sendStaffChatMessage( final User user, final String message )
     {
         BuX.getInstance().getJobManager().executeJob(
                 new BroadcastLanguageMessageJob(
                         "general-commands.staffchat.format",
                         ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
-                        "{user}", userName,
-                        "{server}", serverName,
+                        "{user}", user.getName(),
+                        "{user_prefix}", StaffUtils.getStaffRankForUser( user ).map( rank -> Utils.c( rank.getDisplay() ) ).orElse( "" ),
+                        "{permission_user_prefix}", BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ),
+                        "{permission_user_prefix}", BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ),
+                        "{server}", user.getServerName(),
                         "{message}", message
                 )
         );
@@ -48,12 +53,11 @@ public class StaffChatCommandCall implements CommandCall
         // If amount of arguments > 0, then we should directly send a message in staff chat
         if ( args.size() > 0 )
         {
-            sendStaffChatMessage( user.getServerName(), user.getName(), String.join( " ", args ) );
+            sendStaffChatMessage( user, String.join( " ", args ) );
             return;
         }
 
         user.setInStaffChat( !user.isInStaffChat() );
-
         user.sendLangMessage( "general-commands.staffchat." + ( user.isInStaffChat() ? "enabled" : "disabled" ) );
     }
 

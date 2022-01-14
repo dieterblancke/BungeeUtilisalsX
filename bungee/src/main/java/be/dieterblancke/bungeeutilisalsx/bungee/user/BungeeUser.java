@@ -431,7 +431,7 @@ public class BungeeUser implements User
     @Override
     public void sendPacket( final Object packet )
     {
-        if ( packet instanceof DefinedPacket )
+        if ( player != null && packet instanceof DefinedPacket )
         {
             player.unsafe().sendPacket( (DefinedPacket) packet );
         }
@@ -475,6 +475,12 @@ public class BungeeUser implements User
     public String getLanguageTagLong()
     {
         return player.getLocale().toString();
+    }
+
+    @Override
+    public Object getPlayerObject()
+    {
+        return player;
     }
 
     @Override

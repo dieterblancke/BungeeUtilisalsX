@@ -28,7 +28,7 @@ import java.util.Date;
 public interface Dao
 {
 
-    SimpleDateFormat format = new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" );
+    ThreadLocal<SimpleDateFormat> SIMPLE_DATE_FORMAT = ThreadLocal.withInitial( () -> new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ) );
 
     static String formatDateToString( final Date date )
     {
@@ -36,7 +36,7 @@ public interface Dao
         {
             return null;
         }
-        return format.format( date );
+        return SIMPLE_DATE_FORMAT.get().format( date );
     }
 
     static Date formatStringToDate( final String date )
@@ -47,7 +47,7 @@ public interface Dao
         }
         try
         {
-            return format.parse( date );
+            return SIMPLE_DATE_FORMAT.get().parse( date );
         }
         catch ( ParseException e )
         {

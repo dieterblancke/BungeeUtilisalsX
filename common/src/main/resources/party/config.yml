@@ -7,9 +7,9 @@ default-member-limit: 10
 # changing party owner will not change it, a new party would have to be made!
 # Change this to member-limits: [] if you want no permission specific limits.
 member-limits:
-  - permission: bungeeutilisalsx.party.limits.default
-    limit: 15
   - permission: bungeeutilisalsx.party.limits.vip
+    limit: 15
+  - permission: bungeeutilisalsx.party.limits.mvp
     limit: 25
 
 # A list of servers that you cannot be warped FROM (for example, combat log servers, login servers etc)
@@ -31,7 +31,7 @@ inactivity-period:
 # A list of party roles with their permissions, the available permissions are:
 # - INVITE
 # - KICK
-# - SETTINGS
+# - WARP
 # Besides these roles, there is also the party owner, which isn't a role.
 party-roles:
   - name: MEMBER

@@ -26,7 +26,7 @@ public class StaffChatExecutor implements EventExecutor
             {
                 event.setCancelled( true );
 
-                StaffChatCommandCall.sendStaffChatMessage( user.getServerName(), user.getName(), event.getMessage() );
+                StaffChatCommandCall.sendStaffChatMessage( user, event.getMessage() );
             }
             else
             {
@@ -55,7 +55,7 @@ public class StaffChatExecutor implements EventExecutor
         }
         final String message = event.getMessage().substring( detect.length() );
 
-        StaffChatCommandCall.sendStaffChatMessage( user.getServerName(), user.getName(), message );
+        StaffChatCommandCall.sendStaffChatMessage( user, message );
         event.setCancelled( true );
     }
 }

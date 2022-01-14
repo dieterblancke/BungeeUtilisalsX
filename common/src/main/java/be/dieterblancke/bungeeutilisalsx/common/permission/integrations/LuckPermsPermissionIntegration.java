@@ -2,7 +2,6 @@ package be.dieterblancke.bungeeutilisalsx.common.permission.integrations;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
-import lombok.SneakyThrows;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -32,10 +31,33 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
-    @SneakyThrows
+    @Override
+    public String getPrefix( final UUID uuid )
+    {
+        final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
+
+        if ( luckUser == null )
+        {
+            return "";
+        }
+        return luckUser.getCachedData().getMetaData().getPrefix();
+    }
+
+    @Override
+    public String getSuffix( final UUID uuid )
+    {
+        final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
+
+        if ( luckUser == null )
+        {
+            return "";
+        }
+        return luckUser.getCachedData().getMetaData().getSuffix();
+    }
+
     private net.luckperms.api.model.user.User loadLuckUser( final UUID uuid )
     {
         return Optional.ofNullable( net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser( uuid ) )
-                .orElse( net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).get() );
+                .orElseGet( () -> net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).join() );
     }
 }

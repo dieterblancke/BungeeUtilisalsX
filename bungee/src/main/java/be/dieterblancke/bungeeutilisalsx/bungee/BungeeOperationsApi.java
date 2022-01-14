@@ -65,12 +65,6 @@ public class BungeeOperationsApi implements ProxyOperationsApi
     }
 
     @Override
-    public String getProxyIdentifier()
-    {
-        return ProxyServer.getInstance().getName() + " " + ProxyServer.getInstance().getVersion();
-    }
-
-    @Override
     public List<PluginInfo> getPlugins()
     {
         return ProxyServer.getInstance().getPluginManager().getPlugins()
