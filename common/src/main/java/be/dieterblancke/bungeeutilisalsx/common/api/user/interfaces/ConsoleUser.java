@@ -276,4 +276,10 @@ public abstract class ConsoleUser implements User
     {
         return "en_US";
     }
+
+    @Override
+    public Object getPlayerObject()
+    {
+        return null;
+    }
 }
