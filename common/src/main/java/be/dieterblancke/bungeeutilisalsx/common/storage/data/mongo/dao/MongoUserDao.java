@@ -112,7 +112,7 @@ public class MongoUserDao implements UserDao
     }
 
     @Override
-    public CompletableFuture<UserStorage> getUserData( UUID uuid )
+    public CompletableFuture<Optional<UserStorage>> getUserData( UUID uuid )
     {
         return CompletableFuture.supplyAsync( () ->
         {
@@ -121,14 +121,14 @@ public class MongoUserDao implements UserDao
 
             if ( document != null )
             {
-                return getUserStorageFromDocument( document );
+                return Optional.of( getUserStorageFromDocument( document ) );
             }
-            return new UserStorage();
+            return Optional.empty();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public CompletableFuture<UserStorage> getUserData( String name )
+    public CompletableFuture<Optional<UserStorage>> getUserData( String name )
     {
         return CompletableFuture.supplyAsync( () ->
         {
@@ -140,9 +140,9 @@ public class MongoUserDao implements UserDao
 
             if ( document != null )
             {
-                return getUserStorageFromDocument( document );
+                return Optional.of( getUserStorageFromDocument( document ) );
             }
-            return new UserStorage();
+            return Optional.empty();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 

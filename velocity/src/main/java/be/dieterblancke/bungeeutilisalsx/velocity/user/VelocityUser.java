@@ -97,9 +97,9 @@ public class VelocityUser implements User
 
         dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
-            if ( userStorage.isLoaded() )
+            if ( userStorage.isPresent() )
             {
-                storage = userStorage;
+                storage = userStorage.get();
 
                 if ( !storage.getUserName().equalsIgnoreCase( name ) )
                 {

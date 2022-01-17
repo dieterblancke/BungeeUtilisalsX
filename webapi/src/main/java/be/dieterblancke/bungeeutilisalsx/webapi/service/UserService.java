@@ -22,9 +22,9 @@ public class UserService
             return User.console();
         }
 
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).join();
+        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).join().orElse( null );
 
-        return storage.isLoaded() ? User.of( storage ) : null;
+        return storage != null && storage.isLoaded() ? User.of( storage ) : null;
     }
 
     @Cacheable
@@ -36,8 +36,8 @@ public class UserService
     @SneakyThrows
     public User findByUuidUncached( final UUID uuid )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join();
+        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join().orElse( null );
 
-        return storage.isLoaded() ? User.of( storage ) : null;
+        return storage != null && storage.isLoaded() ? User.of( storage ) : null;
     }
 }

@@ -23,6 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
@@ -57,9 +58,10 @@ public class IgnoreCommandCall implements CommandCall, TabCall
 
             final UserDao dao = BuX.getApi().getStorageManager().getDao().getUserDao();
 
-            dao.getUserData( name ).thenAccept( storage ->
+            dao.getUserData( name ).thenAccept( optionalStorage ->
             {
-                if ( !storage.isLoaded() )
+                final UserStorage storage = optionalStorage.orElse( null );
+                if ( storage == null || !storage.isLoaded() )
                 {
                     user.sendLangMessage( "never-joined" );
                     return;

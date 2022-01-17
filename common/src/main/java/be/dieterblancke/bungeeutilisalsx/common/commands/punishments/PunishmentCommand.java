@@ -233,15 +233,14 @@ public abstract class PunishmentCommand implements CommandCall
 
         public boolean hasJoined()
         {
-            return getStorage().isLoaded();
+            return getStorage() != null && getStorage().isLoaded();
         }
 
-        @SneakyThrows
         public UserStorage getStorage()
         {
             if ( storage == null )
             {
-                return storage = dao().getUserDao().getUserData( player ).get();
+                return storage = dao().getUserDao().getUserData( player ).join().orElse( null );
             }
             return storage;
         }
@@ -313,15 +312,14 @@ public abstract class PunishmentCommand implements CommandCall
 
         public boolean hasJoined()
         {
-            return getStorage().isLoaded();
+            return getStorage() != null && getStorage().isLoaded();
         }
 
-        @SneakyThrows
         public UserStorage getStorage()
         {
             if ( storage == null )
             {
-                return storage = dao().getUserDao().getUserData( player ).get();
+                return storage = dao().getUserDao().getUserData( player ).join().orElse( null );
             }
             return storage;
         }

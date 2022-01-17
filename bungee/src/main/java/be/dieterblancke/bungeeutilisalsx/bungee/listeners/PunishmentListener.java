@@ -21,6 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -35,6 +36,7 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 
 import java.net.InetSocketAddress;
+import java.util.Optional;
 import java.util.UUID;
 
 public class PunishmentListener implements Listener
@@ -97,12 +99,19 @@ public class PunishmentListener implements Listener
 
     private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join();
+        final Dao dao = BuX.getApi().getStorageManager().getDao();
+        final Optional<UserStorage> optionalStorage = dao.getUserDao().getUserData( uuid ).join();
+
+        if ( !optionalStorage.isPresent() )
+        {
+            return null;
+        }
+        final UserStorage storage = optionalStorage.get();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
                 BuX.getInstance().getName(), storage.getLanguage()
         ).getConfig();
 
-        final BansDao bansDao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
+        final BansDao bansDao = dao.getPunishmentDao().getBansDao();
         PunishmentInfo info = bansDao.getCurrentBan( uuid, server ).join();
         if ( info == null )
         {

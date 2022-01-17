@@ -21,10 +21,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 public interface UserDao
@@ -40,9 +37,9 @@ public interface UserDao
 
     CompletableFuture<Boolean> ipExists( String ip );
 
-    CompletableFuture<UserStorage> getUserData( UUID uuid );
+    CompletableFuture<Optional<UserStorage>> getUserData( UUID uuid );
 
-    CompletableFuture<UserStorage> getUserData( String name );
+    CompletableFuture<Optional<UserStorage>> getUserData( String name );
 
     CompletableFuture<List<String>> getUsersOnIP( String ip );
 

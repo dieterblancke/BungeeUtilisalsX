@@ -60,9 +60,10 @@ public class PunishmentInfoCommandCall implements CommandCall
         final String username = args.get( 0 );
         final String server = useServerPunishments() ? args.get( 1 ) : null;
 
-        dao.getUserDao().getUserData( username ).thenAccept( storage ->
+        dao.getUserDao().getUserData( username ).thenAccept( optionalStorage ->
         {
-            if ( !storage.isLoaded() )
+            final UserStorage storage = optionalStorage.orElse( null );
+            if ( storage == null || !storage.isLoaded() )
             {
                 user.sendLangMessage( "never-joined" );
                 return;
