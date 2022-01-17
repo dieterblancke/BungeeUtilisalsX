@@ -38,7 +38,6 @@ general-commands:
     help:
       - '&e- &b/bux version'
       - '&e- &b/bux reload'
-      - '&e- &b/bux dump'
       - '&e- &b/bux convert (oldtype) [properties]'
   announce:
     usage: '&ePlease use &b/announce (p/b/c/a/t) (message)&e.'
@@ -71,7 +70,7 @@ general-commands:
   staffchat:
     enabled: '&eYou are now talking in the &bstaff chat&e!'
     disabled: '&eYou are now talking in the &bpublic chat&e!'
-    format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
+    format: '&7(&4SC&7) &7(&a{server}&7) {user_prefix} &e{user} &8» &f{message}'
   language:
     usage:
       - '&ePlease use &b/language (language)&e!'
@@ -248,6 +247,7 @@ general-commands:
     pm-cmd-disabled: '&eYou cannot send or receive any private messages while you have them &cdisabled&e.'
     not-receiving-pms: '&eThis user currently has private messages &cdisabled&e!'
   shout:
+    usage: '&ePlease use &b/shout (message)&e!'
     shout-broadcast: '&6&lSHOUT &e&l{servername} &b{user} &8» &f{message}'
     shout-broadcast-staff: '&6&lSHOUT &e&l{servername} &c(Staff) &b{user} &8» &f{message}'
   staffannouncement:
@@ -258,6 +258,10 @@ general-commands:
     online: '&eThis user is online at the moment! Please use &b/msg (user) (message) &einstead&b!'
     message: '&b{user} &e@ &b{time} &e-> &f{message}'
     sent: '&eYou have sent an offline message to &b{user}&e!'
+  opengui:
+    usage: '&ePlease use &b/opengui (type) [args] [-u=USER]&e!'
+    usage-custom: '&ePlease use &b/opengui custom (gui-name) [-u=USER]&e!'
+    gui-not-found: '&eCould not find a GUI named &b{gui}&e!'
 
 friends:
   gui:
@@ -571,6 +575,7 @@ punishments:
 
   kick:
     usage: '&fPlease use &a/kick (user) (reason)&f!'
+    usage-server: '&fPlease use &a/kick (user) (server) (reason)&f!'
     executed: '&fYou have kicked &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been kicked by &a{by} &fat &a{server}&f!'
@@ -585,6 +590,7 @@ punishments:
 
   warn:
     usage: '&fPlease use &a/warn (user) (reason)&f!'
+    usage-server: '&fPlease use &a/warn (user) (server) (reason)&f!'
     executed: '&fYou have warned &e{user} for &e{reason}&f!'
     broadcast:
       - '&a{user} &fhas been warned by &a{by} &fat &a{server}&f!'
@@ -785,6 +791,125 @@ hubbalancer:
 gui:
   input:
     cancelled: '&eThe input action was cancelled.'
+
+party:
+  not-in-party: '&eYou need to be in a party to do this.'
+  inactivity-removal: '&b{user} &ehas been automatically removed from the party due to inactivity!'
+  info:
+    - '&b{party-owner}''s &eparty info:'
+    - '&7Created at: &f{party-created-at}'
+    - '&7Party members: &f{party-member-count}'
+    - '&f{party-member-list}'
+    - '&7Sent invites: {party-invitation-count}'
+    - '&7Join requests: {party-joinrequest-count}'
+  own-party-full: '&eYour party is currently full!'
+  other-party-full: '&b{user}''s &eparty is currently full!'
+  owner-role-name: 'OWNER'
+
+  gui:
+    invite-chat-input: '&ePlease enter the name of the user you wish to invite or type ''&bcancel&e'' to abort.'
+    kick-chat-input: '&ePlease enter the name of the user you wish to kick or type ''&bcancel&e'' to abort.'
+
+  help:
+    message:
+      - '&e&lParty help reference:'
+      - '&7- &b/party create &7- Creates a new party.'
+      - '&7- &b/party disband &7- Disbands your party.'
+      - '&7- &b/party chat [message] &7- Toggles party chat mode or sends a chat message to the party.'
+      - '&7- &b/party accept (user) &7- Accepts a party invite.'
+      - '&7- &b/party info &7- Shows info of your current party.'
+      - '&7- &b/party invite (user) &7- Invites someone to your party.'
+      - '&7- &b/party kick (user) &7- Kicks someone from your party.'
+      - '&7- &b/party leave &7- Makes you leave your current party.'
+      - '&7- &b/party list (members / invites / requests) [page] &7- Lists members, invites or requests for the party.'
+      - '&7- &b/party setowner (user) &7- Sets a new party owner.'
+      - '&7- &b/party setrole (user) (role) &7- Sets a role for an user.'
+      - '&7- &b/party warp &7- Warps all party users to your current server.'
+  create:
+    already-in-party: '&eYou are already in a party.'
+    created: '&eYou have successfully created a party! You can invite people by using &b/party invite (user)&e!'
+  invite:
+    usage: '&ePlease use &b/party invite (user)&e!'
+    invite-self: '&eYou cannot invite yourself to your own party.'
+    already-in-party: '&b{user} &eis already in your party!'
+    already-in-other-party: '&b{user} &eis already in another party!'
+    not-allowed: '&eYou do not have the permission to invite people to the party!'
+    ignored: '&eYou cannot invite people that have ignored you!'
+    invited: '&eYou have been invited to &b{user}''s &bparty! Use &b/party accept {user} &eto join the party!'
+    invited-broadcast: '&b{user} &ehas been invited to the party!'
+    invite-success: '&eYou have successfully invited &b{user} &eto your party!'
+  accept:
+    usage: '&ePlease use &b/party accept (user)&e!'
+    already-in-party: '&eYou are already in a party!'
+    no-party: '&b{user} &edoes not have a party!'
+    not-invited-to-party: '&eYou have no invite to &b{user}''s &eparty!'
+    accepted: '&eYou have successfully joined &b{user}''s &eparty!'
+    joined-party: '&b{user} &ehas joined the party!'
+  leave:
+    left: '&eYou have left the party of &b{party-owner}&e!'
+    left-broadcast: '&b{user} &ehas left the party!'
+    owner-left-broadcast: '&eSince &b{party-old-owner} &ewas the party owner, &b{party-owner} &ehas been assigned as the new party owner!'
+  chat:
+    enabled: '&eParty chat is now &aENABLED&e!'
+    disabled: '&eParty chat is now &cDISABLED&e!'
+    format: '&7(PARTY) &b{user} -> &f{message}'
+  setowner:
+    usage: '&ePlease use &b/party setowner (user)&e!'
+    not-allowed: '&eYou are not the party owner!'
+    not-in-party: '&eThis user is not in your party!'
+    changed: '&eYou have given &b{new-owner} &eownership of the party!'
+    broadcast: '&b{old-owner} &ehas passed the ownership of the party to &b{new-owner}&e!'
+  kick:
+    usage: '&ePlease use &b/party kick (user)&e!'
+    not-allowed: '&eYou do not have the permission to kick people from the party!'
+    not-in-party: '&eThis user is not in your party!'
+    kick: '&eYou have kicked &b{kickedUser} &efrom your party!'
+    kicked-broadcast: '&b{kickedUser} &ehas been kicked from the party by &b{user}&e!'
+    kicked: '&eYou have been kicked from the party by &b{user}&e!'
+    cannot-kick: '&eYou cannot kick this user from the party!'
+  warp:
+    not-allowed: '&eYou do not have the permission to warp your party to your server!'
+    failed: '&eCould not warp your party to your server!'
+    nobody-to-warp: '&eThere was nobody to warp to your current server!'
+    warping: '&eWarping all party members to your server ...'
+    warped: '&eYou have been warped to &b{server}&e!'
+  setrole:
+    usage: '&ePlease use &b/party setrole (user) (role)&e!'
+    not-allowed: '&eOnly the party owner can set someone''s role!'
+    not-in-party: '&eThis user is not in your party!'
+    incorrect-role: '&eThat role does not exist, please use one of the following roles: &b{roles}'
+    role-updated: '&eYou have changed the role of &b{user} &eto &b{role}&e!'
+    role-updated-broadcast: '&b{user}''s &erole has been changed to &b{role}&e!'
+  list:
+    members:
+      empty: '&eYour party currently has no members!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+      no-role: 'None'
+
+      header: '&eParty Member List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &7({role}) &b{user} [{joinedAt}]'
+    invites:
+      empty: '&eYour party currently has no sent invites!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+
+      header: '&eParty Invite List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{invitedAt}]'
+    requests:
+      empty: '&eYour party currently has no join requests!'
+      wrong-page: '&ePlease enter a page in between &b1 and {maxpages}&e!'
+
+      header: '&eParty Join Request List (page &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{requestedAt}]'
+  disband:
+    not-allowed: '&eOnly the party owner can disband the party!'
+    broadcast: '&b{user} &ehas disbanded the party!'
+    disbanded: '&eYou have successfully disbanded your party!'
 
 custom:
   ingamemotd:

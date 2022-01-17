@@ -39,7 +39,9 @@ jobs:
           java-version: 16
           cache: 'maven'
       - name: Build with Maven
-        run: bash build.sh -Dmaven.test.skip=true
+        run: mvn package
+      - name: Fix build names
+        run: bash fix-build-names.sh
       - name: Create artifact
         uses: actions/upload-artifact@v2
         with:
@@ -48,7 +50,6 @@ jobs:
           path: |
             bungee/target/BungeeUtilisalsX*.jar
             velocity/target/BungeeUtilisalsX*.jar
-            spigot/target/BungeeUtilisalsX*.jar
             webapi/target/BungeeUtilisalsX*.jar
 
 #  deploy:

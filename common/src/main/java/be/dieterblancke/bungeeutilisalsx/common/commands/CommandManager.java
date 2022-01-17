@@ -30,6 +30,7 @@ import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.message.*;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.spy.CommandSpyCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.spy.SocialSpyCommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.commands.party.PartyCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.plugin.PluginCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.*;
 import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.removal.UnbanCommandCall;
@@ -90,6 +91,11 @@ public abstract class CommandManager
         registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
         registerGeneralCommand( "offlinemessage", new OfflineMessageCommandCall() );
 
+        if ( BuX.getInstance().isProtocolizeEnabled() )
+        {
+            registerGeneralCommand( "opengui", new OpenGuiCommandCall(), List.of( "-u" ) );
+        }
+
         if ( ConfigFiles.GENERALCOMMANDS.getConfig().getBoolean( "server.slash-server.enabled" ) )
         {
             registerSlashServerCommands();
@@ -99,6 +105,12 @@ public abstract class CommandManager
                 ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
                 ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
                 new FriendsCommandCall()
+        );
+        registerCommand(
+                "party",
+                ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "enabled" ),
+                ConfigFiles.PARTY_CONFIG.getConfig().getSection( "command" ),
+                new PartyCommandCall()
         );
     }
 

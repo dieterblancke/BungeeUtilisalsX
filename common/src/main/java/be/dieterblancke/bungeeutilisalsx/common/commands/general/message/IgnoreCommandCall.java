@@ -23,7 +23,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.List;
@@ -58,40 +57,41 @@ public class IgnoreCommandCall implements CommandCall, TabCall
 
             final UserDao dao = BuX.getApi().getStorageManager().getDao().getUserDao();
 
-            if ( !dao.exists( name ) )
+            dao.getUserData( name ).thenAccept( storage ->
             {
-                user.sendLangMessage( "never-joined" );
-                return;
-            }
-
-            final UserStorage storage = dao.getUserData( name );
-
-            if ( action.equalsIgnoreCase( "remove" ) )
-            {
-                if ( user.getStorage().getIgnoredUsers().stream().noneMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
+                if ( !storage.isLoaded() )
                 {
-                    user.sendLangMessage( "general-commands.ignore.remove.not-ignored", "{user}", name );
+                    user.sendLangMessage( "never-joined" );
                     return;
                 }
 
-                BuX.getApi().getStorageManager().getDao().getUserDao().unignoreUser( user.getUuid(), storage.getUuid() );
-                user.getStorage().getIgnoredUsers().removeIf( ignored -> ignored.equalsIgnoreCase( name ) );
-
-                user.sendLangMessage( "general-commands.ignore.remove.unignored", "{user}", name );
-            }
-            else
-            {
-                if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
+                if ( action.equalsIgnoreCase( "remove" ) )
                 {
-                    user.sendLangMessage( "general-commands.ignore.add.already-ignored", "{user}", name );
-                    return;
+                    if ( user.getStorage().getIgnoredUsers().stream().noneMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
+                    {
+                        user.sendLangMessage( "general-commands.ignore.remove.not-ignored", "{user}", name );
+                        return;
+                    }
+
+                    BuX.getApi().getStorageManager().getDao().getUserDao().unignoreUser( user.getUuid(), storage.getUuid() );
+                    user.getStorage().getIgnoredUsers().removeIf( ignored -> ignored.equalsIgnoreCase( name ) );
+
+                    user.sendLangMessage( "general-commands.ignore.remove.unignored", "{user}", name );
                 }
+                else
+                {
+                    if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
+                    {
+                        user.sendLangMessage( "general-commands.ignore.add.already-ignored", "{user}", name );
+                        return;
+                    }
 
-                BuX.getApi().getStorageManager().getDao().getUserDao().ignoreUser( user.getUuid(), storage.getUuid() );
-                user.getStorage().getIgnoredUsers().add( storage.getUserName() );
+                    BuX.getApi().getStorageManager().getDao().getUserDao().ignoreUser( user.getUuid(), storage.getUuid() );
+                    user.getStorage().getIgnoredUsers().add( storage.getUserName() );
 
-                user.sendLangMessage( "general-commands.ignore.add.ignored", "{user}", name );
-            }
+                    user.sendLangMessage( "general-commands.ignore.add.ignored", "{user}", name );
+                }
+            } );
         }
         else if ( action.equalsIgnoreCase( "list" ) )
         {

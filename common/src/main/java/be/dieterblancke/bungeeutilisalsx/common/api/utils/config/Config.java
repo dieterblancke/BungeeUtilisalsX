@@ -20,11 +20,13 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.config;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.FileUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.exception.InvalidConfigFileException;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import lombok.Getter;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.logging.Level;
 
 public class Config
@@ -46,7 +48,14 @@ public class Config
 
         if ( !file.exists() )
         {
-            IConfiguration.createDefaultFile( FileUtils.getResourceAsStream( location ), file );
+            final InputStream inputStream = FileUtils.getResourceAsStream( location );
+
+            if ( inputStream == null )
+            {
+                throw new InvalidConfigFileException();
+            }
+
+            IConfiguration.createDefaultFile( inputStream, file );
 
             this.config = IConfiguration.loadYamlConfiguration( file );
         }

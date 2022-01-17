@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.job;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.Job;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
@@ -12,6 +13,7 @@ import lombok.SneakyThrows;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 
 public class MultiProxyJobManager extends JobManager
 {
@@ -40,17 +42,25 @@ public class MultiProxyJobManager extends JobManager
     }
 
     @Override
-    @SneakyThrows
-    public void executeJob( final Job job )
+    public CompletableFuture<Void> executeJob( final Job job )
     {
-        if ( job instanceof MultiProxyJob )
+        return CompletableFuture.runAsync( () ->
         {
-            connectionFactory.getChannel().basicPublish( ALL_PROXIES_CHANNEL, "", null, this.encodeJob( job ) );
-        }
-        else
-        {
-            connectionFactory.getChannel().basicPublish( SINGLE_PROXIES_CHANNEL, "", null, this.encodeJob( job ) );
-        }
+            if ( job instanceof MultiProxyJob )
+            {
+                this.basicPublish( ALL_PROXIES_CHANNEL, this.encodeJob( job ) );
+            }
+            else
+            {
+                this.basicPublish( SINGLE_PROXIES_CHANNEL, this.encodeJob( job ) );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @SneakyThrows
+    private void basicPublish( final String channel, final byte[] message )
+    {
+        connectionFactory.getChannel().basicPublish( channel, "", null, message );
     }
 
     private void handleMessage( final String message )

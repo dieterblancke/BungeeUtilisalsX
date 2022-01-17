@@ -13,10 +13,6 @@ bungeeutilisals:
       enabled: true
       name: reload
       permission: bungeeutilisals.commands.admin.reload
-    dump:
-      enabled: true
-      name: dump
-      permission: bungeeutilisals.commands.admin.dump
 glist:
   # Enable this command or not?
   enabled: true
@@ -306,3 +302,8 @@ offlinemessage:
   permission: bungeeutilisals.commands.offlinemessage
   cooldown: 60
   execute-msg-if-online: true
+opengui:
+  enabled: true
+  name: opengui
+  aliases: 'og'
+  permission: bungeeutilisals.commands.opengui

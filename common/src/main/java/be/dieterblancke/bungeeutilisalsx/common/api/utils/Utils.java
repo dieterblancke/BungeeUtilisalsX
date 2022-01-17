@@ -935,16 +935,6 @@ public class Utils
     }
 
     /**
-     * Checks if the server is a Bukkit instance or not
-     *
-     * @return true if Bukkit instance, false if not
-     */
-    public static boolean isSpigot()
-    {
-        return classFound( "org.bukkit.Bukkit" );
-    }
-
-    /**
      * Gets the time left until a certain date
      *
      * @param format the format that should be replaced
@@ -1004,26 +994,22 @@ public class Utils
     @SneakyThrows
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
-        final List<Class<?>> classes = new ArrayList<>();
+        final List<Class<?>> classes = ClassPath.from( BuX.class.getClassLoader() )
+                .getTopLevelClassesRecursive( packageName )
+                .stream()
+                .map( ClassPath.ClassInfo::load )
+                .collect( Collectors.toList() );
 
-        classes.addAll(
-                ClassPath.from( BuX.class.getClassLoader() )
-                        .getTopLevelClassesRecursive( packageName )
-                        .stream()
-                        .map( ClassPath.ClassInfo::load )
-                        .collect( Collectors.toList() )
-        );
-
-        BuX.debug("Found " + classes + " classes in package " + packageName);
+        BuX.debug( "Found " + classes + " classes in package " + packageName );
 
         if ( classes.isEmpty() )
         {
-            BuX.debug("Class list is empty");
+            BuX.debug( "Class list is empty" );
             final CodeSource src = BuX.class.getProtectionDomain().getCodeSource();
 
             if ( src != null )
             {
-                BuX.debug("FOUND SRC");
+                BuX.debug( "FOUND SRC" );
                 try
                 {
                     final URL jar = src.getLocation();
@@ -1038,11 +1024,11 @@ public class Utils
                         }
                         final String name = e.getName().replace( "/", "." );
 
-                        BuX.debug("class name: " + name);
+                        BuX.debug( "class name: " + name );
 
                         if ( name.startsWith( packageName ) )
                         {
-                            BuX.debug("FOUND CLASS: " + name);
+                            BuX.debug( "FOUND CLASS: " + name );
 
                             if ( name.endsWith( ".class" ) )
                             {
@@ -1058,7 +1044,10 @@ public class Utils
             }
         }
 
-        return classes;
+        return classes
+                .stream()
+                .sorted( Comparator.comparing( ( Class<?> o ) -> o.getSimpleName() ) )
+                .toList();
     }
 
     /**
@@ -1079,6 +1068,7 @@ public class Utils
      * @param name the name to get the data for
      * @return the data for the given user
      */
+    @SneakyThrows
     public static UserStorage getUserStorageIfUserExists( final User user, final String name )
     {
         final UserStorage storage;
@@ -1089,14 +1079,61 @@ public class Utils
         }
         else
         {
-            if ( !BuX.getApi().getStorageManager().getDao().getUserDao().exists( name ) )
+            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).get();
+
+            if ( !storage.isLoaded() )
             {
                 return null;
             }
-
-            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name );
         }
 
         return storage;
+    }
+
+    /**
+     * @param obj the obj to check
+     * @param def the default value
+     * @param <T> type of obj
+     * @return the object given, or default if null
+     */
+    public static <T> T nullToDefault( final T obj, final T def )
+    {
+        if ( obj == null )
+        {
+            return def;
+        }
+        return obj;
+    }
+
+    /**
+     * @param string the string to check
+     * @param def    the default value
+     * @return the object given, or default if null
+     */
+    public static String blankToDefault( final String string, final String def )
+    {
+        if ( string == null || string.isBlank() )
+        {
+            return def;
+        }
+        return string;
+    }
+
+    /**
+     * @param optionals the optionals to be checked
+     * @param <T> type
+     * @return the first optional with a value, or an empty if none
+     */
+    @SafeVarargs
+    public static <T> Optional<T> firstPresent( final Optional<T>... optionals )
+    {
+        for ( Optional<T> optional : optionals )
+        {
+            if ( optional.isPresent() )
+            {
+                return optional;
+            }
+        }
+        return Optional.empty();
     }
 }

@@ -31,6 +31,7 @@ import com.google.common.collect.Lists;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class UserPunishExecutor implements EventExecutor
 {
@@ -72,43 +73,45 @@ public class UserPunishExecutor implements EventExecutor
 
         for ( PunishmentAction action : actions )
         {
-            final long amount = this.getPunishmentAmount( event, action );
-
-            if ( amount >= action.getLimit() )
+            this.getPunishmentAmount( event, action ).thenAccept( amount ->
             {
-                action.getActions().forEach( command ->
-                        BuX.getApi().getConsoleUser().executeCommand( command.replace( "%user%", event.getName() ) )
-                );
+                if ( amount >= action.getLimit() )
+                {
+                    action.getActions().forEach( command ->
+                            BuX.getApi().getConsoleUser().executeCommand( command.replace( "%user%", event.getName() ) )
+                    );
 
-                if ( event.isUserPunishment() )
-                {
-                    BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateActionStatus(
-                            action.getLimit(),
-                            event.getType(),
+                    if ( event.isUserPunishment() )
+                    {
+                        BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateActionStatus(
+                                action.getLimit(),
+                                event.getType(),
+                                event.getUuid(),
+                                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                        );
+                    }
+                    else
+                    {
+                        BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
+                                action.getLimit(),
+                                event.getType(),
+                                event.getIp(),
+                                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                        );
+                    }
+
+                    BuX.getApi().getStorageManager().getDao().getPunishmentDao().savePunishmentAction(
                             event.getUuid(),
-                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
-                    );
-                }
-                else
-                {
-                    BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
-                            action.getLimit(),
-                            event.getType(),
+                            event.getName(),
                             event.getIp(),
-                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                            action.getUid()
                     );
                 }
-                BuX.getApi().getStorageManager().getDao().getPunishmentDao().savePunishmentAction(
-                        event.getUuid(),
-                        event.getName(),
-                        event.getIp(),
-                        action.getUid()
-                );
-            }
+            } );
         }
     }
 
-    private long getPunishmentAmount( final UserPunishmentFinishEvent event, final PunishmentAction action )
+    private CompletableFuture<Long> getPunishmentAmount( final UserPunishmentFinishEvent event, final PunishmentAction action )
     {
         if ( event.isUserPunishment() )
         {

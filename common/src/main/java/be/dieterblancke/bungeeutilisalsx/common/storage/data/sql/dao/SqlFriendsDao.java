@@ -34,393 +34,433 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class SqlFriendsDao implements FriendsDao
 {
 
     @Override
-    public void addFriend( UUID user, UUID uuid )
+    public CompletableFuture<Void> addFriend( final UUID user, final UUID uuid )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_friends(user, friend, created) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, user.toString() );
-            pstmt.setString( 2, uuid.toString() );
-            pstmt.setString( 3, Dao.formatDateToString( new Date() ) );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
-    }
-
-    @Override
-    public void removeFriend( UUID user, UUID uuid )
-    {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "DELETE FROM bu_friends WHERE user = ? AND friend = ?;"
-              ) )
-        {
-            pstmt.setString( 1, user.toString() );
-            pstmt.setString( 2, uuid.toString() );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
-    }
-
-    @Override
-    public List<FriendData> getFriends( UUID uuid )
-    {
-        final List<FriendData> friends = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT created, user, friend, u.username friendname, u.lastlogout lastlogout FROM bu_friends" +
-                              " JOIN bu_users u ON friend = u.uuid" +
-                              " WHERE user = ?;"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO bu_friends(user, friend, created) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, user.toString() );
+                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 3, Dao.formatDateToString( new Date() ) );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> removeFriend( final UUID user, final UUID uuid )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "DELETE FROM bu_friends WHERE user = ? AND friend = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, user.toString() );
+                pstmt.setString( 2, uuid.toString() );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<FriendData>> getFriends( final UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<FriendData> friends = Lists.newArrayList();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT created, user, friend, u.username friendname, u.lastlogout lastlogout FROM bu_friends" +
+                                  " JOIN bu_users u ON friend = u.uuid" +
+                                  " WHERE user = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    friends.add( new FriendData(
-                            UUID.fromString( rs.getString( "friend" ) ),
-                            rs.getString( "friendname" ),
-                            Dao.formatStringToDate( rs.getString( "created" ) ),
-                            Dao.formatStringToDate( rs.getString( "lastlogout" ) )
-                    ) );
+                    while ( rs.next() )
+                    {
+                        friends.add( new FriendData(
+                                UUID.fromString( rs.getString( "friend" ) ),
+                                rs.getString( "friendname" ),
+                                Dao.formatStringToDate( rs.getString( "created" ) ),
+                                Dao.formatStringToDate( rs.getString( "lastlogout" ) )
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return friends;
+            return friends;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public long getAmountOfFriends( UUID uuid )
+    public CompletableFuture<Long> getAmountOfFriends( final UUID uuid )
     {
-        long count = 0;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT COUNT(friend) FROM bu_friends WHERE user = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
+            long count = 0;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT COUNT(friend) FROM bu_friends WHERE user = ?;"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    count = rs.getInt( 1 );
+                    if ( rs.next() )
+                    {
+                        count = rs.getLong( 1 );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return count;
+            return count;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void addFriendRequest( UUID user, UUID uuid )
+    public CompletableFuture<Void> addFriendRequest( final UUID user, final UUID uuid )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_friendrequests(user, friend, requested_at) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, user.toString() );
-            pstmt.setString( 2, uuid.toString() );
-            pstmt.setString( 3, Dao.formatDateToString( new Date() ) );
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO bu_friendrequests(user, friend, requested_at) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
+                  ) )
+            {
+                pstmt.setString( 1, user.toString() );
+                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 3, Dao.formatDateToString( new Date() ) );
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void removeFriendRequest( UUID user, UUID uuid )
+    public CompletableFuture<Void> removeFriendRequest( final UUID user, final UUID uuid )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "DELETE FROM bu_friendrequests WHERE user = ? AND friend = ?;"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user.toString() );
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "DELETE FROM bu_friendrequests WHERE user = ? AND friend = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user.toString() );
 
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<FriendRequest> getIncomingFriendRequests( UUID uuid )
+    public CompletableFuture<List<FriendRequest>> getIncomingFriendRequests( final UUID uuid )
     {
-        final List<FriendRequest> friendRequests = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT user, username, friend, requested_at FROM bu_friendrequests"
-                              + " JOIN bu_users ON user = uuid"
-                              + " WHERE friend = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
+            final List<FriendRequest> friendRequests = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT user, username, friend, requested_at FROM bu_friendrequests"
+                                  + " JOIN bu_users ON user = uuid"
+                                  + " WHERE friend = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    friendRequests.add( new FriendRequest(
-                            uuid,
-                            rs.getString( "username" ),
-                            UUID.fromString( rs.getString( "friend" ) ),
-                            null,
-                            Dao.formatStringToDate( rs.getString( "requested_at" ) )
-                    ) );
+                    while ( rs.next() )
+                    {
+                        friendRequests.add( new FriendRequest(
+                                uuid,
+                                rs.getString( "username" ),
+                                UUID.fromString( rs.getString( "friend" ) ),
+                                null,
+                                Dao.formatStringToDate( rs.getString( "requested_at" ) )
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return friendRequests;
+            return friendRequests;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<FriendRequest> getOutgoingFriendRequests( UUID uuid )
+    public CompletableFuture<List<FriendRequest>> getOutgoingFriendRequests( final UUID uuid )
     {
-        final List<FriendRequest> friendRequests = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT user, friend, username, requested_at FROM bu_friendrequests"
-                              + " JOIN bu_users ON friend = uuid"
-                              + " WHERE user = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
+            final List<FriendRequest> friendRequests = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT user, friend, username, requested_at FROM bu_friendrequests"
+                                  + " JOIN bu_users ON friend = uuid"
+                                  + " WHERE user = ?;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    friendRequests.add( new FriendRequest(
-                            uuid,
-                            null,
-                            UUID.fromString( rs.getString( "friend" ) ),
-                            rs.getString( "username" ),
-                            Dao.formatStringToDate( rs.getString( "requested_at" ) )
-                    ) );
+                    while ( rs.next() )
+                    {
+                        friendRequests.add( new FriendRequest(
+                                uuid,
+                                null,
+                                UUID.fromString( rs.getString( "friend" ) ),
+                                rs.getString( "username" ),
+                                Dao.formatStringToDate( rs.getString( "requested_at" ) )
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return friendRequests;
+            return friendRequests;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean hasIncomingFriendRequest( UUID user, UUID uuid )
+    public CompletableFuture<Boolean> hasIncomingFriendRequest( final UUID user, final UUID uuid )
     {
-        boolean found = false;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user.toString() );
+            boolean found = false;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    found = rs.getBoolean( 1 );
+                    if ( rs.next() )
+                    {
+                        found = rs.getBoolean( 1 );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return found;
+            return found;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean hasOutgoingFriendRequest( UUID user, UUID uuid )
+    public CompletableFuture<Boolean> hasOutgoingFriendRequest( final UUID user, final UUID uuid )
     {
-        boolean found = false;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, user.toString() );
-            pstmt.setString( 2, uuid.toString() );
+            boolean found = false;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, user.toString() );
+                pstmt.setString( 2, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    found = rs.getBoolean( 1 );
+                    if ( rs.next() )
+                    {
+                        found = rs.getBoolean( 1 );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return found;
+            return found;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void setSetting( UUID uuid, FriendSetting type, boolean value )
+    public CompletableFuture<Void> setSetting( UUID uuid, FriendSetting type, boolean value )
     {
-        // not really the cleanest code, but should be fine
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ? AND setting = ?"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, type.toString() );
-            boolean exists = false;
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            // not really the cleanest code, but should be fine
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ? AND setting = ?"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, type.toString() );
+                boolean exists = false;
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    exists = rs.getInt( 1 ) > 0;
+                    if ( rs.next() )
+                    {
+                        exists = rs.getInt( 1 ) > 0;
+                    }
+                }
+
+                if ( exists )
+                {
+                    try ( PreparedStatement updatePstmt = connection.prepareStatement(
+                            "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
+                    ) )
+                    {
+                        updatePstmt.setBoolean( 1, value );
+                        updatePstmt.setString( 2, uuid.toString() );
+                        updatePstmt.setString( 3, type.toString() );
+
+                        updatePstmt.executeUpdate();
+                    }
+                }
+                else
+                {
+                    try ( PreparedStatement insertPstmt = connection.prepareStatement(
+                            "INSERT INTO bu_friendsettings (user, setting, value) VALUES (?, ?, ?);"
+                    ) )
+                    {
+                        insertPstmt.setString( 1, uuid.toString() );
+                        insertPstmt.setString( 2, type.toString() );
+                        insertPstmt.setObject( 3, value );
+
+                        insertPstmt.executeUpdate();
+                    }
                 }
             }
-
-            if ( exists )
+            catch ( SQLException e )
             {
-                try ( PreparedStatement updatePstmt = connection.prepareStatement(
-                        "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
-                ) )
-                {
-                    updatePstmt.setBoolean( 1, value );
-                    updatePstmt.setString( 2, uuid.toString() );
-                    updatePstmt.setString( 3, type.toString() );
-
-                    updatePstmt.executeUpdate();
-                }
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
-            else
-            {
-                try ( PreparedStatement insertPstmt = connection.prepareStatement(
-                        "INSERT INTO bu_friendsettings (user, setting, value) VALUES (?, ?, ?);"
-                ) )
-                {
-                    insertPstmt.setString( 1, uuid.toString() );
-                    insertPstmt.setString( 2, type.toString() );
-                    insertPstmt.setObject( 3, value );
-
-                    insertPstmt.executeUpdate();
-                }
-            }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public boolean getSetting( final UUID uuid, final FriendSetting type )
+    public CompletableFuture<Boolean> getSetting( final UUID uuid, final FriendSetting type )
     {
-        boolean setting = type.getDefault();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT value FROM bu_friendsettings WHERE user = ? AND setting = ? LIMIT 1;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, type.toString() );
+            boolean setting = type.getDefault();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT value FROM bu_friendsettings WHERE user = ? AND setting = ? LIMIT 1;"
+                  ) )
             {
-                if ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, type.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    setting = rs.getBoolean( "value" );
+                    if ( rs.next() )
+                    {
+                        setting = rs.getBoolean( "value" );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return setting;
+            return setting;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public FriendSettings getSettings( UUID uuid )
+    public CompletableFuture<FriendSettings> getSettings( UUID uuid )
     {
-        final FriendSettings settings = new FriendSettings();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM bu_friendsettings WHERE user = ? LIMIT 1;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
+            final FriendSettings settings = new FriendSettings();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM bu_friendsettings WHERE user = ? LIMIT 1;"
+                  ) )
             {
-                while ( rs.next() )
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
                 {
-                    settings.set(
-                            FriendSetting.valueOf( rs.getString( "setting" ).toUpperCase() ),
-                            rs.getBoolean( "value" )
-                    );
+                    while ( rs.next() )
+                    {
+                        settings.set(
+                                FriendSetting.valueOf( rs.getString( "setting" ).toUpperCase() ),
+                                rs.getBoolean( "value" )
+                        );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
 
-        return settings;
+            return settings;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 }

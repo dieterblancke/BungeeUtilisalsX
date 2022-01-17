@@ -32,7 +32,7 @@ command:
   aliases: 'friend, bfriends'
   permission: bungeeutilisals.friends
   send-message: true
-  # Set this to true to open gui on friend command execute without arguments. Note that this REQUIRES BuX-Spigot to be in your Spigot servers.
+  # Set this to true to open gui on friend command execute without arguments.
   open-gui: false
 
 subcommands:

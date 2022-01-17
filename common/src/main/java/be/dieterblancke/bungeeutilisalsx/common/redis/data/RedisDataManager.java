@@ -2,19 +2,22 @@ package be.dieterblancke.bungeeutilisalsx.common.redis.data;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.cache.CacheHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
+import be.dieterblancke.bungeeutilisalsx.common.api.redis.PartyDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.google.common.base.MoreObjects;
 import com.google.common.cache.LoadingCache;
-import lombok.RequiredArgsConstructor;
+import lombok.Getter;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
-@RequiredArgsConstructor
+@Getter
 public class RedisDataManager implements IRedisDataManager
 {
 
     private final RedisManager redisManager;
+    private final PartyDataManager redisPartyDataManager;
     private final LoadingCache<String, Long> domainCountCache = CacheHelper.<String, Long>builder()
             .build( builder ->
             {
@@ -22,13 +25,19 @@ public class RedisDataManager implements IRedisDataManager
                 builder.expireAfterWrite( 3, TimeUnit.MINUTES );
             }, this::getAmountOfOnlineUsersOnDomainUncached );
 
+    public RedisDataManager( final RedisManager redisManager )
+    {
+        this.redisManager = redisManager;
+        this.redisPartyDataManager = new RedisPartyDataManager( redisManager );
+    }
+
     @Override
     public void loadRedisUser( final User user )
     {
         final String uuid = user.getUuid().toString();
         final String domain = user.getJoinedHost();
 
-        this.redisManager.execute( commands ->
+        this.redisManager.executeAsync( commands ->
         {
             commands.sadd( RedisDataConstants.DOMAIN_PREFIX + domain, uuid );
         } );
@@ -40,7 +49,7 @@ public class RedisDataManager implements IRedisDataManager
         final String uuid = user.getUuid().toString();
         final String domain = user.getJoinedHost();
 
-        this.redisManager.execute( commands ->
+        this.redisManager.executeAsync( commands ->
         {
             commands.srem( RedisDataConstants.DOMAIN_PREFIX + domain, uuid );
         } );
@@ -60,16 +69,34 @@ public class RedisDataManager implements IRedisDataManager
         }
     }
 
+    @Override
+    public boolean attemptShedLock( final String type, final int period, final TimeUnit unit )
+    {
+        final Long lastExecute = this.redisManager.execute( commands ->
+        {
+            final String str = commands.get( RedisDataConstants.SHEDLOCK_PREFIX + type );
+
+            return str == null ? null : Long.parseLong( str );
+        } );
+
+        if ( MoreObjects.firstNonNull( lastExecute, 0l ) + unit.toMillis( period ) > System.currentTimeMillis() )
+        {
+            return false;
+        }
+
+        this.redisManager.executeAsync( commands ->
+        {
+            commands.set( RedisDataConstants.SHEDLOCK_PREFIX + type, String.valueOf( System.currentTimeMillis() ) );
+        } );
+
+        return true;
+    }
+
     private long getAmountOfOnlineUsersOnDomainUncached( final String domain )
     {
         return redisManager.execute( commands ->
         {
             return commands.scard( RedisDataConstants.DOMAIN_PREFIX + domain );
         } );
-    }
-
-    private static final class RedisDataConstants
-    {
-        private static final String DOMAIN_PREFIX = "domain:";
     }
 }

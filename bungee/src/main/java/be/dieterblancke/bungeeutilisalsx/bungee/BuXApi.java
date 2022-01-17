@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.bungee;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.bossbar.BossBar;
-import be.dieterblancke.bungeeutilisalsx.bungee.user.ConsoleUser;
+import be.dieterblancke.bungeeutilisalsx.bungee.user.BungeeConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.IBuXApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
@@ -40,7 +40,7 @@ public class BuXApi implements IBuXApi
     private final IHubBalancer hubBalancer;
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
-    private final User consoleUser = new ConsoleUser();
+    private final User consoleUser = new BungeeConsoleUser();
     private final List<User> users = Lists.newCopyOnWriteArrayList();
 
     @Override

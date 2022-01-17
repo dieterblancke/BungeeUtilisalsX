@@ -34,6 +34,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -43,9 +44,9 @@ public interface User extends MessageRecipient
     /**
      * Loads the user.
      *
-     * @param uuid The parent player uuid, null if console
+     * @param player the player object
      */
-    void load( UUID uuid );
+    void load( Object player );
 
     /**
      * Unloads the User from storage.
@@ -54,8 +55,10 @@ public interface User extends MessageRecipient
 
     /**
      * Saves the local user data onto the database.
+     *
+     * @param logout if the save action is executed on logout
      */
-    void save();
+    void save( boolean logout );
 
     /**
      * @return User data is being stored in here.
@@ -347,18 +350,20 @@ public interface User extends MessageRecipient
     default void sendOfflineMessages()
     {
         final OfflineMessageDao offlineMessageDao = BuX.getApi().getStorageManager().getDao().getOfflineMessageDao();
-        final List<OfflineMessage> messages = offlineMessageDao.getOfflineMessages( this.getName() );
 
-        if ( !messages.isEmpty() )
+        offlineMessageDao.getOfflineMessages( this.getName() ).thenAccept( messages ->
         {
-            this.sendLangMessage( "offlinemessages-join-header" );
-
-            for ( OfflineMessage message : messages )
+            if ( !messages.isEmpty() )
             {
-                this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
-                offlineMessageDao.updateOfflineMessage( message.getId(), false );
+                this.sendLangMessage( "offlinemessages-join-header" );
+
+                for ( OfflineMessage message : messages )
+                {
+                    this.sendLangMessage( message.getLanguagePath(), message.getPlaceholders() );
+                    offlineMessageDao.deleteOfflineMessage( message.getId() );
+                }
             }
-        }
+        } );
     }
 
     /**
@@ -429,4 +434,33 @@ public interface User extends MessageRecipient
      * @param vanished the vanish state to be set
      */
     void setVanished( boolean vanished );
+
+    /**
+     * @return the cached user group
+     */
+    String getGroup();
+
+    /**
+     * Gets the user current server
+     *
+     * @return an optional of the server the user is currently in
+     */
+    default Optional<IProxyServer> getCurrentServer() {
+        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo(this.getServerName()) );
+    }
+
+    /**
+     * @return short language tag of the user, f.e. "en"
+     */
+    String getLanguageTagShort();
+
+    /**
+     * @return long language tag of the user, f.e. "en_US"
+     */
+    String getLanguageTagLong();
+
+    /**
+     * @return the underlying player object
+     */
+    Object getPlayerObject();
 }

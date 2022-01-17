@@ -46,8 +46,9 @@ public class StaffUtils
         return BuX.getApi().getUser( name ).map( User::isVanished ).orElse( false );
     }
 
-    public static Optional<StaffRankData> getStaffRankForUser( final User user) {
-        final String group = BuX.getInstance().getActivePermissionIntegration().getGroup( user.getUuid() );
+    public static Optional<StaffRankData> getStaffRankForUser( final User user )
+    {
+        final String group = user.getGroup();
 
         return ConfigFiles.RANKS.getRanks()
                 .stream()

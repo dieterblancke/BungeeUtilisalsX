@@ -17,6 +17,7 @@ public class GuiConfig extends Config
     private final Class<? extends GuiConfigItem> configItemClass;
     private final String title;
     private final int rows;
+    private final String permission;
     private final List<GuiConfigItem> items = new ArrayList<>();
 
     public GuiConfig( final String fileLocation, final Class<? extends GuiConfigItem> configItemClass )
@@ -27,6 +28,7 @@ public class GuiConfig extends Config
         this.configItemClass = configItemClass;
         this.title = super.getConfig().getString( "title" );
         this.rows = super.getConfig().getInteger( "rows" );
+        this.permission = super.getConfig().exists( "permission" ) ? super.getConfig().getString( "permission" ) : null;
 
         this.loadItems();
     }

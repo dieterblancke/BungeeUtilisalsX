@@ -1,0 +1,106 @@
+enabled: false
+
+# The default member limit, put to -1 to leave unlimited
+default-member-limit: 10
+
+# Permissions that are allowed to have higher party member limits. This is checked on party creation,
+# changing party owner will not change it, a new party would have to be made!
+# Change this to member-limits: [] if you want no permission specific limits.
+member-limits:
+  - permission: bungeeutilisalsx.party.limits.vip
+    limit: 15
+  - permission: bungeeutilisalsx.party.limits.mvp
+    limit: 25
+
+# A list of servers that you cannot be warped FROM (for example, combat log servers, login servers etc)
+disabled-warp-from-servers:
+  - LoginServers
+
+inactivity-period:
+  # How often should BungeeUtilisalsX scan for inactive parties (in seconds)?
+  # This scans all parties for offline members, if all members are offline, the party will be flagged inactive.
+  # Next scan, if the party is already inactive AND all party members are still offline, then the party will be removed.
+  party: 60
+
+  # How often should BungeeUtilisalsX scan for inactive party members (in seconds)?
+  # This will flag members that are offline, next scan, if they are still offline, they will be removed from the party
+  # If the party is empty, the party will be removed, if the party owner is offline, a new owner will be assigned automatically
+  # Set this to -1 to not automatically remove inactive members!
+  party-member: -1
+
+# A list of party roles with their permissions, the available permissions are:
+# - INVITE
+# - KICK
+# - WARP
+# Besides these roles, there is also the party owner, which isn't a role.
+party-roles:
+  - name: MEMBER
+    default: true
+    priority: 1
+    permissions: []
+  - name: MODERATOR
+    priority: 2
+    permissions:
+      - INVITE
+      - KICK
+      - WARP
+
+command:
+  aliases: 'party, bparty'
+  permission: bungeeutilisalsx.party
+  send-message: true
+  # Set this to true to open gui on party command execute without arguments.
+  open-gui: false
+
+# Set this to false if you don't want people to be able to be invited if they are already in a party.
+allow-invites-to-members-already-in-party: true
+
+subcommands:
+  create:
+    enabled: true
+    aliases: 'make, new'
+    permission: bungeeutilisalsx.party.create
+  invite:
+    enabled: true
+    aliases: 'invite, add'
+    permission: bungeeutilisalsx.party.invite
+  accept:
+    enabled: true
+    aliases: 'join'
+    permission: bungeeutilisalsx.party.accept
+  leave:
+    enabled: true
+    aliases: 'quit'
+    permission: bungeeutilisalsx.party.leave
+  chat:
+    enabled: true
+    aliases: 'c'
+    permission: bungeeutilisalsx.party.chat
+  setowner:
+    enabled: true
+    aliases: 'owner'
+    permission: bungeeutilisalsx.party.setowner
+  kick:
+    enabled: true
+    aliases: 'remove'
+    permission: bungeeutilisalsx.party.kick
+  warp:
+    enabled: true
+    aliases: 'tphere'
+    permission: bungeeutilisalsx.party.warp
+  list:
+    enabled: true
+    aliases: 'l'
+    permission: bungeeutilisalsx.party.list
+  setrole:
+    enabled: true
+    aliases: 'sr'
+    permission: bungeeutilisalsx.party.setrole
+  disband:
+    enabled: true
+    aliases: 'dispose'
+    permission: bungeeutilisalsx.party.disband
+  info:
+    enabled: true
+    aliases: 'stats'
+    permission: bungeeutilisalsx.party.info

@@ -56,10 +56,9 @@ public class SwearChatProtection implements ChatProtection
     @Override
     public SwearValidationResult validateMessage( final User user, final String message )
     {
-        final IConfiguration config = ConfigFiles.ANTISWEAR.getConfig();
         if ( !enabled || user.hasPermission( bypassPermission ) )
         {
-            return new SwearValidationResult( true, message );
+            return new SwearValidationResult( true, null, message );
         }
 
         for ( Pattern blockedWordPattern : this.blockedWords )
@@ -84,7 +83,7 @@ public class SwearChatProtection implements ChatProtection
             }
         }
 
-        return new SwearValidationResult( true, message );
+        return new SwearValidationResult( true, null, message );
     }
 
     private SwearValidationResult validateMessage( final String message, final Pattern pattern, final List<String> whitelist )
@@ -102,11 +101,10 @@ public class SwearChatProtection implements ChatProtection
         if ( matcher.find() )
         {
             final String word = matcher.group();
-            final String lowercasedWord = word.toLowerCase();
 
-            return new SwearValidationResult( false, message.replace( word, replaceWith ) );
+            return new SwearValidationResult( false, word, message.replace( word, replaceWith ) );
         }
-        return new SwearValidationResult( true, message );
+        return new SwearValidationResult( true, null, message );
     }
 
     @Data

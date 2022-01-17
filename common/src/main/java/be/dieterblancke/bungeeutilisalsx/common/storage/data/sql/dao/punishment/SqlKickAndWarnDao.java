@@ -33,296 +33,321 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 public class SqlKickAndWarnDao implements KickAndWarnDao
 {
 
     @Override
-    public PunishmentInfo insertWarn( UUID uuid, String user, String ip, String reason, String server, String executedby )
+    public CompletableFuture<PunishmentInfo> insertWarn( UUID uuid, String user, String ip, String reason, String server, String executedby )
     {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                              " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setString( 6, executedby );
-            pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.WARN, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
-    }
-
-    @Override
-    public PunishmentInfo insertKick( UUID uuid, String user, String ip, String reason, String server, String executedby )
-    {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                              " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, user );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, reason );
-            pstmt.setString( 5, server );
-            pstmt.setString( 6, executedby );
-            pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
-        return PunishmentDao.buildPunishmentInfo( PunishmentType.KICK, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
-    }
-
-    @Override
-    public List<PunishmentInfo> getKicks( UUID uuid )
-    {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE uuid = ?;"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                                  " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                  ) )
             {
-                while ( rs.next() )
-                {
-                    final int id = rs.getInt( "id" );
-                    final String ip = rs.getString( "ip" );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setString( 6, executedby );
+                pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    ) );
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo( PunishmentType.WARN, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<PunishmentInfo> insertKick( UUID uuid, String user, String ip, String reason, String server, String executedby )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                                  " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, user );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, reason );
+                pstmt.setString( 5, server );
+                pstmt.setString( 6, executedby );
+                pstmt.setString( 7, Dao.formatDateToString( new Date() ) );
+
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
+            return PunishmentDao.buildPunishmentInfo( PunishmentType.KICK, uuid, user, ip, reason, server, executedby, new Date(), -1, true, null );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<PunishmentInfo>> getKicks( UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE uuid = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        final int id = rs.getInt( "id" );
+                        final String ip = rs.getString( "ip" );
+                        final String user = rs.getString( "user" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        punishments.add( PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getWarns( UUID uuid )
+    public CompletableFuture<List<PunishmentInfo>> getWarns( UUID uuid )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE uuid = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, uuid.toString() );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE uuid = ?;"
+                  ) )
             {
-                while ( rs.next() )
-                {
-                    final int id = rs.getInt( "id" );
-                    final String ip = rs.getString( "ip" );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setString( 1, uuid.toString() );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    ) );
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        final int id = rs.getInt( "id" );
+                        final String ip = rs.getString( "ip" );
+                        final String user = rs.getString( "user" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        punishments.add( PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getKicksExecutedBy( String name )
+    public CompletableFuture<List<PunishmentInfo>> getKicksExecutedBy( String name )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE executed_by = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, name );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE executed_by = ?;"
+                  ) )
             {
-                while ( rs.next() )
-                {
-                    final int id = rs.getInt( "id" );
-                    final String ip = rs.getString( "ip" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setString( 1, name );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    ) );
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        final int id = rs.getInt( "id" );
+                        final String ip = rs.getString( "ip" );
+                        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                        final String user = rs.getString( "user" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        punishments.add( PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public List<PunishmentInfo> getWarnsExecutedBy( String name )
+    public CompletableFuture<List<PunishmentInfo>> getWarnsExecutedBy( String name )
     {
-        final List<PunishmentInfo> punishments = Lists.newArrayList();
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE executed_by = ?;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setString( 1, name );
+            final List<PunishmentInfo> punishments = Lists.newArrayList();
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE executed_by = ?;"
+                  ) )
             {
-                while ( rs.next() )
-                {
-                    final int id = rs.getInt( "id" );
-                    final String ip = rs.getString( "ip" );
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setString( 1, name );
 
-                    punishments.add( PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    ) );
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        final int id = rs.getInt( "id" );
+                        final String ip = rs.getString( "ip" );
+                        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                        final String user = rs.getString( "user" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        punishments.add( PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        ) );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return punishments;
+            return punishments;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getKickById( String id )
+    public CompletableFuture<PunishmentInfo> getKickById( String id )
     {
-        PunishmentInfo info = null;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE id = ? LIMIT 1;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setInt( 1, Integer.parseInt( id ) );
+            PunishmentInfo info = null;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE id = ? LIMIT 1;"
+                  ) )
             {
-                if ( rs.next() )
-                {
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setInt( 1, Integer.parseInt( id ) );
 
-                    info = PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    );
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                        final String user = rs.getString( "user" );
+                        final String ip = rs.getString( "ip" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        info = PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return info;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public PunishmentInfo getWarnById( String id )
+    public CompletableFuture<PunishmentInfo> getWarnById( String id )
     {
-        PunishmentInfo info = null;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE id = ? LIMIT 1;"
-              ) )
+        return CompletableFuture.supplyAsync( () ->
         {
-            pstmt.setInt( 1, Integer.parseInt( id ) );
+            PunishmentInfo info = null;
 
-            try ( ResultSet rs = pstmt.executeQuery() )
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE id = ? LIMIT 1;"
+                  ) )
             {
-                if ( rs.next() )
-                {
-                    final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
-                    final String user = rs.getString( "user" );
-                    final String ip = rs.getString( "ip" );
-                    final String reason = rs.getString( "reason" );
-                    final String server = rs.getString( "server" );
-                    final String executedby = rs.getString( "executed_by" );
-                    final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+                pstmt.setInt( 1, Integer.parseInt( id ) );
 
-                    info = PunishmentDao.buildPunishmentInfo(
-                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                            date, -1, true, null
-                    );
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        final UUID uuid = UUID.fromString( rs.getString( "uuid" ) );
+                        final String user = rs.getString( "user" );
+                        final String ip = rs.getString( "ip" );
+                        final String reason = rs.getString( "reason" );
+                        final String server = rs.getString( "server" );
+                        final String executedby = rs.getString( "executed_by" );
+                        final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
+
+                        info = PunishmentDao.buildPunishmentInfo(
+                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                                date, -1, true, null
+                        );
+                    }
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
-        }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
+            }
 
-        return info;
+            return info;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 }

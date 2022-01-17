@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -27,55 +26,52 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface MutesDao
 {
 
-    boolean isMuted( UUID uuid, String server );
+    CompletableFuture<Boolean> isMuted( UUID uuid, String server );
 
-    boolean isIPMuted( String ip, String server );
+    CompletableFuture<Boolean> isIPMuted( String ip, String server );
 
-    boolean isMuted( PunishmentType type, UUID uuid, String server );
+    CompletableFuture<PunishmentInfo> insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    boolean isIPMuted( PunishmentType type, String ip, String server );
+    CompletableFuture<PunishmentInfo> insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
 
-    PunishmentInfo insertMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
+    CompletableFuture<PunishmentInfo> insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo insertIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby );
+    CompletableFuture<PunishmentInfo> insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
 
-    PunishmentInfo insertTempMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
+    CompletableFuture<PunishmentInfo> getCurrentMute( UUID uuid, String server );
 
-    PunishmentInfo insertTempIPMute( UUID uuid, String user, String ip, String reason, String server, boolean active, String executedby, long duration );
+    CompletableFuture<PunishmentInfo> getCurrentIPMute( String ip, String server );
 
-    PunishmentInfo getCurrentMute( UUID uuid, String server );
+    CompletableFuture<Void> removeCurrentMute( UUID uuid, String removedBy, String server );
 
-    PunishmentInfo getCurrentIPMute( String ip, String server );
+    CompletableFuture<Void> removeCurrentIPMute( String ip, String removedBy, String server );
 
-    void removeCurrentMute( UUID uuid, String removedBy, String server );
+    CompletableFuture<List<PunishmentInfo>> getMutes( UUID uuid );
 
-    void removeCurrentIPMute( String ip, String removedBy, String server );
+    CompletableFuture<List<PunishmentInfo>> getMutes( UUID uuid, String server );
 
-    List<PunishmentInfo> getMutes( UUID uuid );
+    CompletableFuture<List<PunishmentInfo>> getMutesExecutedBy( String name );
 
-    List<PunishmentInfo> getMutes( UUID uuid, String server );
+    CompletableFuture<List<PunishmentInfo>> getIPMutes( String ip );
 
-    List<PunishmentInfo> getMutesExecutedBy( String name );
+    CompletableFuture<List<PunishmentInfo>> getIPMutes( String ip, String server );
 
-    List<PunishmentInfo> getIPMutes( String ip );
+    CompletableFuture<List<PunishmentInfo>> getRecentMutes( int limit );
 
-    List<PunishmentInfo> getIPMutes( String ip, String server );
+    CompletableFuture<PunishmentInfo> getById( String id );
 
-    List<PunishmentInfo> getRecentMutes( int limit );
+    CompletableFuture<PunishmentInfo> getByPunishmentId( String punishmentUid );
 
-    PunishmentInfo getById( String id );
+    CompletableFuture<List<PunishmentInfo>> getActiveMutes( UUID uuid );
 
-    PunishmentInfo getByPunishmentId( String punishmentUid );
+    CompletableFuture<List<PunishmentInfo>> getActiveIPMutes( String ip );
 
-    List<PunishmentInfo> getActiveMutes( UUID uuid );
-
-    List<PunishmentInfo> getActiveIPMutes( String ip );
-
-    boolean isPunishmentUidFound( String puid );
+    CompletableFuture<Boolean> isPunishmentUidFound( String puid );
 
     default String createUniqueMuteId()
     {
@@ -85,7 +81,7 @@ public interface MutesDao
         );
 
         // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
-        while ( this.isPunishmentUidFound( uid ) )
+        while ( this.isPunishmentUidFound( uid ).join() )
         {
             uid = Utils.createRandomString(
                     PunishmentDao.getPunishmentIdCharacters(),
@@ -96,7 +92,7 @@ public interface MutesDao
         return uid;
     }
 
-    int softDeleteSince( String user, String removedBy, Date date );
+    CompletableFuture<Integer> softDeleteSince( String user, String removedBy, Date date );
 
-    int hardDeleteSince( String user, Date date );
+    CompletableFuture<Integer> hardDeleteSince( String user, Date date );
 }

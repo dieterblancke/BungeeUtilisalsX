@@ -3,7 +3,6 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 import java.util.Optional;
@@ -11,15 +10,25 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
-public abstract class HasUserJob implements MultiProxyJob
+public abstract class HasUserJob extends HasUuidJob
 {
 
-    private final UUID uuid;
     private final String userName;
 
-    public Optional<User> getUser()
+    public HasUserJob( final UUID uuid, final String userName )
     {
-        return BuX.getApi().getUser( uuid );
+        super( uuid );
+
+        this.userName = userName;
+    }
+
+    public Optional<User> getUserByName()
+    {
+        if ( userName == null )
+        {
+            return Optional.empty();
+        }
+
+        return BuX.getApi().getUser( userName );
     }
 }

@@ -23,6 +23,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface TracksDao
 {
@@ -39,9 +40,9 @@ public interface TracksDao
         }
     }
 
-    List<PunishmentTrackInfo> getTrackInfos( UUID uuid, String trackId, String server );
+    CompletableFuture<List<PunishmentTrackInfo>> getTrackInfos( UUID uuid, String trackId, String server );
 
-    void addToTrack( PunishmentTrackInfo punishmentTrackInfo );
+    CompletableFuture<Void> addToTrack( PunishmentTrackInfo punishmentTrackInfo );
 
-    void resetTrack( UUID uuid, String trackId, String server );
+    CompletableFuture<Void> resetTrack( UUID uuid, String trackId, String server );
 }

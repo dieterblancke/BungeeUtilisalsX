@@ -2,8 +2,9 @@ package be.dieterblancke.bungeeutilisalsx.webapi.util;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import net.md_5.bungee.api.chat.BaseComponent;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,12 +36,6 @@ public class SpringProxyOperations implements ProxyOperationsApi
     }
 
     @Override
-    public String getProxyIdentifier()
-    {
-        return null;
-    }
-
-    @Override
     public List<PluginInfo> getPlugins()
     {
         return null;
@@ -50,5 +45,17 @@ public class SpringProxyOperations implements ProxyOperationsApi
     public Optional<PluginInfo> getPlugin( String pluginName )
     {
         return Optional.empty();
+    }
+
+    @Override
+    public long getMaxPlayers()
+    {
+        return 0;
+    }
+
+    @Override
+    public Object getMessageComponent( BaseComponent... components )
+    {
+        return null;
     }
 }

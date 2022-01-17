@@ -24,6 +24,7 @@ import java.util.Random;
 
 public class RandomIterator<T> implements Iterator<T>
 {
+
     private static final Random RANDOM = new Random();
     private final List<T> data;
     private final int[] iteratedIndexes;

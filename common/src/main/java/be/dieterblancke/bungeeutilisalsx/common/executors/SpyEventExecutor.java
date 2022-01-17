@@ -29,6 +29,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SpyEventExecutor implements EventExecutor
 {
@@ -37,8 +38,7 @@ public class SpyEventExecutor implements EventExecutor
     public void onPrivateMessage( final UserPrivateMessageEvent event )
     {
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "socialspy.permission" );
-        final List<User> users = BuX.getApi().getUsers()
-                .stream()
+        final List<User> users = Stream.concat( BuX.getApi().getUsers().stream(), Stream.of( BuX.getApi().getConsoleUser() ) )
                 .filter( user -> user.isSocialSpy() && user.hasPermission( permission ) )
                 .filter( user -> !user.getName().equals( event.getSender() )
                         && !user.getName().equals( event.getReceiver() ) )
@@ -63,7 +63,6 @@ public class SpyEventExecutor implements EventExecutor
     @Event
     public void onCommand( final UserCommandEvent event )
     {
-        final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "commandspy.permission" );
         final String commandName = event.getActualCommand().replaceFirst( "/", "" );
 
         for ( String command : ConfigFiles.GENERALCOMMANDS.getConfig().getStringList( "commandspy.ignored-commands" ) )

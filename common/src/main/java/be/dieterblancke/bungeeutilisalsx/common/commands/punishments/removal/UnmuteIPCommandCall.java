@@ -59,7 +59,7 @@ public class UnmuteIPCommandCall extends PunishmentCommand
             return;
         }
         final UserStorage storage = punishmentRemovalArgs.getStorage();
-        if ( !dao().getPunishmentDao().getMutesDao().isIPMuted( storage.getIp(), punishmentRemovalArgs.getServerOrAll() ) )
+        if ( !dao().getPunishmentDao().getMutesDao().isIPMuted( storage.getIp(), punishmentRemovalArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.unmuteip.not-muted" );
             return;

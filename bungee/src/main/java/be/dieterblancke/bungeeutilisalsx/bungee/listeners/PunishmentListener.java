@@ -19,7 +19,6 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
@@ -98,21 +97,16 @@ public class PunishmentListener implements Listener
 
     private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid );
-        final Language language = storage.getLanguage() == null ? BuX.getApi().getLanguageManager().getDefaultLanguage() : storage.getLanguage();
+        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
-                BuX.getInstance().getName(), language
+                BuX.getInstance().getName(), storage.getLanguage()
         ).getConfig();
 
         final BansDao bansDao = BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao();
-        PunishmentInfo info = null;
-        if ( bansDao.isBanned( uuid, server ) )
+        PunishmentInfo info = bansDao.getCurrentBan( uuid, server ).join();
+        if ( info == null )
         {
-            info = bansDao.getCurrentBan( uuid, server );
-        }
-        else if ( bansDao.isIPBanned( ip, server ) )
-        {
-            info = bansDao.getCurrentIPBan( ip, server );
+            info = bansDao.getCurrentIPBan( ip, server ).join();
         }
 
         if ( info == null )

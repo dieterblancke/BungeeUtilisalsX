@@ -32,4 +32,10 @@ public class Scheduler implements IScheduler
                 () -> EXECUTOR_SERVICE.execute( runnable ), delay, period, unit
         );
     }
+
+    @Override
+    public Executor getExecutorService()
+    {
+        return EXECUTOR_SERVICE;
+    }
 }

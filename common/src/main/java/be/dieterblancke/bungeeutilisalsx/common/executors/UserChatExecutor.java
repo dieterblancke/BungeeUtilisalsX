@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEv
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
@@ -82,13 +83,14 @@ public class UserChatExecutor implements EventExecutor
             {
                 event.setMessage( swearValidationResult.getResultMessage() );
             }
-            user.sendLangMessage( "chat-protection.swear" );
+            user.sendLangMessage( "chat-protection.swear", "{swear-word}", swearValidationResult.getSwearWord() );
 
             if ( config.exists( "commands" ) )
             {
                 config.getStringList( "commands" ).forEach( command ->
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
+                    command = Utils.replacePlaceHolders( command, "{swear-word}", swearValidationResult.getSwearWord() );
 
                     BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
@@ -192,5 +194,32 @@ public class UserChatExecutor implements EventExecutor
                 consumers.clear();
             }
         }
+    }
+
+    @Event
+    public void onPartyChat( final UserChatEvent event )
+    {
+        if ( BuX.getInstance().getPartyManager() == null )
+        {
+            return;
+        }
+
+        BuX.getInstance().getPartyManager().getCurrentPartyFor( event.getUser().getName() )
+                .ifPresent( party -> party.getPartyMembers()
+                        .stream()
+                        .filter( m -> m.getUuid().equals( event.getUser().getUuid() ) )
+                        .filter( m -> m.isChat() )
+                        .findFirst()
+                        .ifPresent( member ->
+                        {
+                            event.setCancelled( true );
+
+                            BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                                    party,
+                                    "party.chat.format",
+                                    "{user}", event.getUser().getName(),
+                                    "{message}", event.getMessage()
+                            );
+                        } ) );
     }
 }

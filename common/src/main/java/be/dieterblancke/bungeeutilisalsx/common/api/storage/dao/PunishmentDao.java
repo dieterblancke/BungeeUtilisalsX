@@ -18,6 +18,7 @@
 
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
+import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
@@ -29,6 +30,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface PunishmentDao
 {
@@ -103,6 +105,18 @@ public interface PunishmentDao
         return buildPunishmentInfo( String.valueOf( -1 ), type, uuid, user, ip, reason, server, executedby, date, time, active, removedby, punishmentUid );
     }
 
+    static boolean useServerPunishments()
+    {
+        try
+        {
+            return ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "per-server-punishments" );
+        }
+        catch ( Exception e )
+        {
+            return true;
+        }
+    }
+
     BansDao getBansDao();
 
     MutesDao getMutesDao();
@@ -111,23 +125,31 @@ public interface PunishmentDao
 
     TracksDao getTracksDao();
 
-    long getPunishmentsSince( PunishmentType type, UUID uuid, Date date );
+    CompletableFuture<Long> getPunishmentsSince( PunishmentType type, UUID uuid, Date date );
 
-    long getIPPunishmentsSince( PunishmentType type, String ip, Date date );
+    CompletableFuture<Long> getIPPunishmentsSince( PunishmentType type, String ip, Date date );
 
-    void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date );
+    CompletableFuture<Void> updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date );
 
-    void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date );
+    CompletableFuture<Void> updateIPActionStatus( int limit, PunishmentType type, String ip, Date date );
 
-    void savePunishmentAction( UUID uuid, String username, String ip, String uid );
+    CompletableFuture<Void> savePunishmentAction( UUID uuid, String username, String ip, String uid );
 
-    default int softDeleteSince( final String user, final String removedBy, final Date time )
+    default CompletableFuture<Integer> softDeleteSince( final String user, final String removedBy, final Date time )
     {
-        return getBansDao().softDeleteSince( user, removedBy, time ) + getMutesDao().softDeleteSince( user, removedBy, time );
+        return CompletableFuture.supplyAsync(
+                () -> getBansDao().softDeleteSince( user, removedBy, time ).join()
+                        + getMutesDao().softDeleteSince( user, removedBy, time ).join(),
+                BuX.getInstance().getScheduler().getExecutorService()
+        );
     }
 
-    default int hardDeleteSince( final String user, final Date time )
+    default CompletableFuture<Integer> hardDeleteSince( final String user, final Date time )
     {
-        return getBansDao().hardDeleteSince( user, time ) + getMutesDao().hardDeleteSince( user, time );
+        return CompletableFuture.supplyAsync(
+                () -> getBansDao().hardDeleteSince( user, time ).join()
+                        + getMutesDao().hardDeleteSince( user, time ).join(),
+                BuX.getInstance().getScheduler().getExecutorService()
+        );
     }
 }

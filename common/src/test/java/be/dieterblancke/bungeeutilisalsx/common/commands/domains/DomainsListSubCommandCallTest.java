@@ -17,6 +17,7 @@ import org.mockito.internal.verification.VerificationModeFactory;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 import static org.mockito.Mockito.*;
 
@@ -46,13 +47,13 @@ class DomainsListSubCommandCallTest extends BuXTest
                 .getStorageManager()
                 .getDao()
                 .getUserDao()
-                .getJoinedHostList() ).thenReturn( new HashMap<String, Integer>()
+                .getJoinedHostList() ).thenReturn( CompletableFuture.completedFuture( new HashMap<>()
         {{
             put( "test.play.example.com", 25 );
             put( "test8.play.example.com", 15 );
             put( "test446.play.example.com", 10 );
             put( "play.example.com", 30 );
-        }} );
+        }} ) );
 
         final User user = Mockito.mock( User.class );
 

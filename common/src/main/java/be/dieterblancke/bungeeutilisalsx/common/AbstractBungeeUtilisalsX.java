@@ -7,12 +7,14 @@ import be.dieterblancke.bungeeutilisalsx.common.announcers.tab.TabAnnouncer;
 import be.dieterblancke.bungeeutilisalsx.common.announcers.title.TitleAnnouncer;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffJoinEvent;
-import be.dieterblancke.bungeeutilisalsx.common.api.event.events.network.NetworkStaffLeaveEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.punishment.UserPunishmentFinishEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.staff.NetworkStaffJoinEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.staff.NetworkStaffLeaveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
@@ -20,7 +22,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -31,15 +32,16 @@ import be.dieterblancke.bungeeutilisalsx.common.job.MultiProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManager;
 import be.dieterblancke.bungeeutilisalsx.common.migration.MigrationManagerFactory;
+import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
-import be.dieterblancke.bungeeutilisalsx.common.placeholders.CenterPlaceHolder;
-import be.dieterblancke.bungeeutilisalsx.common.placeholders.JavaScriptPlaceHolder;
+import be.dieterblancke.bungeeutilisalsx.common.placeholders.*;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
+import com.dbsoftwares.configuration.api.FileStorageType;
 import com.dbsoftwares.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
@@ -53,7 +55,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
 
 @Data
 public abstract class AbstractBungeeUtilisalsX
@@ -69,6 +70,7 @@ public abstract class AbstractBungeeUtilisalsX
     private JobManager jobManager;
     private RedisManager redisManager;
     private ProtocolizeManager protocolizeManager;
+    private PartyManager partyManager;
 
     public AbstractBungeeUtilisalsX()
     {
@@ -101,13 +103,18 @@ public abstract class AbstractBungeeUtilisalsX
         this.redisManager = useMultiProxy ? RedisManagerFactory.create() : null;
         this.jobManager = useMultiProxy ? new MultiProxyJobManager() : new SingleProxyJobManager();
 
+        if ( ConfigFiles.PARTY_CONFIG.isEnabled() )
+        {
+            this.partyManager = new SimplePartyManager();
+        }
+
         this.detectPermissionIntegration();
+        this.registerProtocolizeSupport();
         this.registerLanguages();
         this.registerListeners();
         this.registerExecutors();
         this.registerCommands();
         this.registerPluginSupports();
-        this.registerProtocolizeSupport();
 
         Announcer.registerAnnouncers(
                 ActionBarAnnouncer.class,
@@ -143,52 +150,48 @@ public abstract class AbstractBungeeUtilisalsX
 
         PlaceHolderAPI.addPlaceHolder( xmlPlaceHolders );
         PlaceHolderAPI.addPlaceHolder( false, "javascript", new JavaScriptPlaceHolder() );
+
+        PlaceHolderAPI.loadPlaceHolderPack( new DefaultPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new InputPlaceHolders() );
+        PlaceHolderAPI.loadPlaceHolderPack( new UserPlaceHolderPack() );
+        PlaceHolderAPI.loadPlaceHolderPack( new PermissionPlaceHolderPack() );
     }
 
-    protected abstract void registerLanguages();
+    protected void registerLanguages()
+    {
+        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
+        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
+    }
 
     protected abstract void registerListeners();
 
     protected void registerExecutors()
     {
-        final UserExecutor userExecutor = new UserExecutor();
-        this.api.getEventLoader().register( UserLoadEvent.class, userExecutor );
-        this.api.getEventLoader().register( UserUnloadEvent.class, userExecutor );
-        this.api.getEventLoader().register( UserServerConnectedEvent.class, userExecutor );
+        new UserExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
+        new StaffNetworkExecutor().registerForEvents( NetworkStaffJoinEvent.class, NetworkStaffLeaveEvent.class );
+        new SpyEventExecutor().registerForEvents( UserPrivateMessageEvent.class, UserCommandEvent.class );
 
         this.api.getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
         this.api.getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
-
-        final StaffNetworkExecutor staffNetworkExecutor = new StaffNetworkExecutor();
-        this.api.getEventLoader().register( NetworkStaffJoinEvent.class, staffNetworkExecutor );
-        this.api.getEventLoader().register( NetworkStaffLeaveEvent.class, staffNetworkExecutor );
-
-        final SpyEventExecutor spyEventExecutor = new SpyEventExecutor();
-        this.api.getEventLoader().register( UserPrivateMessageEvent.class, spyEventExecutor );
-        this.api.getEventLoader().register( UserCommandEvent.class, spyEventExecutor );
-
         this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
         this.api.getEventLoader().register( UserServerConnectedEvent.class, new IngameMotdExecutor() );
+        this.api.getEventLoader().register( UserCommandEvent.class, new UserCommandExecutor() );
 
-        final UserCommandExecutor userCommandExecutor = new UserCommandExecutor();
-        this.api.getEventLoader().register( UserCommandEvent.class, userCommandExecutor );
+        if ( ConfigFiles.MOTD.isEnabled() )
+        {
+            this.api.getEventLoader().register( ProxyMotdPingEvent.class, new ProxyMotdPingExecutor() );
+        }
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
-            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
+            new MuteCheckExecutor().registerForEvents( UserChatEvent.class, UserCommandEvent.class );
 
-            final MuteCheckExecutor muteCheckExecutor = new MuteCheckExecutor();
-            this.api.getEventLoader().register( UserChatEvent.class, muteCheckExecutor );
-            this.api.getEventLoader().register( UserCommandEvent.class, muteCheckExecutor );
+            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
         }
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
-            final FriendsExecutor friendsExecutor = new FriendsExecutor();
-
-            this.api.getEventLoader().register( UserLoadEvent.class, friendsExecutor );
-            this.api.getEventLoader().register( UserUnloadEvent.class, friendsExecutor );
-            this.api.getEventLoader().register( UserServerConnectedEvent.class, friendsExecutor );
+            new FriendsExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
         }
     }
 
@@ -326,14 +329,6 @@ public abstract class AbstractBungeeUtilisalsX
 
     public void shutdown()
     {
-        if ( !Utils.isSpigot() )
-        {
-            BuX.getApi().getStorageManager().getDao().getUserDao().setCurrentServerBulk(
-                    this.api.getUsers().stream().map( User::getUuid ).collect( Collectors.toList() ),
-                    null
-            );
-        }
-
         Lists.newArrayList( this.api.getUsers() ).forEach( User::unload );
         try
         {
@@ -366,9 +361,15 @@ public abstract class AbstractBungeeUtilisalsX
         return protocolizeManager != null;
     }
 
+    public boolean isPartyManagerEnabled()
+    {
+        return partyManager != null;
+    }
+
     protected abstract void registerMetrics();
 
-    protected void migrate() {
+    protected void migrate()
+    {
         final MigrationManager migrationManager = MigrationManagerFactory.createMigrationManager();
         migrationManager.initialize();
         try

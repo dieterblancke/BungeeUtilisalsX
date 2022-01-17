@@ -1,11 +1,8 @@
-# Java LocalDate representation in GraphQL
 scalar Date
-# Java LocalDateTime representation in GraphQL
 scalar DateTime
-# Java UUID representation in GraphQL
 scalar UUID
-# Java Long representation in GraphQL
 scalar Long
+scalar Void
 
 enum FriendRequestType {
     # Filter type for incoming friend requests
@@ -100,14 +97,50 @@ type Query {
 }
 
 type Mutation {
-    updateUser(uuid: UUID!, input: UserUpdateInput): User
+    updateUser(uuid: UUID!, input: UserUpdateInput!): User
+    createPunishment(input: CreatePunishmentInput!): Punishment
+    removePunishment(input: RemovePunishmentInput!): Void
 }
 
 input UserUpdateInput {
-    userName: String!
-    ip: String!
+    userName: String
+    ip: String
     language: String
     lastLogout: DateTime
+}
+
+input CreatePunishmentInput {
+    # the punishment type
+    type: PunishmentType!
+    # the punished user (name)
+    user: String!
+    # the punished user (uuid)
+    uuid: UUID!
+    # the punished user (ip)
+    ip: String!
+    # the user who executed the punishment
+    executedBy: String!
+    # the server the punishment was executed on (or "ALL")
+    server: String!
+    # the reason of the punishment
+    reason: String!
+    # the expiry time (in milliseconds) of the punishment, -1 if permanent punishment
+    expireTime: Long
+    # the activity status of the punishment
+    active: Boolean!
+}
+
+input RemovePunishmentInput {
+    # the punishment type
+    type: PunishmentType!
+    # the punished user (uuid)
+    uuid: UUID
+    # the punished user (ip)
+    ip: String
+    # the user who removed the punishment
+    removedBy: String!
+    # the server the punishment should be removed for (or "ALL")
+    server: String
 }
 
 type User {
@@ -171,7 +204,7 @@ type Punishment {
     # the punished user (ip)
     ip: String!
     # the user who executed the punishment
-    executedBy: User!
+    executedBy: User
     # the server the punishment was executed on (or "ALL")
     server: String!
     # the reason of the punishment

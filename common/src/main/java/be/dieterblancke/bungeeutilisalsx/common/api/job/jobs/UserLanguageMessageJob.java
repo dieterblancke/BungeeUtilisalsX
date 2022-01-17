@@ -1,20 +1,16 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
-import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.HasUserJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.Optional;
+import java.util.UUID;
 
 @Getter
 @Setter
-public class UserLanguageMessageJob implements MultiProxyJob
+public class UserLanguageMessageJob extends HasUserJob
 {
 
-    private String userName;
     private boolean prefix;
     private boolean colorBefore;
     private String languagePath;
@@ -51,13 +47,31 @@ public class UserLanguageMessageJob implements MultiProxyJob
         this( userName, true, false, languagePath, placeholders );
     }
 
+    public UserLanguageMessageJob( final UUID uuid,
+                                   final String languagePath,
+                                   final Object... placeholders )
+    {
+        this( uuid, null, true, false, languagePath, placeholders );
+    }
+
     public UserLanguageMessageJob( final String userName,
                                    final boolean prefix,
                                    final boolean colorBefore,
                                    final String languagePath,
                                    final Object... placeholders )
     {
-        this.userName = userName;
+        this( null, userName, prefix, colorBefore, languagePath, placeholders );
+    }
+
+    public UserLanguageMessageJob( final UUID uuid,
+                                   final String userName,
+                                   final boolean prefix,
+                                   final boolean colorBefore,
+                                   final String languagePath,
+                                   final Object... placeholders )
+    {
+        super( uuid, userName );
+
         this.prefix = prefix;
         this.colorBefore = colorBefore;
         this.languagePath = languagePath;
@@ -68,10 +82,5 @@ public class UserLanguageMessageJob implements MultiProxyJob
     public boolean isAsync()
     {
         return true;
-    }
-
-    public Optional<User> getUser()
-    {
-        return BuX.getApi().getUser( userName );
     }
 }

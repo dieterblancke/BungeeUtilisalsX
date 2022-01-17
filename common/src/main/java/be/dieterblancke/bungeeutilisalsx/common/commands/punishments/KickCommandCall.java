@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -56,39 +55,41 @@ public class KickCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getKickAndWarnDao().insertKick(
+        dao().getPunishmentDao().getKickAndWarnDao().insertKick(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
                 reason,
-                user.getServerName(),
+                punishmentArgs.getServerOrAll(),
                 user.getName()
-        );
-
-        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
-        super.attemptKick( storage, "punishments.kick.onkick", info );
-        user.sendLangMessage( "punishments.kick.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
+        ).thenAccept( info ->
         {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.kick.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.kick.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.kick.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
 
-        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.KICK );
+            // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+            super.attemptKick( storage, "punishments.kick.onkick", info );
+            user.sendLangMessage( "punishments.kick.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.kick.broadcast",
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.kick.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.kick.broadcast" ),
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+            }
+
+            punishmentArgs.launchPunishmentFinishEvent( PunishmentType.KICK );
+        } );
     }
 
     @Override

@@ -2,10 +2,10 @@ package be.dieterblancke.bungeeutilisalsx.common.permission.integrations;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration;
-import lombok.SneakyThrows;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class LuckPermsPermissionIntegration implements PermissionIntegration
 {
@@ -17,7 +17,22 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
     }
 
     @Override
-    public String getGroup( final UUID uuid )
+    public CompletableFuture<String> getGroup( final UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
+
+            if ( luckUser == null )
+            {
+                return "";
+            }
+            return luckUser.getPrimaryGroup();
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public String getPrefix( final UUID uuid )
     {
         final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
 
@@ -25,13 +40,24 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
         {
             return "";
         }
-        return luckUser.getPrimaryGroup();
+        return luckUser.getCachedData().getMetaData().getPrefix();
     }
 
-    @SneakyThrows
+    @Override
+    public String getSuffix( final UUID uuid )
+    {
+        final net.luckperms.api.model.user.User luckUser = this.loadLuckUser( uuid );
+
+        if ( luckUser == null )
+        {
+            return "";
+        }
+        return luckUser.getCachedData().getMetaData().getSuffix();
+    }
+
     private net.luckperms.api.model.user.User loadLuckUser( final UUID uuid )
     {
         return Optional.ofNullable( net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser( uuid ) )
-                .orElse( net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).get() );
+                .orElseGet( () -> net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).join() );
     }
 }

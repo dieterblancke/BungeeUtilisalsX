@@ -137,6 +137,11 @@ public class EventLoader implements IEventLoader
                 }
             }
         }
+
+        if ( event instanceof HasCompletionHandlers c )
+        {
+            c.handleCompletion();
+        }
     }
 
     @Override

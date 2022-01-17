@@ -37,6 +37,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
 
@@ -81,18 +82,79 @@ public class SqlPunishmentDao implements PunishmentDao
     }
 
     @Override
-    public long getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
+    public CompletableFuture<Long> getPunishmentsSince( PunishmentType type, UUID uuid, Date date )
     {
-        int count = 0;
-
-        if ( type.isActivatable() )
+        return CompletableFuture.supplyAsync( () ->
         {
+            long count = 0;
+
+            if ( type.isActivatable() )
+            {
+                try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                      PreparedStatement pstmt = connection.prepareStatement(
+                              "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ?;"
+                      ) )
+                {
+                    pstmt.setString( 1, uuid.toString() );
+                    pstmt.setString( 2, Dao.formatDateToString( date ) );
+                    pstmt.setString( 3, type.toString() );
+                    pstmt.setBoolean( 4, false );
+
+                    try ( ResultSet rs = pstmt.executeQuery() )
+                    {
+                        if ( rs.next() )
+                        {
+                            count = rs.getLong( 1 );
+                        }
+                    }
+                }
+                catch ( SQLException e )
+                {
+                    BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+                }
+            }
+            else
+            {
+                try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                      PreparedStatement pstmt = connection.prepareStatement(
+                              "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ?;"
+                      ) )
+                {
+                    pstmt.setString( 1, uuid.toString() );
+                    pstmt.setString( 2, Dao.formatDateToString( date ) );
+                    pstmt.setBoolean( 3, false );
+
+                    try ( ResultSet rs = pstmt.executeQuery() )
+                    {
+                        if ( rs.next() )
+                        {
+                            count = rs.getLong( 1 );
+                        }
+                    }
+                }
+                catch ( SQLException e )
+                {
+                    BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+                }
+            }
+
+            return count;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Long> getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            long count = 0;
+
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ?;"
+                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ?;"
                   ) )
             {
-                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 1, ip );
                 pstmt.setString( 2, Dao.formatDateToString( date ) );
                 pstmt.setString( 3, type.toString() );
                 pstmt.setBoolean( 4, false );
@@ -101,7 +163,7 @@ public class SqlPunishmentDao implements PunishmentDao
                 {
                     if ( rs.next() )
                     {
-                        count = rs.getInt( 1 );
+                        count = rs.getLong( 1 );
                     }
                 }
             }
@@ -109,77 +171,71 @@ public class SqlPunishmentDao implements PunishmentDao
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
-        }
-        else
-        {
-            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-                  PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT COUNT(id) FROM " + type.getTable() + " WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ?;"
-                  ) )
-            {
-                pstmt.setString( 1, uuid.toString() );
-                pstmt.setString( 2, Dao.formatDateToString( date ) );
-                pstmt.setBoolean( 3, false );
-
-                try ( ResultSet rs = pstmt.executeQuery() )
-                {
-                    if ( rs.next() )
-                    {
-                        count = rs.getInt( 1 );
-                    }
-                }
-            }
-            catch ( SQLException e )
-            {
-                BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-            }
-        }
-
-        return count;
+            return count;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public long getIPPunishmentsSince( PunishmentType type, String ip, Date date )
+    public CompletableFuture<Void> updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
     {
-        int count = 0;
-
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT COUNT(id) FROM " + type.getTable() + " WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ?;"
-              ) )
+        return CompletableFuture.runAsync( () ->
         {
-            pstmt.setString( 1, ip );
-            pstmt.setString( 2, Dao.formatDateToString( date ) );
-            pstmt.setString( 3, type.toString() );
-            pstmt.setBoolean( 4, false );
-
-            try ( ResultSet rs = pstmt.executeQuery() )
+            if ( type.isActivatable() )
             {
-                if ( rs.next() )
+                try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                      PreparedStatement pstmt = connection.prepareStatement(
+                              "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+                      ) )
                 {
-                    count = rs.getInt( 1 );
+                    pstmt.setBoolean( 1, true );
+                    pstmt.setString( 2, uuid.toString() );
+                    pstmt.setString( 3, Dao.formatDateToString( date ) );
+                    pstmt.setString( 4, type.toString() );
+                    pstmt.setBoolean( 5, false );
+                    pstmt.setInt( 6, limit );
+
+                    pstmt.executeUpdate();
+                }
+                catch ( SQLException e )
+                {
+                    BuX.getLogger().log( Level.SEVERE, "An error occured", e );
                 }
             }
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-        return count;
+            else
+            {
+                try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                      PreparedStatement pstmt = connection.prepareStatement(
+                              "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ? LIMIT ?;"
+                      ) )
+                {
+                    pstmt.setBoolean( 1, true );
+                    pstmt.setString( 2, uuid.toString() );
+                    pstmt.setString( 3, Dao.formatDateToString( date ) );
+                    pstmt.setBoolean( 4, false );
+                    pstmt.setInt( 5, limit );
+
+                    pstmt.executeUpdate();
+                }
+                catch ( SQLException e )
+                {
+                    BuX.getLogger().log( Level.SEVERE, "An error occured", e );
+                }
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public void updateActionStatus( int limit, PunishmentType type, UUID uuid, Date date )
+    public CompletableFuture<Void> updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
     {
-        if ( type.isActivatable() )
+        return CompletableFuture.runAsync( () ->
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
+                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, true );
-                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 2, ip );
                 pstmt.setString( 3, Dao.formatDateToString( date ) );
                 pstmt.setString( 4, type.toString() );
                 pstmt.setBoolean( 5, false );
@@ -191,71 +247,31 @@ public class SqlPunishmentDao implements PunishmentDao
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
-        }
-        else
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> savePunishmentAction( UUID uuid, String username, String ip, String uid )
+    {
+        return CompletableFuture.runAsync( () ->
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE uuid = ? AND date >= " + Dao.getInsertDateParameter() + " AND punishmentaction_status = ? LIMIT ?;"
+                          "INSERT INTO bu_punishmentactions (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
                   ) )
             {
-                pstmt.setBoolean( 1, true );
-                pstmt.setString( 2, uuid.toString() );
-                pstmt.setString( 3, Dao.formatDateToString( date ) );
-                pstmt.setBoolean( 4, false );
-                pstmt.setInt( 5, limit );
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, username );
+                pstmt.setString( 3, ip );
+                pstmt.setString( 4, uid );
+                pstmt.setString( 5, Dao.formatDateToString( new Date() ) );
 
-                pstmt.executeUpdate();
+                pstmt.execute();
             }
             catch ( SQLException e )
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured", e );
             }
-        }
-    }
-
-    @Override
-    public void updateIPActionStatus( int limit, PunishmentType type, String ip, Date date )
-    {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "UPDATE " + type.getTable() + " SET punishmentaction_status = ? WHERE ip = ? AND date >= " + Dao.getInsertDateParameter() + " AND type = ? AND punishmentaction_status = ? LIMIT ?;"
-              ) )
-        {
-            pstmt.setBoolean( 1, true );
-            pstmt.setString( 2, ip );
-            pstmt.setString( 3, Dao.formatDateToString( date ) );
-            pstmt.setString( 4, type.toString() );
-            pstmt.setBoolean( 5, false );
-            pstmt.setInt( 6, limit );
-
-            pstmt.executeUpdate();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
-    }
-
-    @Override
-    public void savePunishmentAction( UUID uuid, String username, String ip, String uid )
-    {
-        try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
-              PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_punishmentactions (uuid, user, ip, actionid, date) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
-              ) )
-        {
-            pstmt.setString( 1, uuid.toString() );
-            pstmt.setString( 2, username );
-            pstmt.setString( 3, ip );
-            pstmt.setString( 4, uid );
-            pstmt.setString( 5, Dao.formatDateToString( new Date() ) );
-
-            pstmt.execute();
-        }
-        catch ( SQLException e )
-        {
-            BuX.getLogger().log( Level.SEVERE, "An error occured", e );
-        }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 }

@@ -2,13 +2,10 @@ package be.dieterblancke.bungeeutilisalsx.velocity;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.dump.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.CommandHolder;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
-import com.google.common.cache.CacheBuilder;
-import com.google.common.cache.CacheLoader;
-import com.google.common.cache.LoadingCache;
 import com.velocitypowered.api.command.CommandManager;
 import com.velocitypowered.api.command.CommandMeta;
 import com.velocitypowered.api.plugin.PluginContainer;
@@ -16,13 +13,14 @@ import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.chat.ComponentSerializer;
 
-import javax.annotation.Nonnull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 public class VelocityOperationsApi implements ProxyOperationsApi
@@ -76,14 +74,6 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     }
 
     @Override
-    public String getProxyIdentifier()
-    {
-        return Bootstrap.getInstance().getProxyServer().getVersion().getName()
-                + " " + Bootstrap.getInstance().getProxyServer().getVersion().getVendor()
-                + " " + Bootstrap.getInstance().getProxyServer().getVersion().getVersion();
-    }
-
-    @Override
     public List<PluginInfo> getPlugins()
     {
         return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugins()
@@ -96,9 +86,25 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     @Override
     public Optional<PluginInfo> getPlugin( final String pluginName )
     {
-        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugin( pluginName )
+        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugins()
+                .stream()
+                .filter( it -> it.getDescription().getName().orElse( "" ).equalsIgnoreCase( pluginName )
+                        || it.getDescription().getId().equalsIgnoreCase( pluginName ) )
+                .findFirst()
                 .map( PluginContainer::getDescription )
                 .map( this::getPluginInfo );
+    }
+
+    @Override
+    public long getMaxPlayers()
+    {
+        return Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers();
+    }
+
+    @Override
+    public Object getMessageComponent( final BaseComponent... components )
+    {
+        return GsonComponentSerializer.gson().deserialize( ComponentSerializer.toString( components ) );
     }
 
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )

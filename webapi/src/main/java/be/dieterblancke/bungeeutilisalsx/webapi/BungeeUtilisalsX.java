@@ -64,6 +64,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     {
         ConfigFiles.CONFIG.load();
         ConfigFiles.LANGUAGES_CONFIG.load();
+        ConfigFiles.PUNISHMENT_CONFIG.load();
     }
 
     @Override
@@ -91,13 +92,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void loadPlaceHolders()
     {
-    }
-
-    @Override
-    protected void registerLanguages()
-    {
-        this.getApi().getLanguageManager().addPlugin( this.getName(), new File( getDataFolder(), "languages" ), FileStorageType.YAML );
-        this.getApi().getLanguageManager().loadLanguages( this.getClass(), this.getName() );
     }
 
     @Override

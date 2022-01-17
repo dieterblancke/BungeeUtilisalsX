@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.friends.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
@@ -61,7 +60,6 @@ public class FriendDenySubCommandCall implements CommandCall
             return;
         }
         final String name = args.get( 0 );
-        final int friendLimit = FriendUtils.getFriendLimit( user );
         final FriendsDao dao = BuX.getApi().getStorageManager().getDao().getFriendsDao();
         final Optional<User> optionalTarget = BuX.getApi().getUser( name );
         final UserStorage storage = Utils.getUserStorageIfUserExists( optionalTarget.orElse( null ), name );
@@ -72,7 +70,7 @@ public class FriendDenySubCommandCall implements CommandCall
             return;
         }
 
-        if ( !dao.hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ) )
+        if ( !dao.hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
             user.sendLangMessage( "friends.deny.no-request", "{user}", name );
             return;

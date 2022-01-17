@@ -43,7 +43,7 @@ public class UserConnectionListener
     {
         final VelocityUser user = new VelocityUser();
 
-        user.load( event.getPlayer().getUniqueId() );
+        user.load( event.getPlayer() );
     }
 
     // Executing on FIRST to get it to execute early on in the quit procedure

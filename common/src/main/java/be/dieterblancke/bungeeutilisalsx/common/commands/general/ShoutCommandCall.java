@@ -13,7 +13,20 @@ public class ShoutCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
+        if ( args.size() == 0 )
+        {
+            user.sendLangMessage( "general-commands.shout.usage" );
+            return;
+        }
+
         final String message = String.join( " ", args );
+
+        if ( message.isBlank() )
+        {
+
+            return;
+        }
+
         String shoutMessagePath = "general-commands.shout.shout-broadcast";
         if ( user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "shout.staff-permission" ) ) )
         {

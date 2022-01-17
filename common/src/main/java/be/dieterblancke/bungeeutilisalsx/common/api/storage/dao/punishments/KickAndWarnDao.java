@@ -22,23 +22,24 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface KickAndWarnDao
 {
 
-    PunishmentInfo insertWarn( UUID uuid, String user, String ip, String reason, String server, String executedby );
+    CompletableFuture<PunishmentInfo> insertWarn( UUID uuid, String user, String ip, String reason, String server, String executedby );
 
-    PunishmentInfo insertKick( UUID uuid, String user, String ip, String reason, String server, String executedby );
+    CompletableFuture<PunishmentInfo> insertKick( UUID uuid, String user, String ip, String reason, String server, String executedby );
 
-    List<PunishmentInfo> getKicks( final UUID uuid );
+    CompletableFuture<List<PunishmentInfo>> getKicks( final UUID uuid );
 
-    List<PunishmentInfo> getWarns( final UUID uuid );
+    CompletableFuture<List<PunishmentInfo>> getWarns( final UUID uuid );
 
-    List<PunishmentInfo> getKicksExecutedBy( String name );
+    CompletableFuture<List<PunishmentInfo>> getKicksExecutedBy( String name );
 
-    List<PunishmentInfo> getWarnsExecutedBy( String name );
+    CompletableFuture<List<PunishmentInfo>> getWarnsExecutedBy( String name );
 
-    PunishmentInfo getKickById( final String id );
+    CompletableFuture<PunishmentInfo> getKickById( final String id );
 
-    PunishmentInfo getWarnById( final String id );
+    CompletableFuture<PunishmentInfo> getWarnById( final String id );
 }

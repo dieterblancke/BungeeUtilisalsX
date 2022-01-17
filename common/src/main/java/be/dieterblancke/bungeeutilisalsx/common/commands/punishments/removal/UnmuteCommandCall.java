@@ -59,7 +59,7 @@ public class UnmuteCommandCall extends PunishmentCommand
             return;
         }
         final UserStorage storage = punishmentRemovalArgs.getStorage();
-        if ( !dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentRemovalArgs.getServerOrAll() ) )
+        if ( !dao().getPunishmentDao().getMutesDao().isMuted( storage.getUuid(), punishmentRemovalArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.unmute.not-muted" );
             return;
@@ -107,7 +107,7 @@ public class UnmuteCommandCall extends PunishmentCommand
             }
         }
     }
-    
+
     @Override
     public String getDescription()
     {

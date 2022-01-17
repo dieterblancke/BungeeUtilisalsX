@@ -4,23 +4,23 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public interface PermissionIntegration
 {
 
-    static PermissionIntegration getActiveIntegration()
-    {
-        return null;
-    }
-
     boolean isActive();
 
-    String getGroup( UUID user );
+    CompletableFuture<String> getGroup( UUID user );
+
+    String getPrefix( UUID uuid );
+
+    String getSuffix( UUID uuid );
 
     default boolean hasLowerOrEqualGroup( final UUID userUuid, final UUID otherUuid )
     {
-        final String userGroup = this.getGroup( userUuid );
-        final String otherGroup = this.getGroup( otherUuid );
+        final String userGroup = this.getGroup( userUuid ).join();
+        final String otherGroup = this.getGroup( otherUuid ).join();
 
         if ( userGroup.isEmpty() || otherGroup.isEmpty() )
         {

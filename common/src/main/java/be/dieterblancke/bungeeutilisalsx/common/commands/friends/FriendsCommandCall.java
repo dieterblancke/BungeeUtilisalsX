@@ -33,13 +33,9 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
 
     public FriendsCommandCall()
     {
-        super( user ->
-                {
-                    if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" ) )
-                    {
-                        user.sendLangMessage( "friends.help.message" );
-                    }
-                }
+        super(
+                user -> user.sendLangMessage( "friends.help.message" ),
+                () -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" )
         );
 
         super.registerSubCommand(

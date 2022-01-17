@@ -31,10 +31,10 @@ import lombok.Getter;
 
 import java.util.List;
 
+@Getter
 public class MotdConfig extends Config
 {
 
-    @Getter
     private final List<MotdData> motds = Lists.newArrayList();
 
     public MotdConfig( String location )

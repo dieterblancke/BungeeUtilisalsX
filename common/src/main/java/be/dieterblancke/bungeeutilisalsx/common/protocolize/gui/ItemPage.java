@@ -78,7 +78,7 @@ public class ItemPage
         }
     }
 
-    protected boolean shouldShow( final int page, final int max, final GuiConfigItem item )
+    protected boolean shouldShow( final User user, final int page, final int max, final GuiConfigItem item )
     {
         if ( item.getShowIf().equalsIgnoreCase( "has-previous-page" ) )
         {
@@ -190,7 +190,9 @@ public class ItemPage
                     );
 
                     handler.accept( gui, user, event );
-                } else {
+                }
+                else
+                {
                     user.sendLangMessage( "gui.input.cancel" );
                 }
             } );

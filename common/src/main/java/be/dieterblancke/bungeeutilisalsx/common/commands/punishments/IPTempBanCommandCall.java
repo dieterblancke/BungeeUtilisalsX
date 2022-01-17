@@ -20,7 +20,6 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -48,7 +47,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
             user.sendLangMessage( "punishments.iptempban.non-valid" );
             return;
         }
-        if ( dao().getPunishmentDao().getBansDao().isIPBanned( storage.getIp(), punishmentArgs.getServerOrAll() ) )
+        if ( dao().getPunishmentDao().getBansDao().isIPBanned( storage.getIp(), punishmentArgs.getServerOrAll() ).join() )
         {
             user.sendLangMessage( "punishments.iptempban.already-banned" );
             return;
@@ -58,7 +57,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
             return;
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
-        final PunishmentInfo info = dao().getPunishmentDao().getBansDao().insertTempIPBan(
+        dao().getPunishmentDao().getBansDao().insertTempIPBan(
                 storage.getUuid(),
                 storage.getUserName(),
                 storage.getIp(),
@@ -67,33 +66,34 @@ public class IPTempBanCommandCall extends PunishmentCommand
                 true,
                 user.getName(),
                 time
-        );
-
-        // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
-        super.attemptKick( storage, "punishments.iptempban.kick", info );
-
-        user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
-
-        if ( !parameters.contains( "-s" ) )
+        ).thenAccept( info ->
         {
-            if ( parameters.contains( "-nbp" ) )
-            {
-                BuX.getApi().langBroadcast(
-                        "punishments.iptempban.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-            else
-            {
-                BuX.getApi().langPermissionBroadcast(
-                        "punishments.iptempban.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.iptempban.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
-            }
-        }
+            // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
+            super.attemptKick( storage, "punishments.iptempban.kick", info );
 
-        punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPBAN );
+            user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+
+            if ( !parameters.contains( "-s" ) )
+            {
+                if ( parameters.contains( "-nbp" ) )
+                {
+                    BuX.getApi().langBroadcast(
+                            "punishments.iptempban.broadcast",
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+                else
+                {
+                    BuX.getApi().langPermissionBroadcast(
+                            "punishments.iptempban.broadcast",
+                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.iptempban.broadcast" ),
+                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                    );
+                }
+            }
+
+            punishmentArgs.launchPunishmentFinishEvent( PunishmentType.IPTEMPBAN );
+        } );
     }
 
     @Override

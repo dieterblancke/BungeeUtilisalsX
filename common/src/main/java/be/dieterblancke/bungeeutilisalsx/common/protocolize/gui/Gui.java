@@ -105,11 +105,11 @@ public class Gui
     public void refill()
     {
         inventory = new Inventory( InventoryType.valueOf( "GENERIC_9X" + rows ) );
-        inventory.title( Utils.format( Utils.replacePlaceHolders(
+        inventory.title( BuX.getInstance().proxyOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
                 title,
                 "{page}", page,
                 "{max}", pageableItemProvider.getPageAmount()
-        ) ) );
+        ) ) ) );
         inventory.onClick( this::handleInventoryClick );
 
         final ItemPage itemPage = pageableItemProvider.getItemContents( page );
