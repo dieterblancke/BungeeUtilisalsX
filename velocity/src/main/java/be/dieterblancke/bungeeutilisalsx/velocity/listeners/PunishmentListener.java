@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.BansDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
@@ -35,6 +36,7 @@ import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import net.kyori.adventure.text.Component;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public class PunishmentListener
@@ -96,7 +98,14 @@ public class PunishmentListener
 
     private String getKickReasonIfBanned( final UUID uuid, final String ip, final String server )
     {
-        final UserStorage storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( uuid ).join();
+        final Dao dao = BuX.getApi().getStorageManager().getDao();
+        final Optional<UserStorage> optionalStorage = dao.getUserDao().getUserData( uuid ).join();
+
+        if ( !optionalStorage.isPresent() )
+        {
+            return null;
+        }
+        final UserStorage storage = optionalStorage.get();
         final Language language = storage.getLanguage() == null ? BuX.getApi().getLanguageManager().getDefaultLanguage() : storage.getLanguage();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
                 BuX.getInstance().getName(), language

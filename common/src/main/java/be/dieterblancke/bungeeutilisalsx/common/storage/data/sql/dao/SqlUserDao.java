@@ -31,10 +31,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 
@@ -177,11 +174,11 @@ public class SqlUserDao implements UserDao
     }
 
     @Override
-    public CompletableFuture<UserStorage> getUserData( final UUID uuid )
+    public CompletableFuture<Optional<UserStorage>> getUserData( final UUID uuid )
     {
         return CompletableFuture.supplyAsync( () ->
         {
-            final UserStorage storage = new UserStorage();
+            UserStorage storage = null;
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement( "SELECT * FROM bu_users WHERE uuid = ?;" ) )
@@ -192,7 +189,7 @@ public class SqlUserDao implements UserDao
                 {
                     if ( rs.next() )
                     {
-                        loadUserStorageFromResultSet( connection, storage, rs );
+                        storage = loadUserStorageFromResultSet( connection, rs );
                     }
                 }
             }
@@ -200,16 +197,16 @@ public class SqlUserDao implements UserDao
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
-            return storage;
+            return Optional.ofNullable( storage );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
     @Override
-    public CompletableFuture<UserStorage> getUserData( final String name )
+    public CompletableFuture<Optional<UserStorage>> getUserData( final String name )
     {
         return CompletableFuture.supplyAsync( () ->
         {
-            final UserStorage storage = new UserStorage();
+            UserStorage storage = null;
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement( "SELECT * FROM bu_users WHERE username = ? OR ip = ?;" ) )
@@ -221,7 +218,7 @@ public class SqlUserDao implements UserDao
                 {
                     if ( rs.next() )
                     {
-                        loadUserStorageFromResultSet( connection, storage, rs );
+                        storage = loadUserStorageFromResultSet( connection, rs );
                     }
                 }
             }
@@ -229,7 +226,7 @@ public class SqlUserDao implements UserDao
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
-            return storage;
+            return Optional.ofNullable( storage );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -470,10 +467,10 @@ public class SqlUserDao implements UserDao
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
-    private void loadUserStorageFromResultSet( final Connection connection,
-                                               final UserStorage storage,
-                                               final ResultSet rs ) throws SQLException
+    private UserStorage loadUserStorageFromResultSet( final Connection connection,
+                                                      final ResultSet rs ) throws SQLException
     {
+        final UserStorage storage = new UserStorage();
         storage.setUuid( UUID.fromString( rs.getString( "uuid" ) ) );
         storage.setUserName( rs.getString( "username" ) );
         storage.setIp( rs.getString( "ip" ) );
@@ -482,6 +479,7 @@ public class SqlUserDao implements UserDao
         storage.setLastLogout( Dao.formatStringToDate( rs.getString( "lastlogout" ) ) );
         storage.setJoinedHost( rs.getString( "joined_host" ) );
         storage.setIgnoredUsers( loadIgnoredUsers( connection, storage.getUuid() ) );
+        return storage;
     }
 
     private List<String> loadIgnoredUsers( final Connection connection, final UUID user ) throws SQLException

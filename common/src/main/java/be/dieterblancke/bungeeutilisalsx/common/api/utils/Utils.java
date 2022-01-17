@@ -1079,9 +1079,9 @@ public class Utils
         }
         else
         {
-            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).get();
+            storage = BuX.getApi().getStorageManager().getDao().getUserDao().getUserData( name ).join().orElse( null );
 
-            if ( !storage.isLoaded() )
+            if ( storage == null || !storage.isLoaded() )
             {
                 return null;
             }

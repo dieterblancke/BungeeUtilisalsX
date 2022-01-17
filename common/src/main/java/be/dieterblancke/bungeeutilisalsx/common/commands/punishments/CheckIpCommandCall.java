@@ -29,6 +29,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 
 public class CheckIpCommandCall implements CommandCall
@@ -61,7 +62,13 @@ public class CheckIpCommandCall implements CommandCall
                 user.sendLangMessage( "never-joined" );
                 return;
             }
-            final UserStorage storage = userDao.getUserData( args.get( 0 ) ).join();
+            final Optional<UserStorage> optionalStorage = userDao.getUserData( args.get( 0 ) ).join();
+            final UserStorage storage = optionalStorage.orElse( null );
+            if ( storage == null || !storage.isLoaded() )
+            {
+                user.sendLangMessage( "never-joined" );
+                return;
+            }
 
             user.sendLangMessage(
                     "punishments.checkip.head",

@@ -49,9 +49,10 @@ public class PunishmentHistoryCommandCall implements CommandCall
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final String username = args.get( 0 );
 
-        dao.getUserDao().getUserData( username ).thenAccept( storage ->
+        dao.getUserDao().getUserData( username ).thenAccept( optionalStorage ->
         {
-            if ( !storage.isLoaded() )
+            final UserStorage storage = optionalStorage.orElse( null );
+            if ( storage == null || !storage.isLoaded() )
             {
                 user.sendLangMessage( "never-joined" );
                 return;
