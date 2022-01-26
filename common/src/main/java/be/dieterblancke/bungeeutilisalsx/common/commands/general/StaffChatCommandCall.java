@@ -25,6 +25,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import com.google.common.base.Strings;
 
 import java.util.List;
 
@@ -39,9 +40,9 @@ public class StaffChatCommandCall implements CommandCall
                         ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
                         "{user}", user.getName(),
                         "{user_prefix}", StaffUtils.getStaffRankForUser( user ).map( rank -> Utils.c( rank.getDisplay() ) ).orElse( "" ),
-                        "{permission_user_prefix}", BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ),
-                        "{permission_user_prefix}", BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ),
-                        "{server}", user.getServerName(),
+                        "{permission_user_prefix}", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ),
+                        "{permission_user_prefix}", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ),
+                        "{server}", Strings.nullToEmpty( user.getServerName() ),
                         "{message}", message
                 )
         );
