@@ -96,6 +96,7 @@ public class UserConnectionListener
         }
         final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
                 optional.get(),
+                event.getPreviousServer().map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ).orElse( null ),
                 BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );

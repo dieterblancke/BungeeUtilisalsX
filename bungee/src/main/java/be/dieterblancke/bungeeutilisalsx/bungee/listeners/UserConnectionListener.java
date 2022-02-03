@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import com.google.common.base.Strings;
 import net.md_5.bungee.api.event.PlayerDisconnectEvent;
 import net.md_5.bungee.api.event.PostLoginEvent;
 import net.md_5.bungee.api.event.ServerConnectEvent;
@@ -91,6 +92,9 @@ public class UserConnectionListener implements Listener
         }
         final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
                 optional.get(),
+                Optional.ofNullable( Strings.emptyToNull( optional.get().getServerName() ) )
+                        .map( BuX.getInstance().proxyOperations()::getServerInfo )
+                        .orElse( null ),
                 BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );

@@ -123,20 +123,7 @@ public class VelocityUser implements User
             else
             {
                 final String joinedHost = this.getJoinedHost();
-                Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
-
-                if ( ConfigFiles.LANGUAGES_CONFIG.getConfig().getBoolean( "check-default-language" ) )
-                {
-                    final Optional<Language> optionalLanguage = Utils.firstPresent(
-                            BuX.getApi().getLanguageManager().getLanguage( this.getLanguageTagLong() ),
-                            BuX.getApi().getLanguageManager().getLanguage( this.getLanguageTagShort() )
-                    );
-
-                    if ( optionalLanguage.isPresent() )
-                    {
-                        language = optionalLanguage.get();
-                    }
-                }
+                final Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
 
                 dao.getUserDao().createUser(
                         uuid,
