@@ -164,6 +164,12 @@ public class CommandBuilder
         return this;
     }
 
+    public CommandBuilder listenerBased( final boolean listenerBased )
+    {
+        this.listenerBased = listenerBased;
+        return this;
+    }
+
     public CommandBuilder tab( final TabCall tab )
     {
         this.tab = tab;

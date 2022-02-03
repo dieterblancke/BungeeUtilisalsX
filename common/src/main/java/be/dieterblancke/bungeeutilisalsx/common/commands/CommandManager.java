@@ -24,6 +24,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
@@ -46,6 +47,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class CommandManager
 {
@@ -180,12 +182,20 @@ public abstract class CommandManager
             final String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
             final List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
             final String server = section.exists( "server" ) ? section.getString( "server" ) : "ALL";
+            final List<ServerGroup> disabledServers = section.exists( "disabled-servers" ) ? section.getStringList( "disabled-servers" )
+                    .stream()
+                    .filter( s -> ConfigFiles.SERVERGROUPS.getServers().containsKey( s ) )
+                    .map( s -> ConfigFiles.SERVERGROUPS.getServer( s ) )
+                    .collect( Collectors.toList() ) : new ArrayList<>();
+            final boolean listenerBased = section.exists( "listener-based" ) && section.getBoolean( "listener-based" );
 
             final CommandBuilder commandBuilder = CommandBuilder.builder()
                     .enabled( true )
                     .name( name )
                     .aliases( aliases )
                     .permission( permission )
+                    .disabledServers( disabledServers )
+                    .listenerBased( listenerBased )
                     .executable( new CustomCommandCall( section, server, commands ) );
 
             buildCommand( name, commandBuilder );
