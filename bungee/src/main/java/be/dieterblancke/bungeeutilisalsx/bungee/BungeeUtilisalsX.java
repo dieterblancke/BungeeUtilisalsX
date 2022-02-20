@@ -17,7 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
-import com.dbsoftwares.configuration.api.FileStorageType;
+import be.dieterblancke.configuration.api.FileStorageType;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.AdvancedPie;

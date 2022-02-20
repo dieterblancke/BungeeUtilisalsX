@@ -7,7 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.job.SingleProxyJobManager;
 import be.dieterblancke.bungeeutilisalsx.common.party.SimplePartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
-import com.dbsoftwares.configuration.yaml.YamlConfiguration;
+import be.dieterblancke.configuration.yaml.YamlConfiguration;
 import lombok.SneakyThrows;
 import org.mockito.Mockito;
 

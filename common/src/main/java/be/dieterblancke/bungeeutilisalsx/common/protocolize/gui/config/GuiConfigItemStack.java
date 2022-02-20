@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.utils.ItemUtils;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import dev.simplix.protocolize.api.item.ItemStack;
 import dev.simplix.protocolize.data.ItemType;

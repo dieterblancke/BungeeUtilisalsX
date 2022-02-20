@@ -11,7 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.listeners.JoinListener;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.listeners.KickListener;
 import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.tasks.ServerPingTask;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.collect.Sets;
 import lombok.Getter;
 

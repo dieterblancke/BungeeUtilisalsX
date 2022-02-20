@@ -7,7 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;

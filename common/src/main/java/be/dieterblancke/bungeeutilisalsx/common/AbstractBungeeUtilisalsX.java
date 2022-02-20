@@ -41,8 +41,8 @@ import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import be.dieterblancke.bungeeutilisalsx.common.scheduler.Scheduler;
-import com.dbsoftwares.configuration.api.FileStorageType;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.FileStorageType;
+import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
 import lombok.Data;
 

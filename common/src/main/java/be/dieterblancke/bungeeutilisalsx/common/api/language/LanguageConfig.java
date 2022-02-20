@@ -3,7 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Data;
 import net.md_5.bungee.api.chat.TextComponent;
 

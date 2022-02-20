@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friend
 
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfig;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

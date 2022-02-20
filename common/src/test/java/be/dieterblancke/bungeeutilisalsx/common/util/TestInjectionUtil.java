@@ -3,8 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.util;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.json.JsonConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.json.JsonConfiguration;
 
 import java.io.IOException;
 import java.io.InputStream;

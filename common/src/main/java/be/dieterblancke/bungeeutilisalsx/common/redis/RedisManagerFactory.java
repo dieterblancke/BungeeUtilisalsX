@@ -3,8 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.redis;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.ISection;
 
 public final class RedisManagerFactory
 {

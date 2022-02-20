@@ -1,6 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.announcers.title;
 
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import lombok.AllArgsConstructor;
 import lombok.Value;
 
