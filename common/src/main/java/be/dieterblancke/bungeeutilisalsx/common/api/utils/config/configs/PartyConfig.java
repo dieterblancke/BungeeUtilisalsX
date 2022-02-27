@@ -9,6 +9,7 @@ import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,7 @@ public class PartyConfig extends Config
         config.getStringList( "disabled-warp-from-servers" )
                 .stream()
                 .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
+                .filter( Objects::nonNull )
                 .forEach( this.disabledWarpServers::add );
     }
 
