@@ -52,19 +52,6 @@ public class Config
                     file,
                     YamlConfigurationOptions.builder().useComments( true ).build()
             );
-            try
-            {
-                config.copyDefaults(
-                        IConfiguration.loadYamlConfiguration(
-                                FileUtils.getResourceAsStream( location ),
-                                YamlConfigurationOptions.builder().useComments( true ).build()
-                        )
-                );
-            }
-            catch ( IOException e )
-            {
-                BuX.getLogger().log( Level.SEVERE, "Could not update configurations: ", e );
-            }
         }
 
         this.setup();

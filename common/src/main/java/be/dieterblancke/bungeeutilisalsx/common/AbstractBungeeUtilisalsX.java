@@ -90,6 +90,7 @@ public abstract class AbstractBungeeUtilisalsX
         }
 
         this.loadConfigs();
+        this.migrateConfigs();
         ChatProtections.reloadAllProtections();
 
         this.loadPlaceHolders();
@@ -379,6 +380,20 @@ public abstract class AbstractBungeeUtilisalsX
         catch ( Exception e )
         {
             BuX.getLogger().log( Level.SEVERE, "Could not execute migrations", e );
+        }
+    }
+
+    protected void migrateConfigs()
+    {
+        final MigrationManager migrationManager = MigrationManagerFactory.createConfigMigrationManager();
+        migrationManager.initialize();
+        try
+        {
+            migrationManager.migrate();
+        }
+        catch ( Exception e )
+        {
+            BuX.getLogger().log( Level.SEVERE, "Could not execute config migrations", e );
         }
     }
 }

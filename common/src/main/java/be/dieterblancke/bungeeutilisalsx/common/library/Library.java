@@ -72,7 +72,8 @@ public class Library
         {
             return;
         }
-        final File librariesFolder = new File( dataFolder, "libraries" );
+        final File internalFolder = new File( dataFolder, "_internal" );
+        final File librariesFolder = new File( internalFolder, "libraries" );
         final File originalFolder = new File( librariesFolder, "original" );
         final File relocatedFolder = new File( librariesFolder, "relocated" );
 

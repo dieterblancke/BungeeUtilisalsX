@@ -8,7 +8,10 @@ import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.yaml.YamlConfigurationOptions;
 import com.google.common.io.ByteStreams;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.logging.Level;
 
 public class PluginLanguageManager extends AbstractLanguageManager
@@ -37,34 +40,22 @@ public class PluginLanguageManager extends AbstractLanguageManager
             {
                 continue;
             }
-            try
-            {
-                final IConfiguration configuration;
+            final IConfiguration configuration;
 
-                if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
-                {
-                    configuration = IConfiguration.loadJsonConfiguration( lang );
-                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
-                }
-                else
-                {
-                    configuration = IConfiguration.loadYamlConfiguration(
-                            lang,
-                            YamlConfigurationOptions.builder().useComments( true ).build()
-                    );
-                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
-                            resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ),
-                            YamlConfigurationOptions.builder().useComments( true ).build()
-                    ) );
-                }
-
-                configurations.put( lang, new LanguageConfig( language, configuration ) );
-                saveLanguage( pluginName, language );
-            }
-            catch ( IOException e )
+            if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
             {
-                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+                configuration = IConfiguration.loadJsonConfiguration( lang );
             }
+            else
+            {
+                configuration = IConfiguration.loadYamlConfiguration(
+                        lang,
+                        YamlConfigurationOptions.builder().useComments( true ).build()
+                );
+            }
+
+            configurations.put( lang, new LanguageConfig( language, configuration ) );
+            saveLanguage( pluginName, language );
         }
     }
 
