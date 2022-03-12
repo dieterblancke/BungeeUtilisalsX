@@ -55,7 +55,6 @@ public class PluginLanguageManager extends AbstractLanguageManager
             }
 
             configurations.put( lang, new LanguageConfig( language, configuration ) );
-            saveLanguage( pluginName, language );
         }
     }
 
