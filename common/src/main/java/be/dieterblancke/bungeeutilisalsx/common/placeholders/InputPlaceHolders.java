@@ -11,6 +11,8 @@ import be.dieterblancke.configuration.api.IConfiguration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
 
 public class InputPlaceHolders implements PlaceHolderPack
 {
@@ -28,9 +30,14 @@ public class InputPlaceHolders implements PlaceHolderPack
 
                 try
                 {
+                    final Date parsedDate = dateFormat.parse( event.getArgument() );
+                    final Date date = ConfigFiles.CONFIG.isEnabled( "timezone" )
+                            ? Date.from( parsedDate.toInstant().atZone( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) ).toInstant() )
+                            : parsedDate;
+
                     return Utils.getTimeLeft(
                             configuration.getString( "placeholders.timeleft" ),
-                            dateFormat.parse( event.getArgument() )
+                            date
                     );
                 }
                 catch ( ParseException e )
