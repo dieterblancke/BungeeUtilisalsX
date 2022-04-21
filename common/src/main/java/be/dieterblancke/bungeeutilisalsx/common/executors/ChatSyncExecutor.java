@@ -19,6 +19,10 @@ public class ChatSyncExecutor implements EventExecutor
     @Event
     public void onChat( final UserChatEvent event )
     {
+        if ( !ConfigFiles.CHAT_SYNC_CONFIG.isEnabled() )
+        {
+            return;
+        }
         final User user = event.getUser();
         final Optional<ChatSyncedServer> optionalChatSyncedServer = ConfigFiles.CHAT_SYNC_CONFIG.getChatSyncedServer(
                 user.getServerName()
