@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 
+import java.util.Optional;
+
 @Data
 @RequiredArgsConstructor
 @EqualsAndHashCode( callSuper = true )
@@ -15,7 +17,7 @@ public class UserServerConnectedEvent extends AbstractEvent implements Cancellab
 {
 
     private final User user;
-    private final IProxyServer previous;
+    private final Optional<IProxyServer> previous;
     private final IProxyServer target;
     private boolean cancelled;
 

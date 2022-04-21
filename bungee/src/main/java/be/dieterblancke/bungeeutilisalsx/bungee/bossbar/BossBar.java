@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BossBarAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.BUEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
@@ -28,7 +29,7 @@ public class BossBar implements IBossBar
 
     private final UUID uuid;
     private final List<User> users;
-    private final Set<IEventHandler<UserUnloadEvent>> eventHandlers; // Should only contain ONE EventHandler
+    private final Set<IEventHandler<? extends BUEvent>> eventHandlers; // Should only contain ONE EventHandler
     private BarColor color;
     private BarStyle style;
     private float progress;
@@ -59,7 +60,7 @@ public class BossBar implements IBossBar
         this.message = message;
         this.visible = true;
         this.users = Collections.synchronizedList( Lists.newArrayList() );
-        this.eventHandlers = BuX.getApi().getEventLoader().register( UserUnloadEvent.class, new BossBarListener() );
+        this.eventHandlers = BuX.getApi().getEventLoader().register( new BossBarListener(), UserUnloadEvent.class );
     }
 
     @Override

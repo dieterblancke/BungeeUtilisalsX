@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
+import java.util.Optional;
 
 public class GListCommandCall implements CommandCall, TabCall
 {
@@ -63,13 +64,14 @@ public class GListCommandCall implements CommandCall, TabCall
         {
             for ( String server : config.getStringList( "glist.servers.list" ) )
             {
-                final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( server );
+                final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
 
-                if ( group == null )
+                if ( optionalGroup.isEmpty() )
                 {
                     BuX.getLogger().warning( "Could not find a servergroup or -name for " + server + "!" );
                     return;
                 }
+                final ServerGroup group = optionalGroup.get();
 
                 messages.add(
                         MessageBuilder.buildMessage(

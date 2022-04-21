@@ -31,6 +31,7 @@ public class ConfigFiles
     public static IngameMotdConfig INGAME_MOTD_CONFIG = new IngameMotdConfig( "/ingame-motd.yml" );
     public static WebhookConfig WEBHOOK_CONFIG = new WebhookConfig( "/webhooks.yml" );
     public static PartyConfig PARTY_CONFIG = new PartyConfig( "/party/config.yml" );
+    public static ChatSyncConfig CHAT_SYNC_CONFIG = new ChatSyncConfig( "/chat/chatsync.yml" );
 
     public static void loadAllConfigs()
     {

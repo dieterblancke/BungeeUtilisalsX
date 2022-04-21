@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.event.event;
 
 import lombok.NonNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public interface IEventLoader
@@ -12,10 +13,22 @@ public interface IEventLoader
      *
      * @param clazz    The event class.
      * @param executor The EventExecutor
-     * @param <T>      The event class.
      * @return An eventexecutor instance.
      */
-    <T extends BUEvent> Set<IEventHandler<T>> register( @NonNull Class<T> clazz, @NonNull EventExecutor executor );
+    Set<IEventHandler<? extends BUEvent>> register( @NonNull EventExecutor executor, @NonNull Class<? extends BUEvent> clazz );
+
+    default Set<IEventHandler<? extends BUEvent>> register( @NonNull EventExecutor executor, @NonNull Class<? extends BUEvent>... classes )
+    {
+        final Set<IEventHandler<? extends BUEvent>> combinedSet = new HashSet<>();
+
+        for ( Class<? extends BUEvent> clazz : classes )
+        {
+            combinedSet.addAll( register( executor, clazz ) );
+        }
+
+        return combinedSet;
+    }
+
 
     /**
      * Unregisters a certain EventHandler.

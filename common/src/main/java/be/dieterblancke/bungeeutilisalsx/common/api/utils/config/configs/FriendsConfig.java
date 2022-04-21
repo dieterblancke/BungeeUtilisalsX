@@ -8,6 +8,7 @@ import lombok.Getter;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class FriendsConfig extends Config
@@ -34,7 +35,7 @@ public class FriendsConfig extends Config
                 config.getStringList( "ignore-for-switch" )
                         .stream()
                         .map( str -> ConfigFiles.SERVERGROUPS.getServer( str ) )
-                        .filter( Objects::nonNull )
+                        .flatMap( Optional::stream )
                         .collect( Collectors.toList() )
         );
     }

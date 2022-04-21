@@ -7,6 +7,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.configuration.api.ISection;
 
+import java.util.Optional;
+
 public class TitleAnnouncer extends Announcer
 {
 
@@ -20,9 +22,9 @@ public class TitleAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( group == null )
+            if ( optionalGroup .isEmpty() )
             {
                 BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
@@ -30,7 +32,7 @@ public class TitleAnnouncer extends Announcer
             final String permission = section.getString( "permission" );
             final boolean language = section.getBoolean( "language" );
 
-            addAnnouncement( new TitleAnnouncement( language, new TitleMessage( section ), group, permission ) );
+            addAnnouncement( new TitleAnnouncement( language, new TitleMessage( section ), optionalGroup.get(), permission ) );
         }
     }
 }

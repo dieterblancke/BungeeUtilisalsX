@@ -61,7 +61,7 @@ public class PartyConfig extends Config
             config.getStringList( "disabled-warp-from-servers" )
                     .stream()
                     .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
-                    .filter( Objects::nonNull )
+                    .flatMap( Optional::stream )
                     .forEach( this.disabledWarpServers::add );
         }
     }

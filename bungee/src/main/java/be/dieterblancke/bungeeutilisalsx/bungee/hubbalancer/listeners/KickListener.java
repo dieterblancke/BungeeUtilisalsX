@@ -18,6 +18,8 @@ import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
+import java.util.Optional;
+
 public class KickListener implements Listener
 {
 
@@ -45,8 +47,9 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
+                    final Optional<ServerGroup> optionalServerGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalServerGroup.isPresent() && optionalServerGroup.get().isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = false;
                         break;
@@ -70,8 +73,9 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
+                    final Optional<ServerGroup> optionalServerGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalServerGroup.isPresent() && optionalServerGroup.get().isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = true;
                         break;

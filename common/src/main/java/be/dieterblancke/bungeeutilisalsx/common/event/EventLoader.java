@@ -16,14 +16,14 @@ public class EventLoader implements IEventLoader
     private final Map<Class<? extends BUEvent>, Set<IEventHandler>> handlerMap = new ConcurrentHashMap<>();
 
     @Override
-    public <T extends BUEvent> Set<IEventHandler<T>> register( Class<T> eventClass, EventExecutor executor )
+    public Set<IEventHandler<? extends BUEvent>> register( EventExecutor executor, Class<? extends BUEvent> eventClass )
     {
         if ( !BUEvent.class.isAssignableFrom( eventClass ) )
         {
             throw new IllegalArgumentException( "class " + eventClass.getName() + " does not implement BUEvent" );
         }
         Set<IEventHandler> handlers = handlerMap.computeIfAbsent( eventClass, c -> ConcurrentHashMap.newKeySet() );
-        Set<IEventHandler<T>> addedHandlers = ConcurrentHashMap.newKeySet();
+        Set<IEventHandler<? extends BUEvent>> addedHandlers = ConcurrentHashMap.newKeySet();
 
         final List<Method> methods = Lists.newArrayList();
         methods.addAll( Arrays.asList( executor.getClass().getDeclaredMethods() ) );
@@ -47,7 +47,7 @@ public class EventLoader implements IEventLoader
 
                 method.setAccessible( true );
 
-                EventHandler<T> eventHandler = new EventHandler<>( this, eventClass, method, executor, executeIfCancelled, priority );
+                EventHandler<? extends BUEvent> eventHandler = new EventHandler<>( this, eventClass, method, executor, executeIfCancelled, priority );
                 handlers.add( eventHandler );
                 addedHandlers.add( eventHandler );
             }

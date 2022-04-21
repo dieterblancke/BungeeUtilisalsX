@@ -3,15 +3,13 @@ package be.dieterblancke.bungeeutilisalsx.common.language;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.configuration.api.FileStorageType;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.yaml.YamlConfigurationOptions;
 import com.google.common.io.ByteStreams;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.logging.Level;
 
 public class PluginLanguageManager extends AbstractLanguageManager
@@ -21,6 +19,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
     public void loadLanguages( final Class<?> resourceClass, final String pluginName )
     {
         final File folder = plugins.get( pluginName );
+        final boolean autoUpdateFiles = ConfigFiles.LANGUAGES_CONFIG.getConfig().getBoolean( "auto-update", true );
 
         for ( Language language : languages )
         {
@@ -40,21 +39,46 @@ public class PluginLanguageManager extends AbstractLanguageManager
             {
                 continue;
             }
-            final IConfiguration configuration;
-
-            if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
+            try
             {
-                configuration = IConfiguration.loadJsonConfiguration( lang );
-            }
-            else
-            {
-                configuration = IConfiguration.loadYamlConfiguration(
-                        lang,
-                        YamlConfigurationOptions.builder().useComments( true ).build()
-                );
-            }
+                final IConfiguration configuration;
 
-            configurations.put( lang, new LanguageConfig( language, configuration ) );
+                if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
+                {
+                    configuration = IConfiguration.loadJsonConfiguration( lang );
+
+                    if ( autoUpdateFiles )
+                    {
+                        configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
+                    }
+                }
+                else
+                {
+                    configuration = IConfiguration.loadYamlConfiguration(
+                            lang,
+                            YamlConfigurationOptions.builder().useComments( true ).build()
+                    );
+
+                    if ( autoUpdateFiles )
+                    {
+                        configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
+                                resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ),
+                                YamlConfigurationOptions.builder().useComments( true ).build()
+                        ) );
+                    }
+                }
+
+                configurations.put( lang, new LanguageConfig( language, configuration ) );
+
+                if ( autoUpdateFiles )
+                {
+                    saveLanguage( pluginName, language );
+                }
+            }
+            catch ( IOException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
         }
     }
 

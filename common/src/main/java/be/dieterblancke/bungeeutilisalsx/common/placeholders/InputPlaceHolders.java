@@ -11,6 +11,7 @@ import be.dieterblancke.configuration.api.IConfiguration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Optional;
 
 public class InputPlaceHolders implements PlaceHolderPack
 {
@@ -44,14 +45,14 @@ public class InputPlaceHolders implements PlaceHolderPack
             @Override
             public String getReplacement( InputPlaceHolderEvent event )
             {
-                final ServerGroup server = ConfigFiles.SERVERGROUPS.getServer( event.getArgument() );
+                final Optional<ServerGroup> serverGroup = ConfigFiles.SERVERGROUPS.getServer( event.getArgument() );
 
-                if ( server == null )
+                if ( serverGroup.isEmpty() )
                 {
                     return "0";
                 }
 
-                return String.valueOf( server.getPlayers() );
+                return String.valueOf( serverGroup.get().getPlayers() );
             }
         } );
     }

@@ -40,7 +40,7 @@ public class IngameMotdConfig extends Config
                         .stream()
                         .map( section -> new IngameMotd(
                                 section.exists( "server" )
-                                        ? ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) )
+                                        ? ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) ).orElse( null )
                                         : null,
                                 section.exists( "once-per-session" ) && section.getBoolean( "once-per-session" ),
                                 section.exists( "language" ) && section.getBoolean( "language" ),

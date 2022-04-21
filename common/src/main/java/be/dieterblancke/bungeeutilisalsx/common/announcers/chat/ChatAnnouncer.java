@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.configuration.api.ISection;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ChatAnnouncer extends Announcer
 {
@@ -22,9 +23,9 @@ public class ChatAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( group == null )
+            if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().warning(
                         "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
@@ -40,13 +41,13 @@ public class ChatAnnouncer extends Announcer
             {
                 List<String> messages = section.getStringList( messagesKey );
 
-                addAnnouncement( new ChatAnnouncement( usePrefix, messages, group, permission ) );
+                addAnnouncement( new ChatAnnouncement( usePrefix, messages, optionalGroup.get(), permission ) );
             }
             else
             {
                 String messagePath = section.getString( messagesKey );
 
-                addAnnouncement( new ChatAnnouncement( usePrefix, messagePath, group, permission ) );
+                addAnnouncement( new ChatAnnouncement( usePrefix, messagePath, optionalGroup.get(), permission ) );
             }
         }
     }
