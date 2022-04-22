@@ -11,6 +11,7 @@ import be.dieterblancke.configuration.api.ISection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -118,6 +119,7 @@ public class CommandBuilder
                     .stream()
                     .filter( server -> ConfigFiles.SERVERGROUPS.getServers().containsKey( server ) )
                     .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
+                    .flatMap( Optional::stream )
                     .collect( Collectors.toList() );
         }
 

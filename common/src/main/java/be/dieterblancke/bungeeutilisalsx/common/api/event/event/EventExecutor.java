@@ -4,13 +4,4 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 
 public interface EventExecutor
 {
-
-    default void registerForEvents( final Class<? extends BUEvent>... eventClasses )
-    {
-        for ( Class<? extends BUEvent> eventClass : eventClasses )
-        {
-            BuX.getApi().getEventLoader().register( eventClass, this );
-        }
-    }
-
 }

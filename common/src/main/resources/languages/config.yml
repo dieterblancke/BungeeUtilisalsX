@@ -1,3 +1,7 @@
+# Set to true if the language files should automatically update.
+# If you have issues with the language file breaking, try to disable this setting.
+auto-update: true
+
 languages:
   en_US:
     # If default is true, this language will be default for new users, if false, users will be able to select it.

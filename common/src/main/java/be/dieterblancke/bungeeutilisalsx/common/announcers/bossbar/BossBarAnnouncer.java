@@ -11,6 +11,7 @@ import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Optional;
 
 public class BossBarAnnouncer extends Announcer
 {
@@ -25,9 +26,9 @@ public class BossBarAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( group == null )
+            if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().info( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
@@ -52,7 +53,7 @@ public class BossBarAnnouncer extends Announcer
             {
                 messages.add( new BossBarMessage( message ) );
             }
-            addAnnouncement( new BossBarAnnouncement( messages, unit, time, group, permission ) );
+            addAnnouncement( new BossBarAnnouncement( messages, unit, time, optionalGroup.get(), permission ) );
         }
     }
 

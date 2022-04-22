@@ -75,8 +75,7 @@ public class UserConnectionListener implements Listener
         final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
                 optional.get(),
                 Optional.ofNullable( Strings.emptyToNull( optional.get().getServerName() ) )
-                        .map( BuX.getInstance().proxyOperations()::getServerInfo )
-                        .orElse( null ),
+                        .map( BuX.getInstance().proxyOperations()::getServerInfo ),
                 BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );

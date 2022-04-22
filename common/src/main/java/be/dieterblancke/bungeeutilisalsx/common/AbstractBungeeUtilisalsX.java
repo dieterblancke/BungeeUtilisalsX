@@ -166,33 +166,38 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract void registerListeners();
 
+    @SuppressWarnings("unchecked")
     protected void registerExecutors()
     {
-        new UserExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
-        new StaffNetworkExecutor().registerForEvents( NetworkStaffJoinEvent.class, NetworkStaffLeaveEvent.class );
-        new SpyEventExecutor().registerForEvents( UserPrivateMessageEvent.class, UserCommandEvent.class );
+        this.api.getEventLoader().register( new UserExecutor(), UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
+        this.api.getEventLoader().register( new StaffNetworkExecutor(), NetworkStaffJoinEvent.class, NetworkStaffLeaveEvent.class );
+        this.api.getEventLoader().register( new SpyEventExecutor(), UserPrivateMessageEvent.class, UserCommandEvent.class );
+        this.api.getEventLoader().register( new UserChatExecutor(), UserChatEvent.class );
+        this.api.getEventLoader().register( new UserChatExecutor(), UserChatEvent.class );
+        this.api.getEventLoader().register( new StaffChatExecutor(), UserChatEvent.class );
+        this.api.getEventLoader().register( new UserPluginMessageReceiveEventExecutor(), UserPluginMessageReceiveEvent.class );
+        this.api.getEventLoader().register( new IngameMotdExecutor(), UserServerConnectedEvent.class );
+        this.api.getEventLoader().register( new UserCommandExecutor(), UserCommandEvent.class );
 
-        this.api.getEventLoader().register( UserChatEvent.class, new UserChatExecutor() );
-        this.api.getEventLoader().register( UserChatEvent.class, new StaffChatExecutor() );
-        this.api.getEventLoader().register( UserPluginMessageReceiveEvent.class, new UserPluginMessageReceiveEventExecutor() );
-        this.api.getEventLoader().register( UserServerConnectedEvent.class, new IngameMotdExecutor() );
-        this.api.getEventLoader().register( UserCommandEvent.class, new UserCommandExecutor() );
+        if ( ConfigFiles.CHAT_SYNC_CONFIG.isEnabled() )
+        {
+            this.api.getEventLoader().register( new ChatSyncExecutor(), UserChatEvent.class );
+        }
 
         if ( ConfigFiles.MOTD.isEnabled() )
         {
-            this.api.getEventLoader().register( ProxyMotdPingEvent.class, new ProxyMotdPingExecutor() );
+            this.api.getEventLoader().register( new ProxyMotdPingExecutor(), ProxyMotdPingEvent.class );
         }
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.isEnabled() )
         {
-            new MuteCheckExecutor().registerForEvents( UserChatEvent.class, UserCommandEvent.class );
-
-            this.api.getEventLoader().register( UserPunishmentFinishEvent.class, new UserPunishExecutor() );
+            this.api.getEventLoader().register( new MuteCheckExecutor(), UserChatEvent.class, UserCommandEvent.class );
+            this.api.getEventLoader().register( new UserPunishExecutor(), UserPunishmentFinishEvent.class );
         }
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
-            new FriendsExecutor().registerForEvents( UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
+            this.api.getEventLoader().register( new FriendsExecutor(), UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
         }
     }
 

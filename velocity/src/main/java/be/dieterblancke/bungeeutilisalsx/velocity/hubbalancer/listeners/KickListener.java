@@ -16,6 +16,8 @@ import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 
+import java.util.Optional;
+
 public class KickListener
 {
 
@@ -45,8 +47,9 @@ public class KickListener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalGroup.isPresent() && optionalGroup.get().isInGroup( event.getServer().getServerInfo().getName() ) )
                     {
                         fallback = false;
                         break;
@@ -70,8 +73,9 @@ public class KickListener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalGroup.isPresent() && optionalGroup.get().isInGroup( event.getServer().getServerInfo().getName() ) )
                     {
                         fallback = true;
                         break;

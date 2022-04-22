@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.google.common.base.Strings;
 
 public class FriendsExecutor implements EventExecutor
@@ -105,7 +106,7 @@ public class FriendsExecutor implements EventExecutor
                         u.sendLangMessage(
                                 "friends.switch",
                                 "{user}", user.getName(),
-                                "{from}", user.getServerName(),
+                                "{from}", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ),
                                 "{to}", event.getTarget().getName()
                         );
                     }
@@ -121,7 +122,7 @@ public class FriendsExecutor implements EventExecutor
                                 data.getFriend(),
                                 "friends.switch",
                                 "{user}", user.getName(),
-                                "{from}", user.getServerName(),
+                                "{from}", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ),
                                 "{to}", event.getTarget().getName()
                         ) );
                     }

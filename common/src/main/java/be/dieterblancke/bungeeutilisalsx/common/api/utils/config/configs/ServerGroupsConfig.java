@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import lombok.Getter;
 
 import java.util.Map;
+import java.util.Optional;
 
 public class ServerGroupsConfig extends Config
 {
@@ -22,9 +23,9 @@ public class ServerGroupsConfig extends Config
         super( location );
     }
 
-    public ServerGroup getServer( final String server )
+    public Optional<ServerGroup> getServer( final String server )
     {
-        return servers.get( server );
+        return Optional.ofNullable(servers.get( server ));
     }
 
     @Override

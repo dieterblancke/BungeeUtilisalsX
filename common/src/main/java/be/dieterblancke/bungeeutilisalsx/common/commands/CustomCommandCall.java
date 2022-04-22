@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 public class CustomCommandCall implements CommandCall
@@ -32,9 +33,9 @@ public class CustomCommandCall implements CommandCall
         }
         if ( !server.equals( "all" ) && !server.equalsIgnoreCase( "global" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( server );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
 
-            if ( group != null && !group.isInGroup( user.getServerName() ) )
+            if ( optionalGroup.isPresent() && !optionalGroup.get().isInGroup( user.getServerName() ) )
             {
                 return;
             }

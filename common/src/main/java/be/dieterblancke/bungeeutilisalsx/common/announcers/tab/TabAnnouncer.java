@@ -9,6 +9,7 @@ import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TabAnnouncer extends Announcer
 {
@@ -23,9 +24,9 @@ public class TabAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( group == null )
+            if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
@@ -40,7 +41,7 @@ public class TabAnnouncer extends Announcer
                     ? section.getStringList( "footer" )
                     : Lists.newArrayList( section.getString( "footer" ) );
 
-            addAnnouncement( new TabAnnouncement( language, header, footer, group, permission ) );
+            addAnnouncement( new TabAnnouncement( language, header, footer, optionalGroup.get(), permission ) );
         }
     }
 }

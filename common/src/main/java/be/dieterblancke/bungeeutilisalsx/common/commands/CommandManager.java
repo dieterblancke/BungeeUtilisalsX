@@ -168,6 +168,7 @@ public abstract class CommandManager
                     .stream()
                     .filter( s -> ConfigFiles.SERVERGROUPS.getServers().containsKey( s ) )
                     .map( s -> ConfigFiles.SERVERGROUPS.getServer( s ) )
+                    .flatMap( Optional::stream )
                     .collect( Collectors.toList() ) : new ArrayList<>();
             final boolean listenerBased = section.exists( "listener-based" ) && section.getBoolean( "listener-based" );
 

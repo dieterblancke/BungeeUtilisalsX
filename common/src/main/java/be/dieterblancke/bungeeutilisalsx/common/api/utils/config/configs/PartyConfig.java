@@ -56,11 +56,14 @@ public class PartyConfig extends Config
             partyRoles.add( new PartyRole( "MEMBER", true, 0, new ArrayList<>() ) );
         }
 
-        config.getStringList( "disabled-warp-from-servers" )
-                .stream()
-                .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
-                .filter( Objects::nonNull )
-                .forEach( this.disabledWarpServers::add );
+        if ( config.exists( "disabled-warp-from-servers" ) )
+        {
+            config.getStringList( "disabled-warp-from-servers" )
+                    .stream()
+                    .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
+                    .flatMap( Optional::stream )
+                    .forEach( this.disabledWarpServers::add );
+        }
     }
 
     public int getPartyInactivityPeriod()
