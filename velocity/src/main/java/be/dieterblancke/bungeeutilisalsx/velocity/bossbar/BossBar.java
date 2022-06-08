@@ -10,6 +10,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import com.google.common.collect.Lists;
@@ -86,7 +88,7 @@ public class BossBar implements IBossBar
             packet.setAction( BossBarAction.REMOVE.getId() );
         }
 
-        users.forEach( user -> user.sendPacket( packet ) );
+        users.forEach( user -> sendBossBarPacket( user, packet ) );
     }
 
     @Override
@@ -102,7 +104,7 @@ public class BossBar implements IBossBar
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -119,7 +121,7 @@ public class BossBar implements IBossBar
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -135,7 +137,7 @@ public class BossBar implements IBossBar
             packet.setAction( BossBarAction.UPDATE_HEALTH.getId() );
             packet.setPercent( progress );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -164,7 +166,7 @@ public class BossBar implements IBossBar
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            user.sendPacket( packet );
+            sendBossBarPacket( user, packet );
         }
     }
 
@@ -192,7 +194,7 @@ public class BossBar implements IBossBar
             packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
             packet.setName( ComponentSerializer.toString( message ) );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -222,7 +224,7 @@ public class BossBar implements IBossBar
         packet.setUuid( uuid );
         packet.setAction( BossBarAction.REMOVE.getId() );
 
-        users.forEach( user -> user.sendPacket( packet ) );
+        users.forEach( user -> sendBossBarPacket( user, packet ) );
         users.clear();
     }
 
@@ -230,6 +232,18 @@ public class BossBar implements IBossBar
     public void unregister()
     {
         eventHandlers.forEach( IEventHandler::unregister );
+    }
+
+    private void sendBossBarPacket( User user, Object packet )
+    {
+        boolean bossbarDisabled = user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED )
+                .map( UserSetting::getAsBoolean )
+                .orElse( false );
+
+        if ( !bossbarDisabled )
+        {
+            user.sendPacket( packet );
+        }
     }
 
     private class BossBarListener implements EventExecutor

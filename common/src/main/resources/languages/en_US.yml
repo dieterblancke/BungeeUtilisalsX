@@ -261,6 +261,9 @@ general-commands:
     usage: '&ePlease use &b/opengui (type) [args] [-u=USER]&e!'
     usage-custom: '&ePlease use &b/opengui custom (gui-name) [-u=USER]&e!'
     gui-not-found: '&eCould not find a GUI named &b{gui}&e!'
+  togglebossbar:
+    enabled: '&eBossbars have been &aenabled&e, you can now receive bossbars again.'
+    disabled: '&eBossbars have been &cdisabled&e, you won''t receive bossbars anymore.'
 
 friends:
   gui:

@@ -1,17 +1,16 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user;
 
 import com.google.gson.internal.LazilyParsedNumber;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
+@Data
+@AllArgsConstructor
 public class UserSetting
 {
 
-    private UserSettingType settingType;
+    private final UserSettingType settingType;
     private Object value;
-
-    public void set( final Object value )
-    {
-        this.value = value;
-    }
 
     public boolean isBoolean()
     {

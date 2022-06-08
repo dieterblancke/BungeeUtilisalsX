@@ -3,6 +3,9 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
@@ -272,6 +275,89 @@ public class MongoUserDao implements UserDao
                 return UUID.fromString( document.getString( "uuid" ) );
             }
             return null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<UserSettings> getSettings( UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            List<UserSetting> userSettings = new ArrayList<>();
+            MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
+
+            settingsColl.find( Filters.eq( "uuid", uuid.toString() ) )
+                    .forEach( (Consumer<Document>) document -> userSettings.add( new UserSetting(
+                            UserSettingType.valueOf( document.getString( "setting_type" ) ),
+                            document.get( "setting_value" )
+                    ) ) );
+
+            return new UserSettings( uuid, userSettings );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> hasSetting( UUID uuid, UserSettingType type )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            List<UserSetting> userSettings = new ArrayList<>();
+            MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
+
+            return settingsColl.find( Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    ) )
+                    .first() != null;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> registerSetting( UUID uuid, UserSettingType type, Object value )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
+            LinkedHashMap<String, Object> data = Maps.newLinkedHashMap();
+
+            data.put( "uuid", uuid.toString() );
+            data.put( "setting_type", type.toString() );
+            data.put( "setting_value", value );
+
+            db().getCollection( "bu_user_settings" ).insertOne( new Document( data ) );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> updateSetting( UUID uuid, UserSettingType type, Object value )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
+
+            db().getCollection( "bu_user_settings" ).updateOne(
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    ),
+                    Updates.set( "setting_value", value )
+            );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> removeSetting( UUID uuid, UserSettingType type )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
+
+            db().getCollection( "bu_user_settings" ).deleteOne(
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    )
+            );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 

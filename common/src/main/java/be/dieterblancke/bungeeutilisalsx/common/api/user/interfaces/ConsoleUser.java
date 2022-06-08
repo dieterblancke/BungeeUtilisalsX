@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
@@ -35,7 +36,7 @@ public abstract class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
-    private final List<UserSetting> userSettings = new ArrayList<>();
+    private final UserSettings userSettings = new UserSettings(uuid, new ArrayList<>());
 
     @Override
     public void load( Object playerInstance )
@@ -287,7 +288,7 @@ public abstract class ConsoleUser implements User
     }
 
     @Override
-    public List<UserSetting> getSettings()
+    public UserSettings getSettings()
     {
         return userSettings;
     }

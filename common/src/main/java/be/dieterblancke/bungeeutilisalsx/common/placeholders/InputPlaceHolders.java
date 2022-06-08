@@ -32,7 +32,7 @@ public class InputPlaceHolders implements PlaceHolderPack
                 try
                 {
                     final Date parsedDate = dateFormat.parse( event.getArgument() );
-                    final Date date = ConfigFiles.CONFIG.isEnabled( "timezone" )
+                    final Date date = ConfigFiles.CONFIG.isEnabled( "timezone", false )
                             ? Date.from( parsedDate.toInstant().atZone( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) ).toInstant() )
                             : parsedDate;
 
