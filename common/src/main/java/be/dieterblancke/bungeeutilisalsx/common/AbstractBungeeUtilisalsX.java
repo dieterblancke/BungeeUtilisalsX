@@ -173,7 +173,6 @@ public abstract class AbstractBungeeUtilisalsX
         this.api.getEventLoader().register( new StaffNetworkExecutor(), NetworkStaffJoinEvent.class, NetworkStaffLeaveEvent.class );
         this.api.getEventLoader().register( new SpyEventExecutor(), UserPrivateMessageEvent.class, UserCommandEvent.class );
         this.api.getEventLoader().register( new UserChatExecutor(), UserChatEvent.class );
-        this.api.getEventLoader().register( new UserChatExecutor(), UserChatEvent.class );
         this.api.getEventLoader().register( new StaffChatExecutor(), UserChatEvent.class );
         this.api.getEventLoader().register( new UserPluginMessageReceiveEventExecutor(), UserPluginMessageReceiveEvent.class );
         this.api.getEventLoader().register( new IngameMotdExecutor(), UserServerConnectedEvent.class );
