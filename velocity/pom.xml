@@ -16,6 +16,10 @@
             <id>dieterblancke</id>
             <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
+        <repository>
+            <id>bungeecord-repo</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -33,19 +37,19 @@
         <dependency>
             <groupId>com.velocitypowered</groupId>
             <artifactId>velocity</artifactId>
-            <version>3.1.1</version>
+            <version>3.1.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-chat</artifactId>
-            <version>1.16-R0.3</version>
+            <version>1.19-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-velocity</artifactId>
-            <version>2.2.1</version>
+            <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

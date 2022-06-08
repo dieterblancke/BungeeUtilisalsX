@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Priority;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ChatSyncJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
@@ -16,10 +17,10 @@ import java.util.Optional;
 public class ChatSyncExecutor implements EventExecutor
 {
 
-    @Event
+    @Event( priority = Priority.HIGHEST )
     public void onChat( final UserChatEvent event )
     {
-        if ( !ConfigFiles.CHAT_SYNC_CONFIG.isEnabled() )
+        if ( event.isCancelled() || !ConfigFiles.CHAT_SYNC_CONFIG.isEnabled() )
         {
             return;
         }
