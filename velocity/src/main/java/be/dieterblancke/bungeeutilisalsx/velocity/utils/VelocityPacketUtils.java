@@ -5,8 +5,8 @@ import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.util.MessagePosition;
 import com.velocitypowered.proxy.connection.client.ConnectedPlayer;
 import com.velocitypowered.proxy.protocol.MinecraftPacket;
-import com.velocitypowered.proxy.protocol.packet.Chat;
 import com.velocitypowered.proxy.protocol.packet.HeaderAndFooter;
+import com.velocitypowered.proxy.protocol.packet.chat.LegacyChat;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.chat.ComponentSerializer;
 
@@ -34,7 +34,8 @@ public class VelocityPacketUtils
 
     public static void sendMessagePacket( final Player player, final BaseComponent... components )
     {
-        final Chat chat = new Chat();
+        final LegacyChat chat = new LegacyChat();
+
         chat.setType( (byte) MessagePosition.CHAT.ordinal() );
         chat.setMessage( ComponentSerializer.toString( components ) );
 

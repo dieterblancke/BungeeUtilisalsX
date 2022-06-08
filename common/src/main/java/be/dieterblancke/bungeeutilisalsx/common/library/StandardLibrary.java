@@ -113,8 +113,8 @@ public enum StandardLibrary
     ),
     TEXTCOMPONENT(
             "net.md_5.bungee.api.ChatColor",
-            "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/{version}/bungeecord-chat-{version}.jar",
-            "1.16-R0.4",
+            "https://oss.sonatype.org/content/repositories/snapshots/net/md-5/bungeecord-chat/{version}-SNAPSHOT/bungeecord-chat-{version}-20220608.093819-8.jar",
+            "1.19-R0.1",
             true
     ),
     APACHE_COMMONS_POOL2(
