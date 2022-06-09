@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
@@ -449,5 +450,10 @@ public interface User extends MessageRecipient
      * @return a list with the user settings
      */
     UserSettings getSettings();
+
+    /**
+     * @return a list with the active boss bars for this user
+     */
+    List<IBossBar> getActiveBossBars();
 
 }

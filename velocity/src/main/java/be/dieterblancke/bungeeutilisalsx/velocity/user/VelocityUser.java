@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
@@ -40,8 +41,8 @@ import java.util.stream.Collectors;
 public class VelocityUser implements User
 {
 
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList(new ArrayList<>());
     private Player player;
-
     private String name;
     private UUID uuid;
     private String ip;
@@ -78,7 +79,7 @@ public class VelocityUser implements User
                 this.getJoinedHost(),
                 Maps.newHashMap()
         );
-        this.userSettings = new UserSettings(uuid, new ArrayList<>());
+        this.userSettings = new UserSettings( uuid, new ArrayList<>() );
 
         dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {

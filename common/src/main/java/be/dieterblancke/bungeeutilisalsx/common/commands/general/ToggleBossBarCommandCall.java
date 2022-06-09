@@ -5,12 +5,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ToggleBossBarCommandCall implements CommandCall
 {
-
-    // TODO: remove current bossbars and check why it doesn't work after rejoining ...
 
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
@@ -25,6 +24,11 @@ public class ToggleBossBarCommandCall implements CommandCall
         if ( userSetting.getAsBoolean() )
         {
             user.sendLangMessage( "general-commands.togglebossbar.disabled" );
+
+            new ArrayList<>( user.getActiveBossBars() )
+                    .forEach( bossBar -> {
+                        bossBar.removeUser( user );
+                    } );
         }
         else
         {

@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import com.google.gson.internal.LazilyParsedNumber;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,17 +20,21 @@ public class UserSetting
 
     public boolean getAsBoolean()
     {
+        if ( this.isNumber() )
+        {
+            return this.getAsNumber().intValue() == 1;
+        }
         return this.isBoolean() ? (Boolean) this.value : Boolean.parseBoolean( this.getAsString() );
     }
 
     public boolean isNumber()
     {
-        return this.value instanceof Number;
+        return this.value instanceof Number || MathUtils.isInteger( this.value ) || MathUtils.isDouble( this.value );
     }
 
     public Number getAsNumber()
     {
-        return this.value instanceof String ? new LazilyParsedNumber( this.getAsString() ) : (Number) this.value;
+        return this.value instanceof String ? new LazilyParsedNumber( (String) this.value ) : (Number) this.value;
     }
 
     public boolean isString()

@@ -157,6 +157,7 @@ public class BossBar implements IBossBar
                 return;
             }
             users.add( user );
+            user.getActiveBossBars().add( this );
 
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
@@ -204,10 +205,12 @@ public class BossBar implements IBossBar
         if ( users.contains( user ) )
         {
             users.remove( user );
+            user.getActiveBossBars().remove( this );
 
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
+            sendBossBarPacket( user, packet );
         }
     }
 
@@ -224,7 +227,11 @@ public class BossBar implements IBossBar
         packet.setUuid( uuid );
         packet.setAction( BossBarAction.REMOVE.getId() );
 
-        users.forEach( user -> sendBossBarPacket( user, packet ) );
+        users.forEach( user ->
+        {
+            sendBossBarPacket( user, packet );
+            user.getActiveBossBars().remove( this );
+        } );
         users.clear();
     }
 
