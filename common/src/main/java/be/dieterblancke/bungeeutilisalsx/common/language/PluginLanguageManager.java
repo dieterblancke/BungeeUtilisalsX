@@ -56,7 +56,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 {
                     configuration = IConfiguration.loadYamlConfiguration(
                             lang,
-                            YamlConfigurationOptions.builder().useComments( true ).build()
+                            YamlConfigurationOptions.builder().useComments( false ).build()
                     );
 
                     if ( autoUpdateFiles )
