@@ -19,8 +19,6 @@ public class ToggleBossBarCommandCall implements CommandCall
                 user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED ).map( it -> !it.getAsBoolean() ).orElse( true )
         );
 
-        user.getSettings().upsertUserSetting( userSetting );
-
         if ( userSetting.getAsBoolean() )
         {
             user.sendLangMessage( "general-commands.togglebossbar.disabled" );
@@ -34,6 +32,8 @@ public class ToggleBossBarCommandCall implements CommandCall
         {
             user.sendLangMessage( "general-commands.togglebossbar.enabled" );
         }
+
+        user.getSettings().upsertUserSetting( userSetting );
     }
 
     @Override
