@@ -278,8 +278,6 @@ friends:
         hover:
           - '&eClick here to accept &b{name}''s &efriend request!'
         click:
-          # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-          # RUN_COMMAND will only work for BungeeCord commands.
           type: 'RUN_COMMAND'
           action: '/friend accept {name}'
       - text: '&e to accept this friend request.'
@@ -350,8 +348,6 @@ friends:
         - '&eFriends since: &b{friendSince}'
         - '&eLast seen: &b{lastOnline}'
       click:
-        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-        # RUN_COMMAND will only work for BungeeCord commands.
         type: 'SUGGEST_COMMAND'
         action: '/friend msg {friendName} '
     foot: '&eYou currently have a total of &b{friendAmount} &efriends!'
@@ -675,8 +671,6 @@ punishments:
         - '&eExpires at: &b{expire}'
         - '&eRemoved by: &b{removedBy}'
       click:
-        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-        # RUN_COMMAND will only work for BungeeCord commands.
         type: 'SUGGEST_COMMAND'
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
@@ -751,8 +745,6 @@ punishments:
         - '&eExpires at: &b{expire}'
         - '&eRemoved by: &b{removedBy}'
       click:
-        # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
-        # RUN_COMMAND will only work for BungeeCord commands.
         type: 'SUGGEST_COMMAND'
         action: '/punishmentdata {type} {id}'
     foot: '&b{user} &ecurrently has executed a total of &b{punishmentAmount} &epunishments of the &b{type} &etype!'
@@ -914,7 +906,6 @@ custom:
   ingamemotd:
     skyblock:
       - '&eThis is a skyblock join message'
-  # preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
   announce:
     welcome:
       chat: '&eWelcome &b{user} &eto our network!'

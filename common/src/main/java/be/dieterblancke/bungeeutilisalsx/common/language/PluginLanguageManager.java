@@ -63,7 +63,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
                     {
                         configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
                                 resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ),
-                                YamlConfigurationOptions.builder().useComments( true ).build()
+                                YamlConfigurationOptions.builder().useComments( false ).build()
                         ) );
                     }
                 }
