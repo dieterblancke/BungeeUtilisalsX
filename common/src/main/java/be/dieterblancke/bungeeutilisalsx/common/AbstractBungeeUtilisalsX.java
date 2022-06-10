@@ -89,8 +89,8 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
-        this.loadConfigs();
         this.migrateConfigs();
+        this.loadConfigs();
         ChatProtections.reloadAllProtections();
 
         this.loadPlaceHolders();

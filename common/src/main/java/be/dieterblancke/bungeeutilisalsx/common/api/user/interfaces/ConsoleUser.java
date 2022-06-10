@@ -1,10 +1,13 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
@@ -15,6 +18,8 @@ import lombok.Setter;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -33,6 +38,9 @@ public abstract class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
+    private final UserSettings userSettings = new UserSettings(uuid, new ArrayList<>());
+    @Getter
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList(new ArrayList<>());
 
     @Override
     public void load( Object playerInstance )
@@ -281,5 +289,11 @@ public abstract class ConsoleUser implements User
     public Object getPlayerObject()
     {
         return null;
+    }
+
+    @Override
+    public UserSettings getSettings()
+    {
+        return userSettings;
     }
 }

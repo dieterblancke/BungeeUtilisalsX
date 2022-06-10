@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.bungee.user;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
@@ -10,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
@@ -38,8 +40,8 @@ import java.util.stream.Collectors;
 public class BungeeUser implements User
 {
 
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList(new ArrayList<>());
     private ProxiedPlayer player;
-
     private String name;
     private UUID uuid;
     private String ip;
@@ -53,6 +55,7 @@ public class BungeeUser implements User
     private boolean msgToggled;
     private boolean vanished;
     private String group;
+    private UserSettings userSettings;
 
     @Override
     public void load( final Object playerInstance )
@@ -76,6 +79,7 @@ public class BungeeUser implements User
                 this.getJoinedHost(),
                 Maps.newHashMap()
         );
+        this.userSettings = new UserSettings( uuid, new ArrayList<>() );
 
         dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
@@ -116,6 +120,7 @@ public class BungeeUser implements User
                 );
             }
         } );
+        dao.getUserDao().getSettings( uuid ).thenAccept( settings -> userSettings = settings );
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
@@ -450,6 +455,12 @@ public class BungeeUser implements User
     public Object getPlayerObject()
     {
         return player;
+    }
+
+    @Override
+    public UserSettings getSettings()
+    {
+        return userSettings;
     }
 
     @Override
