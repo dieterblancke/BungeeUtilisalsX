@@ -209,7 +209,7 @@ public class BossBar implements IBossBar
             final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
-            sendBossBarPacket( user, packet );
+            user.sendPacket( packet );
         }
     }
 
@@ -228,7 +228,7 @@ public class BossBar implements IBossBar
 
         users.forEach( user ->
         {
-            sendBossBarPacket( user, packet );
+            user.sendPacket( packet );
             user.getActiveBossBars().remove( this );
         } );
         users.clear();

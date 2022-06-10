@@ -210,7 +210,7 @@ public class BossBar implements IBossBar
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
-            sendBossBarPacket( user, packet );
+            user.sendPacket( packet );
         }
     }
 
@@ -229,7 +229,7 @@ public class BossBar implements IBossBar
 
         users.forEach( user ->
         {
-            sendBossBarPacket( user, packet );
+            user.sendPacket( packet );
             user.getActiveBossBars().remove( this );
         } );
         users.clear();
