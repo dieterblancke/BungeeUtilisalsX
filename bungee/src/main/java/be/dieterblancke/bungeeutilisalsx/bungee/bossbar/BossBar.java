@@ -13,11 +13,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnload
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.Collections;
@@ -35,7 +37,7 @@ public class BossBar implements IBossBar
     private BarColor color;
     private BarStyle style;
     private float progress;
-    private BaseComponent[] message;
+    private Component message;
     private boolean visible;
 
     public BossBar()
@@ -50,10 +52,10 @@ public class BossBar implements IBossBar
 
     public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final String message )
     {
-        this( uuid, color, style, progress, TextComponent.fromLegacyText( message ) );
+        this( uuid, color, style, progress, Utils.format( message ) );
     }
 
-    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final BaseComponent[] message )
+    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final Component message )
     {
         this.uuid = uuid;
         this.color = color;
@@ -76,7 +78,7 @@ public class BossBar implements IBossBar
         {
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( ComponentSerializer.toString( message ) );
+            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
             packet.setHealth( progress );
             packet.setColor( color.getId() );
             packet.setDivision( style.getId() );
@@ -141,7 +143,7 @@ public class BossBar implements IBossBar
     }
 
     @Override
-    public BaseComponent[] getBaseComponent()
+    public Component getBaseComponent()
     {
         return message;
     }
@@ -161,7 +163,7 @@ public class BossBar implements IBossBar
             final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( ComponentSerializer.toString( message ) );
+            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
             packet.setHealth( progress );
             packet.setColor( color.getId() );
             packet.setDivision( style.getId() );
@@ -173,26 +175,27 @@ public class BossBar implements IBossBar
     @Override
     public String getMessage()
     {
-        return new TextComponent( message ).toLegacyText();
+        return LegacyComponentSerializer.legacyAmpersand().serialize( message );
     }
 
     @Override
     @Deprecated
     public void setMessage( final String message )
     {
-        setMessage( TextComponent.fromLegacyText( message ) );
+        setMessage( Utils.format( message ) );
     }
 
     @Override
-    public void setMessage( BaseComponent[] title )
+    public void setMessage( Component title )
     {
         this.message = title;
+
         if ( visible )
         {
             final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
-            packet.setTitle( ComponentSerializer.toString( message ) );
+            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
 
             users.forEach( user -> sendBossBarPacket( user, packet ) );
         }

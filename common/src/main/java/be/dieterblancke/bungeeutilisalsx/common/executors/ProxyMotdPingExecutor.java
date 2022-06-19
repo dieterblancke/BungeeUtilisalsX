@@ -12,8 +12,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdData;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.UUID;
@@ -47,17 +46,15 @@ public class ProxyMotdPingExecutor implements EventExecutor
         {
             return null;
         }
-        final boolean colorHex = connection.getVersion() >= Version.MINECRAFT_1_16.getVersionId();
         final String message = formatMessage( motd.getMotd(), connection );
-        final BaseComponent component = new TextComponent(
-                TextComponent.fromLegacyText( Utils.formatString( message, colorHex ) )
-        );
+        final Component component = Utils.format( message );
+
         return new MotdPingResponse(
                 component,
                 motd.getHoverMessages()
                         .stream()
                         .map( m -> new MotdPingPlayer(
-                                Utils.formatString( formatMessage( m, connection ), colorHex ),
+                                Utils.formatString( formatMessage( m, connection ) ),
                                 DIDJEE2_UUID
                         ) )
                         .collect( Collectors.toList() )

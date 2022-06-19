@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.bossbar;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.UUID;
 
@@ -47,9 +47,9 @@ public interface IBossBar
     @Deprecated
     void setMessage( String title );
 
-    void setMessage( BaseComponent[] title );
+    void setMessage( Component title );
 
-    BaseComponent[] getBaseComponent();
+    Component getBaseComponent();
 
     void addUser( User user );
 

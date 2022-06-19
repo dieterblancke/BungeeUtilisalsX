@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.api.ISection;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.AbstractReconnectHandler;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -132,7 +133,7 @@ public class KickListener implements Listener
 
                 if ( data == null || data.getServerInfo() == null )
                 {
-                    event.getPlayer().disconnect( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) );
+                    event.getPlayer().disconnect( BungeeComponentSerializer.get().serialize( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) ) );
                 }
                 else
                 {

@@ -6,7 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.velocity.utils.LanguageUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
@@ -32,15 +31,16 @@ public class JoinListener
             return;
         }
         final Optional<User> optionalUser = BuX.getApi().getUser( player.getUsername() );
-        if ( optionalUser.isPresent() )
+        if ( !optionalUser.isPresent() )
         {
-            final User user = optionalUser.get();
+            return;
+        }
+        final User user = optionalUser.get();
 
-            if ( user.getStorage().hasData( UserStorageKey.HUBBALANCER_NO_REDIRECT ) )
-            {
-                user.getStorage().removeData( UserStorageKey.HUBBALANCER_NO_REDIRECT );
-                return;
-            }
+        if ( user.getStorage().hasData( UserStorageKey.HUBBALANCER_NO_REDIRECT ) )
+        {
+            user.getStorage().removeData( UserStorageKey.HUBBALANCER_NO_REDIRECT );
+            return;
         }
 
         final ServerData optimal = BuX.getApi().getHubBalancer().findBestServer( HubServerType.LOBBY );
@@ -49,7 +49,7 @@ public class JoinListener
         {
             event.setResult( ServerPreConnectEvent.ServerResult.denied() );
 
-            LanguageUtils.sendLangMessage( event.getPlayer(), "hubbalancer.no-lobbies-found" );
+            user.sendLangMessage( "hubbalancer.no-lobbies-found" );
         }
         else
         {

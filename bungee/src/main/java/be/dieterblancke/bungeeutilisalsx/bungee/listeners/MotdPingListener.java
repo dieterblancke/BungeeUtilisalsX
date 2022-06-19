@@ -5,9 +5,11 @@ import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeMotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.ServerPing.PlayerInfo;
 import net.md_5.bungee.api.ServerPing.Players;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.event.ProxyPingEvent;
 import net.md_5.bungee.api.plugin.Listener;
@@ -42,8 +44,7 @@ public class MotdPingListener implements Listener
                                     .map( it -> new PlayerInfo( it.getName(), it.getUuid() ) )
                                     .toArray( PlayerInfo[]::new )
                     ) );
-                    event.getResponse().setDescriptionComponent( e.getMotdPingResponse().getMotd() );
-
+                    event.getResponse().setDescriptionComponent( new TextComponent( BungeeComponentSerializer.get().serialize( e.getMotdPingResponse().getMotd() ) ) );
                     event.completeIntent( Bootstrap.getInstance() );
                 }
         );

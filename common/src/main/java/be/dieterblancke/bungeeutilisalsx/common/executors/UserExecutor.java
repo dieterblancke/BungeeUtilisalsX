@@ -18,7 +18,7 @@ public class UserExecutor implements EventExecutor
     @Event
     public void onLoad( final UserLoadEvent event )
     {
-        event.getApi().getUsers().add( event.getUser() );
+        event.getApi().addUser( event.getUser() );
 
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {
@@ -31,7 +31,7 @@ public class UserExecutor implements EventExecutor
     @Event
     public void onUnload( final UserUnloadEvent event )
     {
-        event.getApi().getUsers().remove( event.getUser() );
+        event.getApi().removeUser( event.getUser() );
 
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {

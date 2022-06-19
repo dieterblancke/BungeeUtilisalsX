@@ -13,9 +13,7 @@ import com.velocitypowered.api.plugin.PluginDescription;
 import com.velocitypowered.api.plugin.meta.PluginDependency;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import com.velocitypowered.api.proxy.server.ServerInfo;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import net.kyori.adventure.text.Component;
 
 import java.util.HashMap;
 import java.util.List;
@@ -102,9 +100,9 @@ public class VelocityOperationsApi implements ProxyOperationsApi
     }
 
     @Override
-    public Object getMessageComponent( final BaseComponent... components )
+    public Object getMessageComponent( final Component component )
     {
-        return GsonComponentSerializer.gson().deserialize( ComponentSerializer.toString( components ) );
+        return component;
     }
 
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )

@@ -21,7 +21,7 @@ import be.dieterblancke.bungeeutilisalsx.velocity.user.VelocityConsoleUser;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -69,7 +69,19 @@ public class BuXApi implements IBuXApi
     @Override
     public List<User> getUsers()
     {
-        return users;
+        return Collections.unmodifiableList( users );
+    }
+
+    @Override
+    public void addUser( User user )
+    {
+        this.users.add( user );
+    }
+
+    @Override
+    public void removeUser( User user )
+    {
+        this.users.remove( user );
     }
 
     @Override
@@ -151,7 +163,7 @@ public class BuXApi implements IBuXApi
     public IBossBar createBossBar( final BarColor color,
                                    final BarStyle style,
                                    final float progress,
-                                   final BaseComponent[] message )
+                                   final Component message )
     {
         return createBossBar( UUID.randomUUID(), color, style, progress, message );
     }
@@ -161,7 +173,7 @@ public class BuXApi implements IBuXApi
                                    final BarColor color,
                                    final BarStyle style,
                                    final float progress,
-                                   final BaseComponent[] message )
+                                   final Component message )
     {
         return new BossBar( uuid, color, style, progress, message );
     }

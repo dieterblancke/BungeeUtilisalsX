@@ -65,7 +65,6 @@ public class HubCommandCall implements CommandCall, TabCall
             if ( optimal == null || optimal.getServerInfo() == null )
             {
                 user.sendLangMessage( "hubbalancer.no-lobbies-found" );
-
                 return;
             }
 

@@ -5,17 +5,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import com.google.common.reflect.ClassPath;
 import lombok.SneakyThrows;
-import net.md_5.bungee.api.ChatColor;
+import net.kyori.adventure.text.Component;
 
-import java.awt.*;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -25,9 +21,7 @@ import java.net.InetSocketAddress;
 import java.net.URL;
 import java.security.CodeSource;
 import java.text.SimpleDateFormat;
-import java.util.List;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,182 +35,14 @@ public class Utils
     private static final Pattern timePattern = Pattern.compile( "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
             + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
-    private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
-    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(\\{(#[A-Fa-f0-9]{6})})(.+?)(\\{/(#[A-Fa-f0-9]{6})})" );
-    private static final List<String> SPECIAL_COLORS = Arrays.asList( "&l", "&n", "&o", "&k", "&m" );
-    private static final Map<Color, net.md_5.bungee.api.ChatColor> COLORS;
-    private static final boolean IS_1_16;
-
-    static
-    {
-        IS_1_16 = ReflectionUtils.getMethod( net.md_5.bungee.api.ChatColor.class, "of", String.class ) != null;
-
-        COLORS = ImmutableMap.<Color, net.md_5.bungee.api.ChatColor>builder()
-                .put( new Color( 0 ), net.md_5.bungee.api.ChatColor.getByChar( '0' ) )
-                .put( new Color( 170 ), net.md_5.bungee.api.ChatColor.getByChar( '1' ) )
-                .put( new Color( 43520 ), net.md_5.bungee.api.ChatColor.getByChar( '2' ) )
-                .put( new Color( 43690 ), net.md_5.bungee.api.ChatColor.getByChar( '3' ) )
-                .put( new Color( 11141120 ), net.md_5.bungee.api.ChatColor.getByChar( '4' ) )
-                .put( new Color( 11141290 ), net.md_5.bungee.api.ChatColor.getByChar( '5' ) )
-                .put( new Color( 16755200 ), net.md_5.bungee.api.ChatColor.getByChar( '6' ) )
-                .put( new Color( 11184810 ), net.md_5.bungee.api.ChatColor.getByChar( '7' ) )
-                .put( new Color( 5592405 ), net.md_5.bungee.api.ChatColor.getByChar( '8' ) )
-                .put( new Color( 5592575 ), net.md_5.bungee.api.ChatColor.getByChar( '9' ) )
-                .put( new Color( 5635925 ), net.md_5.bungee.api.ChatColor.getByChar( 'a' ) )
-                .put( new Color( 5636095 ), net.md_5.bungee.api.ChatColor.getByChar( 'b' ) )
-                .put( new Color( 16733525 ), net.md_5.bungee.api.ChatColor.getByChar( 'c' ) )
-                .put( new Color( 16733695 ), net.md_5.bungee.api.ChatColor.getByChar( 'd' ) )
-                .put( new Color( 16777045 ), net.md_5.bungee.api.ChatColor.getByChar( 'e' ) )
-                .put( new Color( 16777215 ), net.md_5.bungee.api.ChatColor.getByChar( 'f' ) )
-                .build();
-    }
 
     private Utils()
     {
     }
 
-    /**
-     * Formats a message.
-     *
-     * @param message The message to be formatted.
-     * @return The formatted message.
-     */
-    public static String c( String message )
-    {
-        return c( message, true );
-    }
-
-    /**
-     * Formats a message.
-     *
-     * @param message The message to be formatted.
-     * @return The formatted message.
-     */
-    public static String c( String message, boolean hex )
-    {
-        if ( message == null )
-        {
-            return "";
-        }
-        if ( hex )
-        {
-            message = colorHex( message );
-        }
-
-        return net.md_5.bungee.api.ChatColor.translateAlternateColorCodes( '&', message );
-    }
-
-    public static String colorHex( String message )
-    {
-        if ( !IS_1_16 )
-        {
-            return message;
-        }
-        Matcher matcher = HEX_PATTERN.matcher( message );
-        while ( matcher.find() )
-        {
-            final net.md_5.bungee.api.ChatColor hexColor = net.md_5.bungee.api.ChatColor.of( matcher.group().substring( 1, matcher.group().length() - 1 ) );
-            final String before = message.substring( 0, matcher.start() );
-            final String after = message.substring( matcher.end() );
-
-            message = before + hexColor + after;
-            matcher = HEX_PATTERN.matcher( message );
-        }
-        message = colorGradients( message );
-        return message;
-    }
-
-    private static String colorGradients( String message )
-    {
-        Matcher matcher = GRADIENT_HEX_PATTERN.matcher( message );
-        while ( matcher.find() )
-        {
-            final String startColor = matcher.group( 2 );
-            final String text = matcher.group( 3 );
-            final String endColor = matcher.group( 5 );
-
-            message = matcher.replaceFirst( applyGradient( text, startColor, endColor ).replace( "$", "\\$" ) );
-            matcher = GRADIENT_HEX_PATTERN.matcher( message );
-        }
-        return message;
-    }
-
-    private static String applyGradient( String text, final String startHexColor, final String endHexColor )
-    {
-        final ChatColor startColor = ChatColor.of( startHexColor );
-        final ChatColor endColor = ChatColor.of( endHexColor );
-
-        final StringBuilder specialColors = new StringBuilder();
-        for ( String color : SPECIAL_COLORS )
-        {
-            if ( text.contains( color ) )
-            {
-                specialColors.append( color );
-                text = text.replace( color, "" );
-            }
-        }
-        final StringBuilder stringBuilder = new StringBuilder();
-        final ChatColor[] colors = getGradientColors( startColor.getColor(), endColor.getColor(), text.length() );
-        final String[] characters = text.split( "" );
-
-        for ( int i = 0; i < text.length(); i++ )
-        {
-            stringBuilder.append( colors[i] ).append( specialColors ).append( characters[i] );
-        }
-        return stringBuilder.toString();
-    }
-
-    private static ChatColor[] getGradientColors( final Color start, final Color end, final int step )
-    {
-        final ChatColor[] colors = new ChatColor[step];
-        final int stepR = Math.abs( start.getRed() - end.getRed() ) / ( step - 1 );
-        final int stepG = Math.abs( start.getGreen() - end.getGreen() ) / ( step - 1 );
-        final int stepB = Math.abs( start.getBlue() - end.getBlue() ) / ( step - 1 );
-        final int[] direction = new int[]{
-                start.getRed() < end.getRed() ? +1 : -1,
-                start.getGreen() < end.getGreen() ? +1 : -1,
-                start.getBlue() < end.getBlue() ? +1 : -1
-        };
-
-        for ( int i = 0; i < step; i++ )
-        {
-            final Color color = new Color(
-                    start.getRed() + ( ( stepR * i ) * direction[0] ),
-                    start.getGreen() + ( ( stepG * i ) * direction[1] ),
-                    start.getBlue() + ( ( stepB * i ) * direction[2] )
-            );
-            if ( IS_1_16 )
-            {
-                colors[i] = ChatColor.of( color );
-            }
-            else
-            {
-                colors[i] = getClosestColor( color );
-            }
-        }
-        return colors;
-    }
-
-    private static ChatColor getClosestColor( final Color color )
-    {
-        Color nearestColor = null;
-        double nearestDistance = Integer.MAX_VALUE;
-
-        for ( Color constantColor : COLORS.keySet() )
-        {
-            double distance = Math.pow( color.getRed() - constantColor.getRed(), 2 ) + Math.pow( color.getGreen() - constantColor.getGreen(), 2 ) + Math.pow( color.getBlue() - constantColor.getBlue(), 2 );
-            if ( nearestDistance > distance )
-            {
-                nearestColor = constantColor;
-                nearestDistance = distance;
-            }
-        }
-        return COLORS.get( nearestColor );
-    }
-
     public static String formatString( final User user, final String message )
     {
-        return c( PlaceHolderAPI.formatMessage( user, message ) );
+        return PlaceHolderAPI.formatMessage( user, message );
     }
 
     /**
@@ -227,19 +53,7 @@ public class Utils
      */
     public static String formatString( final String message )
     {
-        return c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) );
-    }
-
-    /**
-     * Formats a message, translates color codes and replaces general placeholders.
-     *
-     * @param message The message to be formatted.
-     * @param hex     Replace hex colors or not.
-     * @return The formatted message.
-     */
-    public static String formatString( final String message, final boolean hex )
-    {
-        return c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ), hex );
+        return UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) );
     }
 
     /**
@@ -248,9 +62,9 @@ public class Utils
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( final String message )
+    public static Component format( final String message )
     {
-        return asComponent( c( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) ) );
+        return asComponent( UnicodeTranslator.translate( PlaceHolderAPI.formatMessage( message ) ) );
     }
 
     /**
@@ -259,9 +73,9 @@ public class Utils
      * @param message The message to be wrapped.
      * @return The wrapped message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] asComponent( final String message )
+    public static Component asComponent( final String message )
     {
-        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( message );
+        return MessageUtils.fromText( message );
     }
 
     /**
@@ -270,7 +84,7 @@ public class Utils
      * @param messages The messages to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( final List<String> messages )
+    public static Component format( final List<String> messages )
     {
         return format( null, messages );
     }
@@ -282,9 +96,9 @@ public class Utils
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( final User user, final String message )
+    public static Component format( final User user, final String message )
     {
-        return net.md_5.bungee.api.chat.TextComponent.fromLegacyText( formatString( user, message ) );
+        return MessageUtils.fromText( formatString( user, message ) );
     }
 
     /**
@@ -294,21 +108,18 @@ public class Utils
      * @param messages The messages to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( final User user, final List<String> messages )
+    public static Component format( final User user, final List<String> messages )
     {
-        final AtomicInteger count = new AtomicInteger();
-        return messages
-                .stream()
-                .map( message ->
-                {
-                    if ( count.incrementAndGet() >= messages.size() )
-                    {
-                        return format( user, message );
-                    }
-                    return format( user, message + "\n" );
-                } )
-                .flatMap( Arrays::stream )
-                .toArray( net.md_5.bungee.api.chat.BaseComponent[]::new );
+        Component component = Component.empty();
+
+        for ( int i = 0; i < messages.size(); i++ )
+        {
+            String message = messages.get( i );
+
+            component = component.append( format( user, i + 1 >= messages.size() ? message : message + "\n" ) );
+        }
+
+        return component;
     }
 
     /**
@@ -318,7 +129,7 @@ public class Utils
      * @param message The message to be formatted.
      * @return The formatted message.
      */
-    public static net.md_5.bungee.api.chat.BaseComponent[] format( final String prefix, final String message )
+    public static Component format( final String prefix, final String message )
     {
         return format( prefix + message );
     }
@@ -596,7 +407,7 @@ public class Utils
         {
             return null;
         }
-        return Utils.c( Joiner.on( separator ).join( objects ) );
+        return Joiner.on( separator ).join( objects );
     }
 
     /**
@@ -612,7 +423,7 @@ public class Utils
         {
             return null;
         }
-        return Utils.c( Joiner.on( separator ).join( objects ) );
+        return Joiner.on( separator ).join( objects );
     }
 
     /**
@@ -1103,7 +914,7 @@ public class Utils
 
     /**
      * @param optionals the optionals to be checked
-     * @param <T> type
+     * @param <T>       type
      * @return the first optional with a value, or an empty if none
      */
     @SafeVarargs

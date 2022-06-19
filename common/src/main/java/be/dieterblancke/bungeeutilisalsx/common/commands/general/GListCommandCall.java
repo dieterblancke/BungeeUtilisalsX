@@ -14,7 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -34,7 +34,7 @@ public class GListCommandCall implements CommandCall, TabCall
         final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();
         final String color = config.getString( "glist.playerlist.color" );
         final String separator = config.getString( "glist.playerlist.separator" );
-        final List<TextComponent> messages = Lists.newArrayList();
+        final List<Component> messages = Lists.newArrayList();
         final List<String> onlinePlayers = BuX.getApi().getPlayerUtils().getPlayers();
         final long hiddenUsers = this.getHiddenUsers( onlinePlayers );
         final long totalOnlineCount = BuX.getApi().getPlayerUtils().getTotalCount() - hiddenUsers;
@@ -48,15 +48,13 @@ public class GListCommandCall implements CommandCall, TabCall
                                 user,
                                 config.getSection( "glist.header" ),
                                 "%total%", totalOnlineCount,
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                        StaffUtils.filterPlayerList( onlinePlayers )
-                                ) )
+                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) )
                         )
                 );
             }
             else
             {
-                messages.add( new TextComponent( Utils.format( config.getString( "glist.header" ) ) ) );
+                messages.add( Utils.format( config.getString( "glist.header" ) ) );
             }
         }
 
@@ -79,7 +77,7 @@ public class GListCommandCall implements CommandCall, TabCall
                                 config.getSection( "glist.format" ),
                                 "%server%", group.getName(),
                                 "%players%", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ),
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) ) )
+                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) )
                         )
                 );
             }
@@ -96,9 +94,7 @@ public class GListCommandCall implements CommandCall, TabCall
                                 config.getSection( "glist.format" ),
                                 "%server%", info.getName(),
                                 "%players%", String.valueOf( players.size() - getHiddenUsers( players ) ),
-                                "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                        StaffUtils.filterPlayerList( players )
-                                ) )
+                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( players ) )
                         )
                 );
             }
@@ -108,9 +104,7 @@ public class GListCommandCall implements CommandCall, TabCall
                         user,
                         config.getSection( "glist.total" ),
                         "%total%", totalOnlineCount,
-                        "%playerlist%", Utils.c( color + Joiner.on( separator ).join(
-                                StaffUtils.filterPlayerList( onlinePlayers )
-                        ) )
+                        "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) )
                 )
         );
 

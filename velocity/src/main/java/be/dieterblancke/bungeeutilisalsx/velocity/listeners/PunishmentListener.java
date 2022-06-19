@@ -39,7 +39,7 @@ public class PunishmentListener
 
         if ( kickReason != null )
         {
-            event.setResult( ResultedEvent.ComponentResult.denied( Component.text( Utils.c( kickReason ) ) ) );
+            event.setResult( ResultedEvent.ComponentResult.denied( Utils.format( kickReason ) ));
         }
     }
 
@@ -65,14 +65,14 @@ public class PunishmentListener
             if ( kickReason != null )
             {
                 // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
-                if ( !event.getPlayer().getCurrentServer().isPresent() )
+                if ( event.getPlayer().getCurrentServer().isEmpty() )
                 {
-                    player.disconnect( Component.text( Utils.c( kickReason ) ) );
+                    player.disconnect( Utils.format( kickReason ) );
                 }
                 else
                 {
                     event.setResult( ServerPreConnectEvent.ServerResult.denied() );
-                    player.sendMessage( Component.text( Utils.c( kickReason ) ) );
+                    player.sendMessage( Utils.format( kickReason ) );
                 }
             }
         } );

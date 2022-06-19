@@ -17,7 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.webapi.console.WebApiConsoleUser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -48,6 +48,16 @@ public class BuXApi implements IBuXApi
     public List<User> getUsers()
     {
         return Collections.emptyList();
+    }
+
+    @Override
+    public void addUser( User user )
+    {
+    }
+
+    @Override
+    public void removeUser( User user )
+    {
     }
 
     @Override
@@ -132,7 +142,7 @@ public class BuXApi implements IBuXApi
     public IBossBar createBossBar( final BarColor color,
                                    final BarStyle style,
                                    final float progress,
-                                   final BaseComponent[] message )
+                                   final Component message )
     {
         throw new UnsupportedOperationException( "Bossbar is not suppored in the web version of BungeeUtilisalsX!" );
     }
@@ -142,7 +152,7 @@ public class BuXApi implements IBuXApi
                                    final BarColor color,
                                    final BarStyle style,
                                    final float progress,
-                                   final BaseComponent[] message )
+                                   final Component message )
     {
         throw new UnsupportedOperationException( "Bossbar is not suppored in the web version of BungeeUtilisalsX!" );
     }

@@ -18,6 +18,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
@@ -26,10 +27,9 @@ import com.google.common.collect.Maps;
 import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 
 import java.net.InetSocketAddress;
 import java.time.Duration;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class VelocityUser implements User
 {
 
-    private final List<IBossBar> activeBossBars = Collections.synchronizedList(new ArrayList<>());
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList( new ArrayList<>() );
     private Player player;
     private String name;
     private UUID uuid;
@@ -201,7 +201,7 @@ public class VelocityUser implements User
         {
             return;
         }
-        sendMessage( TextComponent.fromLegacyText( PlaceHolderAPI.formatMessage( this, message ) ) );
+        sendMessage( MessageUtils.fromTextNoColors( PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override
@@ -211,23 +211,14 @@ public class VelocityUser implements User
     }
 
     @Override
-    public void sendMessage( BaseComponent component )
+    public void sendMessage( Component component )
     {
         if ( this.isEmpty( component ) )
         {
             return;
         }
-        VelocityPacketUtils.sendMessagePacket( player, component );
-    }
 
-    @Override
-    public void sendMessage( BaseComponent[] components )
-    {
-        if ( this.isEmpty( components ) )
-        {
-            return;
-        }
-        VelocityPacketUtils.sendMessagePacket( player, components );
+        player.sendMessage( component );
     }
 
     @Override
@@ -267,7 +258,7 @@ public class VelocityUser implements User
     @Override
     public void forceKick( String reason )
     {
-        this.player.disconnect( Component.text( Utils.c( reason ) ) );
+        this.player.disconnect( Utils.format( this, reason ) );
     }
 
     @Override
@@ -382,31 +373,9 @@ public class VelocityUser implements User
     }
 
     @Override
-    public void sendActionBar( final String actionbar )
-    {
-        player.sendActionBar( Component.text( Utils.formatString( this, actionbar ) ) );
-    }
-
-    @Override
-    public void sendTitle( final String title, final String subtitle, final int fadein, final int stay, final int fadeout )
-    {
-        player.showTitle( Title.title(
-                Component.text( Utils.formatString( this, title ) ),
-                Component.text( Utils.formatString( this, subtitle ) ),
-                Title.Times.of( Duration.ofSeconds( fadein ), Duration.ofSeconds( stay ), Duration.ofSeconds( fadeout ) )
-        ) );
-    }
-
-    @Override
     public void sendPacket( final Object packet )
     {
         VelocityPacketUtils.sendPacket( player, packet );
-    }
-
-    @Override
-    public void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer )
-    {
-        VelocityPacketUtils.sendTabPacket( player, header, footer );
     }
 
     @Override
@@ -471,6 +440,12 @@ public class VelocityUser implements User
     public UserSettings getSettings()
     {
         return userSettings;
+    }
+
+    @Override
+    public Audience asAudience()
+    {
+        return this.player;
     }
 
     @Override
