@@ -5,7 +5,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>2.3.4</version>
+        <version>2.3.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -23,12 +23,6 @@
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-            <artifactId>messaging</artifactId>
-            <version>${project.version}</version>
-            <scope>compile</scope>
-        </dependency>
         <dependency>
             <groupId>be.dieterblancke.configuration</groupId>
             <artifactId>ConfigurationAPI</artifactId>

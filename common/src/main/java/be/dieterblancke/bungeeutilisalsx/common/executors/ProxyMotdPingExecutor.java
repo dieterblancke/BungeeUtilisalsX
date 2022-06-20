@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotd
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent.MotdPingPlayer;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent.MotdPingResponse;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -54,7 +55,7 @@ public class ProxyMotdPingExecutor implements EventExecutor
                 motd.getHoverMessages()
                         .stream()
                         .map( m -> new MotdPingPlayer(
-                                Utils.formatString( formatMessage( m, connection ) ),
+                                MessageUtils.colorizeLegacy( Utils.formatString( formatMessage( m, connection ) ) ),
                                 DIDJEE2_UUID
                         ) )
                         .collect( Collectors.toList() )

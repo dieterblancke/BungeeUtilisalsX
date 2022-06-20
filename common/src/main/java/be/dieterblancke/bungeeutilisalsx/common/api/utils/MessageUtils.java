@@ -7,6 +7,8 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MessageUtils
 {
@@ -15,6 +17,33 @@ public class MessageUtils
             .builder()
             .flattener( ComponentFlattener.textOnly() )
             .build();
+    private static final LegacyComponentSerializer SECTION_WITH_RGB = LegacyComponentSerializer
+            .builder()
+            .character( '§' )
+            .hexCharacter( '#' )
+            .hexColors()
+            .build();
+    private static final LegacyComponentSerializer SECTION_WITH_UNUSUAL_RGB = LegacyComponentSerializer
+            .builder()
+            .character( '§' )
+            .hexCharacter( '#' )
+            .hexColors()
+            .useUnusualXRepeatedCharacterHexFormat()
+            .build();
+    private static final LegacyComponentSerializer AMPERSAND_WITH_RGB = LegacyComponentSerializer
+            .builder()
+            .character( '&' )
+            .hexCharacter( '#' )
+            .hexColors()
+            .build();
+    private static final LegacyComponentSerializer SECTION = LegacyComponentSerializer
+            .builder()
+            .character( '§' )
+            .build();
+
+
+    private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
+    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(\\{(#[A-Fa-f0-9]{6})})(.+?)(\\{/(#[A-Fa-f0-9]{6})})" );
     private static final Map<String, String> COLOR_MAPPINGS = new HashMap<>()
     {{
         put( "0", "black" );
@@ -36,7 +65,7 @@ public class MessageUtils
         put( "k", "obfuscated" );
         put( "l", "bold" );
         put( "m", "strikethrough" );
-        put( "n", "underline" );
+        put( "n", "underlined" );
         put( "o", "italic" );
         put( "r", "reset" );
     }};
@@ -50,7 +79,10 @@ public class MessageUtils
         for ( Map.Entry<String, String> entry : COLOR_MAPPINGS.entrySet() )
         {
             text = text.replace( "&" + entry.getKey(), "<" + entry.getValue() + ">" );
+            text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
         }
+
+//        text = fixHexColors( text );
 
         return MiniMessage.miniMessage().deserialize( text );
     }
@@ -58,5 +90,33 @@ public class MessageUtils
     public static Component fromTextNoColors( String text )
     {
         return LEGACY_COMPONENT_SERIALIZER.deserialize( text );
+    }
+
+    public static String colorizeLegacy( String str )
+    {
+        return SECTION_WITH_UNUSUAL_RGB.serialize(
+                AMPERSAND_WITH_RGB.deserialize(
+                        SECTION_WITH_UNUSUAL_RGB.serialize(
+                                fromText( str )
+                        )
+                )
+        );
+    }
+
+    private static String fixHexColors( String text )
+    {
+        Matcher matcher = HEX_PATTERN.matcher( text );
+
+        while ( matcher.find() )
+        {
+            String before = text.substring( 0, matcher.start() );
+            String hexColor = matcher.group().substring( 1, matcher.group().length() - 1 );
+            String after = text.substring( matcher.end() );
+
+            text = before + "<" + hexColor + ">" + after;
+            matcher = HEX_PATTERN.matcher( text );
+        }
+
+        return text;
     }
 }

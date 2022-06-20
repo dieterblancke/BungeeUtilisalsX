@@ -55,7 +55,7 @@ public class LanguageConfig
 
                 if ( i < messages.size() - 1 )
                 {
-                    builder.append( "\n" );
+                    builder.append( "\n<reset>" );
                 }
             }
         }
