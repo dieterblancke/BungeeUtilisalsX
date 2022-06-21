@@ -33,12 +33,12 @@ public class MessageBuilder
     {
         if ( section.isList( "text" ) )
         {
-            final Component component = Component.empty();
-            final List<ISection> sections = section.getSectionList( "text" );
+            Component component = Component.empty();
+            List<ISection> sections = section.getSectionList( "text" );
 
             for ( ISection text : sections )
             {
-                component.append(
+                component = component.append(
                         buildMessage( user, text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
                 );
             }
@@ -95,7 +95,12 @@ public class MessageBuilder
     public static Component buildMessage( final User user, final List<ISection> sections, final Object... placeholders )
     {
         Component component = Component.empty();
-        sections.forEach( section -> component.append( buildMessage( user, section, placeholders ) ) );
+
+        for ( ISection section : sections )
+        {
+            component = component.append( buildMessage( user, section, placeholders ) );
+        }
+
         return component;
     }
 
