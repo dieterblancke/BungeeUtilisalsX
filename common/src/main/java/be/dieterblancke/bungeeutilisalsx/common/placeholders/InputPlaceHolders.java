@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
@@ -25,10 +7,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.handler.In
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.Optional;
 
 public class InputPlaceHolders implements PlaceHolderPack
 {
@@ -46,9 +31,14 @@ public class InputPlaceHolders implements PlaceHolderPack
 
                 try
                 {
+                    final Date parsedDate = dateFormat.parse( event.getArgument() );
+                    final Date date = ConfigFiles.CONFIG.isEnabled( "timezone", false )
+                            ? Date.from( parsedDate.toInstant().atZone( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) ).toInstant() )
+                            : parsedDate;
+
                     return Utils.getTimeLeft(
                             configuration.getString( "placeholders.timeleft" ),
-                            dateFormat.parse( event.getArgument() )
+                            date
                     );
                 }
                 catch ( ParseException e )
@@ -62,14 +52,14 @@ public class InputPlaceHolders implements PlaceHolderPack
             @Override
             public String getReplacement( InputPlaceHolderEvent event )
             {
-                final ServerGroup server = ConfigFiles.SERVERGROUPS.getServer( event.getArgument() );
+                final Optional<ServerGroup> serverGroup = ConfigFiles.SERVERGROUPS.getServer( event.getArgument() );
 
-                if ( server == null )
+                if ( serverGroup.isEmpty() )
                 {
                     return "0";
                 }
 
-                return String.valueOf( server.getPlayers() );
+                return String.valueOf( serverGroup.get().getPlayers() );
             }
         } );
     }

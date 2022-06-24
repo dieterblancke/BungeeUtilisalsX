@@ -9,33 +9,6 @@ class UtilsTest
 {
 
     @Test
-    void testGradientsColoring()
-    {
-        assertEquals(
-                "§x§0§0§0§0§0§0t§x§1§6§1§6§1§6e§x§2§c§2§c§2§cs§x§4§2§4§2§4§2t",
-                Utils.c( "{#000000}test{/#444444}" )
-        );
-    }
-
-    @Test
-    void testHexColoring()
-    {
-        assertEquals(
-                "§x§1§1§1§1§1§1test",
-                Utils.c( "<#111111>test" )
-        );
-    }
-
-    @Test
-    void testNormalColoring()
-    {
-        assertEquals(
-                "§1test",
-                Utils.c( "&1test" )
-        );
-    }
-
-    @Test
     void testParseDateDiff()
     {
         assertEquals(

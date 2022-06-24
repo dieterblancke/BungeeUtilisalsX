@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.utils.GuiSlotUtils;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import lombok.Data;
 
 import java.util.Collection;

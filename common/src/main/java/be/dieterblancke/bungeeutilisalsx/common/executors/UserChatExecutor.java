@@ -14,7 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.chat.protections.SwearValidationResult;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.ChatLockCommandCall;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 
 import java.util.List;
 import java.util.function.Consumer;

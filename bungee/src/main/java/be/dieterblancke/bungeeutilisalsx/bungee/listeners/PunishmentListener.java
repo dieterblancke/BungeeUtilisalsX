@@ -1,23 +1,6 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
+import be.dieterblancke.bungeeutilisalsx.bungee.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -26,7 +9,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.punishments.Bans
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -59,7 +43,7 @@ public class PunishmentListener implements Listener
         if ( kickReason != null )
         {
             event.setCancelled( true );
-            event.setCancelReason( Utils.format( kickReason ) );
+            event.setCancelReason( BungeeComponentSerializer.get().serialize( Utils.format( kickReason ) ) );
         }
     }
 
@@ -88,11 +72,11 @@ public class PunishmentListener implements Listener
             // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
             if ( event.getPlayer().getServer() == null )
             {
-                player.disconnect( Utils.format( kickReason ) );
+                player.disconnect( BungeeComponentSerializer.get().serialize( Utils.format( kickReason ) ) );
             }
             else
             {
-                player.sendMessage( Utils.format( kickReason ) );
+                BungeeUtilisalsX.getInstance().getBungeeAudiences().player( player ).sendMessage( Utils.format( kickReason ) );
             }
         }
     }

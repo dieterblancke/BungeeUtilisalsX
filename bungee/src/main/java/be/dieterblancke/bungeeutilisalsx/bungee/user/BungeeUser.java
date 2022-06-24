@@ -1,25 +1,9 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.bungee.user;
 
+import be.dieterblancke.bungeeutilisalsx.bungee.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
@@ -28,8 +12,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
@@ -39,11 +25,10 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.ChatMessageType;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.Title;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.protocol.DefinedPacket;
 
@@ -56,8 +41,8 @@ import java.util.stream.Collectors;
 public class BungeeUser implements User
 {
 
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList( new ArrayList<>() );
     private ProxiedPlayer player;
-
     private String name;
     private UUID uuid;
     private String ip;
@@ -71,6 +56,7 @@ public class BungeeUser implements User
     private boolean msgToggled;
     private boolean vanished;
     private String group;
+    private UserSettings userSettings;
 
     @Override
     public void load( final Object playerInstance )
@@ -94,6 +80,7 @@ public class BungeeUser implements User
                 this.getJoinedHost(),
                 Maps.newHashMap()
         );
+        this.userSettings = new UserSettings( uuid, new ArrayList<>() );
 
         dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
@@ -134,6 +121,7 @@ public class BungeeUser implements User
                 );
             }
         } );
+        dao.getUserDao().getSettings( uuid ).thenAccept( settings -> userSettings = settings );
 
         if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
         {
@@ -214,7 +202,7 @@ public class BungeeUser implements User
         {
             return;
         }
-        sendMessage( TextComponent.fromLegacyText( PlaceHolderAPI.formatMessage( this, message ) ) );
+        sendMessage( MessageUtils.fromTextNoColors( PlaceHolderAPI.formatMessage( this, message ) ) );
     }
 
     @Override
@@ -224,23 +212,14 @@ public class BungeeUser implements User
     }
 
     @Override
-    public void sendMessage( BaseComponent component )
+    public void sendMessage( Component component )
     {
         if ( this.isEmpty( component ) )
         {
             return;
         }
-        this.player.sendMessage( component );
-    }
 
-    @Override
-    public void sendMessage( BaseComponent[] components )
-    {
-        if ( this.isEmpty( components ) )
-        {
-            return;
-        }
-        this.player.sendMessage( components );
+        asAudience().sendMessage( component );
     }
 
     @Override
@@ -280,7 +259,7 @@ public class BungeeUser implements User
     @Override
     public void forceKick( String reason )
     {
-        this.player.disconnect( Utils.format( reason ) );
+        this.player.disconnect( BungeeComponentSerializer.get().serialize( Utils.format( reason ) ) );
     }
 
     @Override
@@ -395,39 +374,12 @@ public class BungeeUser implements User
     }
 
     @Override
-    public void sendActionBar( final String actionbar )
-    {
-        player.sendMessage( ChatMessageType.ACTION_BAR, Utils.format( this, actionbar ) );
-    }
-
-    @Override
-    public void sendTitle( final String title, final String subtitle, final int fadein, final int stay,
-                           final int fadeout )
-    {
-        final Title bungeeTitle = ProxyServer.getInstance().createTitle();
-
-        bungeeTitle.title( Utils.format( this, title ) );
-        bungeeTitle.subTitle( Utils.format( this, subtitle ) );
-        bungeeTitle.fadeIn( fadein );
-        bungeeTitle.stay( stay );
-        bungeeTitle.fadeOut( fadeout );
-
-        player.sendTitle( bungeeTitle );
-    }
-
-    @Override
     public void sendPacket( final Object packet )
     {
         if ( player != null && packet instanceof DefinedPacket )
         {
             player.unsafe().sendPacket( (DefinedPacket) packet );
         }
-    }
-
-    @Override
-    public void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer )
-    {
-        player.setTabHeader( header, footer );
     }
 
     @Override
@@ -468,6 +420,18 @@ public class BungeeUser implements User
     public Object getPlayerObject()
     {
         return player;
+    }
+
+    @Override
+    public UserSettings getSettings()
+    {
+        return userSettings;
+    }
+
+    @Override
+    public Audience asAudience()
+    {
+        return BungeeUtilisalsX.getInstance().getBungeeAudiences().player( this.player );
     }
 
     @Override

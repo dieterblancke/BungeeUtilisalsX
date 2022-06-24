@@ -2,4 +2,4 @@ name: BungeeUtilisalsX
 main: be.dieterblancke.bungeeutilisalsx.bungee.Bootstrap
 version: ${project.version}
 author: didjee2
-softDepends: [ 'RedisBungee', 'SkinsRestorer', 'Protocolize', 'LuckPerms' ]
+softDepends: [ 'RedisBungee', 'SkinsRestorer', 'Protocolize', 'LuckPerms', 'Triton' ]

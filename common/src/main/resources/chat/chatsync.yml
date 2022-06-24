@@ -1,0 +1,6 @@
+enabled: false
+
+synced-servers:
+  - server: Lobbies
+    format: '&7(&e{server}&7) {permission_user_prefix} {user} {permission_user_suffix}: {message}'
+    force-format: true

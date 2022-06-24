@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -23,6 +5,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -464,6 +449,124 @@ public class SqlUserDao implements UserDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
             return uuid;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<UserSettings> getSettings( final UUID uuid )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            List<UserSetting> userSettings = new ArrayList<>();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( "SELECT * FROM bu_user_settings WHERE uuid = ?;" ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        userSettings.add( new UserSetting(
+                                UserSettingType.valueOf( rs.getString( "setting_type" ) ),
+                                rs.getObject( "setting_value" )
+                        ) );
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+            return new UserSettings( uuid, userSettings );
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Boolean> hasSetting( UUID uuid, UserSettingType type )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            boolean exists = false;
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( "SELECT id FROM bu_user_settings WHERE uuid = ?;" ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    if ( rs.next() )
+                    {
+                        exists = true;
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+            return exists;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> registerSetting( UUID uuid, UserSettingType type, Object value )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( "INSERT INTO bu_user_settings(uuid, setting_type, setting_value) VALUES (?, ?, ?);" ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, type.toString() );
+                pstmt.setObject( 3, value );
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> updateSetting( UUID uuid, UserSettingType type, Object value )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( "UPDATE bu_user_settings SET setting_value = ? WHERE uuid = ? and setting_type = ?;" ) )
+            {
+                pstmt.setObject( 1, value );
+                pstmt.setString( 2, uuid.toString() );
+                pstmt.setString( 3, type.toString() );
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<Void> removeSetting( UUID uuid, UserSettingType type )
+    {
+        return CompletableFuture.runAsync( () ->
+        {
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement( "DELETE FROM bu_user_settings WHERE uuid = ? and setting_type = ?;" ) )
+            {
+                pstmt.setString( 1, uuid.toString() );
+                pstmt.setString( 2, type.toString() );
+                pstmt.executeUpdate();
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 

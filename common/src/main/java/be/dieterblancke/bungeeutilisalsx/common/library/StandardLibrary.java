@@ -1,25 +1,7 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.library;
 
 import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Getter;
 import me.lucko.jarrelocator.Relocation;
 
@@ -51,21 +33,21 @@ public enum StandardLibrary
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.18",
+            "42.4.0",
             checkType( "POSTGRESQL" ),
             relocate( "org.postgresql" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.12.7",
+            "3.12.8",
             checkType( "MONGODB" ),
             relocate( "com.mongodb" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
-            "8.0.23",
+            "8.0.27",
             checkType( "MYSQL" ),
             relocate( "com.mysql" )
     ),
@@ -127,12 +109,6 @@ public enum StandardLibrary
             "com.google.gson.Gson",
             "https://repo1.maven.org/maven2/com/google/code/gson/gson/{version}/gson-{version}.jar",
             "2.8.6",
-            true
-    ),
-    TEXTCOMPONENT(
-            "net.md_5.bungee.api.ChatColor",
-            "https://repo1.maven.org/maven2/net/md-5/bungeecord-chat/{version}/bungeecord-chat-{version}.jar",
-            "1.16-R0.4",
             true
     ),
     APACHE_COMMONS_POOL2(

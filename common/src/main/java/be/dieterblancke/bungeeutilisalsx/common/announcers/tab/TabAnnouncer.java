@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.announcers.tab;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -23,10 +5,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.List;
+import java.util.Optional;
 
 public class TabAnnouncer extends Announcer
 {
@@ -41,9 +24,9 @@ public class TabAnnouncer extends Announcer
     {
         for ( ISection section : configuration.getSectionList( "announcements" ) )
         {
-            final ServerGroup group = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
+            final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( group == null )
+            if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;
@@ -58,7 +41,7 @@ public class TabAnnouncer extends Announcer
                     ? section.getStringList( "footer" )
                     : Lists.newArrayList( section.getString( "footer" ) );
 
-            addAnnouncement( new TabAnnouncement( language, header, footer, group, permission ) );
+            addAnnouncement( new TabAnnouncement( language, header, footer, optionalGroup.get(), permission ) );
         }
     }
 }

@@ -3,7 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.chat.protections;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtection;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Data;
 
 import java.util.List;

@@ -2,55 +2,21 @@ package be.dieterblancke.bungeeutilisalsx.velocity.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.ConsoleUser;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
-import com.velocitypowered.proxy.console.VelocityConsole;
-import net.md_5.bungee.api.chat.BaseComponent;
-import org.apache.logging.log4j.Logger;
-
-import java.lang.reflect.Field;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
 
 public class VelocityConsoleUser extends ConsoleUser
 {
 
-    private static org.apache.logging.log4j.Logger velocityConsoleOutput;
-
-    private static org.apache.logging.log4j.Logger getConsoleOutput()
-    {
-        if ( velocityConsoleOutput == null )
-        {
-            try
-            {
-                final Field loggerField = VelocityConsole.class.getDeclaredField( "logger" );
-                loggerField.setAccessible( true );
-
-                velocityConsoleOutput = (Logger) loggerField.get( null );
-            }
-            catch ( IllegalAccessException | NoSuchFieldException e )
-            {
-                e.printStackTrace();
-            }
-        }
-        return velocityConsoleOutput;
-    }
-
     @Override
-    public void sendMessage( BaseComponent component )
+    public void sendMessage( Component component )
     {
         if ( this.isEmpty( component ) )
         {
             return;
         }
 
-        getConsoleOutput().info( BaseComponent.toLegacyText( component ) );
-    }
-
-    @Override
-    public void sendMessage( BaseComponent[] components )
-    {
-        if ( this.isEmpty( components ) )
-        {
-            return;
-        }
-        getConsoleOutput().info( BaseComponent.toLegacyText( components ) );
+        asAudience().sendMessage( component );
     }
 
     @Override
@@ -85,5 +51,11 @@ public class VelocityConsoleUser extends ConsoleUser
                 Bootstrap.getInstance().getProxyServer().getConsoleCommandSource(),
                 command
         );
+    }
+
+    @Override
+    public Audience asAudience()
+    {
+        return Bootstrap.getInstance().getProxyServer().getConsoleCommandSource();
     }
 }

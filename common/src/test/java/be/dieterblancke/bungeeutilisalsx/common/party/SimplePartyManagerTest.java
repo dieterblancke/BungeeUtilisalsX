@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestRedisContainer;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
-import com.dbsoftwares.configuration.yaml.YamlConfiguration;
+import be.dieterblancke.configuration.yaml.YamlConfiguration;
 import org.junit.jupiter.api.*;
 
 import java.io.IOException;

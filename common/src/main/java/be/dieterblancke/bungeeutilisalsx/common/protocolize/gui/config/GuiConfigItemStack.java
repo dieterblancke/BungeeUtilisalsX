@@ -4,13 +4,13 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.utils.ItemUtils;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 import dev.simplix.protocolize.api.item.ItemStack;
 import dev.simplix.protocolize.data.ItemType;
 import lombok.Data;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,17 +69,17 @@ public class GuiConfigItemStack
                 this.lore.stream()
                         .map( lore ->
                         {
-                            final TextComponent loreComponent = new TextComponent( Utils.format( user, Utils.replacePlaceHolders( lore, placeholders ) ) );
+                            Component loreComponent = Utils.format( user, Utils.replacePlaceHolders( lore, placeholders ) );
 
-                            loreComponent.setItalic( false );
+                            loreComponent = loreComponent.decoration( TextDecoration.ITALIC, false );
 
                             return BuX.getInstance().proxyOperations().getMessageComponent( loreComponent );
                         } )
                         .collect( Collectors.toList() ),
                 false
         );
-        final TextComponent displayName = new TextComponent( Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) ) );
-        displayName.setItalic( false );
+        Component displayName = Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) );
+        displayName = displayName.decoration( TextDecoration.ITALIC, false );
         itemStack.displayName( BuX.getInstance().proxyOperations().getMessageComponent( displayName ) );
 
         this.enchantments.forEach( enchant -> enchant.addToItem( itemStack ) );

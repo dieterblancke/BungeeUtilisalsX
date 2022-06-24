@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.velocity.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -24,7 +6,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserComman
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
+import com.velocitypowered.api.event.command.CommandExecuteEvent.CommandResult;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.Optional;
@@ -47,11 +31,14 @@ public class UserChatListener
 
         if ( chatEvent.isCancelled() )
         {
-            event.setResult( PlayerChatEvent.ChatResult.denied() );
+            event.setResult( ChatResult.denied() );
             return;
         }
 
-        event.setResult( PlayerChatEvent.ChatResult.message( chatEvent.getMessage() ) );
+        if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+        {
+            event.setResult( ChatResult.message( chatEvent.getMessage() ) );
+        }
     }
 
     @Subscribe
@@ -71,10 +58,14 @@ public class UserChatListener
 
             if ( commandEvent.isCancelled() )
             {
-                event.setResult( CommandExecuteEvent.CommandResult.denied() );
+                event.setResult( CommandResult.denied() );
                 return;
             }
-            event.setResult( CommandExecuteEvent.CommandResult.command( commandEvent.getCommand() ) );
+
+            if ( !event.getCommand().equals( commandEvent.getCommand() ) )
+            {
+                event.setResult( CommandResult.command( commandEvent.getCommand() ) );
+            }
         }
     }
 }

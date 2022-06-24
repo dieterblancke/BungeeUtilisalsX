@@ -2,16 +2,17 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Priority;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.StaffChatCommandCall;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 
 public class StaffChatExecutor implements EventExecutor
 {
 
-    @Event
+    @Event( priority = Priority.LOWEST )
     public void onStaffChat( final UserChatEvent event )
     {
         if ( event.isCancelled() )
@@ -35,7 +36,7 @@ public class StaffChatExecutor implements EventExecutor
         }
     }
 
-    @Event
+    @Event( priority = Priority.LOWEST )
     public void onCharChat( final UserChatEvent event )
     {
         final IConfiguration config = ConfigFiles.GENERALCOMMANDS.getConfig();

@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.executors;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -28,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.google.common.base.Strings;
 
 public class FriendsExecutor implements EventExecutor
@@ -123,7 +106,7 @@ public class FriendsExecutor implements EventExecutor
                         u.sendLangMessage(
                                 "friends.switch",
                                 "{user}", user.getName(),
-                                "{from}", user.getServerName(),
+                                "{from}", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ),
                                 "{to}", event.getTarget().getName()
                         );
                     }
@@ -139,7 +122,7 @@ public class FriendsExecutor implements EventExecutor
                                 data.getFriend(),
                                 "friends.switch",
                                 "{user}", user.getName(),
-                                "{from}", user.getServerName(),
+                                "{from}", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ),
                                 "{to}", event.getTarget().getName()
                         ) );
                     }

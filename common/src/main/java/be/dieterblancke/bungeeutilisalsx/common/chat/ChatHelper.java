@@ -1,10 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.chat;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.UnicodeTranslator;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
-import com.dbsoftwares.configuration.api.ISection;
-import net.md_5.bungee.api.ChatColor;
+import be.dieterblancke.configuration.api.ISection;
 
 import java.nio.CharBuffer;
 import java.util.List;
@@ -71,9 +70,7 @@ public class ChatHelper
         {
             char replaceableChar = messageChars[i];
 
-            if ( ( replaceableChar == '&' || replaceableChar == ChatColor.COLOR_CHAR )
-                    && i < ( messageChars.length - 1 )
-                    && ChatColor.getByChar( messageChars[i + 1] ) != null )
+            if ( replaceableChar == '&' && i < ( messageChars.length - 1 ) )
             {
                 builder.append( replaceableChar );
                 builder.append( messageChars[i + 1] );

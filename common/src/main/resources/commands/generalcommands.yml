@@ -307,3 +307,8 @@ opengui:
   name: opengui
   aliases: 'og'
   permission: bungeeutilisals.commands.opengui
+togglebossbar:
+  enabled: true
+  name: togglebossbar
+  aliases: 'tbb'
+  permission: bungeeutilisals.commands.togglebossbar

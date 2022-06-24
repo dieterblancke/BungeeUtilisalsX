@@ -7,8 +7,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.ServerData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.ISection;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.AbstractReconnectHandler;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.chat.BaseComponent;
@@ -17,6 +18,8 @@ import net.md_5.bungee.api.event.ServerKickEvent;
 import net.md_5.bungee.api.plugin.Listener;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
+
+import java.util.Optional;
 
 public class KickListener implements Listener
 {
@@ -45,8 +48,9 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
+                    final Optional<ServerGroup> optionalServerGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalServerGroup.isPresent() && optionalServerGroup.get().isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = false;
                         break;
@@ -70,8 +74,9 @@ public class KickListener implements Listener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getKickedFrom().getName() ) )
+                    final Optional<ServerGroup> optionalServerGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalServerGroup.isPresent() && optionalServerGroup.get().isInGroup( event.getKickedFrom().getName() ) )
                     {
                         fallback = true;
                         break;
@@ -128,7 +133,7 @@ public class KickListener implements Listener
 
                 if ( data == null || data.getServerInfo() == null )
                 {
-                    event.getPlayer().disconnect( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) );
+                    event.getPlayer().disconnect( BungeeComponentSerializer.get().serialize( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) ) );
                 }
                 else
                 {

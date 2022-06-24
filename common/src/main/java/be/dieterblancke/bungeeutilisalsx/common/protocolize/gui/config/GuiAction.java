@@ -1,6 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

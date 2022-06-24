@@ -1,25 +1,8 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.api.event.event;
 
 import lombok.NonNull;
 
+import java.util.HashSet;
 import java.util.Set;
 
 public interface IEventLoader
@@ -30,10 +13,22 @@ public interface IEventLoader
      *
      * @param clazz    The event class.
      * @param executor The EventExecutor
-     * @param <T>      The event class.
      * @return An eventexecutor instance.
      */
-    <T extends BUEvent> Set<IEventHandler<T>> register( @NonNull Class<T> clazz, @NonNull EventExecutor executor );
+    Set<IEventHandler<? extends BUEvent>> register( @NonNull EventExecutor executor, @NonNull Class<? extends BUEvent> clazz );
+
+    default Set<IEventHandler<? extends BUEvent>> register( @NonNull EventExecutor executor, @NonNull Class<? extends BUEvent>... classes )
+    {
+        final Set<IEventHandler<? extends BUEvent>> combinedSet = new HashSet<>();
+
+        for ( Class<? extends BUEvent> clazz : classes )
+        {
+            combinedSet.addAll( register( executor, clazz ) );
+        }
+
+        return combinedSet;
+    }
+
 
     /**
      * Unregisters a certain EventHandler.

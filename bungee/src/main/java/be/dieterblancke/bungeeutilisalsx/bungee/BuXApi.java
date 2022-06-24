@@ -21,14 +21,11 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
 @RequiredArgsConstructor
@@ -72,7 +69,20 @@ public class BuXApi implements IBuXApi
     @Override
     public List<User> getUsers()
     {
-        return users;
+        return Collections.unmodifiableList( users );
+    }
+
+
+    @Override
+    public void addUser( User user )
+    {
+        this.users.add( user );
+    }
+
+    @Override
+    public void removeUser( User user )
+    {
+        this.users.remove( user );
     }
 
     @Override
@@ -80,7 +90,7 @@ public class BuXApi implements IBuXApi
     {
         final List<User> result = Lists.newArrayList();
 
-        for ( User user : users )
+        for ( User user : this.getUsers() )
         {
             if ( user.hasPermission( permission ) )
             {
@@ -151,20 +161,20 @@ public class BuXApi implements IBuXApi
     }
 
     @Override
-    public IBossBar createBossBar( final BarColor color,
-                                   final BarStyle style,
-                                   final float progress,
-                                   final BaseComponent[] message )
+    public IBossBar createBossBar( BarColor color,
+                                   BarStyle style,
+                                   float progress,
+                                   Component message )
     {
         return createBossBar( UUID.randomUUID(), color, style, progress, message );
     }
 
     @Override
-    public IBossBar createBossBar( final UUID uuid,
-                                   final BarColor color,
-                                   final BarStyle style,
-                                   final float progress,
-                                   final BaseComponent[] message )
+    public IBossBar createBossBar( UUID uuid,
+                                   BarColor color,
+                                   BarStyle style,
+                                   float progress,
+                                   Component message )
     {
         return new BossBar( uuid, color, style, progress, message );
     }

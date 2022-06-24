@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.GuiManager;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import dev.simplix.protocolize.api.inventory.Inventory;
 
 public interface ProtocolizeManager

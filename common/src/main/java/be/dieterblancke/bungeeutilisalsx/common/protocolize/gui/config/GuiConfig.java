@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 

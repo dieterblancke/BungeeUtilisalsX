@@ -45,10 +45,8 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
             user.getStorage().setData( UserStorageKey.FRIEND_MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
-                    "friends." + job.getType().toString().toLowerCase() + ".format.receive",
                     false,
-                    Utils::c,
-                    null,
+                    "friends." + job.getType().toString().toLowerCase() + ".format.receive",
                     "{sender}", job.getUserName(),
                     "{message}", job.getMessage()
             );
@@ -56,7 +54,6 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
             executeJob( new UserLanguageMessageJob(
                     job,
                     false,
-                    true,
                     "friends." + job.getType().toString().toLowerCase() + ".format.send",
                     "{receiver}", user.getName(),
                     "{message}", job.getMessage()

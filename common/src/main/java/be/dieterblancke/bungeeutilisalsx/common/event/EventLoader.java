@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.event;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -34,14 +16,14 @@ public class EventLoader implements IEventLoader
     private final Map<Class<? extends BUEvent>, Set<IEventHandler>> handlerMap = new ConcurrentHashMap<>();
 
     @Override
-    public <T extends BUEvent> Set<IEventHandler<T>> register( Class<T> eventClass, EventExecutor executor )
+    public Set<IEventHandler<? extends BUEvent>> register( EventExecutor executor, Class<? extends BUEvent> eventClass )
     {
         if ( !BUEvent.class.isAssignableFrom( eventClass ) )
         {
             throw new IllegalArgumentException( "class " + eventClass.getName() + " does not implement BUEvent" );
         }
         Set<IEventHandler> handlers = handlerMap.computeIfAbsent( eventClass, c -> ConcurrentHashMap.newKeySet() );
-        Set<IEventHandler<T>> addedHandlers = ConcurrentHashMap.newKeySet();
+        Set<IEventHandler<? extends BUEvent>> addedHandlers = ConcurrentHashMap.newKeySet();
 
         final List<Method> methods = Lists.newArrayList();
         methods.addAll( Arrays.asList( executor.getClass().getDeclaredMethods() ) );
@@ -65,7 +47,7 @@ public class EventLoader implements IEventLoader
 
                 method.setAccessible( true );
 
-                EventHandler<T> eventHandler = new EventHandler<>( this, eventClass, method, executor, executeIfCancelled, priority );
+                EventHandler<? extends BUEvent> eventHandler = new EventHandler<>( this, eventClass, method, executor, executeIfCancelled, priority );
                 handlers.add( eventHandler );
                 addedHandlers.add( eventHandler );
             }

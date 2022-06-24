@@ -19,7 +19,6 @@ public class BootstrapUtil
     public static void loadLibraries( final File dataFolder, final LibraryClassLoader libraryClassLoader, final Logger logger )
     {
         BootstrapUtil.dataFolder = dataFolder;
-        ensureRelocatedLibraries( dataFolder, logger );
 
         logger.info( "Loading libraries ..." );
 
@@ -34,29 +33,4 @@ public class BootstrapUtil
         }
         logger.info( "Libraries have been loaded." );
     }
-
-    private static void ensureRelocatedLibraries( final File dataFolder, final Logger logger )
-    {
-        final File folder = new File( dataFolder, "libraries" );
-
-        if ( folder.exists() )
-        {
-            final File originalFolder = new File( folder, "original" );
-            final File relocationFolder = new File( folder, "relocated" );
-            final File[] files = folder.listFiles();
-
-            if ( !originalFolder.exists() && !relocationFolder.exists() )
-            {
-                logger.info( "Detected outdated library structure. Removing all libraries ..." );
-                originalFolder.mkdir();
-                relocationFolder.mkdir();
-
-                for ( File file : files )
-                {
-                    file.delete();
-                }
-            }
-        }
-    }
-
 }
