@@ -47,7 +47,7 @@ public enum StandardLibrary
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
-            "8.0.27",
+            "8.0.28",
             checkType( "MYSQL" ),
             relocate( "com.mysql" )
     ),
