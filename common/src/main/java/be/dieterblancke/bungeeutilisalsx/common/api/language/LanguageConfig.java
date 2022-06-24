@@ -3,9 +3,9 @@ package be.dieterblancke.bungeeutilisalsx.common.api.language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Data;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.function.Function;
@@ -55,7 +55,7 @@ public class LanguageConfig
 
                 if ( i < messages.size() - 1 )
                 {
-                    builder.append( "\n" );
+                    builder.append( "\n<reset>" );
                 }
             }
         }
@@ -111,7 +111,7 @@ public class LanguageConfig
         if ( config.isSection( path ) )
         {
             // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
-            final TextComponent component = MessageBuilder.buildMessage(
+            final Component component = MessageBuilder.buildMessage(
                     user, config.getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
             );
 

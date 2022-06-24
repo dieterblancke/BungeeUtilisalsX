@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.velocity.bossbar;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -23,17 +5,21 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BossBarAction;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.event.BUEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserUnloadEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import com.google.common.collect.Lists;
 import lombok.Getter;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,11 +32,11 @@ public class BossBar implements IBossBar
 
     private final UUID uuid;
     private final List<User> users;
-    private final Set<IEventHandler<UserUnloadEvent>> eventHandlers; // Should only contain ONE EventHandler
+    private final Set<IEventHandler<? extends BUEvent>> eventHandlers; // Should only contain ONE EventHandler
     private BarColor color;
     private BarStyle style;
     private float progress;
-    private BaseComponent[] message;
+    private Component message;
     private boolean visible;
 
     public BossBar()
@@ -65,10 +51,10 @@ public class BossBar implements IBossBar
 
     public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final String message )
     {
-        this( uuid, color, style, progress, TextComponent.fromLegacyText( message ) );
+        this( uuid, color, style, progress, Utils.format( message ) );
     }
 
-    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final BaseComponent[] message )
+    public BossBar( final UUID uuid, final BarColor color, final BarStyle style, final float progress, final Component message )
     {
         this.uuid = uuid;
         this.color = color;
@@ -77,7 +63,7 @@ public class BossBar implements IBossBar
         this.message = message;
         this.visible = true;
         this.users = Collections.synchronizedList( Lists.newArrayList() );
-        this.eventHandlers = BuX.getApi().getEventLoader().register( UserUnloadEvent.class, new BossBarListener() );
+        this.eventHandlers = BuX.getApi().getEventLoader().register( new BossBarListener(), UserUnloadEvent.class );
     }
 
     @Override
@@ -92,7 +78,7 @@ public class BossBar implements IBossBar
         {
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setName( ComponentSerializer.toString( message ) );
+            packet.setName( GsonComponentSerializer.gson().serialize( message ) );
             packet.setPercent( progress );
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
@@ -103,7 +89,7 @@ public class BossBar implements IBossBar
             packet.setAction( BossBarAction.REMOVE.getId() );
         }
 
-        users.forEach( user -> user.sendPacket( packet ) );
+        users.forEach( user -> sendBossBarPacket( user, packet ) );
     }
 
     @Override
@@ -119,7 +105,7 @@ public class BossBar implements IBossBar
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -136,7 +122,7 @@ public class BossBar implements IBossBar
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -152,12 +138,12 @@ public class BossBar implements IBossBar
             packet.setAction( BossBarAction.UPDATE_HEALTH.getId() );
             packet.setPercent( progress );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
     @Override
-    public BaseComponent[] getBaseComponent()
+    public Component getBaseComponent()
     {
         return message;
     }
@@ -172,34 +158,35 @@ public class BossBar implements IBossBar
                 return;
             }
             users.add( user );
+            user.getActiveBossBars().add( this );
 
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setName( ComponentSerializer.toString( message ) );
+            packet.setName( GsonComponentSerializer.gson().serialize( message ) );
             packet.setPercent( progress );
             packet.setColor( color.getId() );
             packet.setOverlay( style.getId() );
 
-            user.sendPacket( packet );
+            sendBossBarPacket( user, packet );
         }
     }
 
     @Override
     public String getMessage()
     {
-        return new TextComponent( message ).toLegacyText();
+        return LegacyComponentSerializer.legacyAmpersand().serialize( message );
     }
 
     @Override
     @Deprecated
     public void setMessage( final String message )
     {
-        setMessage( TextComponent.fromLegacyText( message ) );
+        setMessage( Utils.format( message ) );
     }
 
     @Override
-    public void setMessage( BaseComponent[] title )
+    public void setMessage( Component title )
     {
         this.message = title;
         if ( visible )
@@ -207,9 +194,9 @@ public class BossBar implements IBossBar
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
-            packet.setName( ComponentSerializer.toString( message ) );
+            packet.setName( GsonComponentSerializer.gson().serialize( message ) );
 
-            users.forEach( user -> user.sendPacket( packet ) );
+            users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
     }
 
@@ -219,10 +206,12 @@ public class BossBar implements IBossBar
         if ( users.contains( user ) )
         {
             users.remove( user );
+            user.getActiveBossBars().remove( this );
 
             final com.velocitypowered.proxy.protocol.packet.BossBar packet = new com.velocitypowered.proxy.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.REMOVE.getId() );
+            user.sendPacket( packet );
         }
     }
 
@@ -239,7 +228,11 @@ public class BossBar implements IBossBar
         packet.setUuid( uuid );
         packet.setAction( BossBarAction.REMOVE.getId() );
 
-        users.forEach( user -> user.sendPacket( packet ) );
+        users.forEach( user ->
+        {
+            user.sendPacket( packet );
+            user.getActiveBossBars().remove( this );
+        } );
         users.clear();
     }
 
@@ -247,6 +240,18 @@ public class BossBar implements IBossBar
     public void unregister()
     {
         eventHandlers.forEach( IEventHandler::unregister );
+    }
+
+    private void sendBossBarPacket( User user, Object packet )
+    {
+        boolean bossbarDisabled = user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED )
+                .map( UserSetting::getAsBoolean )
+                .orElse( false );
+
+        if ( !bossbarDisabled )
+        {
+            user.sendPacket( packet );
+        }
     }
 
     private class BossBarListener implements EventExecutor

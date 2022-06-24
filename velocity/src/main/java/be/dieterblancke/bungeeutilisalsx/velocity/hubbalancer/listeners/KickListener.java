@@ -7,14 +7,17 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.ISection;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
+
+import java.util.Optional;
 
 public class KickListener
 {
@@ -24,7 +27,7 @@ public class KickListener
     {
         final ISection section = ConfigFiles.HUBBALANCER.getConfig().getSection( "fallback-trigger" );
         final String reason = event.getServerKickReason()
-                .map( c -> PlainComponentSerializer.plain().serialize( c ) )
+                .map( c -> LegacyComponentSerializer.legacyAmpersand().serialize( c ) )
                 .orElse( "" );
         boolean fallback;
 
@@ -45,8 +48,9 @@ public class KickListener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalGroup.isPresent() && optionalGroup.get().isInGroup( event.getServer().getServerInfo().getName() ) )
                     {
                         fallback = false;
                         break;
@@ -70,8 +74,9 @@ public class KickListener
             {
                 for ( String server : section.getStringList( "servers" ) )
                 {
-                    final ServerGroup serverGroup = ConfigFiles.SERVERGROUPS.getServer( server );
-                    if ( serverGroup != null && serverGroup.isInGroup( event.getServer().getServerInfo().getName() ) )
+                    final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( server );
+
+                    if ( optionalGroup.isPresent() && optionalGroup.get().isInGroup( event.getServer().getServerInfo().getName() ) )
                     {
                         fallback = true;
                         break;
@@ -102,9 +107,7 @@ public class KickListener
 
                 if ( data == null || data.getServerInfo() == null )
                 {
-                    event.getPlayer().disconnect( Component.text(
-                            Utils.c( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) )
-                    ) );
+                    event.getPlayer().disconnect( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) );
                 }
                 else
                 {

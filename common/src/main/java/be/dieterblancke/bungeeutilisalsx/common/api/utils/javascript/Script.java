@@ -3,7 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.yaml.YamlConfigurationOptions;
 import com.google.common.hash.Hashing;
 import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import lombok.Data;
@@ -51,7 +52,10 @@ public class Script
             return;
         }
 
-        this.storage = IConfiguration.loadYamlConfiguration( storage );
+        this.storage = IConfiguration.loadYamlConfiguration(
+                storage,
+                YamlConfigurationOptions.builder().useComments( true ).build()
+        );
         this.engine = loadEngine();
     }
 

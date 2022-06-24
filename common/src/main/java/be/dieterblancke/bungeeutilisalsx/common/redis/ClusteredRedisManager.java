@@ -3,7 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.redis;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.IRedisDataManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.data.RedisDataManager;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import io.lettuce.core.cluster.RedisClusterClient;
 import io.lettuce.core.cluster.api.StatefulRedisClusterConnection;
 import io.lettuce.core.cluster.api.async.RedisClusterAsyncCommands;

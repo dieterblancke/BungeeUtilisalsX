@@ -36,6 +36,11 @@ public class UserCommandExecutor implements EventExecutor
     @Event
     public void onListenerCommand( final UserCommandEvent event )
     {
+        if ( !ConfigFiles.COMMAND_BLOCKER.isEnabled() )
+        {
+            return;
+        }
+
         final String commandName = event.getActualCommand().replaceFirst( "/", "" );
 
         BuX.getInstance().getCommandManager().findCommandByName( commandName ).ifPresent( command ->

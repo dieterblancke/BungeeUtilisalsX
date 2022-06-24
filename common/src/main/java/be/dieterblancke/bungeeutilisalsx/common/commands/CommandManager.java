@@ -1,21 +1,3 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.commands;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
@@ -24,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.general.*;
@@ -38,14 +21,15 @@ import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.removal.Unb
 import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.removal.UnmuteCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.punishments.removal.UnmuteIPCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.report.ReportCommandCall;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 public abstract class CommandManager
 {
@@ -90,6 +74,7 @@ public abstract class CommandManager
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
         registerGeneralCommand( "offlinemessage", new OfflineMessageCommandCall() );
+        registerGeneralCommand( "togglebossbar", new ToggleBossBarCommandCall() );
 
         if ( BuX.getInstance().isProtocolizeEnabled() )
         {
@@ -180,12 +165,21 @@ public abstract class CommandManager
             final String permission = section.exists( "permission" ) ? section.getString( "permission" ) : null;
             final List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
             final String server = section.exists( "server" ) ? section.getString( "server" ) : "ALL";
+            final List<ServerGroup> disabledServers = section.exists( "disabled-servers" ) ? section.getStringList( "disabled-servers" )
+                    .stream()
+                    .filter( s -> ConfigFiles.SERVERGROUPS.getServers().containsKey( s ) )
+                    .map( s -> ConfigFiles.SERVERGROUPS.getServer( s ) )
+                    .flatMap( Optional::stream )
+                    .collect( Collectors.toList() ) : new ArrayList<>();
+            final boolean listenerBased = section.exists( "listener-based" ) && section.getBoolean( "listener-based" );
 
             final CommandBuilder commandBuilder = CommandBuilder.builder()
                     .enabled( true )
                     .name( name )
                     .aliases( aliases )
                     .permission( permission )
+                    .disabledServers( disabledServers )
+                    .listenerBased( listenerBased )
                     .executable( new CustomCommandCall( section, server, commands ) );
 
             buildCommand( name, commandBuilder );

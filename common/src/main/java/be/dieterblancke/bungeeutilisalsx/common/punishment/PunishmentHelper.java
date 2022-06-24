@@ -5,8 +5,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.dbsoftwares.configuration.api.IConfiguration;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
 
 import java.util.Date;

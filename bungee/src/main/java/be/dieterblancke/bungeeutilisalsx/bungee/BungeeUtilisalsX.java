@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.bungee.command.BungeeCommandManager;
 import be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.*;
@@ -17,7 +18,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
-import com.dbsoftwares.configuration.api.FileStorageType;
+import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
 import org.bstats.charts.AdvancedPie;
@@ -37,6 +38,17 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     private final CommandManager commandManager = new BungeeCommandManager();
     private final IPluginDescription pluginDescription = new BungeePluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
+    private final BungeeAudiences bungeeAudiences;
+
+    public BungeeUtilisalsX()
+    {
+        this.bungeeAudiences = BungeeAudiences.create( Bootstrap.getInstance() );
+    }
+
+    public static BungeeUtilisalsX getInstance()
+    {
+        return (BungeeUtilisalsX) AbstractBungeeUtilisalsX.getInstance();
+    }
 
     @Override
     protected IBuXApi createBuXApi()
@@ -81,7 +93,10 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void registerPluginSupports()
     {
-        PluginSupport.registerPluginSupport( new PremiumVanishPluginSupport() );
+        super.registerPluginSupports();
+
+        PluginSupport.registerPluginSupport( PremiumVanishPluginSupport.class );
+        PluginSupport.registerPluginSupport( TritonPluginSupport.class );
     }
 
     @Override
@@ -118,6 +133,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public Logger getLogger()
     {
         return Bootstrap.getInstance().getLogger();
+    }
+
+    public BungeeAudiences getBungeeAudiences()
+    {
+        return bungeeAudiences;
     }
 
     @Override

@@ -1,6 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 import com.google.common.base.Strings;
 import dev.simplix.protocolize.api.item.ItemStack;
 import lombok.Data;

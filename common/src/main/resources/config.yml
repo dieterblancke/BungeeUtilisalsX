@@ -4,6 +4,11 @@ debug: false
 # Should JavaScript placeholders be loaded and enabled?
 scripting: false
 
+# This is the default timezone for date placeholders.
+timezone:
+  enabled: false
+  zone: Europe/Brussels
+
 multi-proxy:
   # Should multi proxy support be enabled? This REQUIRES RabbitMQ AND Redis to work!
   enabled: false

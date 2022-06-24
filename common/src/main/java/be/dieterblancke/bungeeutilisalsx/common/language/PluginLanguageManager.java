@@ -1,28 +1,12 @@
-/*
- * Copyright (C) 2018 DBSoftwares - Dieter Blancke
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- *
- */
-
 package be.dieterblancke.bungeeutilisalsx.common.language;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
-import com.dbsoftwares.configuration.api.FileStorageType;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.configuration.api.FileStorageType;
+import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.yaml.YamlConfigurationOptions;
 import com.google.common.io.ByteStreams;
 
 import java.io.*;
@@ -35,6 +19,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
     public void loadLanguages( final Class<?> resourceClass, final String pluginName )
     {
         final File folder = plugins.get( pluginName );
+        final boolean autoUpdateFiles = ConfigFiles.LANGUAGES_CONFIG.getConfig().getBoolean( "auto-update", true );
 
         for ( Language language : languages )
         {
@@ -61,16 +46,34 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
                 {
                     configuration = IConfiguration.loadJsonConfiguration( lang );
-                    configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
+
+                    if ( autoUpdateFiles )
+                    {
+                        configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
+                    }
                 }
                 else
                 {
-                    configuration = IConfiguration.loadYamlConfiguration( lang );
-                    configuration.copyDefaults( IConfiguration.loadYamlConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ) ) );
+                    configuration = IConfiguration.loadYamlConfiguration(
+                            lang,
+                            YamlConfigurationOptions.builder().useComments( false ).build()
+                    );
+
+                    if ( autoUpdateFiles )
+                    {
+                        configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
+                                resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ),
+                                YamlConfigurationOptions.builder().useComments( false ).build()
+                        ) );
+                    }
                 }
 
                 configurations.put( lang, new LanguageConfig( language, configuration ) );
-                saveLanguage( pluginName, language );
+
+                if ( autoUpdateFiles )
+                {
+                    saveLanguage( pluginName, language );
+                }
             }
             catch ( IOException e )
             {

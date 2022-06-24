@@ -39,10 +39,8 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
             user.getStorage().setData( UserStorageKey.MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
-                    "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
                     false,
-                    Utils::c,
-                    null,
+                    "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
                     "{sender}", job.getUserName(),
                     "{message}", job.getMessage(),
                     "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
@@ -52,7 +50,6 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
             executeJob( new UserLanguageMessageJob(
                     job,
                     false,
-                    true,
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
                     "{receiver}", user.getName(),
                     "{message}", job.getMessage(),

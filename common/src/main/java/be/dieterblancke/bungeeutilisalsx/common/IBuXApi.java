@@ -12,7 +12,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManag
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -57,6 +57,20 @@ public interface IBuXApi
      * @return A list containing all online Users.
      */
     List<User> getUsers();
+
+    /**
+     * Adds a user to memory
+     *
+     * @param user the user to add
+     */
+    void addUser( User user );
+
+    /**
+     * Removes a user to memory
+     *
+     * @param user the user to remove
+     */
+    void removeUser( User user );
 
     /**
      * @param permission The permission the users must have.
@@ -156,7 +170,7 @@ public interface IBuXApi
      * @param message  The display message of the BossBar
      * @return a new BossBar instance.
      */
-    IBossBar createBossBar( BarColor color, BarStyle style, float progress, BaseComponent[] message );
+    IBossBar createBossBar( BarColor color, BarStyle style, float progress, Component message );
 
     /**
      * @param uuid     UUID for the BossBar, should be unique!
@@ -166,7 +180,7 @@ public interface IBuXApi
      * @param message  The display message of the BossBar
      * @return a new BossBar instance.
      */
-    IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, BaseComponent[] message );
+    IBossBar createBossBar( UUID uuid, BarColor color, BarStyle style, float progress, Component message );
 
     /**
      * @return a list of online staff members

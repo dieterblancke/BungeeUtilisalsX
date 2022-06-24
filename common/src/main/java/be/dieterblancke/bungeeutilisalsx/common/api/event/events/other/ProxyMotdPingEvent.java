@@ -6,7 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.UUID;
@@ -30,7 +30,7 @@ public class ProxyMotdPingEvent extends AbstractEvent implements HasCompletionHa
     @Value
     public static class MotdPingResponse
     {
-        BaseComponent motd;
+        Component motd;
         List<MotdPingPlayer> players;
     }
 

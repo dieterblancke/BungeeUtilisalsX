@@ -1,0 +1,901 @@
+---
+prefix: ''
+no-permission: '&c¡Tu no tienes permisos para eso!'
+never-joined: '&fEse usuario no a entrado nunca!'
+offline: '&fEse usuario no esta conectado!'
+no-number: '&ePor favor introduce un numero valido!'
+date-format: 'dd-MM-yyyy kk:mm:ss'
+not-for-console: '&eEsta accion por ahora solo puede ser ejecutada por jugadores.'
+command-disabled-in-this-server: '&eEste comando esta &cdesabilitado &een el servidor &b{server} &e!'
+command-disabled: '&eEl comando &b{command} &eesta &cdesabilitado &een el servidor &b{server} &e!'
+offlinemessages-join-header: '&eHas recibido un msg mientras no estabas desconectado:'
+updater:
+  update-found:
+    - '&eUna nueva actualizacion a sido encontrada para &b{name}&e.'
+    - '&eVersion instalada: &b{version}'
+    - '&eNueva Version: &b{newVersion}'
+chat-protection:
+  swear: '&fPor favor no digas palabras prohibidas!'
+  caps: '&fPor favor no uses muchas mayusculas!'
+  spam: '&fPor favor espera &a%time% &fsegundos para hablar de nuevo!'
+  advertise: '&fPor favor no intentes pasar ips, links externos en este servidor!'
+placeholders:
+  timeleft: '%days% dias, %hours% horas, %minutes% minutos, %seconds% segundos'
+  format:
+    date: 'dd-MM-yyyy'
+    time: 'kk:mm:ss'
+    datetime: 'dd-MM-yyyy kk:mm:ss'
+subcommands:
+  usage: '&ePor favor usa &b{usage}&e!'
+general-commands:
+  cooldown: '&eEste comando esta en un tiempo de espera de &b{time} &esegundos!'
+  bungeeutilisals:
+    help:
+      - '&e- &b/bux version'
+      - '&e- &b/bux reload'
+  announce:
+    usage: '&ePor favor usa &b/announce (p/b/c(hat)/a(ctionbar)/t(itle)) (mensaje)&e.'
+  find:
+    usage: '&ePor favor usa &b/find (nombre)&e.'
+    message: '&b{user} &eesta conectado en &b{server}&e.'
+  server:
+    usage:
+      - '&eEstas jugando en &b{server}&e.'
+      - ''
+      - '&ePuedes cambiar de servidor usando &b/server (servername)&e.'
+    notfound: '&eEl servidor &b{server} &eno existe.'
+    alreadyconnected: '&eTu ya estas conectado en &b{server}&e.'
+    connecting: '&eEstas siendo conectado a &b{server}&e.'
+    sent-other: '&eSe ha enviado al jugador &b{user} &ea &b{server}&e.'
+  clearchat:
+    usage: '&ePor favor usa &b/clearchat (local / global)&e.'
+    cleared: '&eTu chat a sido eliminado por &b{user}&e.'
+  chatlock:
+    usage: '&ePor favor usa &b/chatlock (local / global)&e.'
+    locked: '&eEl chat a sido bloqueado por &b{user}&e.'
+    unlocked: '&eEl chat a sido desbloqueado por &b{user}&e.'
+    onchat: '&eEl chat a sido bloqueado. &aNo podras enviar mensajes por el momento.'
+  glag:
+    - '&eEstadisticas de Bungeecord:'
+    - '&eMemoria Maxima: &b{maxmemory}'
+    - '&eMemoria Libre: &b{freememory}'
+    - '&eMemoria Total: &b{totalmemory}'
+    - '&eActivo desde: &b{onlinesince}'
+  staffchat:
+    enabled: '&eAhora estas hablando en &bChat de Staff&e.'
+    disabled: '&eAhora estas hablando en &bChat Publico&e.'
+    format: '&7(&4SC&7) &7(&a{server}&7) &e{user} &8» &f{message}'
+  language:
+    usage:
+      - '&ePor favor usa &b/language (lenguaje)&e.'
+      - '&eLenguajes disponibles: &b{languages}'
+    notfound:
+      - '&cNo se puede encontrar un lenguaje llamado &4{language}&c.'
+      - '&eLenguajes disponibles: &b{languages}'
+    changed: '&eTu lenguaje a sido cambiado a &b{language}&e.'
+    already: '&eTu ya estas usando el lenguaje &b{language} &e.'
+  staff:
+    no_staff: '&eLo sentimos pero ahora no hay staff conectado.'
+    head: '&fLista de los miembros de staff en linea:'
+    foot: '&eEn total, aqui hay &b{total} &estaffs en linea.'
+    toggle:
+      hidden: '&eAhora estas oculto en la /staff list.'
+      unhidden: '&eAhora estas visible en la /staff list.'
+    users:
+      separator: ', '
+      user:
+        text: '{username}'
+        hover: '&b{username} &eesta jugando en &b{server}&e.'
+        click:
+          type: 'SUGGEST_COMMAND'
+          action: '/server {server}'
+    rank:
+      text:
+        - 
+          text: '{rank_displayname} &b({amount_online})&f: '
+        - 
+          text: '{users}'
+  msg:
+    usage: '&ePor favor usa &b/msg (user) (mensaje)&e.'
+    ignored: '&eTu no puedes enviar un mensaje a este usuario.'
+    self-msg: '&eNo puedes mandarte un mensaje privado a ti mismo.'
+    format:
+      send: '&7(&eYo &e-> &7({receiver-server}) &b{receiver}&7) &f{message}'
+      receive: '&7({sender-server}) &b{sender} &e-> Mi &f{message}'
+  reply:
+    usage: '&ePor favor usa &b/reply (mensaje)&e.'
+    no-target: '&eNo tienes ningun msg que responder.'
+    ignored: '&eTu no puedes enviar un mensaje a este usuario. El usuario te esta ignorando.'
+    format:
+      send: '&eYo &e-> &7({receiver-server}) &b{receiver}&7 &f{message}'
+      receive: '&7({sender-server}) &b{sender} &e-> &eMi &f{message}'
+  ignore:
+    usage: '&ePor favor usa &b/ignore (add / remove / list) [player]&e.'
+    self-ignore: '&eNo puedes ignorarte a ti mismo.'
+    add:
+      already-ignored: '&eNo puedes ignorar a alguien que ya esta siendo ignorado.'
+      ignored: '&eAhora ignoras a &b{user}&e.'
+    remove:
+      not-ignored: '&eNo puedes dejar de ignorar a alguien que no ignoras.'
+      unignored: '&eA partir de ahora no ignoras a &b{user} &emas.'
+    list:
+      none: '&eAhora mismo no ignoras a nadie.'
+      message: '&eLista de usuarios que ignoras: &b{ignoredusers}'
+      separator: ', '
+  socialspy:
+    enabled: '&eTu &bSocialSpy &eahora esta &aactivado&e.'
+    disabled: '&eTu &bSocialSpy &eahora esta &cactivado&e.'
+    message: '&7(SSPY) &8[&b{sender} &e-> &b{receiver}&8] &f{message}!'
+  commandspy:
+    enabled: '&eTu &bCommandSpy &eahora esta &aactivado&e.'''
+    disabled: '&eTu &bCommandSpy &eahora esta &cdesactivado&e.'
+    message: '&7(CSPY) &8[&b{server}&8] &b{user} &eejecuto el comando &7{command}&e.'
+  ping:
+    message: '&eTu ping es: &b{ping} ms&e.'
+    other: '&eEl ping de &b{target} &ees &b{targetPing} ms&e.'
+  report:
+    help:
+      - '&eComandos de &b/report&e:'
+      - '&f- &b/report create (user) (razon)'
+      - '&f- &b/report list [all/active/accepted/denied] [pagina]'
+      - '&f- &b/report accept (id)'
+      - '&f- &b/report deny (id)'
+      - '&f- &b/report history [pagina]'
+    create:
+      usage: '&ePor favor usa &b/report create (user) (razon)&e.'
+      created: '&eHas reportado a &b{target}&e.'
+      bypassed: '&eNo puedes reportar a miembros del staff.'
+      broadcast:
+        - '&b{target} &ea sido reportado por &b{user}&e.'
+        - '&eRazon: &b{reason}'
+        - '&eServer: &b{server}'
+    list:
+      wrong-page: '&ePor favor introduce una pagina entre &b1 y {maxpages}&e.'
+      header: '&eLista de Reportes (pagina &b{page}&e)'
+      footer: ''
+      no-reports: '&eNo hay reportes en esta seccion.'
+      handled: 'Manejado'
+      unhandled: 'Sin_Manejar'
+      item:
+        text: '&b#{id}&e: &b{reported} &efue reportado por &b{reason} &egracias a &b{reporter} &7&o(Mas Info)'
+        hover:
+          - '&f⎯⎯⎯⎯⎯ &eReporte &b#{id}: {reported} &f⎯⎯⎯⎯⎯&r'
+          - '&eUsuario Reportado: &b{reported}'
+          - '&eUsuario que Reporto: &b{reporter}'
+          - '&eRazon: &b{reason}'
+          - '&eServer: &b{server}'
+          - '&eFecha: &b{date}'
+          - '&eManejado: &b{handled}'
+          - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+    history:
+      wrong-page: '&ePor favor introduce una pagina entre &b1 y {maxpages}&e.'
+      header: '&eLista de Reportes (pagina &b{page}&e)'
+      no-reports: '&eTu no tienes reportes.'
+      accepted: '&2\u2713'
+      denied: '&4\u2717'
+      item:
+        text: "{accepted_sign} &b#{id}&e: &b{reported} &ereportado por &b{reason}\n          &egracias a &b{reporter} &7&o(Pon El Raton Aqui)"
+        hover:
+          - '&f⎯⎯⎯⎯⎯ &eReporte &b#{id}: {reported} &f⎯⎯⎯⎯⎯&r'
+          - '&eUsuario Reportado: &b{reported}'
+          - '&eUsuario que Reporto: &b{reporter}'
+          - '&eRazon: &b{reason}'
+          - '&eServer: &b{server}'
+          - '&eFecha: &b{date}'
+          - '&eStaff: &b{handled}'
+          - '&eAceptado: {accepted_sign}'
+          - '&f⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯&r'
+      footer: ''
+    accept:
+      usage: '&ePor favor usa &b/report accept (id)&e.'
+      not-found: '&eNo se encontro el reporte con id &b{id}&e.'
+      updated: '&eEl reporte con id &b{id} &ea sido aceptado.'
+      accepted: '&eTu reporte &b(#{id}) {reported} &ea sido aceptado por &b{staff}&e.'
+    deny:
+      usage: '&ePor favor usa &b/report deny (id)&e.'
+      not-found: '&eNo se encontro el reporte con id &b{id}&e.'
+      updated: '&eEl reporte con id &b{id} &ea sido denegado.'
+      denied: '&eTu reporte &b(#{id}) {reported} &ea sido denegado por &b{staff}&e.'
+  domains:
+    help:
+      - '&aComandos de Dominio:'
+      - '&b- /domains list'
+      - '&b- /domains search (pattern / domain)'
+    list:
+      usage: '&ePor favor usa &b/domains list [pagina]&e.'
+      header:
+        - ''
+        - '&b&lEstadisticas de Dominio'
+        - ''
+      format: '- &e{domain} &f| &a&lEN LINEA&f: {online} | &e&lTOTAL&f: {total}'
+      footer:
+        - ''
+        - '&fEn total, &e{total} &fdominios han sido usados para conectarse a tu server.'
+        - ''
+    search:
+      usage: '&ePor favor usa &b/domains search (pattern / domain)&e.'
+      header:
+        - ''
+        - '&b&lBUSQUEDA DE DOMINIO'
+        - ''
+      format: '- &e{domain} &f| &a&lEN LINEA&f: {online} | &e&lTOTAL&f: {total}'
+      footer: ''
+  helpop:
+    usage: '&ePor favor usa &b/request (mensaje) &eo &b/request reply (user) (mensaje)&e.'
+    broadcast: '&7(&3&lAYUDA&7) &b{user} &7» &f{message}'
+    reply-receive: '&7(&3&lAYUDA&7) &b{user} &3-> Mi &7» &f{message}'
+    reply-send: '&7(&3&lAYUDA&7) &3Yo -> &b{user} &7» &f{message}'
+  msgtoggle:
+    enabled: '&eTodos tus mensajes privados ahora estan &cdesactivados&e.'
+    disabled: '&eTodos tus mensajes privados ahora estan &aactivados&e.'
+    pm-cmd-disabled: "&eNo puedes enviar ni recibir mensajes privados mientras los\n      tengas &cdesactivados&e."
+    not-receiving-pms: '&eEste usuario tiene los mensajes privados &cdesactivados&e.'
+  shout:
+    usage: '&ePor favor usa &b/shout (mensaje)&e.'
+    shout-broadcast: '&6&lGRITO&e&l{servername} &b{user} &8» &f{message}'
+    shout-broadcast-staff: '&6&lGRITO &e&l{servername} &c(Staff) &b{user} &8» &f{message}'
+  staffannouncement:
+    usage: '&ePor favor usa &b/staffannouncement (mensaje) &e.'
+    broadcast: '&e&lANUNCIODESTAFF &b{broadcaster} &e-> &f{message}'
+  offlinemessage:
+    usage: '&ePor favor usa &b/offlinemessage (user) (mensaje)&e.'
+    online: '&eEste usuario esta conectado. Por favor usa &b/msg (user) (mensaje)&e.'
+    message: '&b{user} &e@ &b{time} &e-> &f{message}'
+    sent: '&eHas enviado un mensaje a &b{user}&e mientras esta desconectado.'
+  opengui:
+    usage: '&ePor favor usa &b/opengui (type) [args] [-u=USER]&e.'
+    usage-custom: '&ePor favor usa &b/opengui custom (gui-name) [-u=USER]&e.'
+    gui-not-found: '&eNo existe un gui con el nombre &b{gui}&e.'
+friends:
+  gui:
+    add-chat-input: '&ePor favor ingresa el nombre del amigo que quieres añadir o escribe ''''&bcancel&e'''' para cancelar.'
+  join:
+    requests: '&eTienes &b{amount} &esolicitudes de amigos. Usa &b/friend requests &epara verlas ahora.'
+    join: '&eTu amigo, &b{user}&e, a entrado a la network.'
+  leave: '&eTu amigo, &b{user}&e, a salido de la network.'
+  switch: '&eTu amigo, &b{user}&e, se a movido de &b{from} &ea &b{to}.'
+  request-received:
+    text:
+      - 
+        text: '&eHas recibido una solicitud de amistad de &b{name}&e.{nl}'
+      - 
+        text: '&eEscribe &b/friends accept {name}'
+      - 
+        text: '&e o &bClick Aqui'
+        hover:
+          - '&eClick aqui para aceptar la solicitud de amistad de &b{name}&e.'
+        click:
+          #OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+          #RUN_COMMAND will only work for BungeeCord commands.
+          type: 'RUN_COMMAND'
+          action: '/friend accept {name}'
+      - 
+        text: '&e para aceptar esta solicitud de amistad.'
+  help:
+    message:
+      - '&aComandos de Amigos:'
+      - '&b- /friends add (nombre)'
+      - '&b- /friends accept (nombre)'
+      - '&b- /friends deny (nombre)'
+      - '&b- /friends list [pagina]'
+      - '&b- /friends msg (nombre) (mensaje)'
+      - '&b- /friends removerequest (nombre)'
+      - '&b- /friends remove (nombre)'
+      - '&b- /friends reply (mensaje)'
+      - '&b- /friends requests (in/out) [pagina]'
+      - '&b- /friends settings (ajuste) (enable / disable)'
+  add:
+    usage: '&ePor favor usa &b/friends add (nombre)&e.'
+    selfadd: '&eNo puedes añadirte a ti mismo como amigo.'
+    limited: '&eNo puedes tener mas de &b{limit} &eamigos.'
+    already-friend: '&b{friend} &eya es tu amigo.'
+    already-requested: '&eTu ya has enviado una solicitud de amistad a &b{name}&e.'
+    request-sent: '&eUna solicitud de amistad a sido enviada a &b{user}&e.'
+    disallowed: '&eEste usuario no quiere recibir solicitudes de amistad.'
+  accept:
+    usage: '&ePor favor usa &b/friends accept (nombre)&e.'
+    limited: '&eNo puedes tener mas de &b{limit} &eamigos.'
+    already-friend: '&b{friend} &eya es tu amigo.'
+    no-request: '&eNo se encuentra una solicitud de amistad de &b{user}&e.'
+    accepted: '&eAhora eres amigo de &b{user}&e.'
+    request-accepted: '&b{user} &ea aceptado tu solicitud de amistad.'
+  deny:
+    usage: '&ePor favor usa &b/friends deny (nombre)&e.'
+    no-request: '&eNo se encontro una solicitud de amistad de &b{user}&e.'
+    denied: '&eHas denegado la solicitud de amistad de &b{user}&e.'
+    request-denied: '&b{name} &ea denegado tu solicitud de amistad.'
+  removerequest:
+    usage: '&ePor favor usa &b/friends removerequest (nombre)&e.'
+    no-request: '&eNo tienes ninguna solicitud de amistad de &b{user}&e.'
+    removed: '&eHas eliminado las solicitudes de amistad de &b{user}&e.'
+    request-removed: '&b{user} &eelimino tu solicitud de amistad.'
+  remove:
+    usage: '&ePor favor usa &b/friends remove (nombre)&e.'
+    no-friend: '&b{user} &eno es tu amigo.'
+    removed: '&eHas eliminado a &b{user} &ede tus amigos.'
+    friend-removed: '&b{user} &ete a eliminado de sus amigos.'
+  list:
+    no-friends: '&eNo tienes ningun amigo en este momento.'
+    status:
+      online: 'activo'
+      offline: 'inactivo'
+    head:
+      text:
+        - 
+          text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {previousPage}'
+        - 
+          text: '&eLista de Amigos &b({currentPage} / {maxPages})'
+        - 
+          text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {nextPage}'
+    format:
+      text: '- &b{friendName} - &7{lastOnline}'
+      hover:
+        - '&eActividad: &b{online}'
+        - '&eAmigos desde: &b{friendSince}'
+        - '&eUltima vez visto: &b{lastOnline}'
+      click:
+        #OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        #RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/friend msg {friendName} '
+    foot: '&eTienes un total de &b{friendAmount} &eamigos.'
+  requests:
+    usage: '&ePor favor usa &b/friend requests (in/out) [pagina]&e.'
+    no-requests: '&eNo tienes solicitudes en este momento.'
+    outgoing: 'Saliente'
+    incoming: 'Entrante'
+    head:
+      text:
+        - 
+          text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends requests {type} {previousPage}'
+        - 
+          text: '&e{type} Solicitudes &b({currentPage} / {maxPages})'
+        - 
+          text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends requests {type} {nextPage}'
+    format:
+      incoming: '&a<- &e{target} - &b{requestDate}'
+      outgoing: '&c-> &e{target} - &b{requestDate}'
+    foot: '&eTienes un total de &b{requestAmount} &e{type_lowercase} solicitudes de amistad.'
+  msg:
+    usage: '&ePor favor usa &b/friends msg (nombre) (mensaje)&e.'
+    not-friend: '&b{user} &eno esta en tus amigos.'
+    disallowed: '&eEste usuario no quiere recibir ningun mensaje.'
+    ignored: '&eNo puedes enviar mensajes a este usuario.'
+    format:
+      send: '&7(&eYo &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Mi&7) &f{message}'
+  reply:
+    usage: '&ePor favor usa &b/friends reply (mensaje)&e.'
+    no-target: '&eNo tienes ningun mensaje que responder.'
+    not-friend: '&b{user} &eno esta en tus amigos.'
+    disallowed: '&eEste usuario no quiere recibir mensajes.'
+    ignored: '&eTu no puedes enviar mensajes a este usuario.'
+    format:
+      send: '&7(&eYo &e-> &b{receiver}&7) &f{message}'
+      receive: '&7(&b{sender} &e-> Mi&7) &f{message}'
+  settings:
+    usage: '&ePor favor usa &b/friend settings (ajuste) (enable / disable)'
+    invalid: '&ePor favor usa uno de los siguientes ajustes: &b{settings}'
+    updated: '&eHas actualizado correctamente el ajuste &b{type} a &b{value}&e.'
+    noargs:
+      header: '&eAjustes de Amigos:'
+      enabled: '&aactivado'
+      disabled: '&cdesactivado'
+      format:
+        text:
+          - 
+            text: '&e- &b{type} &e- '
+            hover:
+              - '&eEstado: {status}'
+          - 
+            text: '&a&lACTIVAR'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {unformatted-type} enable'
+          - 
+            text: ' &e- '
+          - 
+            text: '&c&lDESACTIVAR'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {unformatted-type} disable'
+      footer: ''
+  broadcast:
+    usage: '&ePor favor usa &b/friend broadcast (mensaje) &e.'
+    message: '&e(&b{user} &e-> &bTodos&e) &f{message}'
+    disabled: '&eNo puedes mandar un mensaje a todos si tienes el ajuste &cdesactivado&e.'
+punishments:
+  cancelled: '&fUn plugin interno a cancelado tu sancion.'
+  self-punishment: '&fNo puedes sancionarte a ti mismo.'
+  higher-punishment: '&fNo puedes sancionar a alguien por encima de ti.'
+  ban:
+    usage: '&fPor favor usa &a/ban (user) (razon)&f.'
+    usage-server: '&fPor favor &a/ban (user) (servidor) (razon)&f.'
+    already-banned: '&fEste usuario ya esta baneado.'
+    executed: '&fHas baneado a &e{user} &fpor &e{razon}&f.'
+    broadcast:
+      - '&a{user} &fa sido baneado permanentemente por &a{by} &fen&a{server}&f.'
+      - '&fRazon: &e{reason}'
+    kick:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido baneado permanentemente.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cBaneado el: &f{date}'
+      - '&cBaneado por: &f{by}'
+      - '&cBaneado en: &f{server}'
+      - '&cExpira el: &fNunca'
+  ipban:
+    usage: '&fPor favor usa &a/ipban (user / IP) (razon)&f.'
+    usage-server: '&fPor favor usa &a/ipban (user / IP) (servidor) (razon)&f.'
+    already-banned: '&fEste usuario ya esta baneado de ip.'
+    executed: '&fHas baneado de ip a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido baneado permanentemente de ip por &a{by} &fen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+    kick:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido baneado permanentemente de ip.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cBaneado el: &f{date}'
+      - '&cBaneado por: &f{by}'
+      - '&cBaneado en: &f{server}'
+      - '&cExpira: &fNunca'
+  tempban:
+    usage: '&fPor favor usa &a/tempban (user) (tiempo) (razon)&f.'
+    usage-server: '&fPor favor usa &a/tempban (user) (tiempo) (server) (razon)&f.'
+    already-banned: '&fEste usuario ya esta baneado temporalmente.'
+    non-valid: '&fPor favor introduce un formato de tiempo valido.'
+    executed: '&fHas baneado a &e{user} &ftemporalmente por &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido baneado temporalmente por &a{by} &fen &a{server}&f!'
+      - '&fRazon: &e{reason}'
+      - '&fExpira el: &e{expire}'
+    kick:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido baneado temporalmente.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cBaneado el: &f{date}'
+      - '&cBaneado por: &f{by}'
+      - '&cBaneado en: &f{server}'
+      - '&cExpira el: &f{expire}'
+  iptempban:
+    usage: '&fPor favor usa &a/iptempban (user / IP) (tiempo) (razon)&f.'
+    usage-server: '&fPor favor usa &a/iptempban (user / IP) (tiempo) (servidor) (razon)&f.'
+    already-banned: '&fEste usuario ya esta baneado temporalmente de ip.'
+    non-valid: '&fPor favor introduce un formato de tiempo valido.'
+    executed: '&fHas baneado temporalmente de ip a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido temporalmente baneado de ip por &a{by} &fen &a{server}&f!'
+      - '&fRazon: &e{reason}'
+      - '&fExpira el: &e{expire}'
+    kick:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido baneado temporalmente de ip.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cBaneado el: &f{date}'
+      - '&cBaneado por: &f{by}'
+      - '&cBaneado el: &f{server}'
+      - '&cExpira el: &f{expire}'
+  mute:
+    usage: '&fPor favor usa &a/mute (user) (razon)&f.'
+    usage-server: '&fPor favor usa &a/mute (user) (servidor) (razon)&f.'
+    already-muted: '&fEste usuario ya esta muteado.'
+    executed: '&fHas muteado a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} &fa sido muteado permanentemente por &a{by} &fen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+    onmute:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido muteado permanentemente.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cMuteado el: &f{date}'
+      - '&cMuteado por: &f{by}'
+      - '&cMuteado en: &f{server}'
+      - '&cExpira: &fNunca'
+  ipmute:
+    usage: '&fPor favor usa &a/ipmute (user / IP) (razon)&f.'
+    usage-server: '&fPor favor usa &a/ipmute (user / IP) (servidor) (razon)&f.'
+    already-muted: '&fEste usuario ya esta muteado de ip.'
+    executed: '&fHas muteado de ip a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido muteado permanentemente de ip por &a{by} &faen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+    onmute:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido muteado permanentemente de ip.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cMuteado el: &f{date}'
+      - '&cMuteado por: &f{by}'
+      - '&cMuteado el: &f{server}'
+      - '&cExpira: &fNunca'
+  tempmute:
+    usage: '&fPor favor usa &a/tempmute (user) (tiempo) (razon)&f.'
+    usage-server: '&fPor favor usa &a/tempmute (user) (tiempo) (servidor) (razon)&f.'
+    already-muted: '&fEste usuario ya esta muteado temporalmente.'
+    non-valid: '&fPor favor introduce un formato de tiempo valido.'
+    executed: '&fHas muteado temporalmente a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido muteado temporalmente por &a{by} &fen &a{server}&f!'
+      - '&fRazon: &e{reason}'
+      - '&fExpira el: &e{expire}'
+    onmute:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido muteado temporalmente.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cMuteado el: &f{date}'
+      - '&cMuteado por: &f{by}'
+      - '&cMuteado en: &f{server}'
+      - '&cExpira el: &f{expire}'
+  iptempmute:
+    usage: '&fPor favor usa &a/iptempmute (user / IP) (tiempo) (razon)&f.'
+    usage-server: '&fPor favor usa &a/iptempmute (user / IP) (tiempo) (servidor) (razon)&f.'
+    already-muted: '&fEste usuario ya esta baneado de ip.'
+    non-valid: '&fPor favor introduce un formato de tiempo valido.'
+    executed: '&fHas baneado de ip a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} (&f{ip}&a) &fa sido muteado temporalmente de ip por &a{by} &fen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+      - '&fExpira el: &e{expire}'
+    onmute:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido muteado temporalmente de ip.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cMuteado el: &f{date}'
+      - '&cMuteado por: &f{by}'
+      - '&cMuteado en &f{server}'
+      - '&cExpira el: &f{expire}'
+  kick:
+    usage: '&fPor favor usa &a/kick (user) (razon)&f.'
+    usage-server: '&fPor favor usa &a/kick (user) (servidor) (razon)&f.'
+    executed: '&fHas kickeado a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} &fa sido kickeado por &a{by} &fen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+    onkick:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido kickeado.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cKickeado el: &f{date}'
+      - '&cKickeado por: &f{by}'
+      - '&cKickedo en: &f{server}'
+  warn:
+    usage: '&fPor favor usa &a/warn (user) (razon)&f.'
+    usage-server: '&fPor favor usa &a/warn (user) (servidor) (razon)&f.'
+    executed: '&fHas advertido a &e{user} &fpor &e{reason}&f.'
+    broadcast:
+      - '&a{user} &fa sido advertido por &a{by} &fen &a{server}&f.'
+      - '&fRazon: &e{reason}'
+    onwarn:
+      - '&c&lBungeeUtilisalsX &8» &fHas sido advertido.'
+      - ''
+      - '&cRazon: &f{reason}'
+      - '&cAdvertido el: &f{date}'
+      - '&cAdvertido por: &f{by}'
+      - '&cAdvertido en: &f{server}'
+  unban:
+    usage: '&fPor favor usa &a/unban (user)&f.'
+    usage-server: '&fPor favor usa &a/unban (user) (servidor)&f.'
+    not-banned: '&fEste usuario no esta baneado. Prueba &a/unbanip {user}&e.'
+    executed: '&fHas desbaneado a &e{user}&f.'
+    broadcast:
+      - '&a{user} &fa sido desbaneado por &a{by}&f.'
+  unbanip:
+    usage: '&fPor favor usa &a/unbanip (user)&f.'
+    usage-server: '&fPor favor usa &a/unbanip (user) (servidor)&f.'
+    not-banned: '&fEste usuario no esta baneado de ip.'
+    executed: '&fHas desbaneado la ip de &e{user}&f.'
+    broadcast:
+      - '&fLa ip de &a{user}&f a sido desbaneada por &a{by}.'
+  unmute:
+    usage: '&fPor favor usa &a/unmute (user)&f.'
+    usage-server: '&fPor favor usa &a/unmute (user) (servidor)&f.'
+    not-muted: '&fEste usuario no esta muteado.'
+    executed: '&fHas desmuteado a &e{user}&f.'
+    broadcast:
+      - '&a{user} &fa sido desmuteado por &a{by}.'
+  unmuteip:
+    usage: '&fPor favor usa &a/unmuteip (user)&f.'
+    usage-server: '&fPlease use &a/unmuteip (user) (servidor)&f.'
+    not-muted: '&fEste usuario no esta muteado de ip.'
+    executed: '&fHas desmuteado la ip de &e{user}&f.'
+    broadcast:
+      - 'La ip de &a{user}&f a sido desmuteada por &a{by}.'
+  punishmentinfo:
+    usage: '&ePor favor usa &b/punishmentinfo (user) [type / all]&e.'
+    usage-server: '&ePor favor usa &b/punishmentinfo (user) (server) [type / all]&e.'
+    typeinfo:
+      found:
+        - '&eEncontrado un &b{type} &eactivo para &b{user} &epor &b{by}.'
+        - ' &eFecha: &b{date}'
+        - ' &eExpira el: &b{expire}'
+        - ' &eRazon: &b{reason}'
+        - ' &eServidor: &b{server}'
+      notfound: '&b{user} &eno tiene un {type} activo.'
+  punishmenthistory:
+    usage: '&ePor favor usa &b/punishmenthistory (user) [type / all] [pagina]&e.'
+    no-punishments: '&eNo se encontraron sanciones de &b{user} &econ el tipo &b{type}&e.'
+    head:
+      text:
+        - 
+          text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {type} {previousPage}'
+        - 
+          text: '&eHistoria de Sanciones por &a{user} &b({currentPage} / {maxPages})'
+        - 
+          text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {type} {nextPage}'
+    format:
+      text: '&a- #{id} &b{type} &eon &b{date}&e, by &a{by}'
+      hover:
+        - '&eUser: &b{user}'
+        - '&eUuid: &b{uuid}'
+        - '&eIP: &b{ip}'
+        - '&ePor: &b{by}'
+        - '&eServidor: &b{server}'
+        - '&eFecha: &b{date}'
+        - '&eRazon: &b{reason}'
+        - '&eExpira el: &b{expire}'
+        - '&eEliminado por: &b{removedBy}'
+      click:
+        #OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        #RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '&b{user} &etiene un total de &b{punishmentAmount} &esanciones del tipo &b{type} &e.'
+  punishmentdata:
+    usage: '&ePor favor usa &b/punishmentdata (type) (id)&e.'
+    not-found: '&eNo se encuentra una sancion del tipo &b{type} &epor la id &b{id}&e.'
+    found:
+      - '&eDatos de la Sancion &b{id}&e:'
+      - '&eUser: &b{user}'
+      - '&eUuid: &b{uuid}'
+      - '&eIP: &b{ip}'
+      - '&ePor: &b{by}'
+      - '&eServidor: &b{server}'
+      - '&eFecha: &b{date}'
+      - '&eRazon: &b{reason}'
+      - '&eExpira el: &b{expire}'
+      - '&eEliminado por: &b{removedBy}'
+  templates:
+    - 
+      name: 'ADVERTISING'
+      use_for: 'BAN, TEMPBAN, IPBAN, IPTEMPBAN'
+      lines:
+        - '&c&lBungeeUtilisalsX'
+        - ''
+        - '&eNos hemos dado cuenta de que has intentado hacer spam en nuestro servidor.'
+        - '&eEsto es estrictamente sancionado por las reglas, Asique has sido sancionado.'
+        - ''
+        - '&5Apela en: &bhttps://example.com/appeal'
+        - '&5Compra UnBan en: &bhttps://store.example.com'
+  checkip:
+    usage: '&ePor favor usa &b/checkip (user / ip)&e.'
+    colors:
+      online: '&a'
+      offline: '&7'
+      banned: '&c'
+    head: '&eMirando otras cuentas con las que &b{user} &ejuega ({ip})&e:'
+    format:
+      separator: '&f, '
+      message: '&bJugadores Encontrados: &f{players}'
+    foot: '&eLeyenda: &aEn Linea  &7Desconectado  &cBaneado'
+  staffhistory:
+    usage: '&ePor favor usa &b/staffhistory (user) [type / all] [pagina]&e.'
+    no-punishments: '&b{user} &eno a sancionado a nadie con &b{type}&e.'
+    head:
+      text:
+        - 
+          text: '&6<- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {previousPage}'
+        - 
+          text: '&eHistorial de Sanciones de &a{user} &b({currentPage} / {maxPages})'
+        - 
+          text: ' &6->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {nextPage}'
+    format:
+      text: '&a- #{id} &b{type} &een &b{date}&e, por &a{by}'
+      hover:
+        - '&eUser: &b{user}'
+        - '&eUuid: &b{uuid}'
+        - '&eIP: &b{ip}'
+        - '&ePor: &b{by}'
+        - '&eServidor: &b{server}'
+        - '&eFecha: &b{date}'
+        - '&eRazon: &b{reason}'
+        - '&eExpira el: &b{expire}'
+        - '&eEliminado por: &b{removedBy}'
+      click:
+        #OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+        #RUN_COMMAND will only work for BungeeCord commands.
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '&b{user} &erecientemente a ejecutado un total de &b{punishmentAmount} &esanciones con el tipo &b{type} &e.'
+  staffrollback:
+    usage: '&ePor favor usa &b/staffrollback (user) (tiempo) [-f]&e!'
+    hard-rollback: '&b{amount} &esanciones ejecutadas por &b{user} &ehan sido eliminadas permanentemente.'
+    soft-rollback: '&b{amount} &esanciones ejecutadas por &b{user} &ehan sido desactivadas.'
+  track:
+    usage: '&fPor favor usa &a/trackpunish (user) (razon)&f.'
+    usage-server: '&fPor favor usa &a/trackpunish (user) (servidor) (razon)&f.'
+    track-not-found: '&fNo se encuentra esa pista.'
+    track-already-finished: '&fEsa pista esta finalizada y no se puede ejecutar de nuevo.'
+    executed: '&fTienes una pista sancionada &b{user} &ffo la pista &b{track}&f (&b{trackCount}  / {trackMax}&f)'
+    broadcast:
+      - '&b{user} &fa sido sancionado con la pista &b{track}&f por &b{executed_by} &f(&b{trackCount}  / {trackMax}&f)'
+hubbalancer:
+  no-lobbies-found: '&eNo se pudo encontrar un Lobby, ¿Puede ser que este Apagado?'
+  prevented-on-server: '&eEse comando no puede usarse aqui.'
+  no-fallback:
+    - '&cHas sido desconectado'
+    - ''
+    - '&eNo se encontro ningun servidor de fallback.'
+    - '&b¡Prueba a entrar de nuevo en unos minutos!'
+  already-in-lobby: '&c¡Tu ya estas en uno de los Lobbyes!'
+  server-not-found: '&cNo se encuentra el Lobby &4{serverName}&c.'
+  invalid-id: '&cUsa un numero entre &41 y {lobbyAmount}&c.'
+  connected: '&eHas sido conectado a &b{serverName}&e.'
+  offline: '&eParece que el servidor &b{serverName} &eesta cerrado, Puedes probar de nuevo mas tarde'
+  already-connected: '&eTu ya estas conectado en &b{serverName}&e.'
+gui:
+  input:
+    cancelled: '&eLa accion de entrada a sido cancelada.'
+party:
+  not-in-party: '&eDebes estar en una Fiesta para esto.'
+  inactivity-removal: '&b{user} &ea sido removido de la Fiesta por inactividad.'
+  info:
+    - '&bFiesta de {party-owner}:'
+    - '&7Creada el: &f{party-created-at}'
+    - '&7Miembros: &f{party-member-count}'
+    - '&f{party-member-list}'
+    - '&7Invitaciones: {party-invitation-count}'
+    - '&7Solicitudes: {party-joinrequest-count}'
+  own-party-full: '&eTu fiesta esta llena.'
+  other-party-full: '&bLa fiesta de {user} esta llena.'
+  owner-role-name: 'OWNER'
+  gui:
+    invite-chat-input: '&ePor favor introduce un nombre valido para invitar o ''''&bcancel&e'''' para cancelar.'
+    kick-chat-input: '&ePor favor introduce un nombre valido para kickear o ''''&bcancel&e'''' para cancelar.'
+  help:
+    message:
+      - '&e&lAyuda de Fiesta:'
+      - '&7- &b/party create &7- Crear una Fiesta.'
+      - '&7- &b/party disband &7- Eliminar Fiesta.'
+      - '&7- &b/party chat [message] &7- Activa el chat de Fiesta.'
+      - '&7- &b/party accept (user) &7- Acepta una invitacion.'
+      - '&7- &b/party info &7- Mira la informacion de la Fiesta.'
+      - '&7- &b/party invite (user) &7- Invita a la Fiesta.'
+      - '&7- &b/party kick (user) &7- Kickea a alguien de la Fiesta.'
+      - '&7- &b/party leave &7- Sal de la Fiesta actual.'
+      - '&7- &b/party list (members / invites / requests) [pagina] &7- Ver miembros, invitaciones o solicitudes.'
+      - '&7- &b/party setowner (user) &7- Setea un nuevo dueño de la Fiesta.'
+      - '&7- &b/party setrole (user) (role) &7- Setea un rol a un usuario.'
+      - '&7- &b/party warp &7- Lleva a todos los miembros a tu servidor.'
+  create:
+    already-in-party: '&eTu ya estas en una Fiesta.'
+    created: '&e¡Has creado una fiesta con exito! Puedes invitar gente usando &b/party invite (user)&e.'
+  invite:
+    usage: '&ePor favor usa &b/party invite (user)&e.'
+    invite-self: '&eNo puedes invitarte a ti mismo a tu Fiesta.'
+    already-in-party: '&b{user} &eya esta en tu Fiesta.'
+    already-in-other-party: '&b{user} &eya esta en otra Fiesta.'
+    not-allowed: '&eNo tienes permisos para invitar gente a esta Fiesta.'
+    ignored: '&eNo puedes invitar gente que te ignora a la Fiesta.'
+    invited: '&eHas sido invitado a la Fiesta de &b{user}. Usa &b/party accept {user} &epara entrar a la Fiesta.'
+    invited-broadcast: '&b{user} &ea sido invitado a la Fiesta.'
+    invite-success: '&eHas invitado a &b{user} &ea tu Fiesta.'
+  accept:
+    usage: '&ePor favor usa &b/party accept (user)&e.'
+    already-in-party: '&eTu ya estas en una Fiesta.'
+    no-party: '&b{user} &eno tiene una Fiesta.'
+    not-invited-to-party: '&eTu no tienes una invitacion a la Fiesta de &b{user}&e.'
+    accepted: '&eHas entrado a la Fiesta de &b{user}&e.'
+    joined-party: '&b{user} &ea entrado a la Fiesta.'
+  leave:
+    left: '&eHas salido de la fiesta de &b{party-owner}&e.'
+    left-broadcast: '&b{user} &ea salido de la Fiesta.'
+    owner-left-broadcast: '&eEl dueño &b{party-old-owner} &ea salido de la Fiesta, &b{party-owner} &ea sido asignado como el nuevo dueño.'
+  chat:
+    enabled: '&eTu chat de Fiesta ahora esta &aACTIVADO&e.'
+    disabled: '&eTu chat de Fiesta ahora esta &cDESACTIVADO&e.'
+    format: '&7(FIESTA) &b{user} -> &f{message}'
+  setowner:
+    usage: '&ePor favor usa &b/party setowner (user)&e.'
+    not-allowed: '&eTu no eres el dueño de esta Fiesta.'
+    not-in-party: '&eEste usuario no esta en la Fiesta.'
+    changed: '&eHas dado el rol dueño de la Fiesta a &b{new-owner} &e.'
+    broadcast: '&b{old-owner} &ea pasado el rol dueño de la Fiesta a &b{new-owner}&e.'
+  kick:
+    usage: '&ePor favor usa &b/party kick (user)&e.'
+    not-allowed: '&eTu no tienes permiso para kickear gente de la Fiesta.'
+    not-in-party: '&eEl usuario no esta en tu Fiesta.'''
+    kick: '&eHas kickeado a &b{kickedUser} &ede la Fiesta.'
+    kicked-broadcast: '&b{kickedUser} &ea sido kickeado de la Fiesta por &b{user}&e.'
+    kicked: '&eHas sido kickeado de la Fiesta por &b{user}&e.'
+    cannot-kick: '&eNo puedes kickear a este usuario de la Fiesta.'
+  warp:
+    not-allowed: '&eTu no tienes permiso para usar el warp de la Fiesta.'
+    failed: '&eNo se pudo eviar a los miembros a tu servidor.'
+    nobody-to-warp: '&eNo hay nadie para enviar a tu servidor.'
+    warping: '&eEnviando a todos los miembros a tu servidor ...'
+    warped: '&eHas sido enviado a &b{server}&e por tu Fiesta.'
+  setrole:
+    usage: '&ePor favor usa &b/party setrole (user) (role)&e.'
+    not-allowed: '&eSolo el dueño de la Fiesta puede dar rangos.'
+    not-in-party: '&eEste usuario no esta en tu Fiesta.'
+    incorrect-role: '&eEse rango no existe, por favor usa uno de los rangos siguientes: &b{roles}'
+    role-updated: '&eHas cambiado el rango de &b{user} &ea &b{role}&e.'
+    role-updated-broadcast: '&eEl rango de &b{user} &ea sido cambiado a &b{role}&e.'
+  list:
+    members:
+      empty: '&eTu Fiesta todabia no tiene miembros.'
+      wrong-page: '&ePor favor introduce una pagina entre &b1 y {maxpages}&e.'
+      no-role: 'Ninguno'
+      header: '&eLista de Miembros (pagina &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &7({role}) &b{user} [{joinedAt}]'
+    invites:
+      empty: '&eTu Fiesta todabia no a enviado invitaciones.'
+      wrong-page: '&ePor favor introduce una pagina entre &b1 y {maxpages}&e.'
+      header: '&eLista de Invitaciones (pagina &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{invitedAt}]'
+    requests:
+      empty: '&eTu Fiesta todabia no tiene solicitudes para entrar.'
+      wrong-page: '&ePor favor introduce una pagina entre &b1 y {maxpages}&e.'
+      header: '&eSolicitudes de Entrada (pagina &b{page}&e)'
+      footer: ''
+      item:
+        text: '&e- &b{user} [{requestedAt}]'
+  disband:
+    not-allowed: '&eSolo el dueño puede eliminar la Fiesta.'
+    broadcast: '&b{user} &ea eliminado la Fiesta.'
+    disbanded: '&eHas eliminado tu Fiesta con exito.'
+custom:
+  ingamemotd:
+    skyblock:
+      - 'Esto es un mensaje de entrada para skyblock.'
+  #preconfigured messages for /announce (so you f.e. could use "/announce p welcome")
+  announce:
+    welcome:
+      chat: '&eBienvenid@ &b{user} &ea nuestra network.'
+      actionbar: '&eBienvenid@ &b{user} &ea nuestra network.'
+      bossbar: '&eBienvenid@ &b{user} &ea nuestra network.'
+      title:
+        main: '&eBienvenid@ &b{user}'
+        sub: '&ea nuestra network.'
+  announcements:
+    chat:
+      minigame1:
+        - '&eGracias por jugar a nuestros Mini Juegos.'
+        - '&bDisfruta tu estancia.'
+    actionbar:
+      minigame1: '&eBienvenid@ a nuestro servidor &b{user}&e!'
+    bossbar:
+      minigame1: '&eBienvenid@ a nuestro servidor &b{user}&e!'
+      minigame2: '&dDisfruta tu estancia.'
+    title:
+      minigame1:
+        title: '&e&lBungeeUtilisalsX'
+        subtitle: '&dUn plugin por DBSoftwares, mantenido por &bdidjee2.'

@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.WebhookConfig.DiscordWebhookConfig;
-import com.dbsoftwares.configuration.api.ISection;
+import be.dieterblancke.configuration.api.ISection;
 
 import javax.net.ssl.HttpsURLConnection;
 import java.awt.*;

@@ -10,7 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.storage.TestMySQLStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestPostgreSQLStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestSQLiteStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
-import com.dbsoftwares.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.api.IConfiguration;
 import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.mockito.stubbing.Answer;
