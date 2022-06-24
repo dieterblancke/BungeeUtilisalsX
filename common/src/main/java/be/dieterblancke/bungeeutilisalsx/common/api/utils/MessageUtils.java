@@ -82,8 +82,6 @@ public class MessageUtils
             text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
         }
 
-//        text = fixHexColors( text );
-
         return MiniMessage.miniMessage().deserialize( text );
     }
 

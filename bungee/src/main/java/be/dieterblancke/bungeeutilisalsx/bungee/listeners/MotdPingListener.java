@@ -1,9 +1,11 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.Bootstrap;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeMotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ServerPing;
@@ -45,6 +47,10 @@ public class MotdPingListener implements Listener
                                     .toArray( PlayerInfo[]::new )
                     ) );
                     event.getResponse().setDescriptionComponent( new TextComponent( BungeeComponentSerializer.get().serialize( e.getMotdPingResponse().getMotd() ) ) );
+
+                    PluginSupport.getPluginSupport( TritonPluginSupport.class )
+                            .ifPresent( tritonPluginSupport -> tritonPluginSupport.handleMotd( event ) );
+
                     event.completeIntent( Bootstrap.getInstance() );
                 }
         );

@@ -72,6 +72,12 @@
             <version>4.1.1</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.tritonmc</groupId>
+            <artifactId>Triton</artifactId>
+            <version>v3.7.4</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>

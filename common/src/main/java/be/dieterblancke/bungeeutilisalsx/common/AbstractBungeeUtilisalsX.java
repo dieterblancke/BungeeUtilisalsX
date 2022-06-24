@@ -280,7 +280,8 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    protected abstract void registerPluginSupports();
+    protected void registerPluginSupports() {
+    }
 
     protected void loadDatabase()
     {
