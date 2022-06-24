@@ -33,21 +33,21 @@ public enum StandardLibrary
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.18",
+            "42.4.0",
             checkType( "POSTGRESQL" ),
             relocate( "org.postgresql" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.12.7",
+            "3.12.8",
             checkType( "MONGODB" ),
             relocate( "com.mongodb" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
-            "8.0.23",
+            "8.0.27",
             checkType( "MYSQL" ),
             relocate( "com.mysql" )
     ),
