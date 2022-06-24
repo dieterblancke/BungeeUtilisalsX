@@ -26,7 +26,7 @@ announcements:
     time: 1
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisals.announcements.receive'
-    message: '&eThis server is using BungeeUtilisals'
+    message: '<yellow>This server is using BungeeUtilisals'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames

@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.FontWidthInfo;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -61,7 +62,7 @@ public class CenterPlaceHolder extends XMLPlaceHolder
 
         for ( char c : text.toCharArray() )
         {
-            if ( c == '&' || c == '§' )
+            if ( c == '&' || c == MessageUtils.SECTION_CHAR )
             {
                 nextIsColour = true;
             }

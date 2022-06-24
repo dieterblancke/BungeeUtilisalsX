@@ -22,5 +22,5 @@ patterns:
 
 # Commands that have to be executed when someone swears (will be executed by console)
 commands:
-  - 'staffannouncement &b{user} &ehas used used a swear word: &b{swear-word}&e!'
+  - 'staffannouncement <aqua>{user} <yellow>has used used a swear word: <aqua>{swear-word}<yellow>!'
 # - 'warn {user} Please do not swear.'
