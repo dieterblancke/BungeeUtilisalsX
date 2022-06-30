@@ -22,6 +22,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -214,10 +215,11 @@ public abstract class AbstractBungeeUtilisalsX
             this.api.getLanguageManager().reloadConfig( this.getName(), language );
         }
 
-        if ( this.api.getHubBalancer() != null )
-        {
-            this.api.getHubBalancer().reload();
-        }
+// TODO: reload server manager
+//        if ( this.api.getHubBalancer() != null )
+//        {
+//            this.api.getHubBalancer().reload();
+//        }
 
         this.getCommandManager().load();
         Announcer.getAnnouncers().values().forEach( Announcer::reload );
@@ -246,11 +248,11 @@ public abstract class AbstractBungeeUtilisalsX
             scriptsFolder.mkdir();
 
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/scripts/hello.js" ),
+                    this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
                     new File( scriptsFolder, "hello.js" )
             );
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/scripts/coins.js" ),
+                    this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
                     new File( scriptsFolder, "coins.js" )
             );
         }
@@ -332,6 +334,8 @@ public abstract class AbstractBungeeUtilisalsX
     public abstract IPluginDescription getDescription();
 
     public abstract Logger getLogger();
+
+    public abstract Platform getPlatform();
 
     public void shutdown()
     {

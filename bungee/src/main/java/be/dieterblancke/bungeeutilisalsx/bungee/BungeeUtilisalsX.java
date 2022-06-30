@@ -1,7 +1,5 @@
 package be.dieterblancke.bungeeutilisalsx.bungee;
 
-import be.dieterblancke.bungeeutilisalsx.bungee.command.BungeeCommandManager;
-import be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
@@ -11,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
 import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
@@ -35,7 +34,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final ProxyOperationsApi proxyOperationsApi = new BungeeOperationsApi();
-    private final CommandManager commandManager = new BungeeCommandManager();
+    private final CommandManager commandManager = new CommandManager();
     private final IPluginDescription pluginDescription = new BungeePluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
     private final BungeeAudiences bungeeAudiences;
@@ -56,7 +55,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
-                ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
                 ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ?
                         this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
@@ -135,6 +133,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         return Bootstrap.getInstance().getLogger();
     }
 
+    @Override
+    public Platform getPlatform()
+    {
+        return Platform.BUNGEECORD;
+    }
+
     public BungeeAudiences getBungeeAudiences()
     {
         return bungeeAudiences;
@@ -146,7 +150,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         final Metrics metrics = new Metrics( Bootstrap.getInstance(), 5134 );
 
         metrics.addCustomChart( new SimplePie(
-                "punishments",
+                "configurations/punishments",
                 () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
@@ -181,10 +185,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 "tab_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new SimplePie(
-                "hubbalancer",
-                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
-        ) );
+// TODO: add chart "serverbalancer"
+//        metrics.addCustomChart( new SimplePie(
+//                "hubbalancer",
+//                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+//        ) );
         metrics.addCustomChart( new SimplePie(
                 "protocolize",
                 () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"

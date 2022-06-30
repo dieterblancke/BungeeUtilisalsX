@@ -7,6 +7,6 @@ public class MainFriendRequestsGuiConfig extends GuiConfig
 {
     public MainFriendRequestsGuiConfig()
     {
-        super( "/gui/friends/friendrequests.yml", GuiConfigItem.class );
+        super( "/configurations/gui/friends/friendrequests.yml", GuiConfigItem.class );
     }
 }

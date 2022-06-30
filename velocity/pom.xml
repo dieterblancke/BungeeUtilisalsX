@@ -5,7 +5,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>2.3.5</version>
+        <version>2.3.6</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
-            <version>2.3.5</version>
+            <version>2.3.6</version>
         </dependency>
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -53,5 +53,118 @@
                 <filtering>true</filtering>
             </resource>
         </resources>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.metrics</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>be.dieterblancke.configuration</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.configuration</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.mariadb.jdbc</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.mariadb.jdbc</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.postgresql</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.postgresql</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.mongodb</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.mongodb</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.mysql</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.mysql</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.zaxxer.hikari</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.zaxxer.hikari</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.lettuce.core</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.lettuce.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>reactor.core</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.core</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>reactor.adapter</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.adapter
+                            </shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>reactor.util</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.util</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.reactivestreams</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.reactivestreams
+                            </shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.mozilla</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.mozilla</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>de.christophkraemer.rhino</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.de.christophkraemer.rhino
+                            </shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.apache.commons.pool2</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.apache.commons.pool2
+                            </shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.jsoup</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.jsoup</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.rabbitmq</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.rabbitmq</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>me.lucko.jarrelocator</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.me.lucko.jarrelocator
+                            </shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.github.karlatemp.unsafeaccessor</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.objectweb.asm</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.objectweb.asm</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>nonapi.io.github</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.nonapi.io.github</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>io.github</pattern>
+                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
     </build>
 </project>

@@ -8,7 +8,7 @@ public class FriendRequestsGuiConfig extends GuiConfig
 
     public FriendRequestsGuiConfig( final FriendRequestType type )
     {
-        super( "/gui/friends/" + type.toString().toLowerCase() + "friendrequests.yml", FriendRequestGuiConfigItem.class );
+        super( "/configurations/gui/friends/" + type.toString().toLowerCase() + "friendrequests.yml", FriendRequestGuiConfigItem.class );
     }
 
 }

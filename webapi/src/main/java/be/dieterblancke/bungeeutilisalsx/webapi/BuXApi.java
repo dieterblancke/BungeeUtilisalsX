@@ -7,7 +7,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
-import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
@@ -76,12 +75,6 @@ public class BuXApi implements IBuXApi
     public IPunishmentHelper getPunishmentExecutor()
     {
         throw new UnsupportedOperationException( "The PunishmentExecutor is currently only supported in the proxy versions of BungeeUtilisalsX!" );
-    }
-
-    @Override
-    public IHubBalancer getHubBalancer()
-    {
-        throw new UnsupportedOperationException( "The HubBalancer is currently only supported in the proxy versions of BungeeUtilisalsX!" );
     }
 
     @Override

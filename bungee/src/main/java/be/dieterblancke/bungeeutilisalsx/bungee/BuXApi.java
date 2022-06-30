@@ -9,7 +9,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
-import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
@@ -34,7 +33,6 @@ public class BuXApi implements IBuXApi
 
     private final ILanguageManager languageManager;
     private final IEventLoader eventLoader;
-    private final IHubBalancer hubBalancer;
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
     private final User consoleUser = new BungeeConsoleUser();

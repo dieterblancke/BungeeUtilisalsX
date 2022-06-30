@@ -26,7 +26,7 @@ public class Config
 
     public void load()
     {
-        final File file = new File( BuX.getInstance().getDataFolder(), location );
+        final File file = new File( BuX.getInstance().getDataFolder(), location.replaceFirst( "configurations/", "" ) );
 
         if ( !file.exists() )
         {
@@ -54,7 +54,7 @@ public class Config
         }
 
         this.setup();
-        BuX.debug( "Successfully loaded config file: " + location.substring( 1 ) );
+        BuX.debug( "Successfully loaded config file: " + location.replaceFirst( "configurations/", "" ).substring( 1 ) );
     }
 
     public void reload()

@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.library;
 
 import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Getter;
 import me.lucko.jarrelocator.Relocation;
@@ -40,7 +41,7 @@ public enum StandardLibrary
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.12.8",
+            "3.12.11",
             checkType( "MONGODB" ),
             relocate( "com.mongodb" )
     ),
@@ -54,7 +55,7 @@ public enum StandardLibrary
     HIKARICP(
             "com.zaxxer.hikari.HikariDataSource",
             "https://repo1.maven.org/maven2/com/zaxxer/HikariCP/{version}/HikariCP-{version}.jar",
-            "5.0.0",
+            "5.0.1",
             checkType( "MYSQL", "MARIADB", "POSTGRESQL" ),
             relocate( "com.zaxxer.hikari" )
     ),
@@ -73,7 +74,7 @@ public enum StandardLibrary
     LETTUCE(
             "io.lettuce.core.RedisClient",
             "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
-            "6.0.2.RELEASE",
+            "6.1.8.RELEASE",
             configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
             relocate( "io.lettuce.core" ),
             relocate( "reactor.core" ),
@@ -114,28 +115,28 @@ public enum StandardLibrary
     APACHE_COMMONS_POOL2(
             "org.apache.commons.pool2.impl.GenericObjectPool",
             "https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/{version}/commons-pool2-{version}.jar",
-            "2.9.0",
+            "2.11.1",
             configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
             relocate( "org.apache.commons.pool2" )
     ),
     JSOUP(
             "org.jsoup.nodes.Document",
             "https://repo1.maven.org/maven2/org/jsoup/jsoup/{version}/jsoup-{version}.jar",
-            "1.14.2",
+            "1.14.3",
             true,
             relocate( "org.jsoup" )
     ),
     RABBIT_MQ(
             "com.rabbitmq.client.RpcClient",
             "https://repo1.maven.org/maven2/com/rabbitmq/amqp-client/{version}/amqp-client-{version}.jar",
-            "5.13.0",
+            "5.14.2",
             configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
             relocate( "com.rabbitmq" )
     ),
     RHINO(
             "org.mozilla.javascript.Script",
             "https://repo1.maven.org/maven2/org/mozilla/rhino/{version}/rhino-{version}.jar",
-            "1.7.13",
+            "1.7.14",
             configExistsAndTrue( getConfig(), "scripting" ),
             relocate( "org.mozilla" )
     ),
@@ -198,6 +199,6 @@ public enum StandardLibrary
         {
             return config = IConfiguration.loadYamlConfiguration( configFile );
         }
-        return config = IConfiguration.loadYamlConfiguration( BootstrapUtil.class.getResourceAsStream( "/config.yml" ) );
+        return config = IConfiguration.loadYamlConfiguration( BootstrapUtil.class.getResourceAsStream( "/configurations/config.yml" ) );
     }
 }

@@ -43,7 +43,7 @@ public enum DefaultGui
     CUSTOM(
             () ->
             {
-                new GuiConfig( "/gui/custom/test.yml", GuiConfigItem.class );
+                new GuiConfig( "/configurations/gui/custom/test.yml", GuiConfigItem.class );
                 return null;
             },
             CustomGuiOpener::new

@@ -6,6 +6,6 @@ public class FriendGuiConfig extends GuiConfig
 {
     public FriendGuiConfig()
     {
-        super( "/gui/friends/friends.yml", FriendGuiConfigItem.class );
+        super( "/configurations/gui/friends/friends.yml", FriendGuiConfigItem.class );
     }
 }

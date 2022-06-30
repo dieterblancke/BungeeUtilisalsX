@@ -16,7 +16,9 @@ public class BootstrapUtil
     private static File dataFolder;
 
     @SneakyThrows
-    public static void loadLibraries( final File dataFolder, final LibraryClassLoader libraryClassLoader, final Logger logger )
+    public static void loadLibraries( File dataFolder,
+                                      LibraryClassLoader libraryClassLoader,
+                                      Logger logger )
     {
         BootstrapUtil.dataFolder = dataFolder;
 
@@ -24,7 +26,7 @@ public class BootstrapUtil
 
         for ( StandardLibrary standardLibrary : StandardLibrary.values() )
         {
-            final Library library = standardLibrary.getLibrary();
+            Library library = standardLibrary.getLibrary();
 
             if ( library.isToLoad() && !library.isPresent() )
             {

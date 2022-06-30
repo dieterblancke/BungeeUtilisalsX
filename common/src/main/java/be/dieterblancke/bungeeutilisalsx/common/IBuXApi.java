@@ -5,7 +5,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
-import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
@@ -88,11 +87,6 @@ public interface IBuXApi
      * @return The BungeeUtilisals punishment API.
      */
     IPunishmentHelper getPunishmentExecutor();
-
-    /**
-     * @return An either the active HubBalancer or null in case it's disabled.
-     */
-    IHubBalancer getHubBalancer();
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix.
