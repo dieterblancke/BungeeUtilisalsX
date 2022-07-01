@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,18 +18,18 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
     public static void removeFriendRequest( final UserStorage storage, final User user, final User target )
     {
         BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( storage.getUuid(), user.getUuid() );
-        user.sendLangMessage( "friends.removerequest.removed", "{user}", storage.getUserName() );
+        user.sendLangMessage( "friends.removerequest.removed", storage );
 
         if ( target != null )
         {
-            target.sendLangMessage( "friends.removerequest.request-removed", "{user}", user.getName() );
+            target.sendLangMessage( "friends.removerequest.request-removed", user );
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                     storage.getUserName(),
                     "friends.removerequest.request-removed",
-                    "{user}", user.getName()
+                    user
             ) );
         }
     }
@@ -54,7 +55,7 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
 
         if ( !dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
-            user.sendLangMessage( "friends.removerequest.no-request", "{user}", name );
+            user.sendLangMessage( "friends.removerequest.no-request", MessagePlaceholders.create().append( "user", name ) );
             return;
         }
 

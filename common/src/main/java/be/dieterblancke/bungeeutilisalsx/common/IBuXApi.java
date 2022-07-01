@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelpe
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import net.kyori.adventure.text.Component;
 
@@ -126,7 +127,7 @@ public interface IBuXApi
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast( String message, Object... placeholders );
+    void langBroadcast( String message, HasMessagePlaceholders placeholders );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -135,7 +136,7 @@ public interface IBuXApi
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langPermissionBroadcast( String message, String permission, Object... placeholders );
+    void langPermissionBroadcast( String message, String permission, HasMessagePlaceholders placeholders );
 
     /**
      * @return a list of all announcers.

@@ -12,6 +12,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelpe
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.webapi.console.WebApiConsoleUser;
 import lombok.Getter;
@@ -98,12 +99,12 @@ public class BuXApi implements IBuXApi
     }
 
     @Override
-    public void langBroadcast( String message, Object... placeholders )
+    public void langBroadcast( String message, HasMessagePlaceholders placeholders )
     {
     }
 
     @Override
-    public void langPermissionBroadcast( String message, String permission, Object... placeholders )
+    public void langPermissionBroadcast( String message, String permission, HasMessagePlaceholders placeholders )
     {
     }
 

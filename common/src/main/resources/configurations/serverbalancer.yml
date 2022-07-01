@@ -1,0 +1,52 @@
+balancers:
+  # The server group to balance in, any time someone joins a server from this group, BuX will attempt to balance this out.
+  - group: Lobbies
+    # There are 4 methods available: RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS. LEAST_PLAYERS is recommended.
+    method: LEAST_PLAYERS
+
+    pinger:
+      # The delay, in seconds, between BuX pinging servers to check if they are accessible.
+      delay: 5
+      # Maximum attempts until BuX will stop pinging the server for {cooldown} seconds (see below)
+      max-attempts: 3
+      # If the maximum attempts have been reached and the server is still offline, how long should BuX not try to ping the server?
+      cooldown: 60
+
+    # Can be left out, a command to teleport to a random server in this specific balanced group.
+    command:
+      enabled: true
+      name: 'hub'
+      aliases: 'lobby'
+      permission: bungeeutilisalsx.commands.hub
+      listener-based: true
+
+    # The server group to balance in, any time someone joins a server from this group, BuX will attempt to balance this out.
+  - group: minigames-walls
+    # There are 4 methods available: RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS. LEAST_PLAYERS is recommended.
+    method: MOST_PLAYERS
+
+    pinger:
+      # The delay, in seconds, between BuX pinging servers to check if they are accessible.
+      delay: 5
+      # Maximum attempts until BuX will stop pinging the server for {cooldown} seconds (see below)
+      max-attempts: 3
+      # If the maximum attempts have been reached and the server is still offline, how long should BuX not try to ping the server?
+      cooldown: 60
+      # Only have servers as "connectable" if they meet the following rules
+      motd-filter:
+        - '(?i).*Waiting ...*'
+
+    # Can be left out, a command to teleport to a random server in this specific balanced group.
+    command:
+      enabled: true
+      name: 'hub'
+      aliases: 'lobby'
+      permission: bungeeutilisalsx.commands.hub
+      listener-based: true
+
+fallback:
+  type: 'BLACKLIST'
+  reasons:
+    - 'ban'
+    - 'kick'
+  fallback-to: Lobbies

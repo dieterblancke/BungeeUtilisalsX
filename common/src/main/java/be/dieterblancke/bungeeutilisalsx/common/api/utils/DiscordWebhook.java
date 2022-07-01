@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.WebhookConfig.DiscordWebhookConfig;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.configuration.api.ISection;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -192,7 +193,7 @@ public class DiscordWebhook
         private Image image;
         private Author author;
 
-        public static EmbedObject fromSection( final ISection section, final Object... placeholders )
+        public static EmbedObject fromSection( final ISection section, final HasMessagePlaceholders placeholders )
         {
             final EmbedObject embedObject = new EmbedObject();
 

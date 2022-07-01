@@ -5,6 +5,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TriConsumer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiAction;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiActionType;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
@@ -94,14 +96,24 @@ public class ItemPage
         }
     }
 
-    protected GuiItem getGuiItem( final User player, final GuiConfigItem item, final Object... placeholders )
+    protected GuiItem getGuiItem( final User player, final GuiConfigItem item )
+    {
+        return this.getGuiItem( player, item, MessagePlaceholders.empty() );
+    }
+
+    protected GuiItem getGuiItem( final User player, final GuiConfigItem item, final HasMessagePlaceholders placeholders )
     {
         final ItemStack itemStack = item.getItem().buildItem( player, placeholders );
 
         return this.getGuiItem( item.getAction(), item.getRightAction(), itemStack, placeholders );
     }
 
-    protected GuiItem getGuiItem( final GuiAction action, final GuiAction rightAction, final ItemStack itemStack, final Object... placeholders )
+    protected GuiItem getGuiItem( final GuiAction action, final GuiAction rightAction, final ItemStack itemStack )
+    {
+        return this.getGuiItem( action, rightAction, itemStack, MessagePlaceholders.empty() );
+    }
+
+    protected GuiItem getGuiItem( final GuiAction action, final GuiAction rightAction, final ItemStack itemStack, final HasMessagePlaceholders placeholders )
     {
         final ClickableGuiItem clickableGuiItem = new ClickableGuiItem( itemStack )
                 .addHandler( ClickType.LEFT_CLICK, this.getClickHandler( action, placeholders ) );
@@ -114,7 +126,7 @@ public class ItemPage
         return clickableGuiItem;
     }
 
-    private TriConsumer<Gui, User, InventoryClick> getClickHandler( final GuiAction guiAction, final Object... placeholders )
+    private TriConsumer<Gui, User, InventoryClick> getClickHandler( final GuiAction guiAction, final HasMessagePlaceholders placeholders )
     {
         final String action = Utils.replacePlaceHolders( guiAction.getAction().trim(), placeholders );
 

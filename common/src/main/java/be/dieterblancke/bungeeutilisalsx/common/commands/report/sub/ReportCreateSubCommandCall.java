@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.DiscordWebhook.EmbedObject;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.webhook.WebhookFactory;
 import be.dieterblancke.configuration.api.ISection;
 
@@ -63,15 +64,16 @@ public class ReportCreateSubCommandCall implements CommandCall
         final ReportsDao reportsDao = BuX.getApi().getStorageManager().getDao().getReportsDao();
 
         reportsDao.addReport( report );
-        user.sendLangMessage( "general-commands.report.create.created", "{target}", targetName );
+        user.sendLangMessage( "general-commands.report.create.created", MessagePlaceholders.create().append( "target", targetName ) );
 
         BuX.getApi().langPermissionBroadcast(
                 "general-commands.report.create.broadcast",
                 ConfigFiles.GENERALCOMMANDS.getConfig().getString( "report.subcommands.create.broadcast" ),
-                "{target}", targetName,
-                "{user}", user.getName(),
-                "{reason}", reason,
-                "{server}", user.getServerName()
+                MessagePlaceholders.create()
+                        .append( "target", targetName )
+                        .append( "user", user.getName() )
+                        .append( "reason", reason )
+                        .append( "server", user.getServerName() )
         );
 
         this.sendDiscordWebhook( report );
@@ -100,11 +102,7 @@ public class ReportCreateSubCommandCall implements CommandCall
 
         WebhookFactory.discord().send( EmbedObject.fromSection(
                 discordSection,
-                "{user}", report.getUserName(),
-                "{uuid}", report.getUuid(),
-                "{reporter}", report.getReportedBy(),
-                "{reason}", report.getReason(),
-                "{server}", report.getServer()
+                report
         ) );
     }
 }

@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.CommandSpyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.stream.Stream;
 
@@ -23,9 +24,10 @@ public class CommandSpyJobHandler extends AbstractJobHandler
                 {
                     user.sendLangMessage(
                             "general-commands.commandspy.message",
-                            "{user}", job.getUserName(),
-                            "{server}", job.getServerName(),
-                            "{command}", job.getCommand()
+                            MessagePlaceholders.create()
+                                    .append( "user", job.getUserName() )
+                                    .append( "server", job.getServerName() )
+                                    .append( "command", job.getCommand() )
                     );
                 } );
     }

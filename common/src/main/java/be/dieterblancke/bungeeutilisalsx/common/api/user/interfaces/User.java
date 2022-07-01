@@ -15,6 +15,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
@@ -25,8 +27,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
-public interface User extends Messageable, HasLanguageConfig
+public interface User extends Messageable, HasLanguageConfig, HasMessagePlaceholders
 {
 
     /**
@@ -123,7 +126,11 @@ public interface User extends Messageable, HasLanguageConfig
      * @param postPlaceholderFormatter This string formatter can be used to manipulate the string after placeholder replacement.
      * @param placeholders             The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    default void sendLangMessage( String path, boolean prefix, Function<String, String> prePlaceholderFormatter, Function<String, String> postPlaceholderFormatter, Object... placeholders )
+    default void sendLangMessage( String path,
+                                  boolean prefix,
+                                  Function<String, String> prePlaceholderFormatter,
+                                  Function<String, String> postPlaceholderFormatter,
+                                  HasMessagePlaceholders placeholders )
     {
         this.getLanguageConfig().sendLangMessage( this, path, prefix, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
     }
@@ -134,7 +141,7 @@ public interface User extends Messageable, HasLanguageConfig
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    default void sendLangMessage( String path, Object... placeholders )
+    default void sendLangMessage( String path, HasMessagePlaceholders placeholders )
     {
         this.getLanguageConfig().sendLangMessage( this, true, path, placeholders );
     }
@@ -147,7 +154,7 @@ public interface User extends Messageable, HasLanguageConfig
      */
     default void sendLangMessage( boolean prefix, String path )
     {
-        this.getLanguageConfig().sendLangMessage( this, prefix, path, new Object[0] );
+        this.getLanguageConfig().sendLangMessage( this, prefix, path, MessagePlaceholders.empty() );
     }
 
     /**
@@ -157,7 +164,7 @@ public interface User extends Messageable, HasLanguageConfig
      * @param path         The path to the message in the language file.
      * @param placeholders The placeholders and their values (placeholder on odd place, value on even place behind placeholder)
      */
-    default void sendLangMessage( boolean prefix, String path, Object... placeholders )
+    default void sendLangMessage( boolean prefix, String path, HasMessagePlaceholders placeholders )
     {
         this.getLanguageConfig().sendLangMessage( this, path, prefix, null, null, placeholders );
     }
@@ -186,7 +193,22 @@ public interface User extends Messageable, HasLanguageConfig
      * @param path         Path in language file.
      * @param placeholders Placeholders to be replaced.
      */
-    void langKick( String path, Object... placeholders );
+    default void langKick( String path, HasMessagePlaceholders placeholders )
+    {
+        if ( getLanguageConfig().getConfig().isList( path ) )
+        {
+            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
+                    placeholders.getMessagePlaceholders().format( str ) ).collect( Collectors.joining( "\n" ) );
+
+            kick( reason );
+        }
+        else
+        {
+            String message = getLanguageConfig().getConfig().getString( path );
+            message = placeholders.getMessagePlaceholders().format( message );
+            kick( message );
+        }
+    }
 
     /**
      * Kicks the User with a certain reason.
@@ -467,4 +489,8 @@ public interface User extends Messageable, HasLanguageConfig
      */
     Audience asAudience();
 
+    @Override
+    default MessagePlaceholders getMessagePlaceholders() {
+        return this.getStorage().getMessagePlaceholders();
+    }
 }

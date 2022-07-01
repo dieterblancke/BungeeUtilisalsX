@@ -12,6 +12,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
@@ -128,7 +129,7 @@ public abstract class ConsoleUser implements User
     }
 
     @Override
-    public void langKick( String path, Object... placeholders )
+    public void langKick( String path, HasMessagePlaceholders placeholders )
     {
         // do nothing
     }

@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDa
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,10 +46,13 @@ public class ReportDenySubCommandCall implements CommandCall
             reportsDao.handleReport( id, false );
             user.sendLangMessage(
                     "general-commands.report.deny.updated",
-                    "{id}", report.getId()
+                    report
             );
 
-            final Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
+            Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
+            MessagePlaceholders placeholders = MessagePlaceholders.create()
+                    .append( report )
+                    .append( "staff", user.getName() );
 
             if ( optionalUser.isPresent() )
             {
@@ -56,9 +60,7 @@ public class ReportDenySubCommandCall implements CommandCall
 
                 target.sendLangMessage(
                         "general-commands.report.deny.denied",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
+                        placeholders
                 );
             }
             else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
@@ -66,9 +68,7 @@ public class ReportDenySubCommandCall implements CommandCall
                 BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                         report.getReportedBy(),
                         "general-commands.report.deny.denied",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
+                        placeholders
                 ) );
             }
             else
@@ -78,9 +78,7 @@ public class ReportDenySubCommandCall implements CommandCall
                         new OfflineMessage(
                                 null,
                                 "general-commands.report.deny.denied",
-                                "{id}", report.getId(),
-                                "{reported}", report.getUserName(),
-                                "{staff}", user.getName()
+                                placeholders
                         )
                 );
             }

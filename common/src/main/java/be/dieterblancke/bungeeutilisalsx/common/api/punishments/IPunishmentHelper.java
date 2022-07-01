@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.punishments;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.configuration.api.IConfiguration;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public interface IPunishmentHelper
 
     String setPlaceHolders( String line, PunishmentInfo info );
 
-    List<String> getPlaceHolders( PunishmentInfo info );
+    MessagePlaceholders getPlaceHolders( PunishmentInfo info );
 
     default boolean isHigherPunishment( UUID executor, UUID target )
     {

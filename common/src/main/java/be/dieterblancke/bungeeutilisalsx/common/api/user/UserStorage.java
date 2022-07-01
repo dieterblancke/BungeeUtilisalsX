@@ -1,22 +1,21 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Supplier;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserStorage
+public class UserStorage implements HasMessagePlaceholders
 {
 
     private UUID uuid;
@@ -87,5 +86,15 @@ public class UserStorage
     public void removeData( final UserStorageKey key )
     {
         this.removeData( key.toString() );
+    }
+
+    @Override
+    public MessagePlaceholders getMessagePlaceholders()
+    {
+        return MessagePlaceholders.create()
+                .append( "uuid", uuid )
+                .append( "user", userName )
+                .append( "ip", ip )
+                .append( "language", Optional.ofNullable(language).map( Language::getName ).orElse( "" ) );
     }
 }

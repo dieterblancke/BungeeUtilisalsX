@@ -4,6 +4,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequestType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
@@ -62,8 +64,9 @@ public class FriendRequestsItemPage extends ItemPage
                         type,
                         (FriendRequestGuiConfigItem) item,
                         data,
-                        "{user-name}", type == FriendRequestType.OUTGOING ? data.getFriendName() : data.getUserName(),
-                        "{requested-at}", Utils.formatDate( data.getRequestedAt() )
+                        MessagePlaceholders.create()
+                                .append( "user-name", type == FriendRequestType.OUTGOING ? data.getFriendName() : data.getUserName() )
+                                .append( "requested-at", Utils.formatDate( data.getRequestedAt() ) )
                 ) );
             }
         }
@@ -73,7 +76,7 @@ public class FriendRequestsItemPage extends ItemPage
                                       final FriendRequestType type,
                                       final FriendRequestGuiConfigItem item,
                                       final FriendRequest requestData,
-                                      final Object... placeholders )
+                                      final HasMessagePlaceholders placeholders )
     {
         final ItemStack itemStack = item.getItem().buildItem( user, placeholders );
 

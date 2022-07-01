@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 public class UserKickJobHandler extends AbstractJobHandler
 {
@@ -25,7 +26,7 @@ public class UserKickJobHandler extends AbstractJobHandler
 
     private void kickUser( final User user,
                            final String languagePath,
-                           final Object[] placeholders,
+                           final MessagePlaceholders placeholders,
                            final PunishmentType punishmentType,
                            final String reason )
     {

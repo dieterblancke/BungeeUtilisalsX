@@ -5,6 +5,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
@@ -65,9 +67,10 @@ public class FriendItemPage extends ItemPage
                         (FriendGuiConfigItem) item,
                         data,
                         currentServer,
-                        "{friend-name}", data.getFriend(),
-                        "{last-online}", Utils.formatDate( data.getLastOnline() ),
-                        "{server}", currentServer == null ? "Unknown" : currentServer
+                        MessagePlaceholders.create()
+                                .append( "friend-name", data.getFriend() )
+                                .append( "last-online", Utils.formatDate( data.getLastOnline() ) )
+                                .append( "server", currentServer == null ? "Unknown" : currentServer )
                 ) );
             }
         }
@@ -77,7 +80,7 @@ public class FriendItemPage extends ItemPage
                                       final FriendGuiConfigItem item,
                                       final FriendData friendData,
                                       final String currentServer,
-                                      final Object... placeholders )
+                                      final HasMessagePlaceholders placeholders )
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online

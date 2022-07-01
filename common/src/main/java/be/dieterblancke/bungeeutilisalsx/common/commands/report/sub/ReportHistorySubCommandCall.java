@@ -2,13 +2,13 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.report.sub;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
-import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.UnicodeTranslator;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageNotFoundException;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.UnicodeTranslator;
 
 import java.util.List;
 
@@ -43,37 +43,35 @@ public class ReportHistorySubCommandCall implements CommandCall
 
                 user.sendLangMessage(
                         "general-commands.report.history.header",
-                        "{page}", page,
-                        "{maxPages}", maxPages
+                        MessagePlaceholders.create()
+                                .append( "page", page )
+                                .append( "maxPages", maxPages )
                 );
 
                 for ( Report report : pageReports )
                 {
                     user.sendLangMessage(
                             "general-commands.report.history.item",
-                            "{id}", report.getId(),
-                            "{reported}", report.getUserName(),
-                            "{reporter}", report.getReportedBy(),
-                            "{reason}", report.getReason(),
-                            "{server}", report.getServer(),
-                            "{date}", Dao.formatDateToString( report.getDate() ),
-                            "{handled}", report.isHandled(),
-                            "{accepted_sign}", report.isHandled() ? report.isAccepted() ? accepted : denied : ""
+                            MessagePlaceholders.create()
+                                    .append( report )
+                                    .append( "accepted_sign", report.isHandled() ? report.isAccepted() ? accepted : denied : "" )
                     );
                 }
 
                 user.sendLangMessage(
                         "general-commands.report.history.footer",
-                        "{page}", page,
-                        "{maxPages}", maxPages
+                        MessagePlaceholders.create()
+                                .append( "page", page )
+                                .append( "maxPages", maxPages )
                 );
             }
             catch ( PageNotFoundException e )
             {
                 user.sendLangMessage(
                         "general-commands.report.history.wrong-page",
-                        "{page}", e.getPage(),
-                        "{maxpages}", e.getMaxPages()
+                        MessagePlaceholders.create()
+                                .append( "page", e.getPage() )
+                                .append( "maxpages", e.getMaxPages() )
                 );
             }
         } );

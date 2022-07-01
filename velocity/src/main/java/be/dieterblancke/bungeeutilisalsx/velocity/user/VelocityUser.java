@@ -19,6 +19,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
@@ -225,34 +226,6 @@ public class VelocityUser implements User
     public void kick( String reason )
     {
         BuX.getInstance().getScheduler().runAsync( () -> forceKick( reason ) );
-    }
-
-    @Override
-    public void langKick( String path, Object... placeholders )
-    {
-        if ( getLanguageConfig().getConfig().isList( path ) )
-        {
-            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
-            {
-                for ( int i = 0; i < placeholders.length - 1; i += 2 )
-                {
-                    str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-                }
-                return str;
-            } ).collect( Collectors.joining( "\n" ) );
-
-            kick( reason );
-        }
-        else
-        {
-            String message = getLanguageConfig().getConfig().getString( path );
-            for ( int i = 0; i < placeholders.length - 1; i += 2 )
-            {
-                message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-            }
-
-            kick( message );
-        }
     }
 
     @Override

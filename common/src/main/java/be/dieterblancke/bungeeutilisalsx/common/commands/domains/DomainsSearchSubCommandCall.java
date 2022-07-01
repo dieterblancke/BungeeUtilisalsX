@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -22,20 +23,21 @@ public class DomainsSearchSubCommandCall implements CommandCall
 
         BuX.getApi().getStorageManager().getDao().getUserDao().searchJoinedHosts( domainToSearch ).thenAccept( ( domains ) ->
         {
-            user.sendLangMessage( "general-commands.domains.search.header", "{total}", domains.size() );
+            user.sendLangMessage( "general-commands.domains.search.header", MessagePlaceholders.create().append( "total", domains.size() ) );
 
             domains.entrySet().stream()
                     .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
                     .forEach( entry ->
                             user.sendLangMessage(
                                     "general-commands.domains.search.format",
-                                    "{domain}", entry.getKey(),
-                                    "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
-                                    "{total}", entry.getValue()
+                                    MessagePlaceholders.create()
+                                            .append( "{domain}", entry.getKey() )
+                                            .append( "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
+                                            .append( "{total}", entry.getValue() )
                             )
                     );
 
-            user.sendLangMessage( "general-commands.domains.search.footer", "{total}", domains.size() );
+            user.sendLangMessage( "general-commands.domains.search.footer", MessagePlaceholders.create().append( "total", domains.size() ) );
         } );
     }
 

@@ -1,7 +1,10 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.other;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
@@ -10,7 +13,7 @@ import java.util.UUID;
 
 @Data
 @AllArgsConstructor
-public class Report
+public class Report implements HasMessagePlaceholders
 {
 
     private final long id;
@@ -32,10 +35,28 @@ public class Report
                 new OfflineMessage(
                         null,
                         "general-commands.report.accept.accepted",
-                        "{id}", id,
-                        "{reported}", userName,
-                        "{staff}", accepter
+                        MessagePlaceholders.create()
+                                .append( "id", id )
+                                .append( "reported", reportedBy )
+                                .append( "staff", accepter )
+                                .append( this )
                 )
         );
+    }
+
+    @Override
+    public MessagePlaceholders getMessagePlaceholders()
+    {
+        return MessagePlaceholders.create()
+                .append( "id", id )
+                .append( "uuid", uuid )
+                .append( "user", userName )
+                .append( "reported", userName )
+                .append( "reporter", reportedBy )
+                .append( "reason", reason )
+                .append( "server", server )
+                .append( "date", () -> Dao.formatDateToString( date ) )
+                .append( "handled", handled )
+                .append( "accepted", accepted );
     }
 }

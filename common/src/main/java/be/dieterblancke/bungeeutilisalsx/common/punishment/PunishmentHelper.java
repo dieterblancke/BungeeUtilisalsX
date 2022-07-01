@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -107,104 +108,61 @@ public class PunishmentHelper implements IPunishmentHelper
             return null;
         }
 
-        final List<String> placeHolders = this.getPlaceHolders( info );
-        for ( int i = 0; i < placeHolders.size(); i++ )
-        {
-            line = line.replace( placeHolders.get( i ), placeHolders.get( ++i ) );
-        }
-
-        return line;
+        return getPlaceHolders( info ).format( line );
     }
 
     @Override
-    public List<String> getPlaceHolders( PunishmentInfo info )
+    public MessagePlaceholders getPlaceHolders( PunishmentInfo info )
     {
-        final List<String> placeholders = Lists.newArrayList();
+        MessagePlaceholders placeholders = MessagePlaceholders.create();
 
         if ( info.getReason() != null )
         {
-            placeholders.add( "{reason}" );
-            placeholders.add( info.getReason() );
+            placeholders.append( "reason", info.getReason() );
         }
 
         if ( info.getDate() != null )
         {
-            placeholders.add( "{date}" );
-            placeholders.add( Utils.formatDate( getDateFormat(), info.getDate() ) );
+            placeholders.append( "date", Utils.formatDate( getDateFormat(), info.getDate() ) );
         }
 
         if ( info.getExecutedBy() != null )
         {
-            placeholders.add( "{by}" );
-            placeholders.add( info.getExecutedBy() );
+            placeholders.append( "by", info.getExecutedBy() );
         }
 
         if ( info.getServer() != null )
         {
-            placeholders.add( "{server}" );
-            placeholders.add( info.getServer() );
+            placeholders.append( "server", info.getServer() );
         }
 
-        // Just adding in case someone wants them ...
+        // Just appending in case someone wants them ...
         if ( info.getUuid() != null )
         {
-            placeholders.add( "{uuid}" );
-            placeholders.add( info.getUuid().toString() );
+            placeholders.append( "uuid", info.getUuid().toString() );
         }
 
         if ( info.getIp() != null )
         {
-            placeholders.add( "{ip}" );
-            placeholders.add( info.getIp() );
+            placeholders.append( "ip", info.getIp() );
         }
 
         if ( info.getUser() != null )
         {
-            placeholders.add( "{user}" );
-            placeholders.add( info.getUser() );
+            placeholders.append( "user", info.getUser() );
         }
 
-        placeholders.add( "{id}" );
-        placeholders.add( String.valueOf( info.getId() ) );
+        placeholders.append( "id", String.valueOf( info.getId() ) );
 
         if ( info.getType() != null )
         {
-            placeholders.add( "{type}" );
-            placeholders.add( info.getType().toString().toLowerCase() );
+            placeholders.append( "type", info.getType().toString().toLowerCase() );
         }
 
-        placeholders.add( "{expire}" );
-        if ( info.getExpireTime() != null )
-        {
-            placeholders.add( Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) );
-        }
-        else
-        {
-            placeholders.add( "Never" );
-        }
-
-        placeholders.add( "{timeLeft}" );
-        if ( info.getExpireTime() != null )
-        {
-            placeholders.add( Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() - System.currentTimeMillis() ) );
-        }
-        else
-        {
-            placeholders.add( "Never" );
-        }
-
-        placeholders.add( "{removedBy}" );
-        if ( info.getRemovedBy() != null )
-        {
-            placeholders.add( info.getRemovedBy() );
-        }
-        else
-        {
-            placeholders.add( "Unknown" );
-        }
-
-        placeholders.add( "{punishment_uid}" );
-        placeholders.add( info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
+        placeholders.append( "expire", info.getExpireTime() != null ? Utils.formatDate( getDateFormat(), new Date( info.getExpireTime() ) ) : "Never" );
+        placeholders.append( "timeLeft", info.getExpireTime() != null ? Utils.getTimeLeft( getTimeLeftFormat(), info.getExpireTime() - System.currentTimeMillis() ) : "Never" );
+        placeholders.append( "removedBy", info.getRemovedBy() != null ? info.getRemovedBy() : "Unknown" );
+        placeholders.append( "punishment_uid", info.getPunishmentUid() == null ? "" : info.getPunishmentUid() );
 
         return placeholders;
     }

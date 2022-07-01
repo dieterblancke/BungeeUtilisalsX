@@ -6,9 +6,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
@@ -70,9 +71,10 @@ public class PartyItemPage extends ItemPage
                         (PartyGuiConfigItem) item,
                         member,
                         currentServer,
-                        "{member}", member.getUserName(),
-                        "{server}", currentServer == null ? "Unknown" : currentServer,
-                        "{role}", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() )
+                        MessagePlaceholders.create()
+                                .append( "member", member.getUserName() )
+                                .append( "server", currentServer == null ? "Unknown" : currentServer )
+                                .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
                 ) );
             }
         }
@@ -109,7 +111,7 @@ public class PartyItemPage extends ItemPage
                                            final PartyGuiConfigItem item,
                                            final PartyMember member,
                                            final String currentServer,
-                                           final Object... placeholders )
+                                           final HasMessagePlaceholders placeholders )
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online

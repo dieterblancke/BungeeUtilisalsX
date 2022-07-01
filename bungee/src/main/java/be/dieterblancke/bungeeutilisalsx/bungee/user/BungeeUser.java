@@ -21,6 +21,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -226,34 +227,6 @@ public class BungeeUser implements User
     public void kick( String reason )
     {
         BuX.getInstance().getScheduler().runAsync( () -> this.forceKick( reason ) );
-    }
-
-    @Override
-    public void langKick( String path, Object... placeholders )
-    {
-        if ( getLanguageConfig().getConfig().isList( path ) )
-        {
-            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
-            {
-                for ( int i = 0; i < placeholders.length - 1; i += 2 )
-                {
-                    str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-                }
-                return str;
-            } ).collect( Collectors.joining( "\n" ) );
-
-            kick( reason );
-        }
-        else
-        {
-            String message = getLanguageConfig().getConfig().getString( path );
-            for ( int i = 0; i < placeholders.length - 1; i += 2 )
-            {
-                message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-            }
-
-            kick( message );
-        }
     }
 
     @Override

@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.sql.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.gson.Gson;
 
 import java.sql.Connection;
@@ -41,7 +42,7 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
                         messages.add( new OfflineMessage(
                                 rs.getLong( "id" ),
                                 rs.getString( "message" ),
-                                GSON.fromJson( rs.getString( "parameters" ), Object[].class )
+                                MessagePlaceholders.fromArray( GSON.fromJson( rs.getString( "parameters" ), Object[].class ) )
                         ) );
                     }
                 }
@@ -67,7 +68,7 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
             {
                 pstmt.setString( 1, username );
                 pstmt.setString( 2, message.getLanguagePath() );
-                pstmt.setString( 3, GSON.toJson( message.getPlaceholders() ) );
+                pstmt.setString( 3, GSON.toJson( message.getPlaceholders().getMessagePlaceholders().asArray() ) );
                 pstmt.setBoolean( 4, true );
 
                 pstmt.execute();

@@ -3,6 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.utils.ItemUtils;
 import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -53,7 +55,12 @@ public class GuiConfigItemStack
         this.customModelData = section.exists( "custom-model-data" ) ? section.getInteger( "custom-model-data" ) : null;
     }
 
-    public ItemStack buildItem( final User user, final Object... placeholders )
+    public ItemStack buildItem( final User user )
+    {
+        return this.buildItem( user, MessagePlaceholders.empty() );
+    }
+
+    public ItemStack buildItem( final User user, final HasMessagePlaceholders placeholders )
     {
         if ( this.itemType == null || this.itemType == ItemType.AIR )
         {

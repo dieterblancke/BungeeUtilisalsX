@@ -2,6 +2,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.language;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Data;
@@ -17,7 +19,7 @@ public class LanguageConfig
     private final Language language;
     private final IConfiguration config;
 
-    public String buildLangMessage( final String path, final Object... placeholders )
+    public String buildLangMessage( final String path, final HasMessagePlaceholders placeholders )
     {
         return this.buildLangMessage( path, null, null, placeholders );
     }
@@ -26,7 +28,7 @@ public class LanguageConfig
             final String path,
             final Function<String, String> prePlaceholderFormatter,
             final Function<String, String> postPlaceholderFormatter,
-            final Object... placeholders )
+            final HasMessagePlaceholders placeholders )
     {
         if ( !config.exists( path ) )
         {
@@ -85,10 +87,10 @@ public class LanguageConfig
 
     public void sendLangMessage( final User user, final boolean prefix, final String path )
     {
-        this.sendLangMessage( user, prefix, path, new Object[0] );
+        this.sendLangMessage( user, prefix, path, MessagePlaceholders.empty() );
     }
 
-    public void sendLangMessage( final User user, final String path, final Object... placeholders )
+    public void sendLangMessage( final User user, final String path, final HasMessagePlaceholders placeholders )
     {
         this.sendLangMessage( user, true, path, placeholders );
     }
@@ -96,7 +98,7 @@ public class LanguageConfig
     public void sendLangMessage( final User user,
                                  final boolean prefix,
                                  final String path,
-                                 final Object... placeholders )
+                                 final HasMessagePlaceholders placeholders )
     {
         this.sendLangMessage( user, path, prefix, null, null, placeholders );
     }
@@ -106,7 +108,7 @@ public class LanguageConfig
                                  boolean prefix,
                                  Function<String, String> prePlaceholderFormatter,
                                  Function<String, String> postPlaceholderFormatter,
-                                 Object... placeholders )
+                                 HasMessagePlaceholders placeholders )
     {
         if ( config.isSection( path ) )
         {

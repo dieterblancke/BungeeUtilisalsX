@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.*;
 import java.util.regex.Matcher;
@@ -45,20 +46,21 @@ public class DomainsListSubCommandCall implements CommandCall
                         this.addDomain( domains, domainLists, domain, amount );
                     } );
 
-                    user.sendLangMessage( "general-commands.domains.list.header", "{total}", domains.size() );
+                    user.sendLangMessage( "general-commands.domains.list.header", MessagePlaceholders.create().append( "total", domains.size() ) );
 
                     domains.entrySet().stream()
                             .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
                             .forEach( entry ->
                                     user.sendLangMessage(
                                             "general-commands.domains.list.format",
-                                            "{domain}", entry.getKey(),
-                                            "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ),
-                                            "{total}", entry.getValue()
+                                            MessagePlaceholders.create()
+                                                    .append( "domain", entry.getKey() )
+                                                    .append( "online", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
+                                                    .append( "total", entry.getValue() )
                                     )
                             );
 
-                    user.sendLangMessage( "general-commands.domains.list.footer", "{total}", domains.size() );
+                    user.sendLangMessage( "general-commands.domains.list.footer", MessagePlaceholders.create().append( "total", domains.size() ) );
                 } );
     }
 

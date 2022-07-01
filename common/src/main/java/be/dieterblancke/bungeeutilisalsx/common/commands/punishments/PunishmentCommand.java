@@ -176,7 +176,7 @@ public abstract class PunishmentCommand implements CommandCall
                 info.getType().isIP(),
                 storage.getIp(),
                 path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
                 info.getType(),
                 info.getReason()
         ) );
@@ -190,7 +190,7 @@ public abstract class PunishmentCommand implements CommandCall
                 info.getType().isIP(),
                 storage.getIp(),
                 path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
                 info.getType(),
                 info.getReason()
         ) );

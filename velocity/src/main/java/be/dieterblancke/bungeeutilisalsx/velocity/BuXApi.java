@@ -14,6 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelpe
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.bossbar.BossBar;
 import be.dieterblancke.bungeeutilisalsx.velocity.user.VelocityConsoleUser;
@@ -128,15 +129,15 @@ public class BuXApi implements IBuXApi
     }
 
     @Override
-    public void langBroadcast( final String message, final Object... placeholders )
+    public void langBroadcast( final String message, final HasMessagePlaceholders placeholders )
     {
-        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, "", placeholders ) );
+        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, "", placeholders.getMessagePlaceholders() ) );
     }
 
     @Override
-    public void langPermissionBroadcast( final String message, final String permission, final Object... placeholders )
+    public void langPermissionBroadcast( final String message, final String permission, final HasMessagePlaceholders placeholders )
     {
-        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, permission, placeholders ) );
+        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, permission, placeholders.getMessagePlaceholders() ) );
     }
 
     @Override
