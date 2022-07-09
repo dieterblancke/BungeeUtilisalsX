@@ -11,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.ChatSyncConfig.ChatSyncedServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Optional;
 
@@ -40,7 +41,8 @@ public class ChatSyncExecutor implements EventExecutor
                     chatSyncedServer.format(),
                     str -> PlaceHolderAPI.formatMessage( user, str ),
                     null,
-                    "{message}", event.getMessage()
+                    MessagePlaceholders.create()
+                            .append( "message", event.getMessage() )
             );
 
             BuX.getInstance().getJobManager().executeJob( new ChatSyncJob(

@@ -68,23 +68,20 @@ public class UnmuteIPCommandCall extends PunishmentCommand
 
         punishmentRemovalArgs.removeCachedMute();
 
-        user.sendLangMessage( "punishments.unmuteip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+        user.sendLangMessage( "punishments.unmuteip.executed", executor.getPlaceHolders( info ) );
 
         if ( !parameters.contains( "-s" ) )
         {
             if ( parameters.contains( "-nbp" ) )
             {
-                BuX.getApi().langBroadcast(
-                        "punishments.unmuteip.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
-                );
+                BuX.getApi().langBroadcast( "punishments.unmuteip.broadcast", executor.getPlaceHolders( info ) );
             }
             else
             {
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unmuteip.broadcast",
                         ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmuteip.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
         }

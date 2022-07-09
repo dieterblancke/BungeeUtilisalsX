@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -42,7 +43,10 @@ public class ClearChatCommandCall implements CommandCall, TabCall
             user.sendMessage( Utils.format( "&e  " ) );
         }
 
-        user.sendLangMessage( "general-commands.clearchat.cleared", "{user}", by );
+        user.sendLangMessage(
+                "general-commands.clearchat.cleared",
+                MessagePlaceholders.create().append( "user", by )
+        );
     }
 
     @Override

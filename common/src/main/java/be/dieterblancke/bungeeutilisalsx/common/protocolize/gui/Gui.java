@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
 import com.google.common.collect.Lists;
 import dev.simplix.protocolize.api.inventory.Inventory;
@@ -107,8 +108,9 @@ public class Gui
         inventory = new Inventory( InventoryType.valueOf( "GENERIC_9X" + rows ) );
         inventory.title( BuX.getInstance().proxyOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
                 title,
-                "{page}", page,
-                "{max}", pageableItemProvider.getPageAmount()
+                MessagePlaceholders.create()
+                        .append( "page", page )
+                        .append( "max", pageableItemProvider.getPageAmount() )
         ) ) ) );
         inventory.onClick( this::handleInventoryClick );
 

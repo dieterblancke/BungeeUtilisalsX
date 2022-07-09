@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserFriendPrivateMe
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -30,7 +31,10 @@ public class FriendReplySubCommandCall implements CommandCall
         final String name = user.getStorage().getData( UserStorageKey.FRIEND_MSG_LAST_USER );
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
-            user.sendLangMessage( "friends.reply.not-friend", "{user}", name );
+            user.sendLangMessage(
+                    "friends.reply.not-friend",
+                    MessagePlaceholders.create().append( "user", name )
+            );
             return;
         }
 

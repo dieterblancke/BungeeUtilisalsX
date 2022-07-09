@@ -29,7 +29,7 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                     storage.getUserName(),
                     "friends.removerequest.request-removed",
-                    user
+                    user.getMessagePlaceholders()
             ) );
         }
     }

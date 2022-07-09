@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -54,7 +55,9 @@ public class CheckIpCommandCall implements CommandCall
 
             user.sendLangMessage(
                     "punishments.checkip.head",
-                    "{user}", storage.getUserName(), "{ip}", storage.getIp()
+                    MessagePlaceholders.create()
+                            .append( "user", storage.getUserName() )
+                            .append( "ip", storage.getIp() )
             );
 
             final List<String> users = userDao.getUsersOnIP( storage.getIp() ).join();
@@ -87,14 +90,17 @@ public class CheckIpCommandCall implements CommandCall
 
             user.sendLangMessage(
                     "punishments.checkip.format.message",
-                    "{players}", Utils.formatList(
-                            formattedUsers, user.getLanguageConfig().getConfig().getString( "punishments.checkip.format.separator" )
-                    )
+                    MessagePlaceholders.create()
+                            .append( "players", Utils.formatList(
+                                    formattedUsers, user.getLanguageConfig().getConfig().getString( "punishments.checkip.format.separator" )
+                            ) )
             );
 
             user.sendLangMessage(
                     "punishments.checkip.foot",
-                    "{user}", storage.getUserName(), "{ip}", storage.getIp()
+                    MessagePlaceholders.create()
+                            .append( "user", storage.getUserName() )
+                            .append( "ip", storage.getIp() )
             );
         } );
     }
