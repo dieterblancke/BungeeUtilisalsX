@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.UserDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -49,31 +50,46 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                     return;
                 }
 
+                MessagePlaceholders placeholders = MessagePlaceholders.create()
+                        .append( "user", name );
+
                 if ( action.equalsIgnoreCase( "remove" ) )
                 {
                     if ( user.getStorage().getIgnoredUsers().stream().noneMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
                     {
-                        user.sendLangMessage( "general-commands.ignore.remove.not-ignored", "{user}", name );
+                        user.sendLangMessage(
+                                "general-commands.ignore.remove.not-ignored",
+                                placeholders
+                        );
                         return;
                     }
 
                     BuX.getApi().getStorageManager().getDao().getUserDao().unignoreUser( user.getUuid(), storage.getUuid() );
                     user.getStorage().getIgnoredUsers().removeIf( ignored -> ignored.equalsIgnoreCase( name ) );
 
-                    user.sendLangMessage( "general-commands.ignore.remove.unignored", "{user}", name );
+                    user.sendLangMessage(
+                            "general-commands.ignore.remove.unignored",
+                            placeholders
+                    );
                 }
                 else
                 {
                     if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
                     {
-                        user.sendLangMessage( "general-commands.ignore.add.already-ignored", "{user}", name );
+                        user.sendLangMessage(
+                                "general-commands.ignore.add.already-ignored",
+                                placeholders
+                        );
                         return;
                     }
 
                     BuX.getApi().getStorageManager().getDao().getUserDao().ignoreUser( user.getUuid(), storage.getUuid() );
                     user.getStorage().getIgnoredUsers().add( storage.getUserName() );
 
-                    user.sendLangMessage( "general-commands.ignore.add.ignored", "{user}", name );
+                    user.sendLangMessage(
+                            "general-commands.ignore.add.ignored",
+                            placeholders
+                    );
                 }
             } );
         }
@@ -87,11 +103,11 @@ public class IgnoreCommandCall implements CommandCall, TabCall
             {
                 user.sendLangMessage(
                         "general-commands.ignore.list.message",
-                        "{ignoredusers}",
-                        String.join(
-                                user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
-                                user.getStorage().getIgnoredUsers()
-                        )
+                        MessagePlaceholders.create()
+                                .append( "{ignoredusers}", String.join(
+                                        user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
+                                        user.getStorage().getIgnoredUsers()
+                                ) )
                 );
             }
         }

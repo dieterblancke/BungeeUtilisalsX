@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,7 +20,7 @@ public class PartyLeaveSubCommandCall implements CommandCall
                 .filter( member -> member.getUuid().equals( user.getUuid() ) )
                 .findFirst();
 
-        if ( !optionalPartyMember.isPresent() )
+        if ( optionalPartyMember.isEmpty() )
         {
             return;
         }
@@ -32,12 +33,14 @@ public class PartyLeaveSubCommandCall implements CommandCall
 
         user.sendLangMessage(
                 "party.leave.left",
-                "{party-owner}", party.getOwner().getUserName()
+                MessagePlaceholders.create()
+                        .append( "party-owner", party.getOwner().getUserName() )
         );
         BuX.getInstance().getPartyManager().languageBroadcastToParty(
                 party,
                 "party.leave.left-broadcast",
-                "{user}", user.getName()
+                MessagePlaceholders.create()
+                        .append( "user", user.getName() )
         );
 
         if ( partyMember.isPartyOwner() && !party.isOwner( user.getUuid() ) )
@@ -45,8 +48,9 @@ public class PartyLeaveSubCommandCall implements CommandCall
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                     party,
                     "party.leave.owner-left-broadcast",
-                    "{party-old-owner}", user.getName(),
-                    "{party-owner}", party.getOwner().getUserName()
+                    MessagePlaceholders.create()
+                            .append( "party-old-owner", user.getName() )
+                            .append( "{party-owner}", party.getOwner().getUserName() )
             );
         }
     }
@@ -56,7 +60,7 @@ public class PartyLeaveSubCommandCall implements CommandCall
     {
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;

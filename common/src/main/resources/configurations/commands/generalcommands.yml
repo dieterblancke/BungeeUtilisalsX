@@ -44,9 +44,9 @@ glist:
       - 'Skyblock'
       - 'SkyWars'
   total:
-    text: '<yellow>There is / are <red>%total% <yellow>player(s) online now!'
+    text: '<yellow>There is / are <red>{total} <yellow>player(s) online now!'
     hover:
-      - '%playerlist%'
+      - '{playerlist}'
 announce:
   enabled: true
   name: announce

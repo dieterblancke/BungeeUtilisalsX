@@ -68,13 +68,20 @@ public class MessagePlaceholders implements HasMessagePlaceholders
     {
         for ( Map.Entry<String, Supplier<Object>> entry : placeHolders.entrySet() )
         {
-            final String key = !entry.getKey().startsWith( "{" ) && !entry.getKey().endsWith( "}" )
-                    ? "{" + entry.getKey() + "}"
-                    : entry.getKey();
-
-            if ( input.contains( key ) )
+            if ( !entry.getKey().startsWith( "{" ) && !entry.getKey().endsWith( "}" ) )
             {
-                input = input.replace( key, String.valueOf( entry.getValue().get() ) );
+                if ( input.contains( "{" + entry.getKey() + "}" ) )
+                {
+                    input = input.replace( "{" + entry.getKey() + "}", String.valueOf( entry.getValue().get() ) );
+                }
+                if ( input.contains( "%" + entry.getKey() + "%" ) )
+                {
+                    input = input.replace( "%" + entry.getKey() + "%", String.valueOf( entry.getValue().get() ) );
+                }
+            }
+            else
+            {
+                input = input.replace( entry.getKey(), String.valueOf( entry.getValue().get() ) );
             }
         }
 

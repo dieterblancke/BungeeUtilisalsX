@@ -53,7 +53,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
             // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
             super.attemptKick( storage, "punishments.iptempban.kick", info );
 
-            user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+            user.sendLangMessage( "punishments.iptempban.executed", executor.getPlaceHolders( info ) );
 
             if ( !parameters.contains( "-s" ) )
             {
@@ -61,7 +61,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
                 {
                     BuX.getApi().langBroadcast(
                             "punishments.iptempban.broadcast",
-                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                            executor.getPlaceHolders( info )
                     );
                 }
                 else
@@ -69,7 +69,7 @@ public class IPTempBanCommandCall extends PunishmentCommand
                     BuX.getApi().langPermissionBroadcast(
                             "punishments.iptempban.broadcast",
                             ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.iptempban.broadcast" ),
-                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                            executor.getPlaceHolders( info )
                     );
                 }
             }

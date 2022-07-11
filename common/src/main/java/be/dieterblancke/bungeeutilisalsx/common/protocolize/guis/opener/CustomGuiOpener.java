@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.opener;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.Gui;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.GuiOpener;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfig;
@@ -35,7 +36,7 @@ public class CustomGuiOpener extends GuiOpener
 
         if ( !new File( BuX.getInstance().getDataFolder(), fileLocation ).exists() )
         {
-            user.sendLangMessage( "general-commands.opengui.gui-not-found", "{gui}", guiName );
+            user.sendLangMessage( "general-commands.opengui.gui-not-found", MessagePlaceholders.create().append( "gui", guiName ) );
             return;
         }
 
