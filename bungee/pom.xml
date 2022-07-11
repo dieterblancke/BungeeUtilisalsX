@@ -49,9 +49,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>com.imaginarycode.minecraft</groupId>
-            <artifactId>RedisBungee</artifactId>
-            <version>0.5</version>
+            <groupId>com.github.limework.redisbungee</groupId>
+            <artifactId>RedisBungee-Bungee</artifactId>
+            <version>0.7.3</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

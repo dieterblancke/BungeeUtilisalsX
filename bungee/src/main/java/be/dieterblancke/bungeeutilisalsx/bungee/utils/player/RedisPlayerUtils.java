@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
-import com.imaginarycode.minecraft.redisbungee.RedisBungee;
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -19,7 +19,7 @@ public class RedisPlayerUtils implements IPlayerUtils
     {
         final ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
 
-        return info == null ? 0 : RedisBungee.getApi().getPlayersOnServer( server ).size();
+        return info == null ? 0 : RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).size();
     }
 
     @Override
@@ -30,8 +30,8 @@ public class RedisPlayerUtils implements IPlayerUtils
 
         if ( info != null )
         {
-            RedisBungee.getApi().getPlayersOnServer( server ).forEach( uuid ->
-                    players.add( RedisBungee.getApi().getNameFromUuid( uuid ) ) );
+            RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).forEach( uuid ->
+                    players.add( RedisBungeeAPI.getRedisBungeeApi().getNameFromUuid( uuid ) ) );
         }
 
         return players;
@@ -40,7 +40,7 @@ public class RedisPlayerUtils implements IPlayerUtils
     @Override
     public int getTotalCount()
     {
-        return RedisBungee.getApi().getPlayerCount();
+        return RedisBungeeAPI.getRedisBungeeApi().getPlayerCount();
     }
 
     @Override
@@ -48,7 +48,7 @@ public class RedisPlayerUtils implements IPlayerUtils
     {
         final List<String> players = Lists.newArrayList();
 
-        RedisBungee.getApi().getPlayersOnline().forEach( uuid -> players.add( RedisBungee.getApi().getNameFromUuid( uuid ) ) );
+        RedisBungeeAPI.getRedisBungeeApi().getPlayersOnline().forEach( uuid -> players.add( RedisBungeeAPI.getRedisBungeeApi().getNameFromUuid( uuid ) ) );
 
         return players;
     }
@@ -56,11 +56,11 @@ public class RedisPlayerUtils implements IPlayerUtils
     @Override
     public IProxyServer findPlayer( String name )
     {
-        final UUID uuid = RedisBungee.getApi().getUuidFromName( name );
+        final UUID uuid = RedisBungeeAPI.getRedisBungeeApi().getUuidFromName( name );
 
-        if ( RedisBungee.getApi().isPlayerOnline( uuid ) )
+        if ( RedisBungeeAPI.getRedisBungeeApi().isPlayerOnline( uuid ) )
         {
-            return BuX.getInstance().proxyOperations().getServerInfo( RedisBungee.getApi().getServerFor( uuid ).getName() );
+            return BuX.getInstance().proxyOperations().getServerInfo( RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ) );
         }
 
         return null;
@@ -69,18 +69,18 @@ public class RedisPlayerUtils implements IPlayerUtils
     @Override
     public boolean isOnline( String name )
     {
-        final UUID uuid = RedisBungee.getApi().getUuidFromName( name );
+        final UUID uuid = RedisBungeeAPI.getRedisBungeeApi().getUuidFromName( name );
 
         if ( uuid == null )
         {
             return false;
         }
-        return RedisBungee.getApi().isPlayerOnline( uuid );
+        return RedisBungeeAPI.getRedisBungeeApi().isPlayerOnline( uuid );
     }
 
     @Override
     public UUID getUuidNoFallback( String targetName )
     {
-        return RedisBungee.getApi().getUuidFromName( targetName, false );
+        return RedisBungeeAPI.getRedisBungeeApi().getUuidFromName( targetName, false );
     }
 }
