@@ -156,6 +156,7 @@ general-commands:
       usage: '<yellow>Please use <aqua>/report create (target) (reason)<yellow>!'
       created: '<yellow>You have successfully reported <aqua>{target}<yellow>!'
       bypassed: '<yellow>You cannot report staff members!'
+      self-report: '<yellow>You cannot report yourself!'
 
       broadcast:
         - '<aqua>{target} <yellow>has been reported by <aqua>{user}<yellow>!'
