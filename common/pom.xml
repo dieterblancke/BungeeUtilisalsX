@@ -79,7 +79,7 @@
         <dependency>
             <groupId>io.github.karlatemp</groupId>
             <artifactId>unsafe-accessor</artifactId>
-            <version>1.6.0</version>
+            <version>1.7.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
