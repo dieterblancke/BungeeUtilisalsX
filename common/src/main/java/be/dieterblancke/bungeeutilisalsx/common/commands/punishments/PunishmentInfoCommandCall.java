@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -152,15 +153,16 @@ public class PunishmentInfoCommandCall implements CommandCall
         {
             user.sendLangMessage(
                     "punishments.punishmentinfo.typeinfo.found",
-                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[0] )
+                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
             );
         }
         else
         {
             user.sendLangMessage(
                     "punishments.punishmentinfo.typeinfo.notfound",
-                    "{user}", storage.getUserName(),
-                    "{type}", type.toString().toLowerCase()
+                    MessagePlaceholders.create()
+                            .append( "user", storage.getUserName() )
+                            .append( "type", type.toString().toLowerCase() )
             );
         }
     }

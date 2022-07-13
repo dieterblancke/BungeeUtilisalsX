@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -62,17 +63,17 @@ public class FriendListSubCommandCall implements CommandCall
                 maxNumber = allFriends.size();
             }
 
-            final List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
-            user.sendLangMessage(
-                    "friends.list.head",
-                    "{friendAmount}", allFriends.size(),
-                    "{maxFriends}", friendLimit,
-                    "{pendingFriends}", pendingRequests,
-                    "{previousPage}", previous,
-                    "{currentPage}", page,
-                    "{nextPage}", next,
-                    "{maxPages}", pages
-            );
+            MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
+                    .append( "friendAmount", allFriends.size() )
+                    .append( "maxFriends", friendLimit )
+                    .append( "pendingFriends", pendingRequests )
+                    .append( "previousPage", previous )
+                    .append( "currentPage", page )
+                    .append( "nextPage", next )
+                    .append( "maxPages", pages );
+
+            List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
+            user.sendLangMessage( "friends.list.head", messagePlaceholders );
 
             final String now = user.getLanguageConfig().getConfig().getString( "friends.list.online" );
             final String onlineText = user.getLanguageConfig().getConfig().getString( "friends.list.status.online" );
@@ -82,22 +83,14 @@ public class FriendListSubCommandCall implements CommandCall
             {
                 user.sendLangMessage(
                         "friends.list.format",
-                        "{friendName}", friend.getFriend(),
-                        "{lastOnline}", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ),
-                        "{online}", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText,
-                        "{friendSince}", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() )
+                        MessagePlaceholders.create()
+                                .append( "friendName", friend.getFriend() )
+                                .append( "lastOnline", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ) )
+                                .append( "online", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText )
+                                .append( "friendSince", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() ) )
                 );
             }
-            user.sendLangMessage(
-                    "friends.list.foot",
-                    "{friendAmount}", allFriends.size(),
-                    "{maxFriends}", friendLimit,
-                    "{pendingFriends}", pendingRequests,
-                    "{previousPage}", previous,
-                    "{currentPage}", page,
-                    "{nextPage}", next,
-                    "{maxPages}", pages
-            );
+            user.sendLangMessage( "friends.list.foot", messagePlaceholders );
         } );
     }
 

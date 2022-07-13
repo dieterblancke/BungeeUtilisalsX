@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserGetPingJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -25,7 +26,7 @@ public class PingCommandCall implements CommandCall
                     && !permission.isEmpty()
                     && !user.hasPermission( permission ) )
             {
-                user.sendLangMessage( "no-permission", "%permission%", permission );
+                user.sendLangMessage( "no-permission", MessagePlaceholders.create().append( "permission", permission ) );
                 return;
             }
 

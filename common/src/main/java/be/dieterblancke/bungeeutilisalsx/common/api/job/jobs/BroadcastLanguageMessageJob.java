@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import lombok.Getter;
 import lombok.Setter;

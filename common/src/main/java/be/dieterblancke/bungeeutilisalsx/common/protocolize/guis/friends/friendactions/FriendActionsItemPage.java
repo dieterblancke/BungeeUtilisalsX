@@ -26,7 +26,7 @@ public class FriendActionsItemPage extends ItemPage
                 .map( IProxyServer::getName ).orElse( null );
 
         final MessagePlaceholders placeholders = MessagePlaceholders.create()
-                .append( "friend-name" , friendData.getFriend())
+                .append( "friend-name", friendData.getFriend() )
                 .append( "last-online", Utils.formatDate( friendData.getLastOnline() ) )
                 .append( "server", currentServer == null ? "Unknown" : currentServer );
 

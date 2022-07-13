@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
@@ -81,7 +82,7 @@ public class StaffCommandCall implements CommandCall
                 .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .collect( Collectors.toCollection( Lists::newLinkedList ) );
 
-        user.sendLangMessage( "general-commands.staff.head", "{total}", staffUsers.size() );
+        user.sendLangMessage( "general-commands.staff.head", MessagePlaceholders.create().append( "total", staffUsers.size() ) );
 
         for ( StaffRankData rank : onlineStaffRanks )
         {
@@ -89,9 +90,10 @@ public class StaffCommandCall implements CommandCall
             final Component component = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
-                    "{rank_displayname}", rank.getDisplay(),
-                    "{amount_online}", users.size(),
-                    "{total}", staffUsers.size()
+                    MessagePlaceholders.create()
+                            .append( "rank_displayname", rank.getDisplay() )
+                            .append( "amount_online", users.size() )
+                            .append( "total", staffUsers.size() )
             );
 
             final List<TextComponent> components = findUsersComponents( component );
@@ -111,13 +113,14 @@ public class StaffCommandCall implements CommandCall
                     c = c.append( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
-                            "{username}", u.getName(),
-                            "{server}", info == null ? "Unknown" : info.getName()
+                            MessagePlaceholders.create()
+                                    .append( "username", u.getName() )
+                                    .append( "server", info == null ? "Unknown" : info.getName() )
                     ) );
 
                     if ( userIt.hasNext() )
                     {
-                        c = c.append( Utils.format( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator" ) ) );
+                        c = c.append( Utils.format( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator", MessagePlaceholders.empty() ) ) );
                     }
                 }
             }
@@ -125,7 +128,7 @@ public class StaffCommandCall implements CommandCall
             user.sendMessage( component );
         }
 
-        user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
+        user.sendLangMessage( "general-commands.staff.foot", MessagePlaceholders.create().append( "total", staffUsers.size() ) );
     }
 
     @Override
@@ -150,7 +153,7 @@ public class StaffCommandCall implements CommandCall
 
         for ( TextComponent c : components )
         {
-            if ( c.children() != null && !c.children().isEmpty() )
+            if ( !c.children().isEmpty() )
             {
                 finalComponents.addAll( findUsersComponents( c ) );
             }

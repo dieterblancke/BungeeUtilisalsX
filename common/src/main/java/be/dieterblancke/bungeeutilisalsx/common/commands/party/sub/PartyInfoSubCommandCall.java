@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,12 +29,13 @@ public class PartyInfoSubCommandCall implements CommandCall
 
         user.sendLangMessage(
                 "party.info",
-                "{party-owner}", party.getOwner().getNickName(),
-                "{party-created-at}", Utils.formatDate( party.getCreatedAt(), user.getLanguageConfig().getConfig() ),
-                "{party-member-count}", party.getPartyMembers().size(),
-                "{party-member-list}", party.getPartyMembers().stream().map( PartyMember::getNickName ).collect( Collectors.joining( ", " ) ),
-                "{party-invitation-count}", party.getSentInvites().size(),
-                "{party-joinrequest-count}", party.getJoinRequests().size()
+                MessagePlaceholders.create()
+                        .append( "party-owner", party.getOwner().getNickName() )
+                        .append( "party-created-at", Utils.formatDate( party.getCreatedAt(), user.getLanguageConfig().getConfig() ) )
+                        .append( "party-member-count", party.getPartyMembers().size() )
+                        .append( "party-member-list", party.getPartyMembers().stream().map( PartyMember::getNickName ).collect( Collectors.joining( ", " ) ) )
+                        .append( "party-invitation-count", party.getSentInvites().size() )
+                        .append( "party-joinrequest-count", party.getJoinRequests().size() )
         );
     }
 

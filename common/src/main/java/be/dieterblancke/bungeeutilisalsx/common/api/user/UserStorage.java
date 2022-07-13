@@ -95,6 +95,6 @@ public class UserStorage implements HasMessagePlaceholders
                 .append( "uuid", uuid )
                 .append( "user", userName )
                 .append( "ip", ip )
-                .append( "language", Optional.ofNullable(language).map( Language::getName ).orElse( "" ) );
+                .append( "language", Optional.ofNullable( language ).map( Language::getName ).orElse( "" ) );
     }
 }

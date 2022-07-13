@@ -25,7 +25,7 @@ public class ServerGroupsConfig extends Config
 
     public Optional<ServerGroup> getServer( final String server )
     {
-        return Optional.ofNullable(servers.get( server ));
+        return Optional.ofNullable( servers.get( server ) );
     }
 
     @Override

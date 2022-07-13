@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -36,14 +37,13 @@ public class StaffHistoryCommandCall implements CommandCall
             {
                 user.sendLangMessage(
                         "punishments.staffhistory.no-punishments",
-                        "{user}", username,
-                        "{type}", action
+                        MessagePlaceholders.create()
+                                .append( "user", username )
+                                .append( "type", action )
                 );
                 return;
             }
-            int page = args.size() > 2
-                    ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
-                    : 1;
+            int page = args.size() > 2 ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 ) : 1;
             final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
 
             if ( page > pages )
@@ -62,30 +62,25 @@ public class StaffHistoryCommandCall implements CommandCall
                 maxNumber = allPunishments.size();
             }
 
-            final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
-            user.sendLangMessage(
-                    "punishments.staffhistory.head",
-                    "{previousPage}", previous,
-                    "{currentPage}", page,
-                    "{nextPage}", next,
-                    "{maxPages}", pages,
-                    "{type}", action,
-                    "{user}", username
-            );
+            MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
+                    .append( "previousPage", previous )
+                    .append( "currentPage", page )
+                    .append( "nextPage", next )
+                    .append( "maxPages", pages )
+                    .append( "type", action )
+                    .append( "user", username )
+                    .append( "punishmentAmount", allPunishments.size() );
+
+            List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
+            user.sendLangMessage( "punishments.staffhistory.head", messagePlaceholders );
 
             punishments.forEach( punishment ->
                     user.sendLangMessage(
                             "punishments.staffhistory.format",
-                            BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
+                            BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment )
                     )
             );
-            user.sendLangMessage(
-                    "punishments.staffhistory.foot",
-                    "{punishmentAmount}", allPunishments.size(),
-                    "{user}", username,
-                    "{type}", action,
-                    "{user}", username
-            );
+            user.sendLangMessage( "punishments.staffhistory.foot", messagePlaceholders );
         } );
     }
 

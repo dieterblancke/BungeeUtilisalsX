@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -35,9 +36,10 @@ public class ShoutCommandCall implements CommandCall
 
         BuX.getApi().langBroadcast(
                 shoutMessagePath,
-                "{user}", user.getName(),
-                "{servername}", user.getServerName(),
-                "{message}", message
+                MessagePlaceholders.create()
+                        .append( "user", user.getName() )
+                        .append( "servername", user.getServerName() )
+                        .append( "message", message )
         );
     }
 

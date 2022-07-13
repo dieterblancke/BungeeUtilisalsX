@@ -5,10 +5,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
+import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.PunishmentDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.Collection;
@@ -57,14 +59,13 @@ public class PunishmentHistoryCommandCall implements CommandCall
                         {
                             user.sendLangMessage(
                                     "punishments.punishmenthistory.no-punishments",
-                                    "{user}", username,
-                                    "{type}", action
+                                    MessagePlaceholders.create()
+                                            .append( "user", username )
+                                            .append( "type", action )
                             );
                             return;
                         }
-                        int page = args.size() > 2
-                                ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 )
-                                : 1;
+                        int page = args.size() > 2 ? ( MathUtils.isInteger( args.get( 2 ) ) ? Integer.parseInt( args.get( 2 ) ) : 1 ) : 1;
                         final int pages = (int) Math.ceil( (double) allPunishments.size() / 10 );
 
                         if ( page > pages )
@@ -83,28 +84,24 @@ public class PunishmentHistoryCommandCall implements CommandCall
                             maxNumber = allPunishments.size();
                         }
 
-                        final List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
-                        user.sendLangMessage(
-                                "punishments.punishmenthistory.head",
-                                "{previousPage}", previous,
-                                "{currentPage}", page,
-                                "{nextPage}", next,
-                                "{maxPages}", pages,
-                                "{type}", action
-                        );
+                        MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
+                                .append( "{previousPage}", previous )
+                                .append( "{currentPage}", page )
+                                .append( "{nextPage}", next )
+                                .append( "{maxPages}", pages )
+                                .append( "{type}", action )
+                                .append( "{punishmentAmount}", allPunishments.size() )
+                                .append( "{user}", username );
+                        List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
+                        user.sendLangMessage( "punishments.punishmenthistory.head", messagePlaceholders );
 
                         punishments.forEach( punishment ->
                                 user.sendLangMessage(
                                         "punishments.punishmenthistory.format",
-                                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment ).toArray( new Object[0] )
+                                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment )
                                 )
                         );
-                        user.sendLangMessage(
-                                "punishments.punishmenthistory.foot",
-                                "{punishmentAmount}", allPunishments.size(),
-                                "{user}", username,
-                                "{type}", action
-                        );
+                        user.sendLangMessage( "punishments.punishmenthistory.foot", messagePlaceholders );
                     } );
         } );
     }
@@ -146,40 +143,22 @@ public class PunishmentHistoryCommandCall implements CommandCall
 
     private CompletableFuture<List<PunishmentInfo>> listPunishments( final UserStorage storage, final PunishmentType type )
     {
-        final Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
-        final Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
+        Predicate<PunishmentInfo> permanentFilter = punishment -> !punishment.isTemporary();
+        Predicate<PunishmentInfo> temporaryFilter = PunishmentInfo::isTemporary;
+        PunishmentDao punishmentDao = BuX.getApi().getStorageManager().getDao().getPunishmentDao();
 
-        switch ( type )
-        {
-            default:
-            case BAN:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
-                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
-            case TEMPBAN:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBans( storage.getUuid() )
-                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
-            case IPBAN:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
-                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
-            case IPTEMPBAN:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getIPBans( storage.getIp() )
-                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
-            case MUTE:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
-                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
-            case TEMPMUTE:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutes( storage.getUuid() )
-                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
-            case IPMUTE:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
-                        .thenApply( it -> it.stream().filter( permanentFilter ).toList() );
-            case IPTEMPMUTE:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getIPMutes( storage.getIp() )
-                        .thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
-            case KICK:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( storage.getUuid() );
-            case WARN:
-                return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns( storage.getUuid() );
-        }
+        return switch ( type )
+                {
+                    case BAN -> punishmentDao.getBansDao().getBans( storage.getUuid() ).thenApply( it -> it.stream().filter( permanentFilter ).toList() );
+                    case TEMPBAN -> punishmentDao.getBansDao().getBans( storage.getUuid() ).thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
+                    case IPBAN -> punishmentDao.getBansDao().getIPBans( storage.getIp() ).thenApply( it -> it.stream().filter( permanentFilter ).toList() );
+                    case IPTEMPBAN -> punishmentDao.getBansDao().getIPBans( storage.getIp() ).thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
+                    case MUTE -> punishmentDao.getMutesDao().getMutes( storage.getUuid() ).thenApply( it -> it.stream().filter( permanentFilter ).toList() );
+                    case TEMPMUTE -> punishmentDao.getMutesDao().getMutes( storage.getUuid() ).thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
+                    case IPMUTE -> punishmentDao.getMutesDao().getIPMutes( storage.getIp() ).thenApply( it -> it.stream().filter( permanentFilter ).toList() );
+                    case IPTEMPMUTE -> punishmentDao.getMutesDao().getIPMutes( storage.getIp() ).thenApply( it -> it.stream().filter( temporaryFilter ).toList() );
+                    case KICK -> punishmentDao.getKickAndWarnDao().getKicks( storage.getUuid() );
+                    case WARN -> punishmentDao.getKickAndWarnDao().getWarns( storage.getUuid() );
+                };
     }
 }

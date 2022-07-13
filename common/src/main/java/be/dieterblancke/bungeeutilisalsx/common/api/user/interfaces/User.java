@@ -490,7 +490,8 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
     Audience asAudience();
 
     @Override
-    default MessagePlaceholders getMessagePlaceholders() {
+    default MessagePlaceholders getMessagePlaceholders()
+    {
         return this.getStorage().getMessagePlaceholders();
     }
 }

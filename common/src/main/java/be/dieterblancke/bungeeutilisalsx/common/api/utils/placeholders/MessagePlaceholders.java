@@ -9,7 +9,6 @@ import java.util.function.Supplier;
 public class MessagePlaceholders implements HasMessagePlaceholders
 {
 
-    // TODO: look to use HasMessagePlaceholders and replace current placeholders with this class implementation
     private static final MessagePlaceholders EMPTY = new MessagePlaceholders()
     {
         @Override

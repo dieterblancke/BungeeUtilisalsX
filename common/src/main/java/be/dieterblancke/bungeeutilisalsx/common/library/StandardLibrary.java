@@ -1,7 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.library;
 
 import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.configuration.api.IConfiguration;
 import lombok.Getter;
 import me.lucko.jarrelocator.Relocation;

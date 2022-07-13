@@ -82,6 +82,7 @@ public class ReportListSubCommandCall implements CommandCall
                         MessagePlaceholders.create()
                                 .append( "page", e.getPage() )
                                 .append( "maxpages", e.getMaxPages() )
+                                .append( "maxPages", e.getMaxPages() )
                 );
             }
         } );

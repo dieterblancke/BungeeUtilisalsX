@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,7 +26,7 @@ public class PartyKickSubCommandCall implements CommandCall
         }
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;
@@ -51,7 +52,8 @@ public class PartyKickSubCommandCall implements CommandCall
                     {
                         user.sendLangMessage(
                                 "party.kick.cannot-kick",
-                                "{user}", member.getUserName()
+                                MessagePlaceholders.create()
+                                        .append( "user", member.getUserName() )
                         );
                         return;
                     }
@@ -60,20 +62,23 @@ public class PartyKickSubCommandCall implements CommandCall
 
                     user.sendLangMessage(
                             "party.kick.kick",
-                            "{kickedUser}", member.getUserName()
+                            MessagePlaceholders.create()
+                                    .append( "kickedUser", member.getUserName() )
                     );
 
                     BuX.getInstance().getPartyManager().languageBroadcastToParty(
                             party,
                             "party.kick.kicked-broadcast",
-                            "{kickedUser}", member.getUserName(),
-                            "{user}", user.getName()
+                            MessagePlaceholders.create()
+                                    .append( "kickedUser", member.getUserName() )
+                                    .append( "user", user.getName() )
                     );
 
                     BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                             member.getUuid(),
                             "party.kick.kicked",
-                            "{user}", user.getName()
+                            MessagePlaceholders.create()
+                                    .append( "user", user.getName() )
                     ) );
                 }, () -> user.sendLangMessage( "party.kick.not-in-party" ) );
     }

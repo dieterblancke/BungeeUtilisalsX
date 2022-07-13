@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageMessageInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageResponseHandler;
@@ -79,9 +80,10 @@ public class PartyListSubCommandCall implements CommandCall
             {
                 return new PageMessageInfo(
                         "party.list.members.item",
-                        "{user}", member.getUserName(),
-                        "{role}", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ),
-                        "{joinedAt}", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() )
+                        MessagePlaceholders.create()
+                                .append( "user", member.getUserName() )
+                                .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
+                                .append( "joinedAt", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 
@@ -121,8 +123,9 @@ public class PartyListSubCommandCall implements CommandCall
             {
                 return new PageMessageInfo(
                         "party.list.invites.item",
-                        "{user}", invite.getInviteeName(),
-                        "{invitedAt}", Utils.formatDate( invite.getInvitedAt(), user.getLanguageConfig().getConfig() )
+                        MessagePlaceholders.create()
+                                .append( "user", invite.getInviteeName() )
+                                .append( "invitedAt", Utils.formatDate( invite.getInvitedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 
@@ -162,8 +165,9 @@ public class PartyListSubCommandCall implements CommandCall
             {
                 return new PageMessageInfo(
                         "party.list.requests.item",
-                        "{user}", request.getRequesterName(),
-                        "{requestedAt}", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() )
+                        MessagePlaceholders.create()
+                                .append( "user", request.getRequesterName() )
+                                .append( "requestedAt", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 

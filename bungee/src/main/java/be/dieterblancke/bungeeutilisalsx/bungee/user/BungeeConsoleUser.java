@@ -5,7 +5,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.ConsoleUser;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
 
 public class BungeeConsoleUser extends ConsoleUser
 {

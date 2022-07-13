@@ -24,7 +24,7 @@ public class TitleAnnouncer extends Announcer
         {
             final Optional<ServerGroup> optionalGroup = ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) );
 
-            if ( optionalGroup .isEmpty() )
+            if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().warning( "Could not find a servergroup or -name for " + section.getString( "server" ) + "!" );
                 return;

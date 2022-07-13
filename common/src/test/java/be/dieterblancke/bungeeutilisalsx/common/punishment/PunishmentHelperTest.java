@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import be.dieterblancke.configuration.api.IConfiguration;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -59,27 +61,27 @@ class PunishmentHelperTest
         when( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "time-left-format" ) ).thenReturn( "%days%d" );
         final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd-MM-yyyy kk:mm:ss" );
 
-        final List<String> placeHolders = punishmentHelper.getPlaceHolders( punishmentInfo );
+        final List<Object> placeHolders = Arrays.stream( punishmentHelper.getPlaceHolders( punishmentInfo ).asArray() ).toList();
 
-        assertEquals( Arrays.asList(
-                "{reason}", "test reason",
-                "{date}", dateFormat.format( punishmentInfo.getDate() ),
-                "{by}", "testexec",
-                "{server}", "testserver",
-                "{uuid}", "e7e5216f-c419-43b8-a5e7-525386c56e9b",
-                "{ip}", "127.0.0.1",
-                "{user}", "testuser",
-                "{id}", "1",
-                "{type}", "ban",
-                "{expire}", dateFormat.format( new Date( punishmentInfo.getExpireTime() ) ),
-                "{timeLeft}", "4d",
-                "{removedBy}", "Unknown",
-                "{punishment_uid}", "abc"
-        ), placeHolders );
+        Assertions.assertThat( placeHolders ).containsAll( Arrays.asList(
+                "reason", "test reason",
+                "date", dateFormat.format( punishmentInfo.getDate() ),
+                "by", "testexec",
+                "server", "testserver",
+                "uuid", "e7e5216f-c419-43b8-a5e7-525386c56e9b",
+                "ip", "127.0.0.1",
+                "user", "testuser",
+                "id", "1",
+                "type", "ban",
+                "expire", dateFormat.format( new Date( punishmentInfo.getExpireTime() ) ),
+                "timeLeft", "4d",
+                "removedBy", "Unknown",
+                "punishment_uid", "abc"
+        ) );
     }
 
     @Test
-    void testSetPlaceHolders() throws NoSuchFieldException, IllegalAccessException, ParseException, InterruptedException
+    void testSetPlaceHolders() throws NoSuchFieldException, IllegalAccessException
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.PUNISHMENT_CONFIG,

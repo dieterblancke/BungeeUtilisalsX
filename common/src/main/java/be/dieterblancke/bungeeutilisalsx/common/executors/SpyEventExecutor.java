@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPrivat
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.CommandSpyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -35,9 +36,10 @@ public class SpyEventExecutor implements EventExecutor
         {
             user.sendLangMessage(
                     "general-commands.socialspy.message",
-                    "{sender}", event.getSender(),
-                    "{receiver}", event.getReceiver(),
-                    "{message}", event.getMessage()
+                    MessagePlaceholders.create()
+                            .append( "sender}", event.getSender() )
+                            .append( "receiver", event.getReceiver() )
+                            .append( "message", event.getMessage() )
             );
         }
     }

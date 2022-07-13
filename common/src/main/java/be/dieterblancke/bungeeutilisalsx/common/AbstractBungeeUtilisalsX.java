@@ -167,7 +167,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract void registerListeners();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected void registerExecutors()
     {
         this.api.getEventLoader().register( new UserExecutor(), UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
@@ -282,7 +282,8 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    protected void registerPluginSupports() {
+    protected void registerPluginSupports()
+    {
     }
 
     protected void loadDatabase()

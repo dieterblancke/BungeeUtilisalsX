@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -27,23 +28,17 @@ public class HelpOpCommandCall implements CommandCall
         final String message = String.join( " ", args );
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "helpop.receive-broadcast" );
 
+        MessagePlaceholders broadcastPlaceholders = MessagePlaceholders.create()
+                .append( "message", message )
+                .append( "user", user.getName() )
+                .append( "user_server", user.getServerName() );
+
         if ( !user.hasPermission( permission ) )
         {
-            user.sendLangMessage(
-                    "general-commands.helpop.broadcast",
-                    "{message}", message,
-                    "{user}", user.getName(),
-                    "{user_server}", user.getServerName()
-            );
+            user.sendLangMessage( "general-commands.helpop.broadcast", broadcastPlaceholders );
         }
 
-        BuX.getApi().langPermissionBroadcast(
-                "general-commands.helpop.broadcast",
-                permission,
-                "{message}", message,
-                "{user}", user.getName(),
-                "{user_server}", user.getServerName()
-        );
+        BuX.getApi().langPermissionBroadcast( "general-commands.helpop.broadcast", permission, broadcastPlaceholders );
     }
 
     @Override
@@ -77,15 +72,17 @@ public class HelpOpCommandCall implements CommandCall
 
         user.sendLangMessage(
                 "general-commands.helpop.reply-send",
-                "{user}", targetName,
-                "{message}", message
+                MessagePlaceholders.create()
+                        .append( "user", targetName )
+                        .append( "message", message )
         );
 
         BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                 targetName,
                 "general-commands.helpop.reply-receive",
-                "{user}", user.getName(),
-                "{message}", message
+                MessagePlaceholders.create()
+                        .append( "user", user.getName() )
+                        .append( "message", message )
         ) );
     }
 }
