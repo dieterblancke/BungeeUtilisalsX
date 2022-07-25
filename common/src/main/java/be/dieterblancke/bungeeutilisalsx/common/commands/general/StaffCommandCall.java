@@ -16,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class StaffCommandCall implements CommandCall
@@ -66,6 +67,7 @@ public class StaffCommandCall implements CommandCall
                 .stream()
                 .filter( staffUser -> !staffUser.isHidden() && !staffUser.isVanished() )
                 .collect( Collectors.toList() );
+
         if ( staffUsers.isEmpty() )
         {
             user.sendLangMessage( "general-commands.staff.no_staff" );
@@ -86,8 +88,8 @@ public class StaffCommandCall implements CommandCall
 
         for ( StaffRankData rank : onlineStaffRanks )
         {
-            final List<StaffUser> users = staffMembers.get( rank );
-            final Component component = MessageBuilder.buildMessage(
+            List<StaffUser> users = staffMembers.get( rank );
+            Component originalComponent = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
                     MessagePlaceholders.create()
@@ -96,11 +98,9 @@ public class StaffCommandCall implements CommandCall
                             .append( "total", staffUsers.size() )
             );
 
-            final List<TextComponent> components = findUsersComponents( component );
-
-            for ( TextComponent c : components )
+            Component replacedComponent = this.replaceAndRebuild( originalComponent, () ->
             {
-                c = c.content( "" );
+                TextComponent.Builder builder = Component.text();
 
                 users.sort( Comparator.comparing( StaffUser::getName ) );
                 final Iterator<StaffUser> userIt = users.iterator();
@@ -110,7 +110,7 @@ public class StaffCommandCall implements CommandCall
                     final StaffUser u = userIt.next();
                     final IProxyServer info = BuX.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    c = c.append( MessageBuilder.buildMessage(
+                    builder = builder.append( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
                             MessagePlaceholders.create()
@@ -120,12 +120,17 @@ public class StaffCommandCall implements CommandCall
 
                     if ( userIt.hasNext() )
                     {
-                        c = c.append( Utils.format( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator", MessagePlaceholders.empty() ) ) );
+                        builder = builder.append( Utils.format( user.getLanguageConfig().buildLangMessage(
+                                "general-commands.staff.users.separator",
+                                MessagePlaceholders.empty()
+                        ) ) );
                     }
                 }
-            }
 
-            user.sendMessage( component );
+                return builder.build();
+            } );
+
+            user.sendMessage( replacedComponent );
         }
 
         user.sendLangMessage( "general-commands.staff.foot", MessagePlaceholders.create().append( "total", staffUsers.size() ) );
@@ -143,25 +148,34 @@ public class StaffCommandCall implements CommandCall
         return "/staff";
     }
 
-    private List<TextComponent> findUsersComponents( final Component component )
+    private TextComponent replaceAndRebuild( Component original, Supplier<TextComponent> userComponentSupplier )
     {
-        final List<TextComponent> components = component.children().stream()
+        TextComponent.Builder componentBuilder = Component.text();
+
+        original.children()
+                .stream()
                 .filter( c -> c instanceof TextComponent )
                 .map( c -> (TextComponent) c )
-                .toList();
-        final List<TextComponent> finalComponents = Lists.newArrayList();
+                .forEach( textComponent ->
+                {
+                    TextComponent.Builder subComponent = Component.text();
 
-        for ( TextComponent c : components )
-        {
-            if ( !c.children().isEmpty() )
-            {
-                finalComponents.addAll( findUsersComponents( c ) );
-            }
-            if ( c.content().contains( "{users}" ) )
-            {
-                finalComponents.add( c );
-            }
-        }
-        return finalComponents;
+                    if ( !textComponent.children().isEmpty() )
+                    {
+                        subComponent.append( replaceAndRebuild( textComponent, userComponentSupplier ) );
+                    }
+                    else if ( textComponent.content().contains( "{users}" ) )
+                    {
+                        subComponent.append( userComponentSupplier.get() );
+                    }
+                    else
+                    {
+                        subComponent.append( textComponent );
+                    }
+
+                    componentBuilder.append( subComponent );
+                } );
+
+        return componentBuilder.build();
     }
 }
