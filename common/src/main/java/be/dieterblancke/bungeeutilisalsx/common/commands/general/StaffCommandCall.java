@@ -11,7 +11,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -85,10 +86,10 @@ public class StaffCommandCall implements CommandCall
         for ( StaffRankData rank : onlineStaffRanks )
         {
             final List<StaffUser> users = staffMembers.get( rank );
-            final TextComponent component = MessageBuilder.buildMessage(
+            final Component component = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
-                    "{rank_displayname}", Utils.c( rank.getDisplay() ),
+                    "{rank_displayname}", rank.getDisplay(),
                     "{amount_online}", users.size(),
                     "{total}", staffUsers.size()
             );
@@ -97,7 +98,7 @@ public class StaffCommandCall implements CommandCall
 
             for ( TextComponent c : components )
             {
-                c.setText( "" );
+                c = c.content( "" );
 
                 users.sort( Comparator.comparing( StaffUser::getName ) );
                 final Iterator<StaffUser> userIt = users.iterator();
@@ -107,7 +108,7 @@ public class StaffCommandCall implements CommandCall
                     final StaffUser u = userIt.next();
                     final IProxyServer info = BuX.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    c.addExtra( MessageBuilder.buildMessage(
+                    c = c.append( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
                             "{username}", u.getName(),
@@ -116,7 +117,7 @@ public class StaffCommandCall implements CommandCall
 
                     if ( userIt.hasNext() )
                     {
-                        c.addExtra( Utils.c( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator" ) ) );
+                        c = c.append( Utils.format( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator" ) ) );
                     }
                 }
             }
@@ -139,21 +140,21 @@ public class StaffCommandCall implements CommandCall
         return "/staff";
     }
 
-    private List<TextComponent> findUsersComponents( final TextComponent component )
+    private List<TextComponent> findUsersComponents( final Component component )
     {
-        final List<TextComponent> components = component.getExtra().stream()
+        final List<TextComponent> components = component.children().stream()
                 .filter( c -> c instanceof TextComponent )
                 .map( c -> (TextComponent) c )
-                .collect( Collectors.toList() );
+                .toList();
         final List<TextComponent> finalComponents = Lists.newArrayList();
 
         for ( TextComponent c : components )
         {
-            if ( c.getExtra() != null && !c.getExtra().isEmpty() )
+            if ( c.children() != null && !c.children().isEmpty() )
             {
                 finalComponents.addAll( findUsersComponents( c ) );
             }
-            if ( c.getText().contains( "{users}" ) )
+            if ( c.content().contains( "{users}" ) )
             {
                 finalComponents.add( c );
             }

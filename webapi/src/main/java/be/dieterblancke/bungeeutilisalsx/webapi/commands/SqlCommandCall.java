@@ -3,7 +3,6 @@ package be.dieterblancke.bungeeutilisalsx.webapi.commands;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.google.common.base.Joiner;
 import lombok.SneakyThrows;
 
 import java.sql.Connection;
@@ -11,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SqlCommandCall implements CommandCall
 {
@@ -27,13 +27,13 @@ public class SqlCommandCall implements CommandCall
                 case "query":
                     if ( args.size() > 1 )
                     {
-                        query( Joiner.on( " " ).join( args.subList( 1, args.size() ) ) );
+                        query( String.join( " ", args.subList( 1, args.size() ) ) );
                         return;
                     }
                 case "exec":
                     if ( args.size() > 1 )
                     {
-                        exec( Joiner.on( " " ).join( args.subList( 1, args.size() ) ) );
+                        query( String.join( " ", args.subList( 1, args.size() ) ) );
                         return;
                     }
             }

@@ -1,6 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 
 import java.util.*;
@@ -40,5 +42,15 @@ public interface UserDao
     CompletableFuture<Void> unignoreUser( UUID user, UUID unignore );
 
     CompletableFuture<UUID> getUuidFromName( String targetName );
+
+    CompletableFuture<UserSettings> getSettings( UUID uuid );
+
+    CompletableFuture<Boolean> hasSetting( UUID uuid, UserSettingType type );
+
+    CompletableFuture<Void> registerSetting( UUID uuid, UserSettingType type, Object value );
+
+    CompletableFuture<Void> updateSetting( UUID uuid, UserSettingType type, Object value );
+
+    CompletableFuture<Void> removeSetting( UUID uuid, UserSettingType type );
 
 }

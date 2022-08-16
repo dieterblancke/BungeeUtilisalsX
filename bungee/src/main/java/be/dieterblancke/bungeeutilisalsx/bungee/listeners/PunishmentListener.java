@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
+import be.dieterblancke.bungeeutilisalsx.bungee.BungeeUtilisalsX;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
@@ -9,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.configuration.api.IConfiguration;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.PendingConnection;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
@@ -41,7 +43,7 @@ public class PunishmentListener implements Listener
         if ( kickReason != null )
         {
             event.setCancelled( true );
-            event.setCancelReason( Utils.format( kickReason ) );
+            event.setCancelReason( BungeeComponentSerializer.get().serialize( Utils.format( kickReason ) ) );
         }
     }
 
@@ -70,11 +72,11 @@ public class PunishmentListener implements Listener
             // If current server is null, we're assuming the player just joined the network and tries to join a server he is banned on, kicking instead ...
             if ( event.getPlayer().getServer() == null )
             {
-                player.disconnect( Utils.format( kickReason ) );
+                player.disconnect( BungeeComponentSerializer.get().serialize( Utils.format( kickReason ) ) );
             }
             else
             {
-                player.sendMessage( Utils.format( kickReason ) );
+                BungeeUtilisalsX.getInstance().getBungeeAudiences().player( player ).sendMessage( Utils.format( kickReason ) );
             }
         }
     }

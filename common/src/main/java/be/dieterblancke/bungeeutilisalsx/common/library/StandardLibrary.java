@@ -33,21 +33,21 @@ public enum StandardLibrary
     POSTGRESQL(
             "org.postgresql.ds.PGSimpleDataSource",
             "https://repo1.maven.org/maven2/org/postgresql/postgresql/{version}/postgresql-{version}.jar",
-            "42.2.18",
+            "42.4.0",
             checkType( "POSTGRESQL" ),
             relocate( "org.postgresql" )
     ),
     MONGODB(
             "com.mongodb.MongoClient",
             "https://repo1.maven.org/maven2/org/mongodb/mongo-java-driver/{version}/mongo-java-driver-{version}.jar",
-            "3.12.7",
+            "3.12.8",
             checkType( "MONGODB" ),
             relocate( "com.mongodb" )
     ),
     MYSQL(
             "com.mysql.cj.jdbc.Driver",
             "https://repo1.maven.org/maven2/mysql/mysql-connector-java/{version}/mysql-connector-java-{version}.jar",
-            "8.0.23",
+            "8.0.28",
             checkType( "MYSQL" ),
             relocate( "com.mysql" )
     ),
@@ -109,12 +109,6 @@ public enum StandardLibrary
             "com.google.gson.Gson",
             "https://repo1.maven.org/maven2/com/google/code/gson/gson/{version}/gson-{version}.jar",
             "2.8.6",
-            true
-    ),
-    TEXTCOMPONENT(
-            "net.md_5.bungee.api.ChatColor",
-            "https://oss.sonatype.org/content/repositories/snapshots/net/md-5/bungeecord-chat/{version}-SNAPSHOT/bungeecord-chat-{version}-20220608.093819-8.jar",
-            "1.19-R0.1",
             true
     ),
     APACHE_COMMONS_POOL2(

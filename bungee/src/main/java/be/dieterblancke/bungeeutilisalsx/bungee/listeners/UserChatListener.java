@@ -35,7 +35,10 @@ public class UserChatListener implements Listener
                 event.setCancelled( true );
                 return;
             }
-            event.setMessage( commandEvent.getCommand() );
+            if ( !event.getMessage().equals( commandEvent.getCommand() ) )
+            {
+                event.setMessage( commandEvent.getCommand() );
+            }
         }
         else
         {
@@ -48,7 +51,10 @@ public class UserChatListener implements Listener
                 return;
             }
 
-            event.setMessage( chatEvent.getMessage() );
+            if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+            {
+                event.setMessage( chatEvent.getMessage() );
+            }
         }
     }
 }

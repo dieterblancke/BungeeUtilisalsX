@@ -3,11 +3,11 @@ enabled: false
 motds:
   # By removing server, the MOTD message will be sent on network join (which is once per session)
   - message:
-      - '&eWelcome &b{user} &eto our server!'
+      - '<yellow>Welcome <aqua>{user} <yellow>to our server!'
   - server: Lobbies
     once-per-session: true
     message:
-      - '&eWelcome back to our lobbies &b{user}&e!'
+      - '<yellow>Welcome back to our lobbies <aqua>{user}<yellow>!'
   - server: Skyblock
     once-per-session: true
     language: true
@@ -28,7 +28,7 @@ motds:
       # How long should the title fade out?
       fadeout: 10
       # Title text, if language is set to true, the path will be searched in the language file.
-      title: '&c&lBungeeUtilisals'
+      title: '<red><bold>BungeeUtilisals'
       # SubTitle text, if language is set to true, the path will be searched in the language file.
       subtitle: custom.ingamemotd.skyblock
     message: custom.ingamemotd.skyblock

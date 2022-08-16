@@ -82,10 +82,7 @@ public class CheckIpCommandCall implements CommandCall
                     }
                 }
 
-                formattedUsers.add(
-                        Utils.c( user.getLanguageConfig().getConfig().getString( colorPath ) )
-                                + u
-                );
+                formattedUsers.add( user.getLanguageConfig().getConfig().getString( colorPath ) + u );
             } );
 
             user.sendLangMessage(

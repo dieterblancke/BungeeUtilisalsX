@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
@@ -9,18 +10,23 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao.OfflineMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
-public interface User extends MessageRecipient
+public interface User extends Messageable, HasLanguageConfig
 {
 
     /**
@@ -168,20 +174,6 @@ public interface User extends MessageRecipient
     }
 
     /**
-     * Sends a BaseComponent message to the user, colors will be formatted.
-     *
-     * @param component The component to be sent.
-     */
-    void sendMessage( BaseComponent component );
-
-    /**
-     * Sends a BaseComponent message to the user, colors will be formatted.
-     *
-     * @param component The component to be sent.
-     */
-    void sendMessage( BaseComponent[] component );
-
-    /**
      * Synchronously kicks the User with a certain reason.
      *
      * @param reason The reason of the kick.
@@ -258,7 +250,7 @@ public interface User extends MessageRecipient
     /**
      * @return The user his language config.
      */
-    default LanguageConfig getLanguageConfig( final String plugin )
+    default LanguageConfig getLanguageConfig( String plugin )
     {
         return BuX.getApi().getLanguageManager().getLanguageConfiguration( plugin, this );
     }
@@ -331,7 +323,7 @@ public interface User extends MessageRecipient
      */
     default void sendOfflineMessages()
     {
-        final OfflineMessageDao offlineMessageDao = BuX.getApi().getStorageManager().getDao().getOfflineMessageDao();
+        OfflineMessageDao offlineMessageDao = BuX.getApi().getStorageManager().getDao().getOfflineMessageDao();
 
         offlineMessageDao.getOfflineMessages( this.getName() ).thenAccept( messages ->
         {
@@ -360,7 +352,10 @@ public interface User extends MessageRecipient
      *
      * @param actionbar the message to be displayed in the action bar.
      */
-    void sendActionBar( String actionbar );
+    default void sendActionBar( String actionbar )
+    {
+        asAudience().sendActionBar( Utils.format( this, actionbar ) );
+    }
 
     /**
      * Sends a title to the user.
@@ -371,7 +366,14 @@ public interface User extends MessageRecipient
      * @param stay     the time the title should stay
      * @param fadeout  the time the title should fade out
      */
-    void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout );
+    default void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout )
+    {
+        asAudience().showTitle( Title.title(
+                Utils.format( this, title ),
+                Utils.format( this, subtitle ),
+                Times.times( Duration.ofSeconds( fadein ), Duration.ofSeconds( stay ), Duration.ofSeconds( fadeout ) )
+        ) );
+    }
 
     /**
      * @return true if user is not receiving pms, false if the user does allow pms
@@ -390,7 +392,7 @@ public interface User extends MessageRecipient
      *
      * @param packet the packet to be sent.
      */
-    void sendPacket( final Object packet );
+    void sendPacket( Object packet );
 
     /**
      * Sets the tab header and footer for this user.
@@ -398,7 +400,10 @@ public interface User extends MessageRecipient
      * @param header the header to be set.
      * @param footer the footer to be set.
      */
-    void setTabHeader( final BaseComponent[] header, final BaseComponent[] footer );
+    default void setTabHeader( Component header, Component footer )
+    {
+        asAudience().sendPlayerListHeaderAndFooter( header, footer );
+    }
 
     /**
      * @return the host the user joined with.
@@ -427,8 +432,9 @@ public interface User extends MessageRecipient
      *
      * @return an optional of the server the user is currently in
      */
-    default Optional<IProxyServer> getCurrentServer() {
-        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo(this.getServerName()) );
+    default Optional<IProxyServer> getCurrentServer()
+    {
+        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo( this.getServerName() ) );
     }
 
     /**
@@ -445,4 +451,20 @@ public interface User extends MessageRecipient
      * @return the underlying player object
      */
     Object getPlayerObject();
+
+    /**
+     * @return a list with the user settings
+     */
+    UserSettings getSettings();
+
+    /**
+     * @return a list with the active boss bars for this user
+     */
+    List<IBossBar> getActiveBossBars();
+
+    /**
+     * @return the current user instance as Audience
+     */
+    Audience asAudience();
+
 }

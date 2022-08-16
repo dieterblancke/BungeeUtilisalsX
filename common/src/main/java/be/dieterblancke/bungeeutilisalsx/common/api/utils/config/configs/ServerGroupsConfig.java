@@ -45,14 +45,15 @@ public class ServerGroupsConfig extends Config
         for ( ISection group : config.getSectionList( "groups" ) )
         {
             String name = group.getString( "name" );
+            boolean dynamic = group.exists( "dynamic" ) ? group.getBoolean( "dynamic" ) : false;
 
             if ( group.isList( "servers" ) )
             {
-                servers.put( name, new ServerGroup( name, false, group.getStringList( "servers" ) ) );
+                servers.put( name, new ServerGroup( name, false, dynamic, group.getStringList( "servers" ) ) );
             }
             else
             {
-                servers.put( name, new ServerGroup( name, true, Lists.newArrayList() ) );
+                servers.put( name, new ServerGroup( name, true, dynamic, Lists.newArrayList() ) );
             }
         }
 
@@ -62,7 +63,7 @@ public class ServerGroupsConfig extends Config
             {
                 servers.put(
                         server.getName(),
-                        new ServerGroup( server.getName(), false, Lists.newArrayList( server.getName() ) )
+                        new ServerGroup( server.getName(), false, false, Lists.newArrayList( server.getName() ) )
                 );
             }
         }

@@ -2,9 +2,8 @@ package be.dieterblancke.bungeeutilisalsx.common.placeholders;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolder;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.FontWidthInfo;
-import net.md_5.bungee.api.ChatColor;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -37,7 +36,6 @@ public class CenterPlaceHolder extends XMLPlaceHolder
 
     private String center( String text, final char pad )
     {
-        text = Utils.c( text );
         final int length = getStringWidth( text );
         final int toCompensate = 154 - ( length / 2 );
         final int padLength = FontWidthInfo.getFontWidthInfo( pad ).getLength() + 1;
@@ -50,7 +48,7 @@ public class CenterPlaceHolder extends XMLPlaceHolder
             compensated += padLength;
         }
         sb.append( text );
-        sb.append( ChatColor.RESET );
+        sb.append( "&r" );
 
         return sb.toString();
     }
@@ -64,19 +62,17 @@ public class CenterPlaceHolder extends XMLPlaceHolder
 
         for ( char c : text.toCharArray() )
         {
-            if ( c == ChatColor.COLOR_CHAR )
+            if ( c == '&' || c == MessageUtils.SECTION_CHAR )
             {
                 nextIsColour = true;
             }
             else if ( nextIsColour )
             {
-                final ChatColor cc = ChatColor.getByChar( c );
-
-                if ( cc == ChatColor.BOLD )
+                if ( c == 'l' )
                 {
                     bold = true;
                 }
-                else if ( cc == ChatColor.RESET )
+                else if ( c == 'r' )
                 {
                     bold = false;
                 }

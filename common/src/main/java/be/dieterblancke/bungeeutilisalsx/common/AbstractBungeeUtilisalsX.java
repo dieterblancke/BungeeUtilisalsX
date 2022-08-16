@@ -89,8 +89,8 @@ public abstract class AbstractBungeeUtilisalsX
             getDataFolder().mkdirs();
         }
 
-        this.loadConfigs();
         this.migrateConfigs();
+        this.loadConfigs();
         ChatProtections.reloadAllProtections();
 
         this.loadPlaceHolders();
@@ -280,7 +280,8 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    protected abstract void registerPluginSupports();
+    protected void registerPluginSupports() {
+    }
 
     protected void loadDatabase()
     {

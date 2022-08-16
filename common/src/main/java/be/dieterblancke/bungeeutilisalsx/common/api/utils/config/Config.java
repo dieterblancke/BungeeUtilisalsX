@@ -10,7 +10,6 @@ import lombok.Getter;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.logging.Level;
 
 public class Config
 {
@@ -95,12 +94,17 @@ public class Config
         return true;
     }
 
-    public boolean isEnabled( final String path )
+    public boolean isEnabled( String path )
+    {
+        return isEnabled( path, true );
+    }
+
+    public boolean isEnabled( String path, boolean def )
     {
         if ( config.exists( path + ".enabled" ) )
         {
             return config.getBoolean( path + ".enabled" );
         }
-        return true;
+        return def;
     }
 }

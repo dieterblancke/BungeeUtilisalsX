@@ -1,20 +1,24 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
+import net.kyori.adventure.text.Component;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -27,6 +31,9 @@ public abstract class ConsoleUser implements User
     @Getter
     private final List<FriendData> friends = Lists.newArrayList();
     private final UUID uuid = UUID.randomUUID();
+    private final UserSettings userSettings = new UserSettings( uuid, new ArrayList<>() );
+    @Getter
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList( new ArrayList<>() );
     @Getter
     @Setter
     private boolean socialSpy;
@@ -85,7 +92,7 @@ public abstract class ConsoleUser implements User
     @Override
     public void sendRawMessage( String message )
     {
-        sendMessage( TextComponent.fromLegacyText( message ) );
+        sendMessage( MessageUtils.fromTextNoColors( message ) );
     }
 
     @Override
@@ -236,7 +243,7 @@ public abstract class ConsoleUser implements User
     }
 
     @Override
-    public void setTabHeader( BaseComponent[] header, BaseComponent[] footer )
+    public void setTabHeader( Component header, Component footer )
     {
         // do nothing
     }
@@ -281,5 +288,11 @@ public abstract class ConsoleUser implements User
     public Object getPlayerObject()
     {
         return null;
+    }
+
+    @Override
+    public UserSettings getSettings()
+    {
+        return userSettings;
     }
 }

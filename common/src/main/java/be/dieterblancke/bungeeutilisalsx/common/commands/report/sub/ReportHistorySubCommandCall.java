@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.Report;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.PageUtils.PageNotFoundException;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.UnicodeTranslator;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.UnicodeTranslator;
 
 import java.util.List;
 

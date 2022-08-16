@@ -7,12 +7,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.api.ISection;
-import com.google.common.collect.Lists;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.HoverEvent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.hover.content.Text;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.HoverEvent;
 
 import java.util.List;
 import java.util.function.Function;
@@ -21,33 +18,33 @@ import java.util.stream.Collectors;
 public class MessageBuilder
 {
 
-    public static TextComponent buildMessage( final User user,
-                                              final ISection section,
-                                              final Object... placeholders )
+    public static Component buildMessage( final User user,
+                                          final ISection section,
+                                          final Object... placeholders )
     {
         return buildMessage( user, section, null, null, placeholders );
     }
 
-    public static TextComponent buildMessage( final User user,
-                                              final ISection section,
-                                              final Function<String, String> prePlaceholderFormatter,
-                                              final Function<String, String> postPlaceholderFormatter,
-                                              final Object... placeholders )
+    public static Component buildMessage( final User user,
+                                          final ISection section,
+                                          final Function<String, String> prePlaceholderFormatter,
+                                          final Function<String, String> postPlaceholderFormatter,
+                                          final Object... placeholders )
     {
         if ( section.isList( "text" ) )
         {
-            final TextComponent component = new TextComponent();
-            final List<ISection> sections = section.getSectionList( "text" );
+            Component component = Component.empty();
+            List<ISection> sections = section.getSectionList( "text" );
 
             for ( ISection text : sections )
             {
-                component.addExtra(
+                component = component.append(
                         buildMessage( user, text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
                 );
             }
             return component;
         }
-        final BaseComponent[] text = searchAndFormat(
+        Component text = searchAndFormat(
                 user,
                 user.getLanguageConfig().getConfig(),
                 section.getString( "text" ),
@@ -55,11 +52,10 @@ public class MessageBuilder
                 postPlaceholderFormatter,
                 placeholders
         );
-        final TextComponent component = new TextComponent( text );
 
         if ( section.exists( "hover" ) )
         {
-            final BaseComponent[] components = searchHoverMessageAndFormat(
+            Component component = searchHoverMessageAndFormat(
                     user,
                     section,
                     prePlaceholderFormatter,
@@ -67,37 +63,45 @@ public class MessageBuilder
                     placeholders
             );
 
-            if ( components != null )
+            if ( component != null )
             {
-                component.setHoverEvent( new HoverEvent( HoverEvent.Action.SHOW_TEXT, new Text( components ) ) );
+                text = text.hoverEvent( HoverEvent.showText( component ) );
             }
         }
         if ( section.exists( "click" ) )
         {
-            component.setClickEvent( new ClickEvent(
+            text = text.clickEvent( ClickEvent.clickEvent(
                     ClickEvent.Action.valueOf( section.getString( "click.type" ) ),
-                    PlaceHolderAPI.formatMessage( user, Utils.c( format(
+                    PlaceHolderAPI.formatMessage( user, format(
                             section.getString( "click.action" ),
                             prePlaceholderFormatter,
                             postPlaceholderFormatter,
                             placeholders
-                    ) ) )
+                    ) )
             ) );
+        }
+        if ( section.exists( "insertion" ) )
+        {
+            text = text.insertion( section.getString( "insertion" ) );
         }
         if ( section.exists( "sound" ) && BuX.getInstance().isProtocolizeEnabled() )
         {
             BuX.getInstance().getProtocolizeManager().sendSound( user, SoundData.fromSection( section, "sound" ) );
         }
 
-        return component;
+        return text;
     }
 
-    public static List<TextComponent> buildMessage( final User user, final List<ISection> sections, final Object... placeholders )
+    public static Component buildMessage( final User user, final List<ISection> sections, final Object... placeholders )
     {
-        final List<TextComponent> components = Lists.newArrayList();
+        Component component = Component.empty();
 
-        sections.forEach( section -> components.add( buildMessage( user, section, placeholders ) ) );
-        return components;
+        for ( ISection section : sections )
+        {
+            component = component.append( buildMessage( user, section, placeholders ) );
+        }
+
+        return component;
     }
 
     private static String searchAndFormat( final IConfiguration config,
@@ -122,12 +126,12 @@ public class MessageBuilder
         return format( text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
     }
 
-    private static BaseComponent[] searchAndFormat( final User user,
-                                                    final IConfiguration config,
-                                                    final String str,
-                                                    final Function<String, String> prePlaceholderFormatter,
-                                                    final Function<String, String> postPlaceholderFormatter,
-                                                    final Object... placeholders )
+    private static Component searchAndFormat( final User user,
+                                              final IConfiguration config,
+                                              final String str,
+                                              final Function<String, String> prePlaceholderFormatter,
+                                              final Function<String, String> postPlaceholderFormatter,
+                                              final Object... placeholders )
     {
         if ( config.exists( str ) )
         {
@@ -197,11 +201,11 @@ public class MessageBuilder
         return str;
     }
 
-    private static BaseComponent[] searchHoverMessageAndFormat( final User user,
-                                                                final ISection section,
-                                                                final Function<String, String> prePlaceholderFormatter,
-                                                                final Function<String, String> postPlaceholderFormatter,
-                                                                final Object... placeholders )
+    private static Component searchHoverMessageAndFormat( final User user,
+                                                          final ISection section,
+                                                          final Function<String, String> prePlaceholderFormatter,
+                                                          final Function<String, String> postPlaceholderFormatter,
+                                                          final Object... placeholders )
     {
         if ( section.isList( "hover" ) )
         {

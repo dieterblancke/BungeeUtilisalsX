@@ -8,8 +8,6 @@ import com.velocitypowered.api.event.proxy.ProxyPingEvent;
 import com.velocitypowered.api.proxy.InboundConnection;
 import com.velocitypowered.api.proxy.server.ServerPing;
 import com.velocitypowered.api.proxy.server.ServerPing.SamplePlayer;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
-import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.stream.Collectors;
 
@@ -40,9 +38,7 @@ public class MotdPingListener
                                             .map( it -> new SamplePlayer( it.getName(), it.getUuid() ) )
                                             .collect( Collectors.toList() )
                             ),
-                            GsonComponentSerializer.gson().deserialize(
-                                    ComponentSerializer.toString( e.getMotdPingResponse().getMotd() )
-                            ),
+                            e.getMotdPingResponse().getMotd(),
                             orig.getFavicon().orElse( null )
                     );
 

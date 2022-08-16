@@ -26,19 +26,19 @@ announcements:
     language: false
     # The lines for the header of the tab list.
     header:
-      - '&7----------------[ &e&lBungeeUtilisalsX &7]----------------'
+      - '<gray>----------------[ <yellow><bold>BungeeUtilisalsX<reset> <gray>]----------------'
       - ''
-      - '&7Current Date: &a{date}'
-      - '&7Current Time: &a{time}'
+      - '<gray>Current Date: <green>{date}'
+      - '<gray>Current Time: <green>{time}'
       - ''
-      - '&aGlobal &7online: &b{proxy_online} players'
-      - '&a{server} &7online: &b{server_online} players'
+      - '<green>Global <gray>online: <aqua>{proxy_online} players'
+      - '<green>{server} <gray>online: <aqua>{server_online} players'
       - ''
     # The lines for the footer of the tab list.
     footer:
       - ''
-      - '&7This server uses &bBungeeUtilisalsX&7!'
-      - '&7For more info, please check out my website:'
-      - '&ahttps://dieterblancke.xyz/projects/BungeeUtilisalsX&7!'
+      - '<gray>This server uses <aqua>BungeeUtilisalsX<gray>!'
+      - '<gray>For more info, please check out my website:'
+      - '<green>https://dieterblancke.xyz/projects/BungeeUtilisalsX<gray>!'
       - ''
-      - '&7----------------[ &e&lBungeeUtilisalsX &7]----------------'
+      - '<gray>----------------[ <yellow><bold>BungeeUtilisalsX<reset> <gray>]----------------'

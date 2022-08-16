@@ -6,7 +6,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserComman
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
+import com.velocitypowered.api.event.command.CommandExecuteEvent.CommandResult;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
+import com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult;
 import com.velocitypowered.api.proxy.Player;
 
 import java.util.Optional;
@@ -29,11 +31,14 @@ public class UserChatListener
 
         if ( chatEvent.isCancelled() )
         {
-            event.setResult( PlayerChatEvent.ChatResult.denied() );
+            event.setResult( ChatResult.denied() );
             return;
         }
 
-        event.setResult( PlayerChatEvent.ChatResult.message( chatEvent.getMessage() ) );
+        if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+        {
+            event.setResult( ChatResult.message( chatEvent.getMessage() ) );
+        }
     }
 
     @Subscribe
@@ -53,10 +58,14 @@ public class UserChatListener
 
             if ( commandEvent.isCancelled() )
             {
-                event.setResult( CommandExecuteEvent.CommandResult.denied() );
+                event.setResult( CommandResult.denied() );
                 return;
             }
-            event.setResult( CommandExecuteEvent.CommandResult.command( commandEvent.getCommand() ) );
+
+            if ( !event.getCommand().equals( commandEvent.getCommand() ) )
+            {
+                event.setResult( CommandResult.command( commandEvent.getCommand() ) );
+            }
         }
     }
 }

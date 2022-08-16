@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.PlaceHolderEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 
 public class UserPlaceHolderPack implements PlaceHolderPack
 {
@@ -36,7 +37,7 @@ public class UserPlaceHolderPack implements PlaceHolderPack
     private String getUserPrefix( final PlaceHolderEvent event )
     {
         return StaffUtils.getStaffRankForUser( event.getUser() )
-                .map( rank -> Utils.c( rank.getDisplay() ) )
+                .map( StaffRankData::getDisplay )
                 .orElse( "" );
     }
 

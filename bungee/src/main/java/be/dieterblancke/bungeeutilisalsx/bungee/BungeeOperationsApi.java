@@ -4,10 +4,11 @@ import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.CommandHolder;
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.plugin.Plugin;
 import net.md_5.bungee.api.plugin.PluginDescription;
@@ -91,9 +92,9 @@ public class BungeeOperationsApi implements ProxyOperationsApi
     }
 
     @Override
-    public Object getMessageComponent( final BaseComponent... components )
+    public Object getMessageComponent( final Component component )
     {
-        return components;
+        return BungeeComponentSerializer.get().serialize( component );
     }
 
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )

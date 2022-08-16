@@ -14,6 +14,7 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.player.KickedFromServerEvent;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainComponentSerializer;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class KickListener
     {
         final ISection section = ConfigFiles.HUBBALANCER.getConfig().getSection( "fallback-trigger" );
         final String reason = event.getServerKickReason()
-                .map( c -> PlainComponentSerializer.plain().serialize( c ) )
+                .map( c -> LegacyComponentSerializer.legacyAmpersand().serialize( c ) )
                 .orElse( "" );
         boolean fallback;
 
@@ -106,9 +107,7 @@ public class KickListener
 
                 if ( data == null || data.getServerInfo() == null )
                 {
-                    event.getPlayer().disconnect( Component.text(
-                            Utils.c( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) )
-                    ) );
+                    event.getPlayer().disconnect( Utils.format( String.join( "\n", language.getStringList( "hubbalancer.no-fallback" ) ) ) );
                 }
                 else
                 {

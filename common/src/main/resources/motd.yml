@@ -5,51 +5,51 @@ motd:
   # Default, this one will show when all others do not apply.
   - condition: 'default'
     motd: |-
-      &2Motd &5line &61
-      &3Motd &4line &72
+      <dark_green>Motd <dark_purple>line <gold>1
+      <dark_aqua>Motd <dark_red>line <gray>2
     player-hover:
-      - '&8&m---------------------------------'
-      - '&b&lGLOBAL &7» &f{proxy_online} players'
-      - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
-      - '&8&m---------------------------------'
+      - '<dark_gray><strikethrough>---------------------------------'
+      - '<aqua><bold>GLOBAL<reset> <gray>» <white>{proxy_online} players'
+      - '<yellow><bold>LOBBIES<reset> <gray>» <white>{getcount: Lobbies} players'
+      - '<dark_gray><strikethrough>---------------------------------'
   # User pings the server at the 'play.example.net' domain, condition is invalid when domain name is unknown.
   - condition: 'domain == play.example.net || domain == play.example.com'
     motd: |-
-      &aIt seems that you are playing on &2play.example.net&a!
-      &e     Please switch to &bplay.example.com &einstead!
+      <green>It seems that you are playing on <dark_green>play.example.net<green>!
+      <yellow>     Please switch to <aqua>play.example.com <yellow>instead!
     player-hover:
-      - '&8&m---------------------------------'
-      - '&b&lGLOBAL &7» &f{proxy_online} players'
-      - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
-      - '&8&m---------------------------------'
+      - '<dark_gray><strikethrough>---------------------------------'
+      - '<aqua><bold>GLOBAL<reset> <gray>» <white>{proxy_online} players'
+      - '<yellow><bold>LOBBIES<reset> <gray>» <white>{getcount: Lobbies} players'
+      - '<dark_gray><strikethrough>---------------------------------'
   # User name is known, player probably has joined before.
   - condition: 'name != null'
     motd: |-
-      &e                        Hello &b{user}&e!
-      &e               Welcome back to our server!
+      <yellow>                        Hello <aqua>{user}<yellow>!
+      <yellow>               Welcome back to our server!
     player-hover:
-      - '&8&m---------------------------------'
-      - '&eWelcome back &b{user} &eto our network!'
+      - '<dark_gray><strikethrough>---------------------------------'
+      - '<yellow>Welcome back <aqua>{user} <yellow>to our network!'
       - ''
-      - '&b&lGLOBAL &7» &f{proxy_online} players'
-      - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
-      - '&8&m---------------------------------'
+      - '<aqua><bold>GLOBAL<reset> <gray>» <white>{proxy_online} players'
+      - '<yellow><bold>LOBBIES<reset> <gray>» <white>{getcount: Lobbies} players'
+      - '<dark_gray><strikethrough>---------------------------------'
   # User name is unknown, player probably has never joined before.
   - condition: 'name == null'
     motd: |-
-      &eIt seems like you haven't joined our server yet!
-      &b               Come and take a look!
+      <yellow>It seems like you haven't joined our server yet!
+      <aqua>               Come and take a look!
     player-hover:
-      - '&8&m---------------------------------'
-      - '&b&lGLOBAL &7» &f{proxy_online} players'
-      - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
-      - '&8&m---------------------------------'
+      - '<dark_gray><strikethrough>---------------------------------'
+      - '<aqua><bold>GLOBAL<reset> <gray>» <white>{proxy_online} players'
+      - '<yellow><bold>LOBBIES<reset> <gray>» <white>{getcount: Lobbies} players'
+      - '<dark_gray><strikethrough>---------------------------------'
   - condition: 'version < 1.12.2'
     motd: |-
-      &bIt seems like you are using &e{version}&b!
-      &ePlease update to &a1.12.2 &eas this is the recommended version.
+      <aqua>It seems like you are using <yellow>{version}<aqua>!
+      <yellow>Please update to <green>1.12.2 <yellow>as this is the recommended version.
     player-hover:
-      - '&8&m---------------------------------'
-      - '&b&lGLOBAL &7» &f{proxy_online} players'
-      - '&e&lLOBBIES &7» &f{getcount: Lobbies} players'
-      - '&8&m---------------------------------'
+      - '<dark_gray><strikethrough>---------------------------------'
+      - '<aqua><bold>GLOBAL<reset> <gray>» <white>{proxy_online} players'
+      - '<yellow><bold>LOBBIES<reset> <gray>» <white>{getcount: Lobbies} players'
+      - '<dark_gray><strikethrough>---------------------------------'

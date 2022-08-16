@@ -2,30 +2,21 @@ package be.dieterblancke.bungeeutilisalsx.webapi.console;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.ConsoleUser;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.chat.ComponentSerializer;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 public class WebApiConsoleUser extends ConsoleUser
 {
 
     @Override
-    public void sendMessage( BaseComponent component )
+    public void sendMessage( Component component )
     {
         if ( this.isEmpty( component ) )
         {
             return;
         }
-        BuX.getLogger().info( ComponentSerializer.toString( component ) );
-    }
-
-    @Override
-    public void sendMessage( BaseComponent[] components )
-    {
-        if ( this.isEmpty( components ) )
-        {
-            return;
-        }
-        BuX.getLogger().info( ComponentSerializer.toString( components ) );
+        BuX.getLogger().info( LegacyComponentSerializer.legacyAmpersand().serialize( component ) );
     }
 
     @Override
@@ -50,5 +41,11 @@ public class WebApiConsoleUser extends ConsoleUser
     public void executeCommand( final String command )
     {
         // do nothing
+    }
+
+    @Override
+    public Audience asAudience()
+    {
+        return Audience.empty();
     }
 }

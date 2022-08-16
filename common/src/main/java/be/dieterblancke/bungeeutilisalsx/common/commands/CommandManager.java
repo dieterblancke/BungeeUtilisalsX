@@ -74,6 +74,7 @@ public abstract class CommandManager
         registerGeneralCommand( "domains", new DomainsCommandCall() );
         registerGeneralCommand( "staffannouncement", new StaffAnnouncementCommandCall() );
         registerGeneralCommand( "offlinemessage", new OfflineMessageCommandCall() );
+        registerGeneralCommand( "togglebossbar", new ToggleBossBarCommandCall() );
 
         if ( BuX.getInstance().isProtocolizeEnabled() )
         {

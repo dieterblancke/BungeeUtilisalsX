@@ -35,7 +35,7 @@ announcements:
         progress: 1.0
         # Set to true if the text is a path to a language message
         language: false
-        text: '&eThis server is using BungeeUtilisals'
+        text: '<yellow>This server is using BungeeUtilisals'
         # BarColor PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
       - color: 'GREEN'
         # SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS
@@ -44,7 +44,7 @@ announcements:
         progress: 1.0
         # Set to true if the text is a path to a language message
         language: false
-        text: '&aJoin the DBSoftwares Discord at &bhttps://discord.dieterblancke.xyz&a!'
+        text: '<green>Join the DBSoftwares Discord at <aqua>https://discord.dieterblancke.xyz<green>!'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames

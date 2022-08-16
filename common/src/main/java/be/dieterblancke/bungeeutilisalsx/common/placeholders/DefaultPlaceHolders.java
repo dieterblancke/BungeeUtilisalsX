@@ -6,10 +6,12 @@ import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderPack;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.event.PlaceHolderEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.configuration.api.IConfiguration;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class DefaultPlaceHolders implements PlaceHolderPack
 {
@@ -56,8 +58,10 @@ public class DefaultPlaceHolders implements PlaceHolderPack
         {
             return "";
         }
-        final SimpleDateFormat dateFormat = new SimpleDateFormat( format );
+        final ZonedDateTime localDateTime = ConfigFiles.CONFIG.isEnabled( "timezone", false )
+                ? ZonedDateTime.now( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) )
+                : ZonedDateTime.now();
 
-        return dateFormat.format( new Date() );
+        return localDateTime.format( DateTimeFormatter.ofPattern( format ) );
     }
 }

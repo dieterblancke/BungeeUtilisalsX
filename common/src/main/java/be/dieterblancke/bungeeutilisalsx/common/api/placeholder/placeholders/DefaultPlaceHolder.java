@@ -21,6 +21,6 @@ public class DefaultPlaceHolder extends PlaceHolder
             return message;
         }
         PlaceHolderEvent event = new PlaceHolderEvent( user, this, message );
-        return message.replace( placeHolderName, Utils.c( eventHandler.getReplacement( event ) ) );
+        return message.replace( placeHolderName, eventHandler.getReplacement( event ) );
     }
 }

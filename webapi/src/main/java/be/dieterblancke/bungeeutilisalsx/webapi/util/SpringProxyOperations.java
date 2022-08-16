@@ -2,9 +2,9 @@ package be.dieterblancke.bungeeutilisalsx.webapi.util;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import net.md_5.bungee.api.chat.BaseComponent;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
+import net.kyori.adventure.text.Component;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +54,7 @@ public class SpringProxyOperations implements ProxyOperationsApi
     }
 
     @Override
-    public Object getMessageComponent( BaseComponent... components )
+    public Object getMessageComponent( Component components )
     {
         return null;
     }

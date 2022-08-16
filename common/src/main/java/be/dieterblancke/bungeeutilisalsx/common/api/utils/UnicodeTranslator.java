@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.common.api.utils.text;
+package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 
 import java.io.IOException;
 import java.io.StringWriter;

@@ -6,16 +6,16 @@ commands:
       - 'webstore'
     permission: ''
     messages:
-      - text: '&eYou can find our webstore at &bwww.example.com/store&e!'
+      - text: '<yellow>You can find our webstore at <aqua>www.example.com/store<yellow>!'
         # Remove this if you want no hover action.
         hover:
-          - '&eClick to open visit our webstore.'
+          - '<yellow>Click to open visit our webstore.'
         # Remove this if you want no click action.
         click:
           # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
           type: 'OPEN_URL'
           action: 'www.example.com/store'
-      - text: '&eClick to checkout what we sell in our webstore!'
+      - text: '<yellow>Click to checkout what we sell in our webstore!'
         # Remove this if you want no click action.
         click:
           # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
@@ -28,29 +28,29 @@ commands:
   - name: 'vote'
     permission: ''
     messages:
-      text: '&eYou can find our vote links at &bwww.example.com/vote&e!'
+      text: '<yellow>You can find our vote links at <aqua>www.example.com/vote<yellow>!'
       hover:
-        - '&eClick to vote for our server.'
+        - '<yellow>Click to vote for our server.'
   - name: 'whoami'
     aliases:
       - 'myself'
     permission: ''
     messages:
-      - text: '&eYour name is &b{user}&e.'
+      - text: '<yellow>Your name is <aqua>{user}<yellow>.'
   - name: 'dbsoftwares'
     aliases:
       - 'didjee2'
     permission: ''
     messages:
       text:
-        - text: '&eThis server is using '
-        - text: '&bBungeeUtilisals '
+        - text: '<yellow>This server is using '
+        - text: '<aqua>BungeeUtilisals '
           hover:
-            - '&bBungeeUtilisals &eis a BungeeCord plugin maintained by &bDBSoftwares&e.'
-        - text: '&emade by '
-        - text: '&aDBSoftwares'
+            - '<aqua>BungeeUtilisals <yellow>is a BungeeCord plugin maintained by <aqua>DBSoftwares<yellow>.'
+        - text: '<yellow>made by '
+        - text: '<green>DBSoftwares'
           hover:
-            - '&ehttps://www.dieterblancke.xyz'
+            - '<yellow>https://www.dieterblancke.xyz'
           click:
             # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
             # RUN_COMMAND will only work for BungeeCord commands.
