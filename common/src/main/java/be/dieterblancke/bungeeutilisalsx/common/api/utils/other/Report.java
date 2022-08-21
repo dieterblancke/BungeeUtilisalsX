@@ -55,7 +55,7 @@ public class Report implements HasMessagePlaceholders
                 .append( "reporter", reportedBy )
                 .append( "reason", reason )
                 .append( "server", server )
-                .append( "date", () -> Dao.formatDateToString( date ) )
+                .append( "date", Dao.formatDateToString( date ) )
                 .append( "handled", handled )
                 .append( "accepted", accepted );
     }

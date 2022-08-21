@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
 
 public class MessagePlaceholders implements HasMessagePlaceholders
 {
@@ -17,7 +16,7 @@ public class MessagePlaceholders implements HasMessagePlaceholders
             return input; // no-op implementation
         }
     };
-    private final Map<String, Supplier<Object>> placeHolders = new HashMap<>();
+    private final Map<String, Object> placeHolders = new HashMap<>();
 
     private MessagePlaceholders()
     {
@@ -47,12 +46,6 @@ public class MessagePlaceholders implements HasMessagePlaceholders
 
     public MessagePlaceholders append( final String key, final Object value )
     {
-        this.placeHolders.put( key, () -> value );
-        return this;
-    }
-
-    public MessagePlaceholders append( final String key, final Supplier<Object> value )
-    {
         this.placeHolders.put( key, value );
         return this;
     }
@@ -65,22 +58,22 @@ public class MessagePlaceholders implements HasMessagePlaceholders
 
     public String format( String input )
     {
-        for ( Map.Entry<String, Supplier<Object>> entry : placeHolders.entrySet() )
+        for ( Map.Entry<String, Object> entry : placeHolders.entrySet() )
         {
             if ( !entry.getKey().startsWith( "{" ) && !entry.getKey().endsWith( "}" ) )
             {
                 if ( input.contains( "{" + entry.getKey() + "}" ) )
                 {
-                    input = input.replace( "{" + entry.getKey() + "}", String.valueOf( entry.getValue().get() ) );
+                    input = input.replace( "{" + entry.getKey() + "}", String.valueOf( entry.getValue() ) );
                 }
                 if ( input.contains( "%" + entry.getKey() + "%" ) )
                 {
-                    input = input.replace( "%" + entry.getKey() + "%", String.valueOf( entry.getValue().get() ) );
+                    input = input.replace( "%" + entry.getKey() + "%", String.valueOf( entry.getValue() ) );
                 }
             }
             else
             {
-                input = input.replace( entry.getKey(), String.valueOf( entry.getValue().get() ) );
+                input = input.replace( entry.getKey(), String.valueOf( entry.getValue() ) );
             }
         }
 
@@ -97,10 +90,10 @@ public class MessagePlaceholders implements HasMessagePlaceholders
     {
         List<Object> objects = new ArrayList<>();
 
-        for ( Map.Entry<String, Supplier<Object>> entry : placeHolders.entrySet() )
+        for ( Map.Entry<String, Object> entry : placeHolders.entrySet() )
         {
             objects.add( entry.getKey() );
-            objects.add( entry.getValue().get() );
+            objects.add( entry.getValue() );
         }
 
         return objects.toArray();
