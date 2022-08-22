@@ -1,3 +1,5 @@
+enabled: false
+
 balancers:
   # The server group to balance in, any time someone joins a server from this group, BuX will attempt to balance this out.
   - group: Lobbies
@@ -32,7 +34,7 @@ balancers:
       max-attempts: 3
       # If the maximum attempts have been reached and the server is still offline, how long should BuX not try to ping the server?
       cooldown: 60
-      # Only have servers as "connectable" if they meet the following rules
+      # Only have servers as "connectable" if they meet any the following rules
       motd-filter:
         - '(?i).*Waiting ...*'
 

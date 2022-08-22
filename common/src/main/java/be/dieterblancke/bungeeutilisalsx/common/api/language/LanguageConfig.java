@@ -24,11 +24,10 @@ public class LanguageConfig
         return this.buildLangMessage( path, null, null, placeholders );
     }
 
-    public String buildLangMessage(
-            final String path,
-            final Function<String, String> prePlaceholderFormatter,
-            final Function<String, String> postPlaceholderFormatter,
-            final HasMessagePlaceholders placeholders )
+    public String buildLangMessage( final String path,
+                                    final Function<String, String> prePlaceholderFormatter,
+                                    final Function<String, String> postPlaceholderFormatter,
+                                    final HasMessagePlaceholders placeholders )
     {
         if ( !config.exists( path ) )
         {

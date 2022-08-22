@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancerConfig.ServerBalancerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
@@ -46,6 +47,7 @@ public class CommandManager
         this.registerGeneralCommands();
         this.registerCustomCommands();
         this.registerPunishmentCommands();
+        this.registerServerBalancerCommands();
     }
 
     protected void registerGeneralCommands()
@@ -183,6 +185,23 @@ public class CommandManager
                     .executable( new CustomCommandCall( section, server, commands ) );
 
             buildCommand( name, commandBuilder );
+        }
+    }
+
+    protected void registerServerBalancerCommands()
+    {
+        if ( !ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            return;
+        }
+
+        for ( ServerBalancerGroup balancerGroup : ConfigFiles.SERVER_BALANCER_CONFIG.getBalancerGroups() )
+        {
+            registerCommand(
+                    balancerGroup.getServerGroup().getName(),
+                    balancerGroup.getCommandSection(),
+                    new ServerBalancerCommandCall( balancerGroup )
+            );
         }
     }
 
