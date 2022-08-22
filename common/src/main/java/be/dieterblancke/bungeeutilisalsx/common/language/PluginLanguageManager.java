@@ -35,7 +35,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 lang = loadResource( resourceClass, pluginName, "/configurations/languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
 
-            if ( !lang.exists() )
+            if ( lang == null || !lang.exists() )
             {
                 continue;
             }
