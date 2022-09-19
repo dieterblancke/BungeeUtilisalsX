@@ -88,6 +88,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void registerPluginSupports()
     {
+        super.registerPluginSupports();
     }
 
     @Override

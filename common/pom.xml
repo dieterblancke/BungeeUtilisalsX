@@ -20,6 +20,11 @@
             <id>bungeecord-repo</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </repository>
+        <repository>
+            <id>diogotc-repository</id>
+            <name>Diogo Correia's Reposilite Repository</name>
+            <url>https://repo.diogotc.com/snapshots/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -117,6 +122,12 @@
             <artifactId>adventure-text-minimessage</artifactId>
             <version>4.11.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.rexcantor64.triton</groupId>
+            <artifactId>api</artifactId>
+            <version>4.0.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.junit.jupiter</groupId>

@@ -1,10 +1,12 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.pluginsupport.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.utils.ItemUtils;
 import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -15,8 +17,10 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Data
 public class GuiConfigItemStack
@@ -74,6 +78,9 @@ public class GuiConfigItemStack
         }
         itemStack.lore(
                 this.lore.stream()
+                        .flatMap( lore -> PluginSupport.getPluginSupport( TritonPluginSupport.class )
+                                .map( pluginSupport -> Arrays.stream( pluginSupport.formatGuiMessage( user, lore ).split( "\n" ) ) )
+                                .orElse( Stream.of( lore ) ) )
                         .map( lore ->
                         {
                             Component loreComponent = Utils.format( user, Utils.replacePlaceHolders( lore, placeholders ) );
@@ -85,7 +92,11 @@ public class GuiConfigItemStack
                         .collect( Collectors.toList() ),
                 false
         );
-        Component displayName = Utils.format( user, Utils.replacePlaceHolders( this.name, placeholders ) );
+
+        String itemName = PluginSupport.getPluginSupport( TritonPluginSupport.class )
+                .map( pluginSupport -> pluginSupport.formatGuiMessage( user, name ) )
+                .orElse( name );
+        Component displayName = Utils.format( user, Utils.replacePlaceHolders( itemName, placeholders ) );
         displayName = displayName.decoration( TextDecoration.ITALIC, false );
         itemStack.displayName( BuX.getInstance().proxyOperations().getMessageComponent( displayName ) );
 

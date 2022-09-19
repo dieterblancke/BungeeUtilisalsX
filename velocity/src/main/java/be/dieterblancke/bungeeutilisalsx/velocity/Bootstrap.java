@@ -31,7 +31,8 @@ import java.util.logging.Logger;
         dependencies = {
                 @Dependency( id = "skinsrestorer", optional = true ),
                 @Dependency( id = "protocolize", optional = true ),
-                @Dependency( id = "luckperms", optional = true )
+                @Dependency( id = "luckperms", optional = true ),
+                @Dependency( id = "triton", optional = true )
         }
 )
 public class Bootstrap

@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.bungee;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
-import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonBungeePluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.*;
@@ -94,7 +94,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         super.registerPluginSupports();
 
         PluginSupport.registerPluginSupport( PremiumVanishPluginSupport.class );
-        PluginSupport.registerPluginSupport( TritonPluginSupport.class );
+        PluginSupport.registerPluginSupport( TritonBungeePluginSupport.class );
     }
 
     @Override

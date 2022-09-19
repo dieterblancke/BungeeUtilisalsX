@@ -17,6 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
@@ -38,6 +39,7 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.*;
+import be.dieterblancke.bungeeutilisalsx.common.pluginsupport.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
@@ -284,6 +286,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected void registerPluginSupports()
     {
+        PluginSupport.registerPluginSupport( TritonPluginSupport.class );
     }
 
     protected void loadDatabase()
