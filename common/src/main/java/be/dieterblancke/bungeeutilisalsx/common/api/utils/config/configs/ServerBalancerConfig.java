@@ -10,8 +10,9 @@ import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Getter
 public class ServerBalancerConfig extends Config
@@ -56,6 +57,9 @@ public class ServerBalancerConfig extends Config
                     pingerSection.getInteger( "max-attempts" ),
                     pingerSection.getInteger( "cooldown" ),
                     pingerSection.getStringList( "motd-filter" )
+                            .stream()
+                            .map( Pattern::compile )
+                            .collect( Collectors.toList() )
             );
 
             balancerGroups.add( new ServerBalancerGroup( group, method, commandSection, pinger ) );
@@ -90,6 +94,6 @@ public class ServerBalancerConfig extends Config
         int delay;
         int maxAttempts;
         int cooldown;
-        List<String> motdFilters;
+        List<Pattern> motdFilters;
     }
 }

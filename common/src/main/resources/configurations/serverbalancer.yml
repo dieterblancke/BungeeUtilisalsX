@@ -34,7 +34,7 @@ balancers:
       max-attempts: 3
       # If the maximum attempts have been reached and the server is still offline, how long should BuX not try to ping the server?
       cooldown: 60
-      # Only have servers as "connectable" if they meet any the following rules
+      # If the servers meet none of the following rules, they will be seen as offline. The cooldown rule does not apply to these servers however.
       motd-filter:
         - '(?i).*Waiting ...*'
 

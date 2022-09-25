@@ -3,7 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import lombok.Getter;
 import lombok.Setter;
 

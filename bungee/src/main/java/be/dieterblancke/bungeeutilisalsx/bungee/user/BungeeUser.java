@@ -20,7 +20,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;

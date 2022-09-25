@@ -2,12 +2,17 @@ package be.dieterblancke.bungeeutilisalsx.bungee.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import lombok.Data;
+import net.md_5.bungee.api.Callback;
+import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.chat.ComponentSerializer;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Data
@@ -48,5 +53,29 @@ public class BungeeServer implements IProxyServer
     public void sendPluginMessage( final String channel, final byte[] data )
     {
         serverInfo.sendData( channel, data );
+    }
+
+    @Override
+    public CompletableFuture<PingInfo> ping()
+    {
+        CompletableFuture<PingInfo> completableFuture = new CompletableFuture<>();
+
+        serverInfo.ping( ( serverPing, throwable ) ->
+        {
+            if ( throwable != null )
+            {
+                completableFuture.completeExceptionally( throwable );
+            }
+            else
+            {
+                completableFuture.complete( new PingInfo(
+                        serverPing.getPlayers().getOnline(),
+                        serverPing.getPlayers().getMax(),
+                        ComponentSerializer.toString( serverPing.getDescriptionComponent() )
+                ) );
+            }
+        } );
+
+        return completableFuture;
     }
 }

@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.announcers.bossbar.BossBarMessag
 import be.dieterblancke.bungeeutilisalsx.common.announcers.title.TitleMessage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import lombok.Getter;
 import lombok.Value;

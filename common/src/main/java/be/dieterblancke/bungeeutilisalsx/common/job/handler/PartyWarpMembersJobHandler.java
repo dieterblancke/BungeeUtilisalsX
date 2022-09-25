@@ -4,7 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyWarpMembersJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import lombok.SneakyThrows;
 

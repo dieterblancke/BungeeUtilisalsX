@@ -29,6 +29,11 @@ placeholders:
     time: 'kk:mm:ss'
     datetime: 'dd-MM-yyyy kk:mm:ss'
 
+server-balancer:
+  command:
+    sending: '&eSending you to &b{groupName} &7({serverName})'
+    no-servers-available: '&eThere are currently no servers available in &b{groupName}&e!'
+
 subcommands:
   usage: '<yellow>Please use <aqua>{usage}<yellow>!'
 

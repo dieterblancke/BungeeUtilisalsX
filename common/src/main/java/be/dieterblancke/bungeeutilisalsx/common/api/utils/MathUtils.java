@@ -377,6 +377,10 @@ public class MathUtils
 
     public static <T> T getRandomFromList( List<T> list )
     {
+        if ( list == null || list.isEmpty() )
+        {
+            return null;
+        }
         return list.get( randomRangeInt( 0, list.size() ) );
     }
 

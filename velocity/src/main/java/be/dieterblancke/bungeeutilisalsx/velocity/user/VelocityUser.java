@@ -17,9 +17,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
@@ -30,12 +29,9 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
 
 import java.net.InetSocketAddress;
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter

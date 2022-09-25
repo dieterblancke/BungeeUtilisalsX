@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -181,4 +182,9 @@ public interface IBuXApi
      * @return a list of online staff members
      */
     List<StaffUser> getStaffMembers();
+
+    /**
+     * @return the server balancing handler.
+     */
+    ServerBalancer getServerBalancer();
 }

@@ -5,7 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHa
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 
 public class ChatSyncJobHandler extends AbstractJobHandler
 {
