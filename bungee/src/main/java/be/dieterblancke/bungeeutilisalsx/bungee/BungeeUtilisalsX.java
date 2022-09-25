@@ -17,6 +17,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
@@ -52,6 +53,14 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
+        SimpleServerBalancer simpleServerBalancer = null;
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            simpleServerBalancer = new SimpleServerBalancer();
+            simpleServerBalancer.setup();
+        }
+
         return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
@@ -60,7 +69,8 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                         this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
                                 ? new ProxySyncPlayerUtils()
                                 : new RedisPlayerUtils()
-                        : new BungeePlayerUtils()
+                        : new BungeePlayerUtils(),
+                simpleServerBalancer
         );
     }
 

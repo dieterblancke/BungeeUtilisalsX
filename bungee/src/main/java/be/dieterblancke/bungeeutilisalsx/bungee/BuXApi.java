@@ -13,11 +13,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMe
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +40,7 @@ public class BuXApi implements IBuXApi
     private final IPlayerUtils playerUtils;
     private final User consoleUser = new BungeeConsoleUser();
     private final List<User> users = Lists.newCopyOnWriteArrayList();
+    private final ServerBalancer serverBalancer;
 
     @Override
     public Optional<User> getUser( String name )

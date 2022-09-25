@@ -217,11 +217,10 @@ public abstract class AbstractBungeeUtilisalsX
             this.api.getLanguageManager().reloadConfig( this.getName(), language );
         }
 
-// TODO: reload server manager
-//        if ( this.api.getHubBalancer() != null )
-//        {
-//            this.api.getHubBalancer().reload();
-//        }
+        if ( this.api.getServerBalancer() != null )
+        {
+            this.api.getServerBalancer().reload();
+        }
 
         this.getCommandManager().load();
         Announcer.getAnnouncers().values().forEach( Announcer::reload );

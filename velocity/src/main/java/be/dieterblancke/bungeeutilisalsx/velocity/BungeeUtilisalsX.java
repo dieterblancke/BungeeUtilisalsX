@@ -11,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import org.bstats.charts.AdvancedPie;
@@ -41,13 +42,22 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
+        SimpleServerBalancer simpleServerBalancer = null;
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            simpleServerBalancer = new SimpleServerBalancer();
+            simpleServerBalancer.setup();
+        }
+
         return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
                 new PunishmentHelper(),
                 ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
                         ? new ProxySyncPlayerUtils()
-                        : new VelocityPlayerUtils()
+                        : new VelocityPlayerUtils(),
+                simpleServerBalancer
         );
     }
 

@@ -11,6 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMe
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -38,6 +39,7 @@ public class BuXApi implements IBuXApi
     private final IPlayerUtils playerUtils;
     private final User consoleUser = new VelocityConsoleUser();
     private final List<User> users = Collections.synchronizedList( Lists.newArrayList() );
+    private final ServerBalancer serverBalancer;
 
     @Override
     public Optional<User> getUser( String name )

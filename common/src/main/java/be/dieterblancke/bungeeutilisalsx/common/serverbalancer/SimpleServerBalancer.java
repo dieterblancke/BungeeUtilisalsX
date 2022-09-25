@@ -53,6 +53,13 @@ public class SimpleServerBalancer implements ServerBalancer
     }
 
     @Override
+    public void reload()
+    {
+        shutdown();
+        setup();
+    }
+
+    @Override
     public Optional<IProxyServer> getOptimalServer( ServerBalancerGroup balancerGroup )
     {
         ServerBalancingMethod balancingMethod = balancerGroup.getMethod();

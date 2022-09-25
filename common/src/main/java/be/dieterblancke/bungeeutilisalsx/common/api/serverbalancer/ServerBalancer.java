@@ -12,6 +12,8 @@ public interface ServerBalancer
 
     void shutdown();
 
+    void reload();
+
     Optional<IProxyServer> getOptimalServer( ServerBalancerGroup serverBalancerGroup );
 
 }

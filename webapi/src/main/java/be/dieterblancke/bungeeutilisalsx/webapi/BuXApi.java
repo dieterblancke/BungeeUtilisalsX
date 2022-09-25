@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -155,5 +156,11 @@ public class BuXApi implements IBuXApi
     public List<StaffUser> getStaffMembers()
     {
         return BuX.getInstance().getStaffMembers();
+    }
+
+    @Override
+    public ServerBalancer getServerBalancer()
+    {
+        throw new UnsupportedOperationException( "Bossbar is not suppored in the web version of BungeeUtilisalsX!" );
     }
 }
