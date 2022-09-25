@@ -22,7 +22,7 @@ public class MainFriendRequestsGuiOpener extends GuiOpener
                 .itemProvider( new MainFriendRequestsGuiItemProvider( user, config ) )
                 .rows( config.getRows() )
                 .title( config.getTitle() )
-                .users( user )
+                .user( user )
                 .build();
 
         gui.open();

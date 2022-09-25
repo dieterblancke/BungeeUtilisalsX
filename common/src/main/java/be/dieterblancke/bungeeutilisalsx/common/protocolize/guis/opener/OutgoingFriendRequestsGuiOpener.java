@@ -27,7 +27,7 @@ public class OutgoingFriendRequestsGuiOpener extends GuiOpener
                     .itemProvider( new FriendRequestsGuiItemProvider( user, FriendRequestType.OUTGOING, config, outgoingRequests ) )
                     .rows( config.getRows() )
                     .title( config.getTitle() )
-                    .users( user )
+                    .user( user )
                     .build();
 
             gui.open();

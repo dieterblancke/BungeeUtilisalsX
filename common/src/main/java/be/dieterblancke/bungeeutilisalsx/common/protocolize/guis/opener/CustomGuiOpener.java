@@ -55,7 +55,7 @@ public class CustomGuiOpener extends GuiOpener
                 .itemProvider( new CustomGuiItemProvider( user, config ) )
                 .rows( config.getRows() )
                 .title( config.getTitle() )
-                .users( user )
+                .user( user )
                 .build();
 
         gui.open();

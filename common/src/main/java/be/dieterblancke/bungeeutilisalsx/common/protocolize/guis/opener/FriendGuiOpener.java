@@ -27,7 +27,7 @@ public class FriendGuiOpener extends GuiOpener
                 .itemProvider( new FriendGuiItemProvider( user, config, friends ) )
                 .rows( config.getRows() )
                 .title( config.getTitle() )
-                .users( user )
+                .user( user )
                 .build();
 
         gui.open();
