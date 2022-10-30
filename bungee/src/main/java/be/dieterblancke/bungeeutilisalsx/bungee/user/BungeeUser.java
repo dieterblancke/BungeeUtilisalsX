@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
@@ -18,9 +19,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -284,11 +284,11 @@ public class BungeeUser implements User
     {
         try
         {
-            return Version.getVersion( player.getPendingConnection().getVersion() );
+            return ConfigFiles.VERSIONS_CONFIG.getVersion( player.getPendingConnection().getVersion() );
         }
         catch ( Exception e )
         {
-            return Version.MINECRAFT_1_8;
+            return ConfigFiles.VERSIONS_CONFIG.getUnknownVersion();
         }
     }
 

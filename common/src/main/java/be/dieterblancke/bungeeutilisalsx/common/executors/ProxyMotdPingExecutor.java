@@ -8,7 +8,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotd
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
@@ -64,13 +63,11 @@ public class ProxyMotdPingExecutor implements EventExecutor
 
     private String formatMessage( String message, final MotdConnection connection )
     {
-        final Version version = Version.getVersion( connection.getVersion() );
-
         if ( message.contains( "{user}" ) )
         {
             message = message.replace( "{user}", connection.getName() == null ? "Unknown" : connection.getName() );
         }
-        message = message.replace( "{version}", version == null ? "Unknown" : version.toString() );
+        message = message.replace( "{version}", ConfigFiles.VERSIONS_CONFIG.getVersion( connection.getVersion() ).versionName() );
 
         if ( connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null )
         {
@@ -94,7 +91,7 @@ public class ProxyMotdPingExecutor implements EventExecutor
 
     private MotdPingResponse loadConditionalMotd( final MotdConnection connection, final List<MotdData> motds )
     {
-        final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).collect( Collectors.toList() );
+        final List<MotdData> conditions = motds.stream().filter( data -> !data.isDef() ).toList();
 
         for ( final MotdData condition : conditions )
         {

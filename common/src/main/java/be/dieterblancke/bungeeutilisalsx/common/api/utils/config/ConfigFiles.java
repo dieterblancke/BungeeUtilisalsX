@@ -32,6 +32,7 @@ public class ConfigFiles
     public static PartyConfig PARTY_CONFIG = new PartyConfig( "/configurations/party/config.yml" );
     public static ChatSyncConfig CHAT_SYNC_CONFIG = new ChatSyncConfig( "/configurations/chat/chatsync.yml" );
     public static ServerBalancerConfig SERVER_BALANCER_CONFIG = new ServerBalancerConfig( "/configurations/serverbalancer.yml" );
+    public static VersionsConfig VERSIONS_CONFIG = new VersionsConfig();
 
     public static void loadAllConfigs()
     {

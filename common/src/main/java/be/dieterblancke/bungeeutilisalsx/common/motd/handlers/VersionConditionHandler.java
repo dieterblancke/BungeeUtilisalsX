@@ -1,72 +1,50 @@
 package be.dieterblancke.bungeeutilisalsx.common.motd.handlers;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
+
+import java.util.stream.Collectors;
 
 public class VersionConditionHandler extends ConditionHandler
 {
 
     public VersionConditionHandler( String condition )
     {
-        super( condition.replaceFirst( "version ", "" ).replace( ".", "_" ) );
+        super( condition.replaceFirst( "version ", "" ) );
     }
 
     @Override
-    public boolean checkCondition( final MotdConnection connection )
+    public boolean checkCondition( MotdConnection connection )
     {
-        final Version version = formatVersion( value );
+        Version version = ConfigFiles.VERSIONS_CONFIG.getVersionByName( value )
+                .orElseGet( () ->
+                {
+                    BuX.getLogger().warning( "Found an invalid version in condition 'version " + condition + "', using 'unknown' version instead!" );
+                    BuX.getLogger().warning( "Available versions:" );
+                    BuX.getLogger().warning( listVersions() );
 
-        if ( version == null )
-        {
-            return false;
-        }
+                    return ConfigFiles.VERSIONS_CONFIG.getUnknownVersion();
+                } );
 
         return switch ( operator )
                 {
-                    case LT -> connection.getVersion() < version.getVersionId();
-                    case LTE -> connection.getVersion() <= version.getVersionId();
-                    case EQ -> connection.getVersion() == version.getVersionId();
-                    case NOT_EQ -> connection.getVersion() != version.getVersionId();
-                    case GTE -> connection.getVersion() >= version.getVersionId();
-                    case GT -> connection.getVersion() > version.getVersionId();
-                    default -> false;
+                    case LT -> connection.getVersion() < version.protocolVersion();
+                    case LTE -> connection.getVersion() <= version.protocolVersion();
+                    case EQ -> connection.getVersion() == version.protocolVersion();
+                    case NOT_EQ -> connection.getVersion() != version.protocolVersion();
+                    case GTE -> connection.getVersion() >= version.protocolVersion();
+                    case GT -> connection.getVersion() > version.protocolVersion();
                 };
-    }
-
-    private Version formatVersion( String mcVersion )
-    {
-        try
-        {
-            return Version.valueOf( "MINECRAFT_" + mcVersion );
-        }
-        catch ( IllegalArgumentException e )
-        {
-            BuX.getLogger().warning( "Found an invalid version in condition 'version " + condition + "'!" );
-            BuX.getLogger().warning( "Available versions:" );
-            BuX.getLogger().warning( listVersions() );
-            return null;
-        }
     }
 
     private String listVersions()
     {
-        final StringBuilder builder = new StringBuilder();
-        int length = Version.values().length;
-
-        for ( int i = 0; i < length; i++ )
-        {
-            final Version version = Version.values()[i];
-
-            builder.append( version.toString() );
-
-            if ( i < length - 1 )
-            {
-                builder.append( ", " );
-            }
-        }
-
-        return builder.toString();
+        return ConfigFiles.VERSIONS_CONFIG.getVersions()
+                .stream()
+                .map( Version::versionName )
+                .collect( Collectors.joining( ", " ) );
     }
 }

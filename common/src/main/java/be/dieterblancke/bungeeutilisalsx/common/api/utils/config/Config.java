@@ -3,34 +3,45 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils.config;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.FileUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.exception.InvalidConfigFileException;
+import be.dieterblancke.configuration.api.ConfigurationOptions;
+import be.dieterblancke.configuration.api.FileStorageType;
 import be.dieterblancke.configuration.api.IConfiguration;
+import be.dieterblancke.configuration.json.JsonConfigurationOptions;
 import be.dieterblancke.configuration.yaml.YamlConfigurationOptions;
 import lombok.Getter;
+import lombok.SneakyThrows;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+@Getter
 public class Config
 {
 
-    @Getter
+    private final String location;
+    private final FileStorageType storageType;
     protected IConfiguration config;
-    @Getter
-    protected String location;
 
-    public Config( final String location )
+    public Config( String location )
     {
+        this( FileStorageType.YAML, location );
+    }
+
+    public Config( FileStorageType storageType, String location )
+    {
+        this.storageType = storageType;
         this.location = location;
     }
 
+    @SneakyThrows
     public void load()
     {
-        final File file = new File( BuX.getInstance().getDataFolder(), location.replaceFirst( "configurations/", "" ) );
+        File file = new File( BuX.getInstance().getDataFolder(), location.replaceFirst( "configurations/", "" ) );
 
         if ( !file.exists() )
         {
-            final InputStream inputStream = FileUtils.getResourceAsStream( location );
+            InputStream inputStream = FileUtils.getResourceAsStream( location );
 
             if ( inputStream == null )
             {
@@ -38,20 +49,13 @@ public class Config
             }
 
             IConfiguration.createDefaultFile( inputStream, file );
+        }
 
-            this.config = IConfiguration.loadYamlConfiguration(
-                    file,
-                    YamlConfigurationOptions.builder().useComments( true ).build()
-            );
-        }
-        else
-        {
-            // update configurations ...
-            this.config = IConfiguration.loadYamlConfiguration(
-                    file,
-                    YamlConfigurationOptions.builder().useComments( true ).build()
-            );
-        }
+        this.config = IConfiguration.loadConfiguration(
+                storageType,
+                file,
+                this.createConfigurationOptions()
+        );
 
         this.setup();
         BuX.debug( "Successfully loaded config file: " + location.replaceFirst( "configurations/", "" ).substring( 1 ) );
@@ -106,5 +110,12 @@ public class Config
             return config.getBoolean( path + ".enabled" );
         }
         return def;
+    }
+
+    private ConfigurationOptions createConfigurationOptions()
+    {
+        return storageType == FileStorageType.YAML
+                ? YamlConfigurationOptions.builder().useComments( true ).build()
+                : JsonConfigurationOptions.builder().build();
     }
 }
