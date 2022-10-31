@@ -1,12 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Data;
-import net.md_5.bungee.api.Callback;
-import net.md_5.bungee.api.ServerPing;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
 import net.md_5.bungee.chat.ComponentSerializer;

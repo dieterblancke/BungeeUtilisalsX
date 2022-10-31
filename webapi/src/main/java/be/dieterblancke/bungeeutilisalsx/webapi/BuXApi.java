@@ -161,6 +161,6 @@ public class BuXApi implements IBuXApi
     @Override
     public ServerBalancer getServerBalancer()
     {
-        throw new UnsupportedOperationException( "Bossbar is not suppored in the web version of BungeeUtilisalsX!" );
+        throw new UnsupportedOperationException( "The ServerBalancer is not suppored in the web version of BungeeUtilisalsX!" );
     }
 }
