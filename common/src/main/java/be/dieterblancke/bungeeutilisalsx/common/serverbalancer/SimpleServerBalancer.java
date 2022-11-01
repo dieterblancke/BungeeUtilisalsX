@@ -35,7 +35,6 @@ public class SimpleServerBalancer implements ServerBalancer
         }
 
         setupPingerTasks();
-
         status = true;
     }
 
@@ -48,7 +47,6 @@ public class SimpleServerBalancer implements ServerBalancer
         }
         pingerTasks.values().forEach( it -> it.cancel( true ) );
         pingerTasks.clear();
-
         status = false;
     }
 
@@ -68,9 +66,9 @@ public class SimpleServerBalancer implements ServerBalancer
         return switch ( balancingMethod )
                 {
                     case RANDOM -> Optional.ofNullable( MathUtils.getRandomFromList( groupStatus.getAvailableServers() ) );
-                    case LEAST_PLAYERS -> groupStatus.getAvailableServers().stream().min( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+                    case LEAST_PLAYERS -> groupStatus.getAvailableServers().stream().min( Comparator.comparingInt( o -> groupStatus.serverStatuses().get( o ).getOnlinePlayers() ) );
                     case FIRST_NON_FULL -> groupStatus.getAvailableServers().stream().findFirst();
-                    case MOST_PLAYERS -> groupStatus.getAvailableServers().stream().max( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+                    case MOST_PLAYERS -> groupStatus.getAvailableServers().stream().max( Comparator.comparingInt( o -> groupStatus.serverStatuses().get( o ).getOnlinePlayers() ) );
                 };
     }
 
@@ -94,12 +92,12 @@ public class SimpleServerBalancer implements ServerBalancer
 
                 for ( IProxyServer server : balancerGroup.getServerGroup().getServers() )
                 {
-                    if ( !groupStatus.getServerStatuses().containsKey( server ) )
+                    if ( !groupStatus.serverStatuses().containsKey( server ) )
                     {
-                        groupStatus.getServerStatuses().put( server, new ServerBalancerServerStatus() );
+                        groupStatus.serverStatuses().put( server, new ServerBalancerServerStatus() );
                     }
 
-                    ServerBalancerServerStatus serverStatus = groupStatus.getServerStatuses().get( server );
+                    ServerBalancerServerStatus serverStatus = groupStatus.serverStatuses().get( server );
                     boolean canPing = false;
 
                     if ( serverStatus.getFailureCount() >= pinger.getMaxAttempts() )
@@ -139,10 +137,8 @@ public class SimpleServerBalancer implements ServerBalancer
         }
     }
 
-    @Value
-    public static class ServerBalancerGroupStatus
+    public record ServerBalancerGroupStatus(Map<IProxyServer, ServerBalancerServerStatus> serverStatuses)
     {
-        Map<IProxyServer, ServerBalancerServerStatus> serverStatuses;
 
         public List<IProxyServer> getAvailableServers()
         {
