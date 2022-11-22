@@ -16,7 +16,6 @@ import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.LoginEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
-import net.kyori.adventure.text.Component;
 
 import java.util.Optional;
 import java.util.UUID;
