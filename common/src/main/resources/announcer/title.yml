@@ -21,19 +21,19 @@ announcements:
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Global
     # How long should the title fade in?
-    fadein: 10
+    fadein: 1
     # How long should the title stay?
-    stay: 30
+    stay: 3
     # How long should the title fade out?
-    fadeout: 10
+    fadeout: 1
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisals.announcements.receive'
     # Should the message be retrieved from the language files? If true, you must use a valid path!
     language: false
     # Title text, if language is set to true, the path will be searched in the language file.
-    title: '&c&lBungeeUtilisals'
+    title: '<red><bold>BungeeUtilisals'
     # SubTitle text, if language is set to true, the path will be searched in the language file.
-    subtitle: '&dThank you for using our plugin!'
+    subtitle: '<light_purple>Thank you for using our plugin!'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames

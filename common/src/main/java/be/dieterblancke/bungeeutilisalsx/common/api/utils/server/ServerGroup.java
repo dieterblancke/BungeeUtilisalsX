@@ -12,15 +12,85 @@ import java.util.List;
 public class ServerGroup
 {
 
-    private String name;
-    private boolean global;
-    private List<String> servers;
+    private final String name;
+    private final boolean global;
+    private final boolean dynamic;
+    private final List<String> serverNames;
 
-    public ServerGroup( String name, boolean global, List<String> servers )
+    public ServerGroup( String name, boolean global, boolean dynamic, List<String> servers )
     {
         this.name = name;
         this.global = global;
-        this.servers = searchServers( servers );
+        this.dynamic = dynamic;
+        this.serverNames = dynamic ? servers : searchServers( servers );
+    }
+
+    public int getPlayers()
+    {
+        int players = 0;
+
+        if ( global )
+        {
+            return BuX.getApi().getPlayerUtils().getTotalCount();
+        }
+
+        for ( String server : this.searchServers() )
+        {
+            players += BuX.getApi().getPlayerUtils().getPlayerCount( server );
+        }
+
+        return players;
+    }
+
+    public List<String> getPlayerList()
+    {
+        List<String> players = Lists.newArrayList();
+
+        if ( global )
+        {
+            return BuX.getApi().getPlayerUtils().getPlayers();
+        }
+
+        for ( String server : this.searchServers() )
+        {
+            players.addAll( BuX.getApi().getPlayerUtils().getPlayers( server ) );
+        }
+
+        return players;
+    }
+
+    public List<IProxyServer> getServers()
+    {
+        final List<IProxyServer> servers = Lists.newArrayList();
+
+        this.searchServers().forEach( serverName ->
+        {
+            IProxyServer info = BuX.getInstance().proxyOperations().getServerInfo( serverName );
+
+            if ( info != null )
+            {
+                servers.add( info );
+            }
+        } );
+
+        return servers;
+    }
+
+    public boolean isInGroup( final String serverName )
+    {
+        for ( String server : this.searchServers() )
+        {
+            if ( server.equalsIgnoreCase( serverName ) )
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private List<String> searchServers()
+    {
+        return dynamic ? searchServers( serverNames ) : serverNames;
     }
 
     private List<String> searchServers( List<String> servers )
@@ -58,73 +128,5 @@ public class ServerGroup
         } );
 
         return foundServers;
-    }
-
-    public void addServer( final String server )
-    {
-        this.servers.add( server );
-    }
-
-    public int getPlayers()
-    {
-        int players = 0;
-
-        if ( global )
-        {
-            return BuX.getApi().getPlayerUtils().getTotalCount();
-        }
-
-        for ( String server : servers )
-        {
-            players += BuX.getApi().getPlayerUtils().getPlayerCount( server );
-        }
-
-        return players;
-    }
-
-    public List<String> getPlayerList()
-    {
-        List<String> players = Lists.newArrayList();
-
-        if ( global )
-        {
-            return BuX.getApi().getPlayerUtils().getPlayers();
-        }
-
-        for ( String server : servers )
-        {
-            players.addAll( BuX.getApi().getPlayerUtils().getPlayers( server ) );
-        }
-
-        return players;
-    }
-
-    public List<IProxyServer> getServers()
-    {
-        final List<IProxyServer> servers = Lists.newArrayList();
-
-        this.servers.forEach( serverName ->
-        {
-            IProxyServer info = BuX.getInstance().proxyOperations().getServerInfo( serverName );
-
-            if ( info != null )
-            {
-                servers.add( info );
-            }
-        } );
-
-        return servers;
-    }
-
-    public boolean isInGroup( final String serverName )
-    {
-        for ( String server : servers )
-        {
-            if ( server.equalsIgnoreCase( serverName ) )
-            {
-                return true;
-            }
-        }
-        return false;
     }
 }

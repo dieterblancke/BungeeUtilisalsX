@@ -13,19 +13,20 @@ import java.util.regex.Pattern;
 public class MessageUtils
 {
 
+    public static final char SECTION_CHAR = '\u00A7';
     private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer
             .builder()
             .flattener( ComponentFlattener.textOnly() )
             .build();
     private static final LegacyComponentSerializer SECTION_WITH_RGB = LegacyComponentSerializer
             .builder()
-            .character( '§' )
+            .character( SECTION_CHAR )
             .hexCharacter( '#' )
             .hexColors()
             .build();
     private static final LegacyComponentSerializer SECTION_WITH_UNUSUAL_RGB = LegacyComponentSerializer
             .builder()
-            .character( '§' )
+            .character( SECTION_CHAR )
             .hexCharacter( '#' )
             .hexColors()
             .useUnusualXRepeatedCharacterHexFormat()
@@ -38,7 +39,7 @@ public class MessageUtils
             .build();
     private static final LegacyComponentSerializer SECTION = LegacyComponentSerializer
             .builder()
-            .character( '§' )
+            .character( SECTION_CHAR )
             .build();
 
 
@@ -76,11 +77,7 @@ public class MessageUtils
 
     public static Component fromText( String text )
     {
-        for ( Map.Entry<String, String> entry : COLOR_MAPPINGS.entrySet() )
-        {
-            text = text.replace( "&" + entry.getKey(), "<" + entry.getValue() + ">" );
-            text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
-        }
+        text = convertForMiniMessage( text );
 
         return MiniMessage.miniMessage().deserialize( text );
     }
@@ -99,6 +96,17 @@ public class MessageUtils
                         )
                 )
         );
+    }
+
+    public static String convertForMiniMessage( String text )
+    {
+        for ( Map.Entry<String, String> entry : COLOR_MAPPINGS.entrySet() )
+        {
+            text = text.replace( "&" + entry.getKey(), "<" + entry.getValue() + ">" );
+            text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
+        }
+
+        return text;
     }
 
     private static String fixHexColors( String text )

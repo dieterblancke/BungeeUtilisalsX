@@ -70,15 +70,12 @@ public enum SqlConstants
 
     public String getReplacement( final String type )
     {
-        switch ( type.toLowerCase() )
-        {
-            case "postgresql":
-                return postgresql;
-            case "sqlite":
-                return sqlite;
-            default:
-                return mysql;
-        }
+        return switch ( type.toLowerCase() )
+                {
+                    case "postgresql" -> postgresql;
+                    case "sqlite" -> sqlite;
+                    default -> mysql;
+                };
     }
 
     public String getMysql()

@@ -25,8 +25,8 @@ announcements:
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisalsx.announcements.receive'
     messages:
-      - '&eThis server is using BungeeUtilisals:'
-      - '&6BungeeUtilisals has been coded by &bdidjee2&6.'
+      - '<yellow>This server is using BungeeUtilisals:'
+      - '<gold>BungeeUtilisals has been coded by <aqua>didjee2<gold>.'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames

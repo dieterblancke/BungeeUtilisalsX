@@ -394,10 +394,13 @@ public class BungeeUser implements User
         {
             if ( player.getPendingConnection().getVirtualHost().getHostName() == null )
             {
+                BuX.debug( "IP joined for " + player.getName() + ": " + Utils.getIP( player.getPendingConnection().getVirtualHost().getAddress() ) );
                 joinedHost = Utils.getIP( player.getPendingConnection().getVirtualHost().getAddress() );
             }
             else
             {
+                BuX.debug( "Hostname for " + player.getName() + ": " + player.getPendingConnection().getVirtualHost().getHostName() );
+                BuX.debug( "Hoststring for " + player.getName() + ": " + player.getPendingConnection().getVirtualHost().getHostString() );
                 joinedHost = player.getPendingConnection().getVirtualHost().getHostName();
             }
         }

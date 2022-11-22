@@ -21,16 +21,16 @@ glist:
   permission: bungeeutilisals.commands.glist
   header: ''
   format:
-    text: '&c%server% &7(%players%) &f» %playerlist%'
+    text: '<red>%server% <gray>(%players%) <white>» %playerlist%'
     hover:
-      - '&eClick here to go to &b%server%&e.'
+      - '<yellow>Click here to go to <aqua>%server%<yellow>.'
     click:
       # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
       # RUN_COMMAND will only work for BungeeCord commands.
       type: 'RUN_COMMAND'
       action: '/server %server%'
   playerlist:
-    color: '&e'
+    color: '<yellow>'
     separator: ', '
   # You can use ServerGroups & ServerNames in here. ServerGroups have a higher priority..
   servers:
@@ -44,7 +44,7 @@ glist:
       - 'Skyblock'
       - 'SkyWars'
   total:
-    text: '&eThere is / are &c%total% &eplayer(s) online now!'
+    text: '<yellow>There is / are <red>%total% <yellow>player(s) online now!'
     hover:
       - '%playerlist%'
 announce:
@@ -67,7 +67,7 @@ announce:
       progress: 1.0
     chat:
       enabled: true
-      prefix: '&c&lAnnounce &8» &f'
+      prefix: '<red><bold>Announce<reset> <dark_gray>» <white>'
     actionbar:
       enabled: true
     title:

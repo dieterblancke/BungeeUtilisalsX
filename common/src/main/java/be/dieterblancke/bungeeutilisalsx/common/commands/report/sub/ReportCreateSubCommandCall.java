@@ -30,6 +30,11 @@ public class ReportCreateSubCommandCall implements CommandCall
         final String targetName = args.get( 0 );
         final String reason = String.join( " ", args.subList( 1, args.size() ) );
 
+        if (targetName.equalsIgnoreCase( user.getName() )) {
+            user.sendLangMessage( "general-commands.report.create.self-report" );
+            return;
+        }
+
         if ( !BuX.getApi().getPlayerUtils().isOnline( targetName ) )
         {
             user.sendLangMessage( "offline" );
