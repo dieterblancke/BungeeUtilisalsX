@@ -5,13 +5,13 @@ import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.google.common.base.Strings;
-import net.md_5.bungee.api.event.PlayerDisconnectEvent;
-import net.md_5.bungee.api.event.PostLoginEvent;
-import net.md_5.bungee.api.event.ServerConnectEvent;
-import net.md_5.bungee.api.event.ServerConnectedEvent;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.md_5.bungee.api.event.*;
 import net.md_5.bungee.api.plugin.Listener;
+import net.md_5.bungee.chat.ComponentSerializer;
 import net.md_5.bungee.event.EventHandler;
 import net.md_5.bungee.event.EventPriority;
 
@@ -79,5 +79,31 @@ public class UserConnectionListener implements Listener
                 BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
+    }
+
+    @EventHandler
+    public void onConnect( ServerKickEvent event )
+    {
+        Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
+
+        if ( optional.isEmpty() )
+        {
+            return;
+        }
+
+        GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
+        UserServerKickEvent userServerKickEvent = new UserServerKickEvent(
+                optional.get(),
+                event.getKickedFrom() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getKickedFrom().getName() ),
+                event.getCancelServer() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getCancelServer().getName() ),
+                componentSerializer.deserialize( ComponentSerializer.toString( event.getKickReasonComponent() ) )
+        );
+        BuX.getApi().getEventLoader().launchEvent( userServerKickEvent );
+
+        if ( userServerKickEvent.isTargetChanged() )
+        {
+            event.setCancelServer( ( (BungeeServer) userServerKickEvent.getRedirectServer() ).getServerInfo() );
+            event.setKickReasonComponent( ComponentSerializer.parse( componentSerializer.serialize( userServerKickEvent.getKickMessage() ) ) );
+        }
     }
 }

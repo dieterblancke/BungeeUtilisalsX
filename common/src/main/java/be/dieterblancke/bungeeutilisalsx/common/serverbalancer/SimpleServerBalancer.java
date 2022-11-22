@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer.PingInfo;
 import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
@@ -24,32 +23,31 @@ public class SimpleServerBalancer implements ServerBalancer
 
     private final Map<ServerBalancerGroup, ScheduledFuture<?>> pingerTasks = new ConcurrentHashMap<>();
     private final Map<ServerBalancerGroup, ServerBalancerGroupStatus> groupStatuses = new ConcurrentHashMap<>();
-    private boolean status = false;
+    private boolean initialized = false;
 
     @Override
     public void setup()
     {
-        if ( status )
+        if ( initialized )
         {
             throw new IllegalStateException( "The SimpleServerBalancer has already been setup." );
         }
 
         setupPingerTasks();
-
-        status = true;
+        initialized = true;
     }
 
     @Override
     public void shutdown()
     {
-        if ( !status )
+        if ( !initialized )
         {
             throw new IllegalStateException( "The SimpleServerBalancer has not yet been set up." );
         }
+
         pingerTasks.values().forEach( it -> it.cancel( true ) );
         pingerTasks.clear();
-
-        status = false;
+        initialized = false;
     }
 
     @Override
@@ -59,18 +57,29 @@ public class SimpleServerBalancer implements ServerBalancer
         setup();
     }
 
+    public boolean isInitialized()
+    {
+        return initialized;
+    }
+
     @Override
     public Optional<IProxyServer> getOptimalServer( ServerBalancerGroup balancerGroup )
+    {
+        return this.getOptimalServer( balancerGroup, null );
+    }
+
+    @Override
+    public Optional<IProxyServer> getOptimalServer( ServerBalancerGroup balancerGroup, String serverToIgnore )
     {
         ServerBalancingMethod balancingMethod = balancerGroup.getMethod();
         ServerBalancerGroupStatus groupStatus = groupStatuses.get( balancerGroup );
 
         return switch ( balancingMethod )
                 {
-                    case RANDOM -> Optional.ofNullable( MathUtils.getRandomFromList( groupStatus.getAvailableServers() ) );
-                    case LEAST_PLAYERS -> groupStatus.getAvailableServers().stream().min( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
-                    case FIRST_NON_FULL -> groupStatus.getAvailableServers().stream().findFirst();
-                    case MOST_PLAYERS -> groupStatus.getAvailableServers().stream().max( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+                    case RANDOM -> Optional.ofNullable( MathUtils.getRandomFromList( groupStatus.getAvailableServers( serverToIgnore ) ) );
+                    case LEAST_PLAYERS -> groupStatus.getAvailableServers( serverToIgnore ).stream().min( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+                    case FIRST_NON_FULL -> groupStatus.getAvailableServers( serverToIgnore ).stream().findFirst();
+                    case MOST_PLAYERS -> groupStatus.getAvailableServers( serverToIgnore ).stream().max( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
                 };
     }
 
@@ -144,12 +153,21 @@ public class SimpleServerBalancer implements ServerBalancer
     {
         Map<IProxyServer, ServerBalancerServerStatus> serverStatuses;
 
-        public List<IProxyServer> getAvailableServers()
+        public List<IProxyServer> getAvailableServers( String serverToIgnore )
         {
             List<IProxyServer> availableServers = new ArrayList<>();
 
             for ( Entry<IProxyServer, ServerBalancerServerStatus> entry : serverStatuses.entrySet() )
             {
+                if ( entry.getKey() == null )
+                {
+                    continue;
+                }
+                if ( serverToIgnore != null && entry.getKey().getName().equals( serverToIgnore ) )
+                {
+                    continue;
+                }
+
                 if ( entry.getValue().isOnline() && entry.getValue().getOnlinePlayers() < entry.getValue().getMaxPlayers() )
                 {
                     availableServers.add( entry.getKey() );

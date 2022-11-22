@@ -178,9 +178,8 @@ public abstract class Announcer
     {
         for ( IAnnouncement a : announcements )
         {
-            if ( a instanceof GroupedAnnouncement )
+            if ( a instanceof final GroupedAnnouncement ga )
             {
-                final GroupedAnnouncement ga = (GroupedAnnouncement) a;
 
                 if ( ga.getGroup().equals( group ) )
                 {

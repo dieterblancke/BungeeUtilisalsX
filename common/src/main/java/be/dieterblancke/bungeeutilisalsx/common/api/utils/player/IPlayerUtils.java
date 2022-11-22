@@ -1,9 +1,9 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MojangUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import lombok.SneakyThrows;
 
 import java.util.List;

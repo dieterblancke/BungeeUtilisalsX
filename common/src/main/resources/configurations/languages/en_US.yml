@@ -33,6 +33,7 @@ server-balancer:
   command:
     sending: '&eSending you to &b{groupName} &7({serverName})'
     no-servers-available: '&eThere are currently no servers available in &b{groupName}&e!'
+    already-in-group: '&eYou are already in this server group!'
 
 subcommands:
   usage: '<yellow>Please use <aqua>{usage}<yellow>!'

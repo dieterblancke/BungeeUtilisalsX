@@ -18,7 +18,22 @@ public class ServerBalancerCommandCall implements CommandCall
     @Override
     public void onExecute( User user, List<String> args, List<String> parameters )
     {
-        BuX.getApi().getServerBalancer().getOptimalServer( serverBalancerGroup )
+        String serverToIgnore = null;
+
+        if ( serverBalancerGroup.getServerGroup().isInGroup( user.getServerName() ) )
+        {
+            if ( !serverBalancerGroup.isAllowSendingToOtherServers() )
+            {
+                user.sendLangMessage( "server-balancer.command.already-in-group" );
+                return;
+            }
+            else
+            {
+                serverToIgnore = user.getServerName();
+            }
+        }
+
+        BuX.getApi().getServerBalancer().getOptimalServer( serverBalancerGroup, serverToIgnore )
                 .ifPresentOrElse( server ->
                 {
                     user.sendToServer( server );

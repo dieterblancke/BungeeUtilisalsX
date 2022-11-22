@@ -2,8 +2,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.event.events.user;
 
 import be.dieterblancke.bungeeutilisalsx.common.api.event.AbstractEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Cancellable;
-import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;

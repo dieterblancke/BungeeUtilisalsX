@@ -19,6 +19,7 @@ public class ServerBalancerConfig extends Config
 {
 
     private final List<ServerBalancerGroup> balancerGroups = new ArrayList<>();
+    private FallbackConfig fallbackConfig;
 
     public ServerBalancerConfig( final String location )
     {
@@ -49,6 +50,7 @@ public class ServerBalancerConfig extends Config
             {
                 continue;
             }
+            boolean allowSendingToOtherServers = section.getBoolean( "allow-sending-to-other-servers" );
             ServerBalancingMethod method = Utils.valueOfOr( section.getString( "method" ), ServerBalancingMethod.LEAST_PLAYERS );
             ISection commandSection = section.getSection( "command" );
             ISection pingerSection = section.getSection( "pinger" );
@@ -56,14 +58,18 @@ public class ServerBalancerConfig extends Config
                     pingerSection.getInteger( "delay" ),
                     pingerSection.getInteger( "max-attempts" ),
                     pingerSection.getInteger( "cooldown" ),
-                    pingerSection.getStringList( "motd-filter" )
-                            .stream()
-                            .map( Pattern::compile )
-                            .collect( Collectors.toList() )
+                    pingerSection.exists( "motd-filter" )
+                            ? pingerSection.getStringList( "motd-filter" ).stream().map( Pattern::compile ).collect( Collectors.toList() )
+                            : new ArrayList<>()
             );
 
-            balancerGroups.add( new ServerBalancerGroup( group, method, commandSection, pinger ) );
+            balancerGroups.add( new ServerBalancerGroup( allowSendingToOtherServers, group, method, commandSection, pinger ) );
         }
+        fallbackConfig = new FallbackConfig(
+                FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
+                config.getStringList( "fallback.reasons" ),
+                this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null )
+        );
     }
 
     public Optional<ServerBalancerGroup> getServerBalancerGroupFor( final String serverName )
@@ -76,12 +82,18 @@ public class ServerBalancerConfig extends Config
 
     public enum ServerBalancingMethod
     {
-        RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS;
+        RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS
+    }
+
+    public enum FallbackMode
+    {
+        BLACKLIST, WHITELIST
     }
 
     @Value
     public static class ServerBalancerGroup
     {
+        boolean allowSendingToOtherServers;
         ServerGroup serverGroup;
         ServerBalancingMethod method;
         ISection commandSection;
@@ -95,5 +107,13 @@ public class ServerBalancerConfig extends Config
         int maxAttempts;
         int cooldown;
         List<Pattern> motdFilters;
+    }
+
+    @Value
+    public static class FallbackConfig
+    {
+        FallbackMode fallbackMode;
+        List<String> reasons;
+        ServerBalancerGroup fallbackGroup;
     }
 }

@@ -16,4 +16,6 @@ public interface ServerBalancer
 
     Optional<IProxyServer> getOptimalServer( ServerBalancerGroup serverBalancerGroup );
 
+    Optional<IProxyServer> getOptimalServer( ServerBalancerGroup serverBalancerGroup, String serverToIgnore );
+
 }

@@ -5,6 +5,9 @@ balancers:
   - group: Lobbies
     # There are 4 methods available: RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS. LEAST_PLAYERS is recommended.
     method: LEAST_PLAYERS
+    # If true, when running the command to this server and the player is already in it, BuX will attempt to find another server in this group.
+    # If false, BuX would show an already connected message.
+    allow-sending-to-other-servers: true
 
     pinger:
       # The delay, in seconds, between BuX pinging servers to check if they are accessible.
@@ -20,12 +23,14 @@ balancers:
       name: 'hub'
       aliases: 'lobby'
       permission: bungeeutilisalsx.commands.hub
-      listener-based: true
 
     # The server group to balance in, any time someone joins a server from this group, BuX will attempt to balance this out.
   - group: minigames-walls
     # There are 4 methods available: RANDOM, LEAST_PLAYERS, FIRST_NON_FULL, MOST_PLAYERS. LEAST_PLAYERS is recommended.
     method: MOST_PLAYERS
+    # If true, when running the command to this server and the player is already in it, BuX will attempt to find another server in this group.
+    # If false, BuX would show an already connected message.
+    allow-sending-to-other-servers: true
 
     pinger:
       # The delay, in seconds, between BuX pinging servers to check if they are accessible.
@@ -44,11 +49,14 @@ balancers:
       name: 'hub'
       aliases: 'lobby'
       permission: bungeeutilisalsx.commands.hub
-      listener-based: true
 
+# When someone is kicked from a server, this section will be used.
 fallback:
+  # BLACKLIST: kick reasons that DO contain any of the following words will kick from the network, others will redirect to the "fallback-to" servergroup
+  # WHITELIST: kick reasons that DO NOT contain any of the following words will kick from the network, others will redirect to the "fallback-to" servergroup
   type: 'BLACKLIST'
   reasons:
     - 'ban'
     - 'kick'
+  # The SERVERGROUP to fall back to.
   fallback-to: Lobbies

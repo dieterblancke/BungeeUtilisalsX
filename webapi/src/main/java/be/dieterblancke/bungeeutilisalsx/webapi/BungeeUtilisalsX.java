@@ -36,14 +36,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     public void initialize()
     {
-        if ( ReflectionUtils.getJavaVersion() < 8 )
-        {
-            BuX.getLogger().warning( "You are running a Java version lower then Java 8." );
-            BuX.getLogger().warning( "Please upgrade to Java 8 or newer." );
-            BuX.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
-            return;
-        }
-
         if ( !getDataFolder().exists() )
         {
             getDataFolder().mkdirs();
