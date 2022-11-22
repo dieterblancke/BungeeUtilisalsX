@@ -4,11 +4,12 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
@@ -47,8 +48,9 @@ public class GListCommandCall implements CommandCall, TabCall
                         MessageBuilder.buildMessage(
                                 user,
                                 config.getSection( "glist.header" ),
-                                "%total%", totalOnlineCount,
-                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) )
+                                MessagePlaceholders.create()
+                                        .append( "total", totalOnlineCount )
+                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
                         )
                 );
             }
@@ -75,9 +77,10 @@ public class GListCommandCall implements CommandCall, TabCall
                         MessageBuilder.buildMessage(
                                 user,
                                 config.getSection( "glist.format" ),
-                                "%server%", group.getName(),
-                                "%players%", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ),
-                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) )
+                                MessagePlaceholders.create()
+                                        .append( "server", group.getName() )
+                                        .append( "players", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ) )
+                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) ) )
                         )
                 );
             }
@@ -92,9 +95,10 @@ public class GListCommandCall implements CommandCall, TabCall
                         MessageBuilder.buildMessage(
                                 user,
                                 config.getSection( "glist.format" ),
-                                "%server%", info.getName(),
-                                "%players%", String.valueOf( players.size() - getHiddenUsers( players ) ),
-                                "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( players ) )
+                                MessagePlaceholders.create()
+                                        .append( "server", info.getName() )
+                                        .append( "players", String.valueOf( players.size() - getHiddenUsers( players ) ) )
+                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( players ) ) )
                         )
                 );
             }
@@ -103,8 +107,9 @@ public class GListCommandCall implements CommandCall, TabCall
                 MessageBuilder.buildMessage(
                         user,
                         config.getSection( "glist.total" ),
-                        "%total%", totalOnlineCount,
-                        "%playerlist%", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) )
+                        MessagePlaceholders.create()
+                                .append( "total", totalOnlineCount )
+                                .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
                 )
         );
 

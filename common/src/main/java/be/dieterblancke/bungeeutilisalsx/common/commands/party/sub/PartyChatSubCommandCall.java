@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,8 +29,9 @@ public class PartyChatSubCommandCall implements CommandCall
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                     party,
                     "party.chat.format",
-                    "{user}", user.getName(),
-                    "{message}", String.join( " ", args )
+                    MessagePlaceholders.create()
+                            .append( "user", user.getName() )
+                            .append( "message", String.join( " ", args ) )
             );
         }
         else

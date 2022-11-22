@@ -63,7 +63,7 @@ public abstract class Announcer
         if ( !file.exists() )
         {
             try ( InputStream inputStream = FileUtils.getResourceAsStream(
-                    "/announcer/" + type.toString().toLowerCase() + ".yml"
+                    "/configurations/announcer/" + type.toString().toLowerCase() + ".yml"
             ) )
             {
                 IConfiguration.createDefaultFile( inputStream, file );
@@ -178,9 +178,8 @@ public abstract class Announcer
     {
         for ( IAnnouncement a : announcements )
         {
-            if ( a instanceof GroupedAnnouncement )
+            if ( a instanceof final GroupedAnnouncement ga )
             {
-                final GroupedAnnouncement ga = (GroupedAnnouncement) a;
 
                 if ( ga.getGroup().equals( group ) )
                 {

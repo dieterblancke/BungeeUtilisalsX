@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -23,7 +24,7 @@ public class PartyInviteSubCommandCall implements CommandCall
     {
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;
@@ -61,7 +62,7 @@ public class PartyInviteSubCommandCall implements CommandCall
             {
                 if ( currentParty.get().getUuid().equals( party.getUuid() ) )
                 {
-                    user.sendLangMessage( "party.invite.already-in-party", "{user}", targetUser );
+                    user.sendLangMessage( "party.invite.already-in-party", MessagePlaceholders.create().append( "user", targetUser ) );
                     return;
                 }
                 else if ( !ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "allow-invites-to-members-already-in-party" ) )
@@ -79,17 +80,20 @@ public class PartyInviteSubCommandCall implements CommandCall
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                     target.getUserName(),
                     "party.invite.invited",
-                    "{user}", user.getName()
+                    MessagePlaceholders.create()
+                            .append( "user", user.getName() )
             ) );
 
             user.sendLangMessage(
                     "party.invite.invite-success",
-                    "{user}", target.getUserName()
+                    MessagePlaceholders.create()
+                            .append( "user", target.getUserName() )
             );
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                     party,
                     "party.invite.invited-broadcast",
-                    "{user}", target.getUserName()
+                    MessagePlaceholders.create()
+                            .append( "user", target.getUserName() )
             );
         } );
     }

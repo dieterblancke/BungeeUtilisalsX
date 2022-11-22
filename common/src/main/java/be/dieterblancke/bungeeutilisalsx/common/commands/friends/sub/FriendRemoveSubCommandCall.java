@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +47,10 @@ public class FriendRemoveSubCommandCall implements CommandCall
                 return;
             }
 
-            user.sendLangMessage( "friends.remove.no-friend", "{user}", name );
+            user.sendLangMessage(
+                    "friends.remove.no-friend",
+                    MessagePlaceholders.create().append( "user", name )
+            );
             return;
         }
 
@@ -54,14 +58,20 @@ public class FriendRemoveSubCommandCall implements CommandCall
         dao.getFriendsDao().removeFriend( storage.getUuid(), user.getUuid() );
 
         user.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( name ) );
-        user.sendLangMessage( "friends.remove.removed", "{user}", name );
+        user.sendLangMessage(
+                "friends.remove.removed",
+                MessagePlaceholders.create().append( "user", name )
+        );
 
         if ( optionalTarget.isPresent() )
         {
             final User target = optionalTarget.get();
 
             target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
-            target.sendLangMessage( "friends.remove.friend-removed", "{user}", user.getName() );
+            target.sendLangMessage(
+                    "friends.remove.friend-removed",
+                    MessagePlaceholders.create().append( "user", user.getName() )
+            );
         }
         else
         {

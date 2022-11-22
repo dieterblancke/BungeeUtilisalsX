@@ -1,8 +1,8 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.Config;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.configuration.api.ISection;
 import com.google.common.collect.Lists;
@@ -25,7 +25,7 @@ public class ServerGroupsConfig extends Config
 
     public Optional<ServerGroup> getServer( final String server )
     {
-        return Optional.ofNullable(servers.get( server ));
+        return Optional.ofNullable( servers.get( server ) );
     }
 
     @Override

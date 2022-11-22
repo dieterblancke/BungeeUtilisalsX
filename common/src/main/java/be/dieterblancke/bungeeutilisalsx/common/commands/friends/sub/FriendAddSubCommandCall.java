@@ -9,6 +9,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,7 +29,7 @@ public class FriendAddSubCommandCall implements CommandCall
 
         if ( user.getFriends().size() >= friendLimit )
         {
-            user.sendLangMessage( "friends.add.limited", "{limit}", friendLimit );
+            user.sendLangMessage( "friends.add.limited", MessagePlaceholders.create().append( "limit", friendLimit ) );
             return;
         }
         final String name = args.get( 0 );
@@ -42,7 +43,7 @@ public class FriendAddSubCommandCall implements CommandCall
 
         if ( user.getFriends().stream().anyMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
-            user.sendLangMessage( "friends.add.already-friend", "{friend}", name );
+            user.sendLangMessage( "friends.add.already-friend", MessagePlaceholders.create().append( "friend", name ) );
             return;
         }
 
@@ -68,7 +69,7 @@ public class FriendAddSubCommandCall implements CommandCall
 
         if ( dao.getFriendsDao().hasOutgoingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
-            user.sendLangMessage( "friends.add.already-requested", "{name}", name );
+            user.sendLangMessage( "friends.add.already-requested", MessagePlaceholders.create().append( "name", name ) );
             return;
         }
         if ( dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
@@ -78,20 +79,20 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         dao.getFriendsDao().addFriendRequest( user.getUuid(), storage.getUuid() );
-        user.sendLangMessage( "friends.add.request-sent", "{user}", name );
+        user.sendLangMessage( "friends.add.request-sent", MessagePlaceholders.create().append( "user", name ) );
 
         if ( optionalTarget.isPresent() )
         {
             final User target = optionalTarget.get();
 
-            target.sendLangMessage( "friends.request-received", "{name}", user.getName() );
+            target.sendLangMessage( "friends.request-received", MessagePlaceholders.create().append( "name", user.getName() ) );
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                     name,
                     "friends.request-received",
-                    "{name}", user.getName()
+                    MessagePlaceholders.create().append( "name", user.getName() )
             ) );
         }
     }

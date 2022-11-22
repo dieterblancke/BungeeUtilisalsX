@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,19 +52,22 @@ public class PartySetRoleSubCommandCall implements CommandCall
 
                         user.sendLangMessage(
                                 "party.setrole.role-updated",
-                                "{user}", member.getUserName(),
-                                "{role}", role.getName()
+                                MessagePlaceholders.create()
+                                        .append( "user", member.getUserName() )
+                                        .append( "role", role.getName() )
                         );
 
                         BuX.getInstance().getPartyManager().languageBroadcastToParty(
                                 party,
                                 "party.setrole.role-updated-broadcast",
-                                "{user}", member.getUserName(),
-                                "{role}", role.getName()
+                                MessagePlaceholders.create()
+                                        .append( "user", member.getUserName() )
+                                        .append( "role", role.getName() )
                         );
                     }, () -> user.sendLangMessage(
                             "party.setrole.incorrect-role",
-                            "{roles}", ConfigFiles.PARTY_CONFIG.getPartyRoles().stream().map( PartyRole::getName ).collect( Collectors.joining( ", " ) )
+                            MessagePlaceholders.create()
+                                    .append( "roles", ConfigFiles.PARTY_CONFIG.getPartyRoles().stream().map( PartyRole::getName ).collect( Collectors.joining( ", " ) ) )
                     ) );
                 }, () -> user.sendLangMessage( "party.setrole.not-in-party" ) );
     }

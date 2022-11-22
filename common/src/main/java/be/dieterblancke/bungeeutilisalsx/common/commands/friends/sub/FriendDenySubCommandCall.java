@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,18 +18,21 @@ public class FriendDenySubCommandCall implements CommandCall
     public static void removeFriendRequest( final UserStorage storage, final User user, final User target )
     {
         BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( user.getUuid(), storage.getUuid() );
-        user.sendLangMessage( "friends.deny.denied", "{user}", storage.getUserName() );
+        user.sendLangMessage(
+                "friends.deny.denied",
+                MessagePlaceholders.create().append( "user", storage.getUserName() )
+        );
 
         if ( target != null )
         {
-            target.sendLangMessage( "friends.deny.request-denied", "{name}", user.getName() );
+            target.sendLangMessage( "friends.deny.request-denied", MessagePlaceholders.create().append( "name", user.getName() ) );
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                     storage.getUserName(),
                     "friends.deny.request-denied",
-                    "{name}", user.getName()
+                    MessagePlaceholders.create().append( "name", user.getName() )
             ) );
         }
     }
@@ -54,7 +58,7 @@ public class FriendDenySubCommandCall implements CommandCall
 
         if ( !dao.hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
-            user.sendLangMessage( "friends.deny.no-request", "{user}", name );
+            user.sendLangMessage( "friends.deny.no-request", MessagePlaceholders.create().append( "user", name ) );
             return;
         }
 

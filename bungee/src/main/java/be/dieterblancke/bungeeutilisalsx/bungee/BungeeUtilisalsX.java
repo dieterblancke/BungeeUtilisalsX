@@ -1,23 +1,26 @@
 package be.dieterblancke.bungeeutilisalsx.bungee;
 
-import be.dieterblancke.bungeeutilisalsx.bungee.command.BungeeCommandManager;
-import be.dieterblancke.bungeeutilisalsx.bungee.hubbalancer.HubBalancer;
 import be.dieterblancke.bungeeutilisalsx.bungee.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.PremiumVanishPluginSupport;
-import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonBungeePluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.BungeePlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
+import be.dieterblancke.bungeeutilisalsx.common.executors.ServerBalancerExecutors;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
@@ -35,7 +38,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final ProxyOperationsApi proxyOperationsApi = new BungeeOperationsApi();
-    private final CommandManager commandManager = new BungeeCommandManager();
+    private final CommandManager commandManager = new CommandManager();
     private final IPluginDescription pluginDescription = new BungeePluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
     private final BungeeAudiences bungeeAudiences;
@@ -53,16 +56,24 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
+        SimpleServerBalancer simpleServerBalancer = null;
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            simpleServerBalancer = new SimpleServerBalancer();
+            simpleServerBalancer.setup();
+        }
+
         return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
-                ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
                 ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ?
                         this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
                                 ? new ProxySyncPlayerUtils()
                                 : new RedisPlayerUtils()
-                        : new BungeePlayerUtils()
+                        : new BungeePlayerUtils(),
+                simpleServerBalancer
         );
     }
 
@@ -88,6 +99,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         {
             ProxyServer.getInstance().getPluginManager().registerListener( Bootstrap.getInstance(), new MotdPingListener() );
         }
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            BuX.getApi().getEventLoader().register( new ServerBalancerExecutors( api.getServerBalancer() ), UserServerConnectEvent.class, UserServerKickEvent.class );
+        }
     }
 
     @Override
@@ -96,7 +112,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         super.registerPluginSupports();
 
         PluginSupport.registerPluginSupport( PremiumVanishPluginSupport.class );
-        PluginSupport.registerPluginSupport( TritonPluginSupport.class );
+        PluginSupport.registerPluginSupport( TritonBungeePluginSupport.class );
     }
 
     @Override
@@ -135,6 +151,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         return Bootstrap.getInstance().getLogger();
     }
 
+    @Override
+    public Platform getPlatform()
+    {
+        return Platform.BUNGEECORD;
+    }
+
     public BungeeAudiences getBungeeAudiences()
     {
         return bungeeAudiences;
@@ -146,7 +168,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         final Metrics metrics = new Metrics( Bootstrap.getInstance(), 5134 );
 
         metrics.addCustomChart( new SimplePie(
-                "punishments",
+                "configurations/punishments",
                 () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
@@ -181,10 +203,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 "tab_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new SimplePie(
-                "hubbalancer",
-                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
-        ) );
+// TODO: add chart "serverbalancer"
+//        metrics.addCustomChart( new SimplePie(
+//                "hubbalancer",
+//                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+//        ) );
         metrics.addCustomChart( new SimplePie(
                 "protocolize",
                 () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"

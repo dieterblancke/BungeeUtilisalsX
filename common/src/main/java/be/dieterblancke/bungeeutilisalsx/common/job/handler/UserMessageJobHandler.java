@@ -4,7 +4,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessage
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 
 public class UserMessageJobHandler extends AbstractJobHandler
 {

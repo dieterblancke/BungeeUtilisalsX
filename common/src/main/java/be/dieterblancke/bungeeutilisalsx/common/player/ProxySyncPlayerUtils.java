@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.proxysync.api.ProxySyncApiProvider;
 import be.dieterblancke.proxysync.api.model.user.User;

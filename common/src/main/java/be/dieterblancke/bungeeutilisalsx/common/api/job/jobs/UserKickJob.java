@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -23,7 +24,7 @@ public class UserKickJob implements MultiProxyJob
     private final boolean ip;
     private final String ipAddress;
     private final String languagePath;
-    private final Object[] placeholders;
+    private final MessagePlaceholders placeholders;
     private final PunishmentType punishmentType;
     private final String reason;
 

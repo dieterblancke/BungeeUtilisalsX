@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.webapi.util;
 
 import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
 import net.kyori.adventure.text.Component;
 

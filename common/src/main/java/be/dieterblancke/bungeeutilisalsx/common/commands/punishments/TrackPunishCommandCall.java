@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TrackUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -68,13 +69,12 @@ public class TrackPunishCommandCall extends PunishmentCommand
                     )
             );
 
-            final Object[] messagePlaceholders = new Object[]{
-                    "{user}", storage.getUserName(),
-                    "{track}", track.getIdentifier(),
-                    "{trackCount}", trackInfos.size(),
-                    "{trackMax}", TrackUtils.getMaxRunsForTrack( track ),
-                    "{executed_by}", user.getName()
-            };
+            final MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
+                    .append( "user", storage.getUserName() )
+                    .append( "track", track.getIdentifier() )
+                    .append( "trackCount", trackInfos.size() )
+                    .append( "trackMax", TrackUtils.getMaxRunsForTrack( track ) )
+                    .append( "executed_by", user.getName() );
 
             user.sendLangMessage( "punishments.track.executed", messagePlaceholders );
 

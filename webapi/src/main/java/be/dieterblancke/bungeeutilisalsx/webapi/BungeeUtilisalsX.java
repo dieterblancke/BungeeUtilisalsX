@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.webapi;
 
 import be.dieterblancke.bungeeutilisalsx.common.*;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
@@ -10,7 +11,6 @@ import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringCommandManager;
 import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringPluginDescription;
 import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringProxyOperations;
-import be.dieterblancke.configuration.api.FileStorageType;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
@@ -36,14 +36,6 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     public void initialize()
     {
-        if ( ReflectionUtils.getJavaVersion() < 8 )
-        {
-            BuX.getLogger().warning( "You are running a Java version lower then Java 8." );
-            BuX.getLogger().warning( "Please upgrade to Java 8 or newer." );
-            BuX.getLogger().warning( "BungeeUtilisalsX is not able to start up on Java versions lower then Java 8." );
-            return;
-        }
-
         if ( !getDataFolder().exists() )
         {
             getDataFolder().mkdirs();
@@ -133,6 +125,12 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public Logger getLogger()
     {
         return log;
+    }
+
+    @Override
+    public Platform getPlatform()
+    {
+        return Platform.SPRING;
     }
 
     @Override

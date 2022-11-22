@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.ChatLockJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -19,7 +20,10 @@ public class ChatLockCommandCall implements CommandCall, TabCall
 
     public static void lockChat( final String server, final String by )
     {
-        final Stream<User> users = server.equals( "ALL" )
+        MessagePlaceholders placeholders = MessagePlaceholders.create()
+                .append( "user", by );
+
+        Stream<User> users = server.equals( "ALL" )
                 ? BuX.getApi().getUsers().stream()
                 : BuX.getApi().getUsers().stream().filter( u -> u.getServerName().equalsIgnoreCase( server ) );
 
@@ -27,13 +31,13 @@ public class ChatLockCommandCall implements CommandCall, TabCall
         {
             lockedChatServers.remove( server );
 
-            users.forEach( u -> u.sendLangMessage( "general-commands.chatlock.unlocked", "{user}", by ) );
+            users.forEach( u -> u.sendLangMessage( "general-commands.chatlock.unlocked", placeholders ) );
         }
         else
         {
             lockedChatServers.add( server );
 
-            users.forEach( u -> u.sendLangMessage( "general-commands.chatlock.locked", "{user}", by ) );
+            users.forEach( u -> u.sendLangMessage( "general-commands.chatlock.locked", placeholders ) );
         }
     }
 

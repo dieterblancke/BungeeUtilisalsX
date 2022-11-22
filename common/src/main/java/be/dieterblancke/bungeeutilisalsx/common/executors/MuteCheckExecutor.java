@@ -31,7 +31,7 @@ public class MuteCheckExecutor implements EventExecutor
             return;
         }
         final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
-        if ( checkTemporaryMute( user, info ) )
+        if ( info == null || checkTemporaryMute( user, info ) )
         {
             return;
         }
@@ -40,8 +40,10 @@ public class MuteCheckExecutor implements EventExecutor
                 .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
         {
 
-            user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                    event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+            user.sendLangMessage(
+                    "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                    event.getApi().getPunishmentExecutor().getPlaceHolders( info )
+            );
             event.setCancelled( true );
         }
     }
@@ -57,13 +59,15 @@ public class MuteCheckExecutor implements EventExecutor
             return;
         }
         final PunishmentInfo info = getCurrentMuteForUser( user, user.getServerName() );
-        if ( checkTemporaryMute( user, info ) )
+        if ( info == null || checkTemporaryMute( user, info ) )
         {
             return;
         }
 
-        user.sendLangMessage( "punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                event.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[]{} ) );
+        user.sendLangMessage(
+                "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                event.getApi().getPunishmentExecutor().getPlaceHolders( info )
+        );
         event.setCancelled( true );
     }
 

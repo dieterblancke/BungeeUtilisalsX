@@ -3,9 +3,10 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserSwitchServerJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -14,14 +15,17 @@ public class ServerCommandCall implements CommandCall
 
     public static void sendToServer( final User user, final IProxyServer server )
     {
+        MessagePlaceholders placeholders = MessagePlaceholders.create()
+                .append( "server", server.getName() );
+
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
         {
-            user.sendLangMessage( "general-commands.server.alreadyconnected", "{server}", server.getName() );
+            user.sendLangMessage( "general-commands.server.alreadyconnected", placeholders );
             return;
         }
 
         user.sendToServer( server );
-        user.sendLangMessage( "general-commands.server.connecting", "{server}", server.getName() );
+        user.sendLangMessage( "general-commands.server.connecting", placeholders );
     }
 
     @Override
@@ -29,7 +33,7 @@ public class ServerCommandCall implements CommandCall
     {
         if ( args.isEmpty() )
         {
-            user.sendLangMessage( "general-commands.server.usage", "{server}", user.getServerName() );
+            user.sendLangMessage( "general-commands.server.usage", MessagePlaceholders.create().append( "server", user.getServerName() ) );
             return;
         }
 
@@ -38,7 +42,7 @@ public class ServerCommandCall implements CommandCall
 
         if ( server == null )
         {
-            user.sendLangMessage( "general-commands.server.notfound", "{server}", args.get( serverArgIdx ) );
+            user.sendLangMessage( "general-commands.server.notfound", MessagePlaceholders.create().append( "server", args.get( serverArgIdx ) ) );
             return;
         }
 
@@ -58,8 +62,9 @@ public class ServerCommandCall implements CommandCall
 
                 user.sendLangMessage(
                         "general-commands.server.sent-other",
-                        "{user}", name,
-                        "{server}", server.getName()
+                        MessagePlaceholders.create()
+                                .append( "user", name )
+                                .append( "server", server.getName() )
                 );
             }
             else

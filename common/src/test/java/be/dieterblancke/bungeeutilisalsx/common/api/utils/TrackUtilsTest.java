@@ -27,7 +27,7 @@ class TrackUtilsTest
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.PUNISHMENT_TRACKS,
-                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/punishments/tracks.yml" ) )
+                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/punishments/tracks.yml" ) )
         );
         ConfigFiles.PUNISHMENT_TRACKS.setup();
     }

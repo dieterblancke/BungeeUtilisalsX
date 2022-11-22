@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserPrivateMessageJ
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 public class UserPrivateMessageJobHandler extends AbstractJobHandler
 {
@@ -41,20 +41,22 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
             user.sendLangMessage(
                     false,
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
-                    "{sender}", job.getUserName(),
-                    "{message}", job.getMessage(),
-                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
-                    "{receiver-server}", user.getServerName()
+                    MessagePlaceholders.create()
+                            .append( "sender", job.getUserName() )
+                            .append( "message", job.getMessage() )
+                            .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
+                            .append( "receiver-server", user.getServerName() )
             );
 
             executeJob( new UserLanguageMessageJob(
                     job,
                     false,
                     "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
-                    "{receiver}", user.getName(),
-                    "{message}", job.getMessage(),
-                    "{sender-server}", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName(),
-                    "{receiver-server}", user.getServerName()
+                    MessagePlaceholders.create()
+                            .append( "receiver", user.getName() )
+                            .append( "message", job.getMessage() )
+                            .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
+                            .append( "receiver-server", user.getServerName() )
             ) );
 
             executeJob( new ExecuteEventJob(

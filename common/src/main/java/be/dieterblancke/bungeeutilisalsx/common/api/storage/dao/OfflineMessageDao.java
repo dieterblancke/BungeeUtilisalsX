@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.storage.dao;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import lombok.Value;
 
 import java.util.List;
@@ -19,9 +20,9 @@ public interface OfflineMessageDao
     {
         Long id;
         String languagePath;
-        Object[] placeholders;
+        HasMessagePlaceholders placeholders;
 
-        public OfflineMessage( final Long id, final String languagePath, final Object... placeholders )
+        public OfflineMessage( final Long id, final String languagePath, final HasMessagePlaceholders placeholders )
         {
             this.id = id;
             this.languagePath = languagePath;

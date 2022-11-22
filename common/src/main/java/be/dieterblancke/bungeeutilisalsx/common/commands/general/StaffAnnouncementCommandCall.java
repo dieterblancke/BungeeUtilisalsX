@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -23,8 +24,9 @@ public class StaffAnnouncementCommandCall implements CommandCall
         BuX.getApi().langPermissionBroadcast(
                 "general-commands.staffannouncement.broadcast",
                 ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffannouncement.receive-permission" ),
-                "{broadcaster}", user.getName(),
-                "{message}", message
+                MessagePlaceholders.create()
+                        .append( "broadcaster", user.getName() )
+                        .append( "message", message )
         );
     }
 

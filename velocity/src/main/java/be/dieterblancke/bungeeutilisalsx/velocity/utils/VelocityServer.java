@@ -1,14 +1,17 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.utils;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.messages.MinecraftChannelIdentifier;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerPing.Players;
 import lombok.Data;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.util.Collection;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 @Data
@@ -51,5 +54,15 @@ public class VelocityServer implements IProxyServer
         final MinecraftChannelIdentifier channelIdentifier = MinecraftChannelIdentifier.from( channel );
 
         registeredServer.sendPluginMessage( channelIdentifier, data );
+    }
+
+    @Override
+    public CompletableFuture<PingInfo> ping()
+    {
+        return registeredServer.ping().thenApply( serverPing -> new PingInfo(
+                serverPing.getPlayers().map( Players::getOnline ).orElse( 0 ),
+                serverPing.getPlayers().map( Players::getMax ).orElse( 0 ),
+                GsonComponentSerializer.gson().serialize( serverPing.getDescriptionComponent() )
+        ) );
     }
 }

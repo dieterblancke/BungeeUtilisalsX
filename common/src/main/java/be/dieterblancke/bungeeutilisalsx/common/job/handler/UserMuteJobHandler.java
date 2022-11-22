@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class UserMuteJobHandler extends AbstractJobHandler
 
     private void muteUser( final User user,
                            final String languagePath,
-                           final Object[] placeholders,
+                           final MessagePlaceholders placeholders,
                            final PunishmentType punishmentType,
                            final String reason )
     {

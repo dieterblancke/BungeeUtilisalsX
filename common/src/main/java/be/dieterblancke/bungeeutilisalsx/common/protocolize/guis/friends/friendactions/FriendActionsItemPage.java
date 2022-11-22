@@ -2,9 +2,11 @@ package be.dieterblancke.bungeeutilisalsx.common.protocolize.guis.friends.friend
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.ItemPage;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.config.GuiConfigItem;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
@@ -23,11 +25,10 @@ public class FriendActionsItemPage extends ItemPage
         final String currentServer = Optional.ofNullable( BuX.getApi().getPlayerUtils().findPlayer( friendData.getFriend() ) )
                 .map( IProxyServer::getName ).orElse( null );
 
-        final Object[] placeholders = new Object[]{
-                "{friend-name}", friendData.getFriend(),
-                "{last-online}", Utils.formatDate( friendData.getLastOnline() ),
-                "{server}", currentServer == null ? "Unknown" : currentServer
-        };
+        final MessagePlaceholders placeholders = MessagePlaceholders.create()
+                .append( "friend-name", friendData.getFriend() )
+                .append( "last-online", Utils.formatDate( friendData.getLastOnline() ) )
+                .append( "server", currentServer == null ? "Unknown" : currentServer );
 
         for ( GuiConfigItem item : guiConfig.getItems() )
         {
@@ -59,7 +60,7 @@ public class FriendActionsItemPage extends ItemPage
                                       final FriendGuiConfigItem item,
                                       final FriendData friendData,
                                       final String currentServer,
-                                      final Object... placeholders )
+                                      final HasMessagePlaceholders placeholders )
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online

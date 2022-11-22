@@ -68,7 +68,7 @@ public class UnmuteCommandCall extends PunishmentCommand
 
         punishmentRemovalArgs.removeCachedMute();
 
-        user.sendLangMessage( "punishments.unmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+        user.sendLangMessage( "punishments.unmute.executed", executor.getPlaceHolders( info ) );
 
         if ( !parameters.contains( "-s" ) )
         {
@@ -76,7 +76,7 @@ public class UnmuteCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langBroadcast(
                         "punishments.unmute.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
             else
@@ -84,7 +84,7 @@ public class UnmuteCommandCall extends PunishmentCommand
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unmute.broadcast",
                         ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmute.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
         }

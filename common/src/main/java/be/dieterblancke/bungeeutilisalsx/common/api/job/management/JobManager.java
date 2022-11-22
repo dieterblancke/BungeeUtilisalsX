@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job.management;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.Job;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -20,6 +21,7 @@ public abstract class JobManager
 
     private static final Gson GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter( Job.class, new JobInterfaceAdapter() )
+            .registerTypeAdapter( MessagePlaceholders.class, new MessagePlaceholdersInterfaceAdapter() )
             .create();
     private static final List<JobHandlerInfo> JOB_HANDLERS = new ArrayList<>();
     private static final Map<Class<?>, Object> JOB_HANDLER_INSTANCES = Maps.newHashMap();

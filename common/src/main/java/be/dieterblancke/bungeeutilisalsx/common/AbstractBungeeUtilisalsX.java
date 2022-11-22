@@ -17,11 +17,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.xml.XMLPlaceHolders;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.redis.RedisManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.scheduler.IScheduler;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.StorageType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.javascript.Script;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
@@ -37,6 +39,7 @@ import be.dieterblancke.bungeeutilisalsx.common.permission.PermissionIntegration
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.DefaultPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.permission.integrations.LuckPermsPermissionIntegration;
 import be.dieterblancke.bungeeutilisalsx.common.placeholders.*;
+import be.dieterblancke.bungeeutilisalsx.common.pluginsupport.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.SimpleProtocolizeManager;
 import be.dieterblancke.bungeeutilisalsx.common.redis.RedisManagerFactory;
@@ -166,7 +169,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     protected abstract void registerListeners();
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings( "unchecked" )
     protected void registerExecutors()
     {
         this.api.getEventLoader().register( new UserExecutor(), UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
@@ -214,9 +217,9 @@ public abstract class AbstractBungeeUtilisalsX
             this.api.getLanguageManager().reloadConfig( this.getName(), language );
         }
 
-        if ( this.api.getHubBalancer() != null )
+        if ( this.api.getServerBalancer() != null )
         {
-            this.api.getHubBalancer().reload();
+            this.api.getServerBalancer().reload();
         }
 
         this.getCommandManager().load();
@@ -246,11 +249,11 @@ public abstract class AbstractBungeeUtilisalsX
             scriptsFolder.mkdir();
 
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/scripts/hello.js" ),
+                    this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
                     new File( scriptsFolder, "hello.js" )
             );
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/scripts/coins.js" ),
+                    this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
                     new File( scriptsFolder, "coins.js" )
             );
         }
@@ -280,7 +283,9 @@ public abstract class AbstractBungeeUtilisalsX
         this.getCommandManager().load();
     }
 
-    protected void registerPluginSupports() {
+    protected void registerPluginSupports()
+    {
+        PluginSupport.registerPluginSupport( TritonPluginSupport.class );
     }
 
     protected void loadDatabase()
@@ -332,6 +337,8 @@ public abstract class AbstractBungeeUtilisalsX
     public abstract IPluginDescription getDescription();
 
     public abstract Logger getLogger();
+
+    public abstract Platform getPlatform();
 
     public void shutdown()
     {

@@ -4,8 +4,9 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandBuilder;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancerConfig.ServerBalancerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.commands.domains.DomainsCommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.commands.friends.FriendsCommandCall;
@@ -31,7 +32,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public abstract class CommandManager
+public class CommandManager
 {
 
     protected final List<Command> commands = Lists.newArrayList();
@@ -46,6 +47,7 @@ public abstract class CommandManager
         this.registerGeneralCommands();
         this.registerCustomCommands();
         this.registerPunishmentCommands();
+        this.registerServerBalancerCommands();
     }
 
     protected void registerGeneralCommands()
@@ -183,6 +185,23 @@ public abstract class CommandManager
                     .executable( new CustomCommandCall( section, server, commands ) );
 
             buildCommand( name, commandBuilder );
+        }
+    }
+
+    protected void registerServerBalancerCommands()
+    {
+        if ( !ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            return;
+        }
+
+        for ( ServerBalancerGroup balancerGroup : ConfigFiles.SERVER_BALANCER_CONFIG.getBalancerGroups() )
+        {
+            registerCommand(
+                    balancerGroup.getServerGroup().getName(),
+                    balancerGroup.getCommandSection(),
+                    new ServerBalancerCommandCall( balancerGroup )
+            );
         }
     }
 

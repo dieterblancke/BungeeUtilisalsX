@@ -26,7 +26,8 @@ public class ToggleBossBarCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.togglebossbar.disabled" );
 
             new ArrayList<>( user.getActiveBossBars() )
-                    .forEach( bossBar -> {
+                    .forEach( bossBar ->
+                    {
                         bossBar.removeUser( user );
                     } );
         }

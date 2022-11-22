@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -37,8 +38,9 @@ public class StaffRollbackCommandCall implements CommandCall
 
         deleteTask.thenAccept( amount -> user.sendLangMessage(
                 "punishments.staffrollback." + ( hardRollback ? "hard" : "soft" ) + "-rollback",
-                "{amount}", amount,
-                "{user}", playerName
+                MessagePlaceholders.create()
+                        .append( "amount", amount )
+                        .append( "user", playerName )
         ) );
     }
 

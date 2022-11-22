@@ -5,12 +5,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
-import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import net.kyori.adventure.text.Component;
 
@@ -90,11 +91,6 @@ public interface IBuXApi
     IPunishmentHelper getPunishmentExecutor();
 
     /**
-     * @return An either the active HubBalancer or null in case it's disabled.
-     */
-    IHubBalancer getHubBalancer();
-
-    /**
      * Broadcasts a message with the BungeeUtilisals prefix.
      *
      * @param message The message to be broadcasted.
@@ -132,7 +128,7 @@ public interface IBuXApi
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langBroadcast( String message, Object... placeholders );
+    void langBroadcast( String message, HasMessagePlaceholders placeholders );
 
     /**
      * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
@@ -141,7 +137,7 @@ public interface IBuXApi
      * @param permission   The permission the user must have to receive the message.
      * @param placeholders PlaceHolders + their replacements
      */
-    void langPermissionBroadcast( String message, String permission, Object... placeholders );
+    void langPermissionBroadcast( String message, String permission, HasMessagePlaceholders placeholders );
 
     /**
      * @return a list of all announcers.
@@ -186,4 +182,9 @@ public interface IBuXApi
      * @return a list of online staff members
      */
     List<StaffUser> getStaffMembers();
+
+    /**
+     * @return the server balancing handler.
+     */
+    ServerBalancer getServerBalancer();
 }

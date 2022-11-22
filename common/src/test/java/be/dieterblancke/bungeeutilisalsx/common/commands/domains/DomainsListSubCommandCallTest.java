@@ -4,21 +4,22 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.BuXTest;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.yaml.YamlSection;
 import org.apache.commons.compress.utils.Lists;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mockito;
 import org.mockito.internal.verification.VerificationModeFactory;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.*;
 
 class DomainsListSubCommandCallTest extends BuXTest
@@ -64,25 +65,16 @@ class DomainsListSubCommandCallTest extends BuXTest
                 Lists.newArrayList()
         );
 
-        final ArgumentCaptor<Object> placeholdersCaptor = ArgumentCaptor.forClass( Object.class );
+        final ArgumentCaptor<MessagePlaceholders> placeholdersCaptor = ArgumentCaptor.forClass( MessagePlaceholders.class );
 
         verify( user, VerificationModeFactory.atLeast( 1 ) )
                 .sendLangMessage( eq( "general-commands.domains.list.format" ), placeholdersCaptor.capture() );
 
-        final List<Object> placeholders = placeholdersCaptor.getAllValues();
-
-        for ( int i = 0; i < placeholders.size(); i++ )
-        {
-            final String placeholder = String.valueOf( placeholders.get( i ) );
-
-            if ( placeholder.equals( "{domain}" ) )
-            {
-                Assertions.assertEquals( placeholders.get( i + 1 ), "play.example.com" );
-            }
-            if ( placeholder.equals( "{total}" ) )
-            {
-                Assertions.assertEquals( placeholders.get( i + 1 ), 80 );
-            }
-        }
+        final MessagePlaceholders placeholders = placeholdersCaptor.getValue();
+        assertThat( placeholders.asArray() ).containsAll( Arrays.asList(
+                "domain", "play.example.com",
+                "total", 80,
+                "online", 0L
+        ) );
     }
 }

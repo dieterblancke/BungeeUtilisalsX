@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.FriendsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -27,11 +28,17 @@ public class FriendAcceptSubCommandCall implements CommandCall
         dao.addFriend( storage.getUuid(), user.getUuid() );
 
         user.getFriends().add( new FriendData( storage.getUuid(), storage.getUserName(), new Date(), storage.getLastLogout() ) );
-        user.sendLangMessage( "friends.accept.accepted", "{user}", storage.getUserName() );
+        user.sendLangMessage(
+                "friends.accept.accepted",
+                MessagePlaceholders.create().append( "user", storage.getUserName() )
+        );
 
         if ( target != null )
         {
-            target.sendLangMessage( "friends.accept.request-accepted", "{user}", user.getName() );
+            target.sendLangMessage(
+                    "friends.accept.request-accepted",
+                    MessagePlaceholders.create().append( "user", user.getName() )
+            );
             target.getFriends().add( new FriendData( user.getUuid(), user.getName(), new Date(), user.getStorage().getLastLogout() ) );
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
@@ -59,7 +66,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
 
         if ( user.getFriends().size() >= friendLimit )
         {
-            user.sendLangMessage( "friends.accept.limited", "{limit}", friendLimit );
+            user.sendLangMessage( "friends.accept.limited", MessagePlaceholders.create().append( "limit", friendLimit ) );
             return;
         }
         final String name = args.get( 0 );
@@ -67,7 +74,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
 
         if ( user.getFriends().stream().anyMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
-            user.sendLangMessage( "friends.accept.already-friend", "{friend}", name );
+            user.sendLangMessage( "friends.accept.already-friend", MessagePlaceholders.create().append( "friend", name ) );
             return;
         }
 
@@ -82,7 +89,7 @@ public class FriendAcceptSubCommandCall implements CommandCall
 
         if ( !dao.getFriendsDao().hasIncomingFriendRequest( user.getUuid(), storage.getUuid() ).join() )
         {
-            user.sendLangMessage( "friends.accept.no-request", "{user}", name );
+            user.sendLangMessage( "friends.accept.no-request", MessagePlaceholders.create().append( "user", name ) );
             return;
         }
 

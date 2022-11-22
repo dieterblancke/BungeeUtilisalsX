@@ -1,5 +1,6 @@
 package be.dieterblancke.bungeeutilisalsx.common;
 
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
@@ -30,7 +31,7 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
         {
             TestInjectionUtil.injectConfiguration(
                     ConfigFiles.CONFIG,
-                    new YamlConfiguration( BuXTest.class.getResourceAsStream( "/config.yml" ) )
+                    new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
             );
         }
         this.api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );
@@ -124,6 +125,12 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     public Logger getLogger()
     {
         return LOGGER;
+    }
+
+    @Override
+    public Platform getPlatform()
+    {
+        return null;
     }
 
     @Override

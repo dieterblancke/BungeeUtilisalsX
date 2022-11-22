@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +17,7 @@ public class PartyDisbandSubCommandCall implements CommandCall
     {
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;
@@ -32,7 +33,8 @@ public class PartyDisbandSubCommandCall implements CommandCall
         BuX.getInstance().getPartyManager().languageBroadcastToParty(
                 party,
                 "party.disband.broadcast",
-                "{user}", user.getName()
+                MessagePlaceholders.create()
+                        .append( "user", user.getName() )
         );
 
         BuX.getInstance().getPartyManager().removeParty( party );

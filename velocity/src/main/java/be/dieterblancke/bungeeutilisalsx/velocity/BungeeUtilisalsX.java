@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.velocity;
 import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.AnnouncementType;
 import be.dieterblancke.bungeeutilisalsx.common.api.announcer.Announcer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
@@ -10,8 +11,7 @@ import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
-import be.dieterblancke.bungeeutilisalsx.velocity.command.VelocityCommandManager;
-import be.dieterblancke.bungeeutilisalsx.velocity.hubbalancer.HubBalancer;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import org.bstats.charts.AdvancedPie;
@@ -29,7 +29,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
     private final ProxyOperationsApi proxyOperationsApi = new VelocityOperationsApi();
-    private final CommandManager commandManager = new VelocityCommandManager();
+    private final CommandManager commandManager = new CommandManager();
     private final IPluginDescription pluginDescription = new VelocityPluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
 
@@ -42,14 +42,22 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected IBuXApi createBuXApi()
     {
+        SimpleServerBalancer simpleServerBalancer = null;
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            simpleServerBalancer = new SimpleServerBalancer();
+            simpleServerBalancer.setup();
+        }
+
         return new BuXApi(
                 new PluginLanguageManager(),
                 new EventLoader(),
-                ConfigFiles.HUBBALANCER.isEnabled() ? new HubBalancer() : null,
                 new PunishmentHelper(),
                 ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
                         ? new ProxySyncPlayerUtils()
-                        : new VelocityPlayerUtils()
+                        : new VelocityPlayerUtils(),
+                simpleServerBalancer
         );
     }
 
@@ -90,6 +98,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     @Override
     protected void registerPluginSupports()
     {
+        super.registerPluginSupports();
     }
 
     @Override
@@ -129,12 +138,18 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
+    public Platform getPlatform()
+    {
+        return Platform.VELOCITYPOWERED;
+    }
+
+    @Override
     protected void registerMetrics()
     {
         final Metrics metrics = Bootstrap.getInstance().createMetrics();
 
         metrics.addCustomChart( new SimplePie(
-                "punishments",
+                "configurations/punishments",
                 () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
@@ -169,10 +184,11 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 "tab_announcers",
                 () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
-        metrics.addCustomChart( new SimplePie(
-                "hubbalancer",
-                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
-        ) );
+// TODO: add chart "serverbalancer"
+//        metrics.addCustomChart( new SimplePie(
+//                "hubbalancer",
+//                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
+//        ) );
         metrics.addCustomChart( new SimplePie(
                 "protocolize",
                 () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"

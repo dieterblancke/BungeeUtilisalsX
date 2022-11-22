@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.command;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import com.google.common.collect.Lists;
@@ -62,7 +63,7 @@ public class Command
 
         for ( String argument : argList )
         {
-            if ( argument.startsWith( "-" ) && this.parameters.stream().anyMatch( param -> argument.startsWith( param ) ) )
+            if ( argument.startsWith( "-" ) && this.parameters.stream().anyMatch( argument::startsWith ) )
             {
                 if ( user.hasPermission( this.permission + ".parameters." + argument.substring( 1 ) )
                         || user.hasPermission( this.permission + ".parameters.*" ) )
@@ -93,7 +94,11 @@ public class Command
                 && !user.hasPermission( "bungeeutilisals.*" )
                 && !user.hasPermission( "*" ) )
         {
-            user.sendLangMessage( "no-permission", "%permission%", permission );
+            user.sendLangMessage(
+                    "no-permission",
+                    MessagePlaceholders.create()
+                            .append( "permission", permission )
+            );
             return;
         }
 
@@ -105,8 +110,8 @@ public class Command
                 {
                     user.sendLangMessage(
                             "general-commands.cooldown",
-                            "{time}",
-                            user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000
+                            MessagePlaceholders.create()
+                                    .append( "{time}", user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000 )
                     );
                     return;
                 }
@@ -148,7 +153,7 @@ public class Command
 
     public List<String> onTabComplete( final User user, final String[] args )
     {
-        if ( user.isConsole() || user == null )
+        if ( user == null || user.isConsole() )
         {
             return TabCompleter.empty();
         }

@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.language.LanguageConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -619,7 +620,7 @@ public class Utils
      * @param placeholders the placeholders with their values to be replaced
      * @return the message with the replaced placeholders.
      */
-    public static String replacePlaceHolders( final String message, final Object... placeholders )
+    public static String replacePlaceHolders( final String message, final HasMessagePlaceholders placeholders )
     {
         return replacePlaceHolders( null, message, placeholders );
     }
@@ -632,7 +633,7 @@ public class Utils
      * @param placeholders the placeholders with their values to be replaced
      * @return the message with the replaced placeholders.
      */
-    public static String replacePlaceHolders( final User user, String message, final Object... placeholders )
+    public static String replacePlaceHolders( final User user, String message, final HasMessagePlaceholders placeholders )
     {
         return replacePlaceHolders( user, message, null, null, placeholders );
     }
@@ -649,7 +650,7 @@ public class Utils
     public static String replacePlaceHolders( final String message,
                                               final Function<String, String> prePlaceholderFormatter,
                                               final Function<String, String> postPlaceholderFormatter,
-                                              final Object... placeholders )
+                                              final HasMessagePlaceholders placeholders )
     {
         return replacePlaceHolders( null, message, prePlaceholderFormatter, postPlaceholderFormatter, placeholders );
     }
@@ -668,16 +669,13 @@ public class Utils
                                               String message,
                                               final Function<String, String> prePlaceholderFormatter,
                                               final Function<String, String> postPlaceholderFormatter,
-                                              final Object... placeholders )
+                                              final HasMessagePlaceholders placeholders )
     {
         if ( prePlaceholderFormatter != null )
         {
             message = prePlaceholderFormatter.apply( message );
         }
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
+        message = placeholders.getMessagePlaceholders().format( message );
         message = PlaceHolderAPI.formatMessage( user, message );
         if ( postPlaceholderFormatter != null )
         {

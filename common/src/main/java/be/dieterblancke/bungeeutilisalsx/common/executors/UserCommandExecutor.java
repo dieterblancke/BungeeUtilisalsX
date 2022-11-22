@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.CommandBlockerConfig.BlockedCommand;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.CommandBlockerConfig.BlockedSubCommand;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.base.Strings;
 
 public class UserCommandExecutor implements EventExecutor
@@ -28,7 +29,8 @@ public class UserCommandExecutor implements EventExecutor
             event.setCancelled( true );
             event.getUser().sendLangMessage(
                     "command-disabled",
-                    "{command}", command
+                    MessagePlaceholders.create()
+                            .append( "command", command )
             );
         }
     }

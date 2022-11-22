@@ -79,7 +79,7 @@ public class RedisDataManager implements IRedisDataManager
             return str == null ? null : Long.parseLong( str );
         } );
 
-        if ( MoreObjects.firstNonNull( lastExecute, 0l ) + unit.toMillis( period ) > System.currentTimeMillis() )
+        if ( MoreObjects.firstNonNull( lastExecute, 0L ) + unit.toMillis( period ) > System.currentTimeMillis() )
         {
             return false;
         }

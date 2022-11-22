@@ -16,7 +16,7 @@ public abstract class ConditionHandler
 
     public ConditionHandler( final String condition )
     {
-        this.condition = condition;
+        this.condition = condition.trim();
 
         final String[] arguments = condition.split( " " );
         this.operator = ConditionOperator.detectOperator( arguments[0] );

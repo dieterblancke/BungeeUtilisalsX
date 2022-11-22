@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -28,14 +29,14 @@ public class LanguageCommandCall implements CommandCall, TabCall
 
         if ( args.size() != 1 )
         {
-            user.sendLangMessage( "general-commands.language.usage", "{languages}", languages );
+            user.sendLangMessage( "general-commands.language.usage", MessagePlaceholders.create().append( "languages", languages ) );
             return;
         }
         final String langName = args.get( 0 );
 
         if ( user.getLanguage().getName().equalsIgnoreCase( langName ) )
         {
-            user.sendLangMessage( "general-commands.language.already", "{language}", langName );
+            user.sendLangMessage( "general-commands.language.already", MessagePlaceholders.create().append( "language", langName ) );
             return;
         }
 
@@ -48,13 +49,15 @@ public class LanguageCommandCall implements CommandCall, TabCall
             user.setLanguage( language );
             BuX.getApi().getStorageManager().getDao().getUserDao().setLanguage( user.getUuid(), language );
 
-            user.sendLangMessage( "general-commands.language.changed", "{language}", language.getName() );
+            user.sendLangMessage( "general-commands.language.changed", MessagePlaceholders.create().append( "language", language.getName() ) );
         }
         else
         {
             user.sendLangMessage(
                     "general-commands.language.notfound",
-                    "{language}", langName, "{languages}", languages
+                    MessagePlaceholders.create()
+                            .append( "language", langName )
+                            .append( "languages", languages )
             );
         }
     }

@@ -43,7 +43,7 @@ public class PartyGuiOpener extends GuiOpener
                 .itemProvider( new PartyGuiItemProvider( user, config, party, partyMembers ) )
                 .rows( config.getRows() )
                 .title( config.getTitle() )
-                .users( user )
+                .user( user )
                 .build();
 
         gui.open();

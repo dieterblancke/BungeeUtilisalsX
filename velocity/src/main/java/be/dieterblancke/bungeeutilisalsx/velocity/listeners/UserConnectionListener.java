@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.velocity.listeners;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.velocity.user.VelocityUser;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
@@ -10,10 +11,13 @@ import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
+import com.velocitypowered.api.event.player.KickedFromServerEvent;
+import com.velocitypowered.api.event.player.KickedFromServerEvent.RedirectPlayer;
 import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.util.Optional;
 
@@ -82,5 +86,35 @@ public class UserConnectionListener
                 BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
+    }
+
+    @Subscribe
+    public void onConnect( KickedFromServerEvent event )
+    {
+        Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
+
+        if ( optional.isEmpty() )
+        {
+            return;
+        }
+
+        GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
+        UserServerKickEvent userServerKickEvent = new UserServerKickEvent(
+                optional.get(),
+                event.getServer() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() ),
+                event.getResult() instanceof RedirectPlayer
+                        ? BuX.getInstance().proxyOperations().getServerInfo( ( (RedirectPlayer) event.getResult() ).getServer().getServerInfo().getName() )
+                        : null,
+                event.getServerKickReason().orElse( null )
+        );
+        BuX.getApi().getEventLoader().launchEvent( userServerKickEvent );
+
+        if ( userServerKickEvent.isTargetChanged() )
+        {
+            event.setResult( RedirectPlayer.create(
+                    ( (VelocityServer) userServerKickEvent.getRedirectServer() ).getRegisteredServer(),
+                    userServerKickEvent.getKickMessage()
+            ) );
+        }
     }
 }
