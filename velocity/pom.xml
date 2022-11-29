@@ -16,6 +16,10 @@
             <id>dieterblancke</id>
             <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -41,6 +45,12 @@
             <artifactId>bstats-velocity</artifactId>
             <version>3.0.0</version>
             <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.limework.redisbungee</groupId>
+            <artifactId>RedisBungee-Velocity</artifactId>
+            <version>0.9.0-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

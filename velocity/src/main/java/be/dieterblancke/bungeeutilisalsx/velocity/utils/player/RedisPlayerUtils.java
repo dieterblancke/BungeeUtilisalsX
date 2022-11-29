@@ -1,4 +1,4 @@
-package be.dieterblancke.bungeeutilisalsx.bungee.utils.player;
+package be.dieterblancke.bungeeutilisalsx.velocity.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;

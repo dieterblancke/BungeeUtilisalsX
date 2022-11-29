@@ -9,10 +9,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.velocity.listeners.*;
+import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.RedisPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.player.VelocityPlayerUtils;
 import org.bstats.charts.AdvancedPie;
 import org.bstats.charts.SimplePie;
@@ -55,7 +55,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new EventLoader(),
                 new PunishmentHelper(),
                 ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
-                        ? new ProxySyncPlayerUtils()
+                        ? new RedisPlayerUtils()
                         : new VelocityPlayerUtils(),
                 simpleServerBalancer
         );

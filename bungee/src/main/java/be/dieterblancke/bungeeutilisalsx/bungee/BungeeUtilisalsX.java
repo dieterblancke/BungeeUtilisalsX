@@ -18,7 +18,6 @@ import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.executors.ServerBalancerExecutors;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
-import be.dieterblancke.bungeeutilisalsx.common.player.ProxySyncPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
@@ -68,10 +67,8 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
                 new PluginLanguageManager(),
                 new EventLoader(),
                 new PunishmentHelper(),
-                ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" ) ?
-                        this.proxyOperationsApi.getPlugin( "ProxySync" ).isPresent()
-                                ? new ProxySyncPlayerUtils()
-                                : new RedisPlayerUtils()
+                ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+                        ? new RedisPlayerUtils()
                         : new BungeePlayerUtils(),
                 simpleServerBalancer
         );
