@@ -52,7 +52,7 @@ public class ServerBalancerConfig extends Config
             }
             ServerBalancingMethod method = Utils.valueOfOr( section.getString( "method" ), ServerBalancingMethod.LEAST_PLAYERS );
             boolean allowSendingToOtherServers = section.getBoolean( "allow-sending-to-other-servers" );
-            boolean alwaysBalance = section.getBoolean( "always-balance" );
+            boolean alwaysBalance = section.exists( "always-balance" ) ? section.getBoolean( "always-balance" ) : true;
             ISection commandSection = section.getSection( "command" );
             ISection pingerSection = section.getSection( "pinger" );
             ServerBalancerGroupPinger pinger = new ServerBalancerGroupPinger(
