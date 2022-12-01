@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserPluginMessageReceiveEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteStreams;
 
@@ -25,21 +26,30 @@ public class UserPluginMessageReceiveEventExecutor implements EventExecutor
 
         if ( subchannel.equalsIgnoreCase( "commands" ) )
         {
-            final String action = input.readUTF();
+            String action = input.readUTF();
+            String command = input.readUTF();
 
             if ( action.equalsIgnoreCase( "proxy-execute" ) )
             {
-                final String command = input.readUTF();
-
                 user.executeCommand( PlaceHolderAPI.formatMessage( user, command ) );
             }
             else if ( action.equalsIgnoreCase( "proxy-console-execute" ) )
             {
-                final String command = input.readUTF();
-
                 BuX.getApi().getConsoleUser().executeCommand(
                         PlaceHolderAPI.formatMessage( BuX.getApi().getConsoleUser(), command )
                 );
+            }
+        }
+        else if ( subchannel.equalsIgnoreCase( "server-balancer" ) )
+        {
+            String serverName = input.readUTF();
+
+            if ( BuX.getApi().getServerBalancer() != null )
+            {
+                ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupByName( serverName )
+                        .or( () -> ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( serverName ) )
+                        .flatMap( balancerGroup -> BuX.getApi().getServerBalancer().getOptimalServer( balancerGroup ) )
+                        .ifPresent( user::sendToServer );
             }
         }
     }

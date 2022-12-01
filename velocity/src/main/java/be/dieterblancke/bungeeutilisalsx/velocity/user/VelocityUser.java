@@ -274,7 +274,7 @@ public class VelocityUser implements User
     @Override
     public void sendToServer( IProxyServer proxyServer )
     {
-        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 3 );
+        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 5 );
         this.player.createConnectionRequest( ( (VelocityServer) proxyServer ).getRegisteredServer() ).fireAndForget();
     }
 

@@ -21,7 +21,7 @@ public class PartyListSubCommandCall implements CommandCall
     {
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;

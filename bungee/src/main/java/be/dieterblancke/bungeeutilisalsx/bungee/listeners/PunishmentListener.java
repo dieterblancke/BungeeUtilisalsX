@@ -86,7 +86,7 @@ public class PunishmentListener implements Listener
         final Dao dao = BuX.getApi().getStorageManager().getDao();
         final Optional<UserStorage> optionalStorage = dao.getUserDao().getUserData( uuid ).join();
 
-        if ( !optionalStorage.isPresent() )
+        if ( optionalStorage.isEmpty() )
         {
             return null;
         }
