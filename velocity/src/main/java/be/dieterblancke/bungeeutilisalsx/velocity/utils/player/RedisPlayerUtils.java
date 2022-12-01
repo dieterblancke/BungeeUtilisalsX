@@ -3,10 +3,11 @@ package be.dieterblancke.bungeeutilisalsx.velocity.utils.player;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
+import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.google.common.collect.Lists;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
+import com.velocitypowered.api.proxy.server.RegisteredServer;
+import com.velocitypowered.api.proxy.server.ServerInfo;
 
 import java.util.List;
 import java.util.Optional;
@@ -18,18 +19,18 @@ public class RedisPlayerUtils implements IPlayerUtils
     @Override
     public int getPlayerCount( String server )
     {
-        final ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
+        final Optional<RegisteredServer> registeredServer = Bootstrap.getInstance().getProxyServer().getServer( server );
 
-        return info == null ? 0 : RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).size();
+        return registeredServer.isEmpty() ? 0 : RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).size();
     }
 
     @Override
     public List<String> getPlayers( String server )
     {
         final List<String> players = Lists.newArrayList();
-        final ServerInfo info = ProxyServer.getInstance().getServerInfo( server );
+        final Optional<RegisteredServer> registeredServer = Bootstrap.getInstance().getProxyServer().getServer( server );
 
-        if ( info != null )
+        if ( registeredServer.isPresent() )
         {
             RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).forEach( uuid ->
                     players.add( RedisBungeeAPI.getRedisBungeeApi().getNameFromUuid( uuid ) ) );
@@ -61,7 +62,7 @@ public class RedisPlayerUtils implements IPlayerUtils
 
         if ( RedisBungeeAPI.getRedisBungeeApi().isPlayerOnline( uuid ) )
         {
-            return Optional.ofNullable(RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ))
+            return Optional.ofNullable( RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ) )
                     .map( ServerInfo::getName )
                     .map( BuX.getInstance().proxyOperations()::getServerInfo )
                     .orElse( null );
