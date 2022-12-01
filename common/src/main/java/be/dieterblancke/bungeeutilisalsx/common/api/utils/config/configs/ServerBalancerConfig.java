@@ -50,8 +50,9 @@ public class ServerBalancerConfig extends Config
             {
                 continue;
             }
-            boolean allowSendingToOtherServers = section.getBoolean( "allow-sending-to-other-servers" );
             ServerBalancingMethod method = Utils.valueOfOr( section.getString( "method" ), ServerBalancingMethod.LEAST_PLAYERS );
+            boolean allowSendingToOtherServers = section.getBoolean( "allow-sending-to-other-servers" );
+            boolean alwaysBalance = section.getBoolean( "always-balance" );
             ISection commandSection = section.getSection( "command" );
             ISection pingerSection = section.getSection( "pinger" );
             ServerBalancerGroupPinger pinger = new ServerBalancerGroupPinger(
@@ -63,13 +64,21 @@ public class ServerBalancerConfig extends Config
                             : new ArrayList<>()
             );
 
-            balancerGroups.add( new ServerBalancerGroup( allowSendingToOtherServers, group, method, commandSection, pinger ) );
+            balancerGroups.add( new ServerBalancerGroup( group, method, allowSendingToOtherServers, alwaysBalance, commandSection, pinger ) );
         }
         fallbackConfig = new FallbackConfig(
                 FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
                 config.getStringList( "fallback.reasons" ),
                 this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null )
         );
+    }
+
+    public Optional<ServerBalancerGroup> getServerBalancerGroupByName( final String groupName )
+    {
+        return balancerGroups
+                .stream()
+                .filter( it -> it.getServerGroup().getName().equalsIgnoreCase( groupName ) )
+                .findFirst();
     }
 
     public Optional<ServerBalancerGroup> getServerBalancerGroupFor( final String serverName )
@@ -93,9 +102,10 @@ public class ServerBalancerConfig extends Config
     @Value
     public static class ServerBalancerGroup
     {
-        boolean allowSendingToOtherServers;
         ServerGroup serverGroup;
         ServerBalancingMethod method;
+        boolean allowSendingToOtherServers;
+        boolean alwaysBalance;
         ISection commandSection;
         ServerBalancerGroupPinger pinger;
     }

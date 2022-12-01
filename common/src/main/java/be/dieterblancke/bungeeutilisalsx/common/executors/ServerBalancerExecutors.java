@@ -30,6 +30,7 @@ public class ServerBalancerExecutors implements EventExecutor
         IProxyServer target = event.getTarget();
 
         ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( target.getName() )
+                .filter( it -> it.isAlwaysBalance() || event.getUser().getCurrentServer().isEmpty() )
                 .flatMap( serverBalancer::getOptimalServer )
                 .ifPresent( event::setTarget );
     }
