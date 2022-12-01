@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.executors;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.Event;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.EventExecutor;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent.ConnectReason;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
@@ -23,14 +24,13 @@ public class ServerBalancerExecutors implements EventExecutor
     @Event
     public void onConnectToBalancedGroup( UserServerConnectEvent event )
     {
-        if ( !event.getUser().getCooldowns().canUse( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN ) )
+        if ( !this.shouldBalance( event.getConnectReason() ) || !event.getUser().getCooldowns().canUse( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN ) )
         {
             return;
         }
         IProxyServer target = event.getTarget();
 
         ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( target.getName() )
-                .filter( it -> it.isAlwaysBalance() || event.getUser().getCurrentServer().isEmpty() )
                 .flatMap( serverBalancer::getOptimalServer )
                 .ifPresent( event::setTarget );
     }
@@ -85,6 +85,15 @@ public class ServerBalancerExecutors implements EventExecutor
 
                         yield false;
                     }
+                };
+    }
+
+    private boolean shouldBalance( ConnectReason connectReason )
+    {
+        return switch ( connectReason )
+                {
+                    case LOBBY_FALLBACK, UNKNOWN, JOIN_PROXY, KICK_REDIRECT, SERVER_DOWN_REDIRECT -> true;
+                    case COMMAND, PLUGIN, PLUGIN_MESSAGE -> false;
                 };
     }
 }

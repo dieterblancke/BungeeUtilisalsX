@@ -19,7 +19,7 @@ public class UserChatListener implements Listener
     {
         final Optional<User> optional = BuX.getApi().getUser( ( (CommandSender) event.getSender() ).getName() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }

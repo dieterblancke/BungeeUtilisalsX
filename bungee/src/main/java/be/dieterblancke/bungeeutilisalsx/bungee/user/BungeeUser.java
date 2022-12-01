@@ -277,7 +277,7 @@ public class BungeeUser implements User
     @Override
     public void sendToServer( IProxyServer proxyServer )
     {
-        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 3 );
+        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 5 );
         this.player.connect( ( (BungeeServer) proxyServer ).getServerInfo() );
     }
 

@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.velocity.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent.ConnectReason;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -39,7 +40,7 @@ public class UserConnectionListener
         final Player player = event.getPlayer();
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }
@@ -53,13 +54,14 @@ public class UserConnectionListener
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
         final Optional<RegisteredServer> targetServer = event.getResult().getServer();
 
-        if ( !optional.isPresent() || targetServer.isPresent() )
+        if ( optional.isEmpty() || targetServer.isPresent() )
         {
             return;
         }
         final UserServerConnectEvent userServerConnectEvent = new UserServerConnectEvent(
                 optional.get(),
-                BuX.getInstance().proxyOperations().getServerInfo( targetServer.get().getServerInfo().getName() )
+                BuX.getInstance().proxyOperations().getServerInfo( targetServer.get().getServerInfo().getName() ),
+                ConnectReason.UNKNOWN // Velocity does not seem to have connect reasons as of now
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectEvent );
         if ( userServerConnectEvent.isCancelled() )
@@ -76,16 +78,19 @@ public class UserConnectionListener
     {
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isPresent() )
+        {
+            final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
+                    optional.get(),
+                    event.getPreviousServer().map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ),
+                    BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
+            );
+            BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
+        }
+        else
         {
             return;
         }
-        final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
-                optional.get(),
-                event.getPreviousServer().map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ),
-                BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
-        );
-        BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
     }
 
     @Subscribe

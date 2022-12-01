@@ -4,6 +4,7 @@ import be.dieterblancke.bungeeutilisalsx.bungee.user.BungeeUser;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent.ConnectReason;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
@@ -34,7 +35,7 @@ public class UserConnectionListener implements Listener
     {
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }
@@ -47,19 +48,21 @@ public class UserConnectionListener implements Listener
     {
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }
         final UserServerConnectEvent userServerConnectEvent = new UserServerConnectEvent(
                 optional.get(),
-                BuX.getInstance().proxyOperations().getServerInfo( event.getTarget().getName() )
+                BuX.getInstance().proxyOperations().getServerInfo( event.getTarget().getName() ),
+                ConnectReason.parse( event.getReason().toString() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectEvent );
         if ( userServerConnectEvent.isCancelled() )
         {
             event.setCancelled( true );
         }
+
         event.setTarget( ( (BungeeServer) userServerConnectEvent.getTarget() ).getServerInfo() );
     }
 
@@ -68,7 +71,7 @@ public class UserConnectionListener implements Listener
     {
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getName() );
 
-        if ( !optional.isPresent() )
+        if ( optional.isEmpty() )
         {
             return;
         }

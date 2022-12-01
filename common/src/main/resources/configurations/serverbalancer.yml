@@ -8,9 +8,6 @@ balancers:
     # If true, when running the command to this server and the player is already in it, BuX will attempt to find another server in this group.
     # If false, BuX would show an already connected message.
     allow-sending-to-other-servers: true
-    # If true, BuX will ALWAYS attempt to balance these servers.
-    # If false, BuX will only attempt to balance on initial proxy join or if a specific balancing command / call was made (see https://docs.dieterblancke.xyz/BungeeUtilisalsX/#/api?id=server-balancer)
-    always-balance: true
 
     pinger:
       # The delay, in seconds, between BuX pinging servers to check if they are accessible.
@@ -34,9 +31,6 @@ balancers:
     # If true, when running the command to this server and the player is already in it, BuX will attempt to find another server in this group.
     # If false, BuX would show an already connected message.
     allow-sending-to-other-servers: true
-    # If true, BuX will ALWAYS attempt to balance these servers.
-    # If false, BuX will only attempt to balance on initial proxy join or if a specific balancing command / call was made (see https://docs.dieterblancke.xyz/BungeeUtilisalsX/#/api?id=server-balancer)
-    always-balance: true
 
     pinger:
       # The delay, in seconds, between BuX pinging servers to check if they are accessible.
