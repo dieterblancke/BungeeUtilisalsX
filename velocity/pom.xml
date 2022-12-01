@@ -16,10 +16,6 @@
             <id>dieterblancke</id>
             <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
         </repository>
-        <repository>
-            <id>jitpack.io</id>
-            <url>https://jitpack.io</url>
-        </repository>
     </repositories>
 
     <dependencies>
