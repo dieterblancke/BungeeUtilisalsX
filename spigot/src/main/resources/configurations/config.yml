@@ -1,0 +1,24 @@
+# Enable to get debug messages (where they are enabled)
+debug: false
+
+# The storage settings MUST be the same as in your proxy server, any file-based storage types will NOT work (aka H2 and SQLite won't work)
+storage:
+  type: 'H2'
+  hostname: '127.0.0.1'
+  port: 3306
+  database: 'database'
+  username: 'username'
+  password: 'password'
+
+  properties:
+    serverTimezone: 'Europe/Brussels'
+    characterEncoding: utf8
+    useSSL: true
+
+  # These may be smaller than the proxy pool due to lower expected loads.
+  pool:
+    max-pool-size: 2
+    min-idle: 1
+    idle-timeout: 30
+    max-lifetime: 300
+    connection-timeout: 8

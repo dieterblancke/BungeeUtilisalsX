@@ -4,42 +4,56 @@ import be.dieterblancke.bungeeutilisalsx.common.ServerOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.spigot.command.CommandHolder;
+import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 
+import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class SpigotOperationsApi implements ServerOperationsApi
 {
 
+    private static final Field commandMap;
+
+    static
+    {
+        commandMap = ReflectionUtils.getField( Bukkit.getServer().getClass(), "commandMap" );
+    }
+
     private final Map<Command, CommandHolder> commandHolders = new HashMap<>();
 
     @Override
+    @SneakyThrows
     public void registerCommand( final Command command )
     {
         if ( !commandHolders.containsKey( command ) && !command.isListenerBased() )
         {
             final CommandHolder commandHolder = new CommandHolder( command );
 
-//            TODO: register command
-//            ProxyServer.getInstance().getPluginManager().registerCommand( Bootstrap.getInstance(), commandHolder );
+            CommandMap map = (CommandMap) commandMap.get( Bukkit.getServer() );
+            unregisterCommands( map, command.getName(), command.getAliases() );
+            map.register( command.getName(), "bux", commandHolder );
 
             commandHolders.put( command, commandHolder );
         }
     }
 
     @Override
+    @SneakyThrows
     public void unregisterCommand( final Command command )
     {
         if ( commandHolders.containsKey( command ) )
         {
-//            TODO: unregister command
-//            ProxyServer.getInstance().getPluginManager().unregisterCommand( this.commandHolders.remove( command ) );
+            CommandMap map = (CommandMap) commandMap.get( Bukkit.getServer() );
+            unregisterCommands( map, command.getName(), command.getAliases() );
         }
     }
 
@@ -96,5 +110,30 @@ public class SpigotOperationsApi implements ServerOperationsApi
                 new HashSet<>( pluginDescription.getSoftDepend() ),
                 pluginDescription.getDescription()
         );
+    }
+
+    @SneakyThrows
+    @SuppressWarnings( "unchecked" )
+    private void unregisterCommands( final CommandMap map, final String command, final String[] aliases )
+    {
+        final Field field;
+        if ( ReflectionUtils.hasField( map.getClass(), "knownCommands" ) )
+        {
+            field = ReflectionUtils.getField( map.getClass(), "knownCommands" );
+        }
+        else
+        {
+            field = ReflectionUtils.getField( map.getClass().getSuperclass(), "knownCommands" );
+        }
+        final Map<String, Command> commands = (Map<String, Command>) field.get( map );
+
+        commands.remove( command );
+
+        for ( String alias : aliases )
+        {
+            commands.remove( alias );
+        }
+
+        field.set( map, commands );
     }
 }

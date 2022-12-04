@@ -84,6 +84,13 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
+    protected void loadConfigs()
+    {
+        // only load needed configs
+
+    }
+
+    @Override
     protected void registerMetrics()
     {
         // do nothing
