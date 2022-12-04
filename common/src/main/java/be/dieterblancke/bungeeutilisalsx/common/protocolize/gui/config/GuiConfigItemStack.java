@@ -87,7 +87,7 @@ public class GuiConfigItemStack
 
                             loreComponent = loreComponent.decoration( TextDecoration.ITALIC, false );
 
-                            return BuX.getInstance().proxyOperations().getMessageComponent( loreComponent );
+                            return BuX.getInstance().serverOperations().getMessageComponent( loreComponent );
                         } )
                         .collect( Collectors.toList() ),
                 false
@@ -98,7 +98,7 @@ public class GuiConfigItemStack
                 .orElse( name );
         Component displayName = Utils.format( user, Utils.replacePlaceHolders( itemName, placeholders ) );
         displayName = displayName.decoration( TextDecoration.ITALIC, false );
-        itemStack.displayName( BuX.getInstance().proxyOperations().getMessageComponent( displayName ) );
+        itemStack.displayName( BuX.getInstance().serverOperations().getMessageComponent( displayName ) );
 
         this.enchantments.forEach( enchant -> enchant.addToItem( itemStack ) );
 

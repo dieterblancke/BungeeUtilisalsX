@@ -54,7 +54,7 @@ public class VelocityPlayerUtils implements IPlayerUtils
     {
         return Bootstrap.getInstance().getProxyServer().getPlayer( name )
                 .flatMap( value -> value.getCurrentServer()
-                        .map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ) )
+                        .map( server -> BuX.getInstance().serverOperations().getServerInfo( server.getServerInfo().getName() ) ) )
                 .orElse( null );
     }
 

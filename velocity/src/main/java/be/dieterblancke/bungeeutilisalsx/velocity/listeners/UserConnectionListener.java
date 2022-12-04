@@ -60,7 +60,7 @@ public class UserConnectionListener
         }
         final UserServerConnectEvent userServerConnectEvent = new UserServerConnectEvent(
                 optional.get(),
-                BuX.getInstance().proxyOperations().getServerInfo( targetServer.get().getServerInfo().getName() ),
+                BuX.getInstance().serverOperations().getServerInfo( targetServer.get().getServerInfo().getName() ),
                 ConnectReason.UNKNOWN // Velocity does not seem to have connect reasons as of now
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectEvent );
@@ -82,8 +82,8 @@ public class UserConnectionListener
         {
             final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
                     optional.get(),
-                    event.getPreviousServer().map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ),
-                    BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() )
+                    event.getPreviousServer().map( server -> BuX.getInstance().serverOperations().getServerInfo( server.getServerInfo().getName() ) ),
+                    BuX.getInstance().serverOperations().getServerInfo( event.getServer().getServerInfo().getName() )
             );
             BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
         }
@@ -106,9 +106,9 @@ public class UserConnectionListener
         GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
         UserServerKickEvent userServerKickEvent = new UserServerKickEvent(
                 optional.get(),
-                event.getServer() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getServerInfo().getName() ),
+                event.getServer() == null ? null : BuX.getInstance().serverOperations().getServerInfo( event.getServer().getServerInfo().getName() ),
                 event.getResult() instanceof RedirectPlayer
-                        ? BuX.getInstance().proxyOperations().getServerInfo( ( (RedirectPlayer) event.getResult() ).getServer().getServerInfo().getName() )
+                        ? BuX.getInstance().serverOperations().getServerInfo( ( (RedirectPlayer) event.getResult() ).getServer().getServerInfo().getName() )
                         : null,
                 event.getServerKickReason().orElse( null )
         );

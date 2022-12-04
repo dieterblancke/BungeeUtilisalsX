@@ -23,7 +23,7 @@ public class DefaultPlaceHolders implements PlaceHolderPack
         PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
                 event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
-                event -> String.valueOf( BuX.getInstance().proxyOperations().getMaxPlayers() ) );
+                event -> String.valueOf( BuX.getInstance().serverOperations().getMaxPlayers() ) );
 
         PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
         PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );

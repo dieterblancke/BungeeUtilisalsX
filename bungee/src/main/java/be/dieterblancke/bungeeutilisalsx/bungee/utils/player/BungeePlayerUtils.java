@@ -59,7 +59,7 @@ public class BungeePlayerUtils implements IPlayerUtils
 
         if ( player != null )
         {
-            return BuX.getInstance().proxyOperations().getServerInfo( player.getServer().getInfo().getName() );
+            return BuX.getInstance().serverOperations().getServerInfo( player.getServer().getInfo().getName() );
         }
 
         return null;

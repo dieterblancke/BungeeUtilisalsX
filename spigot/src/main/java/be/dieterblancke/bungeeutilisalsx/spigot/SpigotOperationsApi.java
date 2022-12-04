@@ -1,25 +1,20 @@
-package be.dieterblancke.bungeeutilisalsx.bungee;
+package be.dieterblancke.bungeeutilisalsx.spigot;
 
-import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
-import be.dieterblancke.bungeeutilisalsx.bungee.utils.CommandHolder;
 import be.dieterblancke.bungeeutilisalsx.common.ServerOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
+import be.dieterblancke.bungeeutilisalsx.spigot.command.CommandHolder;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
-import net.md_5.bungee.api.ProxyServer;
-import net.md_5.bungee.api.config.ServerInfo;
-import net.md_5.bungee.api.plugin.Plugin;
-import net.md_5.bungee.api.plugin.PluginDescription;
+import org.bukkit.Bukkit;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginDescriptionFile;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
-public class BungeeOperationsApi implements ServerOperationsApi
+public class SpigotOperationsApi implements ServerOperationsApi
 {
 
     private final Map<Command, CommandHolder> commandHolders = new HashMap<>();
@@ -31,7 +26,8 @@ public class BungeeOperationsApi implements ServerOperationsApi
         {
             final CommandHolder commandHolder = new CommandHolder( command );
 
-            ProxyServer.getInstance().getPluginManager().registerCommand( Bootstrap.getInstance(), commandHolder );
+//            TODO: register command
+//            ProxyServer.getInstance().getPluginManager().registerCommand( Bootstrap.getInstance(), commandHolder );
 
             commandHolders.put( command, commandHolder );
         }
@@ -42,34 +38,27 @@ public class BungeeOperationsApi implements ServerOperationsApi
     {
         if ( commandHolders.containsKey( command ) )
         {
-            ProxyServer.getInstance().getPluginManager().unregisterCommand( this.commandHolders.remove( command ) );
+//            TODO: unregister command
+//            ProxyServer.getInstance().getPluginManager().unregisterCommand( this.commandHolders.remove( command ) );
         }
     }
 
     @Override
     public List<IProxyServer> getServers()
     {
-        return ProxyServer.getInstance()
-                .getServers()
-                .values()
-                .stream()
-                .map( ServerInfo::getName )
-                .map( this::getServerInfo )
-                .collect( Collectors.toList() );
+        return List.of();
     }
 
     @Override
     public IProxyServer getServerInfo( final String serverName )
     {
-        final ServerInfo serverInfo = ProxyServer.getInstance().getServerInfo( serverName );
-        return serverInfo == null ? null : new BungeeServer( serverInfo );
+        return null;
     }
 
     @Override
     public List<PluginInfo> getPlugins()
     {
-        return ProxyServer.getInstance().getPluginManager().getPlugins()
-                .stream()
+        return Arrays.stream( Bukkit.getPluginManager().getPlugins() )
                 .map( Plugin::getDescription )
                 .map( this::getPluginInfo )
                 .collect( Collectors.toList() );
@@ -78,7 +67,7 @@ public class BungeeOperationsApi implements ServerOperationsApi
     @Override
     public Optional<PluginInfo> getPlugin( final String pluginName )
     {
-        final Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin( pluginName );
+        final Plugin plugin = Bukkit.getPluginManager().getPlugin( pluginName );
 
         return Optional.ofNullable( plugin )
                 .map( Plugin::getDescription )
@@ -88,7 +77,7 @@ public class BungeeOperationsApi implements ServerOperationsApi
     @Override
     public long getMaxPlayers()
     {
-        return ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers();
+        return Bukkit.getMaxPlayers();
     }
 
     @Override
@@ -97,14 +86,14 @@ public class BungeeOperationsApi implements ServerOperationsApi
         return BungeeComponentSerializer.get().serialize( component );
     }
 
-    private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
+    private PluginInfo getPluginInfo( final PluginDescriptionFile pluginDescription )
     {
         return new PluginInfo(
                 pluginDescription.getName(),
                 pluginDescription.getVersion(),
-                pluginDescription.getAuthor(),
-                pluginDescription.getDepends(),
-                pluginDescription.getSoftDepends(),
+                String.join( ", ", pluginDescription.getAuthors() ),
+                new HashSet<>( pluginDescription.getDepend() ),
+                new HashSet<>( pluginDescription.getSoftDepend() ),
                 pluginDescription.getDescription()
         );
     }

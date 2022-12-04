@@ -7,6 +7,7 @@ public enum Platform
 
     BUNGEECORD,
     VELOCITYPOWERED,
+    SPIGOT,
     SPRING;
 
     private static Platform CURRENT_PLATFORM = null;

@@ -12,7 +12,7 @@ public class TritonPluginSupport implements PluginSupport
     @Override
     public boolean isEnabled()
     {
-        return BuX.getInstance().proxyOperations().getPlugin( "Triton" ).isPresent();
+        return BuX.getInstance().serverOperations().getPlugin( "Triton" ).isPresent();
     }
 
     @Override

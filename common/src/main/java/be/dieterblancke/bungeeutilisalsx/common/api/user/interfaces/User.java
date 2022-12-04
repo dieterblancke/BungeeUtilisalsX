@@ -456,7 +456,7 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
      */
     default Optional<IProxyServer> getCurrentServer()
     {
-        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo( this.getServerName() ) );
+        return Optional.ofNullable( BuX.getInstance().serverOperations().getServerInfo( this.getServerName() ) );
     }
 
     /**

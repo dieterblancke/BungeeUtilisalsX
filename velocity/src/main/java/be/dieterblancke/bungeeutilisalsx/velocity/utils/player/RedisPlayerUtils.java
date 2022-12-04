@@ -64,7 +64,7 @@ public class RedisPlayerUtils implements IPlayerUtils
         {
             return Optional.ofNullable( RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ) )
                     .map( ServerInfo::getName )
-                    .map( BuX.getInstance().proxyOperations()::getServerInfo )
+                    .map( BuX.getInstance().serverOperations()::getServerInfo )
                     .orElse( null );
         }
 

@@ -54,7 +54,7 @@ public class UserConnectionListener implements Listener
         }
         final UserServerConnectEvent userServerConnectEvent = new UserServerConnectEvent(
                 optional.get(),
-                BuX.getInstance().proxyOperations().getServerInfo( event.getTarget().getName() ),
+                BuX.getInstance().serverOperations().getServerInfo( event.getTarget().getName() ),
                 ConnectReason.parse( event.getReason().toString() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectEvent );
@@ -78,8 +78,8 @@ public class UserConnectionListener implements Listener
         final UserServerConnectedEvent userServerConnectedEvent = new UserServerConnectedEvent(
                 optional.get(),
                 Optional.ofNullable( Strings.emptyToNull( optional.get().getServerName() ) )
-                        .map( BuX.getInstance().proxyOperations()::getServerInfo ),
-                BuX.getInstance().proxyOperations().getServerInfo( event.getServer().getInfo().getName() )
+                        .map( BuX.getInstance().serverOperations()::getServerInfo ),
+                BuX.getInstance().serverOperations().getServerInfo( event.getServer().getInfo().getName() )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerConnectedEvent );
     }
@@ -97,8 +97,8 @@ public class UserConnectionListener implements Listener
         GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
         UserServerKickEvent userServerKickEvent = new UserServerKickEvent(
                 optional.get(),
-                event.getKickedFrom() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getKickedFrom().getName() ),
-                event.getCancelServer() == null ? null : BuX.getInstance().proxyOperations().getServerInfo( event.getCancelServer().getName() ),
+                event.getKickedFrom() == null ? null : BuX.getInstance().serverOperations().getServerInfo( event.getKickedFrom().getName() ),
+                event.getCancelServer() == null ? null : BuX.getInstance().serverOperations().getServerInfo( event.getCancelServer().getName() ),
                 componentSerializer.deserialize( ComponentSerializer.toString( event.getKickReasonComponent() ) )
         );
         BuX.getApi().getEventLoader().launchEvent( userServerKickEvent );

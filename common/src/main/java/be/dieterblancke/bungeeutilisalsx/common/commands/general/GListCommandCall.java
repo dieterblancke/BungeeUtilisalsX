@@ -87,7 +87,7 @@ public class GListCommandCall implements CommandCall, TabCall
         }
         else
         {
-            for ( IProxyServer info : BuX.getInstance().proxyOperations().getServers() )
+            for ( IProxyServer info : BuX.getInstance().serverOperations().getServers() )
             {
                 final List<String> players = BuX.getApi().getPlayerUtils().getPlayers( info.getName() );
 

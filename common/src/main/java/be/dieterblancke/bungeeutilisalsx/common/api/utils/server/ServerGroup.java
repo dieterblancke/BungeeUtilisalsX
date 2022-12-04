@@ -65,7 +65,7 @@ public class ServerGroup
 
         this.searchServers().forEach( serverName ->
         {
-            IProxyServer info = BuX.getInstance().proxyOperations().getServerInfo( serverName );
+            IProxyServer info = BuX.getInstance().serverOperations().getServerInfo( serverName );
 
             if ( info != null )
             {
@@ -99,7 +99,7 @@ public class ServerGroup
 
         servers.forEach( server ->
         {
-            for ( IProxyServer info : BuX.getInstance().proxyOperations().getServers() )
+            for ( IProxyServer info : BuX.getInstance().serverOperations().getServers() )
             {
                 String name = info.getName().toLowerCase();
 

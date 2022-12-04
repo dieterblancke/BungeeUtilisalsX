@@ -143,7 +143,7 @@ public class CommandManager
     {
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "server.slash-server.permission" );
 
-        for ( IProxyServer proxyServer : BuX.getInstance().proxyOperations().getServers() )
+        for ( IProxyServer proxyServer : BuX.getInstance().serverOperations().getServers() )
         {
             final String name = proxyServer.getName().toLowerCase();
             final CommandBuilder builder = CommandBuilder.builder()

@@ -326,7 +326,7 @@ public abstract class AbstractBungeeUtilisalsX
         activePermissionIntegration = new DefaultPermissionIntegration();
     }
 
-    public abstract ProxyOperationsApi proxyOperations();
+    public abstract ServerOperationsApi serverOperations();
 
     public abstract File getDataFolder();
 
@@ -363,7 +363,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     private void registerProtocolizeSupport()
     {
-        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isPresent() )
+        if ( BuX.getInstance().serverOperations().getPlugin( "Protocolize" ).isPresent() )
         {
             this.protocolizeManager = new SimpleProtocolizeManager();
         }
