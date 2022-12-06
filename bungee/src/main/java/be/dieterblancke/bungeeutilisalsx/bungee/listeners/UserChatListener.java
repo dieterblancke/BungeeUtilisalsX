@@ -30,14 +30,17 @@ public class UserChatListener implements Listener
             final UserCommandEvent commandEvent = new UserCommandEvent( user, event.getMessage() );
             BuX.getApi().getEventLoader().launchEvent( commandEvent );
 
-            if ( commandEvent.isCancelled() )
+            if ( commandEvent.getUser().allowsMessageModifications() )
             {
-                event.setCancelled( true );
-                return;
-            }
-            if ( !event.getMessage().equals( commandEvent.getCommand() ) )
-            {
-                event.setMessage( commandEvent.getCommand() );
+                if ( commandEvent.isCancelled() )
+                {
+                    event.setCancelled( true );
+                    return;
+                }
+                if ( !event.getMessage().equals( commandEvent.getCommand() ) )
+                {
+                    event.setMessage( commandEvent.getCommand() );
+                }
             }
         }
         else
@@ -45,15 +48,18 @@ public class UserChatListener implements Listener
             final UserChatEvent chatEvent = new UserChatEvent( user, event.getMessage() );
             BuX.getApi().getEventLoader().launchEvent( chatEvent );
 
-            if ( chatEvent.isCancelled() )
+            if ( chatEvent.getUser().allowsMessageModifications() )
             {
-                event.setCancelled( true );
-                return;
-            }
+                if ( chatEvent.isCancelled() )
+                {
+                    event.setCancelled( true );
+                    return;
+                }
 
-            if ( !event.getMessage().equals( chatEvent.getMessage() ) )
-            {
-                event.setMessage( chatEvent.getMessage() );
+                if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+                {
+                    event.setMessage( chatEvent.getMessage() );
+                }
             }
         }
     }

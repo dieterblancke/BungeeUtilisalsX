@@ -494,4 +494,7 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
     {
         return this.getStorage().getMessagePlaceholders();
     }
+
+    boolean allowsMessageModifications();
+
 }

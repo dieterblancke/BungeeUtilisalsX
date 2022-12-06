@@ -25,6 +25,7 @@ import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
@@ -417,6 +418,14 @@ public class VelocityUser implements User
     public Audience asAudience()
     {
         return this.player;
+    }
+
+    @Override
+    public boolean allowsMessageModifications()
+    {
+        player.getIdentifiedKey().
+        return player.getIdentifiedKey() == null
+                || player.getProtocolVersion().getProtocol() < 760;
     }
 
     @Override
