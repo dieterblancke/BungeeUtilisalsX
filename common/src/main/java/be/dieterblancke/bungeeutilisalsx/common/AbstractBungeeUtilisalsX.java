@@ -103,7 +103,7 @@ public abstract class AbstractBungeeUtilisalsX
 
         this.api = this.createBuXApi();
 
-        final boolean useMultiProxy = ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" );
+        final boolean useMultiProxy = ConfigFiles.CONFIG.getConfig().exists( "multi-proxy.enabled" ) && ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" );
         this.redisManager = useMultiProxy ? RedisManagerFactory.create() : null;
         this.jobManager = useMultiProxy ? new MultiProxyJobManager() : new SingleProxyJobManager();
 
@@ -326,7 +326,7 @@ public abstract class AbstractBungeeUtilisalsX
         activePermissionIntegration = new DefaultPermissionIntegration();
     }
 
-    public abstract ProxyOperationsApi proxyOperations();
+    public abstract ServerOperationsApi serverOperations();
 
     public abstract File getDataFolder();
 
@@ -363,7 +363,7 @@ public abstract class AbstractBungeeUtilisalsX
 
     private void registerProtocolizeSupport()
     {
-        if ( BuX.getInstance().proxyOperations().getPlugin( "Protocolize" ).isPresent() )
+        if ( BuX.getInstance().serverOperations().getPlugin( "Protocolize" ).isPresent() )
         {
             this.protocolizeManager = new SimpleProtocolizeManager();
         }

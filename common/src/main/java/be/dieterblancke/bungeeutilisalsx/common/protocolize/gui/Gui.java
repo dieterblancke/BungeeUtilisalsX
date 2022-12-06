@@ -92,7 +92,7 @@ public class Gui
     public void refill()
     {
         inventory = new Inventory( InventoryType.valueOf( "GENERIC_9X" + rows ) );
-        inventory.title( BuX.getInstance().proxyOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
+        inventory.title( BuX.getInstance().serverOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
                 PluginSupport.getPluginSupport( TritonPluginSupport.class )
                         .map( pluginSupport -> pluginSupport.formatGuiMessage( user, title ) )
                         .orElse( title ),

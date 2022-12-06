@@ -37,6 +37,6 @@ public class UserSwitchServerJob implements MultiProxyJob
 
     public Optional<IProxyServer> getTargetServer()
     {
-        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo( server ) );
+        return Optional.ofNullable( BuX.getInstance().serverOperations().getServerInfo( server ) );
     }
 }

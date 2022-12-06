@@ -92,7 +92,7 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    public ProxyOperationsApi proxyOperations()
+    public ServerOperationsApi serverOperations()
     {
         throw new UnsupportedOperationException();
     }

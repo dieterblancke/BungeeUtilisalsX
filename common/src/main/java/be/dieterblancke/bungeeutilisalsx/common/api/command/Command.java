@@ -187,12 +187,12 @@ public class Command
 
     public void unload()
     {
-        BuX.getInstance().proxyOperations().unregisterCommand( this );
+        BuX.getInstance().serverOperations().unregisterCommand( this );
     }
 
     public Command register()
     {
-        BuX.getInstance().proxyOperations().registerCommand( this );
+        BuX.getInstance().serverOperations().registerCommand( this );
         return this;
     }
 

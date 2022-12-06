@@ -123,6 +123,19 @@ public class ReflectionUtils
         return null;
     }
 
+    public static boolean hasField( Class<?> clazz, String name )
+    {
+        try
+        {
+            Field field = clazz.getDeclaredField( name );
+            return true;
+        }
+        catch ( Exception e )
+        {
+            return false;
+        }
+    }
+
     public static Object getValue( Object instance, Class<?> clazz, String fieldName ) throws IllegalAccessException
     {
         final Field field = getField( clazz, fieldName );

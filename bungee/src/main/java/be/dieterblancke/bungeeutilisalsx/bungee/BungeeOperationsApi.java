@@ -2,7 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.bungee;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeServer;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.CommandHolder;
-import be.dieterblancke.bungeeutilisalsx.common.ProxyOperationsApi;
+import be.dieterblancke.bungeeutilisalsx.common.ServerOperationsApi;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.Command;
 import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.PluginInfo;
@@ -19,7 +19,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-public class BungeeOperationsApi implements ProxyOperationsApi
+public class BungeeOperationsApi implements ServerOperationsApi
 {
 
     private final Map<Command, CommandHolder> commandHolders = new HashMap<>();

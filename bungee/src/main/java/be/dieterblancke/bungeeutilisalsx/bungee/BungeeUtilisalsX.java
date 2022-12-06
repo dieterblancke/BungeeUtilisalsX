@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 {
 
-    private final ProxyOperationsApi proxyOperationsApi = new BungeeOperationsApi();
+    private final ServerOperationsApi serverOperationsApi = new BungeeOperationsApi();
     private final CommandManager commandManager = new CommandManager();
     private final IPluginDescription pluginDescription = new BungeePluginDescription();
     private final List<StaffUser> staffMembers = new ArrayList<>();
@@ -113,9 +113,9 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    public ProxyOperationsApi proxyOperations()
+    public ServerOperationsApi serverOperations()
     {
-        return proxyOperationsApi;
+        return serverOperationsApi;
     }
 
     @Override

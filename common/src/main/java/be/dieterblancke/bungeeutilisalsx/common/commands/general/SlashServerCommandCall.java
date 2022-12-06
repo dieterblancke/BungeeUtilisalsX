@@ -20,7 +20,7 @@ public class SlashServerCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( serverName );
+        final IProxyServer server = BuX.getInstance().serverOperations().getServerInfo( serverName );
 
         if ( server == null )
         {

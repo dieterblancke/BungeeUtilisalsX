@@ -15,6 +15,7 @@
         <module>bungee</module>
         <module>velocity</module>
         <module>webapi</module>
+        <module>spigot</module>
     </modules>
 
     <developers>

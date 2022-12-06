@@ -4,13 +4,12 @@ import be.dieterblancke.bungeeutilisalsx.common.*;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.ReflectionUtils;
 import be.dieterblancke.bungeeutilisalsx.common.commands.CommandManager;
 import be.dieterblancke.bungeeutilisalsx.common.event.EventLoader;
 import be.dieterblancke.bungeeutilisalsx.common.language.PluginLanguageManager;
 import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringCommandManager;
 import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringPluginDescription;
-import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringProxyOperations;
+import be.dieterblancke.bungeeutilisalsx.webapi.util.SpringServerOperations;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
@@ -26,7 +25,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 
     private final IPluginDescription pluginDescription = new SpringPluginDescription();
     private final CommandManager commandManager = new SpringCommandManager();
-    private final ProxyOperationsApi proxyOperations = new SpringProxyOperations();
+    private final ServerOperationsApi proxyOperations = new SpringServerOperations();
 
     public BungeeUtilisalsX()
     {
@@ -92,7 +91,7 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
     }
 
     @Override
-    public ProxyOperationsApi proxyOperations()
+    public ServerOperationsApi serverOperations()
     {
         return proxyOperations;
     }

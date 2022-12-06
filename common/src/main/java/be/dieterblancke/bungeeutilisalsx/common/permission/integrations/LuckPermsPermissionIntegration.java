@@ -13,7 +13,7 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
     @Override
     public boolean isActive()
     {
-        return BuX.getInstance().proxyOperations().getPlugin( "LuckPerms" ).isPresent();
+        return BuX.getInstance().serverOperations().getPlugin( "LuckPerms" ).isPresent();
     }
 
     @Override

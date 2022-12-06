@@ -38,7 +38,7 @@ public class ServerCommandCall implements CommandCall
         }
 
         final int serverArgIdx = args.size() == 2 ? 1 : 0;
-        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( args.get( serverArgIdx ) );
+        final IProxyServer server = BuX.getInstance().serverOperations().getServerInfo( args.get( serverArgIdx ) );
 
         if ( server == null )
         {

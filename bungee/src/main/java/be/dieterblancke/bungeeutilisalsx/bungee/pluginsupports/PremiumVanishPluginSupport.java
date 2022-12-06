@@ -16,7 +16,7 @@ public class PremiumVanishPluginSupport implements PluginSupport
     @Override
     public boolean isEnabled()
     {
-        return BuX.getInstance().proxyOperations().getPlugin( "PremiumVanish" ).isPresent();
+        return BuX.getInstance().serverOperations().getPlugin( "PremiumVanish" ).isPresent();
     }
 
     @Override

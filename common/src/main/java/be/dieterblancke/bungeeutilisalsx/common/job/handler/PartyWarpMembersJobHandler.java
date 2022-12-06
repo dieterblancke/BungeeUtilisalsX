@@ -15,7 +15,7 @@ public class PartyWarpMembersJobHandler extends AbstractJobHandler
     @SneakyThrows
     void handlePartyWarpMembersJob( final PartyWarpMembersJob job )
     {
-        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( job.getTargetServer() );
+        final IProxyServer server = BuX.getInstance().serverOperations().getServerInfo( job.getTargetServer() );
 
         if ( server != null )
         {

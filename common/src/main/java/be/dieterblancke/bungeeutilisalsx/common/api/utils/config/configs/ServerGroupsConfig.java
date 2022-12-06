@@ -57,7 +57,7 @@ public class ServerGroupsConfig extends Config
             }
         }
 
-        for ( IProxyServer server : BuX.getInstance().proxyOperations().getServers() )
+        for ( IProxyServer server : BuX.getInstance().serverOperations().getServers() )
         {
             if ( !servers.containsKey( server.getName() ) )
             {

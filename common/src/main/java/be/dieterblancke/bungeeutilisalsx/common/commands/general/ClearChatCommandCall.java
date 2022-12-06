@@ -24,7 +24,7 @@ public class ClearChatCommandCall implements CommandCall, TabCall
         }
         else
         {
-            final IProxyServer info = BuX.getInstance().proxyOperations().getServerInfo( server );
+            final IProxyServer info = BuX.getInstance().serverOperations().getServerInfo( server );
 
             if ( info != null )
             {
