@@ -423,7 +423,6 @@ public class VelocityUser implements User
     @Override
     public boolean allowsMessageModifications()
     {
-        player.getIdentifiedKey().
         return player.getIdentifiedKey() == null
                 || player.getProtocolVersion().getProtocol() < 760;
     }
