@@ -24,7 +24,6 @@ public class StaffChatCommandCall implements CommandCall
                         MessagePlaceholders.create()
                                 .append( "user", user.getName() )
                                 .append( "user_prefix", StaffUtils.getStaffRankForUser( user ).map( StaffRankData::getDisplay ).orElse( "" ) )
-                                .append( "permission_user_prefix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ) )
                                 .append( "permission_user_prefix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ) )
                                 .append( "server", Strings.nullToEmpty( user.getServerName() ) )
                                 .append( "message", message )
