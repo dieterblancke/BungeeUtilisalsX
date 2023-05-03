@@ -68,18 +68,6 @@ public class VelocityUser implements User
         this.uuid = player.getUniqueId();
         this.ip = Utils.getIP( player.getRemoteAddress() );
         this.cooldowns = new UserCooldowns();
-        this.storage = new UserStorage(
-                uuid,
-                name,
-                ip,
-                BuX.getApi().getLanguageManager().getDefaultLanguage(),
-                now,
-                now,
-                Lists.newArrayList(),
-                this.getJoinedHost(),
-                Maps.newHashMap()
-        );
-        this.userSettings = new UserSettings( uuid, new ArrayList<>() );
 
         dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
         {
@@ -110,6 +98,17 @@ public class VelocityUser implements User
             {
                 final String joinedHost = this.getJoinedHost();
                 final Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
+                this.storage = new UserStorage(
+                        uuid,
+                        name,
+                        ip,
+                        BuX.getApi().getLanguageManager().getDefaultLanguage(),
+                        now,
+                        now,
+                        Lists.newArrayList(),
+                        this.getJoinedHost(),
+                        Maps.newHashMap()
+                );
 
                 dao.getUserDao().createUser(
                         uuid,
