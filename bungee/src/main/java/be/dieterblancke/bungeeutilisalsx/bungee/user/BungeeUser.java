@@ -110,6 +110,7 @@ public class BungeeUser implements User
                         this.getJoinedHost(),
                         Maps.newHashMap()
                 );
+
                 dao.getUserDao().createUser(
                         uuid,
                         name,
