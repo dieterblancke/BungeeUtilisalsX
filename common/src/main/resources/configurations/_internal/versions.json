@@ -135,6 +135,18 @@
     {
       "versionName": "1.19.1",
       "protocolVersion": 760
+    },
+    {
+      "versionName": "1.19.3",
+      "protocolVersion": 761
+    },
+    {
+      "versionName": "1.19.4",
+      "protocolVersion": 762
+    },
+    {
+      "versionName": "1.20",
+      "protocolVersion": 763
     }
   ]
 }
