@@ -46,13 +46,31 @@ public class StaffUtils
         return BuX.getApi().getUser( name ).map( User::isVanished ).orElse( false );
     }
 
-    public static Optional<StaffRankData> getStaffRankForUser( final User user )
+    public static Optional<StaffRankData> getStaffRankForUser( User user )
     {
-        final String group = user.getGroup();
+        String group = user.getGroup();
 
+        if ( !Strings.isNullOrEmpty( group ) )
+        {
+            BuX.debug( "User " + user.getName() + " detected with group: " + group + ", trying to match rank on group first ..." );
+
+            return ConfigFiles.RANKS.getRanks()
+                    .stream()
+                    .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
+                    .filter( rank -> rank.getName().equalsIgnoreCase( group ) )
+                    .findFirst()
+                    .or( () -> getStaffRankForUserByPermissions( user ) );
+        }
+
+        return getStaffRankForUserByPermissions( user );
+    }
+
+    private static Optional<StaffRankData> getStaffRankForUserByPermissions( User user )
+    {
         return ConfigFiles.RANKS.getRanks()
                 .stream()
-                .filter( rank -> Strings.isNullOrEmpty( group ) ? user.hasPermission( rank.getPermission(), true ) : rank.getName().equalsIgnoreCase( group ) )
-                .max( Comparator.comparingInt( StaffRankData::getPriority ) );
+                .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
+                .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
+                .findFirst();
     }
 }

@@ -66,7 +66,7 @@ public class StaffCommandCall implements CommandCall
         final List<StaffUser> staffUsers = BuX.getInstance().getStaffMembers()
                 .stream()
                 .filter( staffUser -> !staffUser.isHidden() && !staffUser.isVanished() )
-                .collect( Collectors.toList() );
+                .toList();
 
         if ( staffUsers.isEmpty() )
         {
@@ -74,13 +74,15 @@ public class StaffCommandCall implements CommandCall
             return;
         }
 
-        final Map<StaffRankData, List<StaffUser>> staffMembers = staffUsers
+        final Map<String, List<StaffUser>> staffMembers = staffUsers
                 .stream()
-                .collect( Collectors.groupingBy( StaffUser::getRank ) );
+                .collect( Collectors.groupingBy( it -> it.getRank().getName() ) );
 
         final LinkedList<StaffRankData> onlineStaffRanks = staffMembers
                 .keySet()
                 .stream()
+                .map( it -> ConfigFiles.RANKS.getRankData( it ) )
+                .filter( Objects::nonNull )
                 .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .collect( Collectors.toCollection( Lists::newLinkedList ) );
 
@@ -88,7 +90,7 @@ public class StaffCommandCall implements CommandCall
 
         for ( StaffRankData rank : onlineStaffRanks )
         {
-            List<StaffUser> users = staffMembers.get( rank );
+            List<StaffUser> users = staffMembers.get( rank.getName() );
             Component originalComponent = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
@@ -110,7 +112,7 @@ public class StaffCommandCall implements CommandCall
                     final StaffUser u = userIt.next();
                     final IProxyServer info = BuX.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    builder = builder.append( MessageBuilder.buildMessage(
+                    builder.append( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
                             MessagePlaceholders.create()
@@ -120,7 +122,7 @@ public class StaffCommandCall implements CommandCall
 
                     if ( userIt.hasNext() )
                     {
-                        builder = builder.append( Utils.format( user.getLanguageConfig().buildLangMessage(
+                        builder.append( Utils.format( user.getLanguageConfig().buildLangMessage(
                                 "general-commands.staff.users.separator",
                                 MessagePlaceholders.empty()
                         ) ) );
