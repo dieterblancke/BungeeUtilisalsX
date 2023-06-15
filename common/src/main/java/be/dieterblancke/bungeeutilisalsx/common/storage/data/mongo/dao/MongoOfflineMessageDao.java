@@ -2,6 +2,7 @@ package be.dieterblancke.bungeeutilisalsx.common.storage.data.mongo.dao;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDao;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.gson.Gson;
 import com.mongodb.client.FindIterable;
@@ -36,7 +37,7 @@ public class MongoOfflineMessageDao implements OfflineMessageDao
                 messages.add( new OfflineMessage(
                         document.getLong( "_id" ),
                         document.getString( "message" ),
-                        GSON.fromJson( document.getString( "parameters" ), Object[].class )
+                        MessagePlaceholders.fromArray( GSON.fromJson( document.getString( "parameters" ), Object[].class ) )
                 ) );
             }
 
@@ -56,7 +57,7 @@ public class MongoOfflineMessageDao implements OfflineMessageDao
                             .append( "_id", manager().getNextSequenceValue( "offline_message_id" ) )
                             .append( "username", username )
                             .append( "message", message.getLanguagePath() )
-                            .append( "parameters", GSON.toJson( message.getPlaceholders() ) )
+                            .append( "parameters", GSON.toJson( message.getPlaceholders().getMessagePlaceholders().asArray() ) )
                             .append( "active", true )
             );
         } );

@@ -9,15 +9,17 @@ import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarColor;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.BarStyle;
 import be.dieterblancke.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.event.IEventLoader;
-import be.dieterblancke.bungeeutilisalsx.common.api.hubbalancer.IHubBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.ILanguageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.punishments.IPunishmentHelper;
+import be.dieterblancke.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.AbstractStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
+import be.dieterblancke.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +36,11 @@ public class BuXApi implements IBuXApi
 
     private final ILanguageManager languageManager;
     private final IEventLoader eventLoader;
-    private final IHubBalancer hubBalancer;
     private final IPunishmentHelper punishmentExecutor;
     private final IPlayerUtils playerUtils;
     private final User consoleUser = new BungeeConsoleUser();
     private final List<User> users = Lists.newCopyOnWriteArrayList();
+    private final ServerBalancer serverBalancer;
 
     @Override
     public Optional<User> getUser( String name )
@@ -131,15 +133,15 @@ public class BuXApi implements IBuXApi
     }
 
     @Override
-    public void langBroadcast( final String message, final Object... placeholders )
+    public void langBroadcast( final String message, final HasMessagePlaceholders placeholders )
     {
-        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, "", placeholders ) );
+        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, "", placeholders.getMessagePlaceholders() ) );
     }
 
     @Override
-    public void langPermissionBroadcast( final String message, final String permission, final Object... placeholders )
+    public void langPermissionBroadcast( final String message, final String permission, final HasMessagePlaceholders placeholders )
     {
-        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, permission, placeholders ) );
+        BuX.getInstance().getJobManager().executeJob( new BroadcastLanguageMessageJob( message, permission, placeholders.getMessagePlaceholders() ) );
     }
 
     @Override

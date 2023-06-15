@@ -45,7 +45,7 @@ public class IPMuteCommandCall extends PunishmentCommand
         ).thenAccept( info ->
         {
             super.attemptMute( storage, "punishments.ipmute.onmute", info );
-            user.sendLangMessage( "punishments.ipmute.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+            user.sendLangMessage( "punishments.ipmute.executed", executor.getPlaceHolders( info ) );
 
             if ( !parameters.contains( "-s" ) )
             {
@@ -53,7 +53,7 @@ public class IPMuteCommandCall extends PunishmentCommand
                 {
                     BuX.getApi().langBroadcast(
                             "punishments.ipmute.broadcast",
-                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                            executor.getPlaceHolders( info )
                     );
                 }
                 else
@@ -61,7 +61,7 @@ public class IPMuteCommandCall extends PunishmentCommand
                     BuX.getApi().langPermissionBroadcast(
                             "punishments.ipmute.broadcast",
                             ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ipmute.broadcast" ),
-                            executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                            executor.getPlaceHolders( info )
                     );
                 }
             }

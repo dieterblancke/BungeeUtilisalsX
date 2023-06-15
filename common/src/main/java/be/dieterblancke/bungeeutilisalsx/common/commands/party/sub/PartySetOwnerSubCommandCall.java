@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.UserUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +24,7 @@ public class PartySetOwnerSubCommandCall implements CommandCall
         }
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;
@@ -51,19 +52,22 @@ public class PartySetOwnerSubCommandCall implements CommandCall
 
                     user.sendLangMessage(
                             "party.setowner.changed",
-                            "{new-owner}", target.getUserName()
+                            MessagePlaceholders.create()
+                                    .append( "new-owner", target.getUserName() )
                     );
                     BuX.getInstance().getPartyManager().languageBroadcastToParty(
                             party,
                             "party.setowner.broadcast",
-                            "{old-owner}", user.getName(),
-                            "{new-owner}", target.getUserName()
+                            MessagePlaceholders.create()
+                                    .append( "old-owner", user.getName() )
+                                    .append( "new-owner", target.getUserName() )
                     );
                 }, () ->
                 {
                     user.sendLangMessage(
                             "party.setowner.not-in-party",
-                            "{user}", target.getUserName()
+                            MessagePlaceholders.create()
+                                    .append( "user", target.getUserName() )
                     );
                 } ) );
     }

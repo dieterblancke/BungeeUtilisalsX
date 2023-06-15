@@ -1,6 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.webapi;
 
 import be.dieterblancke.bungeeutilisalsx.common.BootstrapUtil;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Platform;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoader;
 import lombok.SneakyThrows;
 import lombok.extern.java.Log;
@@ -27,6 +28,7 @@ public class Bootstrap
         final File jarFile = new File( Bootstrap.class.getProtectionDomain().getCodeSource().getLocation().toURI() );
         final File dataFolder = new File( jarFile.isDirectory() ? jarFile : jarFile.getParentFile(), "BungeeUtilisalsX" );
 
+        Platform.setCurrentPlatform( Platform.SPRING );
         BootstrapUtil.loadLibraries(
                 dataFolder,
                 new UrlLibraryClassLoader(),

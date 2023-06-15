@@ -66,7 +66,7 @@ public class UnbanCommandCall extends PunishmentCommand
         info.setRemovedBy( user.getName() );
         info.setServer( punishmentRemovalArgs.getServerOrAll() );
 
-        user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+        user.sendLangMessage( "punishments.unban.executed", executor.getPlaceHolders( info ) );
 
         if ( !parameters.contains( "-s" ) )
         {
@@ -74,7 +74,7 @@ public class UnbanCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langBroadcast(
                         "punishments.unban.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
             else
@@ -82,7 +82,7 @@ public class UnbanCommandCall extends PunishmentCommand
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unban.broadcast",
                         ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unban.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
         }

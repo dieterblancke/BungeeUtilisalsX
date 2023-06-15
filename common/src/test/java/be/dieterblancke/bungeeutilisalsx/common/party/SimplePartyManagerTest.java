@@ -6,7 +6,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.storage.TestRedisContainer;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import be.dieterblancke.configuration.yaml.YamlConfiguration;
 import org.junit.jupiter.api.*;
@@ -32,11 +31,11 @@ class SimplePartyManagerTest extends BuXTest
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.CONFIG,
-                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/config.yml" ) )
+                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
         );
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.PARTY_CONFIG,
-                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/party/config.yml" ) )
+                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/party/config.yml" ) )
         );
 
         ConfigFiles.CONFIG.getConfig().set( "multi-proxy.enabled", true );

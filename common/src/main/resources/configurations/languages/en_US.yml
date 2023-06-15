@@ -1,0 +1,940 @@
+prefix: ''
+no-permission: '<red>You do not have the permission to do this!'
+never-joined: '<white>That user never joined before!'
+offline: '<white>That user is not online!'
+no-number: '<yellow>Please enter a valid number!'
+date-format: 'dd-MM-yyyy kk:mm:ss'
+not-for-console: '<yellow>This action is currently only supported for usage by players.'
+command-disabled-in-this-server: '<yellow>This command is <red>disabled <yellow>in the <aqua>{server} <yellow>server!'
+command-disabled: '<yellow>The command <aqua>{command} <yellow>is <red>disabled <yellow>in the <aqua>{server} <yellow>server!'
+offlinemessages-join-header: '<yellow>Messages you received while you were away:'
+
+updater:
+  update-found:
+    - '<yellow>An update has been found for <aqua>{name}<yellow>.'
+    - '<yellow>Installed version: <aqua>{version}'
+    - '<yellow>New Version: <aqua>{newVersion}'
+
+chat-protection:
+  swear: '<white>Please do not swear!'
+  caps: '<white>Please do not use that much caps!'
+  spam: '<white>Please wait another <green>%time% <white>seconds before talking again!'
+  advertise: '<white>Please do not advertise!'
+
+placeholders:
+  timeleft: '%days% days, %hours% hours, %minutes% minutes, %seconds% seconds'
+
+  format:
+    date: 'dd-MM-yyyy'
+    time: 'kk:mm:ss'
+    datetime: 'dd-MM-yyyy kk:mm:ss'
+
+server-balancer:
+  command:
+    sending: '&eSending you to &b{groupName} &7({serverName})'
+    no-servers-available: '&eThere are currently no servers available in &b{groupName}&e!'
+    already-in-group: '&eYou are already in this server group!'
+
+subcommands:
+  usage: '<yellow>Please use <aqua>{usage}<yellow>!'
+
+general-commands:
+  cooldown: '<yellow>This command is on cooldown for <aqua>{time} <yellow>more seconds!'
+  bungeeutilisals:
+    help:
+      - '<yellow>- <aqua>/bux version'
+      - '<yellow>- <aqua>/bux reload'
+  announce:
+    usage: '<yellow>Please use <aqua>/announce (p/b/c/a/t) (message)<yellow>.'
+  find:
+    usage: '<yellow>Please use <aqua>/find (name)<yellow>!'
+    message: '<aqua>{user} <yellow>is online in <aqua>{server}<yellow>!'
+  server:
+    usage:
+      - '<yellow>You are playing in <aqua>{server}<yellow>!'
+      - ''
+      - '<yellow>You can switch servers using <light_purple>/server (servername)<yellow>!'
+    notfound: '<yellow>The server <aqua>{server} <yellow>does not exist!'
+    alreadyconnected: '<yellow>You are already connected to <aqua>{server}<yellow>!'
+    connecting: '<yellow>You are being connected to <aqua>{server}<yellow>!'
+    sent-other: '<yellow>Sent <aqua>{user} <yellow>to <aqua>{server}<yellow>!'
+  clearchat:
+    usage: '<yellow>Please use <aqua>/clearchat (local / global)<yellow>!'
+    cleared: '<yellow>Your chat has been cleared by <aqua>{user}<yellow>!'
+  chatlock:
+    usage: '<yellow>Please use <aqua>/chatlock (local / global)<yellow>!'
+    locked: '<yellow>The chat has been locked by <aqua>{user}<yellow>!'
+    unlocked: '<yellow>The chat has been unlocked by <aqua>{user}<yellow>!'
+    onchat: '<yellow>The chat has been locked! <green>You cannot send messages at the moment.'
+  glag:
+    - '<yellow>BungeeCord statistics:'
+    - '<yellow>Max Memory: <aqua>{maxmemory}'
+    - '<yellow>Free Memory: <aqua>{freememory}'
+    - '<yellow>Total Memory: <aqua>{totalmemory}'
+    - '<yellow>Proxy online since: <aqua>{onlinesince}'
+  staffchat:
+    enabled: '<yellow>You are now talking in the <aqua>staff chat<yellow>!'
+    disabled: '<yellow>You are now talking in the <aqua>public chat<yellow>!'
+    format: '<gray>(<dark_red>SC<gray>) <gray>(<green>{server}<gray>) {user_prefix} <yellow>{user} <dark_gray>» <white>{message}'
+  language:
+    usage:
+      - '<yellow>Please use <aqua>/language (language)<yellow>!'
+      - '<yellow>Available languages: <aqua>{languages}'
+    notfound:
+      - '<red>Could not find a language called <dark_red>{language}<red>!'
+      - '<yellow>Available languages: <aqua>{languages}'
+    changed: '<yellow>Your language has been changed to <aqua>{language}<yellow>!'
+    already: '<yellow>You are already using the <aqua>{language} <yellow>language!'
+  staff:
+    no_staff: '<yellow>There is no staff online at the moment!'
+    head: '<white>List of online staff members:'
+    foot: '<yellow>In total, there are <aqua>{total} <yellow>staff members online!'
+    toggle:
+      hidden: '<yellow>You are now hidden from the /staff list!'
+      unhidden: '<yellow>You are now visible again in the /staff list!'
+    users:
+      separator: ', '
+      user:
+        text: '{username}'
+        hover: '<aqua>{username} <yellow>is currently playing on <aqua>{server}<yellow>!'
+        click:
+          type: 'SUGGEST_COMMAND'
+          action: '/server {server}'
+    rank:
+      text:
+        - text: '{rank_displayname} <aqua>({amount_online})<white>: '
+        - text: '{users}'
+  msg:
+    usage: '<yellow>Please use <aqua>/msg (user) (message)<yellow>!'
+    ignored: '<yellow>You cannot send a message to this user!'
+    self-msg: '<yellow>You cannot message yourself!'
+
+    format:
+      send: '<gray>(<yellow>Me <yellow>-> <gray>({receiver-server}) <aqua>{receiver}<gray>) <white>{message}'
+      receive: '<gray>({sender-server}) <aqua>{sender} <yellow>-> Me <white>{message}'
+  reply:
+    usage: '<yellow>Please use <aqua>/reply (message)<yellow>!'
+    no-target: '<yellow>There is currently nobody to reply to!'
+    ignored: '<yellow>You cannot send a message to this user!'
+
+    format:
+      send: '<yellow>Me <yellow>-> <gray>({receiver-server}) <aqua>{receiver}<gray> <white>{message}'
+      receive: '<gray>({sender-server}) <aqua>{sender} <yellow>-> <yellow>Me <white>{message}'
+  ignore:
+    usage: '<yellow>Please use <aqua>/ignore (add / remove / list) [player]<yellow>!'
+    self-ignore: '<yellow>You cannot (un)ignore yourself!'
+
+    add:
+      already-ignored: '<yellow>You cannot ignore someone who is already ignored!'
+      ignored: '<yellow>You are now ignoring <aqua>{user}<yellow>!'
+
+    remove:
+      not-ignored: '<yellow>You cannot unignore someone who is not ignored!'
+      unignored: '<yellow>You are not ignoring <aqua>{user} <yellow>anymore!'
+
+    list:
+      none: '<yellow>You currently are not ignoring any users.'
+      message: '<yellow>List of users you are currently ignoring: <aqua>{ignoredusers}'
+      separator: ', '
+  socialspy:
+    enabled: '<yellow>Your <aqua>socialspy <yellow>is now <green>enabled<yellow>!'
+    disabled: '<yellow>Your <aqua>socialspy <yellow>is now <red>disabled<yellow>!'
+
+    message: '<gray>(SSPY) <dark_gray>[<aqua>{sender} <yellow>-> <aqua>{receiver}<dark_gray>] <white>{message}!'
+  commandspy:
+    enabled: '<yellow>Your <aqua>commandspy <yellow>is now <green>enabled<yellow>!'
+    disabled: '<yellow>Your <aqua>commandspy <yellow>is now <red>disabled<yellow>!'
+
+    message: '<gray>(CSPY) <dark_gray>[<aqua>{server}<dark_gray>] <aqua>{user} <yellow>executed command <gray>{command} <yellow>!'
+  ping:
+    message: '<yellow>Your ping is: <aqua>{ping} ms<yellow>!'
+    other: '<aqua>{target}''s <yellow>ping is <aqua>{targetPing} ms<yellow>!'
+  report:
+    help:
+      - '<yellow>Subcommands of <aqua>/report<yellow>:'
+      - '<white>- <aqua>/report create (user) (reason)'
+      - '<white>- <aqua>/report list [all/active/accepted/denied] [page]'
+      - '<white>- <aqua>/report accept (id)'
+      - '<white>- <aqua>/report deny (id)'
+      - '<white>- <aqua>/report history [page]'
+
+    create:
+      usage: '<yellow>Please use <aqua>/report create (target) (reason)<yellow>!'
+      created: '<yellow>You have successfully reported <aqua>{target}<yellow>!'
+      bypassed: '<yellow>You cannot report staff members!'
+      self-report: '<yellow>You cannot report yourself!'
+
+      broadcast:
+        - '<aqua>{target} <yellow>has been reported by <aqua>{user}<yellow>!'
+        - '<yellow>Reason: <aqua>{reason}'
+        - '<yellow>Server: <aqua>{server}'
+    list:
+      wrong-page: '<yellow>Please enter a page in between <aqua>1 and {maxpages}<yellow>!'
+      header: '<yellow>Report list (page <aqua>{page}<yellow>)'
+      footer: ''
+      no-reports: '<yellow>There are no reports matching this criteria.'
+      handled: 'Handled'
+      unhandled: 'Unhandled'
+      item:
+        text: '<aqua>#{id}<yellow>: <aqua>{reported} <yellow>for <aqua>{reason} <yellow>by <aqua>{reporter} <gray><italic>(Hover Me!)'
+        hover:
+          - '<white>⎯⎯⎯⎯⎯ <yellow>Report <aqua>#{id}: {reported} <white>⎯⎯⎯⎯⎯<reset>'
+          - '<yellow>Reported User: <aqua>{reported}'
+          - '<yellow>Reporter: <aqua>{reporter}'
+          - '<yellow>Reason: <aqua>{reason}'
+          - '<yellow>Server: <aqua>{server}'
+          - '<yellow>Date: <aqua>{date}'
+          - '<yellow>Handled: <aqua>{handled}'
+          - '<white>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯<reset>'
+    history:
+      wrong-page: '<yellow>Please enter a page in between <aqua>1 and {maxpages}<yellow>!'
+      header: '<yellow>Report list (page <aqua>{page}<yellow>)'
+      no-reports: '<yellow>You don''t have any reports yet.'
+      accepted: '<dark_green>\u2713'
+      denied: '<dark_red>\u2717'
+      item:
+        text: '{accepted_sign} <aqua>#{id}<yellow>: <aqua>{reported} <yellow>for <aqua>{reason} <yellow>by <aqua>{reporter} <gray><italic>(Hover Me!)'
+        hover:
+          - '<white>⎯⎯⎯⎯⎯ <yellow>Report <aqua>#{id}: {reported} <white>⎯⎯⎯⎯⎯<reset>'
+          - '<yellow>Reported User: <aqua>{reported}'
+          - '<yellow>Reporter: <aqua>{reporter}'
+          - '<yellow>Reason: <aqua>{reason}'
+          - '<yellow>Server: <aqua>{server}'
+          - '<yellow>Date: <aqua>{date}'
+          - '<yellow>Handled: <aqua>{handled}'
+          - '<yellow>Accepted: {accepted_sign}'
+          - '<white>⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯<reset>'
+      footer: ''
+    accept:
+      usage: '<yellow>Please use <aqua>/report accept (id)<yellow>!'
+      not-found: '<yellow>Could not find a report with id <aqua>{id}<yellow>!'
+      updated: '<yellow>The report with id <aqua>{id} <yellow>has been accepted.'
+      accepted: '<yellow>Your report <aqua>(#{id}) {reported} <yellow>has been accepted by <aqua>{staff}<yellow>!'
+    deny:
+      usage: '<yellow>Please use <aqua>/report deny (id)<yellow>!'
+      not-found: '<yellow>Could not find a report with id <aqua>{id}<yellow>!'
+      updated: '<yellow>The report with id <aqua>{id} <yellow>has been denied.'
+      denied: '<yellow>Your report <aqua>(#{id}) {reported} <yellow>has been denied by <aqua>{staff}<yellow>!'
+  domains:
+    help:
+      - '<green>Domains Command Help:'
+      - '<aqua>- /domains list'
+      - '<aqua>- /domains search (pattern / domain)'
+    list:
+      usage: '<yellow>Please use <aqua>/domains list [page]<yellow>!'
+
+      header:
+        - ''
+        - '<aqua><bold>DOMAINS STATISTICS<reset>'
+        - ''
+      format: '- <yellow>{domain} <white>| <green><bold>ONLINE<reset><white>: {online} | <yellow><bold>TOTAL<reset><white>: {total}'
+      footer:
+        - ''
+        - '<white>In total, <yellow>{total} <white>domains have been used to connect to your server.'
+        - ''
+    search:
+      usage: '<yellow>Please use <aqua>/domains search (pattern / domain)<yellow>!'
+      header:
+        - ''
+        - '<aqua><bold>DOMAIN SEARCH<reset>'
+        - ''
+      format: '- <yellow>{domain} <white>| <green><bold>ONLINE<reset><white>: {online} | <yellow><bold>TOTAL<reset><white>: {total}'
+      footer: ''
+  helpop:
+    usage: '<yellow>Please use <aqua>/bhelpop (message) <yellow>or <aqua>/helpop reply (user) (message)<yellow>!'
+
+    broadcast: '<gray>(<dark_aqua><bold>HELPOP<reset><gray>) <aqua>{user} <gray>» <white>{message}'
+    reply-receive: '<gray>(<dark_aqua><bold>HELPOP<reset><gray>) <aqua>{user} <dark_aqua>-> Me <gray>» <white>{message}'
+    reply-send: '<gray>(<dark_aqua><bold>HELPOP<reset><gray>) <dark_aqua>Me -> <aqua>{user} <gray>» <white>{message}'
+  msgtoggle:
+    enabled: '<yellow>All your private messages are now <red>disabled<yellow>!'
+    disabled: '<yellow>All your private messages are now <green>enabled<yellow>!'
+
+    pm-cmd-disabled: '<yellow>You cannot send or receive any private messages while you have them <red>disabled<yellow>.'
+    not-receiving-pms: '<yellow>This user currently has private messages <red>disabled<yellow>!'
+  shout:
+    usage: '<yellow>Please use <aqua>/shout (message)<yellow>!'
+    shout-broadcast: '<gold><bold>SHOUT <yellow><bold>{servername}<reset> <aqua>{user} <dark_gray>» <white>{message}'
+    shout-broadcast-staff: '<gold><bold>SHOUT <yellow><bold>{servername}<reset> <red>(Staff) <aqua>{user} <dark_gray>» <white>{message}'
+  staffannouncement:
+    usage: '<yellow>Please use <aqua>/staffannouncement (message) <yellow>!'
+    broadcast: '<yellow><bold>STAFFANNOUNCE<reset> <aqua>{broadcaster} <yellow>-> <white>{message}'
+  offlinemessage:
+    usage: '<yellow>Please use <aqua>/offlinemessage (user) (message)<yellow>!'
+    online: '<yellow>This user is online at the moment! Please use <aqua>/msg (user) (message) <yellow>instead<aqua>!'
+    message: '<aqua>{user} <yellow>@ <aqua>{time} <yellow>-> <white>{message}'
+    sent: '<yellow>You have sent an offline message to <aqua>{user}<yellow>!'
+  opengui:
+    usage: '<yellow>Please use <aqua>/opengui (type) [args] [-u=USER]<yellow>!'
+    usage-custom: '<yellow>Please use <aqua>/opengui custom (gui-name) [-u=USER]<yellow>!'
+    gui-not-found: '<yellow>Could not find a GUI named <aqua>{gui}<yellow>!'
+  togglebossbar:
+    enabled: '<yellow>Bossbars have been <green>enabled<yellow>, you can now receive bossbars again.'
+    disabled: '<yellow>Bossbars have been <red>disabled<yellow>, you won''t receive bossbars anymore.'
+
+friends:
+  gui:
+    add-chat-input: '<yellow>Please enter the name of the friend you wish to add or type ''<aqua>cancel<yellow>'' to abort.'
+  join:
+    requests: '<yellow>You have <aqua>{amount} <yellow>outstanding friend requests. Use <aqua>/friend requests <yellow>to check them out!'
+    join: '<yellow>Your friend, <aqua>{user}<yellow>, has joined the network!'
+  leave: '<yellow>Your friend, <aqua>{user}<yellow>, has left the network!'
+  switch: '<yellow>Your friend, <aqua>{user}<yellow>, is switching from <aqua>{from} <yellow>to <aqua>{to}!'
+  request-received:
+    text:
+      - text: '<yellow>You have received a friend request from <aqua>{name}<yellow>!{nl}'
+      - text: '<yellow>Type <aqua>/friends accept {name}'
+      - text: '<yellow> or <aqua>click here'
+        hover:
+          - '<yellow>Click here to accept <aqua>{name}''s <yellow>friend request!'
+        click:
+          type: 'RUN_COMMAND'
+          action: '/friend accept {name}'
+      - text: '<yellow> to accept this friend request.'
+  help:
+    message:
+      - '<green>Friends Commands Help:'
+      - '<aqua>- /friends add (name)'
+      - '<aqua>- /friends accept (name)'
+      - '<aqua>- /friends deny (name)'
+      - '<aqua>- /friends list [page]'
+      - '<aqua>- /friends msg (name) (message)'
+      - '<aqua>- /friends removerequest (name)'
+      - '<aqua>- /friends remove (name)'
+      - '<aqua>- /friends reply (message)'
+      - '<aqua>- /friends requests (in/out) [page]'
+      - '<aqua>- /friends settings (setting) (enable / disable)'
+  add:
+    usage: '<yellow>Please use <aqua>/friends add (name)<yellow>!'
+    selfadd: '<yellow>You cannot add yourself as a friend!'
+    limited: '<yellow>You cannot have more then <aqua>{limit} <yellow>friends!'
+    already-friend: '<aqua>{friend} <yellow>is already in your friends list!'
+    already-requested: '<yellow>There is already a pending friend request to <aqua>{name}<yellow>!'
+    request-sent: '<yellow>A friend request has been sent to <aqua>{user}<yellow>!'
+    disallowed: '<yellow>This user does not want to receive friend requests.'
+  accept:
+    usage: '<yellow>Please use <aqua>/friends accept (name)<yellow>!'
+    limited: '<yellow>You cannot have more then <aqua>{limit} <yellow>friends!'
+    already-friend: '<aqua>{friend} <yellow>is already in your friends list!'
+    no-request: '<yellow>Could not find a friend request from <aqua>{user}<yellow>!'
+    accepted: '<yellow>You are now friends with <aqua>{user}<yellow>!'
+    request-accepted: '<aqua>{user} <yellow>has accepted your friend request!'
+  deny:
+    usage: '<yellow>Please use <aqua>/friends deny (name)<yellow>!'
+    no-request: '<yellow>Could not find a friend request from <aqua>{user}<yellow>!'
+    denied: '<yellow>You have denied the friend request from <aqua>{user}<yellow>!'
+    request-denied: '<aqua>{name} <yellow>has denied your friend request!'
+  removerequest:
+    usage: '<yellow>Please use <aqua>/friends removerequest (name)<yellow>!'
+    no-request: '<yellow>You have no outgoing friend request towards <aqua>{user}<yellow>!'
+    removed: '<yellow>You have removed the friend request towards <aqua>{user}<yellow>!'
+    request-removed: '<aqua>{user} <yellow>removed his friend request towards you!'
+  remove:
+    usage: '<yellow>Please use <aqua>/friends remove (name)<yellow>!'
+    no-friend: '<aqua>{user} <yellow>is not in your friends list!'
+    removed: '<yellow>You have removed <aqua>{user} <yellow>from your friends list!'
+    friend-removed: '<aqua>{user} <yellow>has removed you from his friends list!'
+  list:
+    no-friends: '<yellow>It seems that you do not have any friends at the moment!'
+    status:
+      online: 'online'
+      offline: 'offline'
+    head:
+      text:
+        - text: '<gold><- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {previousPage}'
+
+        - text: '<yellow>Friends List <aqua>({currentPage} of {maxPages})'
+        - text: ' <gold>->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends list {nextPage}'
+    format:
+      text: '- <aqua>{friendName} - <gray>{lastOnline}'
+      hover:
+        - '<yellow>Online: <aqua>{online}'
+        - '<yellow>Friends since: <aqua>{friendSince}'
+        - '<yellow>Last seen: <aqua>{lastOnline}'
+      click:
+        type: 'SUGGEST_COMMAND'
+        action: '/friend msg {friendName} '
+    foot: '<yellow>You currently have a total of <aqua>{friendAmount} <yellow>friends!'
+  requests:
+    usage: '<yellow>Please use <aqua>/friend requests (in/out) [page]<yellow>!'
+    no-requests: '<yellow>It seems that you do not have any requests at the moment!'
+    outgoing: 'Outgoing'
+    incoming: 'Incoming'
+    head:
+      text:
+        - text: '<gold><- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends requests {type} {previousPage}'
+        - text: '<yellow>{type} Requests List <aqua>({currentPage} of {maxPages})'
+        - text: ' <gold>->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/friends requests {type} {nextPage}'
+    format:
+      incoming: '<green><- <yellow>{target} - <aqua>{requestDate}'
+      outgoing: '<red>-> <yellow>{target} - <aqua>{requestDate}'
+    foot: '<yellow>You currently have a total of <aqua>{requestAmount} <yellow>{type_lowercase} friend requests!'
+  msg:
+    usage: '<yellow>Please use <aqua>/friends msg (name) (message)<yellow>!'
+    not-friend: '<aqua>{user} <yellow>is not in your friend list!'
+    disallowed: '<yellow>This user does not want to receive any messages!'
+    ignored: '<yellow>You cannot send a message to this user!'
+
+    format:
+      send: '<gray>(<yellow>Me <yellow>-> <aqua>{receiver}<gray>) <white>{message}'
+      receive: '<gray>(<aqua>{sender} <yellow>-> Me<gray>) <white>{message}'
+  reply:
+    usage: '<yellow>Please use <aqua>/friends reply (message)<yellow>!'
+    no-target: '<yellow>There is currently nobody to reply to!'
+    not-friend: '<aqua>{user} <yellow>is not in your friend list anymore!'
+    disallowed: '<yellow>This user does not want to receive any messages!'
+    ignored: '<yellow>You cannot send a message to this user!'
+
+    format:
+      send: '<gray>(<yellow>Me <yellow>-> <aqua>{receiver}<gray>) <white>{message}'
+      receive: '<gray>(<aqua>{sender} <yellow>-> Me<gray>) <white>{message}'
+  settings:
+    usage: '<yellow>Please use <aqua>/friend settings (setting) (enable / disable)'
+    invalid: '<yellow>Please use one of the following settings: <aqua>{settings}'
+    updated: '<yellow>You have successfully updated the <aqua>{type} setting to <aqua>{value}<yellow>!'
+
+    noargs:
+      header: '<yellow>Friend Settings:'
+      enabled: '<green>enabled'
+      disabled: '<red>disabled'
+
+      format:
+        text:
+          - text: '<yellow>- <aqua>{type} <yellow>- '
+            hover:
+              - '<yellow>Status: {status}'
+          - text: '<green><bold>ENABLE<reset>'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {unformatted-type} enable'
+          - text: ' <yellow>- '
+          - text: '<red><bold>DISABLE<reset>'
+            click:
+              type: 'RUN_COMMAND'
+              action: '/friends settings {unformatted-type} disable'
+      footer: ''
+  broadcast:
+    usage: '<yellow>Please use <aqua>/friend broadcast (message) <yellow>!'
+    message: '<yellow>(<aqua>{user} <yellow>-> <aqua>All<yellow>) <white>{message}'
+    disabled: '<yellow>You cannot broadcast as you have this setting disabled!'
+
+punishments:
+  cancelled: '<white>It seems that an external plugin has cancelled your punishment!'
+  self-punishment: '<white>You cannot punish yourself!'
+  higher-punishment: '<white>You cannot punish someone higher than you!'
+
+  ban:
+    usage: '<white>Please use <green>/ban (user) (reason)<white>!'
+    usage-server: '<white>Please use <green>/ban (user) (server) (reason)<white>!'
+    already-banned: '<white>This user is already banned!'
+    executed: '<white>You have banned <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been permanently banned by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    kick:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been permanently banned!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Banned on: <white>{date}'
+      - '<red>Banned by: <white>{by}'
+      - '<red>Banned at: <white>{server}'
+      - '<red>Unban at: <white>Never'
+
+  ipban:
+    usage: '<white>Please use <green>/ipban (user / IP) (reason)<white>!'
+    usage-server: '<white>Please use <green>/ipban (user / IP) (server) (reason)<white>!'
+    already-banned: '<white>This user is already ipbanned!'
+    executed: '<white>You have ipbanned <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been permanently ipbanned by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    kick:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been permanently IPBanned!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Banned on: <white>{date}'
+      - '<red>Banned by: <white>{by}'
+      - '<red>Banned at: <white>{server}'
+      - '<red>Unban at: <white>Never'
+
+  tempban:
+    usage: '<white>Please use <green>/tempban (user) (timeformat) (reason)<white>!'
+    usage-server: '<white>Please use <green>/tempban (user) (timeformat) (server) (reason)<white>!'
+    already-banned: '<white>This user is already tempbanned!'
+    non-valid: '<white>Please enter a valid time format!'
+    executed: '<white>You have tempbanned <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been temporary banned by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+      - '<white>Expires at: <yellow>{expire}'
+    kick:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been temporary banned!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Banned on: <white>{date}'
+      - '<red>Banned by: <white>{by}'
+      - '<red>Banned at: <white>{server}'
+      - '<red>Unban at: <white>{expire}'
+
+  iptempban:
+    usage: '<white>Please use <green>/iptempban (user / IP) (timeformat) (reason)<white>!'
+    usage-server: '<white>Please use <green>/iptempban (user / IP) (timeformat) (server) (reason)<white>!'
+    already-banned: '<white>This user is already iptempbanned!'
+    non-valid: '<white>Please enter a valid time format!'
+    executed: '<white>You have iptempbanned <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been temporary ipbanned by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+      - '<white>Expires at: <yellow>{expire}'
+    kick:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been temporary ipbanned!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Banned on: <white>{date}'
+      - '<red>Banned by: <white>{by}'
+      - '<red>Banned at: <white>{server}'
+      - '<red>Unban at: <white>{expire}'
+
+  mute:
+    usage: '<white>Please use <green>/mute (user) (reason)<white>!'
+    usage-server: '<white>Please use <green>/mute (user) (server) (reason)<white>!'
+    already-muted: '<white>This user is already muted!'
+    executed: '<white>You have muted <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been permanently muted by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    onmute:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been permanently muted!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Muted on: <white>{date}'
+      - '<red>Muted by: <white>{by}'
+      - '<red>Muted at: <white>{server}'
+      - '<red>Unmute at: <white>Never'
+  ipmute:
+    usage: '<white>Please use <green>/ipmute (user / IP) (reason)<white>!'
+    usage-server: '<white>Please use <green>/ipmute (user / IP) (server) (reason)<white>!'
+    already-muted: '<white>This user is already ipmuted!'
+    executed: '<white>You have ipmuted <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been permanently ipmuted by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    onmute:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been permanently IPMuted!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Muted on: <white>{date}'
+      - '<red>Muted by: <white>{by}'
+      - '<red>Muted at: <white>{server}'
+      - '<red>Unmute at: <white>Never'
+
+  tempmute:
+    usage: '<white>Please use <green>/tempmute (user) (timeformat) (reason)<white>!'
+    usage-server: '<white>Please use <green>/tempmute (user) (timeformat) (server) (reason)<white>!'
+    already-muted: '<white>This user is already tempmuted!'
+    non-valid: '<white>Please enter a valid time format!'
+    executed: '<white>You have tempmuted <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been temporary muted by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+      - '<white>Expires at: <yellow>{expire}'
+    onmute:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been temporary muted!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Muted on: <white>{date}'
+      - '<red>Muted by: <white>{by}'
+      - '<red>Muted at: <white>{server}'
+      - '<red>Unmute at: <white>{expire}'
+
+  iptempmute:
+    usage: '<white>Please use <green>/iptempmute (user / IP) (timeformat) (reason)<white>!'
+    usage-server: '<white>Please use <green>/iptempmute (user / IP) (timeformat) (server) (reason)<white>!'
+    already-muted: '<white>This user is already iptempmuted!'
+    non-valid: '<white>Please enter a valid time format!'
+    executed: '<white>You have iptempmuted <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} (<white>{ip}<green>) <white>has been temporary ipmuted by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+      - '<white>Expires at: <yellow>{expire}'
+    onmute:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been temporary ipmuted!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Muted on: <white>{date}'
+      - '<red>Muted by: <white>{by}'
+      - '<red>Muted at: <white>{server}'
+      - '<red>Unmute at: <white>{expire}'
+
+  kick:
+    usage: '<white>Please use <green>/kick (user) (reason)<white>!'
+    usage-server: '<white>Please use <green>/kick (user) (server) (reason)<white>!'
+    executed: '<white>You have kicked <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been kicked by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    onkick:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been kicked!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Kicked on: <white>{date}'
+      - '<red>Kicked by: <white>{by}'
+      - '<red>Kicked at: <white>{server}'
+
+  warn:
+    usage: '<white>Please use <green>/warn (user) (reason)<white>!'
+    usage-server: '<white>Please use <green>/warn (user) (server) (reason)<white>!'
+    executed: '<white>You have warned <yellow>{user} for <yellow>{reason}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been warned by <green>{by} <white>at <green>{server}<white>!'
+      - '<white>Reason: <yellow>{reason}'
+    onwarn:
+      - '<red><bold>BungeeUtilisalsX<reset> <dark_gray>» <white>You have been warned!'
+      - ''
+      - '<red>Reason: <white>{reason}'
+      - '<red>Warned on: <white>{date}'
+      - '<red>Warned by: <white>{by}'
+      - '<red>Warned at: <white>{server}'
+
+  unban:
+    usage: '<white>Please use <green>/unban (user)<white>!'
+    usage-server: '<white>Please use <green>/unban (user) (server)<white>!'
+    not-banned: '<white>This user is not banned!'
+    executed: '<white>You have unbanned <yellow>{user}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been unbanned by <green>{by} <white>at <green>{server}<white>!'
+
+  unbanip:
+    usage: '<white>Please use <green>/unbanip (user)<white>!'
+    usage-server: '<white>Please use <green>/unbanip (user) (server)<white>!'
+    not-banned: '<white>This user is not ipbanned!'
+    executed: '<white>You have unbanned <yellow>{user}<white>''s IP<white>!'
+    broadcast:
+      - '<green>{user}<white>''s IP has been unbanned by <green>{by} <white>at <green>{server}<white>!'
+
+  unmute:
+    usage: '<white>Please use <green>/unmute (user)<white>!'
+    usage-server: '<white>Please use <green>/unmute (user) (server)<white>!'
+    not-muted: '<white>This user is not muted!'
+    executed: '<white>You have unmuted <yellow>{user}<white>!'
+    broadcast:
+      - '<green>{user} <white>has been unmuted by <green>{by} <white>at <green>{server}<white>!'
+
+  unmuteip:
+    usage: '<white>Please use <green>/unmuteip (user)<white>!'
+    usage-server: '<white>Please use <green>/unmuteip (user) (server)<white>!'
+    not-muted: '<white>This user is not ipmuted!'
+    executed: '<white>You have unmuted <yellow>{user}<white>''s IP<white>!'
+    broadcast:
+      - '<green>{user}<white>''s IP has been unmuted by <green>{by} <white>at <green>{server}<white>!'
+
+  punishmentinfo:
+    usage: '<yellow>Please use <aqua>/punishmentinfo (user) [type / all]<yellow>!'
+    usage-server: '<yellow>Please use <aqua>/punishmentinfo (user) (server) [type / all]<yellow>!'
+
+    typeinfo:
+      found:
+        - '<yellow>Found an active <aqua>{type} <yellow>for <aqua>{user} <yellow>by <aqua>{by}.'
+        - ' <yellow>Punished on: <aqua>{date}'
+        - ' <yellow>Expires at: <aqua>{expire}'
+        - ' <yellow>Reason: <aqua>{reason}'
+        - ' <yellow>Server: <aqua>{server}'
+      notfound: '<aqua>{user} <yellow>does not have an active {type}.'
+
+  punishmenthistory:
+    usage: '<yellow>Please use <aqua>/punishmenthistory (user) [type / all] [page]<yellow>!'
+    no-punishments: '<yellow>There are no punishments found for <aqua>{user} <yellow>with type <aqua>{type}<yellow>!'
+
+    head:
+      text:
+        - text: '<gold><- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {type} {previousPage}'
+        - text: '<yellow>Punishment History of <green>{user} <aqua>({currentPage} of {maxPages})'
+        - text: ' <gold>->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/punishmenthistory {user} {type} {nextPage}'
+    format:
+      text: '<green>- #{id} <aqua>{type} <yellow>on <aqua>{date}<yellow>, by <green>{by}'
+      hover:
+        - '<yellow>User: <aqua>{user}'
+        - '<yellow>Uuid: <aqua>{uuid}'
+        - '<yellow>IP: <aqua>{ip}'
+        - '<yellow>By: <aqua>{by}'
+        - '<yellow>Server: <aqua>{server}'
+        - '<yellow>Date: <aqua>{date}'
+        - '<yellow>Reason: <aqua>{reason}'
+        - '<yellow>Expires at: <aqua>{expire}'
+        - '<yellow>Removed by: <aqua>{removedBy}'
+      click:
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '<aqua>{user} <yellow>currently has a total of <aqua>{punishmentAmount} <yellow>punishments of the <aqua>{type} <yellow>type!'
+
+  punishmentdata:
+    usage: '<yellow>Please use <aqua>/punishmentdata (type) (id)<yellow>!'
+
+    not-found: '<yellow>Could not find a punishment with type <aqua>{type} <yellow>for id <aqua>{id}<yellow>!'
+    found:
+      - '<yellow>Punishment Data for <aqua>{id}<yellow>:'
+      - '<yellow>User: <aqua>{user}'
+      - '<yellow>Uuid: <aqua>{uuid}'
+      - '<yellow>IP: <aqua>{ip}'
+      - '<yellow>By: <aqua>{by}'
+      - '<yellow>Server: <aqua>{server}'
+      - '<yellow>Date: <aqua>{date}'
+      - '<yellow>Reason: <aqua>{reason}'
+      - '<yellow>Expires at: <aqua>{expire}'
+      - '<yellow>Removed by: <aqua>{removedBy}'
+
+  templates:
+    - name: 'ADVERTISING'
+      use_for: 'BAN, TEMPBAN, IPBAN, IPTEMPBAN'
+      lines:
+        - '<red><bold>BungeeUtilisalsX<reset>'
+        - ''
+        - '<yellow>We have noticed that you were advertising on our server.'
+        - '<yellow>This is strictly against our rules, therefore you have been punished!'
+        - ''
+        - '<dark_purple>Appeal at: <aqua>https://example.com/appeal'
+        - '<dark_purple>Buy unban at: <aqua>https://store.example.com'
+
+  checkip:
+    usage: '<yellow>Please use <aqua>/checkip (user / ip)<yellow>!'
+
+    colors:
+      online: '<green>'
+      offline: '<gray>'
+      banned: '<red>'
+
+    head: '<yellow>Looking for other accounts playing with <aqua>{user} ({ip})<yellow>:'
+    format:
+      separator: '<white>, '
+      message: '<aqua>Players Found: <white>{players}'
+    foot: '<yellow>Legenda: <green>Online  <gray>Offline  <red>Banned'
+
+  staffhistory:
+    usage: '<yellow>Please use <aqua>/staffhistory (user) [type / all] [page]<yellow>!'
+    no-punishments: '<aqua>{user} <yellow>has not punished anyone with type <aqua>{type}<yellow>!'
+
+    head:
+      text:
+        - text: '<gold><- '
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {previousPage}'
+        - text: '<yellow>Staff Punishment History of <green>{user} <aqua>({currentPage} of {maxPages})'
+        - text: ' <gold>->'
+          click:
+            type: 'RUN_COMMAND'
+            action: '/staffhistory {user} {type} {nextPage}'
+    format:
+      text: '<green>- #{id} <aqua>{type} <yellow>on <aqua>{date}<yellow>, by <green>{by}'
+      hover:
+        - '<yellow>User: <aqua>{user}'
+        - '<yellow>Uuid: <aqua>{uuid}'
+        - '<yellow>IP: <aqua>{ip}'
+        - '<yellow>By: <aqua>{by}'
+        - '<yellow>Server: <aqua>{server}'
+        - '<yellow>Date: <aqua>{date}'
+        - '<yellow>Reason: <aqua>{reason}'
+        - '<yellow>Expires at: <aqua>{expire}'
+        - '<yellow>Removed by: <aqua>{removedBy}'
+      click:
+        type: 'SUGGEST_COMMAND'
+        action: '/punishmentdata {type} {id}'
+    foot: '<aqua>{user} <yellow>currently has executed a total of <aqua>{punishmentAmount} <yellow>punishments of the <aqua>{type} <yellow>type!'
+
+  staffrollback:
+    usage: '<yellow>Please use <aqua>/staffrollback (user) (time) [-f]<yellow>!'
+
+    hard-rollback: '<aqua>{amount} <yellow>punishments executed by <aqua>{user} <yellow>have been deleted permanently.'
+    soft-rollback: '<aqua>{amount} <yellow>punishments executed by <aqua>{user} <yellow>have been deactivated.'
+
+  track:
+    usage: '<white>Please use <green>/trackpunish (user) (reason)<white>!'
+    usage-server: '<white>Please use <green>/trackpunish (user) (server) (reason)<white>!'
+    track-not-found: '<white>Could not find this track!'
+    track-already-finished: '<white>This track is already finished and cannot be ran again!'
+    executed: '<white>You have track punished <aqua>{user} <white>for the track <aqua>{track}<white> (<aqua>{trackCount} / {trackMax}<white>)'
+    broadcast:
+      - '<aqua>{user} <white>has been punished for the track <aqua>{track}<white> by <aqua>{executed_by} <white>(<aqua>{trackCount} / {trackMax}<white>)'
+
+hubbalancer:
+  no-lobbies-found: '<yellow>Could not find any lobbies, perhaps they are offline?'
+  prevented-on-server: '<yellow>This command cannot be used here.'
+  no-fallback:
+    - '<red>You have been disconnected'
+    - ''
+    - '<yellow>We could not find an online fallback server'
+    - '<aqua>Please try rejoining!'
+  already-in-lobby: '<red>You are already in one of our lobbies!'
+  server-not-found: '<red>Could not find lobby server <dark_red>{serverName}<red>!'
+  invalid-id: '<red>Please use a number between <dark_red>1 and {lobbyAmount}<red>!'
+  connected: '<yellow>You are being connected to <aqua>{serverName}<yellow>!'
+  offline: '<yellow>It seems that <aqua>{serverName} <yellow>is offline at the moment, try again later!'
+  already-connected: '<yellow>You are already connected to <aqua>{serverName}<yellow>!'
+
+gui:
+  input:
+    cancelled: '<yellow>The input action was cancelled.'
+
+party:
+  not-in-party: '<yellow>You need to be in a party to do this.'
+  inactivity-removal: '<aqua>{user} <yellow>has been automatically removed from the party due to inactivity!'
+  info:
+    - '<aqua>{party-owner}''s <yellow>party info:'
+    - '<gray>Created at: <white>{party-created-at}'
+    - '<gray>Party members: <white>{party-member-count}'
+    - '<white>{party-member-list}'
+    - '<gray>Sent invites: {party-invitation-count}'
+    - '<gray>Join requests: {party-joinrequest-count}'
+  own-party-full: '<yellow>Your party is currently full!'
+  other-party-full: '<aqua>{user}''s <yellow>party is currently full!'
+  owner-role-name: 'OWNER'
+
+  gui:
+    invite-chat-input: '<yellow>Please enter the name of the user you wish to invite or type ''<aqua>cancel<yellow>'' to abort.'
+    kick-chat-input: '<yellow>Please enter the name of the user you wish to kick or type ''<aqua>cancel<yellow>'' to abort.'
+
+  help:
+    message:
+      - '<yellow><bold>Party help reference:<reset>'
+      - '<gray>- <aqua>/party create <gray>- Creates a new party.'
+      - '<gray>- <aqua>/party disband <gray>- Disbands your party.'
+      - '<gray>- <aqua>/party chat [message] <gray>- Toggles party chat mode or sends a chat message to the party.'
+      - '<gray>- <aqua>/party accept (user) <gray>- Accepts a party invite.'
+      - '<gray>- <aqua>/party info <gray>- Shows info of your current party.'
+      - '<gray>- <aqua>/party invite (user) <gray>- Invites someone to your party.'
+      - '<gray>- <aqua>/party kick (user) <gray>- Kicks someone from your party.'
+      - '<gray>- <aqua>/party leave <gray>- Makes you leave your current party.'
+      - '<gray>- <aqua>/party list (members / invites / requests) [page] <gray>- Lists members, invites or requests for the party.'
+      - '<gray>- <aqua>/party setowner (user) <gray>- Sets a new party owner.'
+      - '<gray>- <aqua>/party setrole (user) (role) <gray>- Sets a role for an user.'
+      - '<gray>- <aqua>/party warp <gray>- Warps all party users to your current server.'
+  create:
+    already-in-party: '<yellow>You are already in a party.'
+    created: '<yellow>You have successfully created a party! You can invite people by using <aqua>/party invite (user)<yellow>!'
+  invite:
+    usage: '<yellow>Please use <aqua>/party invite (user)<yellow>!'
+    invite-self: '<yellow>You cannot invite yourself to your own party.'
+    already-in-party: '<aqua>{user} <yellow>is already in your party!'
+    already-in-other-party: '<aqua>{user} <yellow>is already in another party!'
+    not-allowed: '<yellow>You do not have the permission to invite people to the party!'
+    ignored: '<yellow>You cannot invite people that have ignored you!'
+    invited: '<yellow>You have been invited to <aqua>{user}''s <aqua>party! Use <aqua>/party accept {user} <yellow>to join the party!'
+    invited-broadcast: '<aqua>{user} <yellow>has been invited to the party!'
+    invite-success: '<yellow>You have successfully invited <aqua>{user} <yellow>to your party!'
+  accept:
+    usage: '<yellow>Please use <aqua>/party accept (user)<yellow>!'
+    already-in-party: '<yellow>You are already in a party!'
+    no-party: '<aqua>{user} <yellow>does not have a party!'
+    not-invited-to-party: '<yellow>You have no invite to <aqua>{user}''s <yellow>party!'
+    accepted: '<yellow>You have successfully joined <aqua>{user}''s <yellow>party!'
+    joined-party: '<aqua>{user} <yellow>has joined the party!'
+  leave:
+    left: '<yellow>You have left the party of <aqua>{party-owner}<yellow>!'
+    left-broadcast: '<aqua>{user} <yellow>has left the party!'
+    owner-left-broadcast: '<yellow>Since <aqua>{party-old-owner} <yellow>was the party owner, <aqua>{party-owner} <yellow>has been assigned as the new party owner!'
+  chat:
+    enabled: '<yellow>Party chat is now <green>ENABLED<yellow>!'
+    disabled: '<yellow>Party chat is now <red>DISABLED<yellow>!'
+    format: '<gray>(PARTY) <aqua>{user} -> <white>{message}'
+  setowner:
+    usage: '<yellow>Please use <aqua>/party setowner (user)<yellow>!'
+    not-allowed: '<yellow>You are not the party owner!'
+    not-in-party: '<yellow>This user is not in your party!'
+    changed: '<yellow>You have given <aqua>{new-owner} <yellow>ownership of the party!'
+    broadcast: '<aqua>{old-owner} <yellow>has passed the ownership of the party to <aqua>{new-owner}<yellow>!'
+  kick:
+    usage: '<yellow>Please use <aqua>/party kick (user)<yellow>!'
+    not-allowed: '<yellow>You do not have the permission to kick people from the party!'
+    not-in-party: '<yellow>This user is not in your party!'
+    kick: '<yellow>You have kicked <aqua>{kickedUser} <yellow>from your party!'
+    kicked-broadcast: '<aqua>{kickedUser} <yellow>has been kicked from the party by <aqua>{user}<yellow>!'
+    kicked: '<yellow>You have been kicked from the party by <aqua>{user}<yellow>!'
+    cannot-kick: '<yellow>You cannot kick this user from the party!'
+  warp:
+    not-allowed: '<yellow>You do not have the permission to warp your party to your server!'
+    failed: '<yellow>Could not warp your party to your server!'
+    nobody-to-warp: '<yellow>There was nobody to warp to your current server!'
+    warping: '<yellow>Warping all party members to your server ...'
+    warped: '<yellow>You have been warped to <aqua>{server}<yellow>!'
+  setrole:
+    usage: '<yellow>Please use <aqua>/party setrole (user) (role)<yellow>!'
+    not-allowed: '<yellow>Only the party owner can set someone''s role!'
+    not-in-party: '<yellow>This user is not in your party!'
+    incorrect-role: '<yellow>That role does not exist, please use one of the following roles: <aqua>{roles}'
+    role-updated: '<yellow>You have changed the role of <aqua>{user} <yellow>to <aqua>{role}<yellow>!'
+    role-updated-broadcast: '<aqua>{user}''s <yellow>role has been changed to <aqua>{role}<yellow>!'
+  list:
+    members:
+      empty: '<yellow>Your party currently has no members!'
+      wrong-page: '<yellow>Please enter a page in between <aqua>1 and {maxpages}<yellow>!'
+      no-role: 'None'
+
+      header: '<yellow>Party Member List (page <aqua>{page}<yellow>)'
+      footer: ''
+      item:
+        text: '<yellow>- <gray>({role}) <aqua>{user} [{joinedAt}]'
+    invites:
+      empty: '<yellow>Your party currently has no sent invites!'
+      wrong-page: '<yellow>Please enter a page in between <aqua>1 and {maxpages}<yellow>!'
+
+      header: '<yellow>Party Invite List (page <aqua>{page}<yellow>)'
+      footer: ''
+      item:
+        text: '<yellow>- <aqua>{user} [{invitedAt}]'
+    requests:
+      empty: '<yellow>Your party currently has no join requests!'
+      wrong-page: '<yellow>Please enter a page in between <aqua>1 and {maxpages}<yellow>!'
+
+      header: '<yellow>Party Join Request List (page <aqua>{page}<yellow>)'
+      footer: ''
+      item:
+        text: '<yellow>- <aqua>{user} [{requestedAt}]'
+  disband:
+    not-allowed: '<yellow>Only the party owner can disband the party!'
+    broadcast: '<aqua>{user} <yellow>has disbanded the party!'
+    disbanded: '<yellow>You have successfully disbanded your party!'
+
+custom:
+  ingamemotd:
+    skyblock:
+      - '<yellow>This is a skyblock join message'
+  announce:
+    welcome:
+      chat: '<yellow>Welcome <aqua>{user} <yellow>to our network!'
+      actionbar: '<yellow>Welcome <aqua>{user} <yellow>to our network!'
+      bossbar: '<yellow>Welcome <aqua>{user} <yellow>to our network!'
+      title:
+        main: '<yellow>Welcome <aqua>{user}'
+        sub: '<yellow>to our network!'
+  announcements:
+    chat:
+      minigame1:
+        - '<yellow>Thank you for playing on our Minigame Servers!'
+        - '<aqua>We hope you enjoy your stay!'
+    actionbar:
+      minigame1: '<yellow>Welcome to our server <aqua>{user}<yellow>!'
+    bossbar:
+      minigame1: '<yellow>Welcome to our server <aqua>{user}<yellow>!'
+      minigame2: '<light_purple>We hope you enjoy your stay!'
+    title:
+      minigame1:
+        title: '<yellow><bold>BungeeUtilisalsX'
+        subtitle: '<light_purple>A plugin by DBSoftwares, maintained by <aqua>didjee2.'

@@ -9,8 +9,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.collect.Lists;
 
 import java.util.*;
@@ -236,7 +237,7 @@ public class SimplePartyManager implements PartyManager
     }
 
     @Override
-    public void broadcastToParty( final Party party, final String message, final Object... placeholders )
+    public void broadcastToParty( final Party party, final String message, final HasMessagePlaceholders placeholders )
     {
         for ( PartyMember partyMember : party.getPartyMembers() )
         {
@@ -250,14 +251,14 @@ public class SimplePartyManager implements PartyManager
     }
 
     @Override
-    public void languageBroadcastToParty( final Party party, final String messagePath, final Object... placeholders )
+    public void languageBroadcastToParty( final Party party, final String messagePath, final HasMessagePlaceholders placeholders )
     {
         for ( PartyMember partyMember : party.getPartyMembers() )
         {
             final UserLanguageMessageJob userLanguageMessageJob = new UserLanguageMessageJob(
                     partyMember.getUuid(),
                     messagePath,
-                    placeholders
+                    placeholders.getMessagePlaceholders()
             );
 
             BuX.getInstance().getJobManager().executeJob( userLanguageMessageJob );
@@ -377,7 +378,7 @@ public class SimplePartyManager implements PartyManager
                     membersQueuedForRemoval.forEach( member ->
                     {
                         this.removeMemberFromParty( party, member );
-                        languageBroadcastToParty( party, "party.inactivity-removal", "{user}", member.getUserName() );
+                        languageBroadcastToParty( party, "party.inactivity-removal", MessagePlaceholders.create().append( "user", member.getUserName() ) );
                     } );
                 }
             } );

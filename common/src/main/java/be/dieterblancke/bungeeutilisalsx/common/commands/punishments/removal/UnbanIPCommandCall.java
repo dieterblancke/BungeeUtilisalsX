@@ -65,7 +65,7 @@ public class UnbanIPCommandCall extends PunishmentCommand
         info.setRemovedBy( user.getName() );
         info.setServer( punishmentRemovalArgs.getServerOrAll() );
 
-        user.sendLangMessage( "punishments.unbanip.executed", executor.getPlaceHolders( info ).toArray( new Object[0] ) );
+        user.sendLangMessage( "punishments.unbanip.executed", executor.getPlaceHolders( info ) );
 
         if ( !parameters.contains( "-s" ) )
         {
@@ -73,7 +73,7 @@ public class UnbanIPCommandCall extends PunishmentCommand
             {
                 BuX.getApi().langBroadcast(
                         "punishments.unbanip.broadcast",
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
             else
@@ -81,7 +81,7 @@ public class UnbanIPCommandCall extends PunishmentCommand
                 BuX.getApi().langPermissionBroadcast(
                         "punishments.unbanip.broadcast",
                         ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unbanip.broadcast" ),
-                        executor.getPlaceHolders( info ).toArray( new Object[]{} )
+                        executor.getPlaceHolders( info )
                 );
             }
         }

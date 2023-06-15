@@ -29,15 +29,18 @@ public class UserChatListener
         final UserChatEvent chatEvent = new UserChatEvent( user, event.getMessage() );
         BuX.getApi().getEventLoader().launchEvent( chatEvent );
 
-        if ( chatEvent.isCancelled() )
+        if ( chatEvent.getUser().allowsMessageModifications() )
         {
-            event.setResult( ChatResult.denied() );
-            return;
-        }
+            if ( chatEvent.isCancelled() )
+            {
+                event.setResult( ChatResult.denied() );
+                return;
+            }
 
-        if ( !event.getMessage().equals( chatEvent.getMessage() ) )
-        {
-            event.setResult( ChatResult.message( chatEvent.getMessage() ) );
+            if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+            {
+                event.setResult( ChatResult.message( chatEvent.getMessage() ) );
+            }
         }
     }
 
@@ -56,15 +59,18 @@ public class UserChatListener
             final UserCommandEvent commandEvent = new UserCommandEvent( user, event.getCommand() );
             BuX.getApi().getEventLoader().launchEvent( commandEvent );
 
-            if ( commandEvent.isCancelled() )
+            if ( commandEvent.getUser().allowsMessageModifications() )
             {
-                event.setResult( CommandResult.denied() );
-                return;
-            }
+                if ( commandEvent.isCancelled() )
+                {
+                    event.setResult( CommandResult.denied() );
+                    return;
+                }
 
-            if ( !event.getCommand().equals( commandEvent.getCommand() ) )
-            {
-                event.setResult( CommandResult.command( commandEvent.getCommand() ) );
+                if ( !event.getCommand().equals( commandEvent.getCommand() ) )
+                {
+                    event.setResult( CommandResult.command( commandEvent.getCommand() ) );
+                }
             }
         }
     }

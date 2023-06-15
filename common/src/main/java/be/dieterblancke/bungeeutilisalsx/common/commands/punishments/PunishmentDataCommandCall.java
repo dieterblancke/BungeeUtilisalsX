@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -71,15 +72,16 @@ public class PunishmentDataCommandCall implements CommandCall
             {
                 user.sendLangMessage(
                         "punishments.punishmentdata.not-found",
-                        "{type}", type.toString().toLowerCase(),
-                        "{id}", id
+                        MessagePlaceholders.create()
+                                .append( "type", type.toString().toLowerCase() )
+                                .append( "id", id )
                 );
             }
             else
             {
                 user.sendLangMessage(
                         "punishments.punishmentdata.found",
-                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray( new Object[0] )
+                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
                 );
             }
         } );

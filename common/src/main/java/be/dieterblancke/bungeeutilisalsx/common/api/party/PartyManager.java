@@ -3,6 +3,7 @@ package be.dieterblancke.bungeeutilisalsx.common.api.party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.exceptions.AlreadyInPartyException;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRole;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -38,9 +39,9 @@ public interface PartyManager
 
     void setPartyOwner( Party party, PartyMember member, boolean owner );
 
-    void broadcastToParty( Party party, String message, Object... placeholders );
+    void broadcastToParty( Party party, String message, HasMessagePlaceholders placeholders );
 
-    void languageBroadcastToParty( Party party, String messagePath, Object... placeholders );
+    void languageBroadcastToParty( Party party, String messagePath, HasMessagePlaceholders placeholders );
 
     void setChatMode( Party party, PartyMember partyMember, boolean chat );
 

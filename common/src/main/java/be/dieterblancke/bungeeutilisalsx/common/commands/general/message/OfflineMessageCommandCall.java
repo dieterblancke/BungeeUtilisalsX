@@ -7,6 +7,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDa
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -51,12 +52,13 @@ public class OfflineMessageCommandCall implements CommandCall
                 new OfflineMessageDao.OfflineMessage(
                         null,
                         "general-commands.offlinemessage.message",
-                        "{user}", user.getName(),
-                        "{time}", Utils.formatDate( new Date(), user.getLanguageConfig().getConfig() ),
-                        "{message}", message
+                        MessagePlaceholders.create()
+                                .append( user )
+                                .append( "time", Utils.formatDate( new Date(), user.getLanguageConfig().getConfig() ) )
+                                .append( "message", message )
                 )
         );
-        user.sendLangMessage( "general-commands.offlinemessage.sent", "{user}", targetName );
+        user.sendLangMessage( "general-commands.offlinemessage.sent", MessagePlaceholders.create().append( "user", targetName ) );
     }
 
     @Override

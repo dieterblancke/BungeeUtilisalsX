@@ -33,7 +33,7 @@ public class PluginMessageListener
             return;
         }
         final Optional<User> optionalUser = BuX.getApi().getUser( ( (Player) event.getTarget() ).getUniqueId() );
-        if ( !optionalUser.isPresent() )
+        if ( optionalUser.isEmpty() )
         {
             return;
         }

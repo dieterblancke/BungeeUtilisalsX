@@ -2,12 +2,13 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffUser;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import com.google.common.collect.Lists;
@@ -15,6 +16,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 public class StaffCommandCall implements CommandCall
@@ -64,41 +66,43 @@ public class StaffCommandCall implements CommandCall
         final List<StaffUser> staffUsers = BuX.getInstance().getStaffMembers()
                 .stream()
                 .filter( staffUser -> !staffUser.isHidden() && !staffUser.isVanished() )
-                .collect( Collectors.toList() );
+                .toList();
+
         if ( staffUsers.isEmpty() )
         {
             user.sendLangMessage( "general-commands.staff.no_staff" );
             return;
         }
 
-        final Map<StaffRankData, List<StaffUser>> staffMembers = staffUsers
+        final Map<String, List<StaffUser>> staffMembers = staffUsers
                 .stream()
-                .collect( Collectors.groupingBy( StaffUser::getRank ) );
+                .collect( Collectors.groupingBy( it -> it.getRank().getName() ) );
 
         final LinkedList<StaffRankData> onlineStaffRanks = staffMembers
                 .keySet()
                 .stream()
+                .map( it -> ConfigFiles.RANKS.getRankData( it ) )
+                .filter( Objects::nonNull )
                 .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
                 .collect( Collectors.toCollection( Lists::newLinkedList ) );
 
-        user.sendLangMessage( "general-commands.staff.head", "{total}", staffUsers.size() );
+        user.sendLangMessage( "general-commands.staff.head", MessagePlaceholders.create().append( "total", staffUsers.size() ) );
 
         for ( StaffRankData rank : onlineStaffRanks )
         {
-            final List<StaffUser> users = staffMembers.get( rank );
-            final Component component = MessageBuilder.buildMessage(
+            List<StaffUser> users = staffMembers.get( rank.getName() );
+            Component originalComponent = MessageBuilder.buildMessage(
                     user,
                     user.getLanguageConfig().getConfig().getSection( "general-commands.staff.rank" ),
-                    "{rank_displayname}", rank.getDisplay(),
-                    "{amount_online}", users.size(),
-                    "{total}", staffUsers.size()
+                    MessagePlaceholders.create()
+                            .append( "rank_displayname", rank.getDisplay() )
+                            .append( "amount_online", users.size() )
+                            .append( "total", staffUsers.size() )
             );
 
-            final List<TextComponent> components = findUsersComponents( component );
-
-            for ( TextComponent c : components )
+            Component replacedComponent = this.replaceAndRebuild( originalComponent, () ->
             {
-                c = c.content( "" );
+                TextComponent.Builder builder = Component.text();
 
                 users.sort( Comparator.comparing( StaffUser::getName ) );
                 final Iterator<StaffUser> userIt = users.iterator();
@@ -108,24 +112,30 @@ public class StaffCommandCall implements CommandCall
                     final StaffUser u = userIt.next();
                     final IProxyServer info = BuX.getApi().getPlayerUtils().findPlayer( u.getName() );
 
-                    c = c.append( MessageBuilder.buildMessage(
+                    builder.append( MessageBuilder.buildMessage(
                             user,
                             user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
-                            "{username}", u.getName(),
-                            "{server}", info == null ? "Unknown" : info.getName()
+                            MessagePlaceholders.create()
+                                    .append( "username", u.getName() )
+                                    .append( "server", info == null ? "Unknown" : info.getName() )
                     ) );
 
                     if ( userIt.hasNext() )
                     {
-                        c = c.append( Utils.format( user.getLanguageConfig().buildLangMessage( "general-commands.staff.users.separator" ) ) );
+                        builder.append( Utils.format( user.getLanguageConfig().buildLangMessage(
+                                "general-commands.staff.users.separator",
+                                MessagePlaceholders.empty()
+                        ) ) );
                     }
                 }
-            }
 
-            user.sendMessage( component );
+                return builder.build();
+            } );
+
+            user.sendMessage( replacedComponent );
         }
 
-        user.sendLangMessage( "general-commands.staff.foot", "{total}", staffUsers.size() );
+        user.sendLangMessage( "general-commands.staff.foot", MessagePlaceholders.create().append( "total", staffUsers.size() ) );
     }
 
     @Override
@@ -140,25 +150,34 @@ public class StaffCommandCall implements CommandCall
         return "/staff";
     }
 
-    private List<TextComponent> findUsersComponents( final Component component )
+    private TextComponent replaceAndRebuild( Component original, Supplier<TextComponent> userComponentSupplier )
     {
-        final List<TextComponent> components = component.children().stream()
+        TextComponent.Builder componentBuilder = Component.text();
+
+        original.children()
+                .stream()
                 .filter( c -> c instanceof TextComponent )
                 .map( c -> (TextComponent) c )
-                .toList();
-        final List<TextComponent> finalComponents = Lists.newArrayList();
+                .forEach( textComponent ->
+                {
+                    TextComponent.Builder subComponent = Component.text();
 
-        for ( TextComponent c : components )
-        {
-            if ( c.children() != null && !c.children().isEmpty() )
-            {
-                finalComponents.addAll( findUsersComponents( c ) );
-            }
-            if ( c.content().contains( "{users}" ) )
-            {
-                finalComponents.add( c );
-            }
-        }
-        return finalComponents;
+                    if ( !textComponent.children().isEmpty() )
+                    {
+                        subComponent.append( replaceAndRebuild( textComponent, userComponentSupplier ) );
+                    }
+                    else if ( textComponent.content().contains( "{users}" ) )
+                    {
+                        subComponent.append( userComponentSupplier.get() );
+                    }
+                    else
+                    {
+                        subComponent.append( textComponent );
+                    }
+
+                    componentBuilder.append( subComponent );
+                } );
+
+        return componentBuilder.build();
     }
 }

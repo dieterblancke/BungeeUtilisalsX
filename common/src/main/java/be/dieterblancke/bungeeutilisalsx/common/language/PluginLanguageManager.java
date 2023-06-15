@@ -28,14 +28,14 @@ public class PluginLanguageManager extends AbstractLanguageManager
 
             if ( fileTypes.get( pluginName ).equals( FileStorageType.JSON ) )
             {
-                lang = loadResource( resourceClass, pluginName, "/languages/" + name + ".json", new File( folder, name + ".json" ) );
+                lang = loadResource( resourceClass, pluginName, "/configurations/languages/" + name + ".json", new File( folder, name + ".json" ) );
             }
             else
             {
-                lang = loadResource( resourceClass, pluginName, "/languages/" + name + ".yml", new File( folder, name + ".yml" ) );
+                lang = loadResource( resourceClass, pluginName, "/configurations/languages/" + name + ".yml", new File( folder, name + ".yml" ) );
             }
 
-            if ( !lang.exists() )
+            if ( lang == null || !lang.exists() )
             {
                 continue;
             }
@@ -49,7 +49,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
 
                     if ( autoUpdateFiles )
                     {
-                        configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/languages/" + name + ".json" ) ) );
+                        configuration.copyDefaults( IConfiguration.loadJsonConfiguration( resourceClass.getResourceAsStream( "/configurations/languages/" + name + ".json" ) ) );
                     }
                 }
                 else
@@ -62,7 +62,7 @@ public class PluginLanguageManager extends AbstractLanguageManager
                     if ( autoUpdateFiles )
                     {
                         configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
-                                resourceClass.getResourceAsStream( "/languages/" + name + ".yml" ),
+                                resourceClass.getResourceAsStream( "/configurations/languages/" + name + ".yml" ),
                                 YamlConfigurationOptions.builder().useComments( false ).build()
                         ) );
                     }
@@ -103,13 +103,13 @@ public class PluginLanguageManager extends AbstractLanguageManager
                     if ( in == null )
                     {
                         BuX.getLogger().info( "Could not find default language configuration configuration for " +
-                                source.replace( "/languages/", "" ).replace( ".json", "" ) +
+                                source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) +
                                 " for plugin " + pluginName );
                         return null;
                     }
                     ByteStreams.copy( in, out );
                     BuX.getLogger().info( "Loading default language configuration for "
-                            + source.replace( "/languages/", "" ).replace( ".json", "" ) + " for plugin "
+                            + source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) + " for plugin "
                             + pluginName );
                 }
             }

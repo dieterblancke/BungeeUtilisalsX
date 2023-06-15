@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.OfflineMessageDa
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.ReportsDao;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,10 +47,13 @@ public class ReportAcceptSubCommandCall implements CommandCall
 
             user.sendLangMessage(
                     "general-commands.report.accept.updated",
-                    "{id}", id
+                    MessagePlaceholders.create().append( "id", id )
             );
 
-            final Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
+            Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
+            MessagePlaceholders placeholders = MessagePlaceholders.create()
+                    .append( report )
+                    .append( "staff", user.getName() );
 
             if ( optionalUser.isPresent() )
             {
@@ -57,9 +61,7 @@ public class ReportAcceptSubCommandCall implements CommandCall
 
                 target.sendLangMessage(
                         "general-commands.report.deny.accepted",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
+                        placeholders
                 );
             }
             else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
@@ -67,9 +69,7 @@ public class ReportAcceptSubCommandCall implements CommandCall
                 BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
                         report.getReportedBy(),
                         "general-commands.report.deny.accepted",
-                        "{id}", report.getId(),
-                        "{reported}", report.getUserName(),
-                        "{staff}", user.getName()
+                        placeholders
                 ) );
             }
             else
@@ -79,9 +79,7 @@ public class ReportAcceptSubCommandCall implements CommandCall
                         new OfflineMessage(
                                 null,
                                 "general-commands.report.deny.accepted",
-                                "{id}", report.getId(),
-                                "{reported}", report.getUserName(),
-                                "{staff}", user.getName()
+                                placeholders
                         )
                 );
             }

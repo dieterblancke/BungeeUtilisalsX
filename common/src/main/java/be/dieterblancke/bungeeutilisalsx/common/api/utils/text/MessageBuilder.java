@@ -4,6 +4,8 @@ import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.api.ISection;
@@ -19,8 +21,14 @@ public class MessageBuilder
 {
 
     public static Component buildMessage( final User user,
+                                          final ISection section )
+    {
+        return buildMessage( user, section, MessagePlaceholders.empty() );
+    }
+
+    public static Component buildMessage( final User user,
                                           final ISection section,
-                                          final Object... placeholders )
+                                          final HasMessagePlaceholders placeholders )
     {
         return buildMessage( user, section, null, null, placeholders );
     }
@@ -28,8 +36,16 @@ public class MessageBuilder
     public static Component buildMessage( final User user,
                                           final ISection section,
                                           final Function<String, String> prePlaceholderFormatter,
+                                          final Function<String, String> postPlaceholderFormatter )
+    {
+        return buildMessage( user, section, prePlaceholderFormatter, postPlaceholderFormatter, MessagePlaceholders.empty() );
+    }
+
+    public static Component buildMessage( final User user,
+                                          final ISection section,
+                                          final Function<String, String> prePlaceholderFormatter,
                                           final Function<String, String> postPlaceholderFormatter,
-                                          final Object... placeholders )
+                                          final HasMessagePlaceholders placeholders )
     {
         if ( section.isList( "text" ) )
         {
@@ -92,7 +108,12 @@ public class MessageBuilder
         return text;
     }
 
-    public static Component buildMessage( final User user, final List<ISection> sections, final Object... placeholders )
+    public static Component buildMessage( final User user, final List<ISection> sections )
+    {
+        return buildMessage( user, sections, MessagePlaceholders.empty() );
+    }
+
+    public static Component buildMessage( final User user, final List<ISection> sections, final HasMessagePlaceholders placeholders )
     {
         Component component = Component.empty();
 
@@ -108,7 +129,7 @@ public class MessageBuilder
                                            final String str,
                                            final Function<String, String> prePlaceholderFormatter,
                                            final Function<String, String> postPlaceholderFormatter,
-                                           final Object... placeholders )
+                                           final HasMessagePlaceholders placeholders )
     {
         String text = str;
 
@@ -131,7 +152,7 @@ public class MessageBuilder
                                               final String str,
                                               final Function<String, String> prePlaceholderFormatter,
                                               final Function<String, String> postPlaceholderFormatter,
-                                              final Object... placeholders )
+                                              final HasMessagePlaceholders placeholders )
     {
         if ( config.exists( str ) )
         {
@@ -171,7 +192,7 @@ public class MessageBuilder
     private static List<String> format( final List<String> list,
                                         final Function<String, String> prePlaceholderFormatter,
                                         final Function<String, String> postPlaceholderFormatter,
-                                        final Object... placeholders )
+                                        final HasMessagePlaceholders placeholders )
     {
         return list.stream()
                 .map( str -> format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders ) )
@@ -181,18 +202,15 @@ public class MessageBuilder
     private static String format( String str,
                                   final Function<String, String> prePlaceholderFormatter,
                                   final Function<String, String> postPlaceholderFormatter,
-                                  final Object... placeholders )
+                                  final HasMessagePlaceholders placeholders )
     {
         if ( prePlaceholderFormatter != null )
         {
             str = prePlaceholderFormatter.apply( str );
         }
-        str = formatLine( str );
 
-        for ( int i = 0; i < placeholders.length - 1; i += 2 )
-        {
-            str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-        }
+        str = formatLine( str );
+        str = placeholders.getMessagePlaceholders().format( str );
 
         if ( postPlaceholderFormatter != null )
         {
@@ -205,7 +223,7 @@ public class MessageBuilder
                                                           final ISection section,
                                                           final Function<String, String> prePlaceholderFormatter,
                                                           final Function<String, String> postPlaceholderFormatter,
-                                                          final Object... placeholders )
+                                                          final HasMessagePlaceholders placeholders )
     {
         if ( section.isList( "hover" ) )
         {

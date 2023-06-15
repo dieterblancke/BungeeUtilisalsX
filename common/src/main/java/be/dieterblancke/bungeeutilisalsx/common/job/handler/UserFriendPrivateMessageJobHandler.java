@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserLanguageMessage
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.management.JobHandler;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
 {
@@ -47,16 +47,18 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
             user.sendLangMessage(
                     false,
                     "friends." + job.getType().toString().toLowerCase() + ".format.receive",
-                    "{sender}", job.getUserName(),
-                    "{message}", job.getMessage()
+                    MessagePlaceholders.create()
+                            .append( "sender", job.getUserName() )
+                            .append( "message", job.getMessage() )
             );
 
             executeJob( new UserLanguageMessageJob(
                     job,
                     false,
                     "friends." + job.getType().toString().toLowerCase() + ".format.send",
-                    "{receiver}", user.getName(),
-                    "{message}", job.getMessage()
+                    MessagePlaceholders.create()
+                            .append( "receiver", user.getName() )
+                            .append( "message", job.getMessage() )
             ) );
 
             executeJob( new ExecuteEventJob(

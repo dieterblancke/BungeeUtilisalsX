@@ -3,9 +3,10 @@ package be.dieterblancke.bungeeutilisalsx.common.commands.general;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.UserSwitchServerJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import lombok.AllArgsConstructor;
 
 import java.util.List;
@@ -19,11 +20,14 @@ public class SlashServerCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        final IProxyServer server = BuX.getInstance().proxyOperations().getServerInfo( serverName );
+        final IProxyServer server = BuX.getInstance().serverOperations().getServerInfo( serverName );
 
         if ( server == null )
         {
-            user.sendLangMessage( "general-commands.server.notfound", "{server}", serverName );
+            user.sendLangMessage(
+                    "general-commands.server.notfound",
+                    MessagePlaceholders.create().append( "server", serverName )
+            );
             return;
         }
 
@@ -46,8 +50,9 @@ public class SlashServerCommandCall implements CommandCall
 
                 user.sendLangMessage(
                         "general-commands.server.sent-other",
-                        "{user}", name,
-                        "{server}", server.getName()
+                        MessagePlaceholders.create()
+                                .append( "user", name )
+                                .append( "server", server.getName() )
                 );
             }
             else
@@ -76,11 +81,19 @@ public class SlashServerCommandCall implements CommandCall
     {
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
         {
-            user.sendLangMessage( "general-commands.server.alreadyconnected", "{server}", server.getName() );
+            user.sendLangMessage(
+                    "general-commands.server.alreadyconnected",
+                    MessagePlaceholders.create()
+                            .append( "server", server.getName() )
+            );
             return;
         }
 
         user.sendToServer( server );
-        user.sendLangMessage( "general-commands.server.connecting", "{server}", server.getName() );
+        user.sendLangMessage(
+                "general-commands.server.connecting",
+                MessagePlaceholders.create()
+                        .append( "server", server.getName() )
+        );
     }
 }

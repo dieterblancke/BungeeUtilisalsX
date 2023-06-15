@@ -13,6 +13,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import be.dieterblancke.configuration.api.IConfiguration;
 import be.dieterblancke.configuration.api.ISection;
@@ -57,7 +58,8 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                             user.sendMessage(
                                     MessageBuilder.buildMessage(
                                             user, section.getSection( "chat" ),
-                                            "{prefix}", config.getString( "announce.types.chat.prefix" )
+                                            MessagePlaceholders.create()
+                                                    .append( "prefix", config.getString( "announce.types.chat.prefix" ) )
                                     )
                             );
                         }

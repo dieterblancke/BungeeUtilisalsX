@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendRequest;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
@@ -81,17 +82,17 @@ public class FriendRequestsSubCommandCall implements CommandCall
                 maxNumber = allRequests.size();
             }
 
-            final List<FriendRequest> requests = allRequests.subList( minNumber, maxNumber );
-            user.sendLangMessage(
-                    "friends.requests.head",
-                    "{previousPage}", previous,
-                    "{currentPage}", page,
-                    "{nextPage}", next,
-                    "{maxPages}", pages,
-                    "{requestAmount}", allRequests.size(),
-                    "{type}", user.getLanguageConfig().getConfig().getString( "friends.requests." + requestType ),
-                    "{type_lowercase}", requestType.toLowerCase()
-            );
+            MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
+                    .append( "previousPage", previous )
+                    .append( "currentPage", page )
+                    .append( "nextPage", next )
+                    .append( "maxPages", pages )
+                    .append( "requestAmount", allRequests.size() )
+                    .append( "type", user.getLanguageConfig().getConfig().getString( "friends.requests." + requestType ) )
+                    .append( "type_lowercase", requestType.toLowerCase() );
+
+            List<FriendRequest> requests = allRequests.subList( minNumber, maxNumber );
+            user.sendLangMessage( "friends.requests.head", messagePlaceholders );
 
             requests.forEach( request ->
             {
@@ -100,20 +101,12 @@ public class FriendRequestsSubCommandCall implements CommandCall
 
                 user.sendLangMessage(
                         "friends.requests.format." + requestType,
-                        "{target}", targetName,
-                        "{requestDate}", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() )
+                        MessagePlaceholders.create()
+                                .append( "target", targetName )
+                                .append( "requestDate", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             } );
-            user.sendLangMessage(
-                    "friends.requests.foot",
-                    "{previousPage}", previous,
-                    "{currentPage}", page,
-                    "{nextPage}", next,
-                    "{maxPages}", pages,
-                    "{requestAmount}", allRequests.size(),
-                    "{type}", requestType,
-                    "{type_lowercase}", requestType.toLowerCase()
-            );
+            user.sendLangMessage( "friends.requests.foot", messagePlaceholders );
         } );
     }
 

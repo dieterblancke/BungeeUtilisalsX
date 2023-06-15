@@ -23,7 +23,7 @@ public class NetworkStaffJoinEvent extends AbstractEvent implements Cancellable
 
     private boolean cancelled;
 
-    public NetworkStaffJoinEvent( final String userName, final UUID uuid, final String staffRank )
+    public NetworkStaffJoinEvent( String userName, UUID uuid, String staffRank )
     {
         this.userName = userName;
         this.uuid = uuid;

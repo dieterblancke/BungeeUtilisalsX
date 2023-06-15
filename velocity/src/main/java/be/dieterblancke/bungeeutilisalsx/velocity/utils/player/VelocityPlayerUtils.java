@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.velocity.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import com.velocitypowered.api.proxy.Player;
@@ -54,7 +54,7 @@ public class VelocityPlayerUtils implements IPlayerUtils
     {
         return Bootstrap.getInstance().getProxyServer().getPlayer( name )
                 .flatMap( value -> value.getCurrentServer()
-                        .map( server -> BuX.getInstance().proxyOperations().getServerInfo( server.getServerInfo().getName() ) ) )
+                        .map( server -> BuX.getInstance().serverOperations().getServerInfo( server.getServerInfo().getName() ) ) )
                 .orElse( null );
     }
 

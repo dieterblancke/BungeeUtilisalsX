@@ -17,7 +17,6 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import lombok.Data;
-import lombok.SneakyThrows;
 
 import java.util.List;
 
@@ -176,7 +175,7 @@ public abstract class PunishmentCommand implements CommandCall
                 info.getType().isIP(),
                 storage.getIp(),
                 path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
                 info.getType(),
                 info.getReason()
         ) );
@@ -190,7 +189,7 @@ public abstract class PunishmentCommand implements CommandCall
                 info.getType().isIP(),
                 storage.getIp(),
                 path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ).toArray(),
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
                 info.getType(),
                 info.getReason()
         ) );

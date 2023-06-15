@@ -31,7 +31,7 @@ public class PluginMessageListener implements Listener
             return;
         }
         final Optional<User> optionalUser = BuX.getApi().getUser( ( (ProxiedPlayer) event.getReceiver() ).getUniqueId() );
-        if ( !optionalUser.isPresent() )
+        if ( optionalUser.isEmpty() )
         {
             return;
         }

@@ -1,10 +1,12 @@
 package be.dieterblancke.bungeeutilisalsx.common.protocolize.gui;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
+import be.dieterblancke.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
+import be.dieterblancke.bungeeutilisalsx.common.pluginsupport.TritonPluginSupport;
 import be.dieterblancke.bungeeutilisalsx.common.protocolize.gui.item.GuiItem;
-import com.google.common.collect.Lists;
 import dev.simplix.protocolize.api.inventory.Inventory;
 import dev.simplix.protocolize.api.inventory.InventoryClick;
 import dev.simplix.protocolize.data.inventory.InventoryType;
@@ -12,8 +14,6 @@ import lombok.AccessLevel;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -26,7 +26,7 @@ public class Gui
     private final String title;
     private final int rows;
     private final PageableItemProvider pageableItemProvider;
-    private final List<User> users;
+    private final User user;
     private long lastActivity = System.currentTimeMillis();
     private Inventory inventory;
     private boolean opened;
@@ -50,11 +50,7 @@ public class Gui
     {
         lastActivity = System.currentTimeMillis();
         this.buildInventory();
-
-        for ( User user : users )
-        {
-            BuX.getInstance().getProtocolizeManager().openInventory( user, inventory );
-        }
+        BuX.getInstance().getProtocolizeManager().openInventory( user, inventory );
         opened = true;
     }
 
@@ -64,17 +60,8 @@ public class Gui
         {
             BuX.getInstance().getProtocolizeManager().getGuiManager().remove( this );
         }
-
-        for ( User user : users )
-        {
-            BuX.getInstance().getProtocolizeManager().closeInventory( user );
-        }
         opened = false;
-
-        if ( remove )
-        {
-            users.clear();
-        }
+        BuX.getInstance().getProtocolizeManager().closeInventory( user );
     }
 
     public void close()
@@ -105,10 +92,13 @@ public class Gui
     public void refill()
     {
         inventory = new Inventory( InventoryType.valueOf( "GENERIC_9X" + rows ) );
-        inventory.title( BuX.getInstance().proxyOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
-                title,
-                "{page}", page,
-                "{max}", pageableItemProvider.getPageAmount()
+        inventory.title( BuX.getInstance().serverOperations().getMessageComponent( Utils.format( Utils.replacePlaceHolders(
+                PluginSupport.getPluginSupport( TritonPluginSupport.class )
+                        .map( pluginSupport -> pluginSupport.formatGuiMessage( user, title ) )
+                        .orElse( title ),
+                MessagePlaceholders.create()
+                        .append( "page", page )
+                        .append( "max", pageableItemProvider.getPageAmount() )
         ) ) ) );
         inventory.onClick( this::handleInventoryClick );
 
@@ -136,7 +126,7 @@ public class Gui
     {
         private String title;
         private int rows = 6;
-        private List<User> users = new ArrayList<>();
+        private User user;
         private PageableItemProvider pageableItemProvider;
 
         private Builder()
@@ -156,15 +146,9 @@ public class Gui
             return this;
         }
 
-        public Builder users( final Iterable<User> users )
+        public Builder user( final User user )
         {
-            this.users = Lists.newArrayList( users );
-            return this;
-        }
-
-        public Builder users( final User... users )
-        {
-            this.users = Lists.newArrayList( users );
+            this.user = user;
             return this;
         }
 
@@ -176,7 +160,7 @@ public class Gui
 
         public Gui build()
         {
-            final Gui gui = new Gui( title, rows, pageableItemProvider, users );
+            final Gui gui = new Gui( title, rows, pageableItemProvider, user );
             BuX.getInstance().getProtocolizeManager().getGuiManager().add( gui );
             return gui;
         }

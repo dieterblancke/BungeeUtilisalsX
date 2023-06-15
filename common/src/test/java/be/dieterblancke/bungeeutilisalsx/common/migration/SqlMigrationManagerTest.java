@@ -11,7 +11,6 @@ import be.dieterblancke.bungeeutilisalsx.common.storage.TestPostgreSQLStorageMan
 import be.dieterblancke.bungeeutilisalsx.common.storage.TestSQLiteStorageManager;
 import be.dieterblancke.bungeeutilisalsx.common.util.TestInjectionUtil;
 import be.dieterblancke.configuration.api.IConfiguration;
-import org.junit.Ignore;
 import org.junit.jupiter.api.*;
 import org.mockito.stubbing.Answer;
 import org.testcontainers.containers.GenericContainer;
@@ -40,7 +39,7 @@ class SqlMigrationManagerTest extends BuXTest
     {
         TestInjectionUtil.injectConfiguration(
                 ConfigFiles.CONFIG,
-                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/config.yml" ) )
+                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/config.yml" ) )
         );
     }
 

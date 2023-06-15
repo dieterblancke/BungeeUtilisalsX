@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.listeners;
 
 import be.dieterblancke.bungeeutilisalsx.bungee.Bootstrap;
-import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonPluginSupport;
+import be.dieterblancke.bungeeutilisalsx.bungee.pluginsupports.TritonBungeePluginSupport;
 import be.dieterblancke.bungeeutilisalsx.bungee.utils.BungeeMotdConnection;
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotdPingEvent;
@@ -48,8 +48,8 @@ public class MotdPingListener implements Listener
                     ) );
                     event.getResponse().setDescriptionComponent( new TextComponent( BungeeComponentSerializer.get().serialize( e.getMotdPingResponse().getMotd() ) ) );
 
-                    PluginSupport.getPluginSupport( TritonPluginSupport.class )
-                            .ifPresent( tritonPluginSupport -> tritonPluginSupport.handleMotd( event ) );
+                    PluginSupport.getPluginSupport( TritonBungeePluginSupport.class )
+                            .ifPresent( tritonBungeePluginSupport -> tritonBungeePluginSupport.handleMotd( event ) );
 
                     event.completeIntent( Bootstrap.getInstance() );
                 }

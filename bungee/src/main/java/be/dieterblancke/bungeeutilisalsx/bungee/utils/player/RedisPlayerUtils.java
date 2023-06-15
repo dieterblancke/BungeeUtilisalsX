@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
 import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
@@ -9,6 +9,7 @@ import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public class RedisPlayerUtils implements IPlayerUtils
@@ -60,7 +61,10 @@ public class RedisPlayerUtils implements IPlayerUtils
 
         if ( RedisBungeeAPI.getRedisBungeeApi().isPlayerOnline( uuid ) )
         {
-            return BuX.getInstance().proxyOperations().getServerInfo( RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ) );
+            return Optional.ofNullable(RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ))
+                    .map( ServerInfo::getName )
+                    .map( BuX.getInstance().serverOperations()::getServerInfo )
+                    .orElse( null );
         }
 
         return null;

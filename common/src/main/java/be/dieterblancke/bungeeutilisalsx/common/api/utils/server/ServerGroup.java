@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.common.api.utils.server;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import com.google.common.collect.Lists;
 import lombok.Data;
 
@@ -65,7 +65,7 @@ public class ServerGroup
 
         this.searchServers().forEach( serverName ->
         {
-            IProxyServer info = BuX.getInstance().proxyOperations().getServerInfo( serverName );
+            IProxyServer info = BuX.getInstance().serverOperations().getServerInfo( serverName );
 
             if ( info != null )
             {
@@ -99,7 +99,7 @@ public class ServerGroup
 
         servers.forEach( server ->
         {
-            for ( IProxyServer info : BuX.getInstance().proxyOperations().getServers() )
+            for ( IProxyServer info : BuX.getInstance().serverOperations().getServers() )
             {
                 String name = info.getName().toLowerCase();
 

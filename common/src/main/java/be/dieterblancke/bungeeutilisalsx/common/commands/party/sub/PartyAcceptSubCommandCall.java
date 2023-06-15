@@ -8,7 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyManager;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.Date;
 import java.util.List;
@@ -48,7 +48,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
         final Optional<Party> optionalInviterParty = partyManager.getCurrentPartyFor( args.get( 0 ) );
         if ( optionalInviterParty.isEmpty() )
         {
-            user.sendLangMessage( "party.accept.no-party", "{user}", args.get( 0 ) );
+            user.sendLangMessage( "party.accept.no-party", MessagePlaceholders.create().append( "user", args.get( 0 ) ) );
             return;
         }
 
@@ -60,7 +60,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
 
         if ( optionalInvite.isEmpty() )
         {
-            user.sendLangMessage( "party.accept.not-invited-to-party", "{user}", args.get( 0 ) );
+            user.sendLangMessage( "party.accept.not-invited-to-party", MessagePlaceholders.create().append( "user", args.get( 0 ) ) );
             return;
         }
 
@@ -68,7 +68,7 @@ public class PartyAcceptSubCommandCall implements CommandCall
         {
             user.sendLangMessage(
                     "party.other-party-full",
-                    "{user}", inviterParty.getOwner().getNickName()
+                    MessagePlaceholders.create().append( "user", inviterParty.getOwner().getNickName() )
             );
             return;
         }
@@ -91,12 +91,12 @@ public class PartyAcceptSubCommandCall implements CommandCall
         partyManager.addMemberToParty( inviterParty, partyMember );
         user.sendLangMessage(
                 "party.accept.accepted",
-                "{user}", args.get( 0 )
+                MessagePlaceholders.create().append( "user", args.get( 0 ) )
         );
         partyManager.languageBroadcastToParty(
                 inviterParty,
                 "party.accept.joined-party",
-                "{user}", user.getName()
+                MessagePlaceholders.create().append( "user", user.getName() )
         );
     }
 

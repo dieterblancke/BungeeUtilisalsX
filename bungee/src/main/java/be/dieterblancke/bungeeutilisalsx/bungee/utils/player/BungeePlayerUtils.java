@@ -1,7 +1,7 @@
 package be.dieterblancke.bungeeutilisalsx.bungee.utils.player;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
 import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
@@ -59,7 +59,7 @@ public class BungeePlayerUtils implements IPlayerUtils
 
         if ( player != null )
         {
-            return BuX.getInstance().proxyOperations().getServerInfo( player.getServer().getInfo().getName() );
+            return BuX.getInstance().serverOperations().getServerInfo( player.getServer().getInfo().getName() );
         }
 
         return null;

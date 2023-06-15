@@ -5,6 +5,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.command.TabCompleter;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.lang.management.ManagementFactory;
 import java.util.Date;
@@ -24,11 +25,13 @@ public class GLagCommandCall implements CommandCall, TabCall
     {
         final long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
-        user.sendLangMessage( "general-commands.glag",
-                "{maxmemory}", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB",
-                "{freememory}", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB",
-                "{totalmemory}", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB",
-                "{onlinesince}", Utils.formatDate( new Date( uptime ), user.getLanguageConfig().getConfig() )
+        user.sendLangMessage(
+                "general-commands.glag",
+                MessagePlaceholders.create()
+                        .append( "maxmemory", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB" )
+                        .append( "freememory", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB" )
+                        .append( "totalmemory", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB" )
+                        .append( "onlinesince", Utils.formatDate( new Date( uptime ), user.getLanguageConfig().getConfig() ) )
         );
     }
 

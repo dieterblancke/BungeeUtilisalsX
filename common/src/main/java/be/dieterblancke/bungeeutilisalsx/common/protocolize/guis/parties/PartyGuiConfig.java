@@ -6,6 +6,6 @@ public class PartyGuiConfig extends GuiConfig
 {
     public PartyGuiConfig()
     {
-        super( "/gui/party/party.yml", PartyGuiConfigItem.class );
+        super( "/configurations/gui/party/party.yml", PartyGuiConfigItem.class );
     }
 }

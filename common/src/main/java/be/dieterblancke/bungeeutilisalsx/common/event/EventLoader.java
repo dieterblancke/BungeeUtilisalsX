@@ -107,9 +107,8 @@ public class EventLoader implements IEventLoader
 
             for ( IEventHandler h : sortedSet )
             {
-                if ( h instanceof EventHandler )
+                if ( h instanceof EventHandler handler )
                 {
-                    EventHandler handler = (EventHandler) h;
 
                     if ( !handler.executeIfCancelled() && event instanceof Cancellable && ( (Cancellable) event ).isCancelled() )
                     {

@@ -10,6 +10,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorageKey;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatHelper;
 import be.dieterblancke.bungeeutilisalsx.common.chat.ChatProtections;
 import be.dieterblancke.bungeeutilisalsx.common.chat.protections.SwearValidationResult;
@@ -83,14 +84,14 @@ public class UserChatExecutor implements EventExecutor
             {
                 event.setMessage( swearValidationResult.getResultMessage() );
             }
-            user.sendLangMessage( "chat-protection.swear", "{swear-word}", swearValidationResult.getSwearWord() );
+            user.sendLangMessage( "chat-protection.swear", MessagePlaceholders.create().append( "swear-word", swearValidationResult.getSwearWord() ) );
 
             if ( config.exists( "commands" ) )
             {
                 config.getStringList( "commands" ).forEach( command ->
                 {
                     command = PlaceHolderAPI.formatMessage( user, command );
-                    command = Utils.replacePlaceHolders( command, "{swear-word}", swearValidationResult.getSwearWord() );
+                    command = Utils.replacePlaceHolders( command, MessagePlaceholders.create().append( "swear-word", swearValidationResult.getSwearWord() ) );
 
                     BuX.getApi().getConsoleUser().executeCommand( command );
                 } );
@@ -138,7 +139,7 @@ public class UserChatExecutor implements EventExecutor
         if ( !ChatProtections.SPAM_PROTECTION.validateMessage( user, event.getMessage() ).isValid() )
         {
             event.setCancelled( true );
-            user.sendLangMessage( "chat-protection.spam", "%time%", user.getCooldowns().getLeftTime( "CHATSPAM" ) / 1000 );
+            user.sendLangMessage( "chat-protection.spam", MessagePlaceholders.create().append( "time", user.getCooldowns().getLeftTime( "CHATSPAM" ) / 1000 ) );
 
             if ( config.exists( "commands" ) )
             {
@@ -217,8 +218,9 @@ public class UserChatExecutor implements EventExecutor
                             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                                     party,
                                     "party.chat.format",
-                                    "{user}", event.getUser().getName(),
-                                    "{message}", event.getMessage()
+                                    MessagePlaceholders.create()
+                                            .append( "user", event.getUser().getName() )
+                                            .append( "message", event.getMessage() )
                             );
                         } ) );
     }

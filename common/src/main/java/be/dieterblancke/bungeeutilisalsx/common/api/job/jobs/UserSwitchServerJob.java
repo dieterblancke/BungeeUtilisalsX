@@ -2,8 +2,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.job.jobs;
 
 import be.dieterblancke.bungeeutilisalsx.common.BuX;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.MultiProxyJob;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -37,6 +37,6 @@ public class UserSwitchServerJob implements MultiProxyJob
 
     public Optional<IProxyServer> getTargetServer()
     {
-        return Optional.ofNullable( BuX.getInstance().proxyOperations().getServerInfo( server ) );
+        return Optional.ofNullable( BuX.getInstance().serverOperations().getServerInfo( server ) );
     }
 }

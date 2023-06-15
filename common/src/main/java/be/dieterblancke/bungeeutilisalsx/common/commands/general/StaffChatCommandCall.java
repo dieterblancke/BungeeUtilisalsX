@@ -5,9 +5,9 @@ import be.dieterblancke.bungeeutilisalsx.common.api.command.CommandCall;
 import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.StaffUtils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.StaffRankData;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.common.base.Strings;
 
 import java.util.List;
@@ -21,12 +21,13 @@ public class StaffChatCommandCall implements CommandCall
                 new BroadcastLanguageMessageJob(
                         "general-commands.staffchat.format",
                         ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
-                        "{user}", user.getName(),
-                        "{user_prefix}", StaffUtils.getStaffRankForUser( user ).map( StaffRankData::getDisplay ).orElse( "" ),
-                        "{permission_user_prefix}", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ),
-                        "{permission_user_prefix}", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ),
-                        "{server}", Strings.nullToEmpty( user.getServerName() ),
-                        "{message}", message
+                        MessagePlaceholders.create()
+                                .append( "user", user.getName() )
+                                .append( "user_prefix", StaffUtils.getStaffRankForUser( user ).map( StaffRankData::getDisplay ).orElse( "" ) )
+                                .append( "permission_user_prefix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ) )
+                                .append( "permission_user_suffix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ) )
+                                .append( "server", Strings.nullToEmpty( user.getServerName() ) )
+                                .append( "message", message )
                 )
         );
     }

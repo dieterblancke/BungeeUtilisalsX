@@ -8,33 +8,32 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendData;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.language.Language;
 import be.dieterblancke.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.storage.dao.Dao;
+import be.dieterblancke.bungeeutilisalsx.common.api.user.CooldownConstants;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserCooldowns;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.title.Title;
 
 import java.net.InetSocketAddress;
-import java.time.Duration;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Setter
 @Getter
@@ -228,34 +227,6 @@ public class VelocityUser implements User
     }
 
     @Override
-    public void langKick( String path, Object... placeholders )
-    {
-        if ( getLanguageConfig().getConfig().isList( path ) )
-        {
-            final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
-            {
-                for ( int i = 0; i < placeholders.length - 1; i += 2 )
-                {
-                    str = str.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-                }
-                return str;
-            } ).collect( Collectors.joining( "\n" ) );
-
-            kick( reason );
-        }
-        else
-        {
-            String message = getLanguageConfig().getConfig().getString( path );
-            for ( int i = 0; i < placeholders.length - 1; i += 2 )
-            {
-                message = message.replace( placeholders[i].toString(), placeholders[i + 1].toString() );
-            }
-
-            kick( message );
-        }
-    }
-
-    @Override
     public void forceKick( String reason )
     {
         this.player.disconnect( Utils.format( this, reason ) );
@@ -304,6 +275,7 @@ public class VelocityUser implements User
     @Override
     public void sendToServer( IProxyServer proxyServer )
     {
+        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 5 );
         this.player.createConnectionRequest( ( (VelocityServer) proxyServer ).getRegisteredServer() ).fireAndForget();
     }
 
@@ -312,11 +284,11 @@ public class VelocityUser implements User
     {
         try
         {
-            return Version.getVersion( player.getProtocolVersion().getProtocol() );
+            return ConfigFiles.VERSIONS_CONFIG.getVersion( player.getProtocolVersion().getProtocol() );
         }
         catch ( Exception e )
         {
-            return Version.MINECRAFT_1_8;
+            return ConfigFiles.VERSIONS_CONFIG.getUnknownVersion();
         }
     }
 
@@ -446,6 +418,13 @@ public class VelocityUser implements User
     public Audience asAudience()
     {
         return this.player;
+    }
+
+    @Override
+    public boolean allowsMessageModifications()
+    {
+        return player.getIdentifiedKey() == null
+                || player.getProtocolVersion().getProtocol() < 760;
     }
 
     @Override

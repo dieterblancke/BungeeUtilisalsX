@@ -6,6 +6,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.friends.FriendSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,9 +27,10 @@ public class FriendSettingsSubCommandCall implements CommandCall
             {
                 user.sendLangMessage(
                         "friends.settings.noargs.format",
-                        "{type}", setting.getName( user.getLanguageConfig().getConfig() ),
-                        "{unformatted-type}", setting.toString(),
-                        "{status}", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) )
+                        MessagePlaceholders.create()
+                                .append( "type", setting.getName( user.getLanguageConfig().getConfig() ) )
+                                .append( "unformatted-type", setting.toString() )
+                                .append( "status", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) ) )
                 );
             }
 
@@ -41,10 +43,10 @@ public class FriendSettingsSubCommandCall implements CommandCall
             if ( type == null )
             {
                 final String settings = Stream.of( FriendSetting.values() )
-                        .map( t -> t.toString() )
+                        .map( Enum::toString )
                         .collect( Collectors.joining() );
 
-                user.sendLangMessage( "friends.settings.invalid", "{settings}", settings );
+                user.sendLangMessage( "friends.settings.invalid", MessagePlaceholders.create().append( "settings", settings ) );
                 return;
             }
             final boolean value = args.get( 1 ).contains( "toggle" )
@@ -56,8 +58,9 @@ public class FriendSettingsSubCommandCall implements CommandCall
 
             user.sendLangMessage(
                     "friends.settings.updated",
-                    "{type}", type.toString().toLowerCase(),
-                    "{value}", value
+                    MessagePlaceholders.create()
+                            .append( "type", type.toString().toLowerCase() )
+                            .append( "value", value )
             );
         }
         else

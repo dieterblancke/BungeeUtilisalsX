@@ -1,0 +1,314 @@
+bungeeutilisals:
+  enabled: true
+  name: bungeeutilisals
+  aliases: 'bux, bu, bungeeutilisalsx'
+  permission: bungeeutilisals.commands.admin
+
+  subcommands:
+    version:
+      enabled: true
+      name: version
+      permission: bungeeutilisals.commands.admin.version
+    reload:
+      enabled: true
+      name: reload
+      permission: bungeeutilisals.commands.admin.reload
+glist:
+  # Enable this command or not?
+  enabled: true
+  name: glist
+  aliases: 'blist, globallist'
+  permission: bungeeutilisals.commands.glist
+  header: ''
+  format:
+    text: '<red>%server% <gray>(%players%) <white>» %playerlist%'
+    hover:
+      - '<yellow>Click here to go to <aqua>%server%<yellow>.'
+    click:
+      # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
+      # RUN_COMMAND will only work for BungeeCord commands.
+      type: 'RUN_COMMAND'
+      action: '/server %server%'
+  playerlist:
+    color: '<yellow>'
+    separator: ', '
+  # You can use ServerGroups & ServerNames in here. ServerGroups have a higher priority..
+  servers:
+    # Set to true if you want the servers below to be shown instead of your normal BungeeCord servers.
+    # This can be helpful if you want to group certain servers.
+    enabled: false
+    # The servers or servergroups which should occur in the /glist servers (allows you to for example group minigames)
+    list:
+      - 'Lobbies'
+      - 'Factions'
+      - 'Skyblock'
+      - 'SkyWars'
+  total:
+    text: '<yellow>There is / are <red>{total} <yellow>player(s) online now!'
+    hover:
+      - '{playerlist}'
+announce:
+  enabled: true
+  name: announce
+  aliases: 'alert, bigalert'
+  permission: bungeeutilisals.commands.announce
+  # Can set to any combination of b, c, a and t (bcat for all), none to keep default announce behaviour
+  # If not set to none, custom types can still be given using /announce type:(b/c/a/t) (message)
+  default-to: none
+  types:
+    bossbar:
+      enabled: true
+      stay: 5
+      # BarColor PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE
+      color: 'YELLOW'
+      # SOLID, SIX_SEGMENTS, TEN_SEGMENTS, TWELVE_SEGMENTS, TWENTY_SEGMENTS
+      style: 'SOLID'
+      # Number between 0.0 & 1.0
+      progress: 1.0
+    chat:
+      enabled: true
+      prefix: '<red><bold>Announce<reset> <dark_gray>» <white>'
+    actionbar:
+      enabled: true
+    title:
+      enabled: true
+      fadein: 10
+      stay: 30
+      fadeout: 10
+  # Path to preconfigured messages in the languages file.
+  pre_configured: 'custom.announce'
+find:
+  enabled: true
+  name: find
+  aliases: 'search'
+  permission: bungeeutilisals.commands.find
+server:
+  enabled: true
+  name: server
+  aliases: 'switch'
+  # Enabling this will create commands for each server (for example /factions /skywars /skyblock ...)
+  slash-server:
+    enabled: false
+    permission: bungeeutilisals.commands.server.{server}
+  permission: bungeeutilisals.commands.server
+  permission-other: bungeeutilisals.commands.server.other
+clearchat:
+  enabled: true
+  name: clearchat
+  aliases: 'cc'
+  permission: bungeeutilisals.commands.clearchat
+chatlock:
+  enabled: true
+  name: chatlock
+  aliases: 'cl, lock, lockchat'
+  permission: bungeeutilisals.commands.chatlock
+  bypass: bungeeutilisals.chatlock.bypass
+glag:
+  enabled: true
+  name: glag
+  aliases: 'bgc, blag'
+  permission: bungeeutilisals.commands.glag
+staffchat:
+  enabled: true
+  name: staffchat
+  aliases: 'sc, schat'
+  permission: bungeeutilisals.commands.staffchat
+
+  # charchat makes it possible to chat in staffchat without using the /staffchat toggle
+  # if a message for example starts with '#' and the person has the staffchat permission, it will be seen as a staffchat message
+  charchat:
+    enabled: false
+    detect: '#'
+language:
+  enabled: true
+  name: language
+  aliases: 'lang'
+  permission: bungeeutilisals.commands.language
+staff:
+  enabled: false
+  name: staff
+  aliases: 'onlinestaff'
+  permission: bungeeutilisals.commands.staff
+
+  toggle:
+    enabled: true
+    name: toggle
+    aliases: 'hide, unhide'
+    permission: bungeeutilisals.commands.staff.toggle
+msg:
+  enabled: true
+  name: msg
+  aliases: 'm, whisper'
+  permission: bungeeutilisals.commands.msg
+reply:
+  enabled: true
+  name: reply
+  aliases: 'r'
+  permission: bungeeutilisals.commands.reply
+ignore:
+  enabled: true
+  name: ignore
+  aliases: 'bignore'
+  permission: bungeeutilisals.commands.ignore
+msgtoggle:
+  enabled: true
+  name: msgtoggle
+  aliases: 'msgt'
+  permission: bungeeutilisals.commands.msgtoggle
+socialspy:
+  enabled: true
+  name: socialspy
+  aliases: 'ss, sspy'
+  permission: bungeeutilisals.commands.socialspy
+commandspy:
+  enabled: true
+  name: commandspy
+  aliases: 'cs, cspy'
+  permission: bungeeutilisals.commands.commandspy
+
+  # Commands to be ignored
+  ignored-commands:
+    - login
+    - register
+    - reg
+    - l
+    - changepassword
+    - changepass
+    - cp
+ping:
+  enabled: true
+  name: ping
+  aliases: 'gping, bping'
+  permission: bungeeutilisals.commands.ping
+  permission-other: bungeeutilisals.commands.ping.other
+report:
+  enabled: true
+  name: report
+  aliases: 'greport, breport'
+  permission: bungeeutilisals.commands.report
+  bypass: bungeeutilisals.commands.report.bypass
+
+  # If the reported user gets punished with one of the types below, it will automatically accept a report.
+  # To disable this, use: '  accept_on_punishment: []'
+  # Possible units: BAN, IPBAN, TEMPBAN, IPTEMPBAN, MUTE, IPMUTE, TEMPMUTE, IPTEMPMUTE, KICK, WARN
+  accept_on_punishment:
+    - 'BAN'
+    - 'TEMPBAN'
+    - 'IPBAN'
+    - 'IPTEMPBAN'
+
+  discord-webhook:
+    enabled: false
+
+    color: 12265273
+
+    author:
+      name: 'Report for {user} by {reporter}.'
+      url: 'https://dieterblancke.xyz/projects/BungeeUtilisalsX'
+      icon: 'https://dieterblancke.xyz/media/avatar.png'
+
+    footer:
+      text: 'BungeeUtilisalsX Report System'
+      icon: 'https://dieterblancke.xyz/media/avatar.png'
+
+    fields:
+      - name: 'Reporter'
+        value: '{reporter}'
+        inline: true
+      - name: 'Target'
+        value: '{user}'
+        inline: true
+      - name: 'Reason'
+        value: '{reason}'
+        inline: true
+      - name: 'Server'
+        value: '{server}'
+        inline: true
+
+  subcommands:
+    create:
+      enabled: true
+      name: create
+      aliases: 'new, c'
+      permission: bungeeutilisals.commands.report.create
+      # Cooldown in seconds ...
+      cooldown: 10
+      broadcast: bungeeutilisals.report.receive
+    list:
+      enabled: true
+      name: list
+      aliases: 'list, l'
+      permission: bungeeutilisals.commands.report.list
+    accept:
+      enabled: true
+      name: accept
+      aliases: ''
+      permission: bungeeutilisals.commands.report.accept
+    deny:
+      enabled: true
+      name: deny
+      aliases: ''
+      permission: bungeeutilisals.commands.report.deny
+    history:
+      enabled: true
+      name: history
+      aliases: 'hist'
+      permission: bungeeutilisals.commands.report.history
+domains:
+  enabled: true
+  name: domains
+  aliases: 'domainlist'
+  permission: bungeeutilisals.commands.domains
+
+  # Regex mappings for certain domains, for example .*play.example.com means that every domain ending with play.example.com will be mapped to play.example.com
+  mappings:
+    - regex: '.*play.example.com'
+      domain: play.example.com
+
+  subcommands:
+    list:
+      enabled: true
+      name: list
+      aliases: 'ls, all'
+      permission: bungeeutilisals.commands.domains.list
+    search:
+      enabled: true
+      name: search
+      aliases: 'find, select'
+      permission: bungeeutilisals.commands.domains.search
+helpop:
+  enabled: true
+  name: bhelpop
+  aliases: 'ghelpop'
+  permission: bungeeutilisals.commands.helpop
+  receive-broadcast: bungeeutilisals.commands.helpop.receive_broadcast
+  reply-permission: bungeeutilisals.commands.helpop.reply
+shout:
+  enabled: true
+  name: shout
+  aliases: 'sh'
+  permission: bungeeutilisals.commands.shout
+  staff-permission: bungeeutilisals.commands.shout.staff
+staffannouncement:
+  enabled: true
+  name: staffannouncement
+  aliases: 'sa, staffannounce'
+  permission: bungeeutilisals.commands.staffannouncement.send
+  receive-permission: bungeeutilisals.commands.staffannouncement.receive
+offlinemessage:
+  enabled: false
+  name: offlinemessage
+  aliases: 'omsg'
+  permission: bungeeutilisals.commands.offlinemessage
+  cooldown: 60
+  execute-msg-if-online: true
+opengui:
+  enabled: true
+  name: opengui
+  aliases: 'og'
+  permission: bungeeutilisals.commands.opengui
+togglebossbar:
+  enabled: true
+  name: togglebossbar
+  aliases: 'tbb'
+  permission: bungeeutilisals.commands.togglebossbar

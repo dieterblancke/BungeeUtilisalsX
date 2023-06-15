@@ -6,10 +6,10 @@ import be.dieterblancke.bungeeutilisalsx.common.api.job.jobs.PartyWarpMembersJob
 import be.dieterblancke.bungeeutilisalsx.common.api.party.Party;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyMember;
 import be.dieterblancke.bungeeutilisalsx.common.api.party.PartyUtils;
+import be.dieterblancke.bungeeutilisalsx.common.api.server.IProxyServer;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.PartyConfig.PartyRolePermission;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.other.IProxyServer;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +22,7 @@ public class PartyWarpSubCommandCall implements CommandCall
     {
         final Optional<Party> optionalParty = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() );
 
-        if ( !optionalParty.isPresent() )
+        if ( optionalParty.isEmpty() )
         {
             user.sendLangMessage( "party.not-in-party" );
             return;
