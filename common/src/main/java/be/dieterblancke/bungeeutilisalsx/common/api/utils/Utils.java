@@ -199,21 +199,32 @@ public class Utils
     /**
      * Attempts to parse a long time from a given string.
      *
-     * @param time The string you want to importer to time.
+     * @param time The string you want to parse relative to the current time.
      * @return The time, in MILLIS, you requested.
      */
-    public static long parseDateDiffInPast( final String time )
+    public static long parseDateDiff( String time )
     {
-        return System.currentTimeMillis() - ( parseDateDiff( time ) - System.currentTimeMillis() );
+        return parseDateDiff( time, false );
     }
 
     /**
      * Attempts to parse a long time from a given string.
      *
-     * @param time The string you want to importer to time.
+     * @param time The string you want to parse relative to the current time.
      * @return The time, in MILLIS, you requested.
      */
-    public static long parseDateDiff( final String time )
+    public static long parseDateDiffInPast( String time )
+    {
+        return parseDateDiff( time, true );
+    }
+
+    /**
+     * Attempts to parse a long time from a given string.
+     *
+     * @param time The string you want to parse relative to the current time.
+     * @return The time, in MILLIS, you requested.
+     */
+    public static long parseDateDiff( String time, boolean history )
     {
         try
         {
@@ -284,31 +295,31 @@ public class Utils
             final Calendar c = new GregorianCalendar();
             if ( years > 0 )
             {
-                c.add( Calendar.YEAR, years );
+                c.add( Calendar.YEAR, history ? -years : years );
             }
             if ( months > 0 )
             {
-                c.add( Calendar.MONTH, months );
+                c.add( Calendar.MONTH, history ? -months : months );
             }
             if ( weeks > 0 )
             {
-                c.add( Calendar.WEEK_OF_YEAR, weeks );
+                c.add( Calendar.WEEK_OF_YEAR, history ? -weeks : weeks );
             }
             if ( days > 0 )
             {
-                c.add( Calendar.DAY_OF_MONTH, days );
+                c.add( Calendar.DAY_OF_MONTH, history ? -days : days );
             }
             if ( hours > 0 )
             {
-                c.add( Calendar.HOUR_OF_DAY, hours );
+                c.add( Calendar.HOUR_OF_DAY, history ? -hours : hours );
             }
             if ( minutes > 0 )
             {
-                c.add( Calendar.MINUTE, minutes );
+                c.add( Calendar.MINUTE, history ? -minutes : minutes );
             }
             if ( seconds > 0 )
             {
-                c.add( Calendar.SECOND, seconds );
+                c.add( Calendar.SECOND, history ? -seconds : seconds );
             }
             return c.getTimeInMillis();
         }

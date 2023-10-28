@@ -3,6 +3,8 @@ package be.dieterblancke.bungeeutilisalsx.common.api.utils;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Calendar;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UtilsTest
@@ -11,13 +13,15 @@ class UtilsTest
     @Test
     void testParseDateDiff()
     {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add( Calendar.DAY_OF_MONTH, 5 );
+        calendar.add( Calendar.HOUR, 3 );
+        calendar.add( Calendar.MINUTE, 18 );
+        calendar.add( Calendar.SECOND, 5 );
+
         assertEquals(
                 Utils.parseDateDiff( "5d3h18m5s" ),
-                System.currentTimeMillis()
-                        + TimeUnit.DAYS.toMillis( 5 )
-                        + TimeUnit.HOURS.toMillis( 3 )
-                        + TimeUnit.MINUTES.toMillis( 18 )
-                        + TimeUnit.SECONDS.toMillis( 5 ),
+                calendar.getTimeInMillis(),
                 50
         );
     }
@@ -25,13 +29,15 @@ class UtilsTest
     @Test
     void testParseDateDiffInPast()
     {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add( Calendar.DAY_OF_MONTH, -5 );
+        calendar.add( Calendar.HOUR, -3 );
+        calendar.add( Calendar.MINUTE, -18 );
+        calendar.add( Calendar.SECOND, -5 );
+
         assertEquals(
                 Utils.parseDateDiffInPast( "5d3h18m5s" ),
-                System.currentTimeMillis()
-                        - TimeUnit.DAYS.toMillis( 5 )
-                        - TimeUnit.HOURS.toMillis( 3 )
-                        - TimeUnit.MINUTES.toMillis( 18 )
-                        - TimeUnit.SECONDS.toMillis( 5 ),
+                calendar.getTimeInMillis(),
                 50
         );
     }
