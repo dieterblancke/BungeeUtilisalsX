@@ -147,6 +147,10 @@
     {
       "versionName": "1.20",
       "protocolVersion": 763
+    },
+    {
+      "versionName": "1.20.2",
+      "protocolVersion": 764
     }
   ]
 }
