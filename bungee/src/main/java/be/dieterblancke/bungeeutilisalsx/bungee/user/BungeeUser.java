@@ -20,8 +20,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.Getter;
@@ -286,11 +286,11 @@ public class BungeeUser implements User
     {
         try
         {
-            return ConfigFiles.VERSIONS_CONFIG.getVersion( player.getPendingConnection().getVersion() );
+            return Version.getVersion( player.getPendingConnection().getVersion() );
         }
         catch ( Exception e )
         {
-            return ConfigFiles.VERSIONS_CONFIG.getUnknownVersion();
+            return Version.UNKNOWN_NEW_VERSION;
         }
     }
 

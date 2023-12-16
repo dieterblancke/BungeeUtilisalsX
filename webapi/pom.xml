@@ -5,7 +5,7 @@
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
         <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>2.4.1</version>
+        <version>2.4.2</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
-            <version>2.4.1</version>
+            <version>2.4.2</version>
         </dependency>
         <dependency>
             <groupId>com.graphql-java-kickstart</groupId>

@@ -18,14 +18,13 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.TimeUnit;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import be.dieterblancke.bungeeutilisalsx.velocity.Bootstrap;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import be.dieterblancke.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.velocitypowered.api.network.ProtocolVersion;
 import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
@@ -284,11 +283,11 @@ public class VelocityUser implements User
     {
         try
         {
-            return ConfigFiles.VERSIONS_CONFIG.getVersion( player.getProtocolVersion().getProtocol() );
+            return Version.getVersion( player.getProtocolVersion().getProtocol() );
         }
         catch ( Exception e )
         {
-            return ConfigFiles.VERSIONS_CONFIG.getUnknownVersion();
+            return Version.UNKNOWN_NEW_VERSION;
         }
     }
 

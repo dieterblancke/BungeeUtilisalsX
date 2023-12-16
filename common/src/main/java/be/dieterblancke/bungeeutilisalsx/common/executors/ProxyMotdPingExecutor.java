@@ -8,6 +8,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.event.events.other.ProxyMotd
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MathUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import be.dieterblancke.bungeeutilisalsx.common.motd.ConditionHandler;
 import be.dieterblancke.bungeeutilisalsx.common.motd.MotdConnection;
@@ -67,7 +68,8 @@ public class ProxyMotdPingExecutor implements EventExecutor
         {
             message = message.replace( "{user}", connection.getName() == null ? "Unknown" : connection.getName() );
         }
-        message = message.replace( "{version}", ConfigFiles.VERSIONS_CONFIG.getVersion( connection.getVersion() ).versionName() );
+        Version version = Version.getVersion( connection.getVersion() );
+        message = message.replace( "{version}", version == Version.UNKNOWN_NEW_VERSION ? "Unknown" : version.toString() );
 
         if ( connection.getVirtualHost() == null || connection.getVirtualHost().getHostName() == null )
         {

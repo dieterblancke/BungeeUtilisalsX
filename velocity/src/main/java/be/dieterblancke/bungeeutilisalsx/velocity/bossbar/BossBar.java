@@ -14,6 +14,7 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSetting;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettingType;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.interfaces.User;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
@@ -152,7 +153,7 @@ public class BossBar implements IBossBar
     {
         if ( !users.contains( user ) )
         {
-            if ( user.getVersion() == null || user.getVersion().protocolVersion() < 107 ) // 107 = 1.9 protocol version
+            if ( user.getVersion() == null || user.getVersion().getVersionId() < Version.MINECRAFT_1_9.getVersionId() )
             {
                 return;
             }

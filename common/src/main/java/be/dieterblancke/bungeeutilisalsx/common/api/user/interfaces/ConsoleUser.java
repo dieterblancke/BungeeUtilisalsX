@@ -11,8 +11,8 @@ import be.dieterblancke.bungeeutilisalsx.common.api.user.UserSettings;
 import be.dieterblancke.bungeeutilisalsx.common.api.user.UserStorage;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.MessageUtils;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.Utils;
+import be.dieterblancke.bungeeutilisalsx.common.api.utils.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import be.dieterblancke.bungeeutilisalsx.common.api.utils.config.configs.VersionsConfig.Version;
 import be.dieterblancke.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import com.google.common.collect.Lists;
 import lombok.Getter;
@@ -198,7 +198,7 @@ public abstract class ConsoleUser implements User
     @Override
     public Version getVersion()
     {
-        return ConfigFiles.VERSIONS_CONFIG.getLatestVersion();
+        return Version.latest();
     }
 
     @Override
