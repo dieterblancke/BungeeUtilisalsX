@@ -8,9 +8,11 @@ services:
       REPLACE_ENV_VARIABLES: "true"
     ports:
       - "25565:25577"
+    networks:
+      - bungeeutilisalsx
     volumes:
-      - ./docker-compose/bungeecord/settings/config.yml:/config.yml
-      - ./docker-compose/bungeecord/settings/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
+      - ./docker-compose/bungeecord/setup/configs/config.yml:/config/config.yml
+      - ./docker-compose/bungeecord/setup/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
       - ./docker-compose/bungeecord/files:/server
   velocity:
     image: itzg/bungeecord
@@ -20,18 +22,27 @@ services:
       ENABLE_RCON: "true"
     ports:
       - "25566:25577"
+    networks:
+      - bungeeutilisalsx
     volumes:
-      - ./docker-compose/velocity/settings/velocity.toml:/velocity.toml
-      - ./docker-compose/velocity/settings/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
+      - ./docker-compose/velocity/setup/configs/velocity.toml:/config/velocity.toml
+      - ./docker-compose/velocity/setup/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
       - ./docker-compose/velocity/files:/server
   paper-1:
     image: itzg/minecraft-server
     tty: true
     stdin_open: true
-    ports:
-      - "25570:25565"
+    networks:
+      - bungeeutilisalsx
     environment:
       TYPE: PAPER
       EULA: "TRUE"
+      ONLINE_MODE: "FALSE"
+      ENFORCE_SECURE_PROFILE: "FALSE"
+      TZ: "Europe/Brussels"
     volumes:
       - ./docker-compose/paper-1/files:/data
+
+networks:
+  bungeeutilisalsx:
+    name: bungeeutilisalsx
