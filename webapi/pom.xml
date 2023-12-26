@@ -128,8 +128,6 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
-                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
-                    <finalName>${project.artifactId}-${project.version}</finalName>
                     <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
                     <filters>
