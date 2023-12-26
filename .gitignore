@@ -3,3 +3,5 @@ builds/
 target/
 *.iml
 */dependency-reduced-pom.xml
+docker-compose/**/files/*
+docker-compose/**/settings/BungeeUtilisalsX.jar

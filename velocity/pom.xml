@@ -66,6 +66,8 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>3.3.0</version>
                 <configuration>
+                    <outputDirectory>${project.build.outputDirectory}</outputDirectory>
+                    <finalName>${project.artifactId}-${project.version}</finalName>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
@@ -168,6 +170,25 @@
                         <goals>
                             <goal>shade</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <!-- Copy the jar to the docker-compose folder for testing -->
+            <plugin>
+                <groupId>com.coderplus.maven.plugins</groupId>
+                <artifactId>copy-rename-maven-plugin</artifactId>
+                <version>1.0</version>
+                <executions>
+                    <execution>
+                        <id>copy-file</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <sourceFile>target/BungeeUtilisalsX v${project.version}-velocity.jar</sourceFile>
+                            <destinationFile>../docker-compose/velocity/settings/BungeeUtilisalsX.jar</destinationFile>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
