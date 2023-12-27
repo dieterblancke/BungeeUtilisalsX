@@ -1,0 +1,45 @@
+enforce_secure_profile: false
+listeners:
+  - query_port: 25577
+    motd: '&1Another Bungee server'
+    tab_list: GLOBAL_PING
+    query_enabled: false
+    proxy_protocol: false
+    forced_hosts:
+      pvp.md-5.net: pvp
+    ping_passthrough: false
+    priorities:
+      - lobby
+    bind_local_address: true
+    host: 0.0.0.0:25577
+    max_players: 1
+    tab_size: 60
+    force_default_server: false
+remote_ping_cache: -1
+network_compression_threshold: 256
+permissions:
+  admin:
+    - '*'
+log_pings: true
+connection_throttle_limit: 3
+server_connect_timeout: 5000
+timeout: 30000
+player_limit: -1
+prevent_proxy_connections: false
+ip_forward: true
+groups:
+  TheS0ulRipp3r:
+    - admin
+remote_ping_timeout: 5000
+connection_throttle: 4000
+log_commands: false
+stats: 7c02925c-7a52-4c80-b0d4-d3c612539d23
+online_mode: true
+forge_support: false
+disabled_commands:
+  - disabledcommandhere
+servers:
+  lobby:
+    motd: '&1Just another BungeeCord - Forced Host'
+    address: paper-1:25565
+    restricted: false
