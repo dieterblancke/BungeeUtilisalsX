@@ -5,7 +5,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
+    <groupId>dev.endoy.bungeeutilisalsx</groupId>
     <artifactId>BungeeUtilisalsX</artifactId>
     <packaging>pom</packaging>
     <version>2.4.2</version>
@@ -18,12 +18,6 @@
         <module>spigot</module>
     </modules>
 
-    <developers>
-        <developer>
-            <id>didjee2</id>
-        </developer>
-    </developers>
-
     <pluginRepositories>
         <pluginRepository>
             <id>maven-snapshots</id>
@@ -33,15 +27,15 @@
 
     <distributionManagement>
         <repository>
-            <id>dieterblancke</id>
-            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
+            <id>endoy</id>
+            <url>https://repo.endoy.dev/artifactory/endoy-public/</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
-            <id>dieterblancke</id>
-            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
+            <id>endoy</id>
+            <url>https://repo.endoy.dev/artifactory/endoy-public/</url>
         </repository>
     </repositories>
 
