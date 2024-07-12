@@ -89,6 +89,12 @@ public class SpigotOperationsApi implements ServerOperationsApi
     }
 
     @Override
+    public Optional<Object> getPluginInstance( String pluginName )
+    {
+        return Optional.ofNullable( Bukkit.getPluginManager().getPlugin( pluginName ) );
+    }
+
+    @Override
     public long getMaxPlayers()
     {
         return Bukkit.getMaxPlayers();

@@ -23,6 +23,8 @@ public interface ServerOperationsApi
 
     Optional<PluginInfo> getPlugin( String pluginName );
 
+    Optional<Object> getPluginInstance( String pluginName );
+
     long getMaxPlayers();
 
     Object getMessageComponent( final Component component );

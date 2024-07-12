@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   bungeecord:
-    image: itzg/bungeecord
+    image: itzg/bungeecord:java21
     environment:
       BUNGEE_JAR_REVISION: "1"
       REPLACE_ENV_VARIABLES: "true"
@@ -15,7 +15,7 @@ services:
       - ./docker-compose/bungeecord/setup/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
       - ./docker-compose/bungeecord/files:/server
   velocity:
-    image: itzg/bungeecord
+    image: itzg/bungeecord:java21
     environment:
       TYPE: VELOCITY
       DEBUG: "false"
@@ -29,7 +29,7 @@ services:
       - ./docker-compose/velocity/setup/BungeeUtilisalsX.jar:/plugins/BungeeUtilisalsX.jar
       - ./docker-compose/velocity/files:/server
   paper-1:
-    image: itzg/minecraft-server
+    image: itzg/minecraft-server:java21
     tty: true
     stdin_open: true
     networks:

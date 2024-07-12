@@ -86,6 +86,12 @@ public class BungeeOperationsApi implements ServerOperationsApi
     }
 
     @Override
+    public Optional<Object> getPluginInstance( String pluginName )
+    {
+        return Optional.ofNullable( ProxyServer.getInstance().getPluginManager().getPlugin( pluginName ) );
+    }
+
+    @Override
     public long getMaxPlayers()
     {
         return ProxyServer.getInstance().getConfig().getListeners().iterator().next().getMaxPlayers();

@@ -35,6 +35,7 @@ commands:
   silent-commandblock-console: false
 world-settings:
   default:
+    unload-frozen-chunks: false
     below-zero-generation-in-existing-chunks: true
     merge-radius:
       item: 2.5

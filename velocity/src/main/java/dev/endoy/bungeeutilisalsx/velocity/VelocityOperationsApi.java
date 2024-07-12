@@ -94,6 +94,13 @@ public class VelocityOperationsApi implements ServerOperationsApi
     }
 
     @Override
+    public Optional<Object> getPluginInstance( String pluginName )
+    {
+        return Bootstrap.getInstance().getProxyServer().getPluginManager().getPlugin( pluginName )
+                .flatMap( PluginContainer::getInstance );
+    }
+
+    @Override
     public long getMaxPlayers()
     {
         return Bootstrap.getInstance().getProxyServer().getConfiguration().getShowMaxPlayers();

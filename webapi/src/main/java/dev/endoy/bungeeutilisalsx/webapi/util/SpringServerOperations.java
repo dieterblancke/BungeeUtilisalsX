@@ -48,6 +48,12 @@ public class SpringServerOperations implements ServerOperationsApi
     }
 
     @Override
+    public Optional<Object> getPluginInstance( String pluginName )
+    {
+        return Optional.empty();
+    }
+
+    @Override
     public long getMaxPlayers()
     {
         return 0;
