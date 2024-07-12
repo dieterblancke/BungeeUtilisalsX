@@ -1,0 +1,30 @@
+package dev.endoy.bungeeutilisalsx.common.api.job.jobs;
+
+import dev.endoy.bungeeutilisalsx.common.api.job.HasUserJob;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.util.UUID;
+
+@Getter
+@Setter
+public class UserVanishUpdateJob extends HasUserJob
+{
+
+    private final boolean vanished;
+
+    public UserVanishUpdateJob( final UUID uuid,
+                                final String userName,
+                                final boolean vanished )
+    {
+        super( uuid, userName );
+
+        this.vanished = vanished;
+    }
+
+    @Override
+    public boolean isAsync()
+    {
+        return true;
+    }
+}

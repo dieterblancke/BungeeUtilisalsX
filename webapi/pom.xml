@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
-        <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>2.4.2</version>
+        <groupId>dev.endoy.bungeeutilisalsx</groupId>
+        <version>2.4.3</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,9 +13,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
+            <groupId>dev.endoy.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
-            <version>2.4.2</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>com.graphql-java-kickstart</groupId>
@@ -109,7 +109,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
+                            <mainClass>dev.endoy.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
@@ -120,13 +120,13 @@
                 <version>3.2.1</version>
                 <configuration>
                     <executable>true</executable>
-                    <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
+                    <mainClass>dev.endoy.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <keepDependenciesWithProvidedScope>true</keepDependenciesWithProvidedScope>
                     <createDependencyReducedPom>true</createDependencyReducedPom>
@@ -172,7 +172,7 @@
                                         implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>be.dieterblancke.bungeeutilisalsx.webapi.Bootstrap</mainClass>
+                                    <mainClass>dev.endoy.bungeeutilisalsx.webapi.Bootstrap</mainClass>
                                 </transformer>
                             </transformers>
                         </configuration>
