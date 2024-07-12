@@ -43,7 +43,10 @@ public enum Version
     MINECRAFT_1_19_3( 761 ),
     MINECRAFT_1_19_4( 762 ),
     MINECRAFT_1_20( 763 ),
-    MINECRAFT_1_20_2( 764 );
+    MINECRAFT_1_20_2( 764 ),
+    MINECRAFT_1_20_3( 765 ),
+    MINECRAFT_1_20_5( 766 ),
+    MINECRAFT_1_21( 767 );
 
     @Getter
     private final int versionId;
