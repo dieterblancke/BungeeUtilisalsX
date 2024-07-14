@@ -11,6 +11,7 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancer
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancerConfig.ServerBalancerGroupPinger;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancerConfig.ServerBalancingMethod;
 import lombok.Data;
+import lombok.Getter;
 import lombok.Value;
 
 import java.util.*;
@@ -23,6 +24,7 @@ public class SimpleServerBalancer implements ServerBalancer
 
     private final Map<ServerBalancerGroup, ScheduledFuture<?>> pingerTasks = new ConcurrentHashMap<>();
     private final Map<ServerBalancerGroup, ServerBalancerGroupStatus> groupStatuses = new ConcurrentHashMap<>();
+    @Getter
     private boolean initialized = false;
 
     @Override
@@ -57,11 +59,6 @@ public class SimpleServerBalancer implements ServerBalancer
         setup();
     }
 
-    public boolean isInitialized()
-    {
-        return initialized;
-    }
-
     @Override
     public Optional<IProxyServer> getOptimalServer( ServerBalancerGroup balancerGroup )
     {
@@ -88,7 +85,7 @@ public class SimpleServerBalancer implements ServerBalancer
         for ( ServerBalancerGroup balancerGroup : ConfigFiles.SERVER_BALANCER_CONFIG.getBalancerGroups() )
         {
             ServerBalancerGroupPinger pinger = balancerGroup.getPinger();
-            ScheduledFuture<?> pingerTask = BuX.getInstance().getScheduler().runTaskRepeating( pinger.getDelay(), pinger.getDelay(), TimeUnit.SECONDS, () ->
+            ScheduledFuture<?> pingerTask = BuX.getInstance().getScheduler().runTaskRepeating( 0, pinger.getDelay(), TimeUnit.SECONDS, () ->
             {
                 final ServerBalancerGroupStatus groupStatus;
                 if ( !groupStatuses.containsKey( balancerGroup ) )
