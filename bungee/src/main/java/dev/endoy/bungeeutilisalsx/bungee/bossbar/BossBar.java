@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.bungee.bossbar;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.bossbar.BarColor;
 import dev.endoy.bungeeutilisalsx.common.api.bossbar.BarStyle;
@@ -15,11 +16,11 @@ import dev.endoy.bungeeutilisalsx.common.api.user.UserSettingType;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Version;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
+import net.kyori.adventure.text.serializer.bungeecord.BungeeComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.md_5.bungee.api.chat.TextComponent;
 
 import java.util.Collections;
 import java.util.List;
@@ -77,7 +78,7 @@ public class BossBar implements IBossBar
         {
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
+            packet.setTitle( new TextComponent( BungeeComponentSerializer.get().serialize( this.message ) ) );
             packet.setHealth( progress );
             packet.setColor( color.getId() );
             packet.setDivision( style.getId() );
@@ -162,7 +163,7 @@ public class BossBar implements IBossBar
             final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.ADD.getId() );
-            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
+            packet.setTitle( new TextComponent( BungeeComponentSerializer.get().serialize( this.message ) ) );
             packet.setHealth( progress );
             packet.setColor( color.getId() );
             packet.setDivision( style.getId() );
@@ -194,7 +195,7 @@ public class BossBar implements IBossBar
             final net.md_5.bungee.protocol.packet.BossBar packet = new net.md_5.bungee.protocol.packet.BossBar();
             packet.setUuid( uuid );
             packet.setAction( BossBarAction.UPDATE_TITLE.getId() );
-            packet.setTitle( GsonComponentSerializer.gson().serialize( message ) );
+            packet.setTitle( new TextComponent( BungeeComponentSerializer.get().serialize( this.message ) ) );
 
             users.forEach( user -> sendBossBarPacket( user, packet ) );
         }
