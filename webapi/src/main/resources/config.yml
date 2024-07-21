@@ -45,5 +45,5 @@ storage:
     idle-timeout: 30
     # Maximum lifetime of a connection. Time in seconds.
     max-lifetime: 300
-    # How long should BungeeUtilisals wait before timing out a connection?
+    # How long should BungeeUtilisalsX wait before timing out a connection?
     connection-timeout: 8

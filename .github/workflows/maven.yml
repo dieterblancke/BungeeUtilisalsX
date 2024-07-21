@@ -58,5 +58,5 @@ jobs:
 #      - name: Download math result for job 1
 #        uses: actions/download-artifact@v2
 #        with:
-#          name: BungeeUtilisals
+#          name: BungeeUtilisalsX
 #      - # TODO: send to dieterblancke.xyz

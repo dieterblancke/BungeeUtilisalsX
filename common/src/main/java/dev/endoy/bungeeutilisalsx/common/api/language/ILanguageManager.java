@@ -23,7 +23,7 @@ public interface ILanguageManager
 
     /**
      * Allows to make a custom User language integration.
-     * This basically means that if you have a language system already, you can fetch the language from there and tell it to BungeeUtilisals.
+     * This basically means that if you have a language system already, you can fetch the language from there and tell it to BungeeUtilisalsX.
      *
      * @param integration LanguageIntegration instance
      */

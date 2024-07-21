@@ -3,4 +3,4 @@ webhooks:
     enabled: false
     url: 'webhook url'
     username: 'BungeeUtilisalsX'
-    avatar-url: 'https://dieterblancke.xyz/media/avatar.png'
+    avatar-url: 'https://endoy.dev/assets/media/logo-dark.webp'

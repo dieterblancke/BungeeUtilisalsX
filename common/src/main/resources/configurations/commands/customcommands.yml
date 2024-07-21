@@ -37,22 +37,20 @@ commands:
     permission: ''
     messages:
       - text: '<yellow>Your name is <aqua>{user}<yellow>.'
-  - name: 'dbsoftwares'
-    aliases:
-      - 'didjee2'
+  - name: 'endoy'
     permission: ''
     messages:
       text:
         - text: '<yellow>This server is using '
-        - text: '<aqua>BungeeUtilisals '
+        - text: '<aqua>BungeeUtilisalsX '
           hover:
-            - '<aqua>BungeeUtilisals <yellow>is a BungeeCord plugin maintained by <aqua>DBSoftwares<yellow>.'
+            - '<aqua>BungeeUtilisalsX <yellow>is a BungeeCord plugin maintained by <aqua>Endoy<yellow>.'
         - text: '<yellow>made by '
-        - text: '<green>DBSoftwares'
+        - text: '<green>Endoy'
           hover:
-            - '<yellow>https://www.dieterblancke.xyz'
+            - '<yellow>https://www.endoy.dev'
           click:
             # OPEN_URL, RUN_COMMAND, SUGGEST_COMMAND
             # RUN_COMMAND will only work for BungeeCord commands.
             type: 'OPEN_URL'
-            action: 'https://www.dieterblancke.xyz'
+            action: 'https://www.endoy.dev'

@@ -31,7 +31,7 @@ announcements:
     # Should the message be retrieved from the language files? If true, you must use a valid path!
     language: false
     # Title text, if language is set to true, the path will be searched in the language file.
-    title: '<red><bold>BungeeUtilisals'
+    title: '<red><bold>BungeeUtilisalsX'
     # SubTitle text, if language is set to true, the path will be searched in the language file.
     subtitle: '<light_purple>Thank you for using our plugin!'
   # You can enter a ServerGroup name or a ServerName in here.

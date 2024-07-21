@@ -204,12 +204,12 @@ report:
 
     author:
       name: 'Report for {user} by {reporter}.'
-      url: 'https://dieterblancke.xyz/projects/BungeeUtilisalsX'
-      icon: 'https://dieterblancke.xyz/media/avatar.png'
+      url: 'https://endoy.dev/projects/BungeeUtilisalsX/info'
+      icon: 'https://endoy.dev/assets/media/logo-dark.webp'
 
     footer:
       text: 'BungeeUtilisalsX Report System'
-      icon: 'https://dieterblancke.xyz/media/avatar.png'
+      icon: 'https://endoy.dev/assets/media/logo-dark.webp'
 
     fields:
       - name: 'Reporter'

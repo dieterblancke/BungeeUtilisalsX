@@ -24,7 +24,7 @@ public class MojangUtils
             final URL url = new URL( getNameToUuidUrl() + name );
             final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestProperty( "User-Agent", "BungeeUtilisals/" + BuX.getInstance().getVersion() );
+            conn.setRequestProperty( "User-Agent", "BungeeUtilisalsX/" + BuX.getInstance().getVersion() );
 
             try ( final InputStream input = conn.getInputStream();
                   final InputStreamReader isr = new InputStreamReader( input ) )
@@ -51,7 +51,7 @@ public class MojangUtils
             final URL url = new URL( getUuidToNameUrl() + uuid.toString().replace( "-", "" ) );
             final HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 
-            conn.setRequestProperty( "User-Agent", "BungeeUtilisals/" + BuX.getInstance().getVersion() );
+            conn.setRequestProperty( "User-Agent", "BungeeUtilisalsX/" + BuX.getInstance().getVersion() );
 
             try ( final InputStream input = conn.getInputStream();
                   final InputStreamReader isr = new InputStreamReader( input ) )

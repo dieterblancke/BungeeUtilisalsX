@@ -33,7 +33,7 @@ public interface IBuXApi
     User getConsoleUser();
 
     /**
-     * @return The language chat of BungeeUtilisals.
+     * @return The language chat of BungeeUtilisalsX.
      */
     ILanguageManager getLanguageManager();
 
@@ -86,19 +86,19 @@ public interface IBuXApi
     Connection getConnection() throws SQLException;
 
     /**
-     * @return The BungeeUtilisals punishment API.
+     * @return The BungeeUtilisalsX punishment API.
      */
     IPunishmentHelper getPunishmentExecutor();
 
     /**
-     * Broadcasts a message with the BungeeUtilisals prefix.
+     * Broadcasts a message with the BungeeUtilisalsX prefix.
      *
      * @param message The message to be broadcasted.
      */
     void broadcast( String message );
 
     /**
-     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisalsX prefix to the people with the given permission.
      *
      * @param message    The message to be broadcasted.
      * @param permission The permission the user must have to receive the message.
@@ -123,7 +123,7 @@ public interface IBuXApi
     void announce( String prefix, String message, String permission );
 
     /**
-     * Broadcasts a message with the BungeeUtilisals prefix.
+     * Broadcasts a message with the BungeeUtilisalsX prefix.
      *
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param placeholders PlaceHolders + their replacements
@@ -131,7 +131,7 @@ public interface IBuXApi
     void langBroadcast( String message, HasMessagePlaceholders placeholders );
 
     /**
-     * Broadcasts a message with the BungeeUtilisals prefix to the people with the given permission.
+     * Broadcasts a message with the BungeeUtilisalsX prefix to the people with the given permission.
      *
      * @param message      The location (in the languages file) of the message to be broadcasted.
      * @param permission   The permission the user must have to receive the message.

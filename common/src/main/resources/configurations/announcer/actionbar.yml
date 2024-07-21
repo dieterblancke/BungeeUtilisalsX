@@ -20,17 +20,17 @@ announcements:
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Global
-    # If set to true, BungeeUtilisals will search the message in the language file of the user.
+    # If set to true, BungeeUtilisalsX will search the message in the language file of the user.
     use-language: false
     # How long should the actionbar be shown (in seconds)
     time: 1
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisals.announcements.receive'
-    message: '<yellow>This server is using BungeeUtilisals'
+    message: '<yellow>This server is using BungeeUtilisalsX'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames
-    # If set to true, BungeeUtilisals will search the message in the language file of the user.
+    # If set to true, BungeeUtilisalsX will search the message in the language file of the user.
     use-language: true
     # How long should the actionbar be shown (in seconds)
     time: 5
