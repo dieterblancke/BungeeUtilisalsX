@@ -20,15 +20,15 @@ public class GuiManager
     {
         // Automatically close inactive inventories and remove offline players from guis (this method mainly serves as a "fallback removal" of guis)
         BuX.getInstance().getScheduler().runTaskRepeating( 1, 1, TimeUnit.MINUTES, () ->
-                activeGuis.removeIf( gui ->
+            activeGuis.removeIf( gui ->
+            {
+                if ( gui.getLastActivity() + TimeUnit.MINUTES.toMillis( 5 ) < System.currentTimeMillis() )
                 {
-                    if ( gui.getLastActivity() + TimeUnit.MINUTES.toMillis( 5 ) < System.currentTimeMillis() )
-                    {
-                        gui.close( false );
-                        return true;
-                    }
-                    return false;
-                } )
+                    gui.close( false );
+                    return true;
+                }
+                return false;
+            } )
         );
 
         for ( DefaultGui gui : DefaultGui.values() )

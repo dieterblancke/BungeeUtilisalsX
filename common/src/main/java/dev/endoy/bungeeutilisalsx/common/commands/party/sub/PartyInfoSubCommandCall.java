@@ -28,14 +28,14 @@ public class PartyInfoSubCommandCall implements CommandCall
         final Party party = optionalParty.get();
 
         user.sendLangMessage(
-                "party.info",
-                MessagePlaceholders.create()
-                        .append( "party-owner", party.getOwner().getNickName() )
-                        .append( "party-created-at", Utils.formatDate( party.getCreatedAt(), user.getLanguageConfig().getConfig() ) )
-                        .append( "party-member-count", party.getPartyMembers().size() )
-                        .append( "party-member-list", party.getPartyMembers().stream().map( PartyMember::getNickName ).collect( Collectors.joining( ", " ) ) )
-                        .append( "party-invitation-count", party.getSentInvites().size() )
-                        .append( "party-joinrequest-count", party.getJoinRequests().size() )
+            "party.info",
+            MessagePlaceholders.create()
+                .append( "party-owner", party.getOwner().getNickName() )
+                .append( "party-created-at", Utils.formatDate( party.getCreatedAt(), user.getLanguageConfig().getConfig() ) )
+                .append( "party-member-count", party.getPartyMembers().size() )
+                .append( "party-member-list", party.getPartyMembers().stream().map( PartyMember::getNickName ).collect( Collectors.joining( ", " ) ) )
+                .append( "party-invitation-count", party.getSentInvites().size() )
+                .append( "party-joinrequest-count", party.getJoinRequests().size() )
         );
     }
 

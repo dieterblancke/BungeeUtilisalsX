@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.job.management;
 
+import com.google.common.collect.Maps;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.job.Job;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
-import com.google.common.collect.Maps;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import lombok.SneakyThrows;
 
 import java.lang.reflect.Method;
@@ -20,9 +20,9 @@ public abstract class JobManager
 {
 
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter( Job.class, new JobInterfaceAdapter() )
-            .registerTypeAdapter( MessagePlaceholders.class, new MessagePlaceholdersInterfaceAdapter() )
-            .create();
+        .registerTypeHierarchyAdapter( Job.class, new JobInterfaceAdapter() )
+        .registerTypeAdapter( MessagePlaceholders.class, new MessagePlaceholdersInterfaceAdapter() )
+        .create();
     private static final List<JobHandlerInfo> JOB_HANDLERS = new ArrayList<>();
     private static final Map<Class<?>, Object> JOB_HANDLER_INSTANCES = Maps.newHashMap();
 
@@ -60,21 +60,21 @@ public abstract class JobManager
     protected void handle( final Job job )
     {
         JOB_HANDLERS.stream()
-                .filter( handler -> handler.getJobClass().equals( job.getClass() ) )
-                .forEach( jobHandlerInfo ->
-                {
-                    final Class<?> clazz = jobHandlerInfo.getHandler().getDeclaringClass();
-                    final Object instance = getJobHandlerInstance( clazz );
+            .filter( handler -> handler.getJobClass().equals( job.getClass() ) )
+            .forEach( jobHandlerInfo ->
+            {
+                final Class<?> clazz = jobHandlerInfo.getHandler().getDeclaringClass();
+                final Object instance = getJobHandlerInstance( clazz );
 
-                    if ( job.isAsync() )
-                    {
-                        BuX.getInstance().getScheduler().runAsync( () -> invokeJobHandler( jobHandlerInfo, instance, job ) );
-                    }
-                    else
-                    {
-                        this.invokeJobHandler( jobHandlerInfo, instance, job );
-                    }
-                } );
+                if ( job.isAsync() )
+                {
+                    BuX.getInstance().getScheduler().runAsync( () -> invokeJobHandler( jobHandlerInfo, instance, job ) );
+                }
+                else
+                {
+                    this.invokeJobHandler( jobHandlerInfo, instance, job );
+                }
+            } );
     }
 
     @SneakyThrows

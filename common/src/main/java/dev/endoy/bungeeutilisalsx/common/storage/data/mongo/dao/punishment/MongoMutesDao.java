@@ -32,9 +32,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -42,11 +42,11 @@ public class MongoMutesDao implements MutesDao
             }
 
             return db()
-                    .getCollection( PunishmentType.MUTE.getTable() )
-                    .find( Filters.and( filters ) )
-                    .limit( 1 )
-                    .iterator()
-                    .hasNext();
+                .getCollection( PunishmentType.MUTE.getTable() )
+                .find( Filters.and( filters ) )
+                .limit( 1 )
+                .iterator()
+                .hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -56,9 +56,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -66,11 +66,11 @@ public class MongoMutesDao implements MutesDao
             }
 
             return db()
-                    .getCollection( PunishmentType.MUTE.getTable() )
-                    .find( Filters.and( filters ) )
-                    .limit( 1 )
-                    .iterator()
-                    .hasNext();
+                .getCollection( PunishmentType.MUTE.getTable() )
+                .find( Filters.and( filters ) )
+                .limit( 1 )
+                .iterator()
+                .hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -104,18 +104,18 @@ public class MongoMutesDao implements MutesDao
 
             db().getCollection( PunishmentType.MUTE.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.MUTE,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.MUTE,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -150,18 +150,18 @@ public class MongoMutesDao implements MutesDao
 
             db().getCollection( PunishmentType.IPMUTE.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPMUTE,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPMUTE,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -197,18 +197,18 @@ public class MongoMutesDao implements MutesDao
 
             db().getCollection( PunishmentType.TEMPMUTE.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.TEMPMUTE,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.TEMPMUTE,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -244,18 +244,18 @@ public class MongoMutesDao implements MutesDao
 
             db().getCollection( PunishmentType.IPTEMPMUTE.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPTEMPMUTE,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPTEMPMUTE,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -266,9 +266,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -293,9 +293,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -320,9 +320,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.runAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -332,13 +332,13 @@ public class MongoMutesDao implements MutesDao
 
             // updateMany, this if for some reason multiple mutes would be active at the same time.
             coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -349,9 +349,9 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.runAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( PunishmentDao.useServerPunishments() )
             {
@@ -361,13 +361,13 @@ public class MongoMutesDao implements MutesDao
 
             // updateMany, this if for some reason multiple mutes would be active at the same time.
             coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -380,8 +380,8 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             ) );
 
             for ( Document document : documents )
@@ -400,9 +400,9 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.regex( "type", "^(?!IP.*$).*" ),
-                    Filters.eq( "server", serverName )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" ),
+                Filters.eq( "server", serverName )
             ) );
 
             for ( Document document : documents )
@@ -438,8 +438,8 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" )
             ) );
 
             for ( Document document : documents )
@@ -458,9 +458,9 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.regex( "type", "IP*" ),
-                    Filters.eq( "server", serverName )
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" ),
+                Filters.eq( "server", serverName )
             ) );
 
             for ( Document document : documents )
@@ -530,9 +530,9 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.MUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             ) );
 
             for ( Document document : documents )
@@ -551,9 +551,9 @@ public class MongoMutesDao implements MutesDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPMUTE.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" ) )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" ) )
             );
 
             for ( Document document : documents )
@@ -582,19 +582,19 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "executed_by", user ),
-                    Filters.gte( "date", date )
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
             );
             final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 
             return (int) coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             ).getModifiedCount();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -605,8 +605,8 @@ public class MongoMutesDao implements MutesDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "executed_by", user ),
-                    Filters.gte( "date", date )
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
             );
             final MongoCollection<Document> coll = db().getCollection( PunishmentType.MUTE.getTable() );
 

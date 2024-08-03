@@ -19,7 +19,7 @@ public class UserWarnJobHandler
             if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( job.getInfo().getReason() ) )
             {
                 warn = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                        user.getLanguageConfig().getConfig(), PunishmentType.WARN, job.getInfo().getReason()
+                    user.getLanguageConfig().getConfig(), PunishmentType.WARN, job.getInfo().getReason()
                 );
             }
             if ( warn == null )

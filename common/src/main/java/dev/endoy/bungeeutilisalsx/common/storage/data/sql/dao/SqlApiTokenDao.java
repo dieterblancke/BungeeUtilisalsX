@@ -20,15 +20,15 @@ public class SqlApiTokenDao implements ApiTokenDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "INSERT INTO bu_api_token(api_token, expire_date, permissions) VALUES (?, ?, ?);"
+                  "INSERT INTO bu_api_token(api_token, expire_date, permissions) VALUES (?, ?, ?);"
               ) )
         {
             pstmt.setString( 1, token.getApiToken() );
             pstmt.setString( 2, Dao.formatDateToString( token.getExpireDate() ) );
             pstmt.setString( 3, token.getPermissions()
-                    .stream()
-                    .map( ApiPermission::toString )
-                    .collect( Collectors.joining( "," ) )
+                .stream()
+                .map( ApiPermission::toString )
+                .collect( Collectors.joining( "," ) )
             );
             pstmt.executeUpdate();
         }
@@ -42,7 +42,7 @@ public class SqlApiTokenDao implements ApiTokenDao
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM bu_api_token WHERE api_token = ? AND expire_date >= " + Dao.getInsertDateParameter() + ";"
+                  "SELECT * FROM bu_api_token WHERE api_token = ? AND expire_date >= " + Dao.getInsertDateParameter() + ";"
               ) )
         {
             pstmt.setString( 1, token );
@@ -53,11 +53,11 @@ public class SqlApiTokenDao implements ApiTokenDao
                 if ( rs.next() )
                 {
                     apiToken = new ApiToken(
-                            rs.getString( "api_token" ),
-                            Dao.formatStringToDate( rs.getString( "expire_date" ) ),
-                            Arrays.stream( rs.getString( "permissions" ).split( "," ) )
-                                    .map( ApiPermission::valueOf )
-                                    .collect( Collectors.toList() )
+                        rs.getString( "api_token" ),
+                        Dao.formatStringToDate( rs.getString( "expire_date" ) ),
+                        Arrays.stream( rs.getString( "permissions" ).split( "," ) )
+                            .map( ApiPermission::valueOf )
+                            .collect( Collectors.toList() )
                     );
                 }
             }
@@ -71,7 +71,7 @@ public class SqlApiTokenDao implements ApiTokenDao
     {
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "DELETE FROM bu_api_token WHERE api_token = ?;"
+                  "DELETE FROM bu_api_token WHERE api_token = ?;"
               ) )
         {
             pstmt.setString( 1, token );
@@ -87,7 +87,7 @@ public class SqlApiTokenDao implements ApiTokenDao
 
         try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
               PreparedStatement pstmt = connection.prepareStatement(
-                      "SELECT * FROM bu_api_token WHERE expire_date >= " + Dao.getInsertDateParameter() + ";"
+                  "SELECT * FROM bu_api_token WHERE expire_date >= " + Dao.getInsertDateParameter() + ";"
               ) )
         {
             pstmt.setString( 1, Dao.formatDateToString( new Date() ) );
@@ -97,11 +97,11 @@ public class SqlApiTokenDao implements ApiTokenDao
                 while ( rs.next() )
                 {
                     apiTokens.add( new ApiToken(
-                            rs.getString( "api_token" ),
-                            Dao.formatStringToDate( rs.getString( "expire_date" ) ),
-                            Arrays.stream( rs.getString( "permissions" ).split( "," ) )
-                                    .map( ApiPermission::valueOf )
-                                    .collect( Collectors.toList() )
+                        rs.getString( "api_token" ),
+                        Dao.formatStringToDate( rs.getString( "expire_date" ) ),
+                        Arrays.stream( rs.getString( "permissions" ).split( "," ) )
+                            .map( ApiPermission::valueOf )
+                            .collect( Collectors.toList() )
                     ) );
                 }
             }

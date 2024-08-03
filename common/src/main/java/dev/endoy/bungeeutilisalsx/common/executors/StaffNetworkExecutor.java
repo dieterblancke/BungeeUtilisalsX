@@ -16,7 +16,7 @@ public class StaffNetworkExecutor implements EventExecutor
     public void onJoin( final NetworkStaffJoinEvent event )
     {
         BuX.getInstance().getStaffMembers().add(
-                new StaffUser( event.getUserName(), event.getUuid(), findStaffRank( event.getStaffRank() ) )
+            new StaffUser( event.getUserName(), event.getUuid(), findStaffRank( event.getStaffRank() ) )
         );
     }
 
@@ -24,18 +24,18 @@ public class StaffNetworkExecutor implements EventExecutor
     public void onLeave( final NetworkStaffLeaveEvent event )
     {
         BuX.getInstance().getStaffMembers().removeIf(
-                staffUser -> staffUser.getName().equals( event.getUserName() )
+            staffUser -> staffUser.getName().equals( event.getUserName() )
         );
     }
 
     private StaffRankData findStaffRank( final String rankName )
     {
         return ConfigFiles.RANKS.getRanks().stream()
-                .filter( rank -> rank.getName().equals( rankName ) )
-                .findFirst()
-                .orElseThrow( () -> new RuntimeException(
-                        "Could not find a staff rank called \"" + rankName + "\"."
-                                + " If you are using redis, make sure the configs are synchronized."
-                ) );
+            .filter( rank -> rank.getName().equals( rankName ) )
+            .findFirst()
+            .orElseThrow( () -> new RuntimeException(
+                "Could not find a staff rank called \"" + rankName + "\"."
+                    + " If you are using redis, make sure the configs are synchronized."
+            ) );
     }
 }

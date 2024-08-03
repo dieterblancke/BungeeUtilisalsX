@@ -1,7 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.api.user;
 
-import dev.endoy.bungeeutilisalsx.common.api.utils.MathUtils;
 import com.google.gson.internal.LazilyParsedNumber;
+import dev.endoy.bungeeutilisalsx.common.api.utils.MathUtils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 

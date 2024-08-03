@@ -22,7 +22,7 @@ public class PartySetPartyMemberRoleHandler extends AbstractJobHandler
                 if ( partyMember.getUuid().equals( job.getUuid() ) )
                 {
                     partyMember.setPartyRole( ConfigFiles.PARTY_CONFIG.findPartyRole( job.getPartyRole() )
-                            .orElse( ConfigFiles.PARTY_CONFIG.getDefaultRole() ) );
+                        .orElse( ConfigFiles.PARTY_CONFIG.getDefaultRole() ) );
                 }
             }
         } );

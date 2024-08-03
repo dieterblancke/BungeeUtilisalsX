@@ -56,7 +56,7 @@ public class VersionConditionHandler extends ConditionHandler
     private String listVersions()
     {
         return Arrays.stream( Version.values() )
-                .map( Version::toString )
-                .collect( Collectors.joining( ", " ) );
+            .map( Version::toString )
+            .collect( Collectors.joining( ", " ) );
     }
 }

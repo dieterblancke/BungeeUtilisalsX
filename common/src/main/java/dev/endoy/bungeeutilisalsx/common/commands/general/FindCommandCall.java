@@ -36,10 +36,10 @@ public class FindCommandCall implements CommandCall
         }
 
         user.sendLangMessage(
-                "general-commands.find.message",
-                MessagePlaceholders.create()
-                        .append( "user", args.get( 0 ) )
-                        .append( "server", server.getName() ) );
+            "general-commands.find.message",
+            MessagePlaceholders.create()
+                .append( "user", args.get( 0 ) )
+                .append( "server", server.getName() ) );
     }
 
     @Override

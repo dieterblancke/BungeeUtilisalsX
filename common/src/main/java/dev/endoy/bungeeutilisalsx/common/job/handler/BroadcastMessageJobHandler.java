@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.job.handler;
 
+import com.google.common.base.Strings;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.job.jobs.BroadcastLanguageMessageJob;
 import dev.endoy.bungeeutilisalsx.common.api.job.jobs.BroadcastMessageJob;
@@ -8,7 +9,6 @@ import dev.endoy.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import dev.endoy.bungeeutilisalsx.common.api.job.management.JobHandler;
 import dev.endoy.bungeeutilisalsx.common.api.language.LanguageConfig;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.google.common.base.Strings;
 
 public class BroadcastMessageJobHandler extends AbstractJobHandler
 {

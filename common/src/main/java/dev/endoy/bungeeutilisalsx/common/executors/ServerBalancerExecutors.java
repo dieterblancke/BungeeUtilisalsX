@@ -31,8 +31,8 @@ public class ServerBalancerExecutors implements EventExecutor
         IProxyServer target = event.getTarget();
 
         ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( target.getName() )
-                .flatMap( serverBalancer::getOptimalServer )
-                .ifPresent( event::setTarget );
+            .flatMap( serverBalancer::getOptimalServer )
+            .ifPresent( event::setTarget );
     }
 
     @Event
@@ -50,8 +50,8 @@ public class ServerBalancerExecutors implements EventExecutor
         if ( this.shouldRedirect( event.getKickMessage() ) )
         {
             ofNullable( ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getFallbackGroup() )
-                    .flatMap( serverBalancer::getOptimalServer )
-                    .ifPresent( event::setRedirectServer );
+                .flatMap( serverBalancer::getOptimalServer )
+                .ifPresent( event::setRedirectServer );
         }
     }
 
@@ -60,40 +60,40 @@ public class ServerBalancerExecutors implements EventExecutor
         String textContents = LegacyComponentSerializer.legacyAmpersand().serialize( kickMessage ).toLowerCase();
 
         return switch ( ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getFallbackMode() )
+        {
+            case BLACKLIST ->
+            {
+                for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
                 {
-                    case BLACKLIST ->
+                    if ( textContents.contains( reason.toLowerCase() ) )
                     {
-                        for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
-                        {
-                            if ( textContents.contains( reason.toLowerCase() ) )
-                            {
-                                yield false;
-                            }
-                        }
-
-                        yield true;
-                    }
-                    case WHITELIST ->
-                    {
-                        for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
-                        {
-                            if ( textContents.contains( reason.toLowerCase() ) )
-                            {
-                                yield true;
-                            }
-                        }
-
                         yield false;
                     }
-                };
+                }
+
+                yield true;
+            }
+            case WHITELIST ->
+            {
+                for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
+                {
+                    if ( textContents.contains( reason.toLowerCase() ) )
+                    {
+                        yield true;
+                    }
+                }
+
+                yield false;
+            }
+        };
     }
 
     private boolean shouldBalance( ConnectReason connectReason )
     {
         return switch ( connectReason )
-                {
-                    case LOBBY_FALLBACK, UNKNOWN, JOIN_PROXY, KICK_REDIRECT, SERVER_DOWN_REDIRECT -> true;
-                    case COMMAND, PLUGIN, PLUGIN_MESSAGE -> false;
-                };
+        {
+            case LOBBY_FALLBACK, UNKNOWN, JOIN_PROXY, KICK_REDIRECT, SERVER_DOWN_REDIRECT -> true;
+            case COMMAND, PLUGIN, PLUGIN_MESSAGE -> false;
+        };
     }
 }

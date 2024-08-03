@@ -30,9 +30,9 @@ public interface PluginSupport
     static <T> Optional<T> getPluginSupport( final Class<T> clazz )
     {
         return PLUGIN_SUPPORTS.stream()
-                .filter( pluginSupport -> pluginSupport.getClass().equals( clazz ) )
-                .map( it -> (T) it )
-                .findFirst();
+            .filter( pluginSupport -> pluginSupport.getClass().equals( clazz ) )
+            .map( it -> (T) it )
+            .findFirst();
     }
 
     boolean isEnabled();

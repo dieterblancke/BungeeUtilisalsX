@@ -57,7 +57,7 @@ public class CustomCommandCall implements CommandCall
             user.sendMessage( component );
         }
         commands.forEach( command -> BuX.getApi().getConsoleUser().executeCommand(
-                PlaceHolderAPI.formatMessage( user, command )
+            PlaceHolderAPI.formatMessage( user, command )
         ) );
     }
 

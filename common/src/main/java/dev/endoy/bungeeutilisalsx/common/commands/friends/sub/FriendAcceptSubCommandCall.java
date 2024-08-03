@@ -29,27 +29,27 @@ public class FriendAcceptSubCommandCall implements CommandCall
 
         user.getFriends().add( new FriendData( storage.getUuid(), storage.getUserName(), new Date(), storage.getLastLogout() ) );
         user.sendLangMessage(
-                "friends.accept.accepted",
-                MessagePlaceholders.create().append( "user", storage.getUserName() )
+            "friends.accept.accepted",
+            MessagePlaceholders.create().append( "user", storage.getUserName() )
         );
 
         if ( target != null )
         {
             target.sendLangMessage(
-                    "friends.accept.request-accepted",
-                    MessagePlaceholders.create().append( "user", user.getName() )
+                "friends.accept.request-accepted",
+                MessagePlaceholders.create().append( "user", user.getName() )
             );
             target.getFriends().add( new FriendData( user.getUuid(), user.getName(), new Date(), user.getStorage().getLastLogout() ) );
         }
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserAddFriendJob(
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    user.getUuid(),
-                    user.getName(),
-                    new Date(),
-                    user.getStorage().getLastLogout()
+                storage.getUuid(),
+                storage.getUserName(),
+                user.getUuid(),
+                user.getName(),
+                new Date(),
+                user.getStorage().getLastLogout()
             ) );
         }
     }

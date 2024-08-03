@@ -73,27 +73,27 @@ public class PartyInviteSubCommandCall implements CommandCall
             }
 
             BuX.getInstance().getPartyManager().addInvitationToParty(
-                    party,
-                    new PartyInvite( new Date(), target.getUuid(), target.getUserName(), user.getUuid() )
+                party,
+                new PartyInvite( new Date(), target.getUuid(), target.getUserName(), user.getUuid() )
             );
 
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    target.getUserName(),
-                    "party.invite.invited",
-                    MessagePlaceholders.create()
-                            .append( "user", user.getName() )
+                target.getUserName(),
+                "party.invite.invited",
+                MessagePlaceholders.create()
+                    .append( "user", user.getName() )
             ) );
 
             user.sendLangMessage(
-                    "party.invite.invite-success",
-                    MessagePlaceholders.create()
-                            .append( "user", target.getUserName() )
+                "party.invite.invite-success",
+                MessagePlaceholders.create()
+                    .append( "user", target.getUserName() )
             );
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                    party,
-                    "party.invite.invited-broadcast",
-                    MessagePlaceholders.create()
-                            .append( "user", target.getUserName() )
+                party,
+                "party.invite.invited-broadcast",
+                MessagePlaceholders.create()
+                    .append( "user", target.getUserName() )
             );
         } );
     }

@@ -1,5 +1,8 @@
 package dev.endoy.bungeeutilisalsx.velocity.user;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.velocitypowered.api.proxy.Player;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserLoadEvent;
@@ -23,9 +26,6 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.velocity.Bootstrap;
 import dev.endoy.bungeeutilisalsx.velocity.utils.VelocityPacketUtils;
 import dev.endoy.bungeeutilisalsx.velocity.utils.VelocityServer;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.velocitypowered.api.proxy.Player;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
@@ -36,10 +36,9 @@ import java.util.*;
 
 @Setter
 @Getter
-public class VelocityUser implements User
-{
+public class VelocityUser implements User {
 
-    private final List<IBossBar> activeBossBars = Collections.synchronizedList( new ArrayList<>() );
+    private final List<IBossBar> activeBossBars = Collections.synchronizedList(new ArrayList<>());
     private Player player;
     private String name;
     private UUID uuid;
@@ -54,17 +53,17 @@ public class VelocityUser implements User
     private boolean msgToggled;
     private String group;
     private UserSettings userSettings;
+    private boolean loaded;
 
     @Override
-    public void load( final Object playerInstance )
-    {
+    public void load(final Object playerInstance) {
         final Date now = new Date();
         final Dao dao = BuX.getInstance().getAbstractStorageManager().getDao();
 
         this.player = (Player) playerInstance;
         this.name = player.getUsername();
         this.uuid = player.getUniqueId();
-        this.ip = Utils.getIP( player.getRemoteAddress() );
+        this.ip = Utils.getIP(player.getRemoteAddress());
         this.cooldowns = new UserCooldowns();
         this.storage = new UserStorage(
                 uuid,
@@ -77,35 +76,29 @@ public class VelocityUser implements User
                 this.getJoinedHost(),
                 Maps.newHashMap()
         );
-        this.userSettings = new UserSettings( uuid, new ArrayList<>() );
+        this.userSettings = new UserSettings(uuid, new ArrayList<>());
 
-        dao.getUserDao().getUserData( uuid ).thenAccept( ( userStorage ) ->
+        dao.getUserDao().getUserData(uuid).thenAccept((userStorage) ->
         {
-            if ( userStorage.isPresent() )
-            {
+            if (userStorage.isPresent()) {
                 storage = userStorage.get();
 
-                if ( !storage.getUserName().equalsIgnoreCase( name ) )
-                {
-                    dao.getUserDao().setName( uuid, name );
-                    storage.setUserName( name );
+                if (!storage.getUserName().equalsIgnoreCase(name)) {
+                    dao.getUserDao().setName(uuid, name);
+                    storage.setUserName(name);
                 }
 
-                if ( BuX.getApi().getLanguageManager().useCustomIntegration() )
-                {
-                    storage.setLanguage( BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage( uuid ) );
+                if (BuX.getApi().getLanguageManager().useCustomIntegration()) {
+                    storage.setLanguage(BuX.getApi().getLanguageManager().getLanguageIntegration().getLanguage(uuid));
                 }
 
-                if ( storage.getJoinedHost() == null )
-                {
+                if (storage.getJoinedHost() == null) {
                     final String joinedHost = this.getJoinedHost();
 
-                    storage.setJoinedHost( joinedHost );
-                    dao.getUserDao().setJoinedHost( uuid, joinedHost );
+                    storage.setJoinedHost(joinedHost);
+                    dao.getUserDao().setJoinedHost(uuid, joinedHost);
                 }
-            }
-            else
-            {
+            } else {
                 final String joinedHost = this.getJoinedHost();
                 final Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
 
@@ -117,42 +110,39 @@ public class VelocityUser implements User
                         joinedHost
                 );
             }
-        } );
-        dao.getUserDao().getSettings( uuid ).thenAccept( settings -> userSettings = settings );
+        });
+        dao.getUserDao().getSettings(uuid).thenAccept(settings -> userSettings = settings);
 
-        if ( ConfigFiles.FRIENDS_CONFIG.isEnabled() )
-        {
-            dao.getFriendsDao().getFriends( uuid ).thenAccept( friendsList -> friends = friendsList );
-            dao.getFriendsDao().getSettings( uuid ).thenAccept( settings -> friendSettings = settings );
+        if (ConfigFiles.FRIENDS_CONFIG.isEnabled()) {
+            dao.getFriendsDao().getFriends(uuid).thenAccept(friendsList -> friends = friendsList);
+            dao.getFriendsDao().getSettings(uuid).thenAccept(settings -> friendSettings = settings);
 
-            BuX.debug( "Friend list of " + name );
-            BuX.debug( Arrays.toString( friends.toArray() ) );
-        }
-        else
-        {
+            BuX.debug("Friend list of " + name);
+            BuX.debug(Arrays.toString(friends.toArray()));
+        } else {
             friendSettings = new FriendSettings();
         }
 
-        BuX.getInstance().getActivePermissionIntegration().getGroup( uuid ).thenAccept( group -> this.group = group );
-        BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
-        BuX.getApi().getEventLoader().launchEventAsync( new UserLoadEvent( this ) );
+        BuX.getInstance().getActivePermissionIntegration().getGroup(uuid).thenAccept(group -> this.group = group);
+        BuX.getInstance().getScheduler().runTaskDelayed(15, TimeUnit.SECONDS, this::sendOfflineMessages);
+        BuX.getApi().getEventLoader().launchEventAsync(new UserLoadEvent(this));
+        this.loaded = true;
     }
 
     @Override
-    public void unload()
-    {
-        BuX.getApi().getEventLoader().launchEvent( new UserUnloadEvent( this ) );
-        this.save( true );
+    public void unload() {
+        BuX.getApi().getEventLoader().launchEvent(new UserUnloadEvent(this));
+        this.save(true);
 
         // clearing data from memory
-        cooldowns.remove();
-        player = null;
-        storage.getData().clear();
+        this.cooldowns.remove();
+        this.player = null;
+        this.storage.getData().clear();
+        this.loaded = false;
     }
 
     @Override
-    public void save( final boolean logout )
-    {
+    public void save(final boolean logout) {
         BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().updateUser(
                 uuid,
                 getName(),
@@ -163,210 +153,165 @@ public class VelocityUser implements User
     }
 
     @Override
-    public UserStorage getStorage()
-    {
+    public UserStorage getStorage() {
         return storage;
     }
 
     @Override
-    public UserCooldowns getCooldowns()
-    {
+    public UserCooldowns getCooldowns() {
         return cooldowns;
     }
 
     @Override
-    public String getIp()
-    {
+    public String getIp() {
         return ip;
     }
 
     @Override
-    public Language getLanguage()
-    {
+    public Language getLanguage() {
         return storage.getLanguage();
     }
 
     @Override
-    public void setLanguage( Language language )
-    {
-        storage.setLanguage( language );
+    public void setLanguage(Language language) {
+        storage.setLanguage(language);
     }
 
     @Override
-    public void sendRawMessage( String message )
-    {
-        if ( message.isEmpty() )
-        {
+    public void sendRawMessage(String message) {
+        if (message.isEmpty()) {
             return;
         }
-        sendMessage( MessageUtils.fromTextNoColors( PlaceHolderAPI.formatMessage( this, message ) ) );
+        sendMessage(MessageUtils.fromTextNoColors(PlaceHolderAPI.formatMessage(this, message)));
     }
 
     @Override
-    public void sendRawColorMessage( String message )
-    {
-        sendMessage( Utils.format( this, message ) );
+    public void sendRawColorMessage(String message) {
+        sendMessage(Utils.format(this, message));
     }
 
     @Override
-    public void sendMessage( Component component )
-    {
-        if ( this.isEmpty( component ) )
-        {
+    public void sendMessage(Component component) {
+        if (this.isEmpty(component)) {
             return;
         }
 
-        player.sendMessage( component );
+        player.sendMessage(component);
     }
 
     @Override
-    public void kick( String reason )
-    {
-        BuX.getInstance().getScheduler().runAsync( () -> forceKick( reason ) );
+    public void kick(String reason) {
+        BuX.getInstance().getScheduler().runAsync(() -> forceKick(reason));
     }
 
     @Override
-    public void forceKick( String reason )
-    {
-        this.player.disconnect( Utils.format( this, reason ) );
+    public void forceKick(String reason) {
+        this.player.disconnect(Utils.format(this, reason));
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return name;
     }
 
     @Override
-    public UUID getUuid()
-    {
+    public UUID getUuid() {
         return uuid;
     }
 
     @Override
-    public void sendNoPermMessage()
-    {
-        sendLangMessage( "no-permission" );
+    public void sendNoPermMessage() {
+        sendLangMessage("no-permission");
     }
 
     @Override
-    public int getPing()
-    {
+    public int getPing() {
         return (int) player.getPing();
     }
 
     @Override
-    public boolean isConsole()
-    {
+    public boolean isConsole() {
         return false;
     }
 
     @Override
-    public String getServerName()
-    {
-        if ( this.player == null )
-        {
+    public String getServerName() {
+        if (this.player == null) {
             return "";
         }
-        return this.player.getCurrentServer().map( it -> it.getServerInfo().getName() ).orElse( "" );
+        return this.player.getCurrentServer().map(it -> it.getServerInfo().getName()).orElse("");
     }
 
     @Override
-    public void sendToServer( IProxyServer proxyServer )
-    {
-        this.cooldowns.updateTime( CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 5 );
-        this.player.createConnectionRequest( ( (VelocityServer) proxyServer ).getRegisteredServer() ).fireAndForget();
+    public void sendToServer(IProxyServer proxyServer) {
+        this.cooldowns.updateTime(CooldownConstants.SERVER_SWITCH_SERVER_BALANCER_COOLDOWN, TimeUnit.SECONDS, 5);
+        this.player.createConnectionRequest(((VelocityServer) proxyServer).getRegisteredServer()).fireAndForget();
     }
 
     @Override
-    public Version getVersion()
-    {
-        try
-        {
-            return Version.getVersion( player.getProtocolVersion().getProtocol() );
-        }
-        catch ( Exception e )
-        {
+    public Version getVersion() {
+        try {
+            return Version.getVersion(player.getProtocolVersion().getProtocol());
+        } catch (Exception e) {
             return Version.UNKNOWN_NEW_VERSION;
         }
     }
 
     @Override
-    public boolean hasPermission( final String permission )
-    {
-        return hasPermission( permission, false );
+    public boolean hasPermission(final String permission) {
+        return hasPermission(permission, false);
     }
 
     @Override
-    public boolean hasPermission( String permission, boolean specific )
-    {
+    public boolean hasPermission(String permission, boolean specific) {
         return specific
-                ? this.hasAnyPermission( permission )
-                : this.hasAnyPermission( permission, "*", "bungeeutilisalsx.*" );
+                ? this.hasAnyPermission(permission)
+                : this.hasAnyPermission(permission, "*", "bungeeutilisalsx.*");
     }
 
     @Override
-    public boolean hasAnyPermission( final String... permissions )
-    {
-        try
-        {
-            for ( String permission : permissions )
-            {
-                if ( player.hasPermission( permission ) )
-                {
-                    if ( ConfigFiles.CONFIG.isDebug() )
-                    {
-                        BuX.getLogger().info( String.format( "%s has the permission %s", this.getName(), permission ) );
+    public boolean hasAnyPermission(final String... permissions) {
+        try {
+            for (String permission : permissions) {
+                if (player.hasPermission(permission)) {
+                    if (ConfigFiles.CONFIG.isDebug()) {
+                        BuX.getLogger().info(String.format("%s has the permission %s", this.getName(), permission));
                     }
                     return true;
-                }
-                else
-                {
-                    if ( ConfigFiles.CONFIG.isDebug() )
-                    {
-                        BuX.getLogger().info( String.format( "%s does not have the permission %s", this.getName(), permission ) );
+                } else {
+                    if (ConfigFiles.CONFIG.isDebug()) {
+                        BuX.getLogger().info(String.format("%s does not have the permission %s", this.getName(), permission));
                     }
                 }
             }
-        }
-        catch ( Exception e )
-        {
-            BuX.getLogger().info( "Failed to check permission " + Arrays.toString( permissions ) + " for " + name + " due to an error that occured!" );
+        } catch (Exception e) {
+            BuX.getLogger().info("Failed to check permission " + Arrays.toString(permissions) + " for " + name + " due to an error that occured!");
             return false;
         }
         return false;
     }
 
     @Override
-    public void executeCommand( final String command )
-    {
-        Bootstrap.getInstance().getProxyServer().getCommandManager().executeImmediatelyAsync( player, command );
+    public void executeCommand(final String command) {
+        Bootstrap.getInstance().getProxyServer().getCommandManager().executeImmediatelyAsync(player, command);
     }
 
     @Override
-    public void sendPacket( final Object packet )
-    {
-        VelocityPacketUtils.sendPacket( player, packet );
+    public void sendPacket(final Object packet) {
+        VelocityPacketUtils.sendPacket(player, packet);
     }
 
     @Override
-    public String getJoinedHost()
-    {
+    public String getJoinedHost() {
         final String joinedHost;
-        if ( player.getVirtualHost().isEmpty() )
-        {
+        if (player.getVirtualHost().isEmpty()) {
             joinedHost = null;
-        }
-        else
-        {
+        } else {
             final InetSocketAddress virtualHost = player.getVirtualHost().get();
 
-            if ( virtualHost.getHostName() == null )
-            {
-                joinedHost = Utils.getIP( virtualHost.getAddress() );
-            }
-            else
-            {
+            if (virtualHost.getHostName() == null) {
+                joinedHost = Utils.getIP(virtualHost.getAddress());
+            } else {
                 joinedHost = virtualHost.getHostName();
             }
         }
@@ -374,81 +319,68 @@ public class VelocityUser implements User
     }
 
     @Override
-    public boolean isVanished()
-    {
+    public boolean isVanished() {
         return false;
     }
 
     @Override
-    public void setVanished( boolean vanished )
-    {
+    public void setVanished(boolean vanished) {
         // do nothing
     }
 
     @Override
-    public String getLanguageTagShort()
-    {
-        return Optional.ofNullable( player.getPlayerSettings().getLocale() )
-                .map( Locale::toString )
-                .orElse( "en" );
+    public String getLanguageTagShort() {
+        return Optional.ofNullable(player.getPlayerSettings().getLocale())
+                .map(Locale::toString)
+                .orElse("en");
     }
 
     @Override
-    public String getLanguageTagLong()
-    {
-        return Optional.ofNullable( player.getPlayerSettings().getLocale() )
-                .map( Locale::toString )
-                .orElse( "en_US" );
+    public String getLanguageTagLong() {
+        return Optional.ofNullable(player.getPlayerSettings().getLocale())
+                .map(Locale::toString)
+                .orElse("en_US");
     }
 
     @Override
-    public Object getPlayerObject()
-    {
+    public Object getPlayerObject() {
         return player;
     }
 
     @Override
-    public UserSettings getSettings()
-    {
+    public UserSettings getSettings() {
         return userSettings;
     }
 
     @Override
-    public Audience asAudience()
-    {
+    public Audience asAudience() {
         return this.player;
     }
 
     @Override
-    public boolean allowsMessageModifications()
-    {
+    public boolean allowsMessageModifications() {
         return player.getIdentifiedKey() == null
                 || player.getProtocolVersion().getProtocol() < 760;
     }
 
     @Override
-    public boolean equals( Object o )
-    {
-        if ( this == o )
-        {
+    public boolean equals(Object o) {
+        if (this == o) {
             return true;
         }
-        if ( o == null || getClass() != o.getClass() )
-        {
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        if ( !super.equals( o ) )
-        {
+        if (!super.equals(o)) {
             return false;
         }
 
         VelocityUser user = (VelocityUser) o;
-        return user.name.equalsIgnoreCase( name ) && user.uuid.equals( uuid );
+        return user.name.equalsIgnoreCase(name) && user.uuid.equals(uuid);
     }
 
     @Override
-    public int hashCode()
-    {
-        return Objects.hash( name, uuid );
+    public int hashCode() {
+        return Objects.hash(name, uuid);
     }
 }

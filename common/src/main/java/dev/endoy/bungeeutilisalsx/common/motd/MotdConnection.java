@@ -23,11 +23,11 @@ public abstract class MotdConnection
         if ( name == null )
         {
             this.name = BuX.getApi().getStorageManager().getDao().getUserDao()
-                    .getUsersOnIP( Utils.getIP( this.getRemoteIp() ) )
-                    .get()
-                    .stream()
-                    .findFirst()
-                    .orElse( null );
+                .getUsersOnIP( Utils.getIP( this.getRemoteIp() ) )
+                .get()
+                .stream()
+                .findFirst()
+                .orElse( null );
         }
 
         return this.name;

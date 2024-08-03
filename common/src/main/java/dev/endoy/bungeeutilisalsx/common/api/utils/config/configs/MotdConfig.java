@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.bungeeutilisalsx.common.motd.ConditionHandler;
 import dev.endoy.bungeeutilisalsx.common.motd.MotdData;
@@ -8,7 +9,6 @@ import dev.endoy.bungeeutilisalsx.common.motd.handlers.MultiConditionHandler;
 import dev.endoy.bungeeutilisalsx.common.motd.handlers.NameConditionHandler;
 import dev.endoy.bungeeutilisalsx.common.motd.handlers.VersionConditionHandler;
 import dev.endoy.configuration.api.ISection;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 
 import java.util.List;
@@ -43,8 +43,8 @@ public class MotdConfig extends Config
             final String condition = section.getString( "condition" );
             final String motd = section.getString( "motd" );
             final List<String> hoverMessages = section.exists( "player-hover" )
-                    ? section.getStringList( "player-hover" )
-                    : Lists.newArrayList();
+                ? section.getStringList( "player-hover" )
+                : Lists.newArrayList();
             final ConditionHandler handler = this.createConditionHandler( condition );
 
             this.motds.add( new MotdData( handler, handler == null, motd, hoverMessages ) );

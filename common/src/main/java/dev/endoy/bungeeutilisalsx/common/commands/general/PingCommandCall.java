@@ -23,8 +23,8 @@ public class PingCommandCall implements CommandCall
         {
             final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "ping.permission-other" );
             if ( permission != null
-                    && !permission.isEmpty()
-                    && !user.hasPermission( permission ) )
+                && !permission.isEmpty()
+                && !user.hasPermission( permission ) )
             {
                 user.sendLangMessage( "no-permission", MessagePlaceholders.create().append( "permission", permission ) );
                 return;
@@ -35,7 +35,7 @@ public class PingCommandCall implements CommandCall
             if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
             {
                 BuX.getInstance().getJobManager().executeJob(
-                        new UserGetPingJob( user.getUuid(), user.getName(), name )
+                    new UserGetPingJob( user.getUuid(), user.getName(), name )
                 );
             }
             else

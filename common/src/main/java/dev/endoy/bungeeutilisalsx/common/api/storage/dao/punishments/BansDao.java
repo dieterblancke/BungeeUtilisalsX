@@ -54,16 +54,16 @@ public interface BansDao
     default String createUniqueBanId()
     {
         String uid = Utils.createRandomString(
-                PunishmentDao.getPunishmentIdCharacters(),
-                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
+            PunishmentDao.getPunishmentIdCharacters(),
+            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
         );
 
         // should not enter the loop often - if ever - but this is for safety so existing uids don't get duplicates.
         while ( this.isPunishmentUidFound( uid ).join() )
         {
             uid = Utils.createRandomString(
-                    PunishmentDao.getPunishmentIdCharacters(),
-                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
+                PunishmentDao.getPunishmentIdCharacters(),
+                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getInteger( "puid-length" )
             );
         }
 

@@ -42,45 +42,45 @@ public class PartyKickSubCommandCall implements CommandCall
         final String targetName = args.get( 0 );
 
         party.getPartyMembers()
-                .stream()
-                .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
-                .findFirst()
-                .ifPresentOrElse( member ->
+            .stream()
+            .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
+            .findFirst()
+            .ifPresentOrElse( member ->
+            {
+                if ( !party.isOwner( currentMember.getUuid() )
+                    && ( party.isOwner( member.getUuid() ) || currentMember.getPartyRolePriority() <= member.getPartyRolePriority() ) )
                 {
-                    if ( !party.isOwner( currentMember.getUuid() )
-                            && ( party.isOwner( member.getUuid() ) || currentMember.getPartyRolePriority() <= member.getPartyRolePriority() ) )
-                    {
-                        user.sendLangMessage(
-                                "party.kick.cannot-kick",
-                                MessagePlaceholders.create()
-                                        .append( "user", member.getUserName() )
-                        );
-                        return;
-                    }
-
-                    BuX.getInstance().getPartyManager().removeMemberFromParty( party, member );
-
                     user.sendLangMessage(
-                            "party.kick.kick",
-                            MessagePlaceholders.create()
-                                    .append( "kickedUser", member.getUserName() )
+                        "party.kick.cannot-kick",
+                        MessagePlaceholders.create()
+                            .append( "user", member.getUserName() )
                     );
+                    return;
+                }
 
-                    BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                            party,
-                            "party.kick.kicked-broadcast",
-                            MessagePlaceholders.create()
-                                    .append( "kickedUser", member.getUserName() )
-                                    .append( "user", user.getName() )
-                    );
+                BuX.getInstance().getPartyManager().removeMemberFromParty( party, member );
 
-                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                            member.getUuid(),
-                            "party.kick.kicked",
-                            MessagePlaceholders.create()
-                                    .append( "user", user.getName() )
-                    ) );
-                }, () -> user.sendLangMessage( "party.kick.not-in-party" ) );
+                user.sendLangMessage(
+                    "party.kick.kick",
+                    MessagePlaceholders.create()
+                        .append( "kickedUser", member.getUserName() )
+                );
+
+                BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                    party,
+                    "party.kick.kicked-broadcast",
+                    MessagePlaceholders.create()
+                        .append( "kickedUser", member.getUserName() )
+                        .append( "user", user.getName() )
+                );
+
+                BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                    member.getUuid(),
+                    "party.kick.kicked",
+                    MessagePlaceholders.create()
+                        .append( "user", user.getName() )
+                ) );
+            }, () -> user.sendLangMessage( "party.kick.not-in-party" ) );
     }
 
     @Override

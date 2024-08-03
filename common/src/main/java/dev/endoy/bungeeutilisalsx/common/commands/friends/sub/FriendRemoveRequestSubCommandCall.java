@@ -27,9 +27,9 @@ public class FriendRemoveRequestSubCommandCall implements CommandCall
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    storage.getUserName(),
-                    "friends.removerequest.request-removed",
-                    user.getMessagePlaceholders()
+                storage.getUserName(),
+                "friends.removerequest.request-removed",
+                user.getMessagePlaceholders()
             ) );
         }
     }

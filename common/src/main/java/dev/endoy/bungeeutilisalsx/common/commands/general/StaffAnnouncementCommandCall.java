@@ -22,11 +22,11 @@ public class StaffAnnouncementCommandCall implements CommandCall
         final String message = String.join( " ", args );
 
         BuX.getApi().langPermissionBroadcast(
-                "general-commands.staffannouncement.broadcast",
-                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffannouncement.receive-permission" ),
-                MessagePlaceholders.create()
-                        .append( "broadcaster", user.getName() )
-                        .append( "message", message )
+            "general-commands.staffannouncement.broadcast",
+            ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffannouncement.receive-permission" ),
+            MessagePlaceholders.create()
+                .append( "broadcaster", user.getName() )
+                .append( "message", message )
         );
     }
 

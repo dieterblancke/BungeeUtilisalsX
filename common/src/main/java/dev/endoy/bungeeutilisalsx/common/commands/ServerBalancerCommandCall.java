@@ -34,20 +34,20 @@ public class ServerBalancerCommandCall implements CommandCall
         }
 
         BuX.getApi().getServerBalancer().getOptimalServer( serverBalancerGroup, serverToIgnore )
-                .ifPresentOrElse( server ->
-                {
-                    user.sendToServer( server );
+            .ifPresentOrElse( server ->
+            {
+                user.sendToServer( server );
 
-                    user.sendLangMessage(
-                            "server-balancer.command.sending",
-                            MessagePlaceholders.create()
-                                    .append( "groupName", serverBalancerGroup.getServerGroup().getName() )
-                                    .append( "serverName", server.getName() )
-                    );
-                }, () -> user.sendLangMessage(
-                        "server-balancer.command.no-servers-available",
-                        MessagePlaceholders.create().append( "groupName", serverBalancerGroup.getServerGroup().getName() )
-                ) );
+                user.sendLangMessage(
+                    "server-balancer.command.sending",
+                    MessagePlaceholders.create()
+                        .append( "groupName", serverBalancerGroup.getServerGroup().getName() )
+                        .append( "serverName", server.getName() )
+                );
+            }, () -> user.sendLangMessage(
+                "server-balancer.command.no-servers-available",
+                MessagePlaceholders.create().append( "groupName", serverBalancerGroup.getServerGroup().getName() )
+            ) );
     }
 
     @Override

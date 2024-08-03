@@ -52,15 +52,15 @@ public class TitleAnnouncement extends Announcement
             final IConfiguration config = user.getLanguageConfig().getConfig();
 
             user.sendTitle(
-                    language && config.exists( titleMessage.getTitle() )
-                            ? config.getString( titleMessage.getTitle() )
-                            : titleMessage.getTitle(),
-                    language && config.exists( titleMessage.getSubtitle() )
-                            ? config.getString( titleMessage.getSubtitle() )
-                            : titleMessage.getSubtitle(),
-                    titleMessage.getFadeIn(),
-                    titleMessage.getStay(),
-                    titleMessage.getFadeOut()
+                language && config.exists( titleMessage.getTitle() )
+                    ? config.getString( titleMessage.getTitle() )
+                    : titleMessage.getTitle(),
+                language && config.exists( titleMessage.getSubtitle() )
+                    ? config.getString( titleMessage.getSubtitle() )
+                    : titleMessage.getSubtitle(),
+                titleMessage.getFadeIn(),
+                titleMessage.getStay(),
+                titleMessage.getFadeOut()
             );
         } );
     }

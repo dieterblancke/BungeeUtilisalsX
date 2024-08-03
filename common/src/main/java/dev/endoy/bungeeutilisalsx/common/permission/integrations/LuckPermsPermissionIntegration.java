@@ -58,6 +58,6 @@ public class LuckPermsPermissionIntegration implements PermissionIntegration
     private net.luckperms.api.model.user.User loadLuckUser( final UUID uuid )
     {
         return Optional.ofNullable( net.luckperms.api.LuckPermsProvider.get().getUserManager().getUser( uuid ) )
-                .orElseGet( () -> net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).join() );
+            .orElseGet( () -> net.luckperms.api.LuckPermsProvider.get().getUserManager().loadUser( uuid ).join() );
     }
 }

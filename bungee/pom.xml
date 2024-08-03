@@ -176,7 +176,8 @@
                         </relocation>
                         <relocation>
                             <pattern>io.github.karlatemp.unsafeaccessor</pattern>
-                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor
+                            </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.objectweb.asm</pattern>

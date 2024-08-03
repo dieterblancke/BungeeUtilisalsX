@@ -29,9 +29,9 @@ public class ClearChatCommandCall implements CommandCall, TabCall
             if ( info != null )
             {
                 BuX.getApi().getUsers()
-                        .stream()
-                        .filter( u -> u.getServerName().equalsIgnoreCase( info.getName() ) )
-                        .forEach( u -> clearChat( u, by ) );
+                    .stream()
+                    .filter( u -> u.getServerName().equalsIgnoreCase( info.getName() ) )
+                    .forEach( u -> clearChat( u, by ) );
             }
         }
     }
@@ -44,8 +44,8 @@ public class ClearChatCommandCall implements CommandCall, TabCall
         }
 
         user.sendLangMessage(
-                "general-commands.clearchat.cleared",
-                MessagePlaceholders.create().append( "user", by )
+            "general-commands.clearchat.cleared",
+            MessagePlaceholders.create().append( "user", by )
         );
     }
 

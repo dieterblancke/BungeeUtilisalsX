@@ -40,10 +40,10 @@ public class WebhookConfig extends Config
         public static DiscordWebhookConfig fromSection( final ISection section )
         {
             return new DiscordWebhookConfig(
-                    section.getBoolean( "enabled" ),
-                    section.getString( "url" ),
-                    section.getString( "username" ),
-                    section.getString( "avatar-url" )
+                section.getBoolean( "enabled" ),
+                section.getString( "url" ),
+                section.getString( "username" ),
+                section.getString( "avatar-url" )
             );
         }
     }

@@ -29,7 +29,7 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "select * from bu_offline_message where username = ? and active = ?;"
+                      "select * from bu_offline_message where username = ? and active = ?;"
                   ) )
             {
                 pstmt.setString( 1, username );
@@ -40,9 +40,9 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
                     while ( rs.next() )
                     {
                         messages.add( new OfflineMessage(
-                                rs.getLong( "id" ),
-                                rs.getString( "message" ),
-                                MessagePlaceholders.fromArray( GSON.fromJson( rs.getString( "parameters" ), Object[].class ) )
+                            rs.getLong( "id" ),
+                            rs.getString( "message" ),
+                            MessagePlaceholders.fromArray( GSON.fromJson( rs.getString( "parameters" ), Object[].class ) )
                         ) );
                     }
                 }
@@ -63,7 +63,7 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
+                      "insert into bu_offline_message(username, message, parameters, active) values(?, ?, ?, ?);"
                   ) )
             {
                 pstmt.setString( 1, username );
@@ -87,7 +87,7 @@ public class SqlOfflineMessageDao implements OfflineMessageDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "delete from bu_offline_message where id = ?;"
+                      "delete from bu_offline_message where id = ?;"
                   ) )
             {
                 pstmt.setLong( 1, id );

@@ -41,11 +41,11 @@ public class MsgCommandCall implements CommandCall
             user.getStorage().setData( UserStorageKey.MSG_LAST_USER, name );
 
             BuX.getInstance().getJobManager().executeJob( new UserPrivateMessageJob(
-                    user.getUuid(),
-                    user.getName(),
-                    name,
-                    message,
-                    PrivateMessageType.MSG
+                user.getUuid(),
+                user.getName(),
+                name,
+                message,
+                PrivateMessageType.MSG
             ) );
         }
         else

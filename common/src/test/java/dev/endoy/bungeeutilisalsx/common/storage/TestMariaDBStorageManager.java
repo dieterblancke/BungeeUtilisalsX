@@ -11,11 +11,11 @@ public class TestMariaDBStorageManager extends MariaDBStorageManager
     public static GenericContainer<?> init()
     {
         mariaDbContainer = new GenericContainer<>( "mariadb:latest" )
-                .withEnv( "MYSQL_DATABASE", "database" )
-                .withEnv( "MYSQL_USER", "username" )
-                .withEnv( "MYSQL_PASSWORD", "password" )
-                .withEnv( "MYSQL_ALLOW_EMPTY_PASSWORD", "yes" )
-                .withExposedPorts( 3306 );
+            .withEnv( "MYSQL_DATABASE", "database" )
+            .withEnv( "MYSQL_USER", "username" )
+            .withEnv( "MYSQL_PASSWORD", "password" )
+            .withEnv( "MYSQL_ALLOW_EMPTY_PASSWORD", "yes" )
+            .withExposedPorts( 3306 );
         mariaDbContainer.start();
         return mariaDbContainer;
     }

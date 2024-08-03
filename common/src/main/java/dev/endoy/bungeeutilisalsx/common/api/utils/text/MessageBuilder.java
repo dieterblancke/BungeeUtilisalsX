@@ -55,28 +55,28 @@ public class MessageBuilder
             for ( ISection text : sections )
             {
                 component = component.append(
-                        buildMessage( user, text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
+                    buildMessage( user, text, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
                 );
             }
             return component;
         }
         Component text = searchAndFormat(
-                user,
-                user.getLanguageConfig().getConfig(),
-                section.getString( "text" ),
-                prePlaceholderFormatter,
-                postPlaceholderFormatter,
-                placeholders
+            user,
+            user.getLanguageConfig().getConfig(),
+            section.getString( "text" ),
+            prePlaceholderFormatter,
+            postPlaceholderFormatter,
+            placeholders
         );
 
         if ( section.exists( "hover" ) )
         {
             Component component = searchHoverMessageAndFormat(
-                    user,
-                    section,
-                    prePlaceholderFormatter,
-                    postPlaceholderFormatter,
-                    placeholders
+                user,
+                section,
+                prePlaceholderFormatter,
+                postPlaceholderFormatter,
+                placeholders
             );
 
             if ( component != null )
@@ -87,13 +87,13 @@ public class MessageBuilder
         if ( section.exists( "click" ) )
         {
             text = text.clickEvent( ClickEvent.clickEvent(
-                    ClickEvent.Action.valueOf( section.getString( "click.type" ) ),
-                    PlaceHolderAPI.formatMessage( user, format(
-                            section.getString( "click.action" ),
-                            prePlaceholderFormatter,
-                            postPlaceholderFormatter,
-                            placeholders
-                    ) )
+                ClickEvent.Action.valueOf( section.getString( "click.type" ) ),
+                PlaceHolderAPI.formatMessage( user, format(
+                    section.getString( "click.action" ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+                ) )
             ) );
         }
         if ( section.exists( "insertion" ) )
@@ -159,8 +159,8 @@ public class MessageBuilder
             if ( config.isString( str ) )
             {
                 return Utils.format(
-                        user,
-                        format( config.getString( str ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
+                    user,
+                    format( config.getString( str ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
                 );
             }
             else if ( config.isList( str ) )
@@ -172,8 +172,8 @@ public class MessageBuilder
         }
 
         return Utils.format(
-                user,
-                format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
+            user,
+            format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders )
         );
     }
 
@@ -182,11 +182,11 @@ public class MessageBuilder
         final String newLine = "\n";
 
         return line.replace( "%nl%", newLine )
-                .replace( "%newline%", newLine )
-                .replace( "{nl}", newLine )
-                .replace( "{newline}", newLine )
-                .replace( "\r\n", newLine )
-                .replace( "\n", newLine );
+            .replace( "%newline%", newLine )
+            .replace( "{nl}", newLine )
+            .replace( "{newline}", newLine )
+            .replace( "\r\n", newLine )
+            .replace( "\n", newLine );
     }
 
     private static List<String> format( final List<String> list,
@@ -195,8 +195,8 @@ public class MessageBuilder
                                         final HasMessagePlaceholders placeholders )
     {
         return list.stream()
-                .map( str -> format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders ) )
-                .collect( Collectors.toList() );
+            .map( str -> format( str, prePlaceholderFormatter, postPlaceholderFormatter, placeholders ) )
+            .collect( Collectors.toList() );
     }
 
     private static String format( String str,
@@ -228,13 +228,13 @@ public class MessageBuilder
         if ( section.isList( "hover" ) )
         {
             return Utils.format(
-                    user,
-                    format(
-                            section.getStringList( "hover" ),
-                            prePlaceholderFormatter,
-                            postPlaceholderFormatter,
-                            placeholders
-                    )
+                user,
+                format(
+                    section.getStringList( "hover" ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
+                )
             );
         }
         else
@@ -244,12 +244,12 @@ public class MessageBuilder
                 return null;
             }
             return searchAndFormat(
-                    user,
-                    user.getLanguageConfig().getConfig(),
-                    section.getString( "hover" ),
-                    prePlaceholderFormatter,
-                    postPlaceholderFormatter,
-                    placeholders
+                user,
+                user.getLanguageConfig().getConfig(),
+                section.getString( "hover" ),
+                prePlaceholderFormatter,
+                postPlaceholderFormatter,
+                placeholders
             );
         }
     }

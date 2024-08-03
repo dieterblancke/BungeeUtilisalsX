@@ -36,10 +36,10 @@ public class StaffHistoryCommandCall implements CommandCall
             if ( allPunishments.isEmpty() )
             {
                 user.sendLangMessage(
-                        "punishments.staffhistory.no-punishments",
-                        MessagePlaceholders.create()
-                                .append( "user", username )
-                                .append( "type", action )
+                    "punishments.staffhistory.no-punishments",
+                    MessagePlaceholders.create()
+                        .append( "user", username )
+                        .append( "type", action )
                 );
                 return;
             }
@@ -63,22 +63,22 @@ public class StaffHistoryCommandCall implements CommandCall
             }
 
             MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
-                    .append( "previousPage", previous )
-                    .append( "currentPage", page )
-                    .append( "nextPage", next )
-                    .append( "maxPages", pages )
-                    .append( "type", action )
-                    .append( "user", username )
-                    .append( "punishmentAmount", allPunishments.size() );
+                .append( "previousPage", previous )
+                .append( "currentPage", page )
+                .append( "nextPage", next )
+                .append( "maxPages", pages )
+                .append( "type", action )
+                .append( "user", username )
+                .append( "punishmentAmount", allPunishments.size() );
 
             List<PunishmentInfo> punishments = allPunishments.subList( minNumber, maxNumber );
             user.sendLangMessage( "punishments.staffhistory.head", messagePlaceholders );
 
             punishments.forEach( punishment ->
-                    user.sendLangMessage(
-                            "punishments.staffhistory.format",
-                            BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment )
-                    )
+                user.sendLangMessage(
+                    "punishments.staffhistory.format",
+                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( punishment )
+                )
             );
             user.sendLangMessage( "punishments.staffhistory.foot", messagePlaceholders );
         } );
@@ -117,11 +117,11 @@ public class StaffHistoryCommandCall implements CommandCall
             }
 
             return CompletableFuture.allOf( tasks.toArray( new CompletableFuture[tasks.size()] ) )
-                    .thenApply( it -> tasks.stream()
-                            .map( CompletableFuture::join )
-                            .flatMap( List::stream )
-                            .toList()
-                    );
+                .thenApply( it -> tasks.stream()
+                    .map( CompletableFuture::join )
+                    .flatMap( List::stream )
+                    .toList()
+                );
         }
     }
 
@@ -136,11 +136,11 @@ public class StaffHistoryCommandCall implements CommandCall
         tasks.add( punishmentDao.getKickAndWarnDao().getKicksExecutedBy( name ) );
 
         return CompletableFuture.allOf( tasks.toArray( new CompletableFuture[tasks.size()] ) )
-                .thenApply( it -> tasks.stream()
-                        .map( CompletableFuture::join )
-                        .flatMap( List::stream )
-                        .toList()
-                );
+            .thenApply( it -> tasks.stream()
+                .map( CompletableFuture::join )
+                .flatMap( List::stream )
+                .toList()
+            );
     }
 
     private CompletableFuture<List<PunishmentInfo>> listPunishments( final String name, final PunishmentType type )
@@ -176,11 +176,11 @@ public class StaffHistoryCommandCall implements CommandCall
             if ( type.isActivatable() )
             {
                 stream = type.isTemporary()
-                        ? stream.filter( temporaryFilter )
-                        : stream.filter( permanentFilter );
+                    ? stream.filter( temporaryFilter )
+                    : stream.filter( permanentFilter );
                 stream = type.isIP()
-                        ? stream.filter( ipFilter )
-                        : stream.filter( notIpFilter );
+                    ? stream.filter( ipFilter )
+                    : stream.filter( notIpFilter );
             }
 
             return stream.toList();

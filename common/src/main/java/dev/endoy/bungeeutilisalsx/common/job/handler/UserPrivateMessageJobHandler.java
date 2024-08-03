@@ -39,31 +39,31 @@ public class UserPrivateMessageJobHandler extends AbstractJobHandler
             user.getStorage().setData( UserStorageKey.MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
-                    false,
-                    "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
-                    MessagePlaceholders.create()
-                            .append( "sender", job.getUserName() )
-                            .append( "message", job.getMessage() )
-                            .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
-                            .append( "receiver-server", user.getServerName() )
+                false,
+                "general-commands." + job.getType().toString().toLowerCase() + ".format.receive",
+                MessagePlaceholders.create()
+                    .append( "sender", job.getUserName() )
+                    .append( "message", job.getMessage() )
+                    .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
+                    .append( "receiver-server", user.getServerName() )
             );
 
             executeJob( new UserLanguageMessageJob(
-                    job,
-                    false,
-                    "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
-                    MessagePlaceholders.create()
-                            .append( "receiver", user.getName() )
-                            .append( "message", job.getMessage() )
-                            .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
-                            .append( "receiver-server", user.getServerName() )
+                job,
+                false,
+                "general-commands." + job.getType().toString().toLowerCase() + ".format.send",
+                MessagePlaceholders.create()
+                    .append( "receiver", user.getName() )
+                    .append( "message", job.getMessage() )
+                    .append( "sender-server", BuX.getApi().getPlayerUtils().findPlayer( job.getUserName() ).getName() )
+                    .append( "receiver-server", user.getServerName() )
             ) );
 
             executeJob( new ExecuteEventJob(
-                    UserPrivateMessageEvent.class,
-                    job.getUserName(),
-                    job.getTargetName(),
-                    job.getMessage()
+                UserPrivateMessageEvent.class,
+                job.getUserName(),
+                job.getTargetName(),
+                job.getMessage()
             ) );
         } );
     }

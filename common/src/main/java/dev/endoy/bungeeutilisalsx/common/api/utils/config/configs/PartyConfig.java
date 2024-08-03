@@ -1,9 +1,9 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.base.Strings;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
-import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.Value;
 
@@ -40,15 +40,15 @@ public class PartyConfig extends Config
         }
 
         config.getSectionList( "party-roles" )
-                .forEach( section -> this.partyRoles.add( new PartyRole(
-                        section.getString( "name" ),
-                        section.exists( "default" ) && section.getBoolean( "default" ),
-                        section.exists( "priority" ) ? section.getInteger( "priority" ) : 0,
-                        Optional.ofNullable( section.getStringList( "permissions" ) ).orElse( new ArrayList<>() )
-                                .stream()
-                                .map( PartyRolePermission::valueOf )
-                                .collect( Collectors.toList() )
-                ) ) );
+            .forEach( section -> this.partyRoles.add( new PartyRole(
+                section.getString( "name" ),
+                section.exists( "default" ) && section.getBoolean( "default" ),
+                section.exists( "priority" ) ? section.getInteger( "priority" ) : 0,
+                Optional.ofNullable( section.getStringList( "permissions" ) ).orElse( new ArrayList<>() )
+                    .stream()
+                    .map( PartyRolePermission::valueOf )
+                    .collect( Collectors.toList() )
+            ) ) );
 
         if ( getDefaultRole() == null )
         {
@@ -58,10 +58,10 @@ public class PartyConfig extends Config
         if ( config.exists( "disabled-warp-from-servers" ) )
         {
             config.getStringList( "disabled-warp-from-servers" )
-                    .stream()
-                    .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
-                    .flatMap( Optional::stream )
-                    .forEach( this.disabledWarpServers::add );
+                .stream()
+                .map( serverName -> ConfigFiles.SERVERGROUPS.getServer( serverName ) )
+                .flatMap( Optional::stream )
+                .forEach( this.disabledWarpServers::add );
         }
     }
 
@@ -87,9 +87,9 @@ public class PartyConfig extends Config
             return Optional.empty();
         }
         return partyRoles
-                .stream()
-                .filter( it -> it.getName().equals( partyRole ) )
-                .findAny();
+            .stream()
+            .filter( it -> it.getName().equals( partyRole ) )
+            .findAny();
     }
 
     public PartyRole getDefaultRole()

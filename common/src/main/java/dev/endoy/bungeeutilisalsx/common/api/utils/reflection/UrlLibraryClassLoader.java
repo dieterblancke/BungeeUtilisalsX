@@ -43,7 +43,7 @@ public class UrlLibraryClassLoader implements LibraryClassLoader
         else
         {
             this.classLoader = Optional.ofNullable( DynamicClassLoader.findAncestor( loader ) )
-                    .orElseGet( () -> new DynamicClassLoader( ClassLoader.getSystemClassLoader() ) );
+                .orElseGet( () -> new DynamicClassLoader( ClassLoader.getSystemClassLoader() ) );
         }
     }
 

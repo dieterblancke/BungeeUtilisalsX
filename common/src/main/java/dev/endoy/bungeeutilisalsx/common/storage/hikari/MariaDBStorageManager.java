@@ -25,7 +25,7 @@ public class MariaDBStorageManager extends HikariStorageManager
     protected String getDataSourceClass()
     {
         return Utils.classFound( "org.mariadb.jdbc.MariaDbDataSource" ) ? "org.mariadb.jdbc.MariaDbDataSource"
-                : "org.mariadb.jdbc.MySQLDataSource";
+            : "org.mariadb.jdbc.MySQLDataSource";
     }
 
     @Override

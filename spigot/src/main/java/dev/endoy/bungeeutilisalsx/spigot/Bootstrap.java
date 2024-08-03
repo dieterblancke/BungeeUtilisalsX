@@ -7,7 +7,8 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.reflection.UrlLibraryClassLoa
 import lombok.Getter;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Bootstrap extends JavaPlugin {
+public class Bootstrap extends JavaPlugin
+{
 
     @Getter
     private static Bootstrap instance;

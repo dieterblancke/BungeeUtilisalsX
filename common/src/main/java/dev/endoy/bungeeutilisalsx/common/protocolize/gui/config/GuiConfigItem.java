@@ -19,10 +19,10 @@ public class GuiConfigItem
     public GuiConfigItem( final GuiConfig guiConfig, final ISection section )
     {
         this.slots = GuiSlotUtils.formatSlots(
-                guiConfig,
-                section.isInteger( "slots" )
-                        ? String.valueOf( section.getInteger( "slots" ) )
-                        : section.getString( "slots" ).trim()
+            guiConfig,
+            section.isInteger( "slots" )
+                ? String.valueOf( section.getInteger( "slots" ) )
+                : section.getString( "slots" ).trim()
         );
         this.action = this.asAction( section, "action" );
         this.rightAction = this.asAction( section, "right-action" );
@@ -39,9 +39,9 @@ public class GuiConfigItem
                 final ISection actionSection = section.getSection( key );
 
                 return new GuiAction(
-                        GuiActionType.valueOf( actionSection.getString( "type" ).toUpperCase() ),
-                        actionSection.getString( "action" ),
-                        actionSection
+                    GuiActionType.valueOf( actionSection.getString( "type" ).toUpperCase() ),
+                    actionSection.getString( "action" ),
+                    actionSection
                 );
             }
             else

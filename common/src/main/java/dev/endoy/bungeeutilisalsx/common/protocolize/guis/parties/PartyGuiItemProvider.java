@@ -21,9 +21,9 @@ public class PartyGuiItemProvider implements PageableItemProvider
                                  final List<PartyMember> members )
     {
         final int itemsPerPage = config.getItems().stream()
-                .filter( item -> ( (PartyGuiConfigItem) item ).isMemberItem() )
-                .mapToInt( item -> item.getSlots().size() )
-                .sum();
+            .filter( item -> ( (PartyGuiConfigItem) item ).isMemberItem() )
+            .mapToInt( item -> item.getSlots().size() )
+            .sum();
         int pages = (int) Math.ceil( (double) members.size() / (double) itemsPerPage );
         if ( pages == 0 )
         {
@@ -36,12 +36,12 @@ public class PartyGuiItemProvider implements PageableItemProvider
             final int max = ( i + 1 ) * itemsPerPage;
 
             this.pages[i] = new PartyItemPage(
-                    user,
-                    i,
-                    pages,
-                    config,
-                    party,
-                    members.isEmpty() ? members : members.size() <= max ? members : members.subList( i * itemsPerPage, max )
+                user,
+                i,
+                pages,
+                config,
+                party,
+                members.isEmpty() ? members : members.size() <= max ? members : members.subList( i * itemsPerPage, max )
             );
         }
     }

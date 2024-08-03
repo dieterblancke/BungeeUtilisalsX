@@ -47,10 +47,10 @@ public class LanguageConfig
             for ( int i = 0; i < messages.size(); i++ )
             {
                 final String message = Utils.replacePlaceHolders(
-                        messages.get( i ),
-                        prePlaceholderFormatter,
-                        postPlaceholderFormatter,
-                        placeholders
+                    messages.get( i ),
+                    prePlaceholderFormatter,
+                    postPlaceholderFormatter,
+                    placeholders
                 );
                 builder.append( message );
 
@@ -63,10 +63,10 @@ public class LanguageConfig
         else
         {
             final String message = Utils.replacePlaceHolders(
-                    config.getString( path ),
-                    prePlaceholderFormatter,
-                    postPlaceholderFormatter,
-                    placeholders
+                config.getString( path ),
+                prePlaceholderFormatter,
+                postPlaceholderFormatter,
+                placeholders
             );
 
             if ( message.isEmpty() )
@@ -113,7 +113,7 @@ public class LanguageConfig
         {
             // section detected, assuming this is a message to be handled by MessageBuilder (hover / focus events)
             final Component component = MessageBuilder.buildMessage(
-                    user, config.getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
+                user, config.getSection( path ), prePlaceholderFormatter, postPlaceholderFormatter, placeholders
             );
 
             user.sendMessage( component );

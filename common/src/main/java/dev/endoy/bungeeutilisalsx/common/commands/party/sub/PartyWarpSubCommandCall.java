@@ -43,45 +43,45 @@ public class PartyWarpSubCommandCall implements CommandCall
                 final String targetName = args.get( 0 );
 
                 partyMembersToWarp = party.getPartyMembers()
-                        .stream()
-                        .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
-                        .filter( m ->
-                        {
-                            final String currentMemberServer = Optional.ofNullable(
-                                    BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
-                            ).map( IProxyServer::getName ).orElse( "" );
+                    .stream()
+                    .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
+                    .filter( m ->
+                    {
+                        final String currentMemberServer = Optional.ofNullable(
+                            BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
+                        ).map( IProxyServer::getName ).orElse( "" );
 
-                            return !currentServer.getName().equals( currentMemberServer )
-                                    && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
-                        } )
-                        .limit( 1 )
-                        .toList();
+                        return !currentServer.getName().equals( currentMemberServer )
+                            && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
+                    } )
+                    .limit( 1 )
+                    .toList();
             }
             else
             {
                 partyMembersToWarp = party.getPartyMembers()
-                        .stream()
-                        .filter( m ->
-                        {
-                            final String currentMemberServer = Optional.ofNullable(
-                                    BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
-                            ).map( IProxyServer::getName ).orElse( "" );
+                    .stream()
+                    .filter( m ->
+                    {
+                        final String currentMemberServer = Optional.ofNullable(
+                            BuX.getApi().getPlayerUtils().findPlayer( m.getUserName() )
+                        ).map( IProxyServer::getName ).orElse( "" );
 
-                            return !currentServer.getName().equals( currentMemberServer )
-                                    && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
-                        } )
-                        .toList();
+                        return !currentServer.getName().equals( currentMemberServer )
+                            && ConfigFiles.PARTY_CONFIG.canWarpFrom( currentMemberServer );
+                    } )
+                    .toList();
             }
 
             if ( !partyMembersToWarp.isEmpty() )
             {
                 BuX.getInstance().getJobManager().executeJob( new PartyWarpMembersJob(
-                        party.getUuid(),
-                        partyMembersToWarp
-                                .stream()
-                                .map( PartyMember::getUuid )
-                                .toList(),
-                        currentServer.getName()
+                    party.getUuid(),
+                    partyMembersToWarp
+                        .stream()
+                        .map( PartyMember::getUuid )
+                        .toList(),
+                    currentServer.getName()
                 ) );
 
                 user.sendLangMessage( "party.warp.warping" );

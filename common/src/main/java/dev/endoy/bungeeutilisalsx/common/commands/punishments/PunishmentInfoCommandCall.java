@@ -152,17 +152,17 @@ public class PunishmentInfoCommandCall implements CommandCall
         if ( info != null )
         {
             user.sendLangMessage(
-                    "punishments.punishmentinfo.typeinfo.found",
-                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
+                "punishments.punishmentinfo.typeinfo.found",
+                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
             );
         }
         else
         {
             user.sendLangMessage(
-                    "punishments.punishmentinfo.typeinfo.notfound",
-                    MessagePlaceholders.create()
-                            .append( "user", storage.getUserName() )
-                            .append( "type", type.toString().toLowerCase() )
+                "punishments.punishmentinfo.typeinfo.notfound",
+                MessagePlaceholders.create()
+                    .append( "user", storage.getUserName() )
+                    .append( "type", type.toString().toLowerCase() )
             );
         }
     }

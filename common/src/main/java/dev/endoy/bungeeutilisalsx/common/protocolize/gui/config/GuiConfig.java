@@ -43,7 +43,8 @@ public class GuiConfig extends Config
             {
                 this.items.add( configItemClass.getConstructor( GuiConfig.class, ISection.class ).newInstance( this, content ) );
             }
-            catch ( InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e )
+            catch ( InstantiationException | IllegalAccessException | InvocationTargetException |
+                    NoSuchMethodException e )
             {
                 e.printStackTrace();
             }

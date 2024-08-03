@@ -1,13 +1,13 @@
 package dev.endoy.bungeeutilisalsx.common.job;
 
+import com.rabbitmq.client.Channel;
+import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.Delivery;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.job.Job;
 import dev.endoy.bungeeutilisalsx.common.api.job.MultiProxyJob;
 import dev.endoy.bungeeutilisalsx.common.api.job.management.JobManager;
 import dev.endoy.bungeeutilisalsx.common.api.rabbitmq.RabbitMQConnectionFactory;
-import com.rabbitmq.client.Channel;
-import com.rabbitmq.client.DeliverCallback;
-import com.rabbitmq.client.Delivery;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 

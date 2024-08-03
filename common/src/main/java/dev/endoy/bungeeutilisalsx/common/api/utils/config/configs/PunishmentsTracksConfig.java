@@ -38,20 +38,20 @@ public class PunishmentsTracksConfig extends Config
             final String identifier = section.getString( "identifier" );
             final boolean canRunAgain = section.getBoolean( "can-run-again" );
             final List<PunishmentTrackRecord> records = section.getSectionList( "track" )
-                    .stream()
-                    .map( track ->
-                    {
-                        final int count = track.getInteger( "count" );
-                        final String action = track.getString( "action" );
+                .stream()
+                .map( track ->
+                {
+                    final int count = track.getInteger( "count" );
+                    final String action = track.getString( "action" );
 
-                        return new PunishmentTrackRecord( count, action );
-                    } )
-                    .collect( Collectors.toList() );
+                    return new PunishmentTrackRecord( count, action );
+                } )
+                .collect( Collectors.toList() );
 
             this.punishmentTracks.add( new PunishmentTrack(
-                    identifier,
-                    canRunAgain,
-                    records
+                identifier,
+                canRunAgain,
+                records
             ) );
         }
     }
@@ -59,16 +59,16 @@ public class PunishmentsTracksConfig extends Config
     public PunishmentTrack getPunishmentTrack( final String reason )
     {
         return punishmentTracks
-                .stream()
-                .filter( track -> track.getIdentifier().equalsIgnoreCase( reason ) )
-                .findFirst()
-                .orElse( null );
+            .stream()
+            .filter( track -> track.getIdentifier().equalsIgnoreCase( reason ) )
+            .findFirst()
+            .orElse( null );
     }
 
     private List<PunishmentType> getPunishmentTypes( final String str )
     {
         return str.equals( "*" )
-                ? Arrays.asList( PunishmentType.values().clone() )
-                : Collections.singletonList( PunishmentType.valueOf( str ) );
+            ? Arrays.asList( PunishmentType.values().clone() )
+            : Collections.singletonList( PunishmentType.valueOf( str ) );
     }
 }

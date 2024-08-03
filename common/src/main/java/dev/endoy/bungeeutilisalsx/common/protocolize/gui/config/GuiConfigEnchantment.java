@@ -29,8 +29,8 @@ public class GuiConfigEnchantment
 
         final CompoundTag compoundTag = itemStack.nbtData();
         final ListTag<CompoundTag> enchants = compoundTag.containsKey( "ench" )
-                ? (ListTag<CompoundTag>) compoundTag.getListTag( "ench" )
-                : new ListTag<>( CompoundTag.class );
+            ? (ListTag<CompoundTag>) compoundTag.getListTag( "ench" )
+            : new ListTag<>( CompoundTag.class );
 
         final CompoundTag enchant = new CompoundTag();
         enchant.putString( "id", this.enchantment );

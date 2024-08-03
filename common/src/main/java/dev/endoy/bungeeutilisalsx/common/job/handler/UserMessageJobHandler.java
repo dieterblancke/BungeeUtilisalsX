@@ -33,11 +33,11 @@ public class UserMessageJobHandler extends AbstractJobHandler
     void executeUserLanguageMessageJob( final UserLanguageMessageJob job )
     {
         job.getUser().or( job::getUserByName ).ifPresent( user -> user.sendLangMessage(
-                job.getLanguagePath(),
-                job.isPrefix(),
-                null,
-                null,
-                job.getPlaceholders()
+            job.getLanguagePath(),
+            job.isPrefix(),
+            null,
+            null,
+            job.getPlaceholders()
         ) );
     }
 }

@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.command;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import dev.endoy.bungeeutilisalsx.common.protocolize.ProtocolizeManager.SoundData;
-import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public class Command
             if ( argument.startsWith( "-" ) && this.parameters.stream().anyMatch( argument::startsWith ) )
             {
                 if ( user.hasPermission( this.permission + ".parameters." + argument.substring( 1 ) )
-                        || user.hasPermission( this.permission + ".parameters.*" ) )
+                    || user.hasPermission( this.permission + ".parameters.*" ) )
                 {
                     params.add( argument );
                 }
@@ -88,16 +88,16 @@ public class Command
             return;
         }
         if ( permission != null
-                && !permission.isEmpty()
-                && !user.hasPermission( permission )
-                && !user.hasPermission( "bungeeutilisals.commands.*" )
-                && !user.hasPermission( "bungeeutilisals.*" )
-                && !user.hasPermission( "*" ) )
+            && !permission.isEmpty()
+            && !user.hasPermission( permission )
+            && !user.hasPermission( "bungeeutilisals.commands.*" )
+            && !user.hasPermission( "bungeeutilisals.*" )
+            && !user.hasPermission( "*" ) )
         {
             user.sendLangMessage(
-                    "no-permission",
-                    MessagePlaceholders.create()
-                            .append( "permission", permission )
+                "no-permission",
+                MessagePlaceholders.create()
+                    .append( "permission", permission )
             );
             return;
         }
@@ -109,9 +109,9 @@ public class Command
                 if ( cooldown > 0 && !user.getCooldowns().canUse( "COMMAND_COOLDOWNS_" + name ) )
                 {
                     user.sendLangMessage(
-                            "general-commands.cooldown",
-                            MessagePlaceholders.create()
-                                    .append( "{time}", user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000 )
+                        "general-commands.cooldown",
+                        MessagePlaceholders.create()
+                            .append( "{time}", user.getCooldowns().getLeftTime( "COMMAND_COOLDOWNS_" + name ) / 1000 )
                     );
                     return;
                 }

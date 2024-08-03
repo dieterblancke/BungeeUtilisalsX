@@ -31,15 +31,15 @@ class SqlMigrationManagerTest extends BuXTest
         super( true );
 
         when( BuX.getApi().getStorageManager() )
-                .thenAnswer( (Answer<AbstractStorageManager>) invocationOnMock -> BuX.getInstance().getAbstractStorageManager() );
+            .thenAnswer( (Answer<AbstractStorageManager>) invocationOnMock -> BuX.getInstance().getAbstractStorageManager() );
     }
 
     @BeforeEach
     void injectConfiguration() throws NoSuchFieldException, IllegalAccessException
     {
         TestInjectionUtil.injectConfiguration(
-                ConfigFiles.CONFIG,
-                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/config.yml" ) )
+            ConfigFiles.CONFIG,
+            IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/config.yml" ) )
         );
     }
 

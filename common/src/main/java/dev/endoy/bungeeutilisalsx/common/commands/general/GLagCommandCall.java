@@ -26,12 +26,12 @@ public class GLagCommandCall implements CommandCall, TabCall
         final long uptime = ManagementFactory.getRuntimeMXBean().getStartTime();
 
         user.sendLangMessage(
-                "general-commands.glag",
-                MessagePlaceholders.create()
-                        .append( "maxmemory", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB" )
-                        .append( "freememory", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB" )
-                        .append( "totalmemory", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB" )
-                        .append( "onlinesince", Utils.formatDate( new Date( uptime ), user.getLanguageConfig().getConfig() ) )
+            "general-commands.glag",
+            MessagePlaceholders.create()
+                .append( "maxmemory", ( Runtime.getRuntime().maxMemory() / 1024 / 1024 ) + " MB" )
+                .append( "freememory", ( Runtime.getRuntime().freeMemory() / 1024 / 1024 ) + " MB" )
+                .append( "totalmemory", ( Runtime.getRuntime().totalMemory() / 1024 / 1024 ) + " MB" )
+                .append( "onlinesince", Utils.formatDate( new Date( uptime ), user.getLanguageConfig().getConfig() ) )
         );
     }
 

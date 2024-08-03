@@ -24,8 +24,8 @@ public abstract class Announcement implements IAnnouncement
     protected Stream<User> filter( final Stream<User> stream )
     {
         return receivePermission.isEmpty()
-                ? stream
-                : stream.filter( user -> user.hasPermission( receivePermission ) || user.hasPermission( "bungeeutilisals.*" ) || user.hasPermission( "*" ) );
+            ? stream
+            : stream.filter( user -> user.hasPermission( receivePermission ) || user.hasPermission( "bungeeutilisals.*" ) || user.hasPermission( "*" ) );
     }
 
     public void clear()

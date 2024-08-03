@@ -57,8 +57,8 @@ public class FriendAddSubCommandCall implements CommandCall
         }
 
         final boolean accepts = optionalTarget
-                .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS ) )
-                .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ).join() );
+            .map( value -> value.getFriendSettings().getSetting( FriendSetting.REQUESTS ) )
+            .orElseGet( () -> dao.getFriendsDao().getSetting( storage.getUuid(), FriendSetting.REQUESTS ).join() );
         final boolean isIgnored = storage.getIgnoredUsers().stream().anyMatch( u -> u.equalsIgnoreCase( user.getName() ) );
 
         if ( !accepts || isIgnored )
@@ -90,9 +90,9 @@ public class FriendAddSubCommandCall implements CommandCall
         else if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    name,
-                    "friends.request-received",
-                    MessagePlaceholders.create().append( "name", user.getName() )
+                name,
+                "friends.request-received",
+                MessagePlaceholders.create().append( "name", user.getName() )
             ) );
         }
     }

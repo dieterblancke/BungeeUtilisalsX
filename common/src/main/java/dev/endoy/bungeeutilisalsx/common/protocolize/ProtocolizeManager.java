@@ -22,10 +22,10 @@ public interface ProtocolizeManager
         public static SoundData fromSection( final ISection section )
         {
             return new SoundData(
-                    section.getString( "sound" ),
-                    section.exists( "category" ) ? section.getString( "category" ) : "master",
-                    section.exists( "volume" ) ? section.getFloat( "volume" ) : 1f,
-                    section.exists( "pitch" ) ? section.getFloat( "pitch" ) : 1f
+                section.getString( "sound" ),
+                section.exists( "category" ) ? section.getString( "category" ) : "master",
+                section.exists( "volume" ) ? section.getFloat( "volume" ) : 1f,
+                section.exists( "pitch" ) ? section.getFloat( "pitch" ) : 1f
             );
         }
 
@@ -43,10 +43,10 @@ public interface ProtocolizeManager
             else
             {
                 return new SoundData(
-                        configuration.getString( path ),
-                        "master",
-                        1f,
-                        1f
+                    configuration.getString( path ),
+                    "master",
+                    1f,
+                    1f
                 );
             }
         }

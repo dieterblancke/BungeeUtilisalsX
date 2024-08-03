@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import dev.endoy.configuration.api.ISection;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 
 import java.util.Map;
@@ -62,8 +62,8 @@ public class ServerGroupsConfig extends Config
             if ( !servers.containsKey( server.getName() ) )
             {
                 servers.put(
-                        server.getName(),
-                        new ServerGroup( server.getName(), false, false, Lists.newArrayList( server.getName() ) )
+                    server.getName(),
+                    new ServerGroup( server.getName(), false, false, Lists.newArrayList( server.getName() ) )
                 );
             }
         }

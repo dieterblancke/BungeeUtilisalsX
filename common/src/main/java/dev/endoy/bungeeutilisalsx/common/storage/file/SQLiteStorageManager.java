@@ -61,9 +61,9 @@ public class SQLiteStorageManager extends SQLStorageManager
     private UnclosableConnection initializeConnection() throws SQLException
     {
         return UnclosableConnection.wrap( DriverManager.getConnection(
-                database == null
-                        ? "jdbc:sqlite::memory:"
-                        : "jdbc:sqlite:" + database.getPath()
+            database == null
+                ? "jdbc:sqlite::memory:"
+                : "jdbc:sqlite:" + database.getPath()
         ) );
     }
 

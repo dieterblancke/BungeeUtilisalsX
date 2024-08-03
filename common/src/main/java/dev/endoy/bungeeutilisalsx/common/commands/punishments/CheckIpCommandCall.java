@@ -37,8 +37,8 @@ public class CheckIpCommandCall implements CommandCall
             final PunishmentDao punishmentDao = dao.getPunishmentDao();
 
             final boolean exists = IP_PATTERN.matcher( args.get( 0 ) ).find()
-                    ? userDao.ipExists( args.get( 0 ) ).join()
-                    : userDao.exists( args.get( 0 ) ).join();
+                ? userDao.ipExists( args.get( 0 ) ).join()
+                : userDao.exists( args.get( 0 ) ).join();
 
             if ( !exists )
             {
@@ -54,10 +54,10 @@ public class CheckIpCommandCall implements CommandCall
             }
 
             user.sendLangMessage(
-                    "punishments.checkip.head",
-                    MessagePlaceholders.create()
-                            .append( "user", storage.getUserName() )
-                            .append( "ip", storage.getIp() )
+                "punishments.checkip.head",
+                MessagePlaceholders.create()
+                    .append( "user", storage.getUserName() )
+                    .append( "ip", storage.getIp() )
             );
 
             final List<String> users = userDao.getUsersOnIP( storage.getIp() ).join();
@@ -89,18 +89,18 @@ public class CheckIpCommandCall implements CommandCall
             } );
 
             user.sendLangMessage(
-                    "punishments.checkip.format.message",
-                    MessagePlaceholders.create()
-                            .append( "players", Utils.formatList(
-                                    formattedUsers, user.getLanguageConfig().getConfig().getString( "punishments.checkip.format.separator" )
-                            ) )
+                "punishments.checkip.format.message",
+                MessagePlaceholders.create()
+                    .append( "players", Utils.formatList(
+                        formattedUsers, user.getLanguageConfig().getConfig().getString( "punishments.checkip.format.separator" )
+                    ) )
             );
 
             user.sendLangMessage(
-                    "punishments.checkip.foot",
-                    MessagePlaceholders.create()
-                            .append( "user", storage.getUserName() )
-                            .append( "ip", storage.getIp() )
+                "punishments.checkip.foot",
+                MessagePlaceholders.create()
+                    .append( "user", storage.getUserName() )
+                    .append( "ip", storage.getIp() )
             );
         } );
     }

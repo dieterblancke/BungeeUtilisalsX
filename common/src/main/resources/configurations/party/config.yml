@@ -37,7 +37,7 @@ party-roles:
   - name: MEMBER
     default: true
     priority: 1
-    permissions: []
+    permissions: [ ]
   - name: MODERATOR
     priority: 2
     permissions:

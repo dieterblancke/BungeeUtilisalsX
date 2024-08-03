@@ -21,12 +21,12 @@ public class MongoApiTokenDao implements ApiTokenDao
         final MongoCollection<Document> collection = db().getCollection( "bu_api_token" );
 
         collection.insertOne( new Document()
-                .append( "api_token", token.getApiToken() )
-                .append( "expire_date", token.getExpireDate() )
-                .append( "permissions", token.getPermissions()
-                        .stream()
-                        .map( ApiPermission::toString )
-                        .collect( Collectors.joining( "," ) ) )
+            .append( "api_token", token.getApiToken() )
+            .append( "expire_date", token.getExpireDate() )
+            .append( "permissions", token.getPermissions()
+                .stream()
+                .map( ApiPermission::toString )
+                .collect( Collectors.joining( "," ) ) )
         );
     }
 
@@ -35,8 +35,8 @@ public class MongoApiTokenDao implements ApiTokenDao
     {
         final MongoCollection<Document> collection = db().getCollection( "bu_api_token" );
         final Iterator<Document> iterator = collection.find( Filters.and(
-                Filters.eq( "api_token", token ),
-                Filters.gte( "expire_date", new Date() )
+            Filters.eq( "api_token", token ),
+            Filters.gte( "expire_date", new Date() )
         ) ).limit( 1 ).iterator();
 
         if ( iterator.hasNext() )
@@ -44,11 +44,11 @@ public class MongoApiTokenDao implements ApiTokenDao
             final Document document = iterator.next();
 
             return Optional.of( new ApiToken(
-                    document.getString( "api_token" ),
-                    document.getDate( "expire_date" ),
-                    Arrays.stream( document.getString( "permissions" ).split( "," ) )
-                            .map( ApiPermission::valueOf )
-                            .collect( Collectors.toList() )
+                document.getString( "api_token" ),
+                document.getDate( "expire_date" ),
+                Arrays.stream( document.getString( "permissions" ).split( "," ) )
+                    .map( ApiPermission::valueOf )
+                    .collect( Collectors.toList() )
             ) );
         }
 
@@ -73,11 +73,11 @@ public class MongoApiTokenDao implements ApiTokenDao
         for ( Document document : iterator )
         {
             apiTokens.add( new ApiToken(
-                    document.getString( "api_token" ),
-                    document.getDate( "expire_date" ),
-                    Arrays.stream( document.getString( "permissions" ).split( "," ) )
-                            .map( ApiPermission::valueOf )
-                            .collect( Collectors.toList() )
+                document.getString( "api_token" ),
+                document.getDate( "expire_date" ),
+                Arrays.stream( document.getString( "permissions" ).split( "," ) )
+                    .map( ApiPermission::valueOf )
+                    .collect( Collectors.toList() )
             ) );
         }
         return apiTokens;

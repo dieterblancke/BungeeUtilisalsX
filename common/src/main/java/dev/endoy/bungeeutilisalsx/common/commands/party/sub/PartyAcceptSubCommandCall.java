@@ -54,9 +54,9 @@ public class PartyAcceptSubCommandCall implements CommandCall
 
         final Party inviterParty = optionalInviterParty.get();
         final Optional<PartyInvite> optionalInvite = inviterParty.getSentInvites()
-                .stream()
-                .filter( invite -> invite.getInvitee().equals( user.getUuid() ) )
-                .findAny();
+            .stream()
+            .filter( invite -> invite.getInvitee().equals( user.getUuid() ) )
+            .findAny();
 
         if ( optionalInvite.isEmpty() )
         {
@@ -67,8 +67,8 @@ public class PartyAcceptSubCommandCall implements CommandCall
         if ( inviterParty.isFull() )
         {
             user.sendLangMessage(
-                    "party.other-party-full",
-                    MessagePlaceholders.create().append( "user", inviterParty.getOwner().getNickName() )
+                "party.other-party-full",
+                MessagePlaceholders.create().append( "user", inviterParty.getOwner().getNickName() )
             );
             return;
         }
@@ -78,25 +78,25 @@ public class PartyAcceptSubCommandCall implements CommandCall
         partyManager.removeInvitationFromParty( inviterParty, invite );
 
         final PartyMember partyMember = new PartyMember(
-                user.getUuid(),
-                user.getName(),
-                new Date(),
-                user.getName(),
-                ConfigFiles.PARTY_CONFIG.getDefaultRole(),
-                false,
-                false,
-                false
+            user.getUuid(),
+            user.getName(),
+            new Date(),
+            user.getName(),
+            ConfigFiles.PARTY_CONFIG.getDefaultRole(),
+            false,
+            false,
+            false
         );
 
         partyManager.addMemberToParty( inviterParty, partyMember );
         user.sendLangMessage(
-                "party.accept.accepted",
-                MessagePlaceholders.create().append( "user", args.get( 0 ) )
+            "party.accept.accepted",
+            MessagePlaceholders.create().append( "user", args.get( 0 ) )
         );
         partyManager.languageBroadcastToParty(
-                inviterParty,
-                "party.accept.joined-party",
-                MessagePlaceholders.create().append( "user", user.getName() )
+            inviterParty,
+            "party.accept.joined-party",
+            MessagePlaceholders.create().append( "user", user.getName() )
         );
     }
 

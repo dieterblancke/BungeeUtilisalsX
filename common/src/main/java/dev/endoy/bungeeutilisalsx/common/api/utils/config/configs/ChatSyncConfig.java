@@ -36,23 +36,23 @@ public class ChatSyncConfig extends Config
 
         syncedServers.clear();
         syncedServers.addAll(
-                config.getSectionList( "synced-servers" )
-                        .stream()
-                        .map( section -> new ChatSyncedServer(
-                                ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) ).orElse( null ),
-                                section.getString( "format" ),
-                                section.getBoolean( "force-format" )
-                        ) )
-                        .filter( it -> it.serverGroup() != null )
-                        .toList()
+            config.getSectionList( "synced-servers" )
+                .stream()
+                .map( section -> new ChatSyncedServer(
+                    ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) ).orElse( null ),
+                    section.getString( "format" ),
+                    section.getBoolean( "force-format" )
+                ) )
+                .filter( it -> it.serverGroup() != null )
+                .toList()
         );
     }
 
     public Optional<ChatSyncedServer> getChatSyncedServer( final String serverName )
     {
         return syncedServers.stream()
-                .filter( it -> it.serverGroup().isInGroup( serverName ) )
-                .findFirst();
+            .filter( it -> it.serverGroup().isInGroup( serverName ) )
+            .findFirst();
     }
 
     public record ChatSyncedServer(ServerGroup serverGroup, String format, boolean forceFormat)

@@ -26,6 +26,6 @@ public interface IPunishmentHelper
     default boolean isHigherPunishment( UUID executor, UUID target )
     {
         return BuX.getInstance().getActivePermissionIntegration().hasLowerOrEqualGroup( executor, target )
-                && !ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-higher-punishments" );
+            && !ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-higher-punishments" );
     }
 }

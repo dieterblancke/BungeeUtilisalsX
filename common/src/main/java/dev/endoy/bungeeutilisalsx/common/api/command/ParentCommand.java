@@ -1,8 +1,8 @@
 package dev.endoy.bungeeutilisalsx.common.api.command;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 
 import java.util.List;
@@ -30,10 +30,10 @@ public class ParentCommand implements TabCall
         this.canSend = canSend;
 
         this.registerSubCommand( CommandBuilder.builder()
-                .enabled( true )
-                .name( "help" )
-                .executable( new HelpSubCommandCall() )
-                .build()
+            .enabled( true )
+            .name( "help" )
+            .executable( new HelpSubCommandCall() )
+            .build()
         );
     }
 

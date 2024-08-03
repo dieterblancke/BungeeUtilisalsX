@@ -73,9 +73,9 @@ public class SpigotOperationsApi implements ServerOperationsApi
     public List<PluginInfo> getPlugins()
     {
         return Arrays.stream( Bukkit.getPluginManager().getPlugins() )
-                .map( Plugin::getDescription )
-                .map( this::getPluginInfo )
-                .collect( Collectors.toList() );
+            .map( Plugin::getDescription )
+            .map( this::getPluginInfo )
+            .collect( Collectors.toList() );
     }
 
     @Override
@@ -84,8 +84,8 @@ public class SpigotOperationsApi implements ServerOperationsApi
         final Plugin plugin = Bukkit.getPluginManager().getPlugin( pluginName );
 
         return Optional.ofNullable( plugin )
-                .map( Plugin::getDescription )
-                .map( this::getPluginInfo );
+            .map( Plugin::getDescription )
+            .map( this::getPluginInfo );
     }
 
     @Override
@@ -109,12 +109,12 @@ public class SpigotOperationsApi implements ServerOperationsApi
     private PluginInfo getPluginInfo( final PluginDescriptionFile pluginDescription )
     {
         return new PluginInfo(
-                pluginDescription.getName(),
-                pluginDescription.getVersion(),
-                String.join( ", ", pluginDescription.getAuthors() ),
-                new HashSet<>( pluginDescription.getDepend() ),
-                new HashSet<>( pluginDescription.getSoftDepend() ),
-                pluginDescription.getDescription()
+            pluginDescription.getName(),
+            pluginDescription.getVersion(),
+            String.join( ", ", pluginDescription.getAuthors() ),
+            new HashSet<>( pluginDescription.getDepend() ),
+            new HashSet<>( pluginDescription.getSoftDepend() ),
+            pluginDescription.getDescription()
         );
     }
 

@@ -79,11 +79,11 @@ public class PartyListSubCommandCall implements CommandCall
             public PageMessageInfo getItemMessage( final PartyMember member )
             {
                 return new PageMessageInfo(
-                        "party.list.members.item",
-                        MessagePlaceholders.create()
-                                .append( "user", member.getUserName() )
-                                .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
-                                .append( "joinedAt", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() ) )
+                    "party.list.members.item",
+                    MessagePlaceholders.create()
+                        .append( "user", member.getUserName() )
+                        .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
+                        .append( "joinedAt", Utils.formatDate( member.getJoinedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 
@@ -122,10 +122,10 @@ public class PartyListSubCommandCall implements CommandCall
             public PageMessageInfo getItemMessage( final PartyInvite invite )
             {
                 return new PageMessageInfo(
-                        "party.list.invites.item",
-                        MessagePlaceholders.create()
-                                .append( "user", invite.getInviteeName() )
-                                .append( "invitedAt", Utils.formatDate( invite.getInvitedAt(), user.getLanguageConfig().getConfig() ) )
+                    "party.list.invites.item",
+                    MessagePlaceholders.create()
+                        .append( "user", invite.getInviteeName() )
+                        .append( "invitedAt", Utils.formatDate( invite.getInvitedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 
@@ -164,10 +164,10 @@ public class PartyListSubCommandCall implements CommandCall
             public PageMessageInfo getItemMessage( final PartyJoinRequest request )
             {
                 return new PageMessageInfo(
-                        "party.list.requests.item",
-                        MessagePlaceholders.create()
-                                .append( "user", request.getRequesterName() )
-                                .append( "requestedAt", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
+                    "party.list.requests.item",
+                    MessagePlaceholders.create()
+                        .append( "user", request.getRequesterName() )
+                        .append( "requestedAt", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             }
 

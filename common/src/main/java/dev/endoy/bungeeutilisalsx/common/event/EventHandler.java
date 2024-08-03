@@ -57,9 +57,9 @@ public class EventHandler<T extends BUEvent> implements IEventHandler<T>
         catch ( Exception e )
         {
             BuX.getLogger().log(
-                    Level.SEVERE,
-                    "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() + ": ",
-                    e
+                Level.SEVERE,
+                "Could not handle event in " + executor.getClass().getName() + ": " + eventClass.getSimpleName() + ": ",
+                e
             );
         }
     }

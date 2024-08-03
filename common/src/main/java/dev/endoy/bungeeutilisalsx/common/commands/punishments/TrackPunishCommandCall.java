@@ -37,9 +37,9 @@ public class TrackPunishCommandCall extends PunishmentCommand
         }
 
         dao().getPunishmentDao().getTracksDao().getTrackInfos(
-                storage.getUuid(),
-                track.getIdentifier(),
-                punishmentArgs.getServerOrAll()
+            storage.getUuid(),
+            track.getIdentifier(),
+            punishmentArgs.getServerOrAll()
         ).thenAccept( trackInfos ->
         {
             if ( TrackUtils.isFinished( track, trackInfos ) )
@@ -48,33 +48,33 @@ public class TrackPunishCommandCall extends PunishmentCommand
                 return;
             }
             final PunishmentTrackInfo trackInfo = new PunishmentTrackInfo(
-                    storage.getUuid(),
-                    track.getIdentifier(),
-                    punishmentArgs.getServerOrAll(),
-                    user.getName(),
-                    new Date(),
-                    true
+                storage.getUuid(),
+                track.getIdentifier(),
+                punishmentArgs.getServerOrAll(),
+                user.getName(),
+                new Date(),
+                true
             );
             trackInfos.add( trackInfo );
             dao().getPunishmentDao().getTracksDao().addToTrack( trackInfo );
 
             TrackUtils.executeStageIfNeeded(
-                    track,
-                    trackInfos,
-                    ( trackRecord ) -> TrackUtils.executeTrackActionFor(
-                            user,
-                            storage,
-                            track.getIdentifier(),
-                            trackRecord.getAction()
-                    )
+                track,
+                trackInfos,
+                ( trackRecord ) -> TrackUtils.executeTrackActionFor(
+                    user,
+                    storage,
+                    track.getIdentifier(),
+                    trackRecord.getAction()
+                )
             );
 
             final MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
-                    .append( "user", storage.getUserName() )
-                    .append( "track", track.getIdentifier() )
-                    .append( "trackCount", trackInfos.size() )
-                    .append( "trackMax", TrackUtils.getMaxRunsForTrack( track ) )
-                    .append( "executed_by", user.getName() );
+                .append( "user", storage.getUserName() )
+                .append( "track", track.getIdentifier() )
+                .append( "trackCount", trackInfos.size() )
+                .append( "trackMax", TrackUtils.getMaxRunsForTrack( track ) )
+                .append( "executed_by", user.getName() );
 
             user.sendLangMessage( "punishments.track.executed", messagePlaceholders );
 
@@ -83,16 +83,16 @@ public class TrackPunishCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.track.broadcast",
-                            messagePlaceholders
+                        "punishments.track.broadcast",
+                        messagePlaceholders
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.track.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.trackpunish.broadcast" ),
-                            messagePlaceholders
+                        "punishments.track.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.trackpunish.broadcast" ),
+                        messagePlaceholders
                     );
                 }
             }
@@ -100,7 +100,7 @@ public class TrackPunishCommandCall extends PunishmentCommand
             if ( TrackUtils.isFinished( track, trackInfos ) && track.isCanRunAgain() )
             {
                 dao().getPunishmentDao().getTracksDao().resetTrack(
-                        storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
+                    storage.getUuid(), track.getIdentifier(), punishmentArgs.getServerOrAll()
                 );
             }
         } );

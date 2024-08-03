@@ -60,13 +60,13 @@ public class FriendRequestsItemPage extends ItemPage
                 final FriendRequest data = friendRequestIterator.next();
 
                 super.setItem( slot, this.getFriendGuiItem(
-                        user,
-                        type,
-                        (FriendRequestGuiConfigItem) item,
-                        data,
-                        MessagePlaceholders.create()
-                                .append( "user-name", type == FriendRequestType.OUTGOING ? data.getFriendName() : data.getUserName() )
-                                .append( "requested-at", Utils.formatDate( data.getRequestedAt() ) )
+                    user,
+                    type,
+                    (FriendRequestGuiConfigItem) item,
+                    data,
+                    MessagePlaceholders.create()
+                        .append( "user-name", type == FriendRequestType.OUTGOING ? data.getFriendName() : data.getUserName() )
+                        .append( "requested-at", Utils.formatDate( data.getRequestedAt() ) )
                 ) );
             }
         }
@@ -83,8 +83,8 @@ public class FriendRequestsItemPage extends ItemPage
         if ( itemStack.itemType() == ItemType.PLAYER_HEAD )
         {
             itemStack.nbtData().putString(
-                    "SkullOwner",
-                    type == FriendRequestType.OUTGOING ? requestData.getFriendName() : requestData.getUserName()
+                "SkullOwner",
+                type == FriendRequestType.OUTGOING ? requestData.getFriendName() : requestData.getUserName()
             );
         }
 

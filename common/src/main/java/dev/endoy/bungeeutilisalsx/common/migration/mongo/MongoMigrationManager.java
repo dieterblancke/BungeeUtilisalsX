@@ -33,7 +33,7 @@ public class MongoMigrationManager implements MigrationManager
         for ( Class<?> clazz : classes )
         {
             final int migrationId = Integer.parseInt(
-                    clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
+                clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
             );
             final Migration migration = (Migration) clazz.getConstructor().newInstance();
 
@@ -42,11 +42,11 @@ public class MongoMigrationManager implements MigrationManager
                 BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
                 migration.migrate();
                 this.createMigration(
-                        migrationId,
-                        migration instanceof FileMigration ? "file" : "java",
-                        migration.getClass().getName(),
-                        new Date(),
-                        true
+                    migrationId,
+                    migration instanceof FileMigration ? "file" : "java",
+                    migration.getClass().getName(),
+                    new Date(),
+                    true
                 );
                 BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
             }
@@ -59,8 +59,8 @@ public class MongoMigrationManager implements MigrationManager
         final MongoCollection<Document> migrationColl = db().getCollection( "bu_migrations" );
 
         return migrationColl.find( Filters.and(
-                Filters.eq( "migration_id", version ),
-                Filters.eq( "success", true )
+            Filters.eq( "migration_id", version ),
+            Filters.eq( "success", true )
         ) ).iterator().hasNext();
     }
 
@@ -69,11 +69,11 @@ public class MongoMigrationManager implements MigrationManager
         final MongoCollection<Document> migrationColl = db().getCollection( "bu_migrations" );
 
         migrationColl.insertOne( new Document()
-                .append( "migration_id", migrationId )
-                .append( "type", type )
-                .append( "script", className )
-                .append( "created_at", createdAt )
-                .append( "success", success ) );
+            .append( "migration_id", migrationId )
+            .append( "type", type )
+            .append( "script", className )
+            .append( "created_at", createdAt )
+            .append( "success", success ) );
     }
 
     private MongoDatabase db()

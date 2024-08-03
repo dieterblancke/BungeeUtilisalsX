@@ -34,21 +34,21 @@ class DomainsListSubCommandCallTest extends BuXTest
     void testDomainsListCommand() throws NoSuchFieldException, IllegalAccessException
     {
         TestInjectionUtil.injectConfiguration(
-                ConfigFiles.GENERALCOMMANDS,
-                mock( IConfiguration.class )
+            ConfigFiles.GENERALCOMMANDS,
+            mock( IConfiguration.class )
         );
         when( ConfigFiles.GENERALCOMMANDS.getConfig().getSectionList( "domains.mappings" ) )
-                .thenReturn( Collections.singletonList( new YamlSection()
-                {{
-                    this.set( "regex", ".*.play.example.com" );
-                    this.set( "domain", "play.example.com" );
-                }} ) );
+            .thenReturn( Collections.singletonList( new YamlSection()
+            {{
+                this.set( "regex", ".*.play.example.com" );
+                this.set( "domain", "play.example.com" );
+            }} ) );
         when( BuX
-                .getApi()
-                .getStorageManager()
-                .getDao()
-                .getUserDao()
-                .getJoinedHostList() ).thenReturn( CompletableFuture.completedFuture( new HashMap<>()
+            .getApi()
+            .getStorageManager()
+            .getDao()
+            .getUserDao()
+            .getJoinedHostList() ).thenReturn( CompletableFuture.completedFuture( new HashMap<>()
         {{
             put( "test.play.example.com", 25 );
             put( "test8.play.example.com", 15 );
@@ -60,21 +60,21 @@ class DomainsListSubCommandCallTest extends BuXTest
 
         final DomainsListSubCommandCall commandCall = new DomainsListSubCommandCall();
         commandCall.onExecute(
-                user,
-                Lists.newArrayList(),
-                Lists.newArrayList()
+            user,
+            Lists.newArrayList(),
+            Lists.newArrayList()
         );
 
         final ArgumentCaptor<MessagePlaceholders> placeholdersCaptor = ArgumentCaptor.forClass( MessagePlaceholders.class );
 
         verify( user, VerificationModeFactory.atLeast( 1 ) )
-                .sendLangMessage( eq( "general-commands.domains.list.format" ), placeholdersCaptor.capture() );
+            .sendLangMessage( eq( "general-commands.domains.list.format" ), placeholdersCaptor.capture() );
 
         final MessagePlaceholders placeholders = placeholdersCaptor.getValue();
         assertThat( placeholders.asArray() ).containsAll( Arrays.asList(
-                "domain", "play.example.com",
-                "total", 80,
-                "online", 0L
+            "domain", "play.example.com",
+            "total", 80,
+            "online", 0L
         ) );
     }
 }

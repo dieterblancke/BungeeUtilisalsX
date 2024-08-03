@@ -34,9 +34,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( useServerPunishments() )
             {
@@ -44,11 +44,11 @@ public class MongoBansDao implements BansDao
             }
 
             return db()
-                    .getCollection( PunishmentType.BAN.getTable() )
-                    .find( Filters.and( filters ) )
-                    .limit( 1 )
-                    .iterator()
-                    .hasNext();
+                .getCollection( PunishmentType.BAN.getTable() )
+                .find( Filters.and( filters ) )
+                .limit( 1 )
+                .iterator()
+                .hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -58,9 +58,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( useServerPunishments() )
             {
@@ -68,11 +68,11 @@ public class MongoBansDao implements BansDao
             }
 
             return db()
-                    .getCollection( PunishmentType.BAN.getTable() )
-                    .find( Filters.and( filters ) )
-                    .limit( 1 )
-                    .iterator()
-                    .hasNext();
+                .getCollection( PunishmentType.BAN.getTable() )
+                .find( Filters.and( filters ) )
+                .limit( 1 )
+                .iterator()
+                .hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -106,18 +106,18 @@ public class MongoBansDao implements BansDao
 
             db().getCollection( PunishmentType.BAN.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.BAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.BAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -152,18 +152,18 @@ public class MongoBansDao implements BansDao
 
             db().getCollection( PunishmentType.IPBAN.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -199,18 +199,18 @@ public class MongoBansDao implements BansDao
 
             db().getCollection( PunishmentType.TEMPBAN.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.TEMPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.TEMPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -246,18 +246,18 @@ public class MongoBansDao implements BansDao
 
             db().getCollection( PunishmentType.IPTEMPBAN.getTable() ).insertOne( new Document( data ) );
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPTEMPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPTEMPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -268,9 +268,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( useServerPunishments() )
             {
@@ -294,9 +294,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( useServerPunishments() )
             {
@@ -321,9 +321,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.runAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             );
             if ( useServerPunishments() )
             {
@@ -333,13 +333,13 @@ public class MongoBansDao implements BansDao
 
             // updateMany, this if for some reason multiple bans would be active at the same time.
             coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -350,9 +350,9 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.runAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "ip", ip ),
-                    Filters.eq( "active", true ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.eq( "active", true ),
+                Filters.regex( "type", "IP*" )
             );
             if ( useServerPunishments() )
             {
@@ -362,13 +362,13 @@ public class MongoBansDao implements BansDao
 
             // updateMany, this if for some reason multiple bans would be active at the same time.
             coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -381,8 +381,8 @@ public class MongoBansDao implements BansDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.regex( "type", "^(?!IP.*$).*" )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" )
             ) );
 
             for ( Document document : documents )
@@ -418,9 +418,9 @@ public class MongoBansDao implements BansDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.BAN.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.regex( "type", "^(?!IP.*$).*" ),
-                    Filters.eq( "server", serverName )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.regex( "type", "^(?!IP.*$).*" ),
+                Filters.eq( "server", serverName )
             ) );
 
             for ( Document document : documents )
@@ -439,8 +439,8 @@ public class MongoBansDao implements BansDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPBAN.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.regex( "type", "IP*" )
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" )
             ) );
 
             for ( Document document : documents )
@@ -459,9 +459,9 @@ public class MongoBansDao implements BansDao
             final List<PunishmentInfo> punishments = Lists.newArrayList();
             final MongoCollection<Document> collection = db().getCollection( PunishmentType.IPBAN.getTable() );
             final FindIterable<Document> documents = collection.find( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.regex( "type", "IP*" ),
-                    Filters.eq( "server", serverName )
+                Filters.eq( "ip", ip ),
+                Filters.regex( "type", "IP*" ),
+                Filters.eq( "server", serverName )
             ) );
 
             for ( Document document : documents )
@@ -541,19 +541,19 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "executed_by", user ),
-                    Filters.gte( "date", date )
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
             );
             final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
 
             return (int) coll.updateMany(
-                    Filters.and( filters ),
-                    Updates.combine(
-                            Updates.set( "active", false ),
-                            Updates.set( "removed", true ),
-                            Updates.set( "removed_by", removedBy ),
-                            Updates.set( "removed_at", new Date() )
-                    )
+                Filters.and( filters ),
+                Updates.combine(
+                    Updates.set( "active", false ),
+                    Updates.set( "removed", true ),
+                    Updates.set( "removed_by", removedBy ),
+                    Updates.set( "removed_at", new Date() )
+                )
             ).getModifiedCount();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -564,8 +564,8 @@ public class MongoBansDao implements BansDao
         return CompletableFuture.supplyAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "executed_by", user ),
-                    Filters.gte( "date", date )
+                Filters.eq( "executed_by", user ),
+                Filters.gte( "date", date )
             );
             final MongoCollection<Document> coll = db().getCollection( PunishmentType.BAN.getTable() );
 

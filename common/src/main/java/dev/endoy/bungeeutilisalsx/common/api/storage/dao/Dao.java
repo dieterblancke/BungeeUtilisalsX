@@ -40,8 +40,8 @@ public interface Dao
     static String getInsertDateParameter()
     {
         return BuX.getInstance().getAbstractStorageManager().getType() == StorageType.POSTGRESQL
-                ? "TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')"
-                : "?";
+            ? "TO_TIMESTAMP(?, 'YYYY/MM/DD HH24:MI:SS')"
+            : "?";
     }
 
     UserDao getUserDao();

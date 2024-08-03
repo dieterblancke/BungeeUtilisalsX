@@ -200,31 +200,31 @@ public class DiscordWebhook
             if ( section.exists( "description" ) )
             {
                 embedObject.setDescription(
-                        Utils.replacePlaceHolders( section.getString( "description" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "description" ), placeholders )
                 );
             }
             if ( section.exists( "image" ) )
             {
                 embedObject.setImage(
-                        Utils.replacePlaceHolders( section.getString( "image" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "image" ), placeholders )
                 );
             }
             if ( section.exists( "thumbnail" ) )
             {
                 embedObject.setThumbnail(
-                        Utils.replacePlaceHolders( section.getString( "thumbnail" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "thumbnail" ), placeholders )
                 );
             }
             if ( section.exists( "title" ) )
             {
                 embedObject.setTitle(
-                        Utils.replacePlaceHolders( section.getString( "title" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "title" ), placeholders )
                 );
             }
             if ( section.exists( "url" ) )
             {
                 embedObject.setUrl(
-                        Utils.replacePlaceHolders( section.getString( "url" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "url" ), placeholders )
                 );
             }
             if ( section.exists( "color" ) )
@@ -234,25 +234,25 @@ public class DiscordWebhook
             if ( section.exists( "author" ) )
             {
                 embedObject.setAuthor(
-                        Utils.replacePlaceHolders( section.getString( "author.name" ), placeholders ),
-                        Utils.replacePlaceHolders( section.getString( "author.url" ), placeholders ),
-                        Utils.replacePlaceHolders( section.getString( "author.icon" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "author.name" ), placeholders ),
+                    Utils.replacePlaceHolders( section.getString( "author.url" ), placeholders ),
+                    Utils.replacePlaceHolders( section.getString( "author.icon" ), placeholders )
                 );
             }
             if ( section.exists( "footer" ) )
             {
                 embedObject.setFooter(
-                        Utils.replacePlaceHolders( section.getString( "footer.text" ), placeholders ),
-                        Utils.replacePlaceHolders( section.getString( "footer.icon" ), placeholders )
+                    Utils.replacePlaceHolders( section.getString( "footer.text" ), placeholders ),
+                    Utils.replacePlaceHolders( section.getString( "footer.icon" ), placeholders )
                 );
             }
 
             for ( ISection field : section.getSectionList( "fields" ) )
             {
                 embedObject.addField(
-                        Utils.replacePlaceHolders( field.getString( "name" ), placeholders ),
-                        Utils.replacePlaceHolders( field.getString( "value" ), placeholders ),
-                        field.getBoolean( "inline" )
+                    Utils.replacePlaceHolders( field.getString( "name" ), placeholders ),
+                    Utils.replacePlaceHolders( field.getString( "value" ), placeholders ),
+                    field.getBoolean( "inline" )
                 );
             }
 

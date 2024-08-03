@@ -56,8 +56,8 @@ public class TabAnnouncement extends Announcement
             final List<String> footers = language ? config.getStringList( this.footer.get( 0 ) ) : this.footer;
 
             user.setTabHeader(
-                    Utils.format( user, headers ),
-                    Utils.format( user, footers )
+                Utils.format( user, headers ),
+                Utils.format( user, footers )
             );
         } );
     }

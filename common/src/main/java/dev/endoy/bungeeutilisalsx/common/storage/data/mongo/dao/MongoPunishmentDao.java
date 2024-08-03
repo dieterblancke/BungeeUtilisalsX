@@ -76,18 +76,18 @@ public class MongoPunishmentDao implements PunishmentDao
             if ( type.isActivatable() )
             {
                 return collection.countDocuments( Filters.and(
-                        Filters.eq( "uuid", uuid.toString() ),
-                        Filters.gte( "date", date ),
-                        Filters.eq( "type", type.toString() ),
-                        Filters.eq( "punishmentaction_status", false )
+                    Filters.eq( "uuid", uuid.toString() ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "type", type.toString() ),
+                    Filters.eq( "punishmentaction_status", false )
                 ) );
             }
             else
             {
                 return collection.countDocuments( Filters.and(
-                        Filters.eq( "uuid", uuid ),
-                        Filters.gte( "date", date ),
-                        Filters.eq( "punishmentaction_status", false )
+                    Filters.eq( "uuid", uuid ),
+                    Filters.gte( "date", date ),
+                    Filters.eq( "punishmentaction_status", false )
                 ) );
             }
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -101,10 +101,10 @@ public class MongoPunishmentDao implements PunishmentDao
             final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
             return collection.countDocuments( Filters.and(
-                    Filters.eq( "ip", ip ),
-                    Filters.gte( "date", date ),
-                    Filters.eq( "type", type.toString() ),
-                    Filters.eq( "punishmentaction_status", false )
+                Filters.eq( "ip", ip ),
+                Filters.gte( "date", date ),
+                Filters.eq( "type", type.toString() ),
+                Filters.eq( "punishmentaction_status", false )
             ) );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -119,37 +119,37 @@ public class MongoPunishmentDao implements PunishmentDao
             if ( type.isActivatable() )
             {
                 collection.find(
-                                Filters.and(
-                                        Filters.eq( "uuid", uuid.toString() ),
-                                        Filters.gte( "date", date ),
-                                        Filters.eq( "type", type.toString() ),
-                                        Filters.eq( "punishmentaction_status", false )
-                                ) )
-                        .sort( Sorts.ascending( "date" ) )
-                        .limit( limit )
-                        .forEach( (Consumer<? super Document>) doc ->
-                        {
-                            doc.put( "punishmentaction_status", true );
+                        Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "type", type.toString() ),
+                            Filters.eq( "punishmentaction_status", false )
+                        ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
 
-                            save( collection, doc );
-                        } );
+                        save( collection, doc );
+                    } );
             }
             else
             {
                 collection.find(
-                                Filters.and(
-                                        Filters.eq( "uuid", uuid.toString() ),
-                                        Filters.gte( "date", date ),
-                                        Filters.eq( "punishmentaction_status", false )
-                                ) )
-                        .sort( Sorts.ascending( "date" ) )
-                        .limit( limit )
-                        .forEach( (Consumer<? super Document>) doc ->
-                        {
-                            doc.put( "punishmentaction_status", true );
+                        Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.gte( "date", date ),
+                            Filters.eq( "punishmentaction_status", false )
+                        ) )
+                    .sort( Sorts.ascending( "date" ) )
+                    .limit( limit )
+                    .forEach( (Consumer<? super Document>) doc ->
+                    {
+                        doc.put( "punishmentaction_status", true );
 
-                            save( collection, doc );
-                        } );
+                        save( collection, doc );
+                    } );
             }
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -162,20 +162,20 @@ public class MongoPunishmentDao implements PunishmentDao
             final MongoCollection<Document> collection = db().getCollection( type.getTable() );
 
             collection.find(
-                            Filters.and(
-                                    Filters.eq( "ip", ip ),
-                                    Filters.gte( "date", date ),
-                                    Filters.eq( "type", type.toString() ),
-                                    Filters.eq( "punishmentaction_status", false )
-                            ) )
-                    .sort( Sorts.ascending( "date" ) )
-                    .limit( limit )
-                    .forEach( (Consumer<? super Document>) doc ->
-                    {
-                        doc.put( "punishmentaction_status", true );
+                    Filters.and(
+                        Filters.eq( "ip", ip ),
+                        Filters.gte( "date", date ),
+                        Filters.eq( "type", type.toString() ),
+                        Filters.eq( "punishmentaction_status", false )
+                    ) )
+                .sort( Sorts.ascending( "date" ) )
+                .limit( limit )
+                .forEach( (Consumer<? super Document>) doc ->
+                {
+                    doc.put( "punishmentaction_status", true );
 
-                        save( collection, doc );
-                    } );
+                    save( collection, doc );
+                } );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 

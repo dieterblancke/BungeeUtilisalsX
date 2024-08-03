@@ -88,16 +88,16 @@ public class CommandManager
             registerSlashServerCommands();
         }
         registerCommand(
-                "friends",
-                ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
-                ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
-                new FriendsCommandCall()
+            "friends",
+            ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "enabled" ),
+            ConfigFiles.FRIENDS_CONFIG.getConfig().getSection( "command" ),
+            new FriendsCommandCall()
         );
         registerCommand(
-                "party",
-                ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "enabled" ),
-                ConfigFiles.PARTY_CONFIG.getConfig().getSection( "command" ),
-                new PartyCommandCall()
+            "party",
+            ConfigFiles.PARTY_CONFIG.getConfig().getBoolean( "enabled" ),
+            ConfigFiles.PARTY_CONFIG.getConfig().getSection( "command" ),
+            new PartyCommandCall()
         );
     }
 
@@ -132,10 +132,10 @@ public class CommandManager
         registerPunishmentCommand( "staffhistory", "commands.staffhistory", new StaffHistoryCommandCall(), parameters );
         registerPunishmentCommand( "trackpunish", "commands.trackpunish", new TrackPunishCommandCall(), parameters );
         registerPunishmentCommand(
-                "staffrollback",
-                "commands.staffrollback",
-                new StaffRollbackCommandCall(),
-                this.getParameterList( config.getSection( "staffrollback-parameters" ) )
+            "staffrollback",
+            "commands.staffrollback",
+            new StaffRollbackCommandCall(),
+            this.getParameterList( config.getSection( "staffrollback-parameters" ) )
         );
     }
 
@@ -147,10 +147,10 @@ public class CommandManager
         {
             final String name = proxyServer.getName().toLowerCase();
             final CommandBuilder builder = CommandBuilder.builder()
-                    .enabled( true )
-                    .name( name )
-                    .permission( permission.replace( "{server}", name ) )
-                    .executable( new SlashServerCommandCall( name ) );
+                .enabled( true )
+                .name( name )
+                .permission( permission.replace( "{server}", name ) )
+                .executable( new SlashServerCommandCall( name ) );
 
             buildCommand( name, builder );
         }
@@ -168,21 +168,21 @@ public class CommandManager
             final List<String> commands = section.exists( "execute" ) ? section.getStringList( "execute" ) : Lists.newArrayList();
             final String server = section.exists( "server" ) ? section.getString( "server" ) : "ALL";
             final List<ServerGroup> disabledServers = section.exists( "disabled-servers" ) ? section.getStringList( "disabled-servers" )
-                    .stream()
-                    .filter( s -> ConfigFiles.SERVERGROUPS.getServers().containsKey( s ) )
-                    .map( s -> ConfigFiles.SERVERGROUPS.getServer( s ) )
-                    .flatMap( Optional::stream )
-                    .collect( Collectors.toList() ) : new ArrayList<>();
+                .stream()
+                .filter( s -> ConfigFiles.SERVERGROUPS.getServers().containsKey( s ) )
+                .map( s -> ConfigFiles.SERVERGROUPS.getServer( s ) )
+                .flatMap( Optional::stream )
+                .collect( Collectors.toList() ) : new ArrayList<>();
             final boolean listenerBased = section.exists( "listener-based" ) && section.getBoolean( "listener-based" );
 
             final CommandBuilder commandBuilder = CommandBuilder.builder()
-                    .enabled( true )
-                    .name( name )
-                    .aliases( aliases )
-                    .permission( permission )
-                    .disabledServers( disabledServers )
-                    .listenerBased( listenerBased )
-                    .executable( new CustomCommandCall( section, server, commands ) );
+                .enabled( true )
+                .name( name )
+                .aliases( aliases )
+                .permission( permission )
+                .disabledServers( disabledServers )
+                .listenerBased( listenerBased )
+                .executable( new CustomCommandCall( section, server, commands ) );
 
             buildCommand( name, commandBuilder );
         }
@@ -198,9 +198,9 @@ public class CommandManager
         for ( ServerBalancerGroup balancerGroup : ConfigFiles.SERVER_BALANCER_CONFIG.getBalancerGroups() )
         {
             registerCommand(
-                    balancerGroup.getServerGroup().getName(),
-                    balancerGroup.getCommandSection(),
-                    new ServerBalancerCommandCall( balancerGroup )
+                balancerGroup.getServerGroup().getName(),
+                balancerGroup.getCommandSection(),
+                new ServerBalancerCommandCall( balancerGroup )
             );
         }
     }
@@ -213,10 +213,10 @@ public class CommandManager
     public void registerGeneralCommand( final String section, final CommandCall call, final List<String> parameters )
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
-                .name( section )
-                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( section ) )
-                .parameters( parameters )
-                .executable( call );
+            .name( section )
+            .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( section ) )
+            .parameters( parameters )
+            .executable( call );
 
         buildCommand( section, commandBuilder );
     }
@@ -226,9 +226,9 @@ public class CommandManager
         final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
 
         final CommandBuilder commandBuilder = CommandBuilder.builder()
-                .name( name )
-                .fromSection( config.getSection( section ) )
-                .executable( call );
+            .name( name )
+            .fromSection( config.getSection( section ) )
+            .executable( call );
 
         if ( parameters != null )
         {
@@ -241,9 +241,9 @@ public class CommandManager
     protected void registerCommand( final String name, final ISection section, final CommandCall call )
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
-                .name( name )
-                .fromSection( section )
-                .executable( call );
+            .name( name )
+            .fromSection( section )
+            .executable( call );
 
         buildCommand( name, commandBuilder );
     }
@@ -251,10 +251,10 @@ public class CommandManager
     protected void registerCommand( final String name, final boolean enabled, final ISection section, final CommandCall call )
     {
         final CommandBuilder commandBuilder = CommandBuilder.builder()
-                .name( name )
-                .fromSection( section )
-                .enabled( enabled )
-                .executable( call );
+            .name( name )
+            .fromSection( section )
+            .enabled( enabled )
+            .executable( call );
 
         buildCommand( name, commandBuilder );
     }
@@ -288,10 +288,10 @@ public class CommandManager
     public Optional<Command> findCommandByName( final String name )
     {
         return this.commands.stream()
-                .filter( command ->
-                        command.getName().equalsIgnoreCase( name )
-                                || Arrays.stream( command.getAliases() ).anyMatch( alias -> alias.equalsIgnoreCase( name ) ) )
-                .findFirst();
+            .filter( command ->
+                command.getName().equalsIgnoreCase( name )
+                    || Arrays.stream( command.getAliases() ).anyMatch( alias -> alias.equalsIgnoreCase( name ) ) )
+            .findFirst();
     }
 
     private List<String> getParameterList( final ISection parameterSection )

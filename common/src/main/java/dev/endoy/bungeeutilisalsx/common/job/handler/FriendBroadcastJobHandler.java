@@ -11,10 +11,10 @@ public class FriendBroadcastJobHandler
     void handleFriendBroadcastJob( final FriendBroadcastJob job )
     {
         job.getReceivers().forEach( user -> user.sendLangMessage(
-                "friends.broadcast.message",
-                MessagePlaceholders.create()
-                        .append( "user", job.getSenderName() )
-                        .append( "message", job.getMessage() )
+            "friends.broadcast.message",
+            MessagePlaceholders.create()
+                .append( "user", job.getSenderName() )
+                .append( "message", job.getMessage() )
         ) );
     }
 }

@@ -26,9 +26,9 @@ public class AdvertisementChatProtection implements ChatProtection
         this.allowedAddresses = new ArrayList<>( ConfigFiles.ANTIAD.getConfig().getStringList( "allowed" ) );
         this.bypassPermission = ConfigFiles.ANTIAD.getConfig().getString( "bypass" );
         this.patterns = ConfigFiles.ANTIAD.getConfig().getStringList( "patterns" )
-                .stream()
-                .map( Pattern::compile )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Pattern::compile )
+            .collect( Collectors.toList() );
     }
 
     @Override

@@ -46,43 +46,43 @@ public class ReportListSubCommandCall implements CommandCall
                 final int next = Math.min( page + 1, pages );
 
                 user.sendLangMessage(
-                        "general-commands.report.list.header",
-                        MessagePlaceholders.create()
-                                .append( "page", page )
-                                .append( "maxPages", pages )
-                                .append( "previousPage", previous )
-                                .append( "nextPage", next )
+                    "general-commands.report.list.header",
+                    MessagePlaceholders.create()
+                        .append( "page", page )
+                        .append( "maxPages", pages )
+                        .append( "previousPage", previous )
+                        .append( "nextPage", next )
                 );
 
                 for ( Report report : pageReports )
                 {
                     user.sendLangMessage(
-                            "general-commands.report.list.item",
-                            MessagePlaceholders.create()
-                                    .append( report )
-                                    .append( "handled", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ) )
-                                    .append( "previousPage", previous )
-                                    .append( "nextPage", next )
+                        "general-commands.report.list.item",
+                        MessagePlaceholders.create()
+                            .append( report )
+                            .append( "handled", user.getLanguageConfig().getConfig().getString( "general-commands.report.list." + ( report.isHandled() ? "handled" : "unhandled" ) ) )
+                            .append( "previousPage", previous )
+                            .append( "nextPage", next )
                     );
                 }
 
                 user.sendLangMessage(
-                        "general-commands.report.list.footer",
-                        MessagePlaceholders.create()
-                                .append( "page", page )
-                                .append( "maxPages", pages )
-                                .append( "previousPage", previous )
-                                .append( "nextPage", next )
+                    "general-commands.report.list.footer",
+                    MessagePlaceholders.create()
+                        .append( "page", page )
+                        .append( "maxPages", pages )
+                        .append( "previousPage", previous )
+                        .append( "nextPage", next )
                 );
             }
             catch ( PageUtils.PageNotFoundException e )
             {
                 user.sendLangMessage(
-                        "general-commands.report.list.wrong-page",
-                        MessagePlaceholders.create()
-                                .append( "page", e.getPage() )
-                                .append( "maxpages", e.getMaxPages() )
-                                .append( "maxPages", e.getMaxPages() )
+                    "general-commands.report.list.wrong-page",
+                    MessagePlaceholders.create()
+                        .append( "page", e.getPage() )
+                        .append( "maxpages", e.getMaxPages() )
+                        .append( "maxPages", e.getMaxPages() )
                 );
             }
         } );

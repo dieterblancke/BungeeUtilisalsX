@@ -55,37 +55,37 @@ public class ServerBalancerConfig extends Config
             ISection commandSection = section.getSection( "command" );
             ISection pingerSection = section.getSection( "pinger" );
             ServerBalancerGroupPinger pinger = new ServerBalancerGroupPinger(
-                    pingerSection.getInteger( "delay" ),
-                    pingerSection.getInteger( "max-attempts" ),
-                    pingerSection.getInteger( "cooldown" ),
-                    pingerSection.exists( "motd-filter" )
-                            ? pingerSection.getStringList( "motd-filter" ).stream().map( Pattern::compile ).collect( Collectors.toList() )
-                            : new ArrayList<>()
+                pingerSection.getInteger( "delay" ),
+                pingerSection.getInteger( "max-attempts" ),
+                pingerSection.getInteger( "cooldown" ),
+                pingerSection.exists( "motd-filter" )
+                    ? pingerSection.getStringList( "motd-filter" ).stream().map( Pattern::compile ).collect( Collectors.toList() )
+                    : new ArrayList<>()
             );
 
             balancerGroups.add( new ServerBalancerGroup( group, method, allowSendingToOtherServers, commandSection, pinger ) );
         }
         fallbackConfig = new FallbackConfig(
-                FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
-                config.getStringList( "fallback.reasons" ),
-                this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null )
+            FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
+            config.getStringList( "fallback.reasons" ),
+            this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null )
         );
     }
 
     public Optional<ServerBalancerGroup> getServerBalancerGroupByName( final String groupName )
     {
         return balancerGroups
-                .stream()
-                .filter( it -> it.getServerGroup().getName().equalsIgnoreCase( groupName ) )
-                .findFirst();
+            .stream()
+            .filter( it -> it.getServerGroup().getName().equalsIgnoreCase( groupName ) )
+            .findFirst();
     }
 
     public Optional<ServerBalancerGroup> getServerBalancerGroupFor( final String serverName )
     {
         return balancerGroups
-                .stream()
-                .filter( it -> it.getServerGroup().isInGroup( serverName ) )
-                .findFirst();
+            .stream()
+            .filter( it -> it.getServerGroup().isInGroup( serverName ) )
+            .findFirst();
     }
 
     public enum ServerBalancingMethod

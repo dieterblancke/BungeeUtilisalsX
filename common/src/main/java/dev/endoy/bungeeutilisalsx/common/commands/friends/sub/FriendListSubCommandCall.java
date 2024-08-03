@@ -64,13 +64,13 @@ public class FriendListSubCommandCall implements CommandCall
             }
 
             MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
-                    .append( "friendAmount", allFriends.size() )
-                    .append( "maxFriends", friendLimit )
-                    .append( "pendingFriends", pendingRequests )
-                    .append( "previousPage", previous )
-                    .append( "currentPage", page )
-                    .append( "nextPage", next )
-                    .append( "maxPages", pages );
+                .append( "friendAmount", allFriends.size() )
+                .append( "maxFriends", friendLimit )
+                .append( "pendingFriends", pendingRequests )
+                .append( "previousPage", previous )
+                .append( "currentPage", page )
+                .append( "nextPage", next )
+                .append( "maxPages", pages );
 
             List<FriendData> friends = allFriends.subList( minNumber, maxNumber );
             user.sendLangMessage( "friends.list.head", messagePlaceholders );
@@ -82,12 +82,12 @@ public class FriendListSubCommandCall implements CommandCall
             for ( FriendData friend : friends )
             {
                 user.sendLangMessage(
-                        "friends.list.format",
-                        MessagePlaceholders.create()
-                                .append( "friendName", friend.getFriend() )
-                                .append( "lastOnline", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ) )
-                                .append( "online", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText )
-                                .append( "friendSince", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() ) )
+                    "friends.list.format",
+                    MessagePlaceholders.create()
+                        .append( "friendName", friend.getFriend() )
+                        .append( "lastOnline", friend.isOnline() ? now : Utils.formatDate( friend.getLastOnline(), user.getLanguageConfig().getConfig() ) )
+                        .append( "online", BuX.getApi().getPlayerUtils().isOnline( friend.getFriend() ) ? onlineText : offlineText )
+                        .append( "friendSince", Utils.formatDate( friend.getFriendSince(), user.getLanguageConfig().getConfig() ) )
                 );
             }
             user.sendLangMessage( "friends.list.foot", messagePlaceholders );

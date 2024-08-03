@@ -15,19 +15,19 @@ public class PluginCommandCall extends ParentCommand implements CommandCall
         super( "general-commands.bungeeutilisals.help" );
 
         registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "version" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.version" ) )
-                        .executable( new VersionSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "version" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.version" ) )
+                .executable( new VersionSubCommandCall() )
+                .build()
         );
 
         registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "reload" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.reload" ) )
-                        .executable( new ReloadSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "reload" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "bungeeutilisals.subcommands.reload" ) )
+                .executable( new ReloadSubCommandCall() )
+                .build()
         );
     }
 

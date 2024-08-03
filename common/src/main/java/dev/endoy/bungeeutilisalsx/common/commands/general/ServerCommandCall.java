@@ -16,7 +16,7 @@ public class ServerCommandCall implements CommandCall
     public static void sendToServer( final User user, final IProxyServer server )
     {
         MessagePlaceholders placeholders = MessagePlaceholders.create()
-                .append( "server", server.getName() );
+            .append( "server", server.getName() );
 
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
         {
@@ -61,10 +61,10 @@ public class ServerCommandCall implements CommandCall
                 BuX.getInstance().getJobManager().executeJob( new UserSwitchServerJob( name, server.getName() ) );
 
                 user.sendLangMessage(
-                        "general-commands.server.sent-other",
-                        MessagePlaceholders.create()
-                                .append( "user", name )
-                                .append( "server", server.getName() )
+                    "general-commands.server.sent-other",
+                    MessagePlaceholders.create()
+                        .append( "user", name )
+                        .append( "server", server.getName() )
                 );
             }
             else

@@ -11,10 +11,10 @@ public class TestPostgreSQLStorageManager extends PostgreSQLStorageManager
     public static GenericContainer<?> init()
     {
         postgresSqlContainer = new GenericContainer<>( "postgres:latest" )
-                .withEnv( "POSTGRES_DB", "database" )
-                .withEnv( "POSTGRES_USER", "username" )
-                .withEnv( "POSTGRES_PASSWORD", "password" )
-                .withExposedPorts( 5432 );
+            .withEnv( "POSTGRES_DB", "database" )
+            .withEnv( "POSTGRES_USER", "username" )
+            .withEnv( "POSTGRES_PASSWORD", "password" )
+            .withExposedPorts( 5432 );
         postgresSqlContainer.start();
         return postgresSqlContainer;
     }

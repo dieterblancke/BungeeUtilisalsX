@@ -30,8 +30,8 @@ public class TestBungeeUtilisalsX extends AbstractBungeeUtilisalsX
         if ( ConfigFiles.CONFIG.getConfig() == null )
         {
             TestInjectionUtil.injectConfiguration(
-                    ConfigFiles.CONFIG,
-                    new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
+                ConfigFiles.CONFIG,
+                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
             );
         }
         this.api = mock( IBuXApi.class, Mockito.RETURNS_DEEP_STUBS );

@@ -29,18 +29,18 @@ public class Punishment
     public static Punishment of( final PunishmentInfo info )
     {
         return new Punishment(
-                info.getType(),
-                info.getUser(),
-                info.getUuid(),
-                ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? info.getIp() : "",
-                info.getExecutedBy(),
-                info.getServer(),
-                info.getReason(),
-                new Timestamp( info.getDate().getTime() ).toLocalDateTime(),
-                info.getExpireTime(),
-                info.isActive(),
-                info.getRemovedBy(),
-                info.getPunishmentUid()
+            info.getType(),
+            info.getUser(),
+            info.getUuid(),
+            ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? info.getIp() : "",
+            info.getExecutedBy(),
+            info.getServer(),
+            info.getReason(),
+            new Timestamp( info.getDate().getTime() ).toLocalDateTime(),
+            info.getExpireTime(),
+            info.isActive(),
+            info.getRemovedBy(),
+            info.getPunishmentUid()
         );
     }
 }

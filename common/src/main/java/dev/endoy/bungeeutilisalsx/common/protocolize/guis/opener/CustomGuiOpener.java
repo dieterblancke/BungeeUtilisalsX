@@ -41,8 +41,8 @@ public class CustomGuiOpener extends GuiOpener
         }
 
         final GuiConfig config = configCache.computeIfAbsent(
-                guiName.toLowerCase(),
-                name -> new GuiConfig( fileLocation, GuiConfigItem.class )
+            guiName.toLowerCase(),
+            name -> new GuiConfig( fileLocation, GuiConfigItem.class )
         );
 
         if ( !Strings.isNullOrEmpty( config.getPermission() ) && !user.hasPermission( config.getPermission() ) )
@@ -52,11 +52,11 @@ public class CustomGuiOpener extends GuiOpener
         }
 
         final Gui gui = Gui.builder()
-                .itemProvider( new CustomGuiItemProvider( user, config ) )
-                .rows( config.getRows() )
-                .title( config.getTitle() )
-                .user( user )
-                .build();
+            .itemProvider( new CustomGuiItemProvider( user, config ) )
+            .rows( config.getRows() )
+            .title( config.getTitle() )
+            .user( user )
+            .build();
 
         gui.open();
     }

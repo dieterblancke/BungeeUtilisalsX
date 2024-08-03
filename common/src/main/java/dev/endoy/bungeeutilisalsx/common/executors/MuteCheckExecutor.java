@@ -37,12 +37,12 @@ public class MuteCheckExecutor implements EventExecutor
         }
 
         if ( ConfigFiles.PUNISHMENT_CONFIG.getConfig().getStringList( "blocked-mute-commands" )
-                .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
+            .contains( event.getActualCommand().replaceFirst( "/", "" ) ) )
         {
 
             user.sendLangMessage(
-                    "punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                    event.getApi().getPunishmentExecutor().getPlaceHolders( info )
+                "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+                event.getApi().getPunishmentExecutor().getPlaceHolders( info )
             );
             event.setCancelled( true );
         }
@@ -65,8 +65,8 @@ public class MuteCheckExecutor implements EventExecutor
         }
 
         user.sendLangMessage(
-                "punishments." + info.getType().toString().toLowerCase() + ".onmute",
-                event.getApi().getPunishmentExecutor().getPlaceHolders( info )
+            "punishments." + info.getType().toString().toLowerCase() + ".onmute",
+            event.getApi().getPunishmentExecutor().getPlaceHolders( info )
         );
         event.setCancelled( true );
     }
@@ -117,9 +117,9 @@ public class MuteCheckExecutor implements EventExecutor
         if ( useServerPunishments() )
         {
             return mutes.stream()
-                    .filter( mute -> mute.getServer().equalsIgnoreCase( "ALL" ) || mute.getServer().equalsIgnoreCase( server ) )
-                    .findAny()
-                    .orElse( null );
+                .filter( mute -> mute.getServer().equalsIgnoreCase( "ALL" ) || mute.getServer().equalsIgnoreCase( server ) )
+                .findAny()
+                .orElse( null );
         }
         else
         {

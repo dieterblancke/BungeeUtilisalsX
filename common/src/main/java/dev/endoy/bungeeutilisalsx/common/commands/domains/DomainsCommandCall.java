@@ -13,18 +13,18 @@ public class DomainsCommandCall extends ParentCommand implements CommandCall
         super( "general-commands.domains.help" );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "list" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.list" ) )
-                        .executable( new DomainsListSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "list" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.list" ) )
+                .executable( new DomainsListSubCommandCall() )
+                .build()
         );
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "search" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.search" ) )
-                        .executable( new DomainsSearchSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "search" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "domains.subcommands.search" ) )
+                .executable( new DomainsSearchSubCommandCall() )
+                .build()
         );
     }
 

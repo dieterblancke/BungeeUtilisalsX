@@ -21,12 +21,12 @@ public class TrackData
     public static TrackData of( final PunishmentTrackInfo info )
     {
         return new TrackData(
-                info.getUuid(),
-                info.getTrackId(),
-                info.getServer(),
-                info.getExecutedBy(),
-                new Timestamp( info.getDate().getTime() ).toLocalDateTime(),
-                info.isActive()
+            info.getUuid(),
+            info.getTrackId(),
+            info.getServer(),
+            info.getExecutedBy(),
+            new Timestamp( info.getDate().getTime() ).toLocalDateTime(),
+            info.isActive()
         );
     }
 }

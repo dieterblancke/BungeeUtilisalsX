@@ -41,35 +41,35 @@ public class PartySetOwnerSubCommandCall implements CommandCall
         final Optional<UserStorage> userStorage = UserUtils.getUserStorage( newOwner, user::sendLangMessage );
 
         userStorage.ifPresent( target -> party.getPartyMembers()
-                .stream()
-                .filter( m -> m.getUuid().equals( target.getUuid() ) )
-                .findFirst()
-                .ifPresentOrElse( ( member ) ->
-                {
-                    BuX.getInstance().getPartyManager().setPartyOwner( party, party.getOwner(), false );
-                    BuX.getInstance().getPartyManager().setPartyOwner( party, member, true );
+            .stream()
+            .filter( m -> m.getUuid().equals( target.getUuid() ) )
+            .findFirst()
+            .ifPresentOrElse( ( member ) ->
+            {
+                BuX.getInstance().getPartyManager().setPartyOwner( party, party.getOwner(), false );
+                BuX.getInstance().getPartyManager().setPartyOwner( party, member, true );
 
 
-                    user.sendLangMessage(
-                            "party.setowner.changed",
-                            MessagePlaceholders.create()
-                                    .append( "new-owner", target.getUserName() )
-                    );
-                    BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                            party,
-                            "party.setowner.broadcast",
-                            MessagePlaceholders.create()
-                                    .append( "old-owner", user.getName() )
-                                    .append( "new-owner", target.getUserName() )
-                    );
-                }, () ->
-                {
-                    user.sendLangMessage(
-                            "party.setowner.not-in-party",
-                            MessagePlaceholders.create()
-                                    .append( "user", target.getUserName() )
-                    );
-                } ) );
+                user.sendLangMessage(
+                    "party.setowner.changed",
+                    MessagePlaceholders.create()
+                        .append( "new-owner", target.getUserName() )
+                );
+                BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                    party,
+                    "party.setowner.broadcast",
+                    MessagePlaceholders.create()
+                        .append( "old-owner", user.getName() )
+                        .append( "new-owner", target.getUserName() )
+                );
+            }, () ->
+            {
+                user.sendLangMessage(
+                    "party.setowner.not-in-party",
+                    MessagePlaceholders.create()
+                        .append( "user", target.getUserName() )
+                );
+            } ) );
     }
 
     @Override

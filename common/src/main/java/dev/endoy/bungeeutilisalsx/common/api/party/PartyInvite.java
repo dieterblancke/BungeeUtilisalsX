@@ -21,10 +21,10 @@ public class PartyInvite
     public static PartyInvite fromMap( final UUID inviteeUuid, final Map<String, String> inviteData )
     {
         return new PartyInvite(
-                new Date( Long.parseLong( inviteData.get( "invitedAt" ) ) ),
-                inviteeUuid,
-                inviteData.get( "inviteeName" ),
-                UUID.fromString( inviteData.get( "invitedBy" ) )
+            new Date( Long.parseLong( inviteData.get( "invitedAt" ) ) ),
+            inviteeUuid,
+            inviteData.get( "inviteeName" ),
+            UUID.fromString( inviteData.get( "invitedBy" ) )
         );
     }
 

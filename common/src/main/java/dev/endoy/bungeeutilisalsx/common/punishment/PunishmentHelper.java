@@ -30,8 +30,8 @@ public class PunishmentHelper implements IPunishmentHelper
     public List<String> searchTemplate( final IConfiguration config, final PunishmentType type, String template )
     {
         template = template.replaceFirst(
-                ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "templates.detect" ),
-                ""
+            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "templates.detect" ),
+            ""
         );
         final List<ISection> sections = config.getSectionList( "punishments.templates" );
 

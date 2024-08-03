@@ -24,9 +24,9 @@ public class GraphQLExceptionHandler
     private GraphQLError handleException( final AuthException exception )
     {
         return GraphqlErrorBuilder.newError()
-                .message( exception.getMessage() )
-                .errorType( DefaultErrorClassification.AuthError )
-                .build();
+            .message( exception.getMessage() )
+            .errorType( DefaultErrorClassification.AuthError )
+            .build();
     }
 
     public enum DefaultErrorClassification implements ErrorClassification

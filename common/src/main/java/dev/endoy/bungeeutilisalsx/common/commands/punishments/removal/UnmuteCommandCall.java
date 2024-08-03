@@ -54,9 +54,9 @@ public class UnmuteCommandCall extends PunishmentCommand
 
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getMutesDao().removeCurrentMute(
-                storage.getUuid(),
-                user.getName(),
-                punishmentRemovalArgs.getServerOrAll()
+            storage.getUuid(),
+            user.getName(),
+            punishmentRemovalArgs.getServerOrAll()
         );
 
         final PunishmentInfo info = new PunishmentInfo();
@@ -75,16 +75,16 @@ public class UnmuteCommandCall extends PunishmentCommand
             if ( parameters.contains( "-nbp" ) )
             {
                 BuX.getApi().langBroadcast(
-                        "punishments.unmute.broadcast",
-                        executor.getPlaceHolders( info )
+                    "punishments.unmute.broadcast",
+                    executor.getPlaceHolders( info )
                 );
             }
             else
             {
                 BuX.getApi().langPermissionBroadcast(
-                        "punishments.unmute.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmute.broadcast" ),
-                        executor.getPlaceHolders( info )
+                    "punishments.unmute.broadcast",
+                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmute.broadcast" ),
+                    executor.getPlaceHolders( info )
                 );
             }
         }

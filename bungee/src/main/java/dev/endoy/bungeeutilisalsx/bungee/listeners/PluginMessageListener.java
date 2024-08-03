@@ -36,9 +36,9 @@ public class PluginMessageListener implements Listener
             return;
         }
         final UserPluginMessageReceiveEvent userPluginMessageReceiveEvent = new UserPluginMessageReceiveEvent(
-                optionalUser.get(),
-                event.getTag(),
-                event.getData().clone()
+            optionalUser.get(),
+            event.getTag(),
+            event.getData().clone()
         );
         BuX.getApi().getEventLoader().launchEventAsync( userPluginMessageReceiveEvent );
     }

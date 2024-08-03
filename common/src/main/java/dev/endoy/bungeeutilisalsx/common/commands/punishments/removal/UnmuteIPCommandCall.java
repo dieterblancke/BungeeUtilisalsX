@@ -54,9 +54,9 @@ public class UnmuteIPCommandCall extends PunishmentCommand
 
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getMutesDao().removeCurrentIPMute(
-                storage.getIp(),
-                user.getName(),
-                punishmentRemovalArgs.getServerOrAll()
+            storage.getIp(),
+            user.getName(),
+            punishmentRemovalArgs.getServerOrAll()
         );
 
         final PunishmentInfo info = new PunishmentInfo();
@@ -79,9 +79,9 @@ public class UnmuteIPCommandCall extends PunishmentCommand
             else
             {
                 BuX.getApi().langPermissionBroadcast(
-                        "punishments.unmuteip.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmuteip.broadcast" ),
-                        executor.getPlaceHolders( info )
+                    "punishments.unmuteip.broadcast",
+                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unmuteip.broadcast" ),
+                    executor.getPlaceHolders( info )
                 );
             }
         }

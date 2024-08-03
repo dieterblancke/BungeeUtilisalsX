@@ -1,13 +1,13 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.punishments.PunishmentAction;
 import dev.endoy.bungeeutilisalsx.common.api.punishments.PunishmentType;
 import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.configuration.api.ISection;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 
 import java.util.List;

@@ -1,10 +1,10 @@
 package dev.endoy.bungeeutilisalsx.common.api.cache;
 
-import dev.endoy.bungeeutilisalsx.common.api.utils.SimpleCacheLoader;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.google.common.cache.CacheLoader;
 import com.google.common.cache.LoadingCache;
+import dev.endoy.bungeeutilisalsx.common.api.utils.SimpleCacheLoader;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

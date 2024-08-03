@@ -41,35 +41,35 @@ public class PartySetRoleSubCommandCall implements CommandCall
         final String roleName = args.get( 1 );
 
         party.getPartyMembers()
-                .stream()
-                .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
-                .findFirst()
-                .ifPresentOrElse( member ->
+            .stream()
+            .filter( m -> m.getUserName().equalsIgnoreCase( targetName ) || m.getNickName().equalsIgnoreCase( targetName ) )
+            .findFirst()
+            .ifPresentOrElse( member ->
+            {
+                ConfigFiles.PARTY_CONFIG.findPartyRole( roleName ).ifPresentOrElse( role ->
                 {
-                    ConfigFiles.PARTY_CONFIG.findPartyRole( roleName ).ifPresentOrElse( role ->
-                    {
-                        BuX.getInstance().getPartyManager().setPartyMemberRole( party, member, role );
+                    BuX.getInstance().getPartyManager().setPartyMemberRole( party, member, role );
 
-                        user.sendLangMessage(
-                                "party.setrole.role-updated",
-                                MessagePlaceholders.create()
-                                        .append( "user", member.getUserName() )
-                                        .append( "role", role.getName() )
-                        );
+                    user.sendLangMessage(
+                        "party.setrole.role-updated",
+                        MessagePlaceholders.create()
+                            .append( "user", member.getUserName() )
+                            .append( "role", role.getName() )
+                    );
 
-                        BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                                party,
-                                "party.setrole.role-updated-broadcast",
-                                MessagePlaceholders.create()
-                                        .append( "user", member.getUserName() )
-                                        .append( "role", role.getName() )
-                        );
-                    }, () -> user.sendLangMessage(
-                            "party.setrole.incorrect-role",
-                            MessagePlaceholders.create()
-                                    .append( "roles", ConfigFiles.PARTY_CONFIG.getPartyRoles().stream().map( PartyRole::getName ).collect( Collectors.joining( ", " ) ) )
-                    ) );
-                }, () -> user.sendLangMessage( "party.setrole.not-in-party" ) );
+                    BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                        party,
+                        "party.setrole.role-updated-broadcast",
+                        MessagePlaceholders.create()
+                            .append( "user", member.getUserName() )
+                            .append( "role", role.getName() )
+                    );
+                }, () -> user.sendLangMessage(
+                    "party.setrole.incorrect-role",
+                    MessagePlaceholders.create()
+                        .append( "roles", ConfigFiles.PARTY_CONFIG.getPartyRoles().stream().map( PartyRole::getName ).collect( Collectors.joining( ", " ) ) )
+                ) );
+            }, () -> user.sendLangMessage( "party.setrole.not-in-party" ) );
     }
 
     @Override

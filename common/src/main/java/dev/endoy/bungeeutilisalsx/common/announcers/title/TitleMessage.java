@@ -17,11 +17,11 @@ public class TitleMessage
     public TitleMessage( final ISection section )
     {
         this(
-                section.getString( "title" ),
-                section.getString( "subtitle" ),
-                section.getInteger( "fadein" ),
-                section.getInteger( "stay" ),
-                section.getInteger( "fadeout" )
+            section.getString( "title" ),
+            section.getString( "subtitle" ),
+            section.getInteger( "fadein" ),
+            section.getInteger( "stay" ),
+            section.getInteger( "fadeout" )
         );
     }
 }

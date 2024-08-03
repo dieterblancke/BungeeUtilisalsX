@@ -39,18 +39,18 @@ public class WarnCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getKickAndWarnDao().insertWarn(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                user.getName()
+            storage.getUuid(),
+            storage.getUserName(),
+            storage.getIp(),
+            reason,
+            punishmentArgs.getServerOrAll(),
+            user.getName()
         ).thenAccept( info ->
         {
             BuX.getInstance().getJobManager().executeJob( new UserWarnJob(
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    info
+                storage.getUuid(),
+                storage.getUserName(),
+                info
             ) );
             user.sendLangMessage( "punishments.warn.executed", executor.getPlaceHolders( info ) );
 
@@ -59,16 +59,16 @@ public class WarnCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.warn.broadcast",
-                            executor.getPlaceHolders( info )
+                        "punishments.warn.broadcast",
+                        executor.getPlaceHolders( info )
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.warn.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.warn.broadcast" ),
-                            executor.getPlaceHolders( info )
+                        "punishments.warn.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.warn.broadcast" ),
+                        executor.getPlaceHolders( info )
                     );
                 }
             }

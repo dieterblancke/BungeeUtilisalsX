@@ -25,8 +25,8 @@ public class SlashServerCommandCall implements CommandCall
         if ( server == null )
         {
             user.sendLangMessage(
-                    "general-commands.server.notfound",
-                    MessagePlaceholders.create().append( "server", serverName )
+                "general-commands.server.notfound",
+                MessagePlaceholders.create().append( "server", serverName )
             );
             return;
         }
@@ -44,15 +44,15 @@ public class SlashServerCommandCall implements CommandCall
             if ( BuX.getApi().getPlayerUtils().isOnline( name ) )
             {
                 BuX.getInstance().getJobManager().executeJob( new UserSwitchServerJob(
-                        name,
-                        server.getName()
+                    name,
+                    server.getName()
                 ) );
 
                 user.sendLangMessage(
-                        "general-commands.server.sent-other",
-                        MessagePlaceholders.create()
-                                .append( "user", name )
-                                .append( "server", server.getName() )
+                    "general-commands.server.sent-other",
+                    MessagePlaceholders.create()
+                        .append( "user", name )
+                        .append( "server", server.getName() )
                 );
             }
             else
@@ -82,18 +82,18 @@ public class SlashServerCommandCall implements CommandCall
         if ( user.getServerName().equalsIgnoreCase( server.getName() ) )
         {
             user.sendLangMessage(
-                    "general-commands.server.alreadyconnected",
-                    MessagePlaceholders.create()
-                            .append( "server", server.getName() )
+                "general-commands.server.alreadyconnected",
+                MessagePlaceholders.create()
+                    .append( "server", server.getName() )
             );
             return;
         }
 
         user.sendToServer( server );
         user.sendLangMessage(
-                "general-commands.server.connecting",
-                MessagePlaceholders.create()
-                        .append( "server", server.getName() )
+            "general-commands.server.connecting",
+            MessagePlaceholders.create()
+                .append( "server", server.getName() )
         );
     }
 }

@@ -1,7 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.api.job.management;
 
-import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import com.google.gson.*;
+import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;

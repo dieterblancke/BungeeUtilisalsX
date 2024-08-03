@@ -71,17 +71,17 @@ public class PunishmentDataCommandCall implements CommandCall
             if ( info == null )
             {
                 user.sendLangMessage(
-                        "punishments.punishmentdata.not-found",
-                        MessagePlaceholders.create()
-                                .append( "type", type.toString().toLowerCase() )
-                                .append( "id", id )
+                    "punishments.punishmentdata.not-found",
+                    MessagePlaceholders.create()
+                        .append( "type", type.toString().toLowerCase() )
+                        .append( "id", id )
                 );
             }
             else
             {
                 user.sendLangMessage(
-                        "punishments.punishmentdata.found",
-                        BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
+                    "punishments.punishmentdata.found",
+                    BuX.getApi().getPunishmentExecutor().getPlaceHolders( info )
                 );
             }
         } );

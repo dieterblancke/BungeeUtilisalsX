@@ -1,9 +1,9 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 
 import java.util.List;
@@ -31,11 +31,11 @@ public class FriendsConfig extends Config
     public void setup()
     {
         disabledSwitchMessageServers.addAll(
-                config.getStringList( "ignore-for-switch" )
-                        .stream()
-                        .map( str -> ConfigFiles.SERVERGROUPS.getServer( str ) )
-                        .flatMap( Optional::stream )
-                        .collect( Collectors.toList() )
+            config.getStringList( "ignore-for-switch" )
+                .stream()
+                .map( str -> ConfigFiles.SERVERGROUPS.getServer( str ) )
+                .flatMap( Optional::stream )
+                .collect( Collectors.toList() )
         );
     }
 

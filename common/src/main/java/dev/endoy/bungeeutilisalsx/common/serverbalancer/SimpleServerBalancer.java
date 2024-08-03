@@ -72,12 +72,15 @@ public class SimpleServerBalancer implements ServerBalancer
         ServerBalancerGroupStatus groupStatus = groupStatuses.get( balancerGroup );
 
         return switch ( balancingMethod )
-                {
-                    case RANDOM -> Optional.ofNullable( MathUtils.getRandomFromList( groupStatus.getAvailableServers( serverToIgnore ) ) );
-                    case LEAST_PLAYERS -> groupStatus.getAvailableServers( serverToIgnore ).stream().min( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
-                    case FIRST_NON_FULL -> groupStatus.getAvailableServers( serverToIgnore ).stream().findFirst();
-                    case MOST_PLAYERS -> groupStatus.getAvailableServers( serverToIgnore ).stream().max( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
-                };
+        {
+            case RANDOM ->
+                Optional.ofNullable( MathUtils.getRandomFromList( groupStatus.getAvailableServers( serverToIgnore ) ) );
+            case LEAST_PLAYERS ->
+                groupStatus.getAvailableServers( serverToIgnore ).stream().min( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+            case FIRST_NON_FULL -> groupStatus.getAvailableServers( serverToIgnore ).stream().findFirst();
+            case MOST_PLAYERS ->
+                groupStatus.getAvailableServers( serverToIgnore ).stream().max( Comparator.comparingInt( o -> groupStatus.getServerStatuses().get( o ).getOnlinePlayers() ) );
+        };
     }
 
     private void setupPingerTasks()
@@ -131,8 +134,8 @@ public class SimpleServerBalancer implements ServerBalancer
                             if ( throwable != null && pinger.getMotdFilters() != null && !pinger.getMotdFilters().isEmpty() )
                             {
                                 if ( pinger.getMotdFilters()
-                                        .stream()
-                                        .noneMatch( filter -> filter.matcher( serverStatus.getMotd() ).matches() ) )
+                                    .stream()
+                                    .noneMatch( filter -> filter.matcher( serverStatus.getMotd() ).matches() ) )
                                 {
                                     serverStatus.setOnline( false );
                                 }

@@ -1,8 +1,8 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.server;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
-import com.google.common.collect.Lists;
 import lombok.Data;
 
 import java.util.LinkedList;

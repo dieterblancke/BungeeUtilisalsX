@@ -15,8 +15,8 @@ import java.io.File;
 
 @Log
 @SpringBootApplication( exclude = {
-        MongoAutoConfiguration.class,
-        MongoDataAutoConfiguration.class
+    MongoAutoConfiguration.class,
+    MongoDataAutoConfiguration.class
 } )
 @EnableAspectJAutoProxy
 public class Bootstrap
@@ -30,9 +30,9 @@ public class Bootstrap
 
         Platform.setCurrentPlatform( Platform.SPRING );
         BootstrapUtil.loadLibraries(
-                dataFolder,
-                new UrlLibraryClassLoader(),
-                log
+            dataFolder,
+            new UrlLibraryClassLoader(),
+            log
         );
 
         SpringApplication.run( Bootstrap.class, args );

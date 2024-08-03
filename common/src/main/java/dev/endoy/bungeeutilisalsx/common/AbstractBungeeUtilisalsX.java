@@ -121,11 +121,11 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerPluginSupports();
 
         Announcer.registerAnnouncers(
-                ActionBarAnnouncer.class,
-                ChatAnnouncer.class,
-                TitleAnnouncer.class,
-                BossBarAnnouncer.class,
-                TabAnnouncer.class
+            ActionBarAnnouncer.class,
+            ChatAnnouncer.class,
+            TitleAnnouncer.class,
+            BossBarAnnouncer.class,
+            TabAnnouncer.class
         );
 
         this.setupTasks();
@@ -249,12 +249,12 @@ public abstract class AbstractBungeeUtilisalsX
             scriptsFolder.mkdir();
 
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
-                    new File( scriptsFolder, "hello.js" )
+                this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
+                new File( scriptsFolder, "hello.js" )
             );
             IConfiguration.createDefaultFile(
-                    this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
-                    new File( scriptsFolder, "coins.js" )
+                this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
+                new File( scriptsFolder, "coins.js" )
             );
         }
 
@@ -312,7 +312,7 @@ public abstract class AbstractBungeeUtilisalsX
     protected void detectPermissionIntegration()
     {
         final List<PermissionIntegration> integrations = Lists.newArrayList(
-                new LuckPermsPermissionIntegration()
+            new LuckPermsPermissionIntegration()
         );
 
         for ( PermissionIntegration integration : integrations )

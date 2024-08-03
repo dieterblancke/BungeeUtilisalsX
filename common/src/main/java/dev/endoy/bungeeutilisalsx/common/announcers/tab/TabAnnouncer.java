@@ -35,11 +35,11 @@ public class TabAnnouncer extends Announcer
             final String permission = section.getString( "permission" );
             final boolean language = section.getBoolean( "language" );
             final List<String> header = section.isList( "header" )
-                    ? section.getStringList( "header" )
-                    : Lists.newArrayList( section.getString( "header" ) );
+                ? section.getStringList( "header" )
+                : Lists.newArrayList( section.getString( "header" ) );
             final List<String> footer = section.isList( "footer" )
-                    ? section.getStringList( "footer" )
-                    : Lists.newArrayList( section.getString( "footer" ) );
+                ? section.getStringList( "footer" )
+                : Lists.newArrayList( section.getString( "footer" ) );
 
             addAnnouncement( new TabAnnouncement( language, header, footer, optionalGroup.get(), permission ) );
         }

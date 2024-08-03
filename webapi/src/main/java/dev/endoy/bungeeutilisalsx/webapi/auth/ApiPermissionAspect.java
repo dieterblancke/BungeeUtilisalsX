@@ -35,7 +35,7 @@ public class ApiPermissionAspect
         if ( !apiToken.getPermissions().contains( permission.value() ) && !apiToken.getPermissions().contains( ApiPermission.ALL ) )
         {
             throw new InsufficientPermissionsException(
-                    "The provided API key does not have the '" + permission.value() + "' permission!"
+                "The provided API key does not have the '" + permission.value() + "' permission!"
             );
         }
 

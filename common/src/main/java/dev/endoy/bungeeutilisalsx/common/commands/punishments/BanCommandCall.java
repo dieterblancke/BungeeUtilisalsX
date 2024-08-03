@@ -35,13 +35,13 @@ public class BanCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getBansDao().insertBan(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                true,
-                user.getName()
+            storage.getUuid(),
+            storage.getUserName(),
+            storage.getIp(),
+            reason,
+            punishmentArgs.getServerOrAll(),
+            true,
+            user.getName()
         ).thenAccept( info ->
         {
             // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
@@ -53,16 +53,16 @@ public class BanCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.ban.broadcast",
-                            executor.getPlaceHolders( info )
+                        "punishments.ban.broadcast",
+                        executor.getPlaceHolders( info )
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.ban.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
-                            executor.getPlaceHolders( info )
+                        "punishments.ban.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ban.broadcast" ),
+                        executor.getPlaceHolders( info )
                     );
                 }
             }

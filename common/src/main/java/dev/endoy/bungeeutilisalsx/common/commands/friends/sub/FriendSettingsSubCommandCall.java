@@ -26,11 +26,11 @@ public class FriendSettingsSubCommandCall implements CommandCall
             for ( FriendSetting setting : FriendSetting.getEnabledSettings() )
             {
                 user.sendLangMessage(
-                        "friends.settings.noargs.format",
-                        MessagePlaceholders.create()
-                                .append( "type", setting.getName( user.getLanguageConfig().getConfig() ) )
-                                .append( "unformatted-type", setting.toString() )
-                                .append( "status", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) ) )
+                    "friends.settings.noargs.format",
+                    MessagePlaceholders.create()
+                        .append( "type", setting.getName( user.getLanguageConfig().getConfig() ) )
+                        .append( "unformatted-type", setting.toString() )
+                        .append( "status", user.getLanguageConfig().getConfig().getString( "friends.settings.noargs." + ( settings.getSetting( setting ) ? "enabled" : "disabled" ) ) )
                 );
             }
 
@@ -43,24 +43,24 @@ public class FriendSettingsSubCommandCall implements CommandCall
             if ( type == null )
             {
                 final String settings = Stream.of( FriendSetting.values() )
-                        .map( Enum::toString )
-                        .collect( Collectors.joining() );
+                    .map( Enum::toString )
+                    .collect( Collectors.joining() );
 
                 user.sendLangMessage( "friends.settings.invalid", MessagePlaceholders.create().append( "settings", settings ) );
                 return;
             }
             final boolean value = args.get( 1 ).contains( "toggle" )
-                    ? !user.getFriendSettings().getSetting( type )
-                    : !args.get( 1 ).toLowerCase().contains( "d" );
+                ? !user.getFriendSettings().getSetting( type )
+                : !args.get( 1 ).toLowerCase().contains( "d" );
 
             user.getFriendSettings().set( type, value );
             BuX.getApi().getStorageManager().getDao().getFriendsDao().setSetting( user.getUuid(), type, value );
 
             user.sendLangMessage(
-                    "friends.settings.updated",
-                    MessagePlaceholders.create()
-                            .append( "type", type.toString().toLowerCase() )
-                            .append( "value", value )
+                "friends.settings.updated",
+                MessagePlaceholders.create()
+                    .append( "type", type.toString().toLowerCase() )
+                    .append( "value", value )
             );
         }
         else

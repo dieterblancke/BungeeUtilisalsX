@@ -50,12 +50,12 @@ public class BungeeOperationsApi implements ServerOperationsApi
     public List<IProxyServer> getServers()
     {
         return ProxyServer.getInstance()
-                .getServers()
-                .values()
-                .stream()
-                .map( ServerInfo::getName )
-                .map( this::getServerInfo )
-                .collect( Collectors.toList() );
+            .getServers()
+            .values()
+            .stream()
+            .map( ServerInfo::getName )
+            .map( this::getServerInfo )
+            .collect( Collectors.toList() );
     }
 
     @Override
@@ -69,10 +69,10 @@ public class BungeeOperationsApi implements ServerOperationsApi
     public List<PluginInfo> getPlugins()
     {
         return ProxyServer.getInstance().getPluginManager().getPlugins()
-                .stream()
-                .map( Plugin::getDescription )
-                .map( this::getPluginInfo )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Plugin::getDescription )
+            .map( this::getPluginInfo )
+            .collect( Collectors.toList() );
     }
 
     @Override
@@ -81,8 +81,8 @@ public class BungeeOperationsApi implements ServerOperationsApi
         final Plugin plugin = ProxyServer.getInstance().getPluginManager().getPlugin( pluginName );
 
         return Optional.ofNullable( plugin )
-                .map( Plugin::getDescription )
-                .map( this::getPluginInfo );
+            .map( Plugin::getDescription )
+            .map( this::getPluginInfo );
     }
 
     @Override
@@ -106,12 +106,12 @@ public class BungeeOperationsApi implements ServerOperationsApi
     private PluginInfo getPluginInfo( final PluginDescription pluginDescription )
     {
         return new PluginInfo(
-                pluginDescription.getName(),
-                pluginDescription.getVersion(),
-                pluginDescription.getAuthor(),
-                pluginDescription.getDepends(),
-                pluginDescription.getSoftDepends(),
-                pluginDescription.getDescription()
+            pluginDescription.getName(),
+            pluginDescription.getVersion(),
+            pluginDescription.getAuthor(),
+            pluginDescription.getDepends(),
+            pluginDescription.getSoftDepends(),
+            pluginDescription.getDescription()
         );
     }
 }

@@ -51,14 +51,14 @@ public class ProxyMotdPingExecutor implements EventExecutor
         final Component component = Utils.format( message );
 
         return new MotdPingResponse(
-                component,
-                motd.getHoverMessages()
-                        .stream()
-                        .map( m -> new MotdPingPlayer(
-                                MessageUtils.colorizeLegacy( Utils.formatString( formatMessage( m, connection ) ) ),
-                                DIDJEE2_UUID
-                        ) )
-                        .collect( Collectors.toList() )
+            component,
+            motd.getHoverMessages()
+                .stream()
+                .map( m -> new MotdPingPlayer(
+                    MessageUtils.colorizeLegacy( Utils.formatString( formatMessage( m, connection ) ) ),
+                    DIDJEE2_UUID
+                ) )
+                .collect( Collectors.toList() )
         );
     }
 
@@ -102,7 +102,7 @@ public class ProxyMotdPingExecutor implements EventExecutor
             if ( handler.checkCondition( connection ) )
             {
                 final List<MotdData> conditionalMotds = conditions.stream().filter(
-                        data -> data.getConditionHandler().getCondition().equalsIgnoreCase( handler.getCondition() )
+                    data -> data.getConditionHandler().getCondition().equalsIgnoreCase( handler.getCondition() )
                 ).collect( Collectors.toList() );
                 final MotdData motd = MathUtils.getRandomFromList( conditionalMotds );
 

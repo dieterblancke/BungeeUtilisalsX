@@ -14,13 +14,13 @@ public class UserGetPingJobHandler extends AbstractJobHandler
     void executeGetUserPingJob( final UserGetPingJob job )
     {
         job.getTargetUser().ifPresent( target -> BuX.getInstance().getJobManager().executeJob(
-                new UserLanguageMessageJob(
-                        job,
-                        "general-commands.ping.other",
-                        MessagePlaceholders.create()
-                                .append( "target", target.getName() )
-                                .append( "targetPing", target.getPing() )
-                )
+            new UserLanguageMessageJob(
+                job,
+                "general-commands.ping.other",
+                MessagePlaceholders.create()
+                    .append( "target", target.getName() )
+                    .append( "targetPing", target.getPing() )
+            )
         ) );
     }
 }

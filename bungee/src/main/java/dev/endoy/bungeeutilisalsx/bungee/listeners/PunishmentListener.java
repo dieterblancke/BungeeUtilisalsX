@@ -58,10 +58,10 @@ public class PunishmentListener implements Listener
         if ( ConfigFiles.CONFIG.isDebug() )
         {
             System.out.printf(
-                    "Checking ban for UUID: %s and IP: %s for server %s%n",
-                    player.getUniqueId().toString(),
-                    ip,
-                    target.getName()
+                "Checking ban for UUID: %s and IP: %s for server %s%n",
+                player.getUniqueId().toString(),
+                ip,
+                target.getName()
             );
         }
 
@@ -92,7 +92,7 @@ public class PunishmentListener implements Listener
         }
         final UserStorage storage = optionalStorage.get();
         final IConfiguration config = BuX.getApi().getLanguageManager().getConfig(
-                BuX.getInstance().getName(), storage.getLanguage()
+            BuX.getInstance().getName(), storage.getLanguage()
         ).getConfig();
 
         final BansDao bansDao = dao.getPunishmentDao().getBansDao();
@@ -124,8 +124,8 @@ public class PunishmentListener implements Listener
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( info.getReason() ) )
         {
             kick = Utils.formatList(
-                    BuX.getApi().getPunishmentExecutor().searchTemplate( config, info.getType(), info.getReason() ),
-                    "\n"
+                BuX.getApi().getPunishmentExecutor().searchTemplate( config, info.getType(), info.getReason() ),
+                "\n"
             );
         }
         if ( kick == null )

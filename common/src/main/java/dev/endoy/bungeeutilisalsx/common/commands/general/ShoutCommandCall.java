@@ -35,11 +35,11 @@ public class ShoutCommandCall implements CommandCall
         }
 
         BuX.getApi().langBroadcast(
-                shoutMessagePath,
-                MessagePlaceholders.create()
-                        .append( "user", user.getName() )
-                        .append( "servername", user.getServerName() )
-                        .append( "message", message )
+            shoutMessagePath,
+            MessagePlaceholders.create()
+                .append( "user", user.getName() )
+                .append( "servername", user.getServerName() )
+                .append( "message", message )
         );
     }
 

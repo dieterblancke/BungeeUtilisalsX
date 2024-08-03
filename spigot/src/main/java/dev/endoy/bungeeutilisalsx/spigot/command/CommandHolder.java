@@ -21,10 +21,10 @@ public class CommandHolder extends org.bukkit.command.Command implements TabExec
     public CommandHolder( final Command command )
     {
         super(
-                command.getName(),
-                command.getCommand().getDescription(),
-                command.getCommand().getUsage(),
-                Arrays.stream( command.getAliases() ).collect( Collectors.toList() )
+            command.getName(),
+            command.getCommand().getDescription(),
+            command.getCommand().getUsage(),
+            Arrays.stream( command.getAliases() ).collect( Collectors.toList() )
         );
 
         this.command = command;
@@ -33,8 +33,8 @@ public class CommandHolder extends org.bukkit.command.Command implements TabExec
     private User getUser( final CommandSender sender )
     {
         return sender instanceof Player
-                ? BuX.getApi().getUser( sender.getName() ).orElse( null )
-                : BuX.getApi().getConsoleUser();
+            ? BuX.getApi().getUser( sender.getName() ).orElse( null )
+            : BuX.getApi().getConsoleUser();
     }
 
     @Override

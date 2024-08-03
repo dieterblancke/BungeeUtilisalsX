@@ -40,11 +40,11 @@ public class PartyGuiOpener extends GuiOpener
         final List<PartyMember> partyMembers = party.getPartyMembers();
         final PartyGuiConfig config = DefaultGui.PARTY.getConfig();
         final Gui gui = Gui.builder()
-                .itemProvider( new PartyGuiItemProvider( user, config, party, partyMembers ) )
-                .rows( config.getRows() )
-                .title( config.getTitle() )
-                .user( user )
-                .build();
+            .itemProvider( new PartyGuiItemProvider( user, config, party, partyMembers ) )
+            .rows( config.getRows() )
+            .title( config.getTitle() )
+            .user( user )
+            .build();
 
         gui.open();
     }

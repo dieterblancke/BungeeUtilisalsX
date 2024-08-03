@@ -66,9 +66,9 @@ public class BossBarAnnouncement extends Announcement
             {
                 final IBossBar bar = BuX.getApi().createBossBar();
                 bar.setMessage(
-                        Utils.format( user, message.isLanguage()
-                                ? config.getString( message.getText() )
-                                : message.getText() )
+                    Utils.format( user, message.isLanguage()
+                        ? config.getString( message.getText() )
+                        : message.getText() )
                 );
                 bar.setColor( message.getColor() );
                 bar.setProgress( message.getProgress() );

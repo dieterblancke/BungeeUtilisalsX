@@ -35,13 +35,13 @@ public class IPMuteCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getMutesDao().insertIPMute(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                true,
-                user.getName()
+            storage.getUuid(),
+            storage.getUserName(),
+            storage.getIp(),
+            reason,
+            punishmentArgs.getServerOrAll(),
+            true,
+            user.getName()
         ).thenAccept( info ->
         {
             super.attemptMute( storage, "punishments.ipmute.onmute", info );
@@ -52,16 +52,16 @@ public class IPMuteCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.ipmute.broadcast",
-                            executor.getPlaceHolders( info )
+                        "punishments.ipmute.broadcast",
+                        executor.getPlaceHolders( info )
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.ipmute.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ipmute.broadcast" ),
-                            executor.getPlaceHolders( info )
+                        "punishments.ipmute.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.ipmute.broadcast" ),
+                        executor.getPlaceHolders( info )
                     );
                 }
             }

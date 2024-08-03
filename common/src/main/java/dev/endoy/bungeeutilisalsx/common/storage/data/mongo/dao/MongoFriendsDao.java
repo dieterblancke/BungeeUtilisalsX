@@ -48,10 +48,10 @@ public class MongoFriendsDao implements FriendsDao
             final MongoCollection<Document> coll = db().getCollection( "bu_friends" );
 
             coll.deleteOne(
-                    Filters.and(
-                            Filters.eq( "user", user.toString() ),
-                            Filters.eq( "friend", uuid.toString() )
-                    )
+                Filters.and(
+                    Filters.eq( "user", user.toString() ),
+                    Filters.eq( "friend", uuid.toString() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -70,10 +70,10 @@ public class MongoFriendsDao implements FriendsDao
                 final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "friend" ) ) ).first();
 
                 friends.add( new FriendData(
-                        UUID.fromString( doc.getString( "friend" ) ),
-                        friend.getString( "username" ),
-                        doc.getDate( "created" ),
-                        friend.getDate( "lastlogout" )
+                    UUID.fromString( doc.getString( "friend" ) ),
+                    friend.getString( "username" ),
+                    doc.getDate( "created" ),
+                    friend.getDate( "lastlogout" )
                 ) );
             } );
 
@@ -115,10 +115,10 @@ public class MongoFriendsDao implements FriendsDao
             final MongoCollection<Document> coll = db().getCollection( "bu_friendrequests" );
 
             coll.deleteOne(
-                    Filters.and(
-                            Filters.eq( "user", uuid.toString() ),
-                            Filters.eq( "friend", user.toString() )
-                    )
+                Filters.and(
+                    Filters.eq( "user", uuid.toString() ),
+                    Filters.eq( "friend", user.toString() )
+                )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -137,11 +137,11 @@ public class MongoFriendsDao implements FriendsDao
                 final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "user" ) ) ).first();
 
                 friendRequests.add( new FriendRequest(
-                        uuid,
-                        friend.getString( "username" ),
-                        UUID.fromString( doc.getString( "friend" ) ),
-                        null,
-                        doc.getDate( "requested_at" )
+                    uuid,
+                    friend.getString( "username" ),
+                    UUID.fromString( doc.getString( "friend" ) ),
+                    null,
+                    doc.getDate( "requested_at" )
                 ) );
             } );
 
@@ -162,11 +162,11 @@ public class MongoFriendsDao implements FriendsDao
             {
                 final Document friend = userColl.find( Filters.eq( "uuid", doc.getString( "friend" ) ) ).first();
                 friendRequests.add( new FriendRequest(
-                        uuid,
-                        null,
-                        UUID.fromString( doc.getString( "friend" ) ),
-                        friend.getString( "username" ),
-                        doc.getDate( "requested_at" )
+                    uuid,
+                    null,
+                    UUID.fromString( doc.getString( "friend" ) ),
+                    friend.getString( "username" ),
+                    doc.getDate( "requested_at" )
                 ) );
             } );
 
@@ -182,8 +182,8 @@ public class MongoFriendsDao implements FriendsDao
             final MongoCollection<Document> coll = db().getCollection( "bu_friendrequests" );
 
             return coll.find( Filters.and(
-                    Filters.eq( "user", uuid.toString() ),
-                    Filters.eq( "friend", user.toString() )
+                Filters.eq( "user", uuid.toString() ),
+                Filters.eq( "friend", user.toString() )
             ) ).limit( 1 ).iterator().hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -196,8 +196,8 @@ public class MongoFriendsDao implements FriendsDao
             final MongoCollection<Document> coll = db().getCollection( "bu_friendrequests" );
 
             return coll.find( Filters.and(
-                    Filters.eq( "user", user.toString() ),
-                    Filters.eq( "friend", uuid.toString() )
+                Filters.eq( "user", user.toString() ),
+                Filters.eq( "friend", uuid.toString() )
             ) ).limit( 1 ).iterator().hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -209,26 +209,26 @@ public class MongoFriendsDao implements FriendsDao
         {
             final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
             final boolean exists = coll.find( Filters.and(
-                    Filters.eq( "user", uuid.toString() ),
-                    Filters.eq( "setting", type.toString() )
+                Filters.eq( "user", uuid.toString() ),
+                Filters.eq( "setting", type.toString() )
             ) ).limit( 1 ).iterator().hasNext();
 
             if ( exists )
             {
                 coll.updateOne(
-                        Filters.and(
-                                Filters.eq( "user", uuid.toString() ),
-                                Filters.eq( "setting", type.toString() )
-                        ),
-                        Updates.set( type.toString().toLowerCase(), value )
+                    Filters.and(
+                        Filters.eq( "user", uuid.toString() ),
+                        Filters.eq( "setting", type.toString() )
+                    ),
+                    Updates.set( type.toString().toLowerCase(), value )
                 );
             }
             else
             {
                 coll.insertOne( new Document()
-                        .append( "user", uuid.toString() )
-                        .append( "setting", type.toString() )
-                        .append( "value", value ) );
+                    .append( "user", uuid.toString() )
+                    .append( "setting", type.toString() )
+                    .append( "value", value ) );
             }
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -240,8 +240,8 @@ public class MongoFriendsDao implements FriendsDao
         {
             final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
             final boolean exists = coll.find( Filters.and(
-                    Filters.eq( "user", uuid.toString() ),
-                    Filters.eq( "setting", type.toString() )
+                Filters.eq( "user", uuid.toString() ),
+                Filters.eq( "setting", type.toString() )
             ) ).limit( 1 ).iterator().hasNext();
 
             if ( !exists )
@@ -273,8 +273,8 @@ public class MongoFriendsDao implements FriendsDao
                 final FriendSetting setting = FriendSetting.valueOf( doc.getString( "setting" ) );
 
                 friendSettings.set(
-                        setting,
-                        doc.getBoolean( "value" )
+                    setting,
+                    doc.getBoolean( "value" )
                 );
             } );
 

@@ -24,11 +24,11 @@ public class FriendGuiOpener extends GuiOpener
         final List<FriendData> friends = user.getFriends();
         final FriendGuiConfig config = DefaultGui.FRIEND.getConfig();
         final Gui gui = Gui.builder()
-                .itemProvider( new FriendGuiItemProvider( user, config, friends ) )
-                .rows( config.getRows() )
-                .title( config.getTitle() )
-                .user( user )
-                .build();
+            .itemProvider( new FriendGuiItemProvider( user, config, friends ) )
+            .rows( config.getRows() )
+            .title( config.getTitle() )
+            .user( user )
+            .build();
 
         gui.open();
     }

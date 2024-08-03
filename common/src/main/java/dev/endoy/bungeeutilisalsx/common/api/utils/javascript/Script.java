@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.javascript;
 
+import com.google.common.hash.Hashing;
+import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.configuration.api.IConfiguration;
 import dev.endoy.configuration.yaml.YamlConfigurationOptions;
-import com.google.common.hash.Hashing;
-import de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory;
 import lombok.Data;
 import lombok.SneakyThrows;
 
@@ -53,8 +53,8 @@ public class Script
         }
 
         this.storage = IConfiguration.loadYamlConfiguration(
-                storage,
-                YamlConfigurationOptions.builder().useComments( true ).build()
+            storage,
+            YamlConfigurationOptions.builder().useComments( true ).build()
         );
         this.engine = loadEngine();
     }
@@ -72,10 +72,10 @@ public class Script
         engine.put( "api", BuX.getApi() );
 
         engine.eval( """
-                function isConsole() {
-                    return user === null || user.getClass().getSimpleName() === 'ConsoleUser';
-                }
-                """ );
+            function isConsole() {
+                return user === null || user.getClass().getSimpleName() === 'ConsoleUser';
+            }
+            """ );
 
         return engine;
     }

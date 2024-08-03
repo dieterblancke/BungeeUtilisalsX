@@ -1,5 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.api.announcer;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.utils.FileUtils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
@@ -7,8 +9,6 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.other.RandomIterator;
 import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
 import dev.endoy.configuration.api.IConfiguration;
 import dev.endoy.configuration.yaml.YamlConfigurationOptions;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Data;
 import lombok.Getter;
 
@@ -63,7 +63,7 @@ public abstract class Announcer
         if ( !file.exists() )
         {
             try ( InputStream inputStream = FileUtils.getResourceAsStream(
-                    "/configurations/announcer/" + type.toString().toLowerCase() + ".yml"
+                "/configurations/announcer/" + type.toString().toLowerCase() + ".yml"
             ) )
             {
                 IConfiguration.createDefaultFile( inputStream, file );
@@ -75,8 +75,8 @@ public abstract class Announcer
         }
 
         configuration = IConfiguration.loadYamlConfiguration(
-                file,
-                YamlConfigurationOptions.builder().useComments( true ).build()
+            file,
+            YamlConfigurationOptions.builder().useComments( true ).build()
         );
         load();
     }
@@ -100,7 +100,8 @@ public abstract class Announcer
 
                 announcers.put( announcer.getType(), announcer );
             }
-            catch ( InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e )
+            catch ( InstantiationException | IllegalAccessException | NoSuchMethodException |
+                    InvocationTargetException e )
             {
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
@@ -115,39 +116,39 @@ public abstract class Announcer
         }
 
         task = SCHEDULED_EXECUTOR_SERVICE.scheduleWithFixedDelay(
-                new Runnable()
+            new Runnable()
+            {
+
+                private IAnnouncement previous;
+
+                @Override
+                public void run()
                 {
-
-                    private IAnnouncement previous;
-
-                    @Override
-                    public void run()
+                    if ( groupPerServer )
                     {
-                        if ( groupPerServer )
+                        for ( IAnnouncement announcement : announcements )
                         {
-                            for ( IAnnouncement announcement : announcements )
+                            if ( announcement instanceof GroupedAnnouncement )
                             {
-                                if ( announcement instanceof GroupedAnnouncement )
-                                {
-                                    announcement.send();
-                                }
+                                announcement.send();
                             }
-                        }
-                        else
-                        {
-                            if ( previous != null )
-                            {
-                                previous.clear();
-                            }
-                            final IAnnouncement next = getNextAnnouncement();
-                            next.send();
-                            previous = next;
                         }
                     }
-                },
-                0,
-                delay,
-                unit.toJavaTimeUnit()
+                    else
+                    {
+                        if ( previous != null )
+                        {
+                            previous.clear();
+                        }
+                        final IAnnouncement next = getNextAnnouncement();
+                        next.send();
+                        previous = next;
+                    }
+                }
+            },
+            0,
+            delay,
+            unit.toJavaTimeUnit()
         );
     }
 

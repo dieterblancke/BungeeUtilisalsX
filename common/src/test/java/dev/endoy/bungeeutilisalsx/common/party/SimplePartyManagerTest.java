@@ -30,18 +30,18 @@ class SimplePartyManagerTest extends BuXTest
     void setup() throws NoSuchFieldException, IllegalAccessException, IOException
     {
         TestInjectionUtil.injectConfiguration(
-                ConfigFiles.CONFIG,
-                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
+            ConfigFiles.CONFIG,
+            new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/config.yml" ) )
         );
         TestInjectionUtil.injectConfiguration(
-                ConfigFiles.PARTY_CONFIG,
-                new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/party/config.yml" ) )
+            ConfigFiles.PARTY_CONFIG,
+            new YamlConfiguration( BuXTest.class.getResourceAsStream( "/configurations/party/config.yml" ) )
         );
 
         ConfigFiles.CONFIG.getConfig().set( "multi-proxy.enabled", true );
         ConfigFiles.CONFIG.getConfig().set(
-                "multi-proxy.redis.uri",
-                "redis://redis@127.0.0.1:" + TEST_REDIS_CONTAINER.getRedisContainer().getMappedPort( 6379 )
+            "multi-proxy.redis.uri",
+            "redis://redis@127.0.0.1:" + TEST_REDIS_CONTAINER.getRedisContainer().getMappedPort( 6379 )
         );
         ConfigFiles.PARTY_CONFIG.getConfig().set( "enabled", true );
 

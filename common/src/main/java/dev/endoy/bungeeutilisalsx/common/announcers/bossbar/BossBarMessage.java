@@ -19,11 +19,11 @@ public class BossBarMessage
     public BossBarMessage( final ISection section )
     {
         this(
-                BarColor.valueOf( section.getString( "color" ) ),
-                BarStyle.valueOf( section.getString( "style" ) ),
-                section.getFloat( "progress" ),
-                section.exists( "language" ) ? section.getBoolean( "language" ) : false,
-                section.getString( "text" )
+            BarColor.valueOf( section.getString( "color" ) ),
+            BarStyle.valueOf( section.getString( "style" ) ),
+            section.getFloat( "progress" ),
+            section.exists( "language" ) ? section.getBoolean( "language" ) : false,
+            section.getString( "text" )
         );
     }
 }

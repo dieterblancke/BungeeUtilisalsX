@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.api.user.interfaces;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.bossbar.IBossBar;
 import dev.endoy.bungeeutilisalsx.common.api.friends.FriendData;
@@ -12,9 +13,7 @@ import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
 import dev.endoy.bungeeutilisalsx.common.api.utils.MessageUtils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Version;
-import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
@@ -42,6 +41,8 @@ public abstract class ConsoleUser implements User
     @Getter
     @Setter
     private boolean commandSpy;
+    @Getter
+    private boolean loaded = true;
 
     @Override
     public void load( Object playerInstance )

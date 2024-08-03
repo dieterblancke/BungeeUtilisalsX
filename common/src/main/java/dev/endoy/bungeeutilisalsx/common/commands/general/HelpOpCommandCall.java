@@ -29,9 +29,9 @@ public class HelpOpCommandCall implements CommandCall
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "helpop.receive-broadcast" );
 
         MessagePlaceholders broadcastPlaceholders = MessagePlaceholders.create()
-                .append( "message", message )
-                .append( "user", user.getName() )
-                .append( "user_server", user.getServerName() );
+            .append( "message", message )
+            .append( "user", user.getName() )
+            .append( "user_server", user.getServerName() );
 
         if ( !user.hasPermission( permission ) )
         {
@@ -71,18 +71,18 @@ public class HelpOpCommandCall implements CommandCall
         }
 
         user.sendLangMessage(
-                "general-commands.helpop.reply-send",
-                MessagePlaceholders.create()
-                        .append( "user", targetName )
-                        .append( "message", message )
+            "general-commands.helpop.reply-send",
+            MessagePlaceholders.create()
+                .append( "user", targetName )
+                .append( "message", message )
         );
 
         BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                targetName,
-                "general-commands.helpop.reply-receive",
-                MessagePlaceholders.create()
-                        .append( "user", user.getName() )
-                        .append( "message", message )
+            targetName,
+            "general-commands.helpop.reply-receive",
+            MessagePlaceholders.create()
+                .append( "user", user.getName() )
+                .append( "message", message )
         ) );
     }
 }

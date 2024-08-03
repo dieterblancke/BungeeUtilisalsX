@@ -57,7 +57,7 @@ public class SqlMigrationManager implements MigrationManager
             for ( Class<?> clazz : classes )
             {
                 final int migrationId = Integer.parseInt(
-                        clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
+                    clazz.getSimpleName().split( "_" )[0].replace( "v", "" )
                 );
                 final Migration migration = (Migration) clazz.getConstructor().newInstance();
 
@@ -66,11 +66,11 @@ public class SqlMigrationManager implements MigrationManager
                     BuX.getLogger().log( Level.INFO, "Executing migration " + clazz.getSimpleName() );
                     migration.migrate();
                     this.createMigration(
-                            migrationId,
-                            migration instanceof FileMigration ? "file" : "java",
-                            migration.getClass().getName(),
-                            new Date(),
-                            true
+                        migrationId,
+                        migration instanceof FileMigration ? "file" : "java",
+                        migration.getClass().getName(),
+                        new Date(),
+                        true
                     );
                     BuX.getLogger().log( Level.INFO, "Successfully executed migration " + clazz.getSimpleName() );
                 }
@@ -83,7 +83,7 @@ public class SqlMigrationManager implements MigrationManager
         boolean exists = false;
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
               PreparedStatement ps = connection.prepareStatement(
-                      "SELECT id FROM bu_migrations WHERE migration_id = ? AND success = ?;"
+                  "SELECT id FROM bu_migrations WHERE migration_id = ? AND success = ?;"
               )
         )
         {
@@ -109,8 +109,8 @@ public class SqlMigrationManager implements MigrationManager
     {
         try ( Connection connection = BuX.getInstance().getAbstractStorageManager().getConnection();
               PreparedStatement ps = connection.prepareStatement(
-                      "INSERT INTO bu_migrations(migration_id, type, script, created_at, success)" +
-                              " VALUES (?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                  "INSERT INTO bu_migrations(migration_id, type, script, created_at, success)" +
+                      " VALUES (?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
               )
         )
         {

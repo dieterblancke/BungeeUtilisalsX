@@ -31,10 +31,10 @@ public class PartyDisbandSubCommandCall implements CommandCall
         }
 
         BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                party,
-                "party.disband.broadcast",
-                MessagePlaceholders.create()
-                        .append( "user", user.getName() )
+            party,
+            "party.disband.broadcast",
+            MessagePlaceholders.create()
+                .append( "user", user.getName() )
         );
 
         BuX.getInstance().getPartyManager().removeParty( party );

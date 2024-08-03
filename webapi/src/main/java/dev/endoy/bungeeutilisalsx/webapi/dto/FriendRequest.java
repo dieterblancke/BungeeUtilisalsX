@@ -19,9 +19,9 @@ public class FriendRequest
     public static FriendRequest of( final dev.endoy.bungeeutilisalsx.common.api.friends.FriendRequest request )
     {
         return new FriendRequest(
-                request.getUser(),
-                request.getFriend(),
-                new Timestamp( request.getRequestedAt().getTime() ).toLocalDateTime()
+            request.getUser(),
+            request.getFriend(),
+            new Timestamp( request.getRequestedAt().getTime() ).toLocalDateTime()
         );
     }
 }

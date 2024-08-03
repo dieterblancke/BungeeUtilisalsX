@@ -83,13 +83,13 @@ public class FriendRequestsSubCommandCall implements CommandCall
             }
 
             MessagePlaceholders messagePlaceholders = MessagePlaceholders.create()
-                    .append( "previousPage", previous )
-                    .append( "currentPage", page )
-                    .append( "nextPage", next )
-                    .append( "maxPages", pages )
-                    .append( "requestAmount", allRequests.size() )
-                    .append( "type", user.getLanguageConfig().getConfig().getString( "friends.requests." + requestType ) )
-                    .append( "type_lowercase", requestType.toLowerCase() );
+                .append( "previousPage", previous )
+                .append( "currentPage", page )
+                .append( "nextPage", next )
+                .append( "maxPages", pages )
+                .append( "requestAmount", allRequests.size() )
+                .append( "type", user.getLanguageConfig().getConfig().getString( "friends.requests." + requestType ) )
+                .append( "type_lowercase", requestType.toLowerCase() );
 
             List<FriendRequest> requests = allRequests.subList( minNumber, maxNumber );
             user.sendLangMessage( "friends.requests.head", messagePlaceholders );
@@ -97,13 +97,13 @@ public class FriendRequestsSubCommandCall implements CommandCall
             requests.forEach( request ->
             {
                 final String targetName = requestType.equalsIgnoreCase( "outgoing" )
-                        ? request.getFriendName() : request.getUserName();
+                    ? request.getFriendName() : request.getUserName();
 
                 user.sendLangMessage(
-                        "friends.requests.format." + requestType,
-                        MessagePlaceholders.create()
-                                .append( "target", targetName )
-                                .append( "requestDate", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
+                    "friends.requests.format." + requestType,
+                    MessagePlaceholders.create()
+                        .append( "target", targetName )
+                        .append( "requestDate", Utils.formatDate( request.getRequestedAt(), user.getLanguageConfig().getConfig() ) )
                 );
             } );
             user.sendLangMessage( "friends.requests.foot", messagePlaceholders );

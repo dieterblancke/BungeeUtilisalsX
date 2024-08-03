@@ -31,7 +31,7 @@ public class ConsoleHandler
             final String[] args = cmd.split( " " );
 
             BuX.getInstance().getCommandManager().findCommandByName( args[0] )
-                    .ifPresent( command -> command.execute( BuX.getApi().getConsoleUser(), Arrays.copyOfRange( args, 1, args.length ) ) );
+                .ifPresent( command -> command.execute( BuX.getApi().getConsoleUser(), Arrays.copyOfRange( args, 1, args.length ) ) );
         }
     }
 }

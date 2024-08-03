@@ -17,19 +17,19 @@ public class SpringCommandManager extends CommandManager
         }
 
         this.buildCommand( "sql", CommandBuilder.builder()
-                .enabled( true )
-                .name( "sql" )
-                .executable( new SqlCommandCall() )
+            .enabled( true )
+            .name( "sql" )
+            .executable( new SqlCommandCall() )
         );
         this.buildCommand( "cache", CommandBuilder.builder()
-                .enabled( true )
-                .name( "cache" )
-                .executable( new CacheCommandCall() )
+            .enabled( true )
+            .name( "cache" )
+            .executable( new CacheCommandCall() )
         );
         this.buildCommand( "api-token", CommandBuilder.builder()
-                .enabled( true )
-                .name( "api-token" )
-                .executable( new ApiTokenCommandCall() )
+            .enabled( true )
+            .name( "api-token" )
+            .executable( new ApiTokenCommandCall() )
         );
     }
 }

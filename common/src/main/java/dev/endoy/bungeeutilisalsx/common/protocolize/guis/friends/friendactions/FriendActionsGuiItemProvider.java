@@ -16,9 +16,9 @@ public class FriendActionsGuiItemProvider implements PageableItemProvider
     public FriendActionsGuiItemProvider( final User user, final FriendActionsGuiConfig config, final FriendData friendData )
     {
         this.page = new FriendActionsItemPage(
-                user,
-                config,
-                friendData
+            user,
+            config,
+            friendData
         );
     }
 

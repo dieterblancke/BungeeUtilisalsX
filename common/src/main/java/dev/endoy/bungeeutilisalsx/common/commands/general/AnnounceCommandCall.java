@@ -56,11 +56,11 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                         if ( section.isSection( "chat" ) )
                         {
                             user.sendMessage(
-                                    MessageBuilder.buildMessage(
-                                            user, section.getSection( "chat" ),
-                                            MessagePlaceholders.create()
-                                                    .append( "prefix", config.getString( "announce.types.chat.prefix" ) )
-                                    )
+                                MessageBuilder.buildMessage(
+                                    user, section.getSection( "chat" ),
+                                    MessagePlaceholders.create()
+                                        .append( "prefix", config.getString( "announce.types.chat.prefix" ) )
+                                )
                             );
                         }
                         else
@@ -68,7 +68,7 @@ public class AnnounceCommandCall implements CommandCall, TabCall
                             for ( String line : section.getString( "chat" ).split( "%nl%" ) )
                             {
                                 user.sendRawColorMessage(
-                                        config.getString( "announce.types.chat.prefix" ) + line.replace( "%sub%", "" )
+                                    config.getString( "announce.types.chat.prefix" ) + line.replace( "%sub%", "" )
                                 );
                             }
                         }
@@ -133,8 +133,8 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         BuX.getApi().getUsers().forEach( user ->
         {
             IBossBar bossBar = BuX.getApi().createBossBar(
-                    color, style, progress,
-                    Utils.format( user, message.replace( "%sub%", "" ).replace( "%nl%", "" ) )
+                color, style, progress,
+                Utils.format( user, message.replace( "%sub%", "" ).replace( "%nl%", "" ) )
             );
 
             bossBar.addUser( user );
@@ -142,14 +142,14 @@ public class AnnounceCommandCall implements CommandCall, TabCall
         } );
 
         BuX.getInstance().getScheduler().runTaskDelayed(
-                stay,
-                TimeUnit.SECONDS,
-                () -> bossBars.forEach( bossBar ->
-                {
-                    bossBar.clearUsers();
+            stay,
+            TimeUnit.SECONDS,
+            () -> bossBars.forEach( bossBar ->
+            {
+                bossBar.clearUsers();
 
-                    bossBar.unregister();
-                } )
+                bossBar.unregister();
+            } )
         );
     }
 
@@ -160,8 +160,8 @@ public class AnnounceCommandCall implements CommandCall, TabCall
             for ( User user : BuX.getApi().getUsers() )
             {
                 user.sendActionBar( Utils.formatString(
-                        user,
-                        message.replace( "%nl%", "" ).replace( "%sub%", "" )
+                    user,
+                    message.replace( "%nl%", "" ).replace( "%sub%", "" )
                 ) );
             }
         }
@@ -185,11 +185,11 @@ public class AnnounceCommandCall implements CommandCall, TabCall
             for ( User user : BuX.getApi().getUsers() )
             {
                 user.sendTitle(
-                        Utils.formatString( user, title ),
-                        Utils.formatString( user, subtitle ),
-                        fadein,
-                        stay,
-                        fadeout
+                    Utils.formatString( user, title ),
+                    Utils.formatString( user, subtitle ),
+                    fadein,
+                    stay,
+                    fadeout
                 );
             }
         }
@@ -243,10 +243,10 @@ public class AnnounceCommandCall implements CommandCall, TabCall
     public String getDescription()
     {
         return """
-                Announces a message globally (similarly to alert). This can be done over chat, title, actionbar and bossbar.
-                Title and subtitles can be split using %sub%.
-                If a default type is set up in the config, a type can still be overridden by using type:(types) as first parameter.
-                Types can be concatinated, for example 'bcat' will announce bossbar, chat, actionbar and title at the same time.""";
+            Announces a message globally (similarly to alert). This can be done over chat, title, actionbar and bossbar.
+            Title and subtitles can be split using %sub%.
+            If a default type is set up in the config, a type can still be overridden by using type:(types) as first parameter.
+            Types can be concatinated, for example 'bcat' will announce bossbar, chat, actionbar and title at the same time.""";
     }
 
     @Override

@@ -30,10 +30,10 @@ public class Party
     public PartyMember getOwner()
     {
         return partyMembers
-                .stream()
-                .filter( PartyMember::isPartyOwner )
-                .findFirst()
-                .orElseGet( () -> partyMembers.isEmpty() ? null : partyMembers.get( 0 ) );
+            .stream()
+            .filter( PartyMember::isPartyOwner )
+            .findFirst()
+            .orElseGet( () -> partyMembers.isEmpty() ? null : partyMembers.get( 0 ) );
     }
 
     public boolean isFull()
@@ -44,9 +44,9 @@ public class Party
     public Optional<PartyMember> getMemberByUuid( final UUID uuid )
     {
         return partyMembers
-                .stream()
-                .filter( it -> it.getUuid().equals( uuid ) )
-                .findAny();
+            .stream()
+            .filter( it -> it.getUuid().equals( uuid ) )
+            .findAny();
     }
 
     public boolean isOwner( final UUID uuid )

@@ -55,15 +55,15 @@ public class PluginLanguageManager extends AbstractLanguageManager
                 else
                 {
                     configuration = IConfiguration.loadYamlConfiguration(
-                            lang,
-                            YamlConfigurationOptions.builder().useComments( false ).build()
+                        lang,
+                        YamlConfigurationOptions.builder().useComments( false ).build()
                     );
 
                     if ( autoUpdateFiles )
                     {
                         configuration.copyDefaults( IConfiguration.loadYamlConfiguration(
-                                resourceClass.getResourceAsStream( "/configurations/languages/" + name + ".yml" ),
-                                YamlConfigurationOptions.builder().useComments( false ).build()
+                            resourceClass.getResourceAsStream( "/configurations/languages/" + name + ".yml" ),
+                            YamlConfigurationOptions.builder().useComments( false ).build()
                         ) );
                     }
                 }
@@ -103,14 +103,14 @@ public class PluginLanguageManager extends AbstractLanguageManager
                     if ( in == null )
                     {
                         BuX.getLogger().info( "Could not find default language configuration configuration for " +
-                                source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) +
-                                " for plugin " + pluginName );
+                            source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) +
+                            " for plugin " + pluginName );
                         return null;
                     }
                     ByteStreams.copy( in, out );
                     BuX.getLogger().info( "Loading default language configuration for "
-                            + source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) + " for plugin "
-                            + pluginName );
+                        + source.replace( "/configurations/languages/", "" ).replace( ".json", "" ) + " for plugin "
+                        + pluginName );
                 }
             }
         }

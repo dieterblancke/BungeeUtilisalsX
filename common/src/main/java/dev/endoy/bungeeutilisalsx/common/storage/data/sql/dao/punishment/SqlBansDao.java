@@ -34,12 +34,12 @@ public class SqlBansDao implements BansDao
             if ( useServerPunishments() )
             {
                 query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
-                        " AND active = ? AND server = ? AND type NOT LIKE 'IP%');";
+                    " AND active = ? AND server = ? AND type NOT LIKE 'IP%');";
             }
             else
             {
                 query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ?" +
-                        " AND active = ? AND type NOT LIKE 'IP%');";
+                    " AND active = ? AND type NOT LIKE 'IP%');";
             }
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -80,12 +80,12 @@ public class SqlBansDao implements BansDao
             if ( useServerPunishments() )
             {
                 query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
-                        " AND active = ? AND server = ? AND type LIKE 'IP%');";
+                    " AND active = ? AND server = ? AND type LIKE 'IP%');";
             }
             else
             {
                 query = "SELECT EXISTS(SELECT id FROM " + PunishmentType.BAN.getTable() + " WHERE ip = ?" +
-                        " AND active = ? AND type LIKE 'IP%');";
+                    " AND active = ? AND type LIKE 'IP%');";
             }
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -131,8 +131,8 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                          "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -154,18 +154,18 @@ public class SqlBansDao implements BansDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.BAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.BAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -185,8 +185,8 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                          "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -208,18 +208,18 @@ public class SqlBansDao implements BansDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    -1,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                -1,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -240,8 +240,8 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                          "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -263,18 +263,18 @@ public class SqlBansDao implements BansDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.TEMPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.TEMPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -295,8 +295,8 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
-                                  "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                      "INSERT INTO " + PunishmentType.BAN.getTable() + " (uuid, user, ip, reason, server, " +
+                          "active, executed_by, duration, type, date, punishment_uid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -318,18 +318,18 @@ public class SqlBansDao implements BansDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured:", e );
             }
             return PunishmentDao.buildPunishmentInfo(
-                    PunishmentType.IPTEMPBAN,
-                    uuid,
-                    user,
-                    ip,
-                    reason,
-                    server,
-                    executedby,
-                    new Date(),
-                    duration,
-                    active,
-                    null,
-                    punishmentUid
+                PunishmentType.IPTEMPBAN,
+                uuid,
+                user,
+                ip,
+                reason,
+                server,
+                executedby,
+                new Date(),
+                duration,
+                active,
+                null,
+                punishmentUid
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -434,12 +434,12 @@ public class SqlBansDao implements BansDao
             if ( useServerPunishments() )
             {
                 query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                        " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
+                    " WHERE uuid = ? AND active = ? AND server = ? AND type NOT LIKE 'IP%';";
             }
             else
             {
                 query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                        " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
+                    " WHERE uuid = ? AND active = ? AND type NOT LIKE 'IP%';";
             }
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
@@ -476,12 +476,12 @@ public class SqlBansDao implements BansDao
             if ( useServerPunishments() )
             {
                 query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                        " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
+                    " WHERE ip = ? AND active = ? AND server = ? AND type LIKE 'IP%';";
             }
             else
             {
                 query = "UPDATE " + PunishmentType.BAN.getTable() + " SET active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() +
-                        " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
+                    " WHERE ip = ? AND active = ? AND type LIKE 'IP%';";
             }
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement( query ) )
@@ -516,7 +516,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND type NOT LIKE 'IP%';"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND type NOT LIKE 'IP%';"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -547,7 +547,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE executed_by = ?;"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE executed_by = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -578,7 +578,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND server = ? AND type NOT LIKE 'IP%';"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE uuid = ? AND server = ? AND type NOT LIKE 'IP%';"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -610,7 +610,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND type LIKE 'IP%';"
+                      "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND type LIKE 'IP%';"
                   ) )
             {
                 pstmt.setString( 1, ip );
@@ -641,7 +641,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND server = ? AND type LIKE 'IP%';"
+                      "SELECT * FROM " + PunishmentType.IPBAN.getTable() + " WHERE ip = ? AND server = ? AND type LIKE 'IP%';"
                   ) )
             {
                 pstmt.setString( 1, ip );
@@ -673,7 +673,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " LIMIT ?;"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " LIMIT ?;"
                   ) )
             {
                 pstmt.setInt( 1, Math.min( limit, 200 ) );
@@ -704,7 +704,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE id = ? LIMIT 1;"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE id = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setInt( 1, Integer.parseInt( id ) );
@@ -735,7 +735,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ? LIMIT 1;"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setString( 1, punishmentUid );
@@ -766,7 +766,7 @@ public class SqlBansDao implements BansDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ?;"
+                      "SELECT * FROM " + PunishmentType.BAN.getTable() + " WHERE punishment_uid = ?;"
                   ) )
             {
                 pstmt.setString( 1, punishmentUid );
@@ -795,7 +795,7 @@ public class SqlBansDao implements BansDao
             int records = 0;
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "update " + PunishmentType.BAN.getTable() + " set active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() + " where executed_by = ? and date >= ?;"
+                      "update " + PunishmentType.BAN.getTable() + " set active = ?, removed = ?, removed_by = ?, removed_at = " + Dao.getInsertDateParameter() + " where executed_by = ? and date >= ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, false );
@@ -822,7 +822,7 @@ public class SqlBansDao implements BansDao
             int records = 0;
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "delete from " + PunishmentType.BAN.getTable() + " where executed_by = ? and date >= ?;"
+                      "delete from " + PunishmentType.BAN.getTable() + " where executed_by = ? and date >= ?;"
                   ) )
             {
                 pstmt.setString( 1, user );

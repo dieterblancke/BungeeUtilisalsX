@@ -12,7 +12,7 @@ public class TestRedisContainer
     public void initialize()
     {
         redisContainer = new GenericContainer<>( "redis:latest" )
-                .withExposedPorts( 6379 );
+            .withExposedPorts( 6379 );
         redisContainer.start();
     }
 

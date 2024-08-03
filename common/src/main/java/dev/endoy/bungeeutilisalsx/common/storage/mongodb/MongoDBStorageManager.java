@@ -54,24 +54,24 @@ public class MongoDBStorageManager extends AbstractStorageManager
             if ( user != null && !user.isEmpty() )
             {
                 credential = MongoCredential.createCredential( user, database,
-                        ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
+                    ( password == null || password.isEmpty() ? null : password.toCharArray() ) );
             }
             MongoClientOptions options = MongoClientOptions.builder()
-                    .applicationName( "BungeeUtilisalsX" )
-                    .connectionsPerHost( configuration.getInteger( "storage.pool.max-pool-size" ) )
-                    .connectTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 )
-                    .maxConnectionLifeTime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 )
-                    .build();
+                .applicationName( "BungeeUtilisalsX" )
+                .connectionsPerHost( configuration.getInteger( "storage.pool.max-pool-size" ) )
+                .connectTimeout( configuration.getInteger( "storage.pool.connection-timeout" ) * 1000 )
+                .maxConnectionLifeTime( configuration.getInteger( "storage.pool.max-lifetime" ) * 1000 )
+                .build();
 
             if ( credential == null )
             {
                 client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
-                        configuration.getInteger( "storage.port" ) ), options );
+                    configuration.getInteger( "storage.port" ) ), options );
             }
             else
             {
                 client = new MongoClient( new ServerAddress( configuration.getString( "storage.hostname" ),
-                        configuration.getInteger( "storage.port" ) ), credential, options );
+                    configuration.getInteger( "storage.port" ) ), credential, options );
             }
         }
 
@@ -97,8 +97,8 @@ public class MongoDBStorageManager extends AbstractStorageManager
     public long getNextSequenceValue( final String sequenceName )
     {
         final Document sequenceDocument = database.getCollection( "bu_counters" ).findOneAndUpdate(
-                Filters.eq( "_id", sequenceName ),
-                Updates.inc( "sequence_value", 1 )
+            Filters.eq( "_id", sequenceName ),
+            Updates.inc( "sequence_value", 1 )
         );
 
         return sequenceDocument.getLong( "sequence_value" );
