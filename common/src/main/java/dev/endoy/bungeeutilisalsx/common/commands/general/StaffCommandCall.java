@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.commands.general;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.command.CommandCall;
 import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
@@ -11,7 +12,6 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
 import dev.endoy.bungeeutilisalsx.common.api.utils.text.MessageBuilder;
 import dev.endoy.configuration.api.IConfiguration;
-import com.google.common.collect.Lists;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
 
@@ -102,6 +102,10 @@ public class StaffCommandCall implements CommandCall
 
             Component replacedComponent = this.replaceAndRebuild( originalComponent, () ->
             {
+                String languagePathPrefix = user.getLanguageConfig().getConfig().exists( "general-commands.staff.users." + rank.getName().toLowerCase() )
+                        ? "general-commands.staff.users." + rank.getName().toLowerCase()
+                        : "general-commands.staff.users";
+
                 TextComponent.Builder builder = Component.text();
 
                 users.sort( Comparator.comparing( StaffUser::getName ) );
@@ -114,7 +118,7 @@ public class StaffCommandCall implements CommandCall
 
                     builder.append( MessageBuilder.buildMessage(
                             user,
-                            user.getLanguageConfig().getConfig().getSection( "general-commands.staff.users.user" ),
+                            user.getLanguageConfig().getConfig().getSection( languagePathPrefix + ".user" ),
                             MessagePlaceholders.create()
                                     .append( "username", u.getName() )
                                     .append( "server", info == null ? "Unknown" : info.getName() )
@@ -123,7 +127,7 @@ public class StaffCommandCall implements CommandCall
                     if ( userIt.hasNext() )
                     {
                         builder.append( Utils.format( user.getLanguageConfig().buildLangMessage(
-                                "general-commands.staff.users.separator",
+                                languagePathPrefix + ".separator",
                                 MessagePlaceholders.empty()
                         ) ) );
                     }

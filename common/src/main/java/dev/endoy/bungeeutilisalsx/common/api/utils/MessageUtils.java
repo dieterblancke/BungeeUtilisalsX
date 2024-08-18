@@ -7,8 +7,6 @@ import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class MessageUtils
 {
@@ -42,9 +40,6 @@ public class MessageUtils
             .character( SECTION_CHAR )
             .build();
 
-
-    private static final Pattern HEX_PATTERN = Pattern.compile( "<#([A-Fa-f0-9]){6}>" );
-    private static final Pattern GRADIENT_HEX_PATTERN = Pattern.compile( "(\\{(#[A-Fa-f0-9]{6})})(.+?)(\\{/(#[A-Fa-f0-9]{6})})" );
     private static final Map<String, String> COLOR_MAPPINGS = new HashMap<>()
     {{
         put( "0", "black" );
@@ -100,27 +95,21 @@ public class MessageUtils
 
     public static String convertForMiniMessage( String text )
     {
-        for ( Map.Entry<String, String> entry : COLOR_MAPPINGS.entrySet() )
+        if ( !text.contains( "&" ) && !text.contains( "§" ) )
         {
-            text = text.replace( "&" + entry.getKey(), "<" + entry.getValue() + ">" );
-            text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
+            return text;
         }
 
-        return text;
-    }
-
-    private static String fixHexColors( String text )
-    {
-        Matcher matcher = HEX_PATTERN.matcher( text );
-
-        while ( matcher.find() )
+        for ( Map.Entry<String, String> entry : COLOR_MAPPINGS.entrySet() )
         {
-            String before = text.substring( 0, matcher.start() );
-            String hexColor = matcher.group().substring( 1, matcher.group().length() - 1 );
-            String after = text.substring( matcher.end() );
-
-            text = before + "<" + hexColor + ">" + after;
-            matcher = HEX_PATTERN.matcher( text );
+            if ( text.contains( "&" + entry.getKey() ) )
+            {
+                text = text.replace( "&" + entry.getKey(), "<" + entry.getValue() + ">" );
+            }
+            else if ( text.contains( "§" + entry.getKey() ) )
+            {
+                text = text.replace( "§" + entry.getKey(), "<" + entry.getValue() + ">" );
+            }
         }
 
         return text;
