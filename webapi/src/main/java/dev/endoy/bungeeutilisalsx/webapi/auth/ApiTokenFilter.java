@@ -33,13 +33,13 @@ public class ApiTokenFilter extends OncePerRequestFilter
                                      final FilterChain filterChain ) throws IOException, ServletException
     {
         getToken( request )
-                .flatMap( BuX.getApi().getStorageManager().getDao().getApiTokenDao()::findApiToken )
-                .map( apiToken -> new PreAuthenticatedAuthenticationToken(
-                        apiToken,
-                        new WebAuthenticationDetailsSource().buildDetails( request ),
-                        null
-                ) )
-                .ifPresent( authentication -> SecurityContextHolder.getContext().setAuthentication( authentication ) );
+            .flatMap( BuX.getApi().getStorageManager().getDao().getApiTokenDao()::findApiToken )
+            .map( apiToken -> new PreAuthenticatedAuthenticationToken(
+                apiToken,
+                new WebAuthenticationDetailsSource().buildDetails( request ),
+                null
+            ) )
+            .ifPresent( authentication -> SecurityContextHolder.getContext().setAuthentication( authentication ) );
 
         filterChain.doFilter( request, response );
     }
@@ -47,10 +47,10 @@ public class ApiTokenFilter extends OncePerRequestFilter
     private Optional<String> getToken( final HttpServletRequest request )
     {
         return Optional
-                .ofNullable( request.getHeader( AUTHORIZATION_HEADER ) )
-                .filter( Strings::isNotEmpty )
-                .map( BEARER_PATTERN::matcher )
-                .filter( Matcher::find )
-                .map( matcher -> matcher.group( 1 ) );
+            .ofNullable( request.getHeader( AUTHORIZATION_HEADER ) )
+            .filter( Strings::isNotEmpty )
+            .map( BEARER_PATTERN::matcher )
+            .filter( Matcher::find )
+            .map( matcher -> matcher.group( 1 ) );
     }
 }

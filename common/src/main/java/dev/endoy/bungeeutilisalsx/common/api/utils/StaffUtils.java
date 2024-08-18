@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils;
 
+import com.google.common.base.Strings;
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import dev.endoy.bungeeutilisalsx.common.api.utils.other.StaffUser;
-import com.google.common.base.Strings;
-import com.google.common.collect.Lists;
 
 import java.util.Collection;
 import java.util.Comparator;
@@ -55,11 +55,11 @@ public class StaffUtils
             BuX.debug( "User " + user.getName() + " detected with group: " + group + ", trying to match rank on group first ..." );
 
             return ConfigFiles.RANKS.getRanks()
-                    .stream()
-                    .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
-                    .filter( rank -> rank.getName().equalsIgnoreCase( group ) )
-                    .findFirst()
-                    .or( () -> getStaffRankForUserByPermissions( user ) );
+                .stream()
+                .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
+                .filter( rank -> rank.getName().equalsIgnoreCase( group ) )
+                .findFirst()
+                .or( () -> getStaffRankForUserByPermissions( user ) );
         }
 
         return getStaffRankForUserByPermissions( user );
@@ -68,9 +68,9 @@ public class StaffUtils
     private static Optional<StaffRankData> getStaffRankForUserByPermissions( User user )
     {
         return ConfigFiles.RANKS.getRanks()
-                .stream()
-                .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
-                .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
-                .findFirst();
+            .stream()
+            .sorted( Comparator.comparingInt( StaffRankData::getPriority ) )
+            .filter( rank -> user.hasPermission( rank.getPermission(), true ) )
+            .findFirst();
     }
 }

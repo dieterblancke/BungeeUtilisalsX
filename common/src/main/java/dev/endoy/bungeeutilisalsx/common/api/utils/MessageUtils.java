@@ -13,32 +13,32 @@ public class MessageUtils
 
     public static final char SECTION_CHAR = '\u00A7';
     private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer
-            .builder()
-            .flattener( ComponentFlattener.textOnly() )
-            .build();
+        .builder()
+        .flattener( ComponentFlattener.textOnly() )
+        .build();
     private static final LegacyComponentSerializer SECTION_WITH_RGB = LegacyComponentSerializer
-            .builder()
-            .character( SECTION_CHAR )
-            .hexCharacter( '#' )
-            .hexColors()
-            .build();
+        .builder()
+        .character( SECTION_CHAR )
+        .hexCharacter( '#' )
+        .hexColors()
+        .build();
     private static final LegacyComponentSerializer SECTION_WITH_UNUSUAL_RGB = LegacyComponentSerializer
-            .builder()
-            .character( SECTION_CHAR )
-            .hexCharacter( '#' )
-            .hexColors()
-            .useUnusualXRepeatedCharacterHexFormat()
-            .build();
+        .builder()
+        .character( SECTION_CHAR )
+        .hexCharacter( '#' )
+        .hexColors()
+        .useUnusualXRepeatedCharacterHexFormat()
+        .build();
     private static final LegacyComponentSerializer AMPERSAND_WITH_RGB = LegacyComponentSerializer
-            .builder()
-            .character( '&' )
-            .hexCharacter( '#' )
-            .hexColors()
-            .build();
+        .builder()
+        .character( '&' )
+        .hexCharacter( '#' )
+        .hexColors()
+        .build();
     private static final LegacyComponentSerializer SECTION = LegacyComponentSerializer
-            .builder()
-            .character( SECTION_CHAR )
-            .build();
+        .builder()
+        .character( SECTION_CHAR )
+        .build();
 
     private static final Map<String, String> COLOR_MAPPINGS = new HashMap<>()
     {{
@@ -85,11 +85,11 @@ public class MessageUtils
     public static String colorizeLegacy( String str )
     {
         return SECTION_WITH_UNUSUAL_RGB.serialize(
-                AMPERSAND_WITH_RGB.deserialize(
-                        SECTION_WITH_UNUSUAL_RGB.serialize(
-                                fromText( str )
-                        )
+            AMPERSAND_WITH_RGB.deserialize(
+                SECTION_WITH_UNUSUAL_RGB.serialize(
+                    fromText( str )
                 )
+            )
         );
     }
 

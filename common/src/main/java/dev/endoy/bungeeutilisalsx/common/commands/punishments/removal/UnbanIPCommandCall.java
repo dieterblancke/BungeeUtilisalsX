@@ -53,9 +53,9 @@ public class UnbanIPCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getBansDao().removeCurrentIPBan(
-                storage.getIp(),
-                user.getName(),
-                punishmentRemovalArgs.getServerOrAll()
+            storage.getIp(),
+            user.getName(),
+            punishmentRemovalArgs.getServerOrAll()
         );
 
         final PunishmentInfo info = new PunishmentInfo();
@@ -72,16 +72,16 @@ public class UnbanIPCommandCall extends PunishmentCommand
             if ( parameters.contains( "-nbp" ) )
             {
                 BuX.getApi().langBroadcast(
-                        "punishments.unbanip.broadcast",
-                        executor.getPlaceHolders( info )
+                    "punishments.unbanip.broadcast",
+                    executor.getPlaceHolders( info )
                 );
             }
             else
             {
                 BuX.getApi().langPermissionBroadcast(
-                        "punishments.unbanip.broadcast",
-                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unbanip.broadcast" ),
-                        executor.getPlaceHolders( info )
+                    "punishments.unbanip.broadcast",
+                    ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.unbanip.broadcast" ),
+                    executor.getPlaceHolders( info )
                 );
             }
         }

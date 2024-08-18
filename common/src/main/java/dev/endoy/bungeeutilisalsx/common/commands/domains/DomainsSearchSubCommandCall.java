@@ -26,16 +26,16 @@ public class DomainsSearchSubCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.domains.search.header", MessagePlaceholders.create().append( "total", domains.size() ) );
 
             domains.entrySet().stream()
-                    .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
-                    .forEach( entry ->
-                            user.sendLangMessage(
-                                    "general-commands.domains.search.format",
-                                    MessagePlaceholders.create()
-                                            .append( "{domain}", entry.getKey() )
-                                            .append( "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
-                                            .append( "{total}", entry.getValue() )
-                            )
-                    );
+                .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
+                .forEach( entry ->
+                    user.sendLangMessage(
+                        "general-commands.domains.search.format",
+                        MessagePlaceholders.create()
+                            .append( "{domain}", entry.getKey() )
+                            .append( "{online}", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
+                            .append( "{total}", entry.getValue() )
+                    )
+                );
 
             user.sendLangMessage( "general-commands.domains.search.footer", MessagePlaceholders.create().append( "total", domains.size() ) );
         } );

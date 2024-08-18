@@ -24,11 +24,11 @@ public class OutgoingFriendRequestsGuiOpener extends GuiOpener
         {
             final FriendRequestsGuiConfig config = DefaultGui.OUTGOINGFRIENDREQUESTS.getConfig();
             final Gui gui = Gui.builder()
-                    .itemProvider( new FriendRequestsGuiItemProvider( user, FriendRequestType.OUTGOING, config, outgoingRequests ) )
-                    .rows( config.getRows() )
-                    .title( config.getTitle() )
-                    .user( user )
-                    .build();
+                .itemProvider( new FriendRequestsGuiItemProvider( user, FriendRequestType.OUTGOING, config, outgoingRequests ) )
+                .rows( config.getRows() )
+                .title( config.getTitle() )
+                .user( user )
+                .build();
 
             gui.open();
         } );

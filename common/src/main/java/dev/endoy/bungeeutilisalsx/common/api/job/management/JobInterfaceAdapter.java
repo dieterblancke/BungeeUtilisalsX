@@ -1,7 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.api.job.management;
 
-import dev.endoy.bungeeutilisalsx.common.api.job.Job;
 import com.google.gson.*;
+import dev.endoy.bungeeutilisalsx.common.api.job.Job;
 
 import java.lang.reflect.Type;
 

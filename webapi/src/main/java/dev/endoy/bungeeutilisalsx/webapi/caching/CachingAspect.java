@@ -19,11 +19,11 @@ public class CachingAspect
 
     private static final Object NULL = new Object();
     private static final Cache<CachingKey, Object> CACHE = CacheHelper.<CachingKey, Object>builder()
-            .build( builder ->
-            {
-                builder.maximumSize( 100000 );
-                builder.expireAfterWrite( ConfigFiles.CONFIG.getConfig().getInteger( "cache-duration-minutes" ), TimeUnit.MINUTES );
-            } );
+        .build( builder ->
+        {
+            builder.maximumSize( 100000 );
+            builder.expireAfterWrite( ConfigFiles.CONFIG.getConfig().getInteger( "cache-duration-minutes" ), TimeUnit.MINUTES );
+        } );
 
     public static void clearCache()
     {

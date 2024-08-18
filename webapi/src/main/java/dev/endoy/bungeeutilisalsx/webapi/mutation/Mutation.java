@@ -28,11 +28,11 @@ public class Mutation implements GraphQLMutationResolver
         final User user = userService.findByUuidUncached( uuid );
 
         BuX.getApi().getStorageManager().getDao().getUserDao().updateUser(
-                uuid,
-                Utils.blankToDefault( input.getUserName(), user.getUserName() ),
-                Utils.blankToDefault( input.getIp(), user.getIp() ),
-                BuX.getApi().getLanguageManager().getLangOrDefault( Utils.blankToDefault( input.getLanguage(), user.getLanguageId() ) ),
-                input.getLastLogout() == null ? null : Timestamp.valueOf( input.getLastLogout() )
+            uuid,
+            Utils.blankToDefault( input.getUserName(), user.getUserName() ),
+            Utils.blankToDefault( input.getIp(), user.getIp() ),
+            BuX.getApi().getLanguageManager().getLangOrDefault( Utils.blankToDefault( input.getLanguage(), user.getLanguageId() ) ),
+            input.getLastLogout() == null ? null : Timestamp.valueOf( input.getLastLogout() )
         );
 
         return userService.findByUuidUncached( uuid );
@@ -42,17 +42,17 @@ public class Mutation implements GraphQLMutationResolver
     public Punishment createPunishment( final CreatePunishmentInput input )
     {
         return switch ( input.getType() )
-                {
-                    case BAN -> punishmentService.createBan( input );
-                    case TEMPBAN -> punishmentService.createTempban( input );
-                    case IPBAN -> punishmentService.createIPBan( input );
-                    case IPTEMPBAN -> punishmentService.createIPTempban( input );
-                    case MUTE -> punishmentService.createMute( input );
-                    case TEMPMUTE -> punishmentService.createTempmute( input );
-                    case IPMUTE -> punishmentService.createIPMute( input );
-                    case IPTEMPMUTE -> punishmentService.createIPTempmute( input );
-                    default -> throw new UnsupportedOperationException( "This punishment type is not supported!" );
-                };
+        {
+            case BAN -> punishmentService.createBan( input );
+            case TEMPBAN -> punishmentService.createTempban( input );
+            case IPBAN -> punishmentService.createIPBan( input );
+            case IPTEMPBAN -> punishmentService.createIPTempban( input );
+            case MUTE -> punishmentService.createMute( input );
+            case TEMPMUTE -> punishmentService.createTempmute( input );
+            case IPMUTE -> punishmentService.createIPMute( input );
+            case IPTEMPMUTE -> punishmentService.createIPTempmute( input );
+            default -> throw new UnsupportedOperationException( "This punishment type is not supported!" );
+        };
     }
 
     @RequiresPermission( ApiPermission.REMOVE_PUNISHMENT )

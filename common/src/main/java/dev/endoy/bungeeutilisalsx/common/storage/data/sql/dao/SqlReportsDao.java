@@ -26,7 +26,7 @@ public class SqlReportsDao implements ReportsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO bu_reports (uuid, reported_by, handled, server, reason, accepted, date) VALUES (?, ?, ?, ?, ?, ?, ?);"
+                      "INSERT INTO bu_reports (uuid, reported_by, handled, server, reason, accepted, date) VALUES (?, ?, ?, ?, ?, ?, ?);"
                   ) )
             {
                 pstmt.setString( 1, report.getUuid().toString() );
@@ -53,7 +53,7 @@ public class SqlReportsDao implements ReportsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "DELETE FROM bu_reports WHERE id = ?;"
+                      "DELETE FROM bu_reports WHERE id = ?;"
                   ) )
             {
                 pstmt.setLong( 1, id );
@@ -75,7 +75,7 @@ public class SqlReportsDao implements ReportsDao
             Report report = null;
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.id = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setLong( 1, id );
@@ -104,7 +104,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid;"
                   ) )
             {
 
@@ -132,7 +132,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.uuid = ?;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE r.uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -172,7 +172,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE handled = ?;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE handled = ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, handled );
@@ -200,7 +200,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE accepted = ?;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE accepted = ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, accepted );
@@ -229,7 +229,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE date >= DATEADD(DAY, ?, GETDATE());"
                   ) )
             {
                 pstmt.setInt( 1, -days );
@@ -257,7 +257,7 @@ public class SqlReportsDao implements ReportsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE bu_reports SET handled = ?, accepted = ? WHERE id = ?;"
+                      "UPDATE bu_reports SET handled = ?, accepted = ? WHERE id = ?;"
                   ) )
             {
                 pstmt.setBoolean( 1, true );
@@ -292,7 +292,7 @@ public class SqlReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE reported_by = ?;"
+                      "SELECT r.*, u.username reported FROM bu_reports r JOIN bu_users u ON u.uuid = r.uuid WHERE reported_by = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -316,15 +316,15 @@ public class SqlReportsDao implements ReportsDao
     private Report getReport( final ResultSet rs ) throws SQLException
     {
         return new Report(
-                rs.getLong( "id" ),
-                UUID.fromString( rs.getString( "uuid" ) ),
-                rs.getString( "reported" ),
-                rs.getString( "reported_by" ),
-                Dao.formatStringToDate( rs.getString( "date" ) ),
-                rs.getString( "server" ),
-                rs.getString( "reason" ),
-                rs.getBoolean( "handled" ),
-                rs.getBoolean( "accepted" )
+            rs.getLong( "id" ),
+            UUID.fromString( rs.getString( "uuid" ) ),
+            rs.getString( "reported" ),
+            rs.getString( "reported_by" ),
+            Dao.formatStringToDate( rs.getString( "date" ) ),
+            rs.getString( "server" ),
+            rs.getString( "reason" ),
+            rs.getBoolean( "handled" ),
+            rs.getBoolean( "accepted" )
         );
     }
 }

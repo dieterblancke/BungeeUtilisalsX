@@ -23,12 +23,12 @@ public class FriendActionsItemPage extends ItemPage
     {
         super( guiConfig.getRows() * 9 );
         final String currentServer = Optional.ofNullable( BuX.getApi().getPlayerUtils().findPlayer( friendData.getFriend() ) )
-                .map( IProxyServer::getName ).orElse( null );
+            .map( IProxyServer::getName ).orElse( null );
 
         final MessagePlaceholders placeholders = MessagePlaceholders.create()
-                .append( "friend-name", friendData.getFriend() )
-                .append( "last-online", Utils.formatDate( friendData.getLastOnline() ) )
-                .append( "server", currentServer == null ? "Unknown" : currentServer );
+            .append( "friend-name", friendData.getFriend() )
+            .append( "last-online", Utils.formatDate( friendData.getLastOnline() ) )
+            .append( "server", currentServer == null ? "Unknown" : currentServer );
 
         for ( GuiConfigItem item : guiConfig.getItems() )
         {
@@ -37,19 +37,19 @@ public class FriendActionsItemPage extends ItemPage
                 if ( ( (FriendGuiConfigItem) item ).isFriendItem() )
                 {
                     super.setItem( slot, this.getFriendGuiItem(
-                            user,
-                            (FriendGuiConfigItem) item,
-                            friendData,
-                            currentServer,
-                            placeholders
+                        user,
+                        (FriendGuiConfigItem) item,
+                        friendData,
+                        currentServer,
+                        placeholders
                     ) );
                 }
                 else
                 {
                     super.setItem( slot, this.getGuiItem(
-                            user,
-                            item,
-                            placeholders
+                        user,
+                        item,
+                        placeholders
                     ) );
                 }
             }
@@ -64,8 +64,8 @@ public class FriendActionsItemPage extends ItemPage
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
-                ? item.getOnlineItem().buildItem( user, placeholders )
-                : item.getOfflineItem().buildItem( user, placeholders );
+            ? item.getOnlineItem().buildItem( user, placeholders )
+            : item.getOfflineItem().buildItem( user, placeholders );
 
         if ( itemStack.itemType() == ItemType.PLAYER_HEAD )
         {

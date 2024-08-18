@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.api.placeholder;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.event.handler.InputPlaceHolderEventHandler;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.event.handler.PlaceHolderEventHandler;
@@ -8,7 +9,6 @@ import dev.endoy.bungeeutilisalsx.common.api.placeholder.placeholders.DefaultPla
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.placeholders.InputPlaceHolder;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.placeholders.PlaceHolder;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.google.common.collect.Lists;
 
 import java.util.List;
 import java.util.logging.Level;

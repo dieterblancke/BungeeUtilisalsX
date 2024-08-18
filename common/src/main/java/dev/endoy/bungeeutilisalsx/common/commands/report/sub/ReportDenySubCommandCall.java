@@ -45,41 +45,41 @@ public class ReportDenySubCommandCall implements CommandCall
 
             reportsDao.handleReport( id, false );
             user.sendLangMessage(
-                    "general-commands.report.deny.updated",
-                    report
+                "general-commands.report.deny.updated",
+                report
             );
 
             Optional<User> optionalUser = BuX.getApi().getUser( report.getReportedBy() );
             MessagePlaceholders placeholders = MessagePlaceholders.create()
-                    .append( report )
-                    .append( "staff", user.getName() );
+                .append( report )
+                .append( "staff", user.getName() );
 
             if ( optionalUser.isPresent() )
             {
                 final User target = optionalUser.get();
 
                 target.sendLangMessage(
-                        "general-commands.report.deny.denied",
-                        placeholders
+                    "general-commands.report.deny.denied",
+                    placeholders
                 );
             }
             else if ( BuX.getApi().getPlayerUtils().isOnline( report.getReportedBy() ) )
             {
                 BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                        report.getReportedBy(),
-                        "general-commands.report.deny.denied",
-                        placeholders
+                    report.getReportedBy(),
+                    "general-commands.report.deny.denied",
+                    placeholders
                 ) );
             }
             else
             {
                 BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
-                        report.getReportedBy(),
-                        new OfflineMessage(
-                                null,
-                                "general-commands.report.deny.denied",
-                                placeholders
-                        )
+                    report.getReportedBy(),
+                    new OfflineMessage(
+                        null,
+                        "general-commands.report.deny.denied",
+                        placeholders
+                    )
                 );
             }
         } );

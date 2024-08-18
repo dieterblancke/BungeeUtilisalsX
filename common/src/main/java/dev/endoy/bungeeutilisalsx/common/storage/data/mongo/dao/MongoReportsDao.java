@@ -67,7 +67,7 @@ public class MongoReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
 
             db().getCollection( "bu_reports" ).find()
-                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -81,7 +81,7 @@ public class MongoReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
 
             db().getCollection( "bu_reports" ).find( Filters.eq( "uuid", uuid.toString() ) )
-                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -106,7 +106,7 @@ public class MongoReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
 
             db().getCollection( "bu_reports" ).find( Filters.eq( "handled", handled ) )
-                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -122,7 +122,7 @@ public class MongoReportsDao implements ReportsDao
             calendar.add( Calendar.DATE, -7 );
 
             db().getCollection( "bu_reports" ).find( Filters.gte( "date", calendar.getTime() ) )
-                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -163,10 +163,10 @@ public class MongoReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
 
             db().getCollection( "bu_reports" )
-                    .find( Filters.eq( "reported_by", name ) )
-                    .forEach( (Consumer<? super Document>) doc ->
-                            reports.add( getReport( doc ) )
-                    );
+                .find( Filters.eq( "reported_by", name ) )
+                .forEach( (Consumer<? super Document>) doc ->
+                    reports.add( getReport( doc ) )
+                );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -179,7 +179,7 @@ public class MongoReportsDao implements ReportsDao
             final List<Report> reports = Lists.newArrayList();
 
             db().getCollection( "bu_reports" ).find( Filters.eq( "accepted", accepted ) )
-                    .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
+                .forEach( (Consumer<? super Document>) doc -> reports.add( getReport( doc ) ) );
 
             return reports;
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -205,15 +205,15 @@ public class MongoReportsDao implements ReportsDao
         final Document user = userColl.find( Filters.eq( "uuid", document.getString( "uuid" ) ) ).first();
 
         return new Report(
-                document.getInteger( "_id" ),
-                UUID.fromString( document.getString( "uuid" ) ),
-                user.getString( "username" ),
-                document.getString( "reported_by" ),
-                document.getDate( "date" ),
-                document.getString( "server" ),
-                document.getString( "reason" ),
-                document.getBoolean( "handled" ),
-                document.getBoolean( "accepted" )
+            document.getInteger( "_id" ),
+            UUID.fromString( document.getString( "uuid" ) ),
+            user.getString( "username" ),
+            document.getString( "reported_by" ),
+            document.getDate( "date" ),
+            document.getString( "server" ),
+            document.getString( "reason" ),
+            document.getBoolean( "handled" ),
+            document.getBoolean( "accepted" )
         );
     }
 

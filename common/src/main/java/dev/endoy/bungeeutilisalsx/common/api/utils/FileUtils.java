@@ -17,8 +17,8 @@ public class FileUtils
     public static InputStream getResourceAsStream( final String path )
     {
         return Optional.ofNullable( BuX.class.getClassLoader().getResourceAsStream( path ) )
-                .orElse( path.startsWith( "/" )
-                        ? BuX.class.getClassLoader().getResourceAsStream( path.replaceFirst( "/", "" ) )
-                        : BuX.class.getClassLoader().getResourceAsStream( "/" + path ) );
+            .orElse( path.startsWith( "/" )
+                ? BuX.class.getClassLoader().getResourceAsStream( path.replaceFirst( "/", "" ) )
+                : BuX.class.getClassLoader().getResourceAsStream( "/" + path ) );
     }
 }

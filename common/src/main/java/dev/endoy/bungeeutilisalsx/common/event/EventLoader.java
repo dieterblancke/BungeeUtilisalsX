@@ -36,9 +36,9 @@ public class EventLoader implements IEventLoader
         for ( Method method : methods )
         {
             if (
-                    method.getParameterCount() > 0
-                            && method.getParameters()[0].getType().equals( eventClass )
-                            && method.isAnnotationPresent( Event.class )
+                method.getParameterCount() > 0
+                    && method.getParameters()[0].getType().equals( eventClass )
+                    && method.isAnnotationPresent( Event.class )
             )
             {
                 Event event = method.getAnnotation( Event.class );

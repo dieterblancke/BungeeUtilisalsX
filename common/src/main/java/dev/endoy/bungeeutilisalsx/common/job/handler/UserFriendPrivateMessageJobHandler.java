@@ -45,27 +45,27 @@ public class UserFriendPrivateMessageJobHandler extends AbstractJobHandler
             user.getStorage().setData( UserStorageKey.FRIEND_MSG_LAST_USER, job.getUserName() );
 
             user.sendLangMessage(
-                    false,
-                    "friends." + job.getType().toString().toLowerCase() + ".format.receive",
-                    MessagePlaceholders.create()
-                            .append( "sender", job.getUserName() )
-                            .append( "message", job.getMessage() )
+                false,
+                "friends." + job.getType().toString().toLowerCase() + ".format.receive",
+                MessagePlaceholders.create()
+                    .append( "sender", job.getUserName() )
+                    .append( "message", job.getMessage() )
             );
 
             executeJob( new UserLanguageMessageJob(
-                    job,
-                    false,
-                    "friends." + job.getType().toString().toLowerCase() + ".format.send",
-                    MessagePlaceholders.create()
-                            .append( "receiver", user.getName() )
-                            .append( "message", job.getMessage() )
+                job,
+                false,
+                "friends." + job.getType().toString().toLowerCase() + ".format.send",
+                MessagePlaceholders.create()
+                    .append( "receiver", user.getName() )
+                    .append( "message", job.getMessage() )
             ) );
 
             executeJob( new ExecuteEventJob(
-                    UserFriendPrivateMessageEvent.class,
-                    job.getUserName(),
-                    job.getTargetName(),
-                    job.getMessage()
+                UserFriendPrivateMessageEvent.class,
+                job.getUserName(),
+                job.getTargetName(),
+                job.getMessage()
             ) );
         } );
     }

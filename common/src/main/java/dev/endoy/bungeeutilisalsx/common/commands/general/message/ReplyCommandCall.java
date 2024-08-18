@@ -40,11 +40,11 @@ public class ReplyCommandCall implements CommandCall, TabCall
             final String message = String.join( " ", args );
 
             BuX.getInstance().getJobManager().executeJob( new UserPrivateMessageJob(
-                    user.getUuid(),
-                    user.getName(),
-                    name,
-                    message,
-                    PrivateMessageType.REPLY
+                user.getUuid(),
+                user.getName(),
+                name,
+                message,
+                PrivateMessageType.REPLY
             ) );
         }
         else

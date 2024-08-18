@@ -17,32 +17,32 @@ public class UserSettings
     public Optional<UserSetting> getUserSetting( UserSettingType userSettingType )
     {
         return settings
-                .stream()
-                .filter( it -> it.getSettingType() == userSettingType )
-                .findFirst();
+            .stream()
+            .filter( it -> it.getSettingType() == userSettingType )
+            .findFirst();
     }
 
     public void upsertUserSetting( UserSetting userSetting )
     {
         this.getUserSetting( userSetting.getSettingType() )
-                .ifPresentOrElse( setting ->
-                {
-                    setting.setValue( userSetting.getValue() );
-                    BuX.getApi().getStorageManager().getDao().getUserDao().updateSetting(
-                            uuid,
-                            setting.getSettingType(),
-                            setting.getValue()
-                    );
-                }, () ->
-                {
-                    this.settings.add( userSetting );
+            .ifPresentOrElse( setting ->
+            {
+                setting.setValue( userSetting.getValue() );
+                BuX.getApi().getStorageManager().getDao().getUserDao().updateSetting(
+                    uuid,
+                    setting.getSettingType(),
+                    setting.getValue()
+                );
+            }, () ->
+            {
+                this.settings.add( userSetting );
 
-                    BuX.getApi().getStorageManager().getDao().getUserDao().registerSetting(
-                            uuid,
-                            userSetting.getSettingType(),
-                            userSetting.getValue()
-                    );
-                } );
+                BuX.getApi().getStorageManager().getDao().getUserDao().registerSetting(
+                    uuid,
+                    userSetting.getSettingType(),
+                    userSetting.getValue()
+                );
+            } );
     }
 
     public void removeUserSetting( UserSetting userSetting )

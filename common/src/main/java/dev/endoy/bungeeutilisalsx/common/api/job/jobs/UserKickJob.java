@@ -37,10 +37,10 @@ public class UserKickJob implements MultiProxyJob
     public List<User> getUsers()
     {
         return BuX.getApi().getUsers().stream()
-                .filter( user -> this.isIp()
-                        ? user.getIp().equalsIgnoreCase( this.ipAddress )
-                        : user.getUuid().equals( this.getUuid() ) || user.getName().equalsIgnoreCase( this.getUserName() ) )
-                .collect( Collectors.toList() );
+            .filter( user -> this.isIp()
+                ? user.getIp().equalsIgnoreCase( this.ipAddress )
+                : user.getUuid().equals( this.getUuid() ) || user.getName().equalsIgnoreCase( this.getUserName() ) )
+            .collect( Collectors.toList() );
 
     }
 }

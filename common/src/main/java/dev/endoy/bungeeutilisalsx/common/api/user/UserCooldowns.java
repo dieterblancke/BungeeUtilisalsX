@@ -1,7 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.api.user;
 
-import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
 import com.google.common.collect.Maps;
+import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
 import lombok.Getter;
 import lombok.Setter;
 

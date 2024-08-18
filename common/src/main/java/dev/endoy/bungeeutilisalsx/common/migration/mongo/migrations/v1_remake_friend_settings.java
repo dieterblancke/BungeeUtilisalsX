@@ -23,20 +23,20 @@ public class v1_remake_friend_settings implements MongoMigration
     {
         final MongoCollection<Document> coll = db().getCollection( "bu_friendsettings" );
         final List<Document> documents = coll
-                .find()
-                .into( new ArrayList<>() )
-                .stream()
-                .flatMap( document -> Stream.of(
-                        new Document()
-                                .append( "user", document.getString( "user" ) )
-                                .append( "setting", FriendSetting.REQUESTS.toString() )
-                                .append( "value", document.getBoolean( "requests" ) ),
-                        new Document()
-                                .append( "user", document.getString( "user" ) )
-                                .append( "setting", FriendSetting.MESSAGES.toString() )
-                                .append( "value", document.getBoolean( "messages" ) )
-                ) )
-                .collect( Collectors.toList() );
+            .find()
+            .into( new ArrayList<>() )
+            .stream()
+            .flatMap( document -> Stream.of(
+                new Document()
+                    .append( "user", document.getString( "user" ) )
+                    .append( "setting", FriendSetting.REQUESTS.toString() )
+                    .append( "value", document.getBoolean( "requests" ) ),
+                new Document()
+                    .append( "user", document.getString( "user" ) )
+                    .append( "setting", FriendSetting.MESSAGES.toString() )
+                    .append( "value", document.getBoolean( "messages" ) )
+            ) )
+            .collect( Collectors.toList() );
 
         coll.deleteMany( new Document() );
         coll.insertMany( documents );

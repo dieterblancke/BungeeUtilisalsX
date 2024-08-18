@@ -26,11 +26,11 @@ public class FriendBroadcastJob implements MultiProxyJob
     public List<User> getReceivers()
     {
         return BuX.getApi().getUsers()
-                .stream()
-                .filter( user -> user.getName().equalsIgnoreCase( senderName )
-                        || receivers.stream().anyMatch( name -> name.equalsIgnoreCase( user.getName() ) ) )
-                .filter( user -> user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST ) )
-                .collect( Collectors.toList() );
+            .stream()
+            .filter( user -> user.getName().equalsIgnoreCase( senderName )
+                || receivers.stream().anyMatch( name -> name.equalsIgnoreCase( user.getName() ) ) )
+            .filter( user -> user.getFriendSettings().getSetting( FriendSetting.FRIEND_BROADCAST ) )
+            .collect( Collectors.toList() );
     }
 
     @Override

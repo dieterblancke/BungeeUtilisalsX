@@ -45,14 +45,14 @@ public class SimplePartyManager implements PartyManager
 
         final Party party = new Party( new Date(), this.getPartyLimit( leader ) );
         party.getPartyMembers().add( new PartyMember(
-                leader.getUuid(),
-                leader.getName(),
-                new Date(),
-                leader.getName(),
-                null,
-                true,
-                false,
-                false
+            leader.getUuid(),
+            leader.getName(),
+            new Date(),
+            leader.getName(),
+            null,
+            true,
+            false,
+            false
         ) );
         final PartyCreationJob partyCreationJob = new PartyCreationJob( party );
 
@@ -70,20 +70,20 @@ public class SimplePartyManager implements PartyManager
     public Optional<Party> getCurrentPartyFor( final String userName )
     {
         return parties
+            .stream()
+            .filter( party -> party.getPartyMembers()
                 .stream()
-                .filter( party -> party.getPartyMembers()
-                        .stream()
-                        .anyMatch( partyMember -> partyMember.getUserName().equals( userName ) ) )
-                .findFirst();
+                .anyMatch( partyMember -> partyMember.getUserName().equals( userName ) ) )
+            .findFirst();
     }
 
     @Override
     public Optional<Party> getCurrentPartyByUuid( final UUID uuid )
     {
         return parties
-                .stream()
-                .filter( party -> party.getUuid().equals( uuid ) )
-                .findFirst();
+            .stream()
+            .filter( party -> party.getUuid().equals( uuid ) )
+            .findFirst();
     }
 
     @Override
@@ -143,9 +143,9 @@ public class SimplePartyManager implements PartyManager
         if ( member.isPartyOwner() )
         {
             final Optional<PartyMember> partyMember = party.getPartyMembers()
-                    .stream()
-                    .filter( m -> !m.getUuid().equals( member.getUuid() ) )
-                    .findFirst();
+                .stream()
+                .filter( m -> !m.getUuid().equals( member.getUuid() ) )
+                .findFirst();
 
             if ( partyMember.isPresent() )
             {
@@ -242,8 +242,8 @@ public class SimplePartyManager implements PartyManager
         for ( PartyMember partyMember : party.getPartyMembers() )
         {
             final UserMessageJob userMessageJob = new UserMessageJob(
-                    partyMember.getUuid(),
-                    Utils.replacePlaceHolders( message, placeholders )
+                partyMember.getUuid(),
+                Utils.replacePlaceHolders( message, placeholders )
             );
 
             BuX.getInstance().getJobManager().executeJob( userMessageJob );
@@ -256,9 +256,9 @@ public class SimplePartyManager implements PartyManager
         for ( PartyMember partyMember : party.getPartyMembers() )
         {
             final UserLanguageMessageJob userLanguageMessageJob = new UserLanguageMessageJob(
-                    partyMember.getUuid(),
-                    messagePath,
-                    placeholders.getMessagePlaceholders()
+                partyMember.getUuid(),
+                messagePath,
+                placeholders.getMessagePlaceholders()
             );
 
             BuX.getInstance().getJobManager().executeJob( userLanguageMessageJob );
@@ -292,9 +292,9 @@ public class SimplePartyManager implements PartyManager
         if ( BuX.getInstance().isRedisManagerEnabled() )
         {
             BuX.getInstance().getRedisManager().getDataManager().getRedisPartyDataManager().setPartyMemberRole(
-                    party,
-                    partyMember,
-                    partyRoleName
+                party,
+                partyMember,
+                partyRoleName
             );
         }
     }
@@ -322,8 +322,8 @@ public class SimplePartyManager implements PartyManager
                 for ( Party party : parties )
                 {
                     final boolean partyInactive = party.getPartyMembers()
-                            .stream()
-                            .noneMatch( partyMember -> BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() ) );
+                        .stream()
+                        .noneMatch( partyMember -> BuX.getApi().getPlayerUtils().isOnline( partyMember.getUserName() ) );
 
                     if ( party.isInactive() && partyInactive )
                     {
@@ -334,7 +334,7 @@ public class SimplePartyManager implements PartyManager
                         if ( party.isInactive() != partyInactive && BuX.getInstance().isRedisManagerEnabled() )
                         {
                             BuX.getInstance().getRedisManager().getDataManager()
-                                    .getRedisPartyDataManager().setInactiveStatus( party, partyInactive );
+                                .getRedisPartyDataManager().setInactiveStatus( party, partyInactive );
                         }
 
                         party.setInactive( partyInactive );
@@ -368,7 +368,7 @@ public class SimplePartyManager implements PartyManager
                             if ( partyMember.isInactive() != inactive && BuX.getInstance().isRedisManagerEnabled() )
                             {
                                 BuX.getInstance().getRedisManager().getDataManager()
-                                        .getRedisPartyDataManager().setInactiveStatus( party, partyMember, inactive );
+                                    .getRedisPartyDataManager().setInactiveStatus( party, partyMember, inactive );
                             }
 
                             partyMember.setInactive( inactive );
@@ -388,10 +388,10 @@ public class SimplePartyManager implements PartyManager
     private int getPartyLimit( final User leader )
     {
         return ConfigFiles.PARTY_CONFIG.getConfig().getSectionList( "member-limits" )
-                .stream()
-                .filter( section -> leader.hasPermission( section.getString( "permission" ) ) )
-                .map( section -> section.getInteger( "limit" ) )
-                .findFirst()
-                .orElse( ConfigFiles.PARTY_CONFIG.getConfig().getInteger( "default-member-limit" ) );
+            .stream()
+            .filter( section -> leader.hasPermission( section.getString( "permission" ) ) )
+            .map( section -> section.getInteger( "limit" ) )
+            .findFirst()
+            .orElse( ConfigFiles.PARTY_CONFIG.getConfig().getInteger( "default-member-limit" ) );
     }
 }

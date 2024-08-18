@@ -1,10 +1,10 @@
 package dev.endoy.bungeeutilisalsx.common.api.rabbitmq;
 
-import dev.endoy.bungeeutilisalsx.common.BuX;
-import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
+import dev.endoy.bungeeutilisalsx.common.BuX;
+import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

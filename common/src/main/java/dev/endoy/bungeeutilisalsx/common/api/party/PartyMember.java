@@ -24,15 +24,15 @@ public class PartyMember
     public static PartyMember fromMap( final UUID partyMemberUuid, final Map<String, String> memberData )
     {
         return new PartyMember(
-                partyMemberUuid,
-                memberData.get( "userName" ),
-                new Date( Long.parseLong( memberData.get( "joinedAt" ) ) ),
-                memberData.get( "nickName" ),
-                ConfigFiles.PARTY_CONFIG.findPartyRole( memberData.getOrDefault( "partyRole", null ) )
-                        .orElse( ConfigFiles.PARTY_CONFIG.getDefaultRole() ),
-                Boolean.parseBoolean( memberData.get( "partyOwner" ) ),
-                Boolean.parseBoolean( memberData.get( "inactive" ) ),
-                Boolean.parseBoolean( memberData.get( "chat" ) )
+            partyMemberUuid,
+            memberData.get( "userName" ),
+            new Date( Long.parseLong( memberData.get( "joinedAt" ) ) ),
+            memberData.get( "nickName" ),
+            ConfigFiles.PARTY_CONFIG.findPartyRole( memberData.getOrDefault( "partyRole", null ) )
+                .orElse( ConfigFiles.PARTY_CONFIG.getDefaultRole() ),
+            Boolean.parseBoolean( memberData.get( "partyOwner" ) ),
+            Boolean.parseBoolean( memberData.get( "inactive" ) ),
+            Boolean.parseBoolean( memberData.get( "chat" ) )
         );
     }
 

@@ -120,18 +120,18 @@ public interface PunishmentDao
     default CompletableFuture<Integer> softDeleteSince( final String user, final String removedBy, final Date time )
     {
         return CompletableFuture.supplyAsync(
-                () -> getBansDao().softDeleteSince( user, removedBy, time ).join()
-                        + getMutesDao().softDeleteSince( user, removedBy, time ).join(),
-                BuX.getInstance().getScheduler().getExecutorService()
+            () -> getBansDao().softDeleteSince( user, removedBy, time ).join()
+                + getMutesDao().softDeleteSince( user, removedBy, time ).join(),
+            BuX.getInstance().getScheduler().getExecutorService()
         );
     }
 
     default CompletableFuture<Integer> hardDeleteSince( final String user, final Date time )
     {
         return CompletableFuture.supplyAsync(
-                () -> getBansDao().hardDeleteSince( user, time ).join()
-                        + getMutesDao().hardDeleteSince( user, time ).join(),
-                BuX.getInstance().getScheduler().getExecutorService()
+            () -> getBansDao().hardDeleteSince( user, time ).join()
+                + getMutesDao().hardDeleteSince( user, time ).join(),
+            BuX.getInstance().getScheduler().getExecutorService()
         );
     }
 }

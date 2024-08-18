@@ -34,7 +34,7 @@ public class CommandHolder extends net.md_5.bungee.api.plugin.Command implements
     private User getUser( final CommandSender sender )
     {
         return sender instanceof ProxiedPlayer
-                ? BuX.getApi().getUser( sender.getName() ).orElse( null )
-                : BuX.getApi().getConsoleUser();
+            ? BuX.getApi().getUser( sender.getName() ).orElse( null )
+            : BuX.getApi().getConsoleUser();
     }
 }

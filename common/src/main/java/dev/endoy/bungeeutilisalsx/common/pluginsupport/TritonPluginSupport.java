@@ -37,7 +37,7 @@ public class TritonPluginSupport implements PluginSupport
             Localized localized = player.getLanguage();
 
             return triton.getMessageParser().translateString( message, localized, triton.getConfig().getGuiSyntax() ).getResult()
-                    .orElse( message );
+                .orElse( message );
         }
         catch ( Exception e )
         {

@@ -26,10 +26,10 @@ public class PartyWarpMembersJob implements MultiProxyJob
     public List<User> getOnlineMembersToWarp()
     {
         return membersToWarp
-                .stream()
-                .map( BuX.getApi()::getUser )
-                .filter( Optional::isPresent )
-                .map( Optional::get )
-                .toList();
+            .stream()
+            .map( BuX.getApi()::getUser )
+            .filter( Optional::isPresent )
+            .map( Optional::get )
+            .toList();
     }
 }

@@ -60,17 +60,17 @@ public class FriendItemPage extends ItemPage
                 }
                 final FriendData data = friendDataIterator.next();
                 final String currentServer = Optional.ofNullable( BuX.getApi().getPlayerUtils().findPlayer( data.getFriend() ) )
-                        .map( IProxyServer::getName ).orElse( null );
+                    .map( IProxyServer::getName ).orElse( null );
 
                 super.setItem( slot, this.getFriendGuiItem(
-                        user,
-                        (FriendGuiConfigItem) item,
-                        data,
-                        currentServer,
-                        MessagePlaceholders.create()
-                                .append( "friend-name", data.getFriend() )
-                                .append( "last-online", Utils.formatDate( data.getLastOnline() ) )
-                                .append( "server", currentServer == null ? "Unknown" : currentServer )
+                    user,
+                    (FriendGuiConfigItem) item,
+                    data,
+                    currentServer,
+                    MessagePlaceholders.create()
+                        .append( "friend-name", data.getFriend() )
+                        .append( "last-online", Utils.formatDate( data.getLastOnline() ) )
+                        .append( "server", currentServer == null ? "Unknown" : currentServer )
                 ) );
             }
         }
@@ -84,8 +84,8 @@ public class FriendItemPage extends ItemPage
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
-                ? item.getOnlineItem().buildItem( user, placeholders )
-                : item.getOfflineItem().buildItem( user, placeholders );
+            ? item.getOnlineItem().buildItem( user, placeholders )
+            : item.getOfflineItem().buildItem( user, placeholders );
 
         if ( itemStack.itemType() == ItemType.PLAYER_HEAD )
         {

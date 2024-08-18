@@ -15,8 +15,8 @@ public class ToggleBossBarCommandCall implements CommandCall
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         UserSetting userSetting = new UserSetting(
-                UserSettingType.BOSSBAR_DISABLED,
-                user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED ).map( it -> !it.getAsBoolean() ).orElse( true )
+            UserSettingType.BOSSBAR_DISABLED,
+            user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED ).map( it -> !it.getAsBoolean() ).orElse( true )
         );
 
         user.getSettings().upsertUserSetting( userSetting );
@@ -26,10 +26,10 @@ public class ToggleBossBarCommandCall implements CommandCall
             user.sendLangMessage( "general-commands.togglebossbar.disabled" );
 
             new ArrayList<>( user.getActiveBossBars() )
-                    .forEach( bossBar ->
-                    {
-                        bossBar.removeUser( user );
-                    } );
+                .forEach( bossBar ->
+                {
+                    bossBar.removeUser( user );
+                } );
         }
         else
         {

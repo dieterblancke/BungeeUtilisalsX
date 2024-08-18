@@ -27,7 +27,7 @@ public class ChatSyncExecutor implements EventExecutor
         }
         final User user = event.getUser();
         final Optional<ChatSyncedServer> optionalChatSyncedServer = ConfigFiles.CHAT_SYNC_CONFIG.getChatSyncedServer(
-                user.getServerName()
+            user.getServerName()
         );
 
         optionalChatSyncedServer.ifPresent( chatSyncedServer ->
@@ -38,17 +38,17 @@ public class ChatSyncExecutor implements EventExecutor
             }
 
             final String message = Utils.replacePlaceHolders(
-                    chatSyncedServer.format(),
-                    str -> PlaceHolderAPI.formatMessage( user, str ),
-                    null,
-                    MessagePlaceholders.create()
-                            .append( "message", event.getMessage() )
+                chatSyncedServer.format(),
+                str -> PlaceHolderAPI.formatMessage( user, str ),
+                null,
+                MessagePlaceholders.create()
+                    .append( "message", event.getMessage() )
             );
 
             BuX.getInstance().getJobManager().executeJob( new ChatSyncJob(
-                    chatSyncedServer.serverGroup().getName(),
-                    chatSyncedServer.forceFormat() ? null : user.getServerName(),
-                    message
+                chatSyncedServer.serverGroup().getName(),
+                chatSyncedServer.forceFormat() ? null : user.getServerName(),
+                message
             ) );
         } );
     }

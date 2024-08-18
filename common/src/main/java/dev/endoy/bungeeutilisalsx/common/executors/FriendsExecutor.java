@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common.executors;
 
+import com.google.common.base.Strings;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.event.event.Event;
 import dev.endoy.bungeeutilisalsx.common.api.event.event.EventExecutor;
@@ -12,7 +13,6 @@ import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
-import com.google.common.base.Strings;
 
 public class FriendsExecutor implements EventExecutor
 {
@@ -22,16 +22,16 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
         BuX.getApi().getStorageManager().getDao().getFriendsDao().getIncomingFriendRequests( user.getUuid() )
-                .thenAccept( requests ->
+            .thenAccept( requests ->
+            {
+                if ( !requests.isEmpty() )
                 {
-                    if ( !requests.isEmpty() )
-                    {
-                        user.sendLangMessage(
-                                "friends.join.requests",
-                                MessagePlaceholders.create().append( "amount", requests.size() )
-                        );
-                    }
-                } );
+                    user.sendLangMessage(
+                        "friends.join.requests",
+                        MessagePlaceholders.create().append( "amount", requests.size() )
+                    );
+                }
+            } );
     }
 
     @Event
@@ -45,19 +45,19 @@ public class FriendsExecutor implements EventExecutor
         }
 
         user.getFriends().forEach( data -> BuX.getApi().getUser( data.getFriend() ).ifPresentOrElse(
-                ( u ) -> u.sendLangMessage( "friends.join.join", MessagePlaceholders.create().append( "user", user.getName() ) ),
-                () ->
+            ( u ) -> u.sendLangMessage( "friends.join.join", MessagePlaceholders.create().append( "user", user.getName() ) ),
+            () ->
+            {
+                if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
                 {
-                    if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
-                    {
-                        BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                                data.getFriend(),
-                                "friends.join.join",
-                                MessagePlaceholders.create()
-                                        .append( "user", user.getName() )
-                        ) );
-                    }
+                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        data.getFriend(),
+                        "friends.join.join",
+                        MessagePlaceholders.create()
+                            .append( "user", user.getName() )
+                    ) );
                 }
+            }
         ) );
     }
 
@@ -66,25 +66,25 @@ public class FriendsExecutor implements EventExecutor
     {
         final User user = event.getUser();
 
-        if ( user.isVanished() )
+        if ( user.isVanished() || !user.isLoaded() )
         {
             return;
         }
 
         user.getFriends().forEach( data -> BuX.getApi().getUser( data.getFriend() ).ifPresentOrElse(
-                ( u ) -> u.sendLangMessage( "friends.leave", MessagePlaceholders.create().append( "user", user.getName() ) ),
-                () ->
+            ( u ) -> u.sendLangMessage( "friends.leave", MessagePlaceholders.create().append( "user", user.getName() ) ),
+            () ->
+            {
+                if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
                 {
-                    if ( BuX.getApi().getPlayerUtils().isOnline( data.getFriend() ) )
-                    {
-                        BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                                data.getFriend(),
-                                "friends.leave",
-                                MessagePlaceholders.create()
-                                        .append( "user", user.getName() )
-                        ) );
-                    }
+                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        data.getFriend(),
+                        "friends.leave",
+                        MessagePlaceholders.create()
+                            .append( "user", user.getName() )
+                    ) );
                 }
+            }
         ) );
     }
 
@@ -99,41 +99,41 @@ public class FriendsExecutor implements EventExecutor
         }
 
         if ( Strings.isNullOrEmpty( event.getTarget().getName() )
-                || ConfigFiles.FRIENDS_CONFIG.isDisabledServerSwitch( event.getTarget().getName() ) )
+            || ConfigFiles.FRIENDS_CONFIG.isDisabledServerSwitch( event.getTarget().getName() ) )
         {
             return;
         }
 
         MessagePlaceholders placeholders = MessagePlaceholders.create()
-                .append( "user", user.getName() )
-                .append( "from", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ) )
-                .append( "to", event.getTarget().getName() );
+            .append( "user", user.getName() )
+            .append( "from", event.getPrevious().map( IProxyServer::getName ).orElse( user.getServerName() ) )
+            .append( "to", event.getTarget().getName() );
 
         user.getFriends().forEach( data -> BuX.getApi().getUser( data.getFriend() ).ifPresentOrElse(
-                ( u ) ->
+            ( u ) ->
+            {
+                if ( u.getFriendSettings().getSetting( FriendSetting.SERVER_SWITCH ) )
                 {
-                    if ( u.getFriendSettings().getSetting( FriendSetting.SERVER_SWITCH ) )
-                    {
-                        u.sendLangMessage(
-                                "friends.switch",
-                                placeholders
-                        );
-                    }
-                },
-                () -> BuX.getApi().getStorageManager().getDao().getFriendsDao().getSetting(
-                        data.getUuid(),
-                        FriendSetting.SERVER_SWITCH
-                ).thenAccept( shouldSend ->
+                    u.sendLangMessage(
+                        "friends.switch",
+                        placeholders
+                    );
+                }
+            },
+            () -> BuX.getApi().getStorageManager().getDao().getFriendsDao().getSetting(
+                data.getUuid(),
+                FriendSetting.SERVER_SWITCH
+            ).thenAccept( shouldSend ->
+            {
+                if ( shouldSend )
                 {
-                    if ( shouldSend )
-                    {
-                        BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                                data.getFriend(),
-                                "friends.switch",
-                                placeholders
-                        ) );
-                    }
-                } )
+                    BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
+                        data.getFriend(),
+                        "friends.switch",
+                        placeholders
+                    ) );
+                }
+            } )
         ) );
     }
 }

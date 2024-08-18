@@ -19,8 +19,8 @@ public class FriendDenySubCommandCall implements CommandCall
     {
         BuX.getApi().getStorageManager().getDao().getFriendsDao().removeFriendRequest( user.getUuid(), storage.getUuid() );
         user.sendLangMessage(
-                "friends.deny.denied",
-                MessagePlaceholders.create().append( "user", storage.getUserName() )
+            "friends.deny.denied",
+            MessagePlaceholders.create().append( "user", storage.getUserName() )
         );
 
         if ( target != null )
@@ -30,9 +30,9 @@ public class FriendDenySubCommandCall implements CommandCall
         else if ( BuX.getApi().getPlayerUtils().isOnline( storage.getUserName() ) )
         {
             BuX.getInstance().getJobManager().executeJob( new UserLanguageMessageJob(
-                    storage.getUserName(),
-                    "friends.deny.request-denied",
-                    MessagePlaceholders.create().append( "name", user.getName() )
+                storage.getUserName(),
+                "friends.deny.request-denied",
+                MessagePlaceholders.create().append( "name", user.getName() )
             ) );
         }
     }

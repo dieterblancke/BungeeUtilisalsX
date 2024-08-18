@@ -30,7 +30,7 @@ public abstract class HikariStorageManager extends SQLStorageManager
             config.setDataSourceClassName( getDataSourceClass() );
             config.addDataSourceProperty( "serverName", configuration.getString( "storage.hostname" ) );
             config.addDataSourceProperty( "port" + ( type.equals( StorageType.POSTGRESQL ) ? "Number" : "" ),
-                    configuration.getInteger( "storage.port" ) );
+                configuration.getInteger( "storage.port" ) );
             config.addDataSourceProperty( "databaseName", configuration.getString( "storage.database" ) );
         }
         config.setUsername( configuration.getString( "storage.username" ) );
@@ -85,7 +85,7 @@ public abstract class HikariStorageManager extends SQLStorageManager
         final String methodName = "set" + key.substring( 0, 1 ).toUpperCase( Locale.ENGLISH ) + key.substring( 1 );
 
         return Arrays.stream( clazz.getDeclaredMethods() )
-                .anyMatch( method -> method.getName().equalsIgnoreCase( methodName ) );
+            .anyMatch( method -> method.getName().equalsIgnoreCase( methodName ) );
     }
 
     protected abstract String getDataSourceClass();

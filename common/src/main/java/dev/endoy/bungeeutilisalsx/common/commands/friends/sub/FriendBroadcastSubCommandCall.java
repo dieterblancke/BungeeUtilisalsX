@@ -29,13 +29,13 @@ public class FriendBroadcastSubCommandCall implements CommandCall
 
         final String message = String.join( " ", args );
         BuX.getInstance().getJobManager().executeJob( new FriendBroadcastJob(
-                user.getUuid(),
-                user.getName(),
-                message,
-                user.getFriends()
-                        .stream()
-                        .map( FriendData::getFriend )
-                        .collect( Collectors.toList() )
+            user.getUuid(),
+            user.getName(),
+            message,
+            user.getFriends()
+                .stream()
+                .map( FriendData::getFriend )
+                .collect( Collectors.toList() )
         ) );
     }
 

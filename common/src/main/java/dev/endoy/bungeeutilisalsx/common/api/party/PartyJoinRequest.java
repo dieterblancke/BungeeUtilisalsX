@@ -20,9 +20,9 @@ public class PartyJoinRequest
     public static PartyJoinRequest fromMap( final UUID requesterUuid, final Map<String, String> requestData )
     {
         return new PartyJoinRequest(
-                new Date( Long.parseLong( requestData.get( "requestedAt" ) ) ),
-                requesterUuid,
-                requestData.get( "requesterName" )
+            new Date( Long.parseLong( requestData.get( "requestedAt" ) ) ),
+            requesterUuid,
+            requestData.get( "requesterName" )
         );
     }
 

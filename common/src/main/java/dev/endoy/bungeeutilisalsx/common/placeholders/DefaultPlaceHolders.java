@@ -21,9 +21,9 @@ public class DefaultPlaceHolders implements PlaceHolderPack
     {
         // Proxy PlaceHolders
         PlaceHolderAPI.addPlaceHolder( "{proxy_online}", false,
-                event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );
+            event -> String.valueOf( BuX.getApi().getPlayerUtils().getTotalCount() ) );
         PlaceHolderAPI.addPlaceHolder( "{proxy_max}", false,
-                event -> String.valueOf( BuX.getInstance().serverOperations().getMaxPlayers() ) );
+            event -> String.valueOf( BuX.getInstance().serverOperations().getMaxPlayers() ) );
 
         PlaceHolderAPI.addPlaceHolder( "{date}", false, this::getCurrentDate );
         PlaceHolderAPI.addPlaceHolder( "{time}", false, this::getCurrentTime );
@@ -59,8 +59,8 @@ public class DefaultPlaceHolders implements PlaceHolderPack
             return "";
         }
         final ZonedDateTime localDateTime = ConfigFiles.CONFIG.isEnabled( "timezone", false )
-                ? ZonedDateTime.now( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) )
-                : ZonedDateTime.now();
+            ? ZonedDateTime.now( ZoneId.of( ConfigFiles.CONFIG.getConfig().getString( "timezone.zone" ) ) )
+            : ZonedDateTime.now();
 
         return localDateTime.format( DateTimeFormatter.ofPattern( format ) );
     }

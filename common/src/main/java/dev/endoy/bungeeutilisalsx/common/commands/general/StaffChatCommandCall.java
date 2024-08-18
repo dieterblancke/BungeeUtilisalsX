@@ -18,17 +18,17 @@ public class StaffChatCommandCall implements CommandCall
     public static void sendStaffChatMessage( final User user, final String message )
     {
         BuX.getInstance().getJobManager().executeJob(
-                new BroadcastLanguageMessageJob(
-                        "general-commands.staffchat.format",
-                        ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
-                        MessagePlaceholders.create()
-                                .append( "user", user.getName() )
-                                .append( "user_prefix", StaffUtils.getStaffRankForUser( user ).map( StaffRankData::getDisplay ).orElse( "" ) )
-                                .append( "permission_user_prefix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ) )
-                                .append( "permission_user_suffix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ) )
-                                .append( "server", Strings.nullToEmpty( user.getServerName() ) )
-                                .append( "message", message )
-                )
+            new BroadcastLanguageMessageJob(
+                "general-commands.staffchat.format",
+                ConfigFiles.GENERALCOMMANDS.getConfig().getString( "staffchat.permission" ),
+                MessagePlaceholders.create()
+                    .append( "user", user.getName() )
+                    .append( "user_prefix", StaffUtils.getStaffRankForUser( user ).map( StaffRankData::getDisplay ).orElse( "" ) )
+                    .append( "permission_user_prefix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getPrefix( user.getUuid() ) ) )
+                    .append( "permission_user_suffix", Strings.nullToEmpty( BuX.getInstance().getActivePermissionIntegration().getSuffix( user.getUuid() ) ) )
+                    .append( "server", Strings.nullToEmpty( user.getServerName() ) )
+                    .append( "message", message )
+            )
         );
     }
 

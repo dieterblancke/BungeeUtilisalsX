@@ -13,9 +13,9 @@ public class UserVanishUpdateJobHandler extends AbstractJobHandler
     {
         // update staff vanished value
         BuX.getApi().getStaffMembers()
-                .stream()
-                .filter( staffUser -> staffUser.getName().equalsIgnoreCase( job.getUserName() ) )
-                .forEach( staffUser -> staffUser.setVanished( job.isVanished() ) );
+            .stream()
+            .filter( staffUser -> staffUser.getName().equalsIgnoreCase( job.getUserName() ) )
+            .forEach( staffUser -> staffUser.setVanished( job.isVanished() ) );
 
         // update user vanished value
         job.getUser().ifPresent( user -> user.setVanished( job.isVanished() ) );

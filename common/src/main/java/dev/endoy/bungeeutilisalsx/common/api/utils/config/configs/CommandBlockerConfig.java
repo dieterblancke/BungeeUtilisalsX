@@ -38,27 +38,27 @@ public class CommandBlockerConfig extends Config
 
         blockedCommands.clear();
         blockedCommands.addAll(
-                config.getSectionList( "blockedcommands" ).stream()
-                        .map( section -> new BlockedCommand(
-                                section.getString( "command" ),
-                                section.exists( "bypass-permission" ) ? section.getString( "bypass-permission" ) : "",
-                                section.exists( "subcommands" ) ?
-                                        section.getSectionList( "subcommands" ).stream()
-                                                .map( subcommand -> new BlockedSubCommand(
-                                                        subcommand.getString( "command" ),
-                                                        subcommand.getInteger( "index" )
-                                                ) )
-                                                .collect( Collectors.toList() )
-                                        : new ArrayList<>(),
-                                section.exists( "servers" ) ?
-                                        section.getStringList( "servers" )
-                                                .stream()
-                                                .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
-                                                .flatMap( Optional::stream )
-                                                .collect( Collectors.toList() )
-                                        : new ArrayList<>()
-                        ) )
-                        .collect( Collectors.toList() )
+            config.getSectionList( "blockedcommands" ).stream()
+                .map( section -> new BlockedCommand(
+                    section.getString( "command" ),
+                    section.exists( "bypass-permission" ) ? section.getString( "bypass-permission" ) : "",
+                    section.exists( "subcommands" ) ?
+                        section.getSectionList( "subcommands" ).stream()
+                            .map( subcommand -> new BlockedSubCommand(
+                                subcommand.getString( "command" ),
+                                subcommand.getInteger( "index" )
+                            ) )
+                            .collect( Collectors.toList() )
+                        : new ArrayList<>(),
+                    section.exists( "servers" ) ?
+                        section.getStringList( "servers" )
+                            .stream()
+                            .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
+                            .flatMap( Optional::stream )
+                            .collect( Collectors.toList() )
+                        : new ArrayList<>()
+                ) )
+                .collect( Collectors.toList() )
         );
     }
 

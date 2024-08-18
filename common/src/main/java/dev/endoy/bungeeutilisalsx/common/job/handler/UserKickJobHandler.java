@@ -16,11 +16,11 @@ public class UserKickJobHandler extends AbstractJobHandler
     void executeUserKickJob( final UserKickJob job )
     {
         job.getUsers().forEach( user -> this.kickUser(
-                user,
-                job.getLanguagePath(),
-                job.getPlaceholders(),
-                job.getPunishmentType(),
-                job.getReason()
+            user,
+            job.getLanguagePath(),
+            job.getPlaceholders(),
+            job.getPunishmentType(),
+            job.getReason()
         ) );
     }
 
@@ -34,16 +34,16 @@ public class UserKickJobHandler extends AbstractJobHandler
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             kick = Utils.formatList( BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig().getConfig(),
-                    punishmentType,
-                    reason
+                user.getLanguageConfig().getConfig(),
+                punishmentType,
+                reason
             ), "\n" );
         }
         if ( kick == null )
         {
             kick = Utils.formatList(
-                    user.getLanguageConfig().getConfig().getStringList( languagePath ),
-                    "\n"
+                user.getLanguageConfig().getConfig().getStringList( languagePath ),
+                "\n"
             );
         }
         kick = Utils.replacePlaceHolders( user, kick, placeholders );

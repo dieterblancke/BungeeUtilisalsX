@@ -29,7 +29,7 @@ public class SqlFriendsDao implements FriendsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO bu_friends(user, friend, created) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
+                      "INSERT INTO bu_friends(user, friend, created) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -52,7 +52,7 @@ public class SqlFriendsDao implements FriendsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "DELETE FROM bu_friends WHERE user = ? AND friend = ?;"
+                      "DELETE FROM bu_friends WHERE user = ? AND friend = ?;"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -76,9 +76,9 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT created, user, friend, u.username friendname, u.lastlogout lastlogout FROM bu_friends" +
-                                  " JOIN bu_users u ON friend = u.uuid" +
-                                  " WHERE user = ?;"
+                      "SELECT created, user, friend, u.username friendname, u.lastlogout lastlogout FROM bu_friends" +
+                          " JOIN bu_users u ON friend = u.uuid" +
+                          " WHERE user = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -88,10 +88,10 @@ public class SqlFriendsDao implements FriendsDao
                     while ( rs.next() )
                     {
                         friends.add( new FriendData(
-                                UUID.fromString( rs.getString( "friend" ) ),
-                                rs.getString( "friendname" ),
-                                Dao.formatStringToDate( rs.getString( "created" ) ),
-                                Dao.formatStringToDate( rs.getString( "lastlogout" ) )
+                            UUID.fromString( rs.getString( "friend" ) ),
+                            rs.getString( "friendname" ),
+                            Dao.formatStringToDate( rs.getString( "created" ) ),
+                            Dao.formatStringToDate( rs.getString( "lastlogout" ) )
                         ) );
                     }
                 }
@@ -114,7 +114,7 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT COUNT(friend) FROM bu_friends WHERE user = ?;"
+                      "SELECT COUNT(friend) FROM bu_friends WHERE user = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -143,7 +143,7 @@ public class SqlFriendsDao implements FriendsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO bu_friendrequests(user, friend, requested_at) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
+                      "INSERT INTO bu_friendrequests(user, friend, requested_at) VALUES(?, ?, " + Dao.getInsertDateParameter() + ");"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -166,7 +166,7 @@ public class SqlFriendsDao implements FriendsDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "DELETE FROM bu_friendrequests WHERE user = ? AND friend = ?;"
+                      "DELETE FROM bu_friendrequests WHERE user = ? AND friend = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -190,9 +190,9 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT user, username, friend, requested_at FROM bu_friendrequests"
-                                  + " JOIN bu_users ON user = uuid"
-                                  + " WHERE friend = ?;"
+                      "SELECT user, username, friend, requested_at FROM bu_friendrequests"
+                          + " JOIN bu_users ON user = uuid"
+                          + " WHERE friend = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -202,11 +202,11 @@ public class SqlFriendsDao implements FriendsDao
                     while ( rs.next() )
                     {
                         friendRequests.add( new FriendRequest(
-                                uuid,
-                                rs.getString( "username" ),
-                                UUID.fromString( rs.getString( "friend" ) ),
-                                null,
-                                Dao.formatStringToDate( rs.getString( "requested_at" ) )
+                            uuid,
+                            rs.getString( "username" ),
+                            UUID.fromString( rs.getString( "friend" ) ),
+                            null,
+                            Dao.formatStringToDate( rs.getString( "requested_at" ) )
                         ) );
                     }
                 }
@@ -229,9 +229,9 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT user, friend, username, requested_at FROM bu_friendrequests"
-                                  + " JOIN bu_users ON friend = uuid"
-                                  + " WHERE user = ?;"
+                      "SELECT user, friend, username, requested_at FROM bu_friendrequests"
+                          + " JOIN bu_users ON friend = uuid"
+                          + " WHERE user = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -241,11 +241,11 @@ public class SqlFriendsDao implements FriendsDao
                     while ( rs.next() )
                     {
                         friendRequests.add( new FriendRequest(
-                                uuid,
-                                null,
-                                UUID.fromString( rs.getString( "friend" ) ),
-                                rs.getString( "username" ),
-                                Dao.formatStringToDate( rs.getString( "requested_at" ) )
+                            uuid,
+                            null,
+                            UUID.fromString( rs.getString( "friend" ) ),
+                            rs.getString( "username" ),
+                            Dao.formatStringToDate( rs.getString( "requested_at" ) )
                         ) );
                     }
                 }
@@ -268,7 +268,7 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
+                      "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -300,7 +300,7 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
+                      "SELECT EXISTS(SELECT * FROM bu_friendrequests WHERE user = ? AND friend = ?);"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -331,7 +331,7 @@ public class SqlFriendsDao implements FriendsDao
             // not really the cleanest code, but should be fine
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ? AND setting = ?"
+                      "SELECT COUNT(user) FROM bu_friendsettings WHERE user = ? AND setting = ?"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -349,7 +349,7 @@ public class SqlFriendsDao implements FriendsDao
                 if ( exists )
                 {
                     try ( PreparedStatement updatePstmt = connection.prepareStatement(
-                            "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
+                        "UPDATE bu_friendsettings SET value = ? WHERE user = ? and setting = ?;"
                     ) )
                     {
                         updatePstmt.setBoolean( 1, value );
@@ -362,7 +362,7 @@ public class SqlFriendsDao implements FriendsDao
                 else
                 {
                     try ( PreparedStatement insertPstmt = connection.prepareStatement(
-                            "INSERT INTO bu_friendsettings (user, setting, value) VALUES (?, ?, ?);"
+                        "INSERT INTO bu_friendsettings (user, setting, value) VALUES (?, ?, ?);"
                     ) )
                     {
                         insertPstmt.setString( 1, uuid.toString() );
@@ -389,7 +389,7 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT value FROM bu_friendsettings WHERE user = ? AND setting = ? LIMIT 1;"
+                      "SELECT value FROM bu_friendsettings WHERE user = ? AND setting = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -421,7 +421,7 @@ public class SqlFriendsDao implements FriendsDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM bu_friendsettings WHERE user = ? LIMIT 1;"
+                      "SELECT * FROM bu_friendsettings WHERE user = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -431,8 +431,8 @@ public class SqlFriendsDao implements FriendsDao
                     while ( rs.next() )
                     {
                         settings.set(
-                                FriendSetting.valueOf( rs.getString( "setting" ).toUpperCase() ),
-                                rs.getBoolean( "value" )
+                            FriendSetting.valueOf( rs.getString( "setting" ).toUpperCase() ),
+                            rs.getBoolean( "value" )
                         );
                     }
                 }

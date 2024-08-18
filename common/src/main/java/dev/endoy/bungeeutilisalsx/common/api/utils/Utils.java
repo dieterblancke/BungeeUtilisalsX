@@ -1,5 +1,8 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils;
 
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.reflect.ClassPath;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.language.LanguageConfig;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.PlaceHolderAPI;
@@ -7,9 +10,6 @@ import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import dev.endoy.configuration.api.IConfiguration;
-import com.google.common.base.Joiner;
-import com.google.common.collect.Lists;
-import com.google.common.reflect.ClassPath;
 import lombok.SneakyThrows;
 import net.kyori.adventure.text.Component;
 
@@ -34,8 +34,8 @@ public class Utils
 {
 
     private static final Pattern timePattern = Pattern.compile( "(?:([0-9]+)\\s*y[a-z]*[,\\s]*)?(?:([0-9]+)\\s*mo[a-z]*[,\\s]*)?"
-            + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
-            + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
+        + "(?:([0-9]+)\\s*w[a-z]*[,\\s]*)?(?:([0-9]+)\\s*d[a-z]*[,\\s]*)?"
+        + "(?:([0-9]+)\\s*h[a-z]*[,\\s]*)?(?:([0-9]+)\\s*m[a-z]*[,\\s]*)?(?:([0-9]+)\\s*(?:s[a-z]*)?)?", Pattern.CASE_INSENSITIVE );
 
     private Utils()
     {
@@ -566,10 +566,10 @@ public class Utils
         catch ( IllegalArgumentException e )
         {
             return UUID.fromString(
-                    str.replaceFirst(
-                            "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
-                            "$1-$2-$3-$4-$5"
-                    )
+                str.replaceFirst(
+                    "(\\p{XDigit}{8})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}{4})(\\p{XDigit}+)",
+                    "$1-$2-$3-$4-$5"
+                )
             );
         }
     }
@@ -709,8 +709,8 @@ public class Utils
         if ( pos > -1 )
         {
             return string.substring( 0, pos )
-                    + replacement
-                    + string.substring( pos + toReplace.length() );
+                + replacement
+                + string.substring( pos + toReplace.length() );
         }
         else
         {
@@ -763,10 +763,10 @@ public class Utils
         final long days = hours / 24;
 
         return format
-                .replace( "%days%", String.valueOf( days ) )
-                .replace( "%hours%", String.valueOf( hours % 24 ) )
-                .replace( "%minutes%", String.valueOf( minutes % 60 ) )
-                .replace( "%seconds%", String.valueOf( seconds % 60 ) );
+            .replace( "%days%", String.valueOf( days ) )
+            .replace( "%hours%", String.valueOf( hours % 24 ) )
+            .replace( "%minutes%", String.valueOf( minutes % 60 ) )
+            .replace( "%seconds%", String.valueOf( seconds % 60 ) );
     }
 
     /**
@@ -780,8 +780,8 @@ public class Utils
         if ( user == null )
         {
             return BuX.getApi().getLanguageManager().getConfig(
-                    BuX.getInstance().getName(),
-                    BuX.getApi().getLanguageManager().getDefaultLanguage()
+                BuX.getInstance().getName(),
+                BuX.getApi().getLanguageManager().getDefaultLanguage()
             );
         }
         return user.getLanguageConfig();
@@ -797,10 +797,10 @@ public class Utils
     public static List<Class<?>> getClassesInPackage( final String packageName )
     {
         final List<Class<?>> classes = ClassPath.from( BuX.class.getClassLoader() )
-                .getTopLevelClassesRecursive( packageName )
-                .stream()
-                .map( ClassPath.ClassInfo::load )
-                .collect( Collectors.toList() );
+            .getTopLevelClassesRecursive( packageName )
+            .stream()
+            .map( ClassPath.ClassInfo::load )
+            .collect( Collectors.toList() );
 
         BuX.debug( "Found " + classes + " classes in package " + packageName );
 
@@ -847,9 +847,9 @@ public class Utils
         }
 
         return classes
-                .stream()
-                .sorted( Comparator.comparing( ( Class<?> o ) -> o.getSimpleName() ) )
-                .toList();
+            .stream()
+            .sorted( Comparator.comparing( ( Class<?> o ) -> o.getSimpleName() ) )
+            .toList();
     }
 
     /**

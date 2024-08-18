@@ -36,8 +36,8 @@ public class UserPlaceHolderPack implements PlaceHolderPack
     private String getUserPrefix( final PlaceHolderEvent event )
     {
         return StaffUtils.getStaffRankForUser( event.getUser() )
-                .map( StaffRankData::getDisplay )
-                .orElse( "" );
+            .map( StaffRankData::getDisplay )
+            .orElse( "" );
     }
 
     private String getServerName( final PlaceHolderEvent event )

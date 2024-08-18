@@ -48,15 +48,15 @@ public class OfflineMessageCommandCall implements CommandCall
         }
 
         BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
-                targetName,
-                new OfflineMessageDao.OfflineMessage(
-                        null,
-                        "general-commands.offlinemessage.message",
-                        MessagePlaceholders.create()
-                                .append( user )
-                                .append( "time", Utils.formatDate( new Date(), user.getLanguageConfig().getConfig() ) )
-                                .append( "message", message )
-                )
+            targetName,
+            new OfflineMessageDao.OfflineMessage(
+                null,
+                "general-commands.offlinemessage.message",
+                MessagePlaceholders.create()
+                    .append( user )
+                    .append( "time", Utils.formatDate( new Date(), user.getLanguageConfig().getConfig() ) )
+                    .append( "message", message )
+            )
         );
         user.sendLangMessage( "general-commands.offlinemessage.sent", MessagePlaceholders.create().append( "user", targetName ) );
     }

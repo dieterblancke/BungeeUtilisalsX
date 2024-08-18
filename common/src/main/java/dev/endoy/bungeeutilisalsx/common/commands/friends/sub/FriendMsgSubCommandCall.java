@@ -37,11 +37,11 @@ public class FriendMsgSubCommandCall implements CommandCall
             user.getStorage().setData( UserStorageKey.FRIEND_MSG_LAST_USER, name );
 
             BuX.getInstance().getJobManager().executeJob( new UserFriendPrivateMessageJob(
-                    user.getUuid(),
-                    user.getName(),
-                    name,
-                    message,
-                    PrivateMessageType.MSG
+                user.getUuid(),
+                user.getName(),
+                name,
+                message,
+                PrivateMessageType.MSG
             ) );
         }
         else

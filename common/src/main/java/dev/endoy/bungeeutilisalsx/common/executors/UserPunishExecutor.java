@@ -22,7 +22,7 @@ public class UserPunishExecutor implements EventExecutor
     public void handleReports( UserPunishmentFinishEvent event )
     {
         BuX.getInstance().getScheduler().runAsync( () ->
-                ReportUtils.handleReportsFor( event.getExecutor().getName(), event.getUuid(), event.getType() )
+            ReportUtils.handleReportsFor( event.getExecutor().getName(), event.getUuid(), event.getType() )
         );
     }
 
@@ -60,33 +60,33 @@ public class UserPunishExecutor implements EventExecutor
                 if ( amount >= action.getLimit() )
                 {
                     action.getActions().forEach( command ->
-                            BuX.getApi().getConsoleUser().executeCommand( command.replace( "%user%", event.getName() ) )
+                        BuX.getApi().getConsoleUser().executeCommand( command.replace( "%user%", event.getName() ) )
                     );
 
                     if ( event.isUserPunishment() )
                     {
                         BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateActionStatus(
-                                action.getLimit(),
-                                event.getType(),
-                                event.getUuid(),
-                                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                            action.getLimit(),
+                            event.getType(),
+                            event.getUuid(),
+                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                         );
                     }
                     else
                     {
                         BuX.getApi().getStorageManager().getDao().getPunishmentDao().updateIPActionStatus(
-                                action.getLimit(),
-                                event.getType(),
-                                event.getIp(),
-                                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                            action.getLimit(),
+                            event.getType(),
+                            event.getIp(),
+                            new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
                         );
                     }
 
                     BuX.getApi().getStorageManager().getDao().getPunishmentDao().savePunishmentAction(
-                            event.getUuid(),
-                            event.getName(),
-                            event.getIp(),
-                            action.getUid()
+                        event.getUuid(),
+                        event.getName(),
+                        event.getIp(),
+                        action.getUid()
                     );
                 }
             } );
@@ -99,18 +99,18 @@ public class UserPunishExecutor implements EventExecutor
         {
             // uuid involved
             return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getPunishmentsSince(
-                    event.getType(),
-                    event.getUuid(),
-                    new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                event.getType(),
+                event.getUuid(),
+                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
             );
         }
         else
         {
             // ip involved
             return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getIPPunishmentsSince(
-                    event.getType(),
-                    event.getIp(),
-                    new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
+                event.getType(),
+                event.getIp(),
+                new Date( System.currentTimeMillis() - action.getUnit().toMillis( action.getTime() ) )
             );
         }
     }

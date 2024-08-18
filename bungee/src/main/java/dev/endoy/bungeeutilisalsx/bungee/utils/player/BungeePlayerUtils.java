@@ -1,9 +1,9 @@
 package dev.endoy.bungeeutilisalsx.bungee.utils.player;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
 import dev.endoy.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import com.google.common.collect.Lists;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 import net.md_5.bungee.api.connection.ProxiedPlayer;

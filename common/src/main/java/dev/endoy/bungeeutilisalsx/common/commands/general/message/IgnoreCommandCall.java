@@ -51,15 +51,15 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                 }
 
                 MessagePlaceholders placeholders = MessagePlaceholders.create()
-                        .append( "user", name );
+                    .append( "user", name );
 
                 if ( action.equalsIgnoreCase( "remove" ) )
                 {
                     if ( user.getStorage().getIgnoredUsers().stream().noneMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
                     {
                         user.sendLangMessage(
-                                "general-commands.ignore.remove.not-ignored",
-                                placeholders
+                            "general-commands.ignore.remove.not-ignored",
+                            placeholders
                         );
                         return;
                     }
@@ -68,8 +68,8 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                     user.getStorage().getIgnoredUsers().removeIf( ignored -> ignored.equalsIgnoreCase( name ) );
 
                     user.sendLangMessage(
-                            "general-commands.ignore.remove.unignored",
-                            placeholders
+                        "general-commands.ignore.remove.unignored",
+                        placeholders
                     );
                 }
                 else
@@ -77,8 +77,8 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                     if ( user.getStorage().getIgnoredUsers().stream().anyMatch( ignored -> ignored.equalsIgnoreCase( name ) ) )
                     {
                         user.sendLangMessage(
-                                "general-commands.ignore.add.already-ignored",
-                                placeholders
+                            "general-commands.ignore.add.already-ignored",
+                            placeholders
                         );
                         return;
                     }
@@ -87,8 +87,8 @@ public class IgnoreCommandCall implements CommandCall, TabCall
                     user.getStorage().getIgnoredUsers().add( storage.getUserName() );
 
                     user.sendLangMessage(
-                            "general-commands.ignore.add.ignored",
-                            placeholders
+                        "general-commands.ignore.add.ignored",
+                        placeholders
                     );
                 }
             } );
@@ -102,12 +102,12 @@ public class IgnoreCommandCall implements CommandCall, TabCall
             else
             {
                 user.sendLangMessage(
-                        "general-commands.ignore.list.message",
-                        MessagePlaceholders.create()
-                                .append( "{ignoredusers}", String.join(
-                                        user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
-                                        user.getStorage().getIgnoredUsers()
-                                ) )
+                    "general-commands.ignore.list.message",
+                    MessagePlaceholders.create()
+                        .append( "{ignoredusers}", String.join(
+                            user.getLanguageConfig().getConfig().getString( "general-commands.ignore.list.separator" ),
+                            user.getStorage().getIgnoredUsers()
+                        ) )
                 );
             }
         }

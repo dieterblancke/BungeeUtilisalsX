@@ -72,10 +72,10 @@ public enum PunishmentType
         final IConfiguration config = ConfigFiles.PUNISHMENT_CONFIG.getConfig();
         final String type = this.toString().toLowerCase();
         final String tempType = this.isIP()
-                ? "iptemp" + this.toString().toLowerCase().replace( "ip", "" )
-                : "temp" + type;
+            ? "iptemp" + this.toString().toLowerCase().replace( "ip", "" )
+            : "temp" + type;
 
         return ( config.exists( "commands." + type + ".enabled" ) && config.getBoolean( "commands." + type + ".enabled" ) )
-                || ( config.exists( "commands." + tempType + ".enabled" ) && config.getBoolean( "commands." + tempType + ".enabled" ) );
+            || ( config.exists( "commands." + tempType + ".enabled" ) && config.getBoolean( "commands." + tempType + ".enabled" ) );
     }
 }

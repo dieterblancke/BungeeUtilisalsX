@@ -19,9 +19,9 @@ public class JavaScriptPlaceHolder extends InputPlaceHolderImpl
     public String getReplacement( InputPlaceHolderEvent event )
     {
         final Optional<Script> optional = BuX.getInstance().getScripts()
-                .stream()
-                .filter( s -> s.getFile().equalsIgnoreCase( event.getArgument() ) )
-                .findFirst();
+            .stream()
+            .filter( s -> s.getFile().equalsIgnoreCase( event.getArgument() ) )
+            .findFirst();
 
         if ( optional.isPresent() )
         {

@@ -16,8 +16,8 @@ public enum FriendSetting
     public static FriendSetting[] getEnabledSettings()
     {
         return Arrays.stream( values() )
-                .filter( setting -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + setting.toString().toLowerCase() ) )
-                .toArray( FriendSetting[]::new );
+            .filter( setting -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "settings." + setting.toString().toLowerCase() ) )
+            .toArray( FriendSetting[]::new );
     }
 
     public String getName()
@@ -28,8 +28,8 @@ public enum FriendSetting
     public String getName( final IConfiguration language )
     {
         return language.exists( "friends.settings.type." + toString().toLowerCase() )
-                ? language.getString( "friends.settings.type." + toString().toLowerCase() )
-                : getName();
+            ? language.getString( "friends.settings.type." + toString().toLowerCase() )
+            : getName();
     }
 
     public boolean getDefault()

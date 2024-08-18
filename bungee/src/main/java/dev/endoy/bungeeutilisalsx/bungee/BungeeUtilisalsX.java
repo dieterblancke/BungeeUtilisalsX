@@ -20,7 +20,6 @@ import dev.endoy.bungeeutilisalsx.common.executors.ServerBalancerExecutors;
 import dev.endoy.bungeeutilisalsx.common.language.PluginLanguageManager;
 import dev.endoy.bungeeutilisalsx.common.punishment.PunishmentHelper;
 import dev.endoy.bungeeutilisalsx.common.serverbalancer.SimpleServerBalancer;
-import dev.endoy.bungeeutilisalsx.bungee.listeners.*;
 import net.kyori.adventure.platform.bungeecord.BungeeAudiences;
 import net.md_5.bungee.api.ProxyServer;
 import org.bstats.bungeecord.Metrics;
@@ -65,13 +64,13 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         }
 
         return new BuXApi(
-                new PluginLanguageManager(),
-                new EventLoader(),
-                new PunishmentHelper(),
-                ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
-                        ? new RedisPlayerUtils()
-                        : new BungeePlayerUtils(),
-                simpleServerBalancer
+            new PluginLanguageManager(),
+            new EventLoader(),
+            new PunishmentHelper(),
+            ConfigFiles.CONFIG.getConfig().getBoolean( "multi-proxy.enabled" )
+                ? new RedisPlayerUtils()
+                : new BungeePlayerUtils(),
+            simpleServerBalancer
         );
     }
 
@@ -166,40 +165,40 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
         final Metrics metrics = new Metrics( Bootstrap.getInstance(), 5134 );
 
         metrics.addCustomChart( new SimplePie(
-                "configurations/punishments",
-                () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
+            "configurations/punishments",
+            () -> ConfigFiles.PUNISHMENT_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "motds",
-                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+            "motds",
+            () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "ingame_motds",
-                () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
+            "ingame_motds",
+            () -> ConfigFiles.MOTD.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "friends",
-                () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
+            "friends",
+            () -> ConfigFiles.FRIENDS_CONFIG.isEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "actionbar_announcers",
-                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
+            "actionbar_announcers",
+            () -> Announcer.getAnnouncers().containsKey( AnnouncementType.ACTIONBAR ) ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "title_announcers",
-                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
+            "title_announcers",
+            () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TITLE ) ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "bossbar_announcers",
-                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
+            "bossbar_announcers",
+            () -> Announcer.getAnnouncers().containsKey( AnnouncementType.BOSSBAR ) ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "chat_announcers",
-                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
+            "chat_announcers",
+            () -> Announcer.getAnnouncers().containsKey( AnnouncementType.CHAT ) ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new SimplePie(
-                "tab_announcers",
-                () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
+            "tab_announcers",
+            () -> Announcer.getAnnouncers().containsKey( AnnouncementType.TAB ) ? "enabled" : "disabled"
         ) );
 // TODO: add chart "serverbalancer"
 //        metrics.addCustomChart( new SimplePie(
@@ -207,15 +206,15 @@ public class BungeeUtilisalsX extends AbstractBungeeUtilisalsX
 //                () -> this.getApi().getHubBalancer() != null ? "enabled" : "disabled"
 //        ) );
         metrics.addCustomChart( new SimplePie(
-                "protocolize",
-                () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"
+            "protocolize",
+            () -> this.isProtocolizeEnabled() ? "enabled" : "disabled"
         ) );
         metrics.addCustomChart( new AdvancedPie(
-                "player_versions",
-                () -> BuX.getApi().getUsers()
-                        .stream()
-                        .map( u -> u.getVersion().toString() )
-                        .collect( Collectors.groupingBy( Function.identity(), Collectors.summingInt( it -> 1 ) ) )
+            "player_versions",
+            () -> BuX.getApi().getUsers()
+                .stream()
+                .map( u -> u.getVersion().toString() )
+                .collect( Collectors.groupingBy( Function.identity(), Collectors.summingInt( it -> 1 ) ) )
         ) );
     }
 }

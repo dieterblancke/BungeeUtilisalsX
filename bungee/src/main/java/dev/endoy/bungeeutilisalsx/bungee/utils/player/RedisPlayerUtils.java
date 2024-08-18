@@ -1,10 +1,10 @@
 package dev.endoy.bungeeutilisalsx.bungee.utils.player;
 
+import com.google.common.collect.Lists;
+import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
 import dev.endoy.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import com.google.common.collect.Lists;
-import com.imaginarycode.minecraft.redisbungee.RedisBungeeAPI;
 import net.md_5.bungee.api.ProxyServer;
 import net.md_5.bungee.api.config.ServerInfo;
 
@@ -32,7 +32,7 @@ public class RedisPlayerUtils implements IPlayerUtils
         if ( info != null )
         {
             RedisBungeeAPI.getRedisBungeeApi().getPlayersOnServer( server ).forEach( uuid ->
-                    players.add( RedisBungeeAPI.getRedisBungeeApi().getNameFromUuid( uuid ) ) );
+                players.add( RedisBungeeAPI.getRedisBungeeApi().getNameFromUuid( uuid ) ) );
         }
 
         return players;
@@ -61,10 +61,10 @@ public class RedisPlayerUtils implements IPlayerUtils
 
         if ( RedisBungeeAPI.getRedisBungeeApi().isPlayerOnline( uuid ) )
         {
-            return Optional.ofNullable(RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ))
-                    .map( ServerInfo::getName )
-                    .map( BuX.getInstance().serverOperations()::getServerInfo )
-                    .orElse( null );
+            return Optional.ofNullable( RedisBungeeAPI.getRedisBungeeApi().getServerFor( uuid ) )
+                .map( ServerInfo::getName )
+                .map( BuX.getInstance().serverOperations()::getServerInfo )
+                .orElse( null );
         }
 
         return null;

@@ -26,8 +26,8 @@ class TrackUtilsTest
     void setup() throws NoSuchFieldException, IllegalAccessException
     {
         TestInjectionUtil.injectConfiguration(
-                ConfigFiles.PUNISHMENT_TRACKS,
-                IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/punishments/tracks.yml" ) )
+            ConfigFiles.PUNISHMENT_TRACKS,
+            IConfiguration.loadYamlConfiguration( this.getClass().getResourceAsStream( "/configurations/punishments/tracks.yml" ) )
         );
         ConfigFiles.PUNISHMENT_TRACKS.setup();
     }
@@ -142,12 +142,12 @@ class TrackUtilsTest
     private PunishmentTrackInfo createPunishmentTrackInfo( final UUID uuid, final String trackId )
     {
         return new PunishmentTrackInfo(
-                uuid,
-                trackId,
-                "ALL",
-                "CONSOLE",
-                new Date(),
-                true
+            uuid,
+            trackId,
+            "ALL",
+            "CONSOLE",
+            new Date(),
+            true
         );
     }
 }

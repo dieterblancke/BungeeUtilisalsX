@@ -19,11 +19,11 @@ public class UserMuteJobHandler extends AbstractJobHandler
     void executeUserMuteJob( final UserMuteJob job )
     {
         job.getUsers().forEach( user -> this.muteUser(
-                user,
-                job.getLanguagePath(),
-                job.getPlaceholders(),
-                job.getPunishmentType(),
-                job.getReason()
+            user,
+            job.getLanguagePath(),
+            job.getPlaceholders(),
+            job.getPunishmentType(),
+            job.getReason()
         ) );
     }
 
@@ -37,7 +37,7 @@ public class UserMuteJobHandler extends AbstractJobHandler
         if ( BuX.getApi().getPunishmentExecutor().isTemplateReason( reason ) )
         {
             mute = BuX.getApi().getPunishmentExecutor().searchTemplate(
-                    user.getLanguageConfig().getConfig(), punishmentType, reason
+                user.getLanguageConfig().getConfig(), punishmentType, reason
             );
         }
         if ( mute == null )

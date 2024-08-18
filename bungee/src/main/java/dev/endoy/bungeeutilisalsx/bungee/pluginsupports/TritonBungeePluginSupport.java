@@ -1,10 +1,10 @@
 package dev.endoy.bungeeutilisalsx.bungee.pluginsupports;
 
+import com.rexcantor64.triton.Triton;
+import com.rexcantor64.triton.api.config.FeatureSyntax;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
-import com.rexcantor64.triton.Triton;
-import com.rexcantor64.triton.api.config.FeatureSyntax;
 import net.md_5.bungee.api.ServerPing.PlayerInfo;
 import net.md_5.bungee.api.ServerPing.Players;
 import net.md_5.bungee.api.ServerPing.Protocol;
@@ -74,7 +74,7 @@ public class TritonBungeePluginSupport implements PluginSupport
             event.getResponse().setVersion( translatedVersion );
 
             event.getResponse().setDescriptionComponent( componentArrayToSingle( Triton.get().getLanguageParser()
-                    .parseComponent( languageName, syntax, event.getResponse().getDescriptionComponent() ) ) );
+                .parseComponent( languageName, syntax, event.getResponse().getDescriptionComponent() ) ) );
         }
     }
 

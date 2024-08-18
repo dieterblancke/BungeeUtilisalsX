@@ -22,10 +22,10 @@ public class SpyEventExecutor implements EventExecutor
     {
         final String permission = ConfigFiles.GENERALCOMMANDS.getConfig().getString( "socialspy.permission" );
         final List<User> users = Stream.concat( BuX.getApi().getUsers().stream(), Stream.of( BuX.getApi().getConsoleUser() ) )
-                .filter( user -> user.isSocialSpy() && user.hasPermission( permission ) )
-                .filter( user -> !user.getName().equals( event.getSender() )
-                        && !user.getName().equals( event.getReceiver() ) )
-                .collect( Collectors.toList() );
+            .filter( user -> user.isSocialSpy() && user.hasPermission( permission ) )
+            .filter( user -> !user.getName().equals( event.getSender() )
+                && !user.getName().equals( event.getReceiver() ) )
+            .collect( Collectors.toList() );
 
         if ( users.isEmpty() )
         {
@@ -35,11 +35,11 @@ public class SpyEventExecutor implements EventExecutor
         for ( User user : users )
         {
             user.sendLangMessage(
-                    "general-commands.socialspy.message",
-                    MessagePlaceholders.create()
-                            .append( "sender}", event.getSender() )
-                            .append( "receiver", event.getReceiver() )
-                            .append( "message", event.getMessage() )
+                "general-commands.socialspy.message",
+                MessagePlaceholders.create()
+                    .append( "sender}", event.getSender() )
+                    .append( "receiver", event.getReceiver() )
+                    .append( "message", event.getMessage() )
             );
         }
     }
@@ -58,10 +58,10 @@ public class SpyEventExecutor implements EventExecutor
         }
 
         BuX.getInstance().getJobManager().executeJob( new CommandSpyJob(
-                event.getUser().getUuid(),
-                event.getUser().getName(),
-                event.getUser().getServerName(),
-                event.getCommand()
+            event.getUser().getUuid(),
+            event.getUser().getName(),
+            event.getUser().getServerName(),
+            event.getCommand()
         ) );
     }
 }

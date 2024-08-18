@@ -60,10 +60,10 @@ public class PageUtils
             int next = Math.min( page + 1, pages );
 
             MessagePlaceholders pagePlaceholders = MessagePlaceholders.create()
-                    .append( "page", page )
-                    .append( "maxPages", pages )
-                    .append( "previousPage", previous )
-                    .append( "nextPage", next );
+                .append( "page", page )
+                .append( "maxPages", pages )
+                .append( "previousPage", previous )
+                .append( "nextPage", next );
 
             responseHandler.getHeaderMessage().sendMessage( user, pagePlaceholders );
 
@@ -77,11 +77,11 @@ public class PageUtils
         catch ( PageUtils.PageNotFoundException e )
         {
             responseHandler.getInvalidPageMessage().sendMessage(
-                    user,
-                    MessagePlaceholders.create()
-                            .append( "page", e.getPage() )
-                            .append( "maxpages", e.getMaxPages() )
-                            .append( "maxPages", e.getMaxPages() )
+                user,
+                MessagePlaceholders.create()
+                    .append( "page", e.getPage() )
+                    .append( "maxpages", e.getMaxPages() )
+                    .append( "maxPages", e.getMaxPages() )
             );
         }
     }
@@ -122,10 +122,10 @@ public class PageUtils
         public void sendMessage( User user, MessagePlaceholders parameters )
         {
             user.sendLangMessage(
-                    path,
-                    MessagePlaceholders.create()
-                            .append( this.parameters )
-                            .append( parameters )
+                path,
+                MessagePlaceholders.create()
+                    .append( this.parameters )
+                    .append( parameters )
             );
         }
     }

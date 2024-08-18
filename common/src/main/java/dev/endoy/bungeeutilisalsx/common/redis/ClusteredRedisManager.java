@@ -31,8 +31,8 @@ public class ClusteredRedisManager implements RedisManager
     {
         this.redisClient = RedisClusterClient.create( section.getString( "uri" ) );
         this.pool = ConnectionPoolSupport.createGenericObjectPool(
-                redisClient::connect,
-                this.getObjectPoolConfig( section.getSection( "pooling" ) )
+            redisClient::connect,
+            this.getObjectPoolConfig( section.getSection( "pooling" ) )
         );
         this.pubSubConnection = redisClient.connectPubSub();
         this.pubSubConnection.addListener( new PubSubListener() );

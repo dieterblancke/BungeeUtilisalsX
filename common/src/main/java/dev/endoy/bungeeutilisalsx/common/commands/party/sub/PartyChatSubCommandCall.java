@@ -27,29 +27,29 @@ public class PartyChatSubCommandCall implements CommandCall
         if ( args.size() > 0 )
         {
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                    party,
-                    "party.chat.format",
-                    MessagePlaceholders.create()
-                            .append( "user", user.getName() )
-                            .append( "message", String.join( " ", args ) )
+                party,
+                "party.chat.format",
+                MessagePlaceholders.create()
+                    .append( "user", user.getName() )
+                    .append( "message", String.join( " ", args ) )
             );
         }
         else
         {
             party.getPartyMembers()
-                    .stream()
-                    .filter( m -> m.getUuid().equals( user.getUuid() ) )
-                    .findFirst()
-                    .ifPresentOrElse( member ->
-                    {
-                        final boolean chatMode = !member.isChat();
-                        BuX.getInstance().getPartyManager().setChatMode( party, member, chatMode );
+                .stream()
+                .filter( m -> m.getUuid().equals( user.getUuid() ) )
+                .findFirst()
+                .ifPresentOrElse( member ->
+                {
+                    final boolean chatMode = !member.isChat();
+                    BuX.getInstance().getPartyManager().setChatMode( party, member, chatMode );
 
-                        user.sendLangMessage( "party.chat." + ( chatMode ? "enabled" : "disabled" ) );
-                    }, () ->
-                    {
-                        user.sendLangMessage( "party.not-in-party" );
-                    } );
+                    user.sendLangMessage( "party.chat." + ( chatMode ? "enabled" : "disabled" ) );
+                }, () ->
+                {
+                    user.sendLangMessage( "party.not-in-party" );
+                } );
 
         }
     }

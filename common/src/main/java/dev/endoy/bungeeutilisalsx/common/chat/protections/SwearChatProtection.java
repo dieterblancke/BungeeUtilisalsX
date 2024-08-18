@@ -29,28 +29,28 @@ public class SwearChatProtection implements ChatProtection
         this.bypassPermission = config.getString( "bypass" );
         this.replaceWith = config.getString( "replace" );
         this.blockedWords = config.getStringList( "words" )
-                .stream()
-                .map( word ->
+            .stream()
+            .map( word ->
+            {
+                final StringBuilder builder = new StringBuilder( "\\b(" );
+
+                for ( char o : word.toCharArray() )
                 {
-                    final StringBuilder builder = new StringBuilder( "\\b(" );
+                    builder.append( o );
+                    builder.append( "+(\\W|\\d\\_)*" );
+                }
+                builder.append( ")\\b" );
 
-                    for ( char o : word.toCharArray() )
-                    {
-                        builder.append( o );
-                        builder.append( "+(\\W|\\d\\_)*" );
-                    }
-                    builder.append( ")\\b" );
-
-                    return Pattern.compile( builder.toString() );
-                } )
-                .collect( Collectors.toList() );
+                return Pattern.compile( builder.toString() );
+            } )
+            .collect( Collectors.toList() );
         this.blockedWordPatterns = ConfigFiles.ANTISWEAR.getConfig().getSectionList( "patterns" )
-                .stream()
-                .map( section -> new SwearPattern(
-                        Pattern.compile( section.getString( "expression" ) ),
-                        section.getStringList( "whitelist" )
-                ) )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( section -> new SwearPattern(
+                Pattern.compile( section.getString( "expression" ) ),
+                section.getStringList( "whitelist" )
+            ) )
+            .collect( Collectors.toList() );
     }
 
     @Override
@@ -74,7 +74,7 @@ public class SwearChatProtection implements ChatProtection
         for ( SwearPattern blockedWordPattern : this.blockedWordPatterns )
         {
             final SwearValidationResult validationResult = this.validateMessage(
-                    message, blockedWordPattern.getPattern(), blockedWordPattern.getWhitelist()
+                message, blockedWordPattern.getPattern(), blockedWordPattern.getWhitelist()
             );
 
             if ( !validationResult.isValid() )

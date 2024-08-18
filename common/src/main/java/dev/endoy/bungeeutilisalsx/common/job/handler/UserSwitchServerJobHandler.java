@@ -12,7 +12,7 @@ public class UserSwitchServerJobHandler extends AbstractJobHandler
     void handleUserSwitchServerJob( final UserSwitchServerJob job )
     {
         job.getTargetUser().ifPresent( user -> job.getTargetServer().ifPresent( proxyServer ->
-                ServerCommandCall.sendToServer( user, proxyServer )
+            ServerCommandCall.sendToServer( user, proxyServer )
         ) );
     }
 }

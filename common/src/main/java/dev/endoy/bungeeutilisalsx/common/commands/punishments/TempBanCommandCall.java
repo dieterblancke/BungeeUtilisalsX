@@ -40,14 +40,14 @@ public class TempBanCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getBansDao().insertTempBan(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                true,
-                user.getName(),
-                time
+            storage.getUuid(),
+            storage.getUserName(),
+            storage.getIp(),
+            reason,
+            punishmentArgs.getServerOrAll(),
+            true,
+            user.getName(),
+            time
         ).thenAccept( info ->
         {
             // Attempting to kick if player is online. If briding is enabled and player is not online, it will attempt to kick on other bungee's.
@@ -60,16 +60,16 @@ public class TempBanCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.tempban.broadcast",
-                            executor.getPlaceHolders( info )
+                        "punishments.tempban.broadcast",
+                        executor.getPlaceHolders( info )
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.tempban.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempban.broadcast" ),
-                            executor.getPlaceHolders( info )
+                        "punishments.tempban.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.tempban.broadcast" ),
+                        executor.getPlaceHolders( info )
                     );
                 }
             }

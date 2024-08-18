@@ -11,9 +11,9 @@ public interface UnclosableConnection extends Connection
     static UnclosableConnection wrap( final Connection connection )
     {
         return (UnclosableConnection) Proxy.newProxyInstance(
-                UnclosableConnection.class.getClassLoader(),
-                new Class[]{ UnclosableConnection.class },
-                new Handler( connection )
+            UnclosableConnection.class.getClassLoader(),
+            new Class[]{ UnclosableConnection.class },
+            new Handler( connection )
         );
     }
 

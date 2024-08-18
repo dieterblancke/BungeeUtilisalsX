@@ -37,10 +37,10 @@ public class StaffRollbackCommandCall implements CommandCall
         }
 
         deleteTask.thenAccept( amount -> user.sendLangMessage(
-                "punishments.staffrollback." + ( hardRollback ? "hard" : "soft" ) + "-rollback",
-                MessagePlaceholders.create()
-                        .append( "amount", amount )
-                        .append( "user", playerName )
+            "punishments.staffrollback." + ( hardRollback ? "hard" : "soft" ) + "-rollback",
+            MessagePlaceholders.create()
+                .append( "amount", amount )
+                .append( "user", playerName )
         ) );
     }
 

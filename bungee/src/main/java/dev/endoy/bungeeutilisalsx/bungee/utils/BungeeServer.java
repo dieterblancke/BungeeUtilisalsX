@@ -41,9 +41,9 @@ public class BungeeServer implements IProxyServer
         final Collection<String> players = this.getPlayers();
 
         return BuX.getApi().getUsers()
-                .stream()
-                .filter( u -> players.contains( u.getName() ) )
-                .collect( Collectors.toList() );
+            .stream()
+            .filter( u -> players.contains( u.getName() ) )
+            .collect( Collectors.toList() );
     }
 
     @Override
@@ -66,9 +66,9 @@ public class BungeeServer implements IProxyServer
             else
             {
                 completableFuture.complete( new PingInfo(
-                        serverPing.getPlayers().getOnline(),
-                        serverPing.getPlayers().getMax(),
-                        ComponentSerializer.toString( serverPing.getDescriptionComponent() )
+                    serverPing.getPlayers().getOnline(),
+                    serverPing.getPlayers().getMax(),
+                    ComponentSerializer.toString( serverPing.getDescriptionComponent() )
                 ) );
             }
         } );

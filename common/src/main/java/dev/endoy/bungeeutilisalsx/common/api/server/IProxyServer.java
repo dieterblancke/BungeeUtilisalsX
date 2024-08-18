@@ -25,8 +25,8 @@ public interface IProxyServer extends HasMessagePlaceholders
     default MessagePlaceholders getMessagePlaceholders()
     {
         return MessagePlaceholders.create()
-                .append( "server", getName() )
-                .append( "serverName", getName() );
+            .append( "server", getName() )
+            .append( "serverName", getName() );
     }
 
     @Value

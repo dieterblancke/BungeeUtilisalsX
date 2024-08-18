@@ -26,28 +26,28 @@ public class User
     public static User of( final UserStorage storage )
     {
         return new User(
-                storage.getUuid(),
-                storage.getUserName(),
-                ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? storage.getIp() : "",
-                storage.getLanguage().getName(),
-                new Timestamp( storage.getFirstLogin().getTime() ).toLocalDateTime(),
-                new Timestamp( storage.getLastLogout().getTime() ).toLocalDateTime(),
-                storage.getIgnoredUsers(),
-                storage.getJoinedHost()
+            storage.getUuid(),
+            storage.getUserName(),
+            ConfigFiles.CONFIG.getConfig().getBoolean( "expose-ips" ) ? storage.getIp() : "",
+            storage.getLanguage().getName(),
+            new Timestamp( storage.getFirstLogin().getTime() ).toLocalDateTime(),
+            new Timestamp( storage.getLastLogout().getTime() ).toLocalDateTime(),
+            storage.getIgnoredUsers(),
+            storage.getJoinedHost()
         );
     }
 
     public static User console()
     {
         return new User(
-                UUID.randomUUID(),
-                "CONSOLE",
-                "127.0.0.1",
-                null,
-                null,
-                null,
-                new ArrayList<>(),
-                null
+            UUID.randomUUID(),
+            "CONSOLE",
+            "127.0.0.1",
+            null,
+            null,
+            null,
+            new ArrayList<>(),
+            null
         );
     }
 }

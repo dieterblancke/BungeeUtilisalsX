@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.bungee;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.bungee.bossbar.BossBar;
 import dev.endoy.bungeeutilisalsx.bungee.user.BungeeConsoleUser;
 import dev.endoy.bungeeutilisalsx.common.BuX;
@@ -19,7 +20,6 @@ import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import dev.endoy.bungeeutilisalsx.common.api.utils.other.StaffUser;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import dev.endoy.bungeeutilisalsx.common.api.utils.player.IPlayerUtils;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;

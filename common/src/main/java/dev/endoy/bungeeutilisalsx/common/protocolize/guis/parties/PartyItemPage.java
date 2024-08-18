@@ -64,17 +64,17 @@ public class PartyItemPage extends ItemPage
                 }
                 final PartyMember member = partyMemberIterator.next();
                 final String currentServer = Optional.ofNullable( BuX.getApi().getPlayerUtils().findPlayer( member.getUserName() ) )
-                        .map( IProxyServer::getName ).orElse( null );
+                    .map( IProxyServer::getName ).orElse( null );
 
                 super.setItem( slot, this.getPartyMemberGuiItem(
-                        user,
-                        (PartyGuiConfigItem) item,
-                        member,
-                        currentServer,
-                        MessagePlaceholders.create()
-                                .append( "member", member.getUserName() )
-                                .append( "server", currentServer == null ? "Unknown" : currentServer )
-                                .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
+                    user,
+                    (PartyGuiConfigItem) item,
+                    member,
+                    currentServer,
+                    MessagePlaceholders.create()
+                        .append( "member", member.getUserName() )
+                        .append( "server", currentServer == null ? "Unknown" : currentServer )
+                        .append( "role", PartyUtils.getRoleName( party, member.getUuid(), user.getLanguageConfig() ) )
                 ) );
             }
         }
@@ -86,9 +86,9 @@ public class PartyItemPage extends ItemPage
         if ( item.getShowIf().startsWith( "has-party-permission:" ) )
         {
             final PartyRolePermission partyRolePermission = Utils.valueOfOr(
-                    PartyRolePermission.class,
-                    item.getShowIf().replaceFirst( "has-party-permission:", "" ),
-                    null
+                PartyRolePermission.class,
+                item.getShowIf().replaceFirst( "has-party-permission:", "" ),
+                null
             );
             final Party party = BuX.getInstance().getPartyManager().getCurrentPartyFor( user.getName() ).orElse( null );
 
@@ -115,8 +115,8 @@ public class PartyItemPage extends ItemPage
     {
         final boolean online = currentServer != null;
         final ItemStack itemStack = online
-                ? item.getOnlineItem().buildItem( user, placeholders )
-                : item.getOfflineItem().buildItem( user, placeholders );
+            ? item.getOnlineItem().buildItem( user, placeholders )
+            : item.getOfflineItem().buildItem( user, placeholders );
 
         if ( itemStack.itemType() == ItemType.PLAYER_HEAD )
         {

@@ -170,28 +170,28 @@ public abstract class PunishmentCommand implements CommandCall
     protected void attemptKick( final UserStorage storage, final String path, final PunishmentInfo info )
     {
         BuX.getInstance().getJobManager().executeJob( new UserKickJob(
-                storage.getUuid(),
-                storage.getUserName(),
-                info.getType().isIP(),
-                storage.getIp(),
-                path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
-                info.getType(),
-                info.getReason()
+            storage.getUuid(),
+            storage.getUserName(),
+            info.getType().isIP(),
+            storage.getIp(),
+            path,
+            BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
+            info.getType(),
+            info.getReason()
         ) );
     }
 
     protected void attemptMute( final UserStorage storage, final String path, final PunishmentInfo info )
     {
         BuX.getInstance().getJobManager().executeJob( new UserMuteJob(
-                storage.getUuid(),
-                storage.getUserName(),
-                info.getType().isIP(),
-                storage.getIp(),
-                path,
-                BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
-                info.getType(),
-                info.getReason()
+            storage.getUuid(),
+            storage.getUserName(),
+            info.getType().isIP(),
+            storage.getIp(),
+            path,
+            BuX.getApi().getPunishmentExecutor().getPlaceHolders( info ),
+            info.getType(),
+            info.getReason()
         ) );
     }
 
@@ -234,14 +234,14 @@ public abstract class PunishmentCommand implements CommandCall
         public boolean launchEvent( final PunishmentType type )
         {
             final UserPunishEvent event = new UserPunishEvent(
-                    type,
-                    executor,
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    storage.getIp(),
-                    reason,
-                    useServerPunishments() ? server : "ALL",
-                    time
+                type,
+                executor,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                useServerPunishments() ? server : "ALL",
+                time
             );
             BuX.getApi().getEventLoader().launchEvent( event );
 
@@ -256,14 +256,14 @@ public abstract class PunishmentCommand implements CommandCall
         public void launchPunishmentFinishEvent( final PunishmentType type )
         {
             final UserPunishmentFinishEvent event = new UserPunishmentFinishEvent(
-                    type,
-                    executor,
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    storage.getIp(),
-                    reason,
-                    this.getServerOrAll(),
-                    time
+                type,
+                executor,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                reason,
+                this.getServerOrAll(),
+                time
             );
 
             BuX.getApi().getEventLoader().launchEvent( event );
@@ -272,7 +272,7 @@ public abstract class PunishmentCommand implements CommandCall
         public boolean isSelfPunishment()
         {
             return player.equalsIgnoreCase( executor.getName() )
-                    && ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-self-punishments" );
+                && ConfigFiles.PUNISHMENT_CONFIG.getConfig().getBoolean( "allow-self-punishments" );
         }
 
         public boolean isHigherPunishment()
@@ -319,21 +319,21 @@ public abstract class PunishmentCommand implements CommandCall
             final UserStorage storage = getStorage();
 
             BuX.getInstance().getJobManager().executeJob( new UserUnmuteJob(
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    this.getServerOrAll()
+                storage.getUuid(),
+                storage.getUserName(),
+                this.getServerOrAll()
             ) );
         }
 
         public boolean launchEvent( final PunishmentRemovalAction type )
         {
             final UserPunishRemoveEvent event = new UserPunishRemoveEvent(
-                    type,
-                    executor,
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    storage.getIp(),
-                    useServerPunishments() ? server : "ALL"
+                type,
+                executor,
+                storage.getUuid(),
+                storage.getUserName(),
+                storage.getIp(),
+                useServerPunishments() ? server : "ALL"
             );
 
             BuX.getApi().getEventLoader().launchEvent( event );

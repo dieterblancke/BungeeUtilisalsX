@@ -1,12 +1,12 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.punishments.PunishmentTrack;
 import dev.endoy.bungeeutilisalsx.common.api.punishments.PunishmentTrack.PunishmentTrackRecord;
 import dev.endoy.bungeeutilisalsx.common.api.punishments.PunishmentTrackInfo;
 import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.google.common.collect.Lists;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -68,13 +68,13 @@ public class TrackUtils
                                               final String trackAction )
     {
         final String replacedTrackAction = trackAction
-                .replace( "{user}", userStorage.getUserName() )
-                .replace( "{reason}", reason );
+            .replace( "{user}", userStorage.getUserName() )
+            .replace( "{reason}", reason );
         final String[] args = replacedTrackAction.split( " " );
         final String commandName = args[0];
         final List<String> arguments = Lists.newArrayList( Arrays.copyOfRange( args, 1, args.length ) );
 
         BuX.getInstance().getCommandManager().findCommandByName( commandName )
-                .ifPresent( command -> command.getCommand().onExecute( user, arguments, new ArrayList<>() ) );
+            .ifPresent( command -> command.getCommand().onExecute( user, arguments, new ArrayList<>() ) );
     }
 }

@@ -11,11 +11,11 @@ public class TestMySQLStorageManager extends MySQLStorageManager
     public static GenericContainer<?> init()
     {
         mySQLContainer = new GenericContainer<>( "mysql:latest" )
-                .withEnv( "MYSQL_DATABASE", "database" )
-                .withEnv( "MYSQL_USER", "username" )
-                .withEnv( "MYSQL_PASSWORD", "password" )
-                .withEnv( "MYSQL_ALLOW_EMPTY_PASSWORD", "yes" )
-                .withExposedPorts( 3306 );
+            .withEnv( "MYSQL_DATABASE", "database" )
+            .withEnv( "MYSQL_USER", "username" )
+            .withEnv( "MYSQL_PASSWORD", "password" )
+            .withEnv( "MYSQL_ALLOW_EMPTY_PASSWORD", "yes" )
+            .withExposedPorts( 3306 );
         mySQLContainer.start();
         return mySQLContainer;
     }

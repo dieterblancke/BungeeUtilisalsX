@@ -20,9 +20,9 @@ class UtilsTest
         calendar.add( Calendar.SECOND, 5 );
 
         assertEquals(
-                Utils.parseDateDiff( "5d3h18m5s" ),
-                calendar.getTimeInMillis(),
-                50
+            Utils.parseDateDiff( "5d3h18m5s" ),
+            calendar.getTimeInMillis(),
+            50
         );
     }
 
@@ -36,9 +36,9 @@ class UtilsTest
         calendar.add( Calendar.SECOND, -5 );
 
         assertEquals(
-                Utils.parseDateDiffInPast( "5d3h18m5s" ),
-                calendar.getTimeInMillis(),
-                50
+            Utils.parseDateDiffInPast( "5d3h18m5s" ),
+            calendar.getTimeInMillis(),
+            50
         );
     }
 
@@ -47,12 +47,12 @@ class UtilsTest
     void testTimeLeft1()
     {
         assertEquals(
-                "5d 8h 50m 38s",
-                Utils.getTimeLeft(
-                        "%days%d %hours%h %minutes%m %seconds%s",
-                        TimeUnit.DAYS.toMillis( 5 ) + TimeUnit.HOURS.toMillis( 8 )
-                                + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
-                )
+            "5d 8h 50m 38s",
+            Utils.getTimeLeft(
+                "%days%d %hours%h %minutes%m %seconds%s",
+                TimeUnit.DAYS.toMillis( 5 ) + TimeUnit.HOURS.toMillis( 8 )
+                    + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+            )
         );
     }
 
@@ -61,11 +61,11 @@ class UtilsTest
     void testTimeLeft2()
     {
         assertEquals(
-                "0d 8h 50m 38s",
-                Utils.getTimeLeft(
-                        "%days%d %hours%h %minutes%m %seconds%s",
-                        TimeUnit.HOURS.toMillis( 8 ) + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
-                )
+            "0d 8h 50m 38s",
+            Utils.getTimeLeft(
+                "%days%d %hours%h %minutes%m %seconds%s",
+                TimeUnit.HOURS.toMillis( 8 ) + TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+            )
         );
     }
 
@@ -74,11 +74,11 @@ class UtilsTest
     void testTimeLeft3()
     {
         assertEquals(
-                "0d 0h 50m 38s",
-                Utils.getTimeLeft(
-                        "%days%d %hours%h %minutes%m %seconds%s",
-                        TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
-                )
+            "0d 0h 50m 38s",
+            Utils.getTimeLeft(
+                "%days%d %hours%h %minutes%m %seconds%s",
+                TimeUnit.MINUTES.toMillis( 50 ) + TimeUnit.SECONDS.toMillis( 38 )
+            )
         );
     }
 
@@ -87,11 +87,11 @@ class UtilsTest
     void testTimeLeft4()
     {
         assertEquals(
-                "0d 0h 0m 38s",
-                Utils.getTimeLeft(
-                        "%days%d %hours%h %minutes%m %seconds%s",
-                        TimeUnit.SECONDS.toMillis( 38 )
-                )
+            "0d 0h 0m 38s",
+            Utils.getTimeLeft(
+                "%days%d %hours%h %minutes%m %seconds%s",
+                TimeUnit.SECONDS.toMillis( 38 )
+            )
         );
     }
 
@@ -100,11 +100,11 @@ class UtilsTest
     void testTimeLeft5()
     {
         assertEquals(
-                "0d 0h 0m 0s",
-                Utils.getTimeLeft(
-                        "%days%d %hours%h %minutes%m %seconds%s",
-                        0
-                )
+            "0d 0h 0m 0s",
+            Utils.getTimeLeft(
+                "%days%d %hours%h %minutes%m %seconds%s",
+                0
+            )
         );
     }
 }

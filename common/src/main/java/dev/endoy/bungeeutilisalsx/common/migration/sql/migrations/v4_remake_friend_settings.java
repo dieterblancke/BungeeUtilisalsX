@@ -25,7 +25,7 @@ public class v4_remake_friend_settings extends FileMigration
             super.migrate();
 
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    "select * from bu_friendsettings_old"
+                "select * from bu_friendsettings_old"
             ) )
             {
                 try ( ResultSet rs = preparedStatement.executeQuery() )
@@ -58,7 +58,7 @@ public class v4_remake_friend_settings extends FileMigration
             }
 
             try ( PreparedStatement preparedStatement = connection.prepareStatement(
-                    "drop table bu_friendsettings_old"
+                "drop table bu_friendsettings_old"
             ) )
             {
                 preparedStatement.execute();

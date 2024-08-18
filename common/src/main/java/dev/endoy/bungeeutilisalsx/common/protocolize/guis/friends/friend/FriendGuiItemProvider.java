@@ -17,9 +17,9 @@ public class FriendGuiItemProvider implements PageableItemProvider
     public FriendGuiItemProvider( final User user, final FriendGuiConfig config, final List<FriendData> friends )
     {
         final int itemsPerPage = config.getItems().stream()
-                .filter( item -> ( (FriendGuiConfigItem) item ).isFriendItem() )
-                .mapToInt( item -> item.getSlots().size() )
-                .sum();
+            .filter( item -> ( (FriendGuiConfigItem) item ).isFriendItem() )
+            .mapToInt( item -> item.getSlots().size() )
+            .sum();
         int pages = (int) Math.ceil( (double) friends.size() / (double) itemsPerPage );
         if ( pages == 0 )
         {
@@ -32,11 +32,11 @@ public class FriendGuiItemProvider implements PageableItemProvider
             final int max = ( i + 1 ) * itemsPerPage;
 
             this.pages[i] = new FriendItemPage(
-                    user,
-                    i,
-                    pages,
-                    config,
-                    friends.isEmpty() ? friends : friends.size() <= max ? friends : friends.subList( i * itemsPerPage, max )
+                user,
+                i,
+                pages,
+                config,
+                friends.isEmpty() ? friends : friends.size() <= max ? friends : friends.subList( i * itemsPerPage, max )
             );
         }
     }

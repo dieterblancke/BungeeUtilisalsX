@@ -32,8 +32,8 @@ public class FriendReplySubCommandCall implements CommandCall
         if ( user.getFriends().stream().noneMatch( data -> data.getFriend().equalsIgnoreCase( name ) ) )
         {
             user.sendLangMessage(
-                    "friends.reply.not-friend",
-                    MessagePlaceholders.create().append( "user", name )
+                "friends.reply.not-friend",
+                MessagePlaceholders.create().append( "user", name )
             );
             return;
         }
@@ -43,11 +43,11 @@ public class FriendReplySubCommandCall implements CommandCall
             final String message = String.join( " ", args );
 
             BuX.getInstance().getJobManager().executeJob( new UserFriendPrivateMessageJob(
-                    user.getUuid(),
-                    user.getName(),
-                    name,
-                    message,
-                    PrivateMessageType.MSG
+                user.getUuid(),
+                user.getName(),
+                name,
+                message,
+                PrivateMessageType.MSG
             ) );
         }
         else

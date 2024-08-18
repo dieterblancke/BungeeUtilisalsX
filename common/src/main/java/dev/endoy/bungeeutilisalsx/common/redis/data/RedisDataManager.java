@@ -19,11 +19,11 @@ public class RedisDataManager implements IRedisDataManager
     private final RedisManager redisManager;
     private final PartyDataManager redisPartyDataManager;
     private final LoadingCache<String, Long> domainCountCache = CacheHelper.<String, Long>builder()
-            .build( builder ->
-            {
-                builder.maximumSize( 250 );
-                builder.expireAfterWrite( 3, TimeUnit.MINUTES );
-            }, this::getAmountOfOnlineUsersOnDomainUncached );
+        .build( builder ->
+        {
+            builder.maximumSize( 250 );
+            builder.expireAfterWrite( 3, TimeUnit.MINUTES );
+        }, this::getAmountOfOnlineUsersOnDomainUncached );
 
     public RedisDataManager( final RedisManager redisManager )
     {

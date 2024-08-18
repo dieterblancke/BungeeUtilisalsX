@@ -85,7 +85,7 @@ public class ActionBarAnnouncement extends Announcement
             if ( language )
             {
                 bar = BuX.getApi().getLanguageManager().getLanguageConfiguration(
-                        BuX.getInstance().getName(), player
+                    BuX.getInstance().getName(), player
                 ).getConfig().getString( message );
             }
 

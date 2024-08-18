@@ -45,13 +45,13 @@ public class GListCommandCall implements CommandCall, TabCall
             if ( config.isSection( "glist.header" ) )
             {
                 messages.add(
-                        MessageBuilder.buildMessage(
-                                user,
-                                config.getSection( "glist.header" ),
-                                MessagePlaceholders.create()
-                                        .append( "total", totalOnlineCount )
-                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
-                        )
+                    MessageBuilder.buildMessage(
+                        user,
+                        config.getSection( "glist.header" ),
+                        MessagePlaceholders.create()
+                            .append( "total", totalOnlineCount )
+                            .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
+                    )
                 );
             }
             else
@@ -74,14 +74,14 @@ public class GListCommandCall implements CommandCall, TabCall
                 final ServerGroup group = optionalGroup.get();
 
                 messages.add(
-                        MessageBuilder.buildMessage(
-                                user,
-                                config.getSection( "glist.format" ),
-                                MessagePlaceholders.create()
-                                        .append( "server", group.getName() )
-                                        .append( "players", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ) )
-                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) ) )
-                        )
+                    MessageBuilder.buildMessage(
+                        user,
+                        config.getSection( "glist.format" ),
+                        MessagePlaceholders.create()
+                            .append( "server", group.getName() )
+                            .append( "players", String.valueOf( group.getPlayers() - getHiddenUsers( group ) ) )
+                            .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( group.getPlayerList() ) ) )
+                    )
                 );
             }
         }
@@ -92,25 +92,25 @@ public class GListCommandCall implements CommandCall, TabCall
                 final List<String> players = BuX.getApi().getPlayerUtils().getPlayers( info.getName() );
 
                 messages.add(
-                        MessageBuilder.buildMessage(
-                                user,
-                                config.getSection( "glist.format" ),
-                                MessagePlaceholders.create()
-                                        .append( "server", info.getName() )
-                                        .append( "players", String.valueOf( players.size() - getHiddenUsers( players ) ) )
-                                        .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( players ) ) )
-                        )
+                    MessageBuilder.buildMessage(
+                        user,
+                        config.getSection( "glist.format" ),
+                        MessagePlaceholders.create()
+                            .append( "server", info.getName() )
+                            .append( "players", String.valueOf( players.size() - getHiddenUsers( players ) ) )
+                            .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( players ) ) )
+                    )
                 );
             }
         }
         messages.add(
-                MessageBuilder.buildMessage(
-                        user,
-                        config.getSection( "glist.total" ),
-                        MessagePlaceholders.create()
-                                .append( "total", totalOnlineCount )
-                                .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
-                )
+            MessageBuilder.buildMessage(
+                user,
+                config.getSection( "glist.total" ),
+                MessagePlaceholders.create()
+                    .append( "total", totalOnlineCount )
+                    .append( "playerlist", color + Joiner.on( separator ).join( StaffUtils.filterPlayerList( onlinePlayers ) ) )
+            )
         );
 
         messages.forEach( user::sendMessage );
@@ -136,7 +136,7 @@ public class GListCommandCall implements CommandCall, TabCall
     private long getHiddenUsers( final List<String> users )
     {
         return users.stream()
-                .filter( StaffUtils::isHidden )
-                .count();
+            .filter( StaffUtils::isHidden )
+            .count();
     }
 }

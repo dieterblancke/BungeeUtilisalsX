@@ -25,6 +25,6 @@ public class ReportUtils
         }
 
         BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid )
-                .thenAccept( reports -> reports.forEach( report -> report.accept( accepter ) ) );
+            .thenAccept( reports -> reports.forEach( report -> report.accept( accepter ) ) );
     }
 }

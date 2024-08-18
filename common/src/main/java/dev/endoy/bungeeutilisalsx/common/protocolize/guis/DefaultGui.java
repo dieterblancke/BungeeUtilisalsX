@@ -17,36 +17,36 @@ public enum DefaultGui
 {
 
     FRIEND(
-            FriendGuiConfig::new,
-            FriendGuiOpener::new
+        FriendGuiConfig::new,
+        FriendGuiOpener::new
     ),
     FRIENDACTIONS(
-            FriendActionsGuiConfig::new,
-            FriendActionsGuiOpener::new
+        FriendActionsGuiConfig::new,
+        FriendActionsGuiOpener::new
     ),
     FRIENDREQUESTS(
-            MainFriendRequestsGuiConfig::new,
-            MainFriendRequestsGuiOpener::new
+        MainFriendRequestsGuiConfig::new,
+        MainFriendRequestsGuiOpener::new
     ),
     INCOMINGFRIENDREQUESTS(
-            () -> new FriendRequestsGuiConfig( FriendRequestType.INCOMING ),
-            IncomingFriendRequestsGuiOpener::new
+        () -> new FriendRequestsGuiConfig( FriendRequestType.INCOMING ),
+        IncomingFriendRequestsGuiOpener::new
     ),
     OUTGOINGFRIENDREQUESTS(
-            () -> new FriendRequestsGuiConfig( FriendRequestType.OUTGOING ),
-            OutgoingFriendRequestsGuiOpener::new
+        () -> new FriendRequestsGuiConfig( FriendRequestType.OUTGOING ),
+        OutgoingFriendRequestsGuiOpener::new
     ),
     PARTY(
-            PartyGuiConfig::new,
-            PartyGuiOpener::new
+        PartyGuiConfig::new,
+        PartyGuiOpener::new
     ),
     CUSTOM(
-            () ->
-            {
-                new GuiConfig( "/configurations/gui/custom/test.yml", GuiConfigItem.class );
-                return null;
-            },
-            CustomGuiOpener::new
+        () ->
+        {
+            new GuiConfig( "/configurations/gui/custom/test.yml", GuiConfigItem.class );
+            return null;
+        },
+        CustomGuiOpener::new
     );
 
     private final Supplier<GuiConfig> configSupplier;

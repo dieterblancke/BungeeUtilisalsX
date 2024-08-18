@@ -89,8 +89,8 @@ public class IngameMotdExecutor implements EventExecutor
     {
         final IBossBar bar = BuX.getApi().createBossBar();
         bar.setMessage( Utils.format(
-                user,
-                locateMessage( language, user.getLanguageConfig().getConfig(), message.getText() )
+            user,
+            locateMessage( language, user.getLanguageConfig().getConfig(), message.getText() )
         ) );
         bar.setColor( message.getColor() );
         bar.setProgress( message.getProgress() );
@@ -101,11 +101,11 @@ public class IngameMotdExecutor implements EventExecutor
     private void sendTitle( final User user, final boolean language, final TitleMessage message )
     {
         user.sendTitle(
-                locateMessage( language, user.getLanguageConfig().getConfig(), message.getTitle() ),
-                locateMessage( language, user.getLanguageConfig().getConfig(), message.getSubtitle() ),
-                message.getFadeIn(),
-                message.getStay(),
-                message.getFadeOut()
+            locateMessage( language, user.getLanguageConfig().getConfig(), message.getTitle() ),
+            locateMessage( language, user.getLanguageConfig().getConfig(), message.getSubtitle() ),
+            message.getFadeIn(),
+            message.getStay(),
+            message.getFadeOut()
         );
     }
 

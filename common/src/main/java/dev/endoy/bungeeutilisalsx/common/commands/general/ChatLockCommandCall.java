@@ -21,11 +21,11 @@ public class ChatLockCommandCall implements CommandCall, TabCall
     public static void lockChat( final String server, final String by )
     {
         MessagePlaceholders placeholders = MessagePlaceholders.create()
-                .append( "user", by );
+            .append( "user", by );
 
         Stream<User> users = server.equals( "ALL" )
-                ? BuX.getApi().getUsers().stream()
-                : BuX.getApi().getUsers().stream().filter( u -> u.getServerName().equalsIgnoreCase( server ) );
+            ? BuX.getApi().getUsers().stream()
+            : BuX.getApi().getUsers().stream().filter( u -> u.getServerName().equalsIgnoreCase( server ) );
 
         if ( lockedChatServers.contains( server ) )
         {

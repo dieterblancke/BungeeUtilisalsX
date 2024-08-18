@@ -27,8 +27,8 @@ public class CenterPlaceHolder extends XMLPlaceHolder
             }
 
             return original.replace( element.outerHtml().replace( "&amp;", "&" ), this.center(
-                    text,
-                    padChar.isEmpty() ? ' ' : padChar.charAt( 0 )
+                text,
+                padChar.isEmpty() ? ' ' : padChar.charAt( 0 )
             ) );
         }
         return original;

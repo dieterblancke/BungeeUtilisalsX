@@ -16,9 +16,9 @@ public class PartyLeaveSubCommandCall implements CommandCall
     public static void leaveParty( final Party party, final User user )
     {
         final Optional<PartyMember> optionalPartyMember = party.getPartyMembers()
-                .stream()
-                .filter( member -> member.getUuid().equals( user.getUuid() ) )
-                .findFirst();
+            .stream()
+            .filter( member -> member.getUuid().equals( user.getUuid() ) )
+            .findFirst();
 
         if ( optionalPartyMember.isEmpty() )
         {
@@ -27,30 +27,30 @@ public class PartyLeaveSubCommandCall implements CommandCall
         final PartyMember partyMember = optionalPartyMember.get();
 
         BuX.getInstance().getPartyManager().removeMemberFromParty(
-                party,
-                partyMember
+            party,
+            partyMember
         );
 
         user.sendLangMessage(
-                "party.leave.left",
-                MessagePlaceholders.create()
-                        .append( "party-owner", party.getOwner().getUserName() )
+            "party.leave.left",
+            MessagePlaceholders.create()
+                .append( "party-owner", party.getOwner().getUserName() )
         );
         BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                party,
-                "party.leave.left-broadcast",
-                MessagePlaceholders.create()
-                        .append( "user", user.getName() )
+            party,
+            "party.leave.left-broadcast",
+            MessagePlaceholders.create()
+                .append( "user", user.getName() )
         );
 
         if ( partyMember.isPartyOwner() && !party.isOwner( user.getUuid() ) )
         {
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                    party,
-                    "party.leave.owner-left-broadcast",
-                    MessagePlaceholders.create()
-                            .append( "party-old-owner", user.getName() )
-                            .append( "{party-owner}", party.getOwner().getUserName() )
+                party,
+                "party.leave.owner-left-broadcast",
+                MessagePlaceholders.create()
+                    .append( "party-old-owner", user.getName() )
+                    .append( "{party-owner}", party.getOwner().getUserName() )
             );
         }
     }

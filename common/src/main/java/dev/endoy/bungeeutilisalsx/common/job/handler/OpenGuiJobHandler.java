@@ -14,7 +14,7 @@ public class OpenGuiJobHandler extends AbstractJobHandler
         if ( BuX.getInstance().isProtocolizeEnabled() )
         {
             job.getUserByName().ifPresent( user ->
-                    BuX.getInstance().getProtocolizeManager().getGuiManager().openGui( user, job.getGui(), job.getArgs() )
+                BuX.getInstance().getProtocolizeManager().getGuiManager().openGui( user, job.getGui(), job.getArgs() )
             );
         }
     }

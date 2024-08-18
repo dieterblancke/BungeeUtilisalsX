@@ -52,9 +52,9 @@ public class Config
         }
 
         this.config = IConfiguration.loadConfiguration(
-                storageType,
-                file,
-                this.createConfigurationOptions()
+            storageType,
+            file,
+            this.createConfigurationOptions()
         );
 
         this.setup();
@@ -115,7 +115,7 @@ public class Config
     private ConfigurationOptions createConfigurationOptions()
     {
         return storageType == FileStorageType.YAML
-                ? YamlConfigurationOptions.builder().useComments( true ).build()
-                : JsonConfigurationOptions.builder().build();
+            ? YamlConfigurationOptions.builder().useComments( true ).build()
+            : JsonConfigurationOptions.builder().build();
     }
 }

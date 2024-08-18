@@ -39,15 +39,15 @@ public class ApiTokenCommandCall implements CommandCall
                         final String token = args.get( 1 );
                         final Date date = dateFormat.parse( args.get( 2 ) );
                         final List<ApiPermission> permissions = Arrays.stream( args.get( 3 ).split( "," ) )
-                                .map( ApiPermission::valueOf )
-                                .collect( Collectors.toList() );
+                            .map( ApiPermission::valueOf )
+                            .collect( Collectors.toList() );
 
                         BuX.getApi().getStorageManager().getDao().getApiTokenDao().createApiToken( new ApiToken(
-                                token,
-                                date,
-                                permissions.contains( ApiPermission.ALL )
-                                        ? Collections.singletonList( ApiPermission.ALL )
-                                        : permissions
+                            token,
+                            date,
+                            permissions.contains( ApiPermission.ALL )
+                                ? Collections.singletonList( ApiPermission.ALL )
+                                : permissions
                         ) );
                         BuX.getLogger().info( "Successfully created API token: " + token );
                         return;
@@ -75,11 +75,11 @@ public class ApiTokenCommandCall implements CommandCall
                         for ( ApiToken token : tokens )
                         {
                             BuX.getLogger().info( "- Token: " + token.getApiToken()
-                                    + ", Expire date: " + dateFormat.format( token.getExpireDate() )
-                                    + ", Permissions: " + token.getPermissions()
-                                    .stream()
-                                    .map( ApiPermission::toString )
-                                    .collect( Collectors.joining( "," ) )
+                                + ", Expire date: " + dateFormat.format( token.getExpireDate() )
+                                + ", Permissions: " + token.getPermissions()
+                                .stream()
+                                .map( ApiPermission::toString )
+                                .collect( Collectors.joining( "," ) )
                             );
                         }
                     }
@@ -93,8 +93,8 @@ public class ApiTokenCommandCall implements CommandCall
         BuX.getLogger().info( "- api-token remove (token)" );
         BuX.getLogger().info( "- api-token list" );
         BuX.getLogger().info( "Available permissions: " + Arrays.stream( ApiPermission.values() )
-                .map( ApiPermission::toString )
-                .collect( Collectors.joining( "," ) ) );
+            .map( ApiPermission::toString )
+            .collect( Collectors.joining( "," ) ) );
     }
 
     @Override

@@ -19,11 +19,11 @@ public class MainFriendRequestsGuiOpener extends GuiOpener
     {
         final MainFriendRequestsGuiConfig config = DefaultGui.FRIENDREQUESTS.getConfig();
         final Gui gui = Gui.builder()
-                .itemProvider( new MainFriendRequestsGuiItemProvider( user, config ) )
-                .rows( config.getRows() )
-                .title( config.getTitle() )
-                .user( user )
-                .build();
+            .itemProvider( new MainFriendRequestsGuiItemProvider( user, config ) )
+            .rows( config.getRows() )
+            .title( config.getTitle() )
+            .user( user )
+            .build();
 
         gui.open();
     }

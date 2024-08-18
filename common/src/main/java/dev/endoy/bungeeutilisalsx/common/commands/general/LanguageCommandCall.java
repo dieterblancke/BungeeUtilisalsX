@@ -24,8 +24,8 @@ public class LanguageCommandCall implements CommandCall, TabCall
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
         final String languages = BuX.getApi().getLanguageManager().getLanguages().stream()
-                .map( Language::getName )
-                .collect( Collectors.joining( ", " ) );
+            .map( Language::getName )
+            .collect( Collectors.joining( ", " ) );
 
         if ( args.size() != 1 )
         {
@@ -54,10 +54,10 @@ public class LanguageCommandCall implements CommandCall, TabCall
         else
         {
             user.sendLangMessage(
-                    "general-commands.language.notfound",
-                    MessagePlaceholders.create()
-                            .append( "language", langName )
-                            .append( "languages", languages )
+                "general-commands.language.notfound",
+                MessagePlaceholders.create()
+                    .append( "language", langName )
+                    .append( "languages", languages )
             );
         }
     }

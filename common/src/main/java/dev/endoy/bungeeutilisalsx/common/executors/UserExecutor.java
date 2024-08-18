@@ -49,10 +49,10 @@ public class UserExecutor implements EventExecutor
         StaffUtils.getStaffRankForUser( user ).ifPresent( rank ->
         {
             BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
-                    NetworkStaffJoinEvent.class,
-                    user.getName(),
-                    user.getUuid(),
-                    rank.getName()
+                NetworkStaffJoinEvent.class,
+                user.getName(),
+                user.getUuid(),
+                rank.getName()
             ) );
         } );
     }
@@ -65,10 +65,10 @@ public class UserExecutor implements EventExecutor
         StaffUtils.getStaffRankForUser( user ).ifPresent( rank ->
         {
             BuX.getInstance().getJobManager().executeJob( new ExecuteNetworkStaffEventJob(
-                    NetworkStaffLeaveEvent.class,
-                    user.getName(),
-                    user.getUuid(),
-                    rank.getName()
+                NetworkStaffLeaveEvent.class,
+                user.getName(),
+                user.getUuid(),
+                rank.getName()
             ) );
         } );
     }

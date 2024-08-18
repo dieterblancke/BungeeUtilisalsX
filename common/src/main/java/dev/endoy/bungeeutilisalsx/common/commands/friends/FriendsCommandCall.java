@@ -16,96 +16,96 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
     public FriendsCommandCall()
     {
         super(
-                user -> user.sendLangMessage( "friends.help.message" ),
-                () -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" )
+            user -> user.sendLangMessage( "friends.help.message" ),
+            () -> ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.send-message" )
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "add" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.add" )
-                        .executable( new FriendAddSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "add" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.add" )
+                .executable( new FriendAddSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "accept" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.accept" )
-                        .executable( new FriendAcceptSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "accept" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.accept" )
+                .executable( new FriendAcceptSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "deny" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.deny" )
-                        .executable( new FriendDenySubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "deny" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.deny" )
+                .executable( new FriendDenySubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "removerequest" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.removerequest" )
-                        .executable( new FriendRemoveRequestSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "removerequest" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.removerequest" )
+                .executable( new FriendRemoveRequestSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "remove" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.remove" )
-                        .executable( new FriendRemoveSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "remove" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.remove" )
+                .executable( new FriendRemoveSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "list" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.list" )
-                        .executable( new FriendListSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "list" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.list" )
+                .executable( new FriendListSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "requests" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.requests" )
-                        .executable( new FriendRequestsSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "requests" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.requests" )
+                .executable( new FriendRequestsSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "msg" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.msg" )
-                        .executable( new FriendMsgSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "msg" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.msg" )
+                .executable( new FriendMsgSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "reply" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.reply" )
-                        .executable( new FriendReplySubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "reply" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.reply" )
+                .executable( new FriendReplySubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "settings" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.settings" )
-                        .executable( new FriendSettingsSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "settings" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.settings" )
+                .executable( new FriendSettingsSubCommandCall() )
+                .build()
         );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "broadcast" )
-                        .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.broadcast" )
-                        .executable( new FriendBroadcastSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "broadcast" )
+                .fromSection( ConfigFiles.FRIENDS_CONFIG.getConfig(), "subcommands.broadcast" )
+                .executable( new FriendBroadcastSubCommandCall() )
+                .build()
         );
     }
 
@@ -115,7 +115,7 @@ public class FriendsCommandCall extends ParentCommand implements CommandCall
         if ( args.isEmpty() )
         {
             if ( ConfigFiles.FRIENDS_CONFIG.getConfig().getBoolean( "command.open-gui" )
-                    && BuX.getInstance().isProtocolizeEnabled() )
+                && BuX.getInstance().isProtocolizeEnabled() )
             {
                 BuX.getInstance().getProtocolizeManager().getGuiManager().openGui( user, "friend", new String[0] );
             }

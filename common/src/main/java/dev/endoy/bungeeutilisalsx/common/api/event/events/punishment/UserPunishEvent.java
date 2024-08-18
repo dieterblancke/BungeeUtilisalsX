@@ -48,19 +48,19 @@ public class UserPunishEvent extends AbstractEvent implements Cancellable
     public PunishmentInfo getInfo()
     {
         return new PunishmentInfo(
-                type,
-                "0",
-                name,
-                ip,
-                uuid,
-                executor.getName(),
-                executionServer,
-                reason,
-                date,
-                expire,
-                true,
-                null,
-                null
+            type,
+            "0",
+            name,
+            ip,
+            uuid,
+            executor.getName(),
+            executionServer,
+            reason,
+            date,
+            expire,
+            true,
+            null,
+            null
         );
     }
 

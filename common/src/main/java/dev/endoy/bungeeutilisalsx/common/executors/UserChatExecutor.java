@@ -32,10 +32,10 @@ public class UserChatExecutor implements EventExecutor
         }
         final User user = event.getUser();
         final boolean isServerChatLocked = ChatLockCommandCall.lockedChatServers.contains( "ALL" )
-                || ChatLockCommandCall.lockedChatServers.contains( user.getServerName() );
+            || ChatLockCommandCall.lockedChatServers.contains( user.getServerName() );
 
         if ( !user.hasPermission( ConfigFiles.GENERALCOMMANDS.getConfig().getString( "chatlock.bypass" ) )
-                && isServerChatLocked )
+            && isServerChatLocked )
         {
             event.setCancelled( true );
             user.sendLangMessage( "general-commands.chatlock.onchat" );
@@ -49,7 +49,7 @@ public class UserChatExecutor implements EventExecutor
         final IConfiguration config = ConfigFiles.UTFSYMBOLS.getConfig();
 
         if ( config.getBoolean( "fancychat.enabled" )
-                && event.getUser().hasPermission( config.getString( "fancychat.permission" ) ) )
+            && event.getUser().hasPermission( config.getString( "fancychat.permission" ) ) )
         {
             event.setMessage( ChatHelper.changeToFancyFont( message ) );
         }
@@ -206,22 +206,22 @@ public class UserChatExecutor implements EventExecutor
         }
 
         BuX.getInstance().getPartyManager().getCurrentPartyFor( event.getUser().getName() )
-                .ifPresent( party -> party.getPartyMembers()
-                        .stream()
-                        .filter( m -> m.getUuid().equals( event.getUser().getUuid() ) )
-                        .filter( m -> m.isChat() )
-                        .findFirst()
-                        .ifPresent( member ->
-                        {
-                            event.setCancelled( true );
+            .ifPresent( party -> party.getPartyMembers()
+                .stream()
+                .filter( m -> m.getUuid().equals( event.getUser().getUuid() ) )
+                .filter( m -> m.isChat() )
+                .findFirst()
+                .ifPresent( member ->
+                {
+                    event.setCancelled( true );
 
-                            BuX.getInstance().getPartyManager().languageBroadcastToParty(
-                                    party,
-                                    "party.chat.format",
-                                    MessagePlaceholders.create()
-                                            .append( "user", event.getUser().getName() )
-                                            .append( "message", event.getMessage() )
-                            );
-                        } ) );
+                    BuX.getInstance().getPartyManager().languageBroadcastToParty(
+                        party,
+                        "party.chat.format",
+                        MessagePlaceholders.create()
+                            .append( "user", event.getUser().getName() )
+                            .append( "message", event.getMessage() )
+                    );
+                } ) );
     }
 }

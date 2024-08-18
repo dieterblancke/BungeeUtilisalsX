@@ -1,5 +1,7 @@
 package dev.endoy.bungeeutilisalsx.bungee.user;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.bungee.BungeeUtilisalsX;
 import dev.endoy.bungeeutilisalsx.bungee.utils.BungeeServer;
 import dev.endoy.bungeeutilisalsx.common.BuX;
@@ -22,8 +24,6 @@ import dev.endoy.bungeeutilisalsx.common.api.utils.TimeUnit;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Utils;
 import dev.endoy.bungeeutilisalsx.common.api.utils.Version;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
@@ -57,6 +57,7 @@ public class BungeeUser implements User
     private boolean vanished;
     private String group;
     private UserSettings userSettings;
+    private boolean loaded;
 
     @Override
     public void load( final Object playerInstance )
@@ -70,15 +71,15 @@ public class BungeeUser implements User
         this.ip = Utils.getIP( (InetSocketAddress) player.getSocketAddress() );
         this.cooldowns = new UserCooldowns();
         this.storage = new UserStorage(
-                uuid,
-                name,
-                ip,
-                BuX.getApi().getLanguageManager().getDefaultLanguage(),
-                now,
-                now,
-                Lists.newArrayList(),
-                this.getJoinedHost(),
-                Maps.newHashMap()
+            uuid,
+            name,
+            ip,
+            BuX.getApi().getLanguageManager().getDefaultLanguage(),
+            now,
+            now,
+            Lists.newArrayList(),
+            this.getJoinedHost(),
+            Maps.newHashMap()
         );
         this.userSettings = new UserSettings( uuid, new ArrayList<>() );
 
@@ -113,11 +114,11 @@ public class BungeeUser implements User
                 final Language language = BuX.getApi().getLanguageManager().getDefaultLanguage();
 
                 dao.getUserDao().createUser(
-                        uuid,
-                        name,
-                        ip,
-                        language,
-                        joinedHost
+                    uuid,
+                    name,
+                    ip,
+                    language,
+                    joinedHost
                 );
             }
         } );
@@ -139,6 +140,7 @@ public class BungeeUser implements User
         BuX.getInstance().getActivePermissionIntegration().getGroup( uuid ).thenAccept( group -> this.group = group );
         BuX.getInstance().getScheduler().runTaskDelayed( 15, TimeUnit.SECONDS, this::sendOfflineMessages );
         BuX.getApi().getEventLoader().launchEventAsync( new UserLoadEvent( this ) );
+        this.loaded = true;
     }
 
     @Override
@@ -148,20 +150,21 @@ public class BungeeUser implements User
         this.save( true );
 
         // clearing data from memory
-        cooldowns.remove();
-        player = null;
-        storage.getData().clear();
+        this.cooldowns.remove();
+        this.player = null;
+        this.storage.getData().clear();
+        this.loaded = false;
     }
 
     @Override
     public void save( final boolean logout )
     {
         BuX.getInstance().getAbstractStorageManager().getDao().getUserDao().updateUser(
-                uuid,
-                getName(),
-                ip,
-                getLanguage(),
-                logout ? new Date() : null
+            uuid,
+            getName(),
+            ip,
+            getLanguage(),
+            logout ? new Date() : null
         );
     }
 
@@ -304,8 +307,8 @@ public class BungeeUser implements User
     public boolean hasPermission( String permission, boolean specific )
     {
         return specific
-                ? this.hasAnyPermission( permission )
-                : this.hasAnyPermission( permission, "*", "bungeeutilisalsx.*" );
+            ? this.hasAnyPermission( permission )
+            : this.hasAnyPermission( permission, "*", "bungeeutilisalsx.*" );
     }
 
     @Override

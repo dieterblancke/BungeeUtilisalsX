@@ -19,13 +19,13 @@ public class Report
     public static Report of( final dev.endoy.bungeeutilisalsx.common.api.utils.other.Report report )
     {
         return new Report(
-                report.getUserName(),
-                report.getReportedBy(),
-                new Timestamp( report.getDate().getTime() ).toLocalDateTime(),
-                report.getServer(),
-                report.getReason(),
-                report.isHandled(),
-                report.isAccepted()
+            report.getUserName(),
+            report.getReportedBy(),
+            new Timestamp( report.getDate().getTime() ).toLocalDateTime(),
+            report.getServer(),
+            report.getReason(),
+            report.isHandled(),
+            report.isAccepted()
         );
     }
 }

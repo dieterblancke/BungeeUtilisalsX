@@ -14,39 +14,39 @@ public class ReportCommandCall extends ParentCommand implements CommandCall
         super( "general-commands.report.help" );
 
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "create" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.create" ) )
-                        .executable( new ReportCreateSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "create" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.create" ) )
+                .executable( new ReportCreateSubCommandCall() )
+                .build()
         );
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "list" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.list" ) )
-                        .executable( new ReportListSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "list" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.list" ) )
+                .executable( new ReportListSubCommandCall() )
+                .build()
         );
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "accept" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.accept" ) )
-                        .executable( new ReportAcceptSubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "accept" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.accept" ) )
+                .executable( new ReportAcceptSubCommandCall() )
+                .build()
         );
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "deny" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.deny" ) )
-                        .executable( new ReportDenySubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "deny" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.deny" ) )
+                .executable( new ReportDenySubCommandCall() )
+                .build()
         );
         super.registerSubCommand(
-                CommandBuilder.builder()
-                        .name( "history" )
-                        .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.history" ) )
-                        .executable( new ReportHistorySubCommandCall() )
-                        .build()
+            CommandBuilder.builder()
+                .name( "history" )
+                .fromSection( ConfigFiles.GENERALCOMMANDS.getConfig().getSection( "report.subcommands.history" ) )
+                .executable( new ReportHistorySubCommandCall() )
+                .build()
         );
     }
 

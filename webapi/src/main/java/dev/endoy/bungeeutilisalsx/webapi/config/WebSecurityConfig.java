@@ -21,9 +21,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter
     protected void configure( HttpSecurity http ) throws Exception
     {
         http
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS )
-                .and()
-                .addFilterBefore( apiTokenFilter, RequestHeaderAuthenticationFilter.class );
+            .csrf().disable()
+            .sessionManagement().sessionCreationPolicy( SessionCreationPolicy.STATELESS )
+            .and()
+            .addFilterBefore( apiTokenFilter, RequestHeaderAuthenticationFilter.class );
     }
 }

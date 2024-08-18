@@ -48,8 +48,8 @@ public class FriendRemoveSubCommandCall implements CommandCall
             }
 
             user.sendLangMessage(
-                    "friends.remove.no-friend",
-                    MessagePlaceholders.create().append( "user", name )
+                "friends.remove.no-friend",
+                MessagePlaceholders.create().append( "user", name )
             );
             return;
         }
@@ -59,8 +59,8 @@ public class FriendRemoveSubCommandCall implements CommandCall
 
         user.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( name ) );
         user.sendLangMessage(
-                "friends.remove.removed",
-                MessagePlaceholders.create().append( "user", name )
+            "friends.remove.removed",
+            MessagePlaceholders.create().append( "user", name )
         );
 
         if ( optionalTarget.isPresent() )
@@ -69,16 +69,16 @@ public class FriendRemoveSubCommandCall implements CommandCall
 
             target.getFriends().removeIf( data -> data.getFriend().equalsIgnoreCase( user.getName() ) );
             target.sendLangMessage(
-                    "friends.remove.friend-removed",
-                    MessagePlaceholders.create().append( "user", user.getName() )
+                "friends.remove.friend-removed",
+                MessagePlaceholders.create().append( "user", user.getName() )
             );
         }
         else
         {
             BuX.getInstance().getJobManager().executeJob( new UserRemoveFriendJob(
-                    storage.getUuid(),
-                    storage.getUserName(),
-                    user.getName()
+                storage.getUuid(),
+                storage.getUserName(),
+                user.getName()
             ) );
         }
     }

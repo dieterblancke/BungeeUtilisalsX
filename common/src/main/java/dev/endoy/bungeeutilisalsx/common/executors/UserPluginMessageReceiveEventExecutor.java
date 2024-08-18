@@ -36,7 +36,7 @@ public class UserPluginMessageReceiveEventExecutor implements EventExecutor
             else if ( action.equalsIgnoreCase( "proxy-console-execute" ) )
             {
                 BuX.getApi().getConsoleUser().executeCommand(
-                        PlaceHolderAPI.formatMessage( BuX.getApi().getConsoleUser(), command )
+                    PlaceHolderAPI.formatMessage( BuX.getApi().getConsoleUser(), command )
                 );
             }
         }
@@ -47,9 +47,9 @@ public class UserPluginMessageReceiveEventExecutor implements EventExecutor
             if ( BuX.getApi().getServerBalancer() != null )
             {
                 ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupByName( serverName )
-                        .or( () -> ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( serverName ) )
-                        .flatMap( balancerGroup -> BuX.getApi().getServerBalancer().getOptimalServer( balancerGroup ) )
-                        .ifPresent( user::sendToServer );
+                    .or( () -> ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( serverName ) )
+                    .flatMap( balancerGroup -> BuX.getApi().getServerBalancer().getOptimalServer( balancerGroup ) )
+                    .ifPresent( user::sendToServer );
             }
         }
     }

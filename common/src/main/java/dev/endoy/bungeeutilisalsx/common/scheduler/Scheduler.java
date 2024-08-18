@@ -29,7 +29,7 @@ public class Scheduler implements IScheduler
                                                 final Runnable runnable )
     {
         return SCHEDULED_EXECUTOR_SERVICE.scheduleWithFixedDelay(
-                () -> EXECUTOR_SERVICE.execute( runnable ), delay, period, unit
+            () -> EXECUTOR_SERVICE.execute( runnable ), delay, period, unit
         );
     }
 

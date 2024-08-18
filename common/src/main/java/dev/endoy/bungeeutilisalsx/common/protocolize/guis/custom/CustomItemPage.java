@@ -18,12 +18,12 @@ public class CustomItemPage extends ItemPage
             for ( int slot : item.getSlots() )
             {
                 super.setItem(
-                        slot,
-                        this.getGuiItem(
-                                item.getAction(),
-                                item.getRightAction(),
-                                item.getItem().buildItem( user )
-                        )
+                    slot,
+                    this.getGuiItem(
+                        item.getAction(),
+                        item.getRightAction(),
+                        item.getItem().buildItem( user )
+                    )
                 );
             }
         }

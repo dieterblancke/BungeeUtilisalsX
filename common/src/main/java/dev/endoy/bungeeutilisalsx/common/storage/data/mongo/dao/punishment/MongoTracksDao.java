@@ -31,9 +31,9 @@ public class MongoTracksDao implements TracksDao
         {
             final List<PunishmentTrackInfo> trackInfos = new ArrayList<>();
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "track_id", trackId ),
-                    Filters.eq( "active", true )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "track_id", trackId ),
+                Filters.eq( "active", true )
             );
             if ( useServerPunishments() )
             {
@@ -46,12 +46,12 @@ public class MongoTracksDao implements TracksDao
             for ( Document document : documentIterator )
             {
                 trackInfos.add( new PunishmentTrackInfo(
-                        UUID.fromString( document.getString( "uuid" ) ),
-                        document.getString( "track_id" ),
-                        document.getString( "server" ),
-                        document.getString( "executed_by" ),
-                        document.getDate( "date" ),
-                        document.getBoolean( "active" )
+                    UUID.fromString( document.getString( "uuid" ) ),
+                    document.getString( "track_id" ),
+                    document.getString( "server" ),
+                    document.getString( "executed_by" ),
+                    document.getDate( "date" ),
+                    document.getBoolean( "active" )
                 ) );
             }
 
@@ -83,9 +83,9 @@ public class MongoTracksDao implements TracksDao
         return CompletableFuture.runAsync( () ->
         {
             final List<Bson> filters = Lists.newArrayList(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "track_id", trackId ),
-                    Filters.eq( "active", true )
+                Filters.eq( "uuid", uuid.toString() ),
+                Filters.eq( "track_id", trackId ),
+                Filters.eq( "active", true )
             );
             if ( useServerPunishments() )
             {

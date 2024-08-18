@@ -38,12 +38,12 @@ public class KickCommandCall extends PunishmentCommand
         }
         final IPunishmentHelper executor = BuX.getApi().getPunishmentExecutor();
         dao().getPunishmentDao().getKickAndWarnDao().insertKick(
-                storage.getUuid(),
-                storage.getUserName(),
-                storage.getIp(),
-                reason,
-                punishmentArgs.getServerOrAll(),
-                user.getName()
+            storage.getUuid(),
+            storage.getUserName(),
+            storage.getIp(),
+            reason,
+            punishmentArgs.getServerOrAll(),
+            user.getName()
         ).thenAccept( info ->
         {
 
@@ -56,16 +56,16 @@ public class KickCommandCall extends PunishmentCommand
                 if ( parameters.contains( "-nbp" ) )
                 {
                     BuX.getApi().langBroadcast(
-                            "punishments.kick.broadcast",
-                            executor.getPlaceHolders( info )
+                        "punishments.kick.broadcast",
+                        executor.getPlaceHolders( info )
                     );
                 }
                 else
                 {
                     BuX.getApi().langPermissionBroadcast(
-                            "punishments.kick.broadcast",
-                            ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.kick.broadcast" ),
-                            executor.getPlaceHolders( info )
+                        "punishments.kick.broadcast",
+                        ConfigFiles.PUNISHMENT_CONFIG.getConfig().getString( "commands.kick.broadcast" ),
+                        executor.getPlaceHolders( info )
                     );
                 }
             }

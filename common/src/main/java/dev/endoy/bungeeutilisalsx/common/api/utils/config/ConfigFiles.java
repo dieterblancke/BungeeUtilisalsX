@@ -1,8 +1,8 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.configs.*;
-import com.google.common.collect.Lists;
 
 import java.lang.reflect.Field;
 import java.util.List;

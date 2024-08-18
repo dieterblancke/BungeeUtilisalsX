@@ -28,7 +28,7 @@ public class ChatAnnouncer extends Announcer
             if ( optionalGroup.isEmpty() )
             {
                 BuX.getLogger().warning(
-                        "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
+                    "Could not find a servergroup or -name for " + section.getString( "server" ) + "!"
                 );
                 return;
             }

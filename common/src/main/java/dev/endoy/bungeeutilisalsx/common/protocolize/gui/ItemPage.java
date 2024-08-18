@@ -116,7 +116,7 @@ public class ItemPage
     protected GuiItem getGuiItem( final GuiAction action, final GuiAction rightAction, final ItemStack itemStack, final HasMessagePlaceholders placeholders )
     {
         final ClickableGuiItem clickableGuiItem = new ClickableGuiItem( itemStack )
-                .addHandler( ClickType.LEFT_CLICK, this.getClickHandler( action, placeholders ) );
+            .addHandler( ClickType.LEFT_CLICK, this.getClickHandler( action, placeholders ) );
 
         if ( rightAction != null && rightAction.isSet() )
         {
@@ -163,7 +163,7 @@ public class ItemPage
             {
                 event.cancelled( true );
                 BuX.getInstance().getProtocolizeManager().getGuiManager().openGui(
-                        player, guiName, Arrays.copyOfRange( args, 1, args.length )
+                    player, guiName, Arrays.copyOfRange( args, 1, args.length )
                 );
             };
         }
@@ -198,7 +198,7 @@ public class ItemPage
                 if ( !str.trim().equalsIgnoreCase( "cancel" ) )
                 {
                     final TriConsumer<Gui, User, InventoryClick> handler = this.getCommandClickHandler(
-                            action.replace( "{output}", str )
+                        action.replace( "{output}", str )
                     );
 
                     handler.accept( gui, user, event );

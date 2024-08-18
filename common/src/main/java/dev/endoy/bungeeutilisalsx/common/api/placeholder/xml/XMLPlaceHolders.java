@@ -1,9 +1,9 @@
 package dev.endoy.bungeeutilisalsx.common.api.placeholder.xml;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.event.PlaceHolderEvent;
 import dev.endoy.bungeeutilisalsx.common.api.placeholder.placeholders.ClassPlaceHolder;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
-import com.google.common.collect.Lists;
 import lombok.EqualsAndHashCode;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

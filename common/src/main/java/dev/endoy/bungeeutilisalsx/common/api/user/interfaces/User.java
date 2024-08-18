@@ -45,6 +45,11 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
     void unload();
 
     /**
+     * @return true if the user is loaded, false if not.
+     */
+    boolean isLoaded();
+
+    /**
      * Saves the local user data onto the database.
      *
      * @param logout if the save action is executed on logout
@@ -198,7 +203,7 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
         if ( getLanguageConfig().getConfig().isList( path ) )
         {
             final String reason = getLanguageConfig().getConfig().getStringList( path ).stream().map( str ->
-                    placeholders.getMessagePlaceholders().format( str ) ).collect( Collectors.joining( "\n" ) );
+                placeholders.getMessagePlaceholders().format( str ) ).collect( Collectors.joining( "\n" ) );
 
             kick( reason );
         }
@@ -391,9 +396,9 @@ public interface User extends Messageable, HasLanguageConfig, HasMessagePlacehol
     default void sendTitle( String title, String subtitle, int fadein, int stay, int fadeout )
     {
         asAudience().showTitle( Title.title(
-                Utils.format( this, title ),
-                Utils.format( this, subtitle ),
-                Times.times( Duration.ofSeconds( fadein ), Duration.ofSeconds( stay ), Duration.ofSeconds( fadeout ) )
+            Utils.format( this, title ),
+            Utils.format( this, subtitle ),
+            Times.times( Duration.ofSeconds( fadein ), Duration.ofSeconds( stay ), Duration.ofSeconds( fadeout ) )
         ) );
     }
 

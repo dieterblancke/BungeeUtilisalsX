@@ -246,8 +246,8 @@ public class BossBar implements IBossBar
     private void sendBossBarPacket( User user, Object packet )
     {
         boolean bossbarDisabled = user.getSettings().getUserSetting( UserSettingType.BOSSBAR_DISABLED )
-                .map( UserSetting::getAsBoolean )
-                .orElse( false );
+            .map( UserSetting::getAsBoolean )
+            .orElse( false );
 
         if ( !bossbarDisabled )
         {

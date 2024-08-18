@@ -1,9 +1,9 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils.config.configs;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.Config;
 import dev.endoy.bungeeutilisalsx.common.api.utils.other.StaffRankData;
 import dev.endoy.configuration.api.ISection;
-import com.google.common.collect.Lists;
 import lombok.Getter;
 
 import java.util.List;
@@ -44,8 +44,8 @@ public class RanksConfig extends Config
     public StaffRankData getRankData( final String rankName )
     {
         return ranks.stream()
-                .filter( rank -> rankName.equalsIgnoreCase( rank.getName() ) )
-                .findFirst()
-                .orElse( null );
+            .filter( rank -> rankName.equalsIgnoreCase( rank.getName() ) )
+            .findFirst()
+            .orElse( null );
     }
 }

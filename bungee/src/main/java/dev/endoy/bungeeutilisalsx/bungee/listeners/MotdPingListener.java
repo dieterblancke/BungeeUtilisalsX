@@ -29,30 +29,30 @@ public class MotdPingListener implements Listener
 
         final MotdConnection motdConnection = this.createMotdConnection( event.getConnection() );
         final ProxyMotdPingEvent proxyMotdPingEvent = new ProxyMotdPingEvent(
-                motdConnection,
-                ( e ) ->
+            motdConnection,
+            ( e ) ->
+            {
+                if ( e.getMotdPingResponse() == null )
                 {
-                    if ( e.getMotdPingResponse() == null )
-                    {
-                        return;
-                    }
-                    final ServerPing orig = event.getResponse();
-
-                    event.getResponse().setPlayers( new Players(
-                            orig.getPlayers().getMax(),
-                            orig.getPlayers().getOnline(),
-                            e.getMotdPingResponse().getPlayers()
-                                    .stream()
-                                    .map( it -> new PlayerInfo( it.getName(), it.getUuid() ) )
-                                    .toArray( PlayerInfo[]::new )
-                    ) );
-                    event.getResponse().setDescriptionComponent( new TextComponent( BungeeComponentSerializer.get().serialize( e.getMotdPingResponse().getMotd() ) ) );
-
-                    PluginSupport.getPluginSupport( TritonBungeePluginSupport.class )
-                            .ifPresent( tritonBungeePluginSupport -> tritonBungeePluginSupport.handleMotd( event ) );
-
-                    event.completeIntent( Bootstrap.getInstance() );
+                    return;
                 }
+                final ServerPing orig = event.getResponse();
+
+                event.getResponse().setPlayers( new Players(
+                    orig.getPlayers().getMax(),
+                    orig.getPlayers().getOnline(),
+                    e.getMotdPingResponse().getPlayers()
+                        .stream()
+                        .map( it -> new PlayerInfo( it.getName(), it.getUuid() ) )
+                        .toArray( PlayerInfo[]::new )
+                ) );
+                event.getResponse().setDescriptionComponent( new TextComponent( BungeeComponentSerializer.get().serialize( e.getMotdPingResponse().getMotd() ) ) );
+
+                PluginSupport.getPluginSupport( TritonBungeePluginSupport.class )
+                    .ifPresent( tritonBungeePluginSupport -> tritonBungeePluginSupport.handleMotd( event ) );
+
+                event.completeIntent( Bootstrap.getInstance() );
+            }
         );
 
         BuX.getApi().getEventLoader().launchEventAsync( proxyMotdPingEvent );
@@ -62,9 +62,9 @@ public class MotdPingListener implements Listener
     private MotdConnection createMotdConnection( final PendingConnection connection )
     {
         return new BungeeMotdConnection(
-                connection.getVersion(),
-                (InetSocketAddress) connection.getSocketAddress(),
-                connection.getVirtualHost()
+            connection.getVersion(),
+            (InetSocketAddress) connection.getSocketAddress(),
+            connection.getVirtualHost()
         );
     }
 }

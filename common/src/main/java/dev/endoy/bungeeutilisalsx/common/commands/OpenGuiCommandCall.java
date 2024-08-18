@@ -31,10 +31,10 @@ public class OpenGuiCommandCall implements CommandCall
         if ( parameters.stream().anyMatch( it -> it.startsWith( "-u" ) ) )
         {
             final String targetUser = parameters.stream()
-                    .filter( it -> it.startsWith( "-u" ) )
-                    .findFirst()
-                    .map( it -> it.replaceFirst( "-u=", "" ) )
-                    .orElse( "" );
+                .filter( it -> it.startsWith( "-u" ) )
+                .findFirst()
+                .map( it -> it.replaceFirst( "-u=", "" ) )
+                .orElse( "" );
 
             if ( !Strings.isNullOrEmpty( targetUser ) )
             {
@@ -50,9 +50,9 @@ public class OpenGuiCommandCall implements CommandCall
         }
 
         BuX.getInstance().getProtocolizeManager().getGuiManager().openGui(
-                user,
-                gui,
-                guiArgs
+            user,
+            gui,
+            guiArgs
         );
     }
 
@@ -60,9 +60,9 @@ public class OpenGuiCommandCall implements CommandCall
     public String getDescription()
     {
         return """
-                Opens a given gui for yourself or another user, for another user, you need this permission: COMMANDPERMISSION.parameters.-u!
-                For example: /opengui custom test will open a custom GUI named from the gui/custom/test.yml file.
-                """;
+            Opens a given gui for yourself or another user, for another user, you need this permission: COMMANDPERMISSION.parameters.-u!
+            For example: /opengui custom test will open a custom GUI named from the gui/custom/test.yml file.
+            """;
     }
 
     @Override

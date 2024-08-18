@@ -20,48 +20,48 @@ public class DomainsListSubCommandCall implements CommandCall
     {
         final Map<String, Integer> domains = new HashMap<>();
         final Map<Pattern, String> mappings = ConfigFiles.GENERALCOMMANDS.getConfig().getSectionList( "domains.mappings" )
-                .stream()
-                .collect( Collectors.toMap(
-                        ( section ) -> Pattern.compile( section.getString( "regex" ) ),
-                        ( section ) -> section.getString( "domain" )
-                ) );
+            .stream()
+            .collect( Collectors.toMap(
+                ( section ) -> Pattern.compile( section.getString( "regex" ) ),
+                ( section ) -> section.getString( "domain" )
+            ) );
 
         BuX.getApi().getStorageManager().getDao().getUserDao().getJoinedHostList()
-                .thenAccept( ( tempDomains ) ->
+            .thenAccept( ( tempDomains ) ->
+            {
+                final Map<String, Set<String>> domainLists = new HashMap<>();
+
+                tempDomains.forEach( ( domain, amount ) ->
                 {
-                    final Map<String, Set<String>> domainLists = new HashMap<>();
-
-                    tempDomains.forEach( ( domain, amount ) ->
+                    for ( Map.Entry<Pattern, String> entry : mappings.entrySet() )
                     {
-                        for ( Map.Entry<Pattern, String> entry : mappings.entrySet() )
+                        final Matcher matcher = entry.getKey().matcher( domain );
+
+                        if ( matcher.find() )
                         {
-                            final Matcher matcher = entry.getKey().matcher( domain );
-
-                            if ( matcher.find() )
-                            {
-                                this.addDomain( domains, domainLists, entry.getValue(), amount );
-                                return;
-                            }
+                            this.addDomain( domains, domainLists, entry.getValue(), amount );
+                            return;
                         }
-                        this.addDomain( domains, domainLists, domain, amount );
-                    } );
-
-                    user.sendLangMessage( "general-commands.domains.list.header", MessagePlaceholders.create().append( "total", domains.size() ) );
-
-                    domains.entrySet().stream()
-                            .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
-                            .forEach( entry ->
-                                    user.sendLangMessage(
-                                            "general-commands.domains.list.format",
-                                            MessagePlaceholders.create()
-                                                    .append( "domain", entry.getKey() )
-                                                    .append( "online", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
-                                                    .append( "total", entry.getValue() )
-                                    )
-                            );
-
-                    user.sendLangMessage( "general-commands.domains.list.footer", MessagePlaceholders.create().append( "total", domains.size() ) );
+                    }
+                    this.addDomain( domains, domainLists, domain, amount );
                 } );
+
+                user.sendLangMessage( "general-commands.domains.list.header", MessagePlaceholders.create().append( "total", domains.size() ) );
+
+                domains.entrySet().stream()
+                    .sorted( ( o1, o2 ) -> Integer.compare( o2.getValue(), o1.getValue() ) )
+                    .forEach( entry ->
+                        user.sendLangMessage(
+                            "general-commands.domains.list.format",
+                            MessagePlaceholders.create()
+                                .append( "domain", entry.getKey() )
+                                .append( "online", UserUtils.getOnlinePlayersOnDomain( entry.getKey() ) )
+                                .append( "total", entry.getValue() )
+                        )
+                    );
+
+                user.sendLangMessage( "general-commands.domains.list.footer", MessagePlaceholders.create().append( "total", domains.size() ) );
+            } );
     }
 
     @Override

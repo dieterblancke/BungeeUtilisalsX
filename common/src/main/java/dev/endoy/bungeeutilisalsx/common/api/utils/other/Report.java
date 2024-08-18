@@ -31,16 +31,16 @@ public class Report implements HasMessagePlaceholders
         BuX.getInstance().getAbstractStorageManager().getDao().getReportsDao().handleReport( id, true );
 
         BuX.getApi().getStorageManager().getDao().getOfflineMessageDao().sendOfflineMessage(
-                reportedBy,
-                new OfflineMessage(
-                        null,
-                        "general-commands.report.accept.accepted",
-                        MessagePlaceholders.create()
-                                .append( "id", id )
-                                .append( "reported", reportedBy )
-                                .append( "staff", accepter )
-                                .append( this )
-                )
+            reportedBy,
+            new OfflineMessage(
+                null,
+                "general-commands.report.accept.accepted",
+                MessagePlaceholders.create()
+                    .append( "id", id )
+                    .append( "reported", reportedBy )
+                    .append( "staff", accepter )
+                    .append( this )
+            )
         );
     }
 
@@ -48,15 +48,15 @@ public class Report implements HasMessagePlaceholders
     public MessagePlaceholders getMessagePlaceholders()
     {
         return MessagePlaceholders.create()
-                .append( "id", id )
-                .append( "uuid", uuid )
-                .append( "user", userName )
-                .append( "reported", userName )
-                .append( "reporter", reportedBy )
-                .append( "reason", reason )
-                .append( "server", server )
-                .append( "date", Dao.formatDateToString( date ) )
-                .append( "handled", handled )
-                .append( "accepted", accepted );
+            .append( "id", id )
+            .append( "uuid", uuid )
+            .append( "user", userName )
+            .append( "reported", userName )
+            .append( "reporter", reportedBy )
+            .append( "reason", reason )
+            .append( "server", server )
+            .append( "date", Dao.formatDateToString( date ) )
+            .append( "handled", handled )
+            .append( "accepted", accepted );
     }
 }

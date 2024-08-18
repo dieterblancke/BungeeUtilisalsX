@@ -43,9 +43,9 @@ public class Query implements GraphQLQueryResolver
         final List<FriendData> friend = BuX.getApi().getStorageManager().getDao().getFriendsDao().getFriends( uuid ).join();
 
         return friend
-                .stream()
-                .map( data -> Friend.of( uuid, data ) )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( data -> Friend.of( uuid, data ) )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -64,9 +64,9 @@ public class Query implements GraphQLQueryResolver
         }
 
         return requests
-                .stream()
-                .map( FriendRequest::of )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( FriendRequest::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -103,9 +103,9 @@ public class Query implements GraphQLQueryResolver
         }
 
         return bans
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -124,9 +124,9 @@ public class Query implements GraphQLQueryResolver
         }
 
         return ipBans
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -134,10 +134,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllBansExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getBansExecutedBy( name )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -154,10 +154,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findRecentBans( final int limit )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getBansDao().getRecentBans( limit )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -194,9 +194,9 @@ public class Query implements GraphQLQueryResolver
         }
 
         return mutes
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -215,9 +215,9 @@ public class Query implements GraphQLQueryResolver
         }
 
         return ipMutes
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -225,10 +225,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllMutesExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getMutesExecutedBy( name )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -245,10 +245,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findRecentMutes( final int limit )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getMutesDao().getRecentMutes( limit )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -256,10 +256,10 @@ public class Query implements GraphQLQueryResolver
     public List<TrackData> findPunishmentTrackData( final UUID uuid, final String trackId, final String server )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getTracksDao().getTrackInfos( uuid, trackId, server )
-                .join()
-                .stream()
-                .map( TrackData::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( TrackData::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -267,10 +267,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllKicksFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicks( uuid )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -278,10 +278,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllKicksExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getKicksExecutedBy( name )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -289,10 +289,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllWarnsFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarns( uuid )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -300,10 +300,10 @@ public class Query implements GraphQLQueryResolver
     public List<Punishment> findAllWarnsExecutedBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getPunishmentDao().getKickAndWarnDao().getWarnsExecutedBy( name )
-                .join()
-                .stream()
-                .map( Punishment::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Punishment::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -311,10 +311,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findAllReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports()
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -322,10 +322,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findActiveReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getActiveReports()
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -333,10 +333,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findHandledReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getHandledReports()
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -344,10 +344,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findAcceptedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getAcceptedReports()
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -355,10 +355,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findDeniedReports()
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getDeniedReports()
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -366,10 +366,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findRecentReports( final int days )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getRecentReports( days )
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -377,10 +377,10 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findReportsFor( final UUID uuid )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReports( uuid )
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 
     @Cacheable
@@ -388,9 +388,9 @@ public class Query implements GraphQLQueryResolver
     public List<Report> findReportsBy( final String name )
     {
         return BuX.getApi().getStorageManager().getDao().getReportsDao().getReportsHistory( name )
-                .join()
-                .stream()
-                .map( Report::of )
-                .collect( Collectors.toList() );
+            .join()
+            .stream()
+            .map( Report::of )
+            .collect( Collectors.toList() );
     }
 }

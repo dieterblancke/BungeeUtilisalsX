@@ -1,10 +1,10 @@
 package dev.endoy.bungeeutilisalsx.common.api.user;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.common.api.language.Language;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.HasMessagePlaceholders;
 import dev.endoy.bungeeutilisalsx.common.api.utils.placeholders.MessagePlaceholders;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -92,9 +92,9 @@ public class UserStorage implements HasMessagePlaceholders
     public MessagePlaceholders getMessagePlaceholders()
     {
         return MessagePlaceholders.create()
-                .append( "uuid", uuid )
-                .append( "user", userName )
-                .append( "ip", ip )
-                .append( "language", Optional.ofNullable( language ).map( Language::getName ).orElse( "" ) );
+            .append( "uuid", uuid )
+            .append( "user", userName )
+            .append( "ip", ip )
+            .append( "language", Optional.ofNullable( language ).map( Language::getName ).orElse( "" ) );
     }
 }

@@ -19,7 +19,7 @@ public class CommandBuilder
 {
 
     private static final TabCall DEFAULT_TAB_CALL = ( user, args ) -> TabCompleter.buildTabCompletion(
-            StaffUtils.filterPlayerList( BuX.getApi().getPlayerUtils().getPlayers() ), args
+        StaffUtils.filterPlayerList( BuX.getApi().getPlayerUtils().getPlayers() ), args
     );
     private boolean enabled;
     private String name;
@@ -116,11 +116,11 @@ public class CommandBuilder
         if ( section.exists( "disabled-servers" ) )
         {
             this.disabledServers = section.getStringList( "disabled-servers" )
-                    .stream()
-                    .filter( server -> ConfigFiles.SERVERGROUPS.getServers().containsKey( server ) )
-                    .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
-                    .flatMap( Optional::stream )
-                    .collect( Collectors.toList() );
+                .stream()
+                .filter( server -> ConfigFiles.SERVERGROUPS.getServers().containsKey( server ) )
+                .map( server -> ConfigFiles.SERVERGROUPS.getServer( server ) )
+                .flatMap( Optional::stream )
+                .collect( Collectors.toList() );
         }
 
         if ( section.exists( "listener-based" ) && section.getBoolean( "listener-based" ) )

@@ -48,8 +48,8 @@ public class SqlUserDao implements UserDao
         {
             final StorageType type = BuX.getInstance().getAbstractStorageManager().getType();
             final String statement = type == StorageType.SQLITE || type == StorageType.POSTGRESQL
-                    ? "INSERT INTO bu_users (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", " + Dao.getInsertDateParameter() + ", ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;"
-                    : "INSERT INTO bu_users (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
+                ? "INSERT INTO bu_users (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", " + Dao.getInsertDateParameter() + ", ?) ON CONFLICT(uuid) DO UPDATE SET username = ?;"
+                : "INSERT INTO bu_users (uuid, username, ip, language, firstlogin, lastlogout, joined_host) VALUES (?, ?, ?, ?, ?, ?, ?) ON DUPLICATE KEY UPDATE username = ?;";
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement( statement ) )
@@ -79,9 +79,9 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE bu_users SET username = ?, ip = ?, language = ?"
-                                  + ( logout == null ? "" : ", lastlogout = " + Dao.getInsertDateParameter() )
-                                  + " WHERE uuid = ?;"
+                      "UPDATE bu_users SET username = ?, ip = ?, language = ?"
+                          + ( logout == null ? "" : ", lastlogout = " + Dao.getInsertDateParameter() )
+                          + " WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -111,7 +111,7 @@ public class SqlUserDao implements UserDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT id FROM bu_users WHERE username = ?;"
+                      "SELECT id FROM bu_users WHERE username = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -139,7 +139,7 @@ public class SqlUserDao implements UserDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT id FROM bu_users WHERE ip = ?;"
+                      "SELECT id FROM bu_users WHERE ip = ?;"
                   ) )
             {
                 pstmt.setString( 1, ip );
@@ -224,7 +224,7 @@ public class SqlUserDao implements UserDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT username FROM bu_users WHERE ip = ?;"
+                      "SELECT username FROM bu_users WHERE ip = ?;"
                   ) )
             {
                 pstmt.setString( 1, ip );
@@ -252,7 +252,7 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE bu_users SET username = ? WHERE uuid = ?;"
+                      "UPDATE bu_users SET username = ? WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -274,7 +274,7 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE bu_users SET language = ? WHERE uuid = ?;"
+                      "UPDATE bu_users SET language = ? WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, language.getName() );
@@ -296,7 +296,7 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "UPDATE bu_users SET joined_host = ? WHERE uuid = ?;"
+                      "UPDATE bu_users SET joined_host = ? WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, joinedHost );
@@ -320,7 +320,7 @@ public class SqlUserDao implements UserDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT joined_host, COUNT(*) amount FROM bu_users GROUP BY joined_host;"
+                      "SELECT joined_host, COUNT(*) amount FROM bu_users GROUP BY joined_host;"
                   ) )
             {
                 try ( ResultSet rs = pstmt.executeQuery() )
@@ -354,7 +354,7 @@ public class SqlUserDao implements UserDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT joined_host, COUNT(*) amount FROM bu_users WHERE joined_host LIKE ? GROUP BY joined_host;"
+                      "SELECT joined_host, COUNT(*) amount FROM bu_users WHERE joined_host LIKE ? GROUP BY joined_host;"
                   ) )
             {
                 pstmt.setString( 1, "%" + searchTag + "%" );
@@ -387,7 +387,7 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO bu_ignoredusers(user, ignored) VALUES (?, ?);"
+                      "INSERT INTO bu_ignoredusers(user, ignored) VALUES (?, ?);"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -409,7 +409,7 @@ public class SqlUserDao implements UserDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "DELETE FROM bu_ignoredusers WHERE user = ? AND ignored = ?;"
+                      "DELETE FROM bu_ignoredusers WHERE user = ? AND ignored = ?;"
                   ) )
             {
                 pstmt.setString( 1, user.toString() );
@@ -469,8 +469,8 @@ public class SqlUserDao implements UserDao
                     while ( rs.next() )
                     {
                         userSettings.add( new UserSetting(
-                                UserSettingType.valueOf( rs.getString( "setting_type" ) ),
-                                rs.getObject( "setting_value" )
+                            UserSettingType.valueOf( rs.getString( "setting_type" ) ),
+                            rs.getObject( "setting_value" )
                         ) );
                     }
                 }
@@ -589,7 +589,7 @@ public class SqlUserDao implements UserDao
     {
         final List<String> ignoredUsers = Lists.newArrayList();
         try ( PreparedStatement pstmt = connection.prepareStatement(
-                "SELECT username FROM bu_ignoredusers iu LEFT JOIN bu_users u ON iu.ignored = u.uuid WHERE user = ?;"
+            "SELECT username FROM bu_ignoredusers iu LEFT JOIN bu_users u ON iu.ignored = u.uuid WHERE user = ?;"
         ) )
         {
             pstmt.setString( 1, user.toString() );

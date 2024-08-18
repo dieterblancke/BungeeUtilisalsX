@@ -43,8 +43,8 @@ public class StaffChatExecutor implements EventExecutor
         final String detect = config.getString( "staffchat.charchat.detect" );
 
         if ( !config.getBoolean( "staffchat.enabled" )
-                || !config.getBoolean( "staffchat.charchat.enabled" )
-                || !event.getMessage().startsWith( detect ) )
+            || !config.getBoolean( "staffchat.charchat.enabled" )
+            || !event.getMessage().startsWith( detect ) )
         {
             return;
         }

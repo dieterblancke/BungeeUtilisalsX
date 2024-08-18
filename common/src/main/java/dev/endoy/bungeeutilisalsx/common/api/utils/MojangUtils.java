@@ -1,8 +1,8 @@
 package dev.endoy.bungeeutilisalsx.common.api.utils;
 
+import com.google.gson.Gson;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 import java.io.InputStream;

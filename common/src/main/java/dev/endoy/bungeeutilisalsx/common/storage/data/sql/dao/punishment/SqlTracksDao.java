@@ -54,12 +54,12 @@ public class SqlTracksDao implements TracksDao
                     while ( rs.next() )
                     {
                         trackInfos.add( new PunishmentTrackInfo(
-                                UUID.fromString( rs.getString( "uuid" ) ),
-                                rs.getString( "track_id" ),
-                                rs.getString( "server" ),
-                                rs.getString( "executed_by" ),
-                                Dao.formatStringToDate( rs.getString( "date" ) ),
-                                rs.getBoolean( "active" )
+                            UUID.fromString( rs.getString( "uuid" ) ),
+                            rs.getString( "track_id" ),
+                            rs.getString( "server" ),
+                            rs.getString( "executed_by" ),
+                            Dao.formatStringToDate( rs.getString( "date" ) ),
+                            rs.getBoolean( "active" )
                         ) );
                     }
                 }
@@ -80,7 +80,7 @@ public class SqlTracksDao implements TracksDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO bu_punishmenttracks (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
+                      "INSERT INTO bu_punishmenttracks (uuid, track_id, server, executed_by, date, active) VALUES (?, ?, ?, ?, " + Dao.getInsertDateParameter() + ", ?);"
                   ) )
             {
                 pstmt.setString( 1, trackInfo.getUuid().toString() );

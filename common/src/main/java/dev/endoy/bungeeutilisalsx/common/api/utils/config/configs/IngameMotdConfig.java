@@ -36,40 +36,40 @@ public class IngameMotdConfig extends Config
     public void setup()
     {
         motds.addAll(
-                config.getSectionList( "motds" )
-                        .stream()
-                        .map( section -> new IngameMotd(
-                                section.exists( "server" )
-                                        ? ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) ).orElse( null )
-                                        : null,
-                                section.exists( "once-per-session" ) && section.getBoolean( "once-per-session" ),
-                                section.exists( "language" ) && section.getBoolean( "language" ),
-                                section.isString( "message" )
-                                        ? Collections.singletonList( section.getString( "message" ) )
-                                        : section.getStringList( "message" ),
-                                section.exists( "actionbar" )
-                                        ? section.getString( "actionbar" )
-                                        : null,
-                                section.exists( "bossbar" )
-                                        ? new BossBarMessage( section.getSection( "bossbar" ) )
-                                        : null,
-                                section.exists( "title" )
-                                        ? new TitleMessage( section.getSection( "title" ) )
-                                        : null,
-                                section.exists( "receive-permission" )
-                                        ? section.getString( "receive-permission" )
-                                        : null
-                        ) )
-                        .collect( Collectors.toList() )
+            config.getSectionList( "motds" )
+                .stream()
+                .map( section -> new IngameMotd(
+                    section.exists( "server" )
+                        ? ConfigFiles.SERVERGROUPS.getServer( section.getString( "server" ) ).orElse( null )
+                        : null,
+                    section.exists( "once-per-session" ) && section.getBoolean( "once-per-session" ),
+                    section.exists( "language" ) && section.getBoolean( "language" ),
+                    section.isString( "message" )
+                        ? Collections.singletonList( section.getString( "message" ) )
+                        : section.getStringList( "message" ),
+                    section.exists( "actionbar" )
+                        ? section.getString( "actionbar" )
+                        : null,
+                    section.exists( "bossbar" )
+                        ? new BossBarMessage( section.getSection( "bossbar" ) )
+                        : null,
+                    section.exists( "title" )
+                        ? new TitleMessage( section.getSection( "title" ) )
+                        : null,
+                    section.exists( "receive-permission" )
+                        ? section.getString( "receive-permission" )
+                        : null
+                ) )
+                .collect( Collectors.toList() )
         );
     }
 
     public List<IngameMotd> getApplicableMotds( final IProxyServer server )
     {
         return motds
-                .stream()
-                .filter( motd -> motd.getServer() == null || ( server != null && motd.getServer().isInGroup( server.getName() ) ) )
-                .collect( Collectors.toList() );
+            .stream()
+            .filter( motd -> motd.getServer() == null || ( server != null && motd.getServer().isInGroup( server.getName() ) ) )
+            .collect( Collectors.toList() );
     }
 
     @Value

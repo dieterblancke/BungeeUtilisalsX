@@ -28,8 +28,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                                  " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                      "INSERT INTO " + PunishmentType.WARN.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                          " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -57,8 +57,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
         {
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
-                                  " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
+                      "INSERT INTO " + PunishmentType.KICK.getTable() + " (uuid, user, ip, reason, server, executed_by, date)" +
+                          " VALUES (?, ?, ?, ?, ?, ?, " + Dao.getInsertDateParameter() + ");"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -88,7 +88,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE uuid = ?;"
+                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -106,8 +106,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         punishments.add( PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         ) );
                     }
                 }
@@ -130,7 +130,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE uuid = ?;"
+                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE uuid = ?;"
                   ) )
             {
                 pstmt.setString( 1, uuid.toString() );
@@ -148,8 +148,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         punishments.add( PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         ) );
                     }
                 }
@@ -172,7 +172,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE executed_by = ?;"
+                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE executed_by = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -191,8 +191,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         punishments.add( PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         ) );
                     }
                 }
@@ -215,7 +215,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE executed_by = ?;"
+                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE executed_by = ?;"
                   ) )
             {
                 pstmt.setString( 1, name );
@@ -234,8 +234,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         punishments.add( PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         ) );
                     }
                 }
@@ -258,7 +258,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE id = ? LIMIT 1;"
+                      "SELECT * FROM " + PunishmentType.KICK.getTable() + " WHERE id = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setInt( 1, Integer.parseInt( id ) );
@@ -276,8 +276,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         info = PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.KICK, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         );
                     }
                 }
@@ -300,7 +300,7 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
 
             try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
                   PreparedStatement pstmt = connection.prepareStatement(
-                          "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE id = ? LIMIT 1;"
+                      "SELECT * FROM " + PunishmentType.WARN.getTable() + " WHERE id = ? LIMIT 1;"
                   ) )
             {
                 pstmt.setInt( 1, Integer.parseInt( id ) );
@@ -318,8 +318,8 @@ public class SqlKickAndWarnDao implements KickAndWarnDao
                         final Date date = Dao.formatStringToDate( rs.getString( "date" ) );
 
                         info = PunishmentDao.buildPunishmentInfo(
-                                id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
-                                date, -1, true, null
+                            id, PunishmentType.WARN, uuid, user, ip, reason, server, executedby,
+                            date, -1, true, null
                         );
                     }
                 }

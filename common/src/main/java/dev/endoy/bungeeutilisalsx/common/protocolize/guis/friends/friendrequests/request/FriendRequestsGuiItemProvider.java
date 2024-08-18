@@ -21,9 +21,9 @@ public class FriendRequestsGuiItemProvider implements PageableItemProvider
                                           final List<FriendRequest> friendRequests )
     {
         final int itemsPerPage = config.getItems().stream()
-                .filter( item -> ( (FriendRequestGuiConfigItem) item ).isRequestItem() )
-                .mapToInt( item -> item.getSlots().size() )
-                .sum();
+            .filter( item -> ( (FriendRequestGuiConfigItem) item ).isRequestItem() )
+            .mapToInt( item -> item.getSlots().size() )
+            .sum();
         int pages = (int) Math.ceil( (double) friendRequests.size() / (double) itemsPerPage );
         if ( pages == 0 )
         {
@@ -36,14 +36,14 @@ public class FriendRequestsGuiItemProvider implements PageableItemProvider
             final int max = ( i + 1 ) * itemsPerPage;
 
             this.pages[i] = new FriendRequestsItemPage(
-                    user,
-                    i,
-                    pages,
-                    config,
-                    type,
-                    friendRequests.isEmpty()
-                            ? friendRequests
-                            : friendRequests.size() <= max ? friendRequests : friendRequests.subList( i * itemsPerPage, max )
+                user,
+                i,
+                pages,
+                config,
+                type,
+                friendRequests.isEmpty()
+                    ? friendRequests
+                    : friendRequests.size() <= max ? friendRequests : friendRequests.subList( i * itemsPerPage, max )
             );
         }
     }

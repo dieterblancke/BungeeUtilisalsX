@@ -17,49 +17,49 @@ public class GraphQLConfig
     GraphQLScalarType longScalar()
     {
         return GraphQLScalarType.newScalar()
-                .name( "Long" )
-                .description( "Built-in Long" )
-                .coercing( new GraphqlLongCoercing() )
-                .build();
+            .name( "Long" )
+            .description( "Built-in Long" )
+            .coercing( new GraphqlLongCoercing() )
+            .build();
     }
 
     @Bean
     GraphQLScalarType dateScalar()
     {
         return GraphQLScalarType.newScalar()
-                .name( "Date" )
-                .description( "Java 8 LocalDate as scalar." )
-                .coercing( new DateCoercing() )
-                .build();
+            .name( "Date" )
+            .description( "Java 8 LocalDate as scalar." )
+            .coercing( new DateCoercing() )
+            .build();
     }
 
     @Bean
     GraphQLScalarType dateTimeScalar()
     {
         return GraphQLScalarType.newScalar()
-                .name( "DateTime" )
-                .description( "Java 8 LocalDate as scalar." )
-                .coercing( new DateTimeCoercing() )
-                .build();
+            .name( "DateTime" )
+            .description( "Java 8 LocalDate as scalar." )
+            .coercing( new DateTimeCoercing() )
+            .build();
     }
 
     @Bean
     GraphQLScalarType uuidScalar()
     {
         return GraphQLScalarType.newScalar()
-                .name( "UUID" )
-                .description( "Java UUID as scalar." )
-                .coercing( new UuidCoercing() )
-                .build();
+            .name( "UUID" )
+            .description( "Java UUID as scalar." )
+            .coercing( new UuidCoercing() )
+            .build();
     }
 
     @Bean
     GraphQLScalarType voidScalar()
     {
         return GraphQLScalarType.newScalar()
-                .name( "Void" )
-                .description( "Java Void type as scalar." )
-                .coercing( new VoidCoercing() )
-                .build();
+            .name( "Void" )
+            .description( "Java Void type as scalar." )
+            .coercing( new VoidCoercing() )
+            .build();
     }
 }

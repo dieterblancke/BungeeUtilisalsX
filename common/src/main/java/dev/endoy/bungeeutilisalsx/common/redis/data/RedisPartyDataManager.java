@@ -49,10 +49,10 @@ public class RedisPartyDataManager implements PartyDataManager
         {
             commands.srem( PARTIES_KEY, party.getUuid().toString() );
             commands.hdel(
-                    getPartyPrefix( party.getUuid() ),
-                    "createdAt",
-                    "inactive",
-                    "partyLimit"
+                getPartyPrefix( party.getUuid() ),
+                "createdAt",
+                "inactive",
+                "partyLimit"
             );
 
             for ( PartyMember partyMember : party.getPartyMembers() )
@@ -70,9 +70,9 @@ public class RedisPartyDataManager implements PartyDataManager
                 this.removeJoinRequestFromParty( commands, party, partyJoinRequest, false );
             }
             commands.del(
-                    getPartyMemberPrefix( party.getUuid() ),
-                    getPartyJoinRequestPrefix( party.getUuid() ),
-                    getPartyInvitationPrefix( party.getUuid() )
+                getPartyMemberPrefix( party.getUuid() ),
+                getPartyJoinRequestPrefix( party.getUuid() ),
+                getPartyInvitationPrefix( party.getUuid() )
             );
         } );
     }
@@ -114,14 +114,14 @@ public class RedisPartyDataManager implements PartyDataManager
         }
 
         commands.hdel(
-                getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ),
-                "userName",
-                "joinedAt",
-                "nickName",
-                "partyRole",
-                "partyOwner",
-                "inactive",
-                "chat"
+            getPartyMemberPrefix( party.getUuid(), partyMember.getUuid() ),
+            "userName",
+            "joinedAt",
+            "nickName",
+            "partyRole",
+            "partyOwner",
+            "inactive",
+            "chat"
         );
     }
 
@@ -200,10 +200,10 @@ public class RedisPartyDataManager implements PartyDataManager
         }
 
         commands.hdel(
-                getPartyInvitationPrefix( party.getUuid(), partyInvite.getInvitee() ),
-                "invitedAt",
-                "invitedBy",
-                "inviteeName"
+            getPartyInvitationPrefix( party.getUuid(), partyInvite.getInvitee() ),
+            "invitedAt",
+            "invitedBy",
+            "inviteeName"
         );
     }
 
@@ -237,9 +237,9 @@ public class RedisPartyDataManager implements PartyDataManager
         }
 
         commands.hdel(
-                getPartyJoinRequestPrefix( party.getUuid(), partyJoinRequest.getRequester() ),
-                "requestedAt",
-                "requesterName"
+            getPartyJoinRequestPrefix( party.getUuid(), partyJoinRequest.getRequester() ),
+            "requestedAt",
+            "requesterName"
         );
     }
 
@@ -249,71 +249,71 @@ public class RedisPartyDataManager implements PartyDataManager
         return redisManager.execute( commands ->
         {
             return commands.smembers( PARTIES_KEY )
-                    .stream()
-                    .map( partyUuid ->
-                    {
-                        final Map<String, String> partyData = commands.hgetall( getPartyPrefix( partyUuid ) );
-                        final Party party = new Party(
-                                UUID.fromString( partyUuid ),
-                                new Date( Long.parseLong( partyData.get( "createdAt" ) ) ),
-                                Integer.parseInt( partyData.get( "partyLimit" ) )
-                        );
+                .stream()
+                .map( partyUuid ->
+                {
+                    final Map<String, String> partyData = commands.hgetall( getPartyPrefix( partyUuid ) );
+                    final Party party = new Party(
+                        UUID.fromString( partyUuid ),
+                        new Date( Long.parseLong( partyData.get( "createdAt" ) ) ),
+                        Integer.parseInt( partyData.get( "partyLimit" ) )
+                    );
 
-                        party.getPartyMembers().addAll( this.getAllPartyMembers( commands, party ) );
-                        party.getSentInvites().addAll( this.getAllPartyInvitations( commands, party ) );
-                        party.getJoinRequests().addAll( this.getAllPartyJoinRequests( commands, party ) );
+                    party.getPartyMembers().addAll( this.getAllPartyMembers( commands, party ) );
+                    party.getSentInvites().addAll( this.getAllPartyInvitations( commands, party ) );
+                    party.getJoinRequests().addAll( this.getAllPartyJoinRequests( commands, party ) );
 
-                        return party;
-                    } )
-                    .collect( Collectors.toList() );
+                    return party;
+                } )
+                .collect( Collectors.toList() );
         } );
     }
 
     private List<PartyMember> getAllPartyMembers( final RedisClusterCommands<String, String> commands, final Party party )
     {
         return commands.smembers( getPartyMemberPrefix( party.getUuid() ) )
-                .stream()
-                .map( UUID::fromString )
-                .map( partyMemberUuid ->
-                {
-                    final Map<String, String> memberData = commands.hgetall(
-                            getPartyMemberPrefix( party.getUuid(), partyMemberUuid )
-                    );
+            .stream()
+            .map( UUID::fromString )
+            .map( partyMemberUuid ->
+            {
+                final Map<String, String> memberData = commands.hgetall(
+                    getPartyMemberPrefix( party.getUuid(), partyMemberUuid )
+                );
 
-                    return PartyMember.fromMap( partyMemberUuid, memberData );
-                } )
-                .collect( Collectors.toList() );
+                return PartyMember.fromMap( partyMemberUuid, memberData );
+            } )
+            .collect( Collectors.toList() );
     }
 
     private List<PartyInvite> getAllPartyInvitations( final RedisClusterCommands<String, String> commands, final Party party )
     {
         return commands.smembers( getPartyInvitationPrefix( party.getUuid() ) )
-                .stream()
-                .map( UUID::fromString )
-                .map( inviteeUuid ->
-                {
-                    final Map<String, String> inviteData = commands.hgetall(
-                            getPartyInvitationPrefix( party.getUuid(), inviteeUuid )
-                    );
+            .stream()
+            .map( UUID::fromString )
+            .map( inviteeUuid ->
+            {
+                final Map<String, String> inviteData = commands.hgetall(
+                    getPartyInvitationPrefix( party.getUuid(), inviteeUuid )
+                );
 
-                    return PartyInvite.fromMap( inviteeUuid, inviteData );
-                } )
-                .collect( Collectors.toList() );
+                return PartyInvite.fromMap( inviteeUuid, inviteData );
+            } )
+            .collect( Collectors.toList() );
     }
 
     private List<PartyJoinRequest> getAllPartyJoinRequests( final RedisClusterCommands<String, String> commands, final Party party )
     {
         return commands.smembers( getPartyJoinRequestPrefix( party.getUuid() ) )
-                .stream()
-                .map( UUID::fromString )
-                .map( requesterUuid ->
-                {
-                    final Map<String, String> requestData = commands.hgetall(
-                            getPartyJoinRequestPrefix( party.getUuid(), requesterUuid )
-                    );
+            .stream()
+            .map( UUID::fromString )
+            .map( requesterUuid ->
+            {
+                final Map<String, String> requestData = commands.hgetall(
+                    getPartyJoinRequestPrefix( party.getUuid(), requesterUuid )
+                );
 
-                    return PartyJoinRequest.fromMap( requesterUuid, requestData );
-                } )
-                .collect( Collectors.toList() );
+                return PartyJoinRequest.fromMap( requesterUuid, requestData );
+            } )
+            .collect( Collectors.toList() );
     }
 }
