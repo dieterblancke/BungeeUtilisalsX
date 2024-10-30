@@ -91,10 +91,8 @@ general-commands:
           action: '/server {server}'
     rank:
       text:
-        - 
-          text: '{rank_displayname} <aqua>({amount_online})<white>: '
-        - 
-          text: '{users}'
+        - text: '{rank_displayname} <aqua>({amount_online})<white>: '
+        - text: '{users}'
   msg:
     usage: '<yellow>Por favor usa <aqua>/msg (user) (mensaje)<yellow>.'
     ignored: '<yellow>Tu no puedes enviar un mensaje a este usuario.'
@@ -256,12 +254,9 @@ friends:
   switch: '<yellow>Tu amigo, <aqua>{user}<yellow>, se a movido de <aqua>{from} <yellow>a <aqua>{to}.'
   request-received:
     text:
-      - 
-        text: '<yellow>Has recibido una solicitud de amistad de <aqua>{name}<yellow>.{nl}'
-      - 
-        text: '<yellow>Escribe <aqua>/friends accept {name}'
-      - 
-        text: '<yellow> o <aqua>Click Aqui'
+      - text: '<yellow>Has recibido una solicitud de amistad de <aqua>{name}<yellow>.{nl}'
+      - text: '<yellow>Escribe <aqua>/friends accept {name}'
+      - text: '<yellow> o <aqua>Click Aqui'
         hover:
           - '<yellow>Click aqui para aceptar la solicitud de amistad de <aqua>{name}<yellow>.'
         click:
@@ -269,8 +264,7 @@ friends:
           #RUN_COMMAND will only work for BungeeCord commands.
           type: 'RUN_COMMAND'
           action: '/friend accept {name}'
-      - 
-        text: '<yellow> para aceptar esta solicitud de amistad.'
+      - text: '<yellow> para aceptar esta solicitud de amistad.'
   help:
     message:
       - '<green>Comandos de Amigos:'
@@ -321,15 +315,12 @@ friends:
       offline: 'inactivo'
     head:
       text:
-        - 
-          text: '<gold><- '
+        - text: '<gold><- '
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {previousPage}'
-        - 
-          text: '<yellow>Lista de Amigos <aqua>({currentPage} / {maxPages})'
-        - 
-          text: ' <gold>->'
+        - text: '<yellow>Lista de Amigos <aqua>({currentPage} / {maxPages})'
+        - text: ' <gold>->'
           click:
             type: 'RUN_COMMAND'
             action: '/friends list {nextPage}'
@@ -352,15 +343,12 @@ friends:
     incoming: 'Entrante'
     head:
       text:
-        - 
-          text: '<gold><- '
+        - text: '<gold><- '
           click:
             type: 'RUN_COMMAND'
             action: '/friends requests {type} {previousPage}'
-        - 
-          text: '<yellow>{type} Solicitudes <aqua>({currentPage} / {maxPages})'
-        - 
-          text: ' <gold>->'
+        - text: '<yellow>{type} Solicitudes <aqua>({currentPage} / {maxPages})'
+        - text: ' <gold>->'
           click:
             type: 'RUN_COMMAND'
             action: '/friends requests {type} {nextPage}'
@@ -624,15 +612,12 @@ punishments:
     no-punishments: '<yellow>No se encontraron sanciones de <aqua>{user} <yellow>con el tipo <aqua>{type}<yellow>.'
     head:
       text:
-        - 
-          text: '<gold><- '
+        - text: '<gold><- '
           click:
             type: 'RUN_COMMAND'
             action: '/punishmenthistory {user} {type} {previousPage}'
-        - 
-          text: '<yellow>Historia de Sanciones por <green>{user} <aqua>({currentPage} / {maxPages})'
-        - 
-          text: ' <gold>->'
+        - text: '<yellow>Historia de Sanciones por <green>{user} <aqua>({currentPage} / {maxPages})'
+        - text: ' <gold>->'
           click:
             type: 'RUN_COMMAND'
             action: '/punishmenthistory {user} {type} {nextPage}'
@@ -695,15 +680,12 @@ punishments:
     no-punishments: '<aqua>{user} <yellow>no a sancionado a nadie con <aqua>{type}<yellow>.'
     head:
       text:
-        - 
-          text: '<gold><- '
+        - text: '<gold><- '
           click:
             type: 'RUN_COMMAND'
             action: '/staffhistory {user} {type} {previousPage}'
-        - 
-          text: '<yellow>Historial de Sanciones de <green>{user} <aqua>({currentPage} / {maxPages})'
-        - 
-          text: ' <gold>->'
+        - text: '<yellow>Historial de Sanciones de <green>{user} <aqua>({currentPage} / {maxPages})'
+        - text: ' <gold>->'
           click:
             type: 'RUN_COMMAND'
             action: '/staffhistory {user} {type} {nextPage}'

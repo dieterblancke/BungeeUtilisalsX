@@ -1,6 +1,6 @@
 enabled: true
 
-# If set to true, BungeeUtilisals will cancel the chat message sent, if false, BungeeUtilisals will replace the word.
+# If set to true, BungeeUtilisalsX will cancel the chat message sent, if false, BungeeUtilisalsX will replace the word.
 cancel: true
 
 # What do you want to words to be replaced with? This is ignored is cancel is true.

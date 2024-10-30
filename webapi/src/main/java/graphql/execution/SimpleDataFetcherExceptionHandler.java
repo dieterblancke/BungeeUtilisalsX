@@ -1,6 +1,6 @@
 package graphql.execution;
 
-import be.dieterblancke.bungeeutilisalsx.webapi.exception.AuthException;
+import dev.endoy.bungeeutilisalsx.webapi.exception.AuthException;
 import graphql.ExceptionWhileDataFetching;
 import graphql.PublicApi;
 import graphql.language.SourceLocation;

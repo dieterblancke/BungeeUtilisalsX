@@ -25,8 +25,8 @@ announcements:
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: 'bungeeutilisalsx.announcements.receive'
     messages:
-      - '<yellow>This server is using BungeeUtilisals:'
-      - '<gold>BungeeUtilisals has been coded by <aqua>didjee2<gold>.'
+      - '<yellow>This server is using BungeeUtilisalsX:'
+      - '<gold>BungeeUtilisalsX has been coded by <aqua>Endoy<gold>.'
   # You can enter a ServerGroup name or a ServerName in here.
   # Do note that ServerGroup names will be prioritized above ServerNames.
   - server: Minigames
@@ -34,7 +34,7 @@ announcements:
     use-prefix: true
     # Permission you need in order to receive the announcement, leave empty if no permission.
     permission: ''
-    # If the messages is NOT a list (like above), then BungeeUtilisals will assume a language reference.
+    # If the messages is NOT a list (like above), then BungeeUtilisalsX will assume a language reference.
     # With a language reference you can add the path of the message to serve as the announcement message.
     # This allows you to make announcements in MULTIPLE languages.
     messages: 'custom.announcements.chat.minigame1'

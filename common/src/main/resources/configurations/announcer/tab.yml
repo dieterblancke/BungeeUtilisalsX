@@ -38,7 +38,7 @@ announcements:
     footer:
       - ''
       - '<gray>This server uses <aqua>BungeeUtilisalsX<gray>!'
-      - '<gray>For more info, please check out my website:'
-      - '<green>https://dieterblancke.xyz/projects/BungeeUtilisalsX<gray>!'
+      - '<gray>For more info, please check out '
+      - '<green>https://endoy.dev/projects/BungeeUtilisalsX/info<gray>!'
       - ''
       - '<gray>----------------[ <yellow><bold>BungeeUtilisalsX<reset> <gray>]----------------'

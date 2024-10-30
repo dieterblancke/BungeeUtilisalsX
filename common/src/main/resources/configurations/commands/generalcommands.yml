@@ -72,9 +72,9 @@ announce:
       enabled: true
     title:
       enabled: true
-      fadein: 10
-      stay: 30
-      fadeout: 10
+      fadein: 1
+      stay: 3
+      fadeout: 1
   # Path to preconfigured messages in the languages file.
   pre_configured: 'custom.announce'
 find:
@@ -204,12 +204,12 @@ report:
 
     author:
       name: 'Report for {user} by {reporter}.'
-      url: 'https://dieterblancke.xyz/projects/BungeeUtilisalsX'
-      icon: 'https://dieterblancke.xyz/media/avatar.png'
+      url: 'https://endoy.dev/projects/BungeeUtilisalsX/info'
+      icon: 'https://endoy.dev/assets/media/logo-dark.webp'
 
     footer:
       text: 'BungeeUtilisalsX Report System'
-      icon: 'https://dieterblancke.xyz/media/avatar.png'
+      icon: 'https://endoy.dev/assets/media/logo-dark.webp'
 
     fields:
       - name: 'Reporter'

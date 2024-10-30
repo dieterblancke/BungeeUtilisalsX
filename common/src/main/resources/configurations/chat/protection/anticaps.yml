@@ -4,7 +4,7 @@ enabled: true
 # (Made it configurable for non-ASCII uppercase characters)
 characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 
-# If set to true, the chat message will be cancelled, if false, BungeeUtilisals will put the message into lowercase.
+# If set to true, the chat message will be cancelled, if false, BungeeUtilisalsX will put the message into lowercase.
 cancel: true
 
 # Minimum amount of characters required to check for caps

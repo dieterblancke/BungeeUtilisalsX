@@ -4,8 +4,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>BungeeUtilisalsX</artifactId>
-        <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
-        <version>2.4.2</version>
+        <groupId>dev.endoy.bungeeutilisalsx</groupId>
+        <version>2.4.5</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
@@ -13,8 +13,8 @@
 
     <repositories>
         <repository>
-            <id>dieterblancke</id>
-            <url>https://repo.dieterblancke.xyz/artifactory/dieterblancke-public/</url>
+            <id>endoy</id>
+            <url>https://repo.endoy.dev/artifactory/endoy-public/</url>
         </repository>
         <repository>
             <id>CodeMC</id>
@@ -32,20 +32,20 @@
 
     <dependencies>
         <dependency>
-            <groupId>be.dieterblancke.bungeeutilisalsx</groupId>
+            <groupId>dev.endoy.bungeeutilisalsx</groupId>
             <artifactId>common</artifactId>
-            <version>2.4.2</version>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-api</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.21-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>net.md-5</groupId>
             <artifactId>bungeecord-protocol</artifactId>
-            <version>1.19-R0.1-SNAPSHOT</version>
+            <version>1.21-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -94,105 +94,106 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.3.0</version>
+                <version>3.6.0</version>
                 <configuration>
                     <relocations>
                         <relocation>
                             <pattern>org.bstats</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.metrics</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.metrics</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>be.dieterblancke.configuration</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.configuration</shadedPattern>
+                            <pattern>dev.endoy.configuration</pattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.configuration</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.mariadb.jdbc</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.mariadb.jdbc</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.mariadb.jdbc</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.postgresql</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.postgresql</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.postgresql</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.mongodb</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.mongodb</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.com.mongodb</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.mysql</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.mysql</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.com.mysql</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.zaxxer.hikari</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.zaxxer.hikari</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.com.zaxxer.hikari</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>io.lettuce.core</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.lettuce.core</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.io.lettuce.core</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>reactor.core</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.core</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.reactor.core</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>reactor.adapter</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.adapter
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.reactor.adapter
                             </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>reactor.util</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.reactor.util</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.reactor.util</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.reactivestreams</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.reactivestreams
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.reactivestreams
                             </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.mozilla</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.mozilla</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.mozilla</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>de.christophkraemer.rhino</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.de.christophkraemer.rhino
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.de.christophkraemer.rhino
                             </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.apache.commons.pool2</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.apache.commons.pool2
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.apache.commons.pool2
                             </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.jsoup</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.jsoup</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.jsoup</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.rabbitmq</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.com.rabbitmq</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.com.rabbitmq</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>me.lucko.jarrelocator</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.me.lucko.jarrelocator
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.me.lucko.jarrelocator
                             </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>io.github.karlatemp.unsafeaccessor</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.io.github.karlatemp.unsafeaccessor
+                            </shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>org.objectweb.asm</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.org.objectweb.asm</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.org.objectweb.asm</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>nonapi.io.github</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.nonapi.io.github</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.nonapi.io.github</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>io.github</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.io.github</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.io.github</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>net.kyori</pattern>
-                            <shadedPattern>be.dieterblancke.bungeeutilisalsx.internal.net.kyori</shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.net.kyori</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -219,7 +220,7 @@
                         </goals>
                         <configuration>
                             <sourceFile>target/BungeeUtilisalsX v${project.version}-bungee.jar</sourceFile>
-                            <destinationFile>../docker-compose/bungeecord/settings/BungeeUtilisalsX.jar</destinationFile>
+                            <destinationFile>../docker-compose/bungeecord/setup/BungeeUtilisalsX.jar</destinationFile>
                         </configuration>
                     </execution>
                 </executions>
