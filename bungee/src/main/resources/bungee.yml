@@ -1,5 +1,5 @@
 name: BungeeUtilisalsX
 main: dev.endoy.bungeeutilisalsx.bungee.Bootstrap
 version: ${project.version}
-author: didjee2
+author: Endoy
 softDepends: [ 'RedisBungee', 'SkinsRestorer', 'Protocolize', 'LuckPerms', 'Triton' ]

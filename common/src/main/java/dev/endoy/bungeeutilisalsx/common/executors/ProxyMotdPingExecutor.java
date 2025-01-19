@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public class ProxyMotdPingExecutor implements EventExecutor
 {
 
-    private static final UUID DIDJEE2_UUID = UUID.fromString( "1d92ed4b-2d2e-4b6b-9cc0-75b018c0e0ca" );
+    private static final UUID RANDOM_UUID = UUID.fromString( "1d92ed4b-2d2e-4b6b-9cc0-75b018c0e0ca" );
 
     @Event
     public void onProxyMotdPing( final ProxyMotdPingEvent event )
@@ -56,7 +56,7 @@ public class ProxyMotdPingExecutor implements EventExecutor
                 .stream()
                 .map( m -> new MotdPingPlayer(
                     MessageUtils.colorizeLegacy( Utils.formatString( formatMessage( m, connection ) ) ),
-                    DIDJEE2_UUID
+                        RANDOM_UUID
                 ) )
                 .collect( Collectors.toList() )
         );

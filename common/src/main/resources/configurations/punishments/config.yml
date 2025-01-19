@@ -19,8 +19,8 @@ puid-characters: 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789
 
 # By enabling this, all punishment commands will need an additional argument specifying the server.
 # For example:
-# - /ban didjee2 ALL Testing
-# - /tempban didjee2 1d Lobby1 Testing
+# - /ban test ALL Testing
+# - /tempban test 1d Lobby1 Testing
 # If you disable this, punishment commands will work as they used to.
 per-server-punishments: true
 
