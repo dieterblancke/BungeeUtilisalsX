@@ -54,7 +54,7 @@ public class UserConnectionListener
         final Optional<User> optional = BuX.getApi().getUser( event.getPlayer().getUsername() );
         final Optional<RegisteredServer> targetServer = event.getResult().getServer();
 
-        if ( optional.isEmpty() || targetServer.isPresent() )
+        if ( optional.isEmpty() || targetServer.isEmpty() )
         {
             return;
         }

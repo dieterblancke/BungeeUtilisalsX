@@ -90,7 +90,7 @@ public class ServerBalancerConfig extends Config
     {
         return balancerGroups
             .stream()
-            .filter( it -> it.getServerGroup().isInGroup( serverName ) )
+            .filter( it -> it.getServerGroup().getName().equals( serverName ) || it.getServerGroup().isInGroup( serverName ) )
             .findFirst();
     }
 
