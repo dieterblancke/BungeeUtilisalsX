@@ -60,3 +60,6 @@ fallback:
     - 'kick'
   # The SERVERGROUP to fall back to.
   fallback-to: Lobbies
+  # If you are in one of these servergroups, you will not be kicked from the network when you are kicked from a server.
+  block-fallback-from:
+    - 'LoginServers'

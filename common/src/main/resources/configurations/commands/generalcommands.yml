@@ -114,6 +114,10 @@ staffchat:
   aliases: 'sc, schat'
   permission: bungeeutilisals.commands.staffchat
 
+  # List of servers where receiving staffchat messages should be disabled (supports ServerGroups)
+  disabled-servers:
+    - 'LoginServers'
+
   # charchat makes it possible to chat in staffchat without using the /staffchat toggle
   # if a message for example starts with '#' and the person has the staffchat permission, it will be seen as a staffchat message
   charchat:

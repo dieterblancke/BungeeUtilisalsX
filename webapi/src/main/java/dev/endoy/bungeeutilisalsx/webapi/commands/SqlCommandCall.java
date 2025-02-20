@@ -10,7 +10,6 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.Statement;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class SqlCommandCall implements CommandCall
 {
@@ -18,7 +17,7 @@ public class SqlCommandCall implements CommandCall
     @Override
     public void onExecute( final User user, final List<String> args, final List<String> parameters )
     {
-        if ( args.size() > 0 )
+        if ( !args.isEmpty() )
         {
             final String action = args.get( 0 );
 

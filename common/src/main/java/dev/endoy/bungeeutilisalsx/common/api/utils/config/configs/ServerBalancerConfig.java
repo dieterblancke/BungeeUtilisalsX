@@ -68,7 +68,13 @@ public class ServerBalancerConfig extends Config
         fallbackConfig = new FallbackConfig(
             FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
             config.getStringList( "fallback.reasons" ),
-            this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null )
+            this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null ),
+            config.getStringList( "fallback.block-fallback-from" )
+                    .stream()
+                    .map( ConfigFiles.SERVERGROUPS::getServer )
+                    .filter( Optional::isPresent )
+                    .map( Optional::get )
+                    .collect( Collectors.toList() )
         );
     }
 
@@ -123,5 +129,6 @@ public class ServerBalancerConfig extends Config
         FallbackMode fallbackMode;
         List<String> reasons;
         ServerBalancerGroup fallbackGroup;
+        List<ServerGroup> blockFallbackFrom;
     }
 }

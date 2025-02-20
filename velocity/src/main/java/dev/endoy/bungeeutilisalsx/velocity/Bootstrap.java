@@ -1,10 +1,5 @@
 package dev.endoy.bungeeutilisalsx.velocity;
 
-import dev.endoy.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
-import dev.endoy.bungeeutilisalsx.common.BootstrapUtil;
-import dev.endoy.bungeeutilisalsx.common.api.utils.Platform;
-import dev.endoy.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
-import dev.endoy.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import com.google.inject.Inject;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.proxy.ProxyInitializeEvent;
@@ -13,6 +8,11 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import dev.endoy.bungeeutilisalsx.common.AbstractBungeeUtilisalsX;
+import dev.endoy.bungeeutilisalsx.common.BootstrapUtil;
+import dev.endoy.bungeeutilisalsx.common.api.utils.Platform;
+import dev.endoy.bungeeutilisalsx.velocity.library.VelocityLibraryClassLoader;
+import dev.endoy.bungeeutilisalsx.velocity.utils.Slf4jLoggerWrapper;
 import lombok.Getter;
 import org.bstats.velocity.Metrics;
 import org.bstats.velocity.Metrics.Factory;
@@ -26,7 +26,7 @@ import java.util.logging.Logger;
 @Plugin(
         id = "bungeeutilisalsx",
         name = "BungeeUtilisalsX",
-        version = "2.4.6",
+        version = "2.4.7",
         authors = { "Endoy" },
         dependencies = {
                 @Dependency( id = "skinsrestorer", optional = true ),

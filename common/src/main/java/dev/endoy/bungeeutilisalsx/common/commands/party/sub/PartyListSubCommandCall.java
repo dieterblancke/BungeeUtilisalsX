@@ -28,7 +28,7 @@ public class PartyListSubCommandCall implements CommandCall
         }
         final Party party = optionalParty.get();
 
-        if ( args.size() > 0 )
+        if ( !args.isEmpty() )
         {
             final String type = args.get( 0 );
 
