@@ -27,7 +27,7 @@ public class ApiTokenCommandCall implements CommandCall
     {
         final SimpleDateFormat dateFormat = new SimpleDateFormat( "dd/MM/yyyy" );
 
-        if ( args.size() > 0 )
+        if ( !args.isEmpty() )
         {
             final String action = args.get( 0 );
 

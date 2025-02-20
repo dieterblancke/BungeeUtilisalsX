@@ -9,6 +9,7 @@ import dev.endoy.bungeeutilisalsx.common.api.server.IProxyServer;
 import dev.endoy.bungeeutilisalsx.common.api.serverbalancer.ServerBalancer;
 import dev.endoy.bungeeutilisalsx.common.api.user.CooldownConstants;
 import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import dev.endoy.bungeeutilisalsx.common.api.utils.config.configs.ServerBalancerConfig.FallbackConfig;
 import lombok.RequiredArgsConstructor;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -31,8 +32,8 @@ public class ServerBalancerExecutors implements EventExecutor
         IProxyServer target = event.getTarget();
 
         ConfigFiles.SERVER_BALANCER_CONFIG.getServerBalancerGroupFor( target.getName() )
-            .flatMap( serverBalancer::getOptimalServer )
-            .ifPresent( event::setTarget );
+                .flatMap( serverBalancer::getOptimalServer )
+                .ifPresent( event::setTarget );
     }
 
     @Event
@@ -47,23 +48,34 @@ public class ServerBalancerExecutors implements EventExecutor
             return;
         }
 
-        if ( this.shouldRedirect( event.getKickMessage() ) )
+        if ( this.shouldRedirect( event.getKickedFrom(), event.getKickMessage() ) )
         {
             ofNullable( ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getFallbackGroup() )
-                .flatMap( serverBalancer::getOptimalServer )
-                .ifPresent( event::setRedirectServer );
+                    .flatMap( serverBalancer::getOptimalServer )
+                    .ifPresent( event::setRedirectServer );
         }
     }
 
-    private boolean shouldRedirect( Component kickMessage )
+    private boolean shouldRedirect( IProxyServer kickedFrom, Component kickMessage )
     {
+        FallbackConfig fallbackConfig = ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig();
+
+        if ( kickedFrom != null )
+        {
+            if ( fallbackConfig.getBlockFallbackFrom().stream().anyMatch( it -> it.isInGroup( kickedFrom.getName() ) ) )
+            {
+                // If the server is in the block list, we should not redirect
+                return false;
+            }
+        }
+
         String textContents = LegacyComponentSerializer.legacyAmpersand().serialize( kickMessage ).toLowerCase();
 
-        return switch ( ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getFallbackMode() )
+        return switch ( fallbackConfig.getFallbackMode() )
         {
             case BLACKLIST ->
             {
-                for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
+                for ( String reason : fallbackConfig.getReasons() )
                 {
                     if ( textContents.contains( reason.toLowerCase() ) )
                     {
@@ -75,7 +87,7 @@ public class ServerBalancerExecutors implements EventExecutor
             }
             case WHITELIST ->
             {
-                for ( String reason : ConfigFiles.SERVER_BALANCER_CONFIG.getFallbackConfig().getReasons() )
+                for ( String reason : fallbackConfig.getReasons() )
                 {
                     if ( textContents.contains( reason.toLowerCase() ) )
                     {

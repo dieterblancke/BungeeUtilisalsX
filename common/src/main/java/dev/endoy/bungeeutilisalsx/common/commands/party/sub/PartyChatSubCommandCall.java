@@ -24,7 +24,7 @@ public class PartyChatSubCommandCall implements CommandCall
         }
         final Party party = optionalParty.get();
 
-        if ( args.size() > 0 )
+        if ( !args.isEmpty() )
         {
             BuX.getInstance().getPartyManager().languageBroadcastToParty(
                 party,

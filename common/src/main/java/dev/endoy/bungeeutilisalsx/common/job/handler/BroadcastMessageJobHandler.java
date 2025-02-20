@@ -9,6 +9,14 @@ import dev.endoy.bungeeutilisalsx.common.api.job.management.AbstractJobHandler;
 import dev.endoy.bungeeutilisalsx.common.api.job.management.JobHandler;
 import dev.endoy.bungeeutilisalsx.common.api.language.LanguageConfig;
 import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
+import dev.endoy.bungeeutilisalsx.common.api.utils.config.ConfigFiles;
+import dev.endoy.bungeeutilisalsx.common.api.utils.server.ServerGroup;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static java.util.Optional.ofNullable;
 
 public class BroadcastMessageJobHandler extends AbstractJobHandler
 {
@@ -29,13 +37,27 @@ public class BroadcastMessageJobHandler extends AbstractJobHandler
     @JobHandler
     void handleBroadcastLanguageMessageJob( final BroadcastLanguageMessageJob job )
     {
+        List<ServerGroup> disabledServers = ofNullable( job.getDisabledServers() ).orElseGet( ArrayList::new )
+                .stream()
+                .map( ConfigFiles.SERVERGROUPS::getServer )
+                .filter( Optional::isPresent )
+                .map( Optional::get )
+                .toList();
+
         for ( User user : BuX.getApi().getUsers() )
         {
-            if ( Strings.isNullOrEmpty( job.getPermission() ) || user.hasPermission( job.getPermission() ) )
+            if ( disabledServers.stream().anyMatch( serverGroup -> serverGroup.isInGroup( user.getServerName() ) ) )
             {
-                this.sendMessage( user, job );
+                continue;
             }
+            if ( !Strings.isNullOrEmpty( job.getPermission() ) && !user.hasPermission( job.getPermission() ) )
+            {
+                continue;
+            }
+
+            this.sendMessage( user, job );
         }
+
         this.sendMessage( BuX.getApi().getConsoleUser(), job );
     }
 
