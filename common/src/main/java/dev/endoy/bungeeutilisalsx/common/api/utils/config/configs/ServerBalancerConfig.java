@@ -69,7 +69,7 @@ public class ServerBalancerConfig extends Config
             FallbackMode.valueOf( config.getString( "fallback.type" ).toUpperCase() ),
             config.getStringList( "fallback.reasons" ),
             this.getServerBalancerGroupFor( config.getString( "fallback.fallback-to" ) ).orElse( null ),
-            config.getStringList( "fallback.block-fallback-from" )
+            config.getStringList( "fallback.block-fallback-from", new ArrayList<>() )
                     .stream()
                     .map( ConfigFiles.SERVERGROUPS::getServer )
                     .filter( Optional::isPresent )
