@@ -1,13 +1,5 @@
 package dev.endoy.bungeeutilisalsx.velocity.listeners;
 
-import dev.endoy.bungeeutilisalsx.common.BuX;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent.ConnectReason;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
-import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
-import dev.endoy.bungeeutilisalsx.velocity.user.VelocityUser;
-import dev.endoy.bungeeutilisalsx.velocity.utils.VelocityServer;
 import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
@@ -18,6 +10,14 @@ import com.velocitypowered.api.event.player.ServerConnectedEvent;
 import com.velocitypowered.api.event.player.ServerPreConnectEvent;
 import com.velocitypowered.api.proxy.Player;
 import com.velocitypowered.api.proxy.server.RegisteredServer;
+import dev.endoy.bungeeutilisalsx.common.BuX;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectEvent.ConnectReason;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerConnectedEvent;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserServerKickEvent;
+import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
+import dev.endoy.bungeeutilisalsx.velocity.user.VelocityUser;
+import dev.endoy.bungeeutilisalsx.velocity.utils.VelocityServer;
 import net.kyori.adventure.text.serializer.gson.GsonComponentSerializer;
 
 import java.util.Optional;
@@ -106,7 +106,7 @@ public class UserConnectionListener
         GsonComponentSerializer componentSerializer = GsonComponentSerializer.gson();
         UserServerKickEvent userServerKickEvent = new UserServerKickEvent(
                 optional.get(),
-                event.getServer() == null ? null : BuX.getInstance().serverOperations().getServerInfo( event.getServer().getServerInfo().getName() ),
+                BuX.getInstance().serverOperations().getServerInfo( event.getServer().getServerInfo().getName() ),
                 event.getResult() instanceof RedirectPlayer
                         ? BuX.getInstance().serverOperations().getServerInfo( ( (RedirectPlayer) event.getResult() ).getServer().getServerInfo().getName() )
                         : null,

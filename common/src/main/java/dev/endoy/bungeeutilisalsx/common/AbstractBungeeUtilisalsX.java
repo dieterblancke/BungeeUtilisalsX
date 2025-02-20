@@ -1,5 +1,6 @@
 package dev.endoy.bungeeutilisalsx.common;
 
+import com.google.common.collect.Lists;
 import dev.endoy.bungeeutilisalsx.common.announcers.actionbar.ActionBarAnnouncer;
 import dev.endoy.bungeeutilisalsx.common.announcers.bossbar.BossBarAnnouncer;
 import dev.endoy.bungeeutilisalsx.common.announcers.chat.ChatAnnouncer;
@@ -46,7 +47,6 @@ import dev.endoy.bungeeutilisalsx.common.redis.RedisManagerFactory;
 import dev.endoy.bungeeutilisalsx.common.scheduler.Scheduler;
 import dev.endoy.configuration.api.FileStorageType;
 import dev.endoy.configuration.api.IConfiguration;
-import com.google.common.collect.Lists;
 import lombok.Data;
 
 import javax.script.ScriptException;
@@ -121,11 +121,11 @@ public abstract class AbstractBungeeUtilisalsX
         this.registerPluginSupports();
 
         Announcer.registerAnnouncers(
-            ActionBarAnnouncer.class,
-            ChatAnnouncer.class,
-            TitleAnnouncer.class,
-            BossBarAnnouncer.class,
-            TabAnnouncer.class
+                ActionBarAnnouncer.class,
+                ChatAnnouncer.class,
+                TitleAnnouncer.class,
+                BossBarAnnouncer.class,
+                TabAnnouncer.class
         );
 
         this.setupTasks();
@@ -201,6 +201,11 @@ public abstract class AbstractBungeeUtilisalsX
         {
             this.api.getEventLoader().register( new FriendsExecutor(), UserLoadEvent.class, UserUnloadEvent.class, UserServerConnectedEvent.class );
         }
+
+        if ( ConfigFiles.SERVER_BALANCER_CONFIG.isEnabled() )
+        {
+            this.api.getEventLoader().register( new ServerBalancerExecutors( api.getServerBalancer() ), UserServerConnectEvent.class, UserServerKickEvent.class );
+        }
     }
 
     protected void setupTasks()
@@ -249,12 +254,12 @@ public abstract class AbstractBungeeUtilisalsX
             scriptsFolder.mkdir();
 
             IConfiguration.createDefaultFile(
-                this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
-                new File( scriptsFolder, "hello.js" )
+                    this.getClass().getResourceAsStream( "/configurations/scripts/hello.js" ),
+                    new File( scriptsFolder, "hello.js" )
             );
             IConfiguration.createDefaultFile(
-                this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
-                new File( scriptsFolder, "coins.js" )
+                    this.getClass().getResourceAsStream( "/configurations/scripts/coins.js" ),
+                    new File( scriptsFolder, "coins.js" )
             );
         }
 
@@ -312,7 +317,7 @@ public abstract class AbstractBungeeUtilisalsX
     protected void detectPermissionIntegration()
     {
         final List<PermissionIntegration> integrations = Lists.newArrayList(
-            new LuckPermsPermissionIntegration()
+                new LuckPermsPermissionIntegration()
         );
 
         for ( PermissionIntegration integration : integrations )

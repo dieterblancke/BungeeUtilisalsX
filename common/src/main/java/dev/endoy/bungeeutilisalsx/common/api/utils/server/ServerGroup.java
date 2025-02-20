@@ -7,6 +7,7 @@ import lombok.Data;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Data
 public class ServerGroup
@@ -97,6 +98,12 @@ public class ServerGroup
     {
         LinkedList<String> foundServers = Lists.newLinkedList();
 
+        BuX.debug( "Scanning servers for group %s with server list %s. Available servers are: %s".formatted(
+                name,
+                String.join( ", ", servers ),
+                BuX.getInstance().serverOperations().getServers().stream().map( IProxyServer::getName ).collect( Collectors.joining( ", " ) )
+        ) );
+
         servers.forEach( server ->
         {
             for ( IProxyServer info : BuX.getInstance().serverOperations().getServers() )
@@ -126,6 +133,8 @@ public class ServerGroup
                 }
             }
         } );
+
+        BuX.debug( "Found servers: %s".formatted( String.join( ", ", foundServers ) ) );
 
         return foundServers;
     }
