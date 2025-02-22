@@ -358,12 +358,6 @@ public class VelocityUser implements User {
     }
 
     @Override
-    public boolean allowsMessageModifications() {
-        return player.getIdentifiedKey() == null
-                || player.getProtocolVersion().getProtocol() < 760;
-    }
-
-    @Override
     public boolean equals(Object o) {
         if (this == o) {
             return true;

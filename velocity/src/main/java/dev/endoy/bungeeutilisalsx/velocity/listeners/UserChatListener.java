@@ -1,15 +1,15 @@
 package dev.endoy.bungeeutilisalsx.velocity.listeners;
 
-import dev.endoy.bungeeutilisalsx.common.BuX;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
-import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
-import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.command.CommandExecuteEvent;
 import com.velocitypowered.api.event.command.CommandExecuteEvent.CommandResult;
 import com.velocitypowered.api.event.player.PlayerChatEvent;
 import com.velocitypowered.api.event.player.PlayerChatEvent.ChatResult;
 import com.velocitypowered.api.proxy.Player;
+import dev.endoy.bungeeutilisalsx.common.BuX;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserChatEvent;
+import dev.endoy.bungeeutilisalsx.common.api.event.events.user.UserCommandEvent;
+import dev.endoy.bungeeutilisalsx.common.api.user.interfaces.User;
 
 import java.util.Optional;
 
@@ -29,18 +29,15 @@ public class UserChatListener
         final UserChatEvent chatEvent = new UserChatEvent( user, event.getMessage() );
         BuX.getApi().getEventLoader().launchEvent( chatEvent );
 
-        if ( chatEvent.getUser().allowsMessageModifications() )
+        if ( chatEvent.isCancelled() )
         {
-            if ( chatEvent.isCancelled() )
-            {
-                event.setResult( ChatResult.denied() );
-                return;
-            }
+            event.setResult( ChatResult.denied() );
+            return;
+        }
 
-            if ( !event.getMessage().equals( chatEvent.getMessage() ) )
-            {
-                event.setResult( ChatResult.message( chatEvent.getMessage() ) );
-            }
+        if ( !event.getMessage().equals( chatEvent.getMessage() ) )
+        {
+            event.setResult( ChatResult.message( chatEvent.getMessage() ) );
         }
     }
 
@@ -59,18 +56,15 @@ public class UserChatListener
             final UserCommandEvent commandEvent = new UserCommandEvent( user, event.getCommand() );
             BuX.getApi().getEventLoader().launchEvent( commandEvent );
 
-            if ( commandEvent.getUser().allowsMessageModifications() )
+            if ( commandEvent.isCancelled() )
             {
-                if ( commandEvent.isCancelled() )
-                {
-                    event.setResult( CommandResult.denied() );
-                    return;
-                }
+                event.setResult( CommandResult.denied() );
+                return;
+            }
 
-                if ( !event.getCommand().equals( commandEvent.getCommand() ) )
-                {
-                    event.setResult( CommandResult.command( commandEvent.getCommand() ) );
-                }
+            if ( !event.getCommand().equals( commandEvent.getCommand() ) )
+            {
+                event.setResult( CommandResult.command( commandEvent.getCommand() ) );
             }
         }
     }

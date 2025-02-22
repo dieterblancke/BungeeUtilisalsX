@@ -414,12 +414,6 @@ public class BungeeUser implements User
     }
 
     @Override
-    public boolean allowsMessageModifications()
-    {
-        return true;
-    }
-
-    @Override
     public boolean equals( Object o )
     {
         if ( this == o )

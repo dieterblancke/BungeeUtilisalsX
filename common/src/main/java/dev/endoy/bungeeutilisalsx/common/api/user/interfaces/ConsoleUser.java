@@ -299,9 +299,4 @@ public abstract class ConsoleUser implements User
         return userSettings;
     }
 
-    @Override
-    public boolean allowsMessageModifications()
-    {
-        return false;
-    }
 }
