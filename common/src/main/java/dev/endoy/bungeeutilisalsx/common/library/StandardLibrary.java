@@ -141,7 +141,7 @@ public enum StandardLibrary
     ),
     RHINO_SCRIPT_ENGINE(
         "de.christophkraemer.rhino.javascript.RhinoScriptEngineFactory",
-        "https://repo.endoy.dev/artifactory/endoy-public/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
+        "https://repo.endoy.dev/endoy-public/de/christophkraemer/rhino-script-engine/{version}/rhino-script-engine-{version}.jar",
         "1.2.1",
         configExistsAndTrue( getConfig(), "scripting" ),
         relocate( "org.mozilla" ),
