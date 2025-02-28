@@ -113,8 +113,7 @@
                         </relocation>
                         <relocation>
                             <pattern>reactor.adapter</pattern>
-                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.reactor.adapter
-                            </shadedPattern>
+                            <shadedPattern>dev.endoy.bungeeutilisalsx.internal.reactor.adapter</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>reactor.util</pattern>

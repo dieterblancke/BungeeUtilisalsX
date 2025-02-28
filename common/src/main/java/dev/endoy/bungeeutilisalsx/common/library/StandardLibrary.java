@@ -73,7 +73,7 @@ public enum StandardLibrary
     LETTUCE(
         "io.lettuce.core.RedisClient",
         "https://repo1.maven.org/maven2/io/lettuce/lettuce-core/{version}/lettuce-core-{version}.jar",
-        "6.1.8.RELEASE",
+        "6.5.4.RELEASE",
         configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
         relocate( "io.lettuce.core" ),
         relocate( "reactor.core" ),
@@ -85,7 +85,7 @@ public enum StandardLibrary
     REACTOR_CORE(
         "reactor.core.scheduler.Schedulers",
         "https://repo1.maven.org/maven2/io/projectreactor/reactor-core/{version}/reactor-core-{version}.jar",
-        "3.3.10.RELEASE",
+        "3.6.6",
         configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
         relocate( "reactor.core" ),
         relocate( "reactor.adapter" ),
@@ -95,7 +95,7 @@ public enum StandardLibrary
     REACTIVE_STREAMS(
         "org.reactivestreams.Processor",
         "https://repo1.maven.org/maven2/org/reactivestreams/reactive-streams/{version}/reactive-streams-{version}.jar",
-        "1.0.3",
+        "1.0.4",
         configExistsAndTrue( getConfig(), "multi-proxy.enabled" ),
         relocate( "org.reactivestreams" )
     ),
