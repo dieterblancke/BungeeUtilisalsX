@@ -28,14 +28,14 @@
     <distributionManagement>
         <repository>
             <id>endoy</id>
-            <url>https://repo.endoy.dev/artifactory/endoy-public/</url>
+            <url>https://repo.endoy.dev/endoy-public</url>
         </repository>
     </distributionManagement>
 
     <repositories>
         <repository>
             <id>endoy</id>
-            <url>https://repo.endoy.dev/artifactory/endoy-public/</url>
+            <url>https://repo.endoy.dev/endoy-public</url>
         </repository>
     </repositories>
 
