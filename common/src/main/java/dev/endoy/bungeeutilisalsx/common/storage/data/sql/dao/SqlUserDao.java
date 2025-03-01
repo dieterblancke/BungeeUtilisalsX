@@ -1,5 +1,7 @@
 package dev.endoy.bungeeutilisalsx.common.storage.data.sql.dao;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.language.Language;
 import dev.endoy.bungeeutilisalsx.common.api.storage.StorageType;
@@ -9,8 +11,6 @@ import dev.endoy.bungeeutilisalsx.common.api.user.UserSetting;
 import dev.endoy.bungeeutilisalsx.common.api.user.UserSettingType;
 import dev.endoy.bungeeutilisalsx.common.api.user.UserSettings;
 import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -242,6 +242,36 @@ public class SqlUserDao implements UserDao
                 BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
             }
             return users;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
+    public CompletableFuture<List<UUID>> getUuidsOnIP( String ip )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            final List<UUID> uuids = Lists.newArrayList();
+
+            try ( Connection connection = BuX.getApi().getStorageManager().getConnection();
+                  PreparedStatement pstmt = connection.prepareStatement(
+                      "SELECT uuid FROM bu_users WHERE ip = ?;"
+                  ) )
+            {
+                pstmt.setString( 1, ip );
+
+                try ( ResultSet rs = pstmt.executeQuery() )
+                {
+                    while ( rs.next() )
+                    {
+                        uuids.add( UUID.fromString( rs.getString( "uuid" ) ) );
+                    }
+                }
+            }
+            catch ( SQLException e )
+            {
+                BuX.getLogger().log( Level.SEVERE, "An error occured: ", e );
+            }
+            return uuids;
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 

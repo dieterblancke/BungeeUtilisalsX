@@ -1,13 +1,5 @@
 package dev.endoy.bungeeutilisalsx.common.storage.data.mongo.dao;
 
-import dev.endoy.bungeeutilisalsx.common.BuX;
-import dev.endoy.bungeeutilisalsx.common.api.language.Language;
-import dev.endoy.bungeeutilisalsx.common.api.storage.dao.UserDao;
-import dev.endoy.bungeeutilisalsx.common.api.user.UserSetting;
-import dev.endoy.bungeeutilisalsx.common.api.user.UserSettingType;
-import dev.endoy.bungeeutilisalsx.common.api.user.UserSettings;
-import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
-import dev.endoy.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mongodb.BasicDBObject;
@@ -17,6 +9,14 @@ import com.mongodb.client.model.Accumulators;
 import com.mongodb.client.model.Aggregates;
 import com.mongodb.client.model.Filters;
 import com.mongodb.client.model.Updates;
+import dev.endoy.bungeeutilisalsx.common.BuX;
+import dev.endoy.bungeeutilisalsx.common.api.language.Language;
+import dev.endoy.bungeeutilisalsx.common.api.storage.dao.UserDao;
+import dev.endoy.bungeeutilisalsx.common.api.user.UserSetting;
+import dev.endoy.bungeeutilisalsx.common.api.user.UserSettingType;
+import dev.endoy.bungeeutilisalsx.common.api.user.UserSettings;
+import dev.endoy.bungeeutilisalsx.common.api.user.UserStorage;
+import dev.endoy.bungeeutilisalsx.common.storage.mongodb.MongoDBStorageManager;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 
@@ -72,7 +72,7 @@ public class MongoUserDao implements UserDao
             }
 
             db().getCollection( "bu_users" )
-                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.combine( updates ) );
+                    .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.combine( updates ) );
         } );
     }
 
@@ -82,7 +82,7 @@ public class MongoUserDao implements UserDao
         return CompletableFuture.supplyAsync( () ->
         {
             return db().getCollection( "bu_users" ).find(
-                name.contains( "." ) ? Filters.eq( "ip", name ) : Filters.eq( "username", name )
+                    name.contains( "." ) ? Filters.eq( "ip", name ) : Filters.eq( "username", name )
             ).iterator().hasNext();
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -119,8 +119,8 @@ public class MongoUserDao implements UserDao
         {
             final MongoCollection<Document> userColl = db().getCollection( "bu_users" );
             final Document document = userColl.find( Filters.or(
-                Filters.eq( "username", name ),
-                Filters.eq( "ip", name )
+                    Filters.eq( "username", name ),
+                    Filters.eq( "ip", name )
             ) ).first();
 
             if ( document != null )
@@ -148,12 +148,28 @@ public class MongoUserDao implements UserDao
     }
 
     @Override
+    public CompletableFuture<List<UUID>> getUuidsOnIP( String ip )
+    {
+        return CompletableFuture.supplyAsync( () ->
+        {
+            List<UUID> uuids = Lists.newArrayList();
+
+            for ( Document document : db().getCollection( "bu_users" ).find( Filters.eq( "ip", ip ) ) )
+            {
+                uuids.add( UUID.fromString( document.getString( "uuid" ) ) );
+            }
+
+            return uuids;
+        }, BuX.getInstance().getScheduler().getExecutorService() );
+    }
+
+    @Override
     public CompletableFuture<Void> setName( UUID uuid, String name )
     {
         return CompletableFuture.runAsync( () ->
         {
             db().getCollection( "bu_users" )
-                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "username", name ) );
+                    .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "username", name ) );
 
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -164,7 +180,7 @@ public class MongoUserDao implements UserDao
         return CompletableFuture.runAsync( () ->
         {
             db().getCollection( "bu_users" )
-                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "language", language.getName() ) );
+                    .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "language", language.getName() ) );
 
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -175,7 +191,7 @@ public class MongoUserDao implements UserDao
         return CompletableFuture.runAsync( () ->
         {
             db().getCollection( "bu_users" )
-                .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "joined_host", joinedHost ) );
+                    .findOneAndUpdate( Filters.eq( "uuid", uuid.toString() ), Updates.set( "joined_host", joinedHost ) );
 
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -189,7 +205,7 @@ public class MongoUserDao implements UserDao
             final MongoCollection<Document> collection = db().getCollection( "bu_users" );
 
             for ( Document doc : collection.aggregate( Collections.singletonList(
-                Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
+                    Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
             ) ) )
             {
                 final String joinedHost = doc.getString( "_id" );
@@ -213,8 +229,8 @@ public class MongoUserDao implements UserDao
             final MongoCollection<Document> collection = db().getCollection( "bu_users" );
 
             for ( Document doc : collection.aggregate( Arrays.asList(
-                Aggregates.match( Filters.regex( "joined_host", searchTag ) ),
-                Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
+                    Aggregates.match( Filters.regex( "joined_host", searchTag ) ),
+                    Aggregates.group( "$joined_host", Accumulators.sum( "count", 1 ) )
             ) ) )
             {
                 final String joinedHost = doc.getString( "_id" );
@@ -252,10 +268,10 @@ public class MongoUserDao implements UserDao
             final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
 
             ignoredUsersColl.findOneAndDelete(
-                Filters.and(
-                    Filters.eq( "user", user.toString() ),
-                    Filters.eq( "ignored", unignore.toString() )
-                )
+                    Filters.and(
+                            Filters.eq( "user", user.toString() ),
+                            Filters.eq( "ignored", unignore.toString() )
+                    )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -267,8 +283,8 @@ public class MongoUserDao implements UserDao
         {
             final MongoCollection<Document> userColl = db().getCollection( "bu_users" );
             final Document document = userColl.find( Filters.eq( "username", targetName ) )
-                .projection( new BasicDBObject().append( "uuid", 1 ) )
-                .first();
+                    .projection( new BasicDBObject().append( "uuid", 1 ) )
+                    .first();
 
             if ( document != null )
             {
@@ -287,10 +303,10 @@ public class MongoUserDao implements UserDao
             MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
 
             settingsColl.find( Filters.eq( "uuid", uuid.toString() ) )
-                .forEach( (Consumer<Document>) document -> userSettings.add( new UserSetting(
-                    UserSettingType.valueOf( document.getString( "setting_type" ) ),
-                    document.get( "setting_value" )
-                ) ) );
+                    .forEach( (Consumer<Document>) document -> userSettings.add( new UserSetting(
+                            UserSettingType.valueOf( document.getString( "setting_type" ) ),
+                            document.get( "setting_value" )
+                    ) ) );
 
             return new UserSettings( uuid, userSettings );
         }, BuX.getInstance().getScheduler().getExecutorService() );
@@ -305,10 +321,10 @@ public class MongoUserDao implements UserDao
             MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
 
             return settingsColl.find( Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "setting_type", type.toString() )
-                ) )
-                .first() != null;
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    ) )
+                    .first() != null;
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
 
@@ -336,11 +352,11 @@ public class MongoUserDao implements UserDao
             MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
 
             db().getCollection( "bu_user_settings" ).updateOne(
-                Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "setting_type", type.toString() )
-                ),
-                Updates.set( "setting_value", value )
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    ),
+                    Updates.set( "setting_value", value )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -353,10 +369,10 @@ public class MongoUserDao implements UserDao
             MongoCollection<Document> settingsColl = db().getCollection( "bu_user_settings" );
 
             db().getCollection( "bu_user_settings" ).deleteOne(
-                Filters.and(
-                    Filters.eq( "uuid", uuid.toString() ),
-                    Filters.eq( "setting_type", type.toString() )
-                )
+                    Filters.and(
+                            Filters.eq( "uuid", uuid.toString() ),
+                            Filters.eq( "setting_type", type.toString() )
+                    )
             );
         }, BuX.getInstance().getScheduler().getExecutorService() );
     }
@@ -374,7 +390,7 @@ public class MongoUserDao implements UserDao
         storage.setUserName( document.getString( "username" ) );
         storage.setIp( document.getString( "ip" ) );
         storage.setLanguage(
-            BuX.getApi().getLanguageManager().getLangOrDefault( document.getString( "language" ) )
+                BuX.getApi().getLanguageManager().getLangOrDefault( document.getString( "language" ) )
         );
         storage.setFirstLogin( document.getDate( "lastlogin" ) );
         storage.setLastLogout( document.getDate( "lastlogout" ) );
@@ -391,7 +407,7 @@ public class MongoUserDao implements UserDao
         final MongoCollection<Document> ignoredUsersColl = db().getCollection( "bu_ignoredusers" );
 
         ignoredUsersColl.find(
-            Filters.eq( "user", uuid.toString() )
+                Filters.eq( "user", uuid.toString() )
         ).forEach( (Consumer<? super Document>) doc ->
         {
             final UUID ignoredUuid = UUID.fromString( doc.getString( "ignored" ) );

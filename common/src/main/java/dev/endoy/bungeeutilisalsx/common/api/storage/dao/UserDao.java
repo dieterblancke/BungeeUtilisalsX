@@ -27,6 +27,8 @@ public interface UserDao
 
     CompletableFuture<List<String>> getUsersOnIP( String ip );
 
+    CompletableFuture<List<UUID>> getUuidsOnIP( String ip );
+
     CompletableFuture<Void> setName( UUID uuid, String name );
 
     CompletableFuture<Void> setLanguage( UUID uuid, Language language );

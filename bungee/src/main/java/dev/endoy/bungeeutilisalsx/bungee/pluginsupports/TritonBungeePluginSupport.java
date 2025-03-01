@@ -1,6 +1,7 @@
 package dev.endoy.bungeeutilisalsx.bungee.pluginsupports;
 
-import com.rexcantor64.triton.Triton;
+import com.rexcantor64.triton.api.Triton;
+import com.rexcantor64.triton.api.TritonAPI;
 import com.rexcantor64.triton.api.config.FeatureSyntax;
 import dev.endoy.bungeeutilisalsx.common.BuX;
 import dev.endoy.bungeeutilisalsx.common.api.pluginsupport.PluginSupport;
@@ -34,8 +35,15 @@ public class TritonBungeePluginSupport implements PluginSupport
 
     public void handleMotd( ProxyPingEvent event )
     {
-        String languageName = Triton.get().getStorage().getLanguageFromIp( Utils.getIP( (InetSocketAddress) event.getConnection().getSocketAddress() ) ).getName();
-        FeatureSyntax syntax = Triton.get().getConf().getMotdSyntax();
+        Triton triton = TritonAPI.getInstance();
+        String languageName = BuX.getApi().getStorageManager().getDao().getUserDao()
+                .getUuidsOnIP( Utils.getIP( (InetSocketAddress) event.getConnection().getSocketAddress() ) )
+                .join()
+                .stream()
+                .findFirst()
+                .map( uuid -> triton.getPlayerManager().get( uuid ).getLang().getName() )
+                .orElseGet( () -> triton.getLanguageManager().getMainLanguage().getName() );
+        FeatureSyntax syntax = triton.getConf().getMotdSyntax();
 
         Players players = event.getResponse().getPlayers();
         if ( players.getSample() != null )
@@ -44,7 +52,7 @@ public class TritonBungeePluginSupport implements PluginSupport
 
             for ( PlayerInfo playerInfo : players.getSample() )
             {
-                String translatedName = Triton.get().getLanguageParser().replaceLanguages( playerInfo.getName(), languageName, syntax );
+                String translatedName = triton.getLanguageParser().parseString( languageName, syntax, playerInfo.getName() );
                 if ( playerInfo.getName() == null || playerInfo.getName().equals( translatedName ) )
                 {
                     newSample.add( playerInfo );
@@ -70,11 +78,9 @@ public class TritonBungeePluginSupport implements PluginSupport
             players.setSample( newSample.toArray( new PlayerInfo[0] ) );
 
             Protocol version = event.getResponse().getVersion();
-            Protocol translatedVersion = new Protocol( Triton.get().getLanguageParser().parseString( languageName, syntax, version.getName() ), version.getProtocol() );
+            Protocol translatedVersion = new Protocol( triton.getLanguageParser().parseString( languageName, syntax, version.getName() ), version.getProtocol() );
             event.getResponse().setVersion( translatedVersion );
-
-            event.getResponse().setDescriptionComponent( componentArrayToSingle( Triton.get().getLanguageParser()
-                .parseComponent( languageName, syntax, event.getResponse().getDescriptionComponent() ) ) );
+            event.getResponse().setDescriptionComponent( componentArrayToSingle( triton.getLanguageParser().parseComponent( languageName, syntax, event.getResponse().getDescriptionComponent() ) ) );
         }
     }
 
